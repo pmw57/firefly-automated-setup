@@ -1,0 +1,143 @@
+
+export type ExpansionId = 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'jetwash' | 'esmerelda' | 'tenth' | 'black_market' | 'still_flying' | 'community';
+
+export interface Expansions {
+  blue: boolean;
+  kalidasa: boolean;
+  pirates: boolean;
+  crime: boolean; 
+  jetwash: boolean;
+  esmerelda: boolean;
+  tenth: boolean;
+  black_market: boolean;
+  still_flying: boolean;
+  community: boolean;
+}
+
+export type ThemeColor = 'blue' | 'amber' | 'red' | 'gray' | 'purple' | 'yellow' | 'dark' | 'cyan' | 'paleGreen' | 'firebrick' | 'khaki' | 'cornflower' | 'brown' | 'teal';
+
+export interface ExpansionIconConfig {
+  type: 'sprite' | 'text';
+  value: string; // Background position for sprite, or text content
+}
+
+export interface ExpansionDef {
+  id: ExpansionId;
+  label: string;
+  description: string;
+  themeColor: ThemeColor;
+  icon: ExpansionIconConfig;
+}
+
+export interface StepOverrides {
+  startingCredits?: number;
+  rimNavMode?: boolean;
+  rimJobMode?: boolean;
+  browncoatNavMode?: boolean;
+  browncoatJobMode?: boolean;
+  browncoatDraftMode?: boolean;
+  timesJobMode?: boolean;
+  forceReshuffle?: boolean;
+  allianceHighAlertJobMode?: boolean;
+  buttonsJobMode?: boolean;
+  extraCruisers?: boolean;
+  wantedLeaderMode?: boolean;
+  awfulCrowdedAllianceMode?: boolean;
+  awfulJobMode?: boolean;
+  blitzPrimeMode?: boolean;
+  clearerSkiesNavMode?: boolean;
+  noAlertTokens?: boolean;
+}
+
+export interface SetupContentData {
+  type: 'core' | 'dynamic';
+  id?: string;        // For core steps
+  elementId?: string; // For dynamic steps
+  title: string;
+}
+
+export interface ContentMap {
+  [key: string]: SetupContentData;
+}
+
+export interface ScenarioStep {
+  id: string;
+  overrides?: StepOverrides;
+}
+
+export interface ScenarioDef {
+  id: string;
+  label: string;
+  description?: string;
+  requiredExpansion?: keyof Expansions;
+  iconOverride?: string;
+  steps: ScenarioStep[];
+}
+
+export interface StoryCardConfig {
+  jobDrawMode?: 'standard' | 'draft_choice' | 'caper_start' | 'wind_takes_us' | 'no_jobs';
+  primingMultiplier?: number;
+  startingCreditsBonus?: number;
+  noStartingFuelParts?: boolean;
+  forbiddenStartingContact?: string;
+  allowedStartingContacts?: string[];
+  shipPlacementMode?: 'persephone';
+  startWithWarrant?: boolean;
+  placeAllianceAlertsInAllianceSpace?: boolean;
+  addBorderSpaceHavens?: boolean;
+  removePiracyJobs?: boolean;
+  placeMixedAlertTokens?: boolean;
+  // New flags
+  smugglersBluesSetup?: boolean;
+  startAtLondinium?: boolean;
+  startWithAlertCard?: boolean;
+  startOutsideAllianceSpace?: boolean;
+  createAlertTokenStackMultiplier?: number;
+  sharedHandSetup?: boolean;
+  // Community flags
+  startingCreditsOverride?: number;
+  customStartingFuel?: number;
+  startingWarrantCount?: number;
+  removeRiver?: boolean;
+  allianceSpaceOffLimits?: boolean;
+  startAtSector?: string;
+  removeJobDecks?: boolean;
+  nandiCrewDiscount?: boolean;
+}
+
+export interface StoryCardDef {
+  title: string;
+  intro: string;
+  setupDescription?: string;
+  requiredExpansion?: keyof Expansions;
+  additionalRequirements?: (keyof Expansions)[];
+  setupConfig?: StoryCardConfig;
+}
+
+export interface GameState {
+  playerCount: number;
+  playerNames: string[];
+  scenarioValue: string;
+  scenarioName: string;
+  selectedStoryCard: string;
+  expansions: Expansions;
+}
+
+export interface Step {
+  type: 'core' | 'dynamic' | 'final';
+  id: string;
+  data?: SetupContentData;
+  overrides?: StepOverrides;
+}
+
+export interface DiceResult {
+  player: string;
+  roll: number;
+  isWinner?: boolean;
+}
+
+export interface DraftState {
+  rolls: DiceResult[];
+  draftOrder: string[];
+  placementOrder: string[];
+}

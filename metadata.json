@@ -1,0 +1,5 @@
+{
+  "name": "Firefly Automated Setup",
+  "description": "A dynamic, step-by-step setup wizard for Firefly: The Game board game.",
+  "requestFramePermissions": []
+}
