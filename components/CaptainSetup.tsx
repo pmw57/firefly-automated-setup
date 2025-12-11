@@ -60,27 +60,33 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-200 animate-fade-in">
-      <div className="flex justify-between items-center mb-6 border-b pb-2">
-         <h2 className="text-2xl font-bold text-gray-800 font-western">Mission Configuration</h2>
-         <span className="text-xs font-bold bg-gray-100 text-gray-500 px-2 py-1 rounded">Part 1 of 2</span>
+    <div className="bg-metal rounded-xl shadow-2xl p-6 md:p-8 border-2 border-gray-400/50 animate-fade-in relative overflow-hidden">
+      {/* Decorative bolts */}
+      <div className="absolute top-3 left-3 w-3 h-3 rounded-full bg-gray-400 shadow-inner border border-gray-500"></div>
+      <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-gray-400 shadow-inner border border-gray-500"></div>
+      <div className="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-gray-400 shadow-inner border border-gray-500"></div>
+      <div className="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-gray-400 shadow-inner border border-gray-500"></div>
+
+      <div className="flex justify-between items-center mb-6 border-b-2 border-gray-300 pb-2 relative z-10">
+         <h2 className="text-2xl font-bold text-gray-800 font-western drop-shadow-sm">Mission Configuration</h2>
+         <span className="text-xs font-bold bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full border border-yellow-300 shadow-sm">Part 1 of 2</span>
       </div>
       
       {/* Player Count & Names */}
-      <div className="mb-8">
-        <label className="block font-bold text-gray-700 mb-2 uppercase tracking-wide text-xs">Number of Captains</label>
+      <div className="mb-8 relative z-10">
+        <label className="block font-bold text-gray-600 mb-2 uppercase tracking-wide text-xs">Number of Captains</label>
         <div className="flex items-center space-x-4 mb-4 select-none">
           <button 
             type="button"
             onClick={() => updatePlayerCount(gameState.playerCount - 1)}
             disabled={gameState.playerCount <= 1}
             aria-label="Decrease player count"
-            className="w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 border border-gray-300 font-bold text-2xl text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-green-500 focus:outline-none"
+            className="w-12 h-12 flex items-center justify-center rounded-lg bg-white hover:bg-gray-50 border-2 border-gray-300 font-bold text-2xl text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm active:translate-y-0.5"
           >
             -
           </button>
           
-          <div className="w-16 h-12 flex items-center justify-center text-3xl font-bold text-green-900 font-western">
+          <div className="w-16 h-12 flex items-center justify-center text-4xl font-bold text-gray-800 font-western drop-shadow-md">
             {gameState.playerCount}
           </div>
 
@@ -89,24 +95,24 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
             onClick={() => updatePlayerCount(gameState.playerCount + 1)}
             disabled={gameState.playerCount >= 9}
             aria-label="Increase player count"
-            className="w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 border border-gray-300 font-bold text-2xl text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:ring-2 focus:ring-green-500 focus:outline-none"
+            className="w-12 h-12 flex items-center justify-center rounded-lg bg-white hover:bg-gray-50 border-2 border-gray-300 font-bold text-2xl text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm active:translate-y-0.5"
           >
             +
           </button>
-          <span className="text-gray-500 italic ml-2">Players</span>
+          <span className="text-gray-500 italic ml-2 font-serif">Crew Manifests</span>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white/50 p-4 rounded-lg border border-gray-300 shadow-inner">
           {gameState.playerNames.map((name, index) => (
             <div key={index} className="flex items-center">
-              <label htmlFor={`player-${index}`} className="text-xs font-bold text-gray-400 w-6 mr-1">{index + 1}.</label>
+              <label htmlFor={`player-${index}`} className="text-xs font-bold text-gray-500 w-6 mr-1 font-mono">{index + 1}.</label>
               <input
                 id={`player-${index}`}
                 type="text"
                 value={name}
                 onChange={(e) => handleNameChange(index, e.target.value)}
                 placeholder={`Captain ${index + 1}`}
-                className="w-full p-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-green-500 focus:outline-none"
+                className="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none bg-white shadow-sm font-medium text-gray-800 placeholder-gray-400"
               />
             </div>
           ))}
@@ -114,8 +120,8 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
       </div>
 
       {/* Expansions */}
-      <div className="mb-8">
-        <label className="block font-bold text-gray-700 mb-3 uppercase tracking-wide text-xs">Active Expansions</label>
+      <div className="mb-8 relative z-10">
+        <label className="block font-bold text-gray-600 mb-3 uppercase tracking-wide text-xs">Active Expansions</label>
         <div className="grid grid-cols-1 gap-4">
           {EXPANSIONS_METADATA.map((expansion) => (
             <ExpansionToggle 
@@ -131,9 +137,11 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
         </div>
       </div>
 
-      <Button onClick={onNext} fullWidth className="text-lg py-3 shadow-md hover:translate-y-[-1px]">
-        Next: Choose Setup Card →
-      </Button>
+      <div className="relative z-10">
+        <Button onClick={onNext} fullWidth className="text-lg py-4 shadow-xl border-b-4 border-green-900/50 hover:translate-y-[-2px] bg-gradient-to-b from-green-700 to-green-800">
+          Next: Choose Setup Card →
+        </Button>
+      </div>
     </div>
   );
 };
