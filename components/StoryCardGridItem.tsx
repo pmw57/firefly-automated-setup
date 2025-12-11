@@ -13,11 +13,22 @@ interface StoryCardGridItemProps {
 export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSelected, onClick, isShortList = false }) => {
     const summary = getStoryCardSetupSummary(card);
     
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick();
+        }
+    };
+
     return (
         <div 
             onClick={onClick}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+            aria-pressed={isSelected}
             className={`
-                relative cursor-pointer rounded-lg border-2 p-3 transition-all duration-200 flex flex-col h-full bg-white shadow-sm hover:shadow-md
+                relative cursor-pointer rounded-lg border-2 p-3 transition-all duration-200 flex flex-col h-full bg-white shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2
                 ${isSelected 
                     ? 'border-green-500 ring-2 ring-green-200 bg-green-50' 
                     : 'border-gray-200 hover:border-gray-300'

@@ -24,11 +24,11 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
     <>
       <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-6 overflow-hidden">
         {isBrowncoatNav ? (
-          <SpecialRuleBlock source="scenario" title="Hardcore Navigation">
-            Shuffle the {renderAction("Alliance Cruiser")} and {renderAction("Reaver Cutter")} cards into the Nav Decks immediately, regardless of player count.
+          <SpecialRuleBlock source="scenario" title="Setup Override">
+            <strong>Hardcore Navigation:</strong> Shuffle the {renderAction("Alliance Cruiser")} and {renderAction("Reaver Cutter")} cards into the Nav Decks immediately, regardless of player count.
           </SpecialRuleBlock>
         ) : hasForcedReshuffle ? (
-          <SpecialRuleBlock source="scenario" title="Hostile Universe">
+          <SpecialRuleBlock source="scenario" title="Setup Override">
             <ul className="list-disc ml-4 space-y-1">
               <li>Place the {renderAction("\"RESHUFFLE\"")} cards in the Nav Decks at the start of the game, regardless of player count.</li>
               <li>{renderAction("Shuffle each of the Alliance and Border Nav Decks")}.</li>
@@ -42,8 +42,8 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
         )}
 
         {isClearerSkies && (
-          <SpecialRuleBlock source="scenario" title="Clearer Skies Rule">
-            <strong>Full Burn:</strong> When initiating a Full Burn, roll a die. The result is how many sectors you may move before you start drawing Nav Cards.
+          <SpecialRuleBlock source="scenario" title="Setup Override">
+            <strong>Clearer Skies Rule:</strong> When initiating a Full Burn, roll a die. The result is how many sectors you may move before you start drawing Nav Cards.
             <br /><span className="text-xs italic opacity-75">Note: You may not move farther than your Drive Core's range, regardless of the die roll.</span>
           </SpecialRuleBlock>
         )}

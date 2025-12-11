@@ -59,18 +59,18 @@ export interface ContentMap {
   [key: string]: SetupContentData;
 }
 
-export interface ScenarioStep {
+export interface SetupCardStep {
   id: string;
   overrides?: StepOverrides;
 }
 
-export interface ScenarioDef {
+export interface SetupCardDef {
   id: string;
   label: string;
   description?: string;
   requiredExpansion?: keyof Expansions;
   iconOverride?: string;
-  steps: ScenarioStep[];
+  steps: SetupCardStep[];
 }
 
 export interface StoryCardConfig {
@@ -116,8 +116,8 @@ export interface StoryCardDef {
 export interface GameState {
   playerCount: number;
   playerNames: string[];
-  scenarioValue: string;
-  scenarioName: string;
+  scenarioValue: string; // Keeping variable name for persistence compatibility, effectively "setupCardId"
+  scenarioName: string;  // Keeping variable name for persistence compatibility, effectively "setupCardName"
   selectedStoryCard: string;
   expansions: Expansions;
 }

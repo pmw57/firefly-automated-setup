@@ -99,7 +99,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
             
             {/* Detailed Setup Description Block */}
             {activeStoryCard.setupDescription && (
-                <SpecialRuleBlock source="story" title="Setup Changes">
+                <SpecialRuleBlock source="story" title="Story Override">
                     {activeStoryCard.setupDescription}
                 </SpecialRuleBlock>
             )}
@@ -107,6 +107,12 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
             {setupNote && !activeStoryCard.setupDescription && (
                 <SpecialRuleBlock source="warning" title="Location Override">
                     {setupNote}
+                </SpecialRuleBlock>
+            )}
+
+            {gameState.scenarioValue === 'TheRimsTheThing' && (
+                <SpecialRuleBlock source="scenario" title="Setup Override">
+                    <strong>The Rim's The Thing:</strong> Remember that only <strong>Border Space</strong> Nav Decks are used in this scenario. Choose a mission achievable with limited navigation options.
                 </SpecialRuleBlock>
             )}
          </div>
@@ -130,9 +136,9 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                   <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full font-bold">Pick one below or roll</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-                  {shortList.map((card, idx) => (
+                  {shortList.map((card) => (
                        <StoryCardGridItem 
-                          key={idx}
+                          key={card.title}
                           card={card}
                           isSelected={gameState.selectedStoryCard === card.title}
                           onClick={() => handleStoryCardSelect(card.title)}
@@ -176,9 +182,9 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
           <div className="h-[500px] overflow-y-auto border border-gray-200 rounded-lg bg-gray-50 p-2 custom-scrollbar">
               {filteredStories.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {filteredStories.map((card, idx) => (
+                      {filteredStories.map((card) => (
                           <StoryCardGridItem 
-                              key={idx}
+                              key={card.title}
                               card={card}
                               isSelected={gameState.selectedStoryCard === card.title}
                               onClick={() => handleStoryCardSelect(card.title)}

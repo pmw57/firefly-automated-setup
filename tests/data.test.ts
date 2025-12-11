@@ -1,22 +1,22 @@
 import { describe, it, expect } from 'vitest';
-import { SCENARIOS, STORY_CARDS, EXPANSIONS_METADATA, SETUP_CONTENT } from '../constants';
+import { SETUP_CARDS, STORY_CARDS, EXPANSIONS_METADATA, SETUP_CONTENT } from '../constants';
 
 describe('Data Integrity', () => {
-  describe('Scenarios', () => {
-    it('all scenarios have a valid requiredExpansion if set', () => {
-      SCENARIOS.forEach(scenario => {
-        if (scenario.requiredExpansion) {
-          const expansion = EXPANSIONS_METADATA.find(e => e.id === scenario.requiredExpansion);
+  describe('Setup Cards (Scenarios)', () => {
+    it('all setup cards have a valid requiredExpansion if set', () => {
+      SETUP_CARDS.forEach(setup => {
+        if (setup.requiredExpansion) {
+          const expansion = EXPANSIONS_METADATA.find(e => e.id === setup.requiredExpansion);
           expect(expansion).toBeDefined();
         }
       });
     });
 
-    it('all steps in scenarios map to valid SETUP_CONTENT', () => {
-      SCENARIOS.forEach(scenario => {
-        scenario.steps.forEach(step => {
+    it('all steps in setup cards map to valid SETUP_CONTENT', () => {
+      SETUP_CARDS.forEach(setup => {
+        setup.steps.forEach(step => {
           const content = SETUP_CONTENT[step.id];
-          expect(content, `Scenario "${scenario.id}" references missing step "${step.id}"`).toBeDefined();
+          expect(content, `Setup Card "${setup.id}" references missing step "${step.id}"`).toBeDefined();
         });
       });
     });

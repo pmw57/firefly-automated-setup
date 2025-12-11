@@ -26,8 +26,9 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
   if (id.includes('D_TIME_LIMIT')) {
     return (
-      <SpecialRuleBlock source="scenario" title="Game Timer">
-        <div className="space-y-3">
+      <SpecialRuleBlock source="scenario" title="Setup Override">
+        <strong>Game Timer:</strong>
+        <div className="space-y-3 mt-1">
           <p>Give a pile of <strong>20 Disgruntled Tokens</strong> to the player taking the first turn. These tokens will be used as Game Length Tokens.</p>
           <p>Each time that player takes a turn, discard one of the Disgruntled Tokens. When the final token is discarded, everyone gets one final turn, then the game is over.</p>
           <p className="font-bold text-red-700">If time runs out before the Story Card is completed, the player with the most credits wins.</p>
@@ -38,8 +39,9 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
   if (id.includes('D_SHUTTLE')) {
     return (
-      <SpecialRuleBlock source="scenario" title="Draft Shuttles from Supply">
-        <ul className="list-decimal ml-5 space-y-2">
+      <SpecialRuleBlock source="scenario" title="Setup Override">
+        <strong>Draft Shuttles from Supply:</strong>
+        <ul className="list-decimal ml-5 space-y-2 mt-1">
           <li>Pull all <strong>Shuttles</strong> from the Supply Decks.</li>
           <li>Starting with the winner of the Ship Roll, each player takes <strong>1 Shuttle</strong> for free.</li>
           <li>Selection passes to the <strong>left</strong>.</li>
@@ -62,8 +64,9 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
   if (id.includes('D_LOCAL_HEROES')) {
     return (
-      <SpecialRuleBlock source="scenario" title="Local Heroes Bonuses">
-        <ul className="list-disc ml-5 space-y-2">
+      <SpecialRuleBlock source="scenario" title="Setup Override">
+        <strong>Local Heroes Bonuses:</strong>
+        <ul className="list-disc ml-5 space-y-2 mt-1">
           <li><strong>Shore Leave:</strong> At your Haven, you may use a Buy Action to take Shore Leave for free. Remove all Disgruntled and Wanted tokens.</li>
           <li><strong>Home Field Advantage:</strong> When you proceed with Misbehaving in the same System as your Haven, take <strong>$100</strong>.</li>
         </ul>
@@ -73,8 +76,9 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
   if (id.includes('D_ALLIANCE_ALERT')) {
     return (
-      <SpecialRuleBlock source="scenario" title="Alliance Alert Cards">
-        <div className="space-y-3">
+      <SpecialRuleBlock source="scenario" title="Setup Override">
+        <strong>Alliance Alert Cards:</strong>
+        <div className="space-y-3 mt-1">
           <p>Begin the game with <strong>one random Alliance Alert Card</strong> in play.</p>
           <p className="text-sm italic">Each Alert has a rule that affects all players. When a Misbehave Card directs you to draw a new Alert Card, place the current Alert at the bottom of the Alert Deck.</p>
         </div>
@@ -84,8 +88,9 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
   if (id.includes('D_PRESSURES_HIGH')) {
     return (
-      <SpecialRuleBlock source="scenario" title="The Pressure's High">
-        <div className="space-y-4">
+      <SpecialRuleBlock source="scenario" title="Setup Override">
+        <strong>The Pressure's High:</strong>
+        <div className="space-y-4 mt-1">
           <div>
             <strong className="block text-red-800 mb-1">Alliance Alert</strong>
             <p>Begin the game with one random Alliance Alert Card in play.</p>
@@ -104,8 +109,9 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
   if (id.includes('D_STRIP_MINING')) {
     return (
-      <SpecialRuleBlock source="scenario" title="The Dinosaur Draft">
-        <ol className="list-decimal ml-5 space-y-2 text-sm">
+      <SpecialRuleBlock source="scenario" title="Setup Override">
+        <strong>The Dinosaur Draft:</strong>
+        <ol className="list-decimal ml-5 space-y-2 text-sm mt-1">
           <li>Choose 1 Supply Deck to be "Strip Mined".</li>
           <li>The winner of the Ship Roll claims the <strong>Dinosaur</strong>.</li>
           <li>Reveal <strong>{gameState.playerCount} cards</strong> from the top of the chosen deck.</li>

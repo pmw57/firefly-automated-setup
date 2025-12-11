@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GameState, Step, Expansions } from '../types';
-import { SCENARIOS, SETUP_CONTENT, STORY_CARDS, EXPANSIONS_METADATA } from '../constants';
+import { SETUP_CARDS, SETUP_CONTENT, STORY_CARDS, EXPANSIONS_METADATA } from '../constants';
 import { InitialForm } from './InitialForm';
 import { StepContent } from './StepContent';
 import { ProgressBar } from './ProgressBar';
@@ -33,17 +33,17 @@ const getDefaultGameState = (): GameState => {
 
 // Helper to rebuild flow from a game state (Moved outside to satisfy React Hooks deps)
 const calculateFlow = (state: GameState): Step[] => {
-  const scenarioDef = SCENARIOS.find(s => s.id === state.scenarioValue) || SCENARIOS[0];
+  const setupDef = SETUP_CARDS.find(s => s.id === state.scenarioValue) || SETUP_CARDS[0];
   const newFlow: Step[] = [];
 
-  scenarioDef.steps.forEach(scenarioStep => {
-    const content = SETUP_CONTENT[scenarioStep.id];
+  setupDef.steps.forEach(setupStep => {
+    const content = SETUP_CONTENT[setupStep.id];
     if (content) {
       newFlow.push({
         type: content.type,
-        id: content.id || content.elementId || scenarioStep.id,
+        id: content.id || content.elementId || setupStep.id,
         data: content,
-        overrides: scenarioStep.overrides
+        overrides: setupStep.overrides
       });
     }
   });
@@ -185,16 +185,25 @@ const SetupWizard: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg mb-6 shadow-sm border border-gray-200 flex justify-between items-center transition-all duration-300">
-        <div>
-           <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Scenario</span>
-           <div className="font-bold text-green-900">{gameState.scenarioName}</div>
+      {/* Sticky Header with Setup Details */}
+      <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg mb-6 shadow-sm border border-gray-200 flex justify-between items-center transition-all duration-300 sticky top-0 z-30">
+        <div className="flex flex-col">
+           <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Active Game</span>
+           <div className="flex flex-wrap items-center gap-x-2 font-bold text-green-900 text-sm md:text-base leading-tight">
+              <span className="text-blue-900">{gameState.scenarioName}</span>
+              {gameState.selectedStoryCard && (
+                <>
+                  <span className="text-gray-400 hidden sm:inline">•</span>
+                  <span className="text-amber-800 block sm:inline">{gameState.selectedStoryCard}</span>
+                </>
+              )}
+           </div>
         </div>
         <button 
           type="button"
           onClick={handleResetClick}
           className={`
-            text-xs font-bold underline focus:outline-none focus:ring-2 rounded px-2 py-1 transition-colors duration-200
+            text-xs font-bold underline focus:outline-none focus:ring-2 rounded px-2 py-1 transition-colors duration-200 ml-4 shrink-0
             ${showConfirmReset 
               ? 'bg-red-600 text-white hover:bg-red-700 ring-red-500 no-underline shadow-md' 
               : 'text-red-600 hover:text-red-800 hover:bg-red-50 focus:ring-red-500'

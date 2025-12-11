@@ -20,12 +20,13 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, ga
   return (
     <div className="space-y-4">
       {overrides.noAlertTokens ? (
-        <SpecialRuleBlock source="scenario" title="Safe Skies">
-          Do not use Reaver or Alliance Alert Tokens for this scenario.
+        <SpecialRuleBlock source="scenario" title="Setup Override">
+          <strong>Safe Skies:</strong> Do not use Reaver or Alliance Alert Tokens for this scenario.
         </SpecialRuleBlock>
       ) : overrides.awfulCrowdedAllianceMode && (
-        <SpecialRuleBlock source="scenario" title="Awful Crowded">
-          <ul className="list-disc ml-4 space-y-1">
+        <SpecialRuleBlock source="scenario" title="Setup Override">
+          <strong>Awful Crowded:</strong>
+          <ul className="list-disc ml-4 space-y-1 mt-1">
             <li>Place an {renderAction("Alert Token")} in <strong>every planetary sector</strong>.</li>
             <li><strong>Alliance Space:</strong> Place Alliance Alert Tokens.</li>
             <li><strong>Border & Rim Space:</strong> Place Reaver Alert Tokens.</li>
@@ -37,13 +38,13 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, ga
       )}
 
       {placeAllianceAlertsInAllianceSpace && (
-        <SpecialRuleBlock source="story" title={activeStoryCard.title}>
+        <SpecialRuleBlock source="story" title="Story Override">
           Place an {renderAction("Alliance Alert Token")} on <strong>every planetary sector in Alliance Space</strong>.
         </SpecialRuleBlock>
       )}
 
       {placeMixedAlertTokens && (
-        <SpecialRuleBlock source="story" title={activeStoryCard.title}>
+        <SpecialRuleBlock source="story" title="Story Override">
           Place <strong>3 Alliance Alert Tokens</strong> in the 'Verse:
           <ul className="list-disc ml-4 mt-1">
             <li>1 in <strong>Alliance Space</strong></li>
@@ -54,13 +55,13 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, ga
       )}
 
       {alertStackCount > 0 && (
-        <SpecialRuleBlock source="story" title={activeStoryCard.title}>
+        <SpecialRuleBlock source="story" title="Story Override">
           Create a stack of <strong>{alertStackCount} Alliance Alert Tokens</strong> (3 per player).
         </SpecialRuleBlock>
       )}
 
       {smugglersBluesSetup && (
-        <SpecialRuleBlock source="story" title="Smuggler's Blues">
+        <SpecialRuleBlock source="story" title="Story Override">
           {useSmugglersRimRule ? (
             <span>Place <strong>2 Contraband</strong> on each Planetary Sector in <strong>Rim Space</strong>.</span>
           ) : (
@@ -70,7 +71,7 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, ga
       )}
 
       {startWithAlertCard && (
-        <SpecialRuleBlock source="story" title="High Alert">
+        <SpecialRuleBlock source="story" title="Story Override">
           Begin the game with one random Alliance Alert Card in play.
         </SpecialRuleBlock>
       )}

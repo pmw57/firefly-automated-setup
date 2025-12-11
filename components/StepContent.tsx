@@ -48,19 +48,31 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
 
   return (
     <div className="animate-fade-in-up">
-      {/* Floating Quote Panel - Top Right */}
-      <QuotePanel stepId={stepId} />
-
-      <div>
-        <h2 className="text-2xl font-bold text-gray-800 mb-4 font-western border-b-2 border-green-800 pb-2 inline-block pr-10">
+      
+      {/* 
+        Flex Layout for Header:
+        - flex-wrap: Allows items to wrap to new line if space runs out.
+        - Heading is FIRST in DOM, so it stays top-left.
+        - QuotePanel is SECOND.
+        - If Heading fits with Quote, they sit side-by-side.
+        - If Heading is too wide, Quote wraps to the next line (Below Heading).
+        - flex-1 on Heading ensures it takes up available space.
+        - min-w on Heading ensures it doesn't get crushed before wrapping occurs.
+      */}
+      <div className="flex flex-wrap items-start justify-between mb-6 gap-4">
+        <h2 className="text-2xl font-bold text-gray-800 font-western border-b-2 border-green-800 pb-2 pr-10 flex-1 min-w-[200px]">
           <span className="text-green-700 mr-2">{stepIndex}.</span>
           {step.data?.title || step.id}
         </h2>
 
-        {/* Main Content Area */}
-        <div className="relative">
-          {renderStepBody()}
+        <div className="w-full lg:w-1/3 shrink-0">
+           <QuotePanel stepId={stepId} />
         </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="relative">
+        {renderStepBody()}
       </div>
 
       <div className="mt-8 flex justify-between clear-both pt-6 border-t border-gray-200">
