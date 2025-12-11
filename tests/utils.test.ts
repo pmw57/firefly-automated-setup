@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { calculateDraftOutcome, determineJobMode, calculateStartingResources } from '../utils';
-import { DiceResult, StoryCardDef } from '../types';
+import { DiceResult, StoryCardDef, StoryCardConfig, StepOverrides } from '../types';
 
 describe('utils', () => {
   describe('calculateDraftOutcome', () => {
@@ -42,7 +42,7 @@ describe('utils', () => {
   });
 
   // Shared Helper
-  const mockStory = (config: any = {}): StoryCardDef => ({
+  const mockStory = (config: Partial<StoryCardConfig> = {}): StoryCardDef => ({
     title: 'Mock Story',
     intro: 'Intro',
     setupConfig: config
@@ -52,8 +52,6 @@ describe('utils', () => {
     it('returns story mode if defined (Highest Priority)', () => {
       const story = mockStory({ jobDrawMode: 'no_jobs' });
       // Even if overrides are present, story config takes precedence in current logic
-      // Note: we removed rimJobMode from StepOverrides, so passing it now would be invalid TS or ignored at runtime.
-      // We pass an empty override object here to satisfy the test.
       expect(determineJobMode(story, {})).toBe('no_jobs');
     });
 
@@ -68,10 +66,9 @@ describe('utils', () => {
       ['allianceHighAlertJobMode', 'high_alert_jobs'],
       ['buttonsJobMode', 'buttons_jobs'],
       ['awfulJobMode', 'awful_jobs']
-    ])('returns %s when %s override is true', (key, expectedMode) => {
-      const overrides = { [key]: true };
-      // Explicitly cast to any to allow dynamic key access for the test
-      expect(determineJobMode(mockStory(), overrides as any)).toBe(expectedMode);
+    ])('returns %s when %s override is true', (key: string, expectedMode: string) => {
+      const overrides = { [key]: true } as StepOverrides;
+      expect(determineJobMode(mockStory(), overrides)).toBe(expectedMode);
     });
   });
 

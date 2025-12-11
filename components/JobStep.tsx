@@ -83,18 +83,15 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
            contacts = ['Amnon Duul', 'Lord Harrow', 'Magistrate Higgins'];
        } else if (jobMode === 'awful_jobs') {
            contacts = ['Harken', 'Amnon Duul', 'Patience'];
-       } else if (jobMode === 'high_alert_jobs') {
-           // Any contact EXCEPT Harken
-           return (
-               <SpecialRuleBlock source="scenario" title="Alliance High Alert">
-                   <p className="mb-2"><strong>Do not use Harken.</strong></p>
-                   <p>Draw <strong>3 starting jobs</strong> from <strong>any combination</strong> of other Contacts.</p>
-                   <p className="opacity-75 mt-2">Players may discard any starting jobs they do not want.</p>
-               </SpecialRuleBlock>
-           );
        } else {
            // Standard Logic (Also used for Rim Jobs where decks are modified but procedure is standard)
+           // This also serves as the base for Alliance High Alert
            contacts = ['Harken', 'Badger', 'Amnon Duul', 'Patience', 'Niska'];
+       }
+
+       // High Alert Logic: Remove Harken from standard list
+       if (jobMode === 'high_alert_jobs') {
+           contacts = contacts.filter(c => c !== 'Harken');
        }
 
        // Apply Filters (Forbidden / Allowed)
@@ -116,6 +113,12 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                {showStoryOverride && activeStoryCard.setupDescription && (
                    <SpecialRuleBlock source="story" title="Story Override">
                        {activeStoryCard.setupDescription}
+                   </SpecialRuleBlock>
+               )}
+
+               {jobMode === 'high_alert_jobs' && (
+                   <SpecialRuleBlock source="scenario" title="Setup Override">
+                       <strong>Harken is unavailable.</strong> The Harken Contact Deck is removed for this scenario.
                    </SpecialRuleBlock>
                )}
 

@@ -13,6 +13,7 @@ interface DraftStepProps {
 
 export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
   const [draftState, setDraftState] = useState<DraftState | null>(null);
+  const [isManualEntry, setIsManualEntry] = useState(false);
 
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
@@ -28,12 +29,12 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
     // 2. Automate Tie Breaking
     // We use a separate array to track effective rolls for logic determination.
     // This allows us to re-roll for ties without overwriting the visual 'initialRolls' that caused the tie.
-    let logicRolls = initialRolls.map(r => r.roll);
+    const logicRolls = initialRolls.map(r => r.roll);
     let candidates = initialRolls.map((_, i) => i); 
     let winnerIndex = -1;
 
     // Loop until we have a single winner
-    while (true) {
+    while (winnerIndex === -1) {
         // Find max roll value among current candidates using the logic array
         let currentMax = -1;
         candidates.forEach(i => {
@@ -46,20 +47,22 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
         if (tiedCandidates.length === 1) {
             // We have a winner
             winnerIndex = tiedCandidates[0];
-            break;
+        } else {
+            // Multiple winners: Re-roll ONLY for the tied players (internal logic only)
+            candidates = tiedCandidates;
+            candidates.forEach(i => {
+                logicRolls[i] = Math.floor(Math.random() * 6) + 1;
+            });
+            // Loop continues to check results of the re-roll
         }
-
-        // Multiple winners: Re-roll ONLY for the tied players (internal logic only)
-        candidates = tiedCandidates;
-        candidates.forEach(i => {
-            logicRolls[i] = Math.floor(Math.random() * 6) + 1;
-        });
-        // Loop continues to check results of the re-roll
     }
 
     // Pass the INITIAL display rolls to the state, but force the winner based on the logic result
     const newState = calculateDraftOutcome(initialRolls, gameState.playerCount, winnerIndex);
     setDraftState(newState);
+    
+    // Disable manual override buttons since the computer calculated the result
+    setIsManualEntry(false);
   };
 
   const handleRollChange = (index: number, newValue: string) => {
@@ -67,9 +70,13 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
     const val = parseInt(newValue) || 0;
     const newRolls = [...draftState.rolls];
     newRolls[index] = { ...newRolls[index], roll: val };
+    
     // When manually changing, we reset the override winner index (3rd param) so it recalculates based on input
     const newState = calculateDraftOutcome(newRolls, gameState.playerCount);
     setDraftState(newState);
+    
+    // Enable manual override buttons since the user is editing values
+    setIsManualEntry(true);
   };
 
   const handleSetWinner = (index: number) => {
@@ -107,6 +114,7 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
             draftState={draftState} 
             onRollChange={handleRollChange} 
             onSetWinner={handleSetWinner}
+            allowManualOverride={isManualEntry}
           />
           
           {/* RULES BLOCK AREA */}

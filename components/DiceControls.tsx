@@ -5,9 +5,10 @@ interface DiceControlsProps {
   draftState: DraftState | null;
   onRollChange: (index: number, newValue: string) => void;
   onSetWinner: (index: number) => void;
+  allowManualOverride?: boolean;
 }
 
-export const DiceControls: React.FC<DiceControlsProps> = ({ draftState, onRollChange, onSetWinner }) => {
+export const DiceControls: React.FC<DiceControlsProps> = ({ draftState, onRollChange, onSetWinner, allowManualOverride = false }) => {
   if (!draftState) return null;
 
   // Find the highest roll to identify potential ties visually
@@ -38,9 +39,10 @@ export const DiceControls: React.FC<DiceControlsProps> = ({ draftState, onRollCh
         >
           <button
              type="button"
-             onClick={() => onSetWinner(i)}
-             className={`text-xs mb-2 cursor-pointer hover:underline focus:outline-none ${labelStyle}`}
-             title={isWinner ? "Current Winner" : "Click to declare Winner"}
+             onClick={() => allowManualOverride && onSetWinner(i)}
+             disabled={!allowManualOverride}
+             className={`text-xs mb-2 focus:outline-none ${labelStyle} ${allowManualOverride ? 'cursor-pointer hover:underline' : 'cursor-default'}`}
+             title={isWinner ? "Current Winner" : allowManualOverride ? "Click to declare Winner" : "Auto-determined"}
           >
             {r.player} {isWinner && '👑'}
           </button>
@@ -57,8 +59,8 @@ export const DiceControls: React.FC<DiceControlsProps> = ({ draftState, onRollCh
             />
           </div>
           
-          {/* Tie Breaker Action */}
-          {!isWinner && isMax && (
+          {/* Tie Breaker Action - Only show if Manual Mode is active */}
+          {!isWinner && isMax && allowManualOverride && (
               <button 
                 type="button"
                 onClick={() => onSetWinner(i)}
