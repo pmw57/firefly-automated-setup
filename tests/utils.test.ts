@@ -67,7 +67,9 @@ describe('utils', () => {
       ['buttonsJobMode', 'buttons_jobs'],
       ['awfulJobMode', 'awful_jobs']
     ])('returns %s when %s override is true', (key: string, expectedMode: string) => {
-      const overrides = { [key]: true } as StepOverrides;
+      const overrideKey = key as keyof StepOverrides;
+      const overrides: StepOverrides = { [overrideKey]: true };
+      
       expect(determineJobMode(mockStory(), overrides)).toBe(expectedMode);
     });
   });

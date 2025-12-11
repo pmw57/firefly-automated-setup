@@ -16,7 +16,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
   const stepId = step.data?.id || step.id;
 
   const jobMode = determineJobMode(activeStoryCard, overrides);
-  const { forbiddenStartingContact, allowedStartingContacts, removePiracyJobs, smugglersBluesSetup, removeJobDecks, sharedHandSetup } = activeStoryCard.setupConfig || {};
+  const { forbiddenStartingContact, allowedStartingContacts, smugglersBluesSetup, removeJobDecks, sharedHandSetup } = activeStoryCard.setupConfig || {};
 
   const renderJobInstructions = () => {
        // 1. Story Card Modes (Highest Priority)
@@ -31,18 +31,33 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
 
        if (jobMode === 'caper_start') {
            return (
-               <SpecialRuleBlock source="story" title="Special Story Setup">
+               <SpecialRuleBlock source="story" title="Story Override">
                    <p><strong>Do not deal Starting Jobs.</strong></p>
                    <p>Each player begins the game with <strong>one Caper Card</strong> instead.</p>
                </SpecialRuleBlock>
            );
        }
+
+       // Special Handling for 'no_jobs' to distinguish source
        if (jobMode === 'no_jobs') {
-           return <div className="p-4 bg-gray-100 rounded text-center font-bold text-gray-600 border border-gray-200">Do not take Starting Jobs.</div>;
+           if (overrides.browncoatJobMode) {
+               return (
+                   <SpecialRuleBlock source="scenario" title="Setup Override">
+                       <p><strong>No Starting Jobs.</strong></p>
+                       <p>Crews must find work on their own out in the black.</p>
+                   </SpecialRuleBlock>
+               );
+           }
+           return (
+               <SpecialRuleBlock source="story" title="Story Override">
+                   <p><strong>Do not take Starting Jobs.</strong></p>
+               </SpecialRuleBlock>
+           );
        }
+
        if (jobMode === 'wind_takes_us') {
            return (
-               <SpecialRuleBlock source="story" title="Where The Wind Takes Us">
+               <SpecialRuleBlock source="story" title="Story Override">
                    <p className="mb-2">Each player chooses <strong>one Contact Deck</strong> of their choice:</p>
                    <ul className="list-disc ml-5 mb-3 text-sm">
                        <li>Draw <strong>{gameState.playerCount <= 3 ? '4' : '3'} Jobs</strong> from that deck.</li>
@@ -55,7 +70,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
        }
        if (jobMode === 'draft_choice') {
            return (
-               <SpecialRuleBlock source="story" title="Draft Choice">
+               <SpecialRuleBlock source="story" title="Story Override">
                    <p className="mb-2">In reverse player order, each player chooses <strong>3 different Contact Decks</strong>.</p>
                    <p className="mb-2">Draw the top Job Card from each chosen deck.</p>
                    {forbiddenStartingContact === 'Niska' && <p className="text-red-600 text-sm font-bold">Note: Mr. Universe is excluded.</p>}
@@ -68,7 +83,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
 
        if (jobMode === 'times_jobs') {
            return (
-               <SpecialRuleBlock source="scenario" title="Time's Not On Our Side">
+               <SpecialRuleBlock source="scenario" title="Setup Override">
                    <p>Each player draws <strong>3 jobs</strong> from <strong>one Contact Deck</strong> of their choice.</p>
                    <p className="text-sm italic opacity-80 mt-1">Players may draw from the same Contact.</p>
                    <p className="opacity-75 mt-2">Players may discard any starting jobs they do not want.</p>
@@ -122,6 +137,35 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                    </SpecialRuleBlock>
                )}
 
+               {jobMode === 'awful_jobs' && (
+                   <SpecialRuleBlock source="scenario" title="Setup Override">
+                       {forbiddenStartingContact === 'Harken' ? (
+                           <>
+                               <strong>Limited Contacts.</strong> This scenario normally draws from Harken, Amnon Duul, and Patience.
+                               <div className="mt-1 text-amber-800 font-bold text-xs">
+                                   ⚠️ Story Card Conflict: Harken is unavailable. Draw from Amnon Duul and Patience only.
+                               </div>
+                           </>
+                       ) : (
+                           <><strong>Limited Contacts.</strong> Starting Jobs are drawn only from Harken, Amnon Duul, and Patience.</>
+                       )}
+                   </SpecialRuleBlock>
+               )}
+
+               {jobMode === 'buttons_jobs' && (
+                   <SpecialRuleBlock source="scenario" title="Setup Override">
+                        <strong>Specific Contacts:</strong> Draw from Amnon Duul, Lord Harrow, and Magistrate Higgins.
+                        <br/>
+                        <strong>Caper Bonus:</strong> Draw 1 Caper Card.
+                   </SpecialRuleBlock>
+               )}
+
+               {gameState.scenarioValue === 'TheRimsTheThing' && (
+                   <SpecialRuleBlock source="scenario" title="Setup Override">
+                       <strong>Modified Contact Decks.</strong> The Contact Decks contain only cards from the Blue Sun and Kalidasa expansions.
+                   </SpecialRuleBlock>
+               )}
+
                <p className="mb-3 font-bold text-gray-700">Draw 1 Job Card from each:</p>
                <div className="flex flex-wrap gap-2 mb-4">
                    {contacts.map(contact => (
@@ -131,9 +175,6 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                    ))}
                </div>
                
-               {/* Specific Extra Instruction for Buttons */}
-               {jobMode === 'buttons_jobs' && <p className="mb-2 text-sm font-bold text-purple-700">+ Draw 1 Caper Card</p>}
-
                <p className="text-sm text-gray-600 border-t pt-2 mt-2">
                   Discard any unwanted jobs. {totalJobCards > 3 && <span>Keep a hand of <strong>up to three</strong> Job Cards.</span>}
                </p>
@@ -144,7 +185,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
   return (
       <div className="space-y-4">
           {stepId.includes('D_RIM_JOBS') ? (
-             <SpecialRuleBlock source="scenario" title="Rim Space Jobs">
+             <SpecialRuleBlock source="scenario" title="Setup Override">
                <p className="leading-relaxed mb-2">
                  Separate the Job Cards from the <InlineExpansionIcon type="blue" /> and <InlineExpansionIcon type="kalidasa" /> expansions (marked with their icons).
                </p>
@@ -156,7 +197,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
           ) : (
              <>
                 {sharedHandSetup && (
-                    <SpecialRuleBlock source="story" title="Setup: Shared Hand">
+                    <SpecialRuleBlock source="story" title="Story Override">
                          <p>
                              Place <strong>one Job from each Contact</strong> face up on top of its deck. 
                              These face up Jobs form a shared hand of Inactive Jobs that everyone may use.
@@ -167,13 +208,13 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                 {renderJobInstructions()}
                 
                 {smugglersBluesSetup && (
-                     <SpecialRuleBlock source="story" title="Contraband Seed">
+                     <SpecialRuleBlock source="story" title="Story Override">
                         Place a $2000 bill under Amnon Duul, Patience, Badger, and Niska's Contact Decks.
                      </SpecialRuleBlock>
                 )}
 
-                {removePiracyJobs && (
-                    <SpecialRuleBlock source="story" title="Cleanup">
+                {activeStoryCard.setupConfig?.removePiracyJobs && (
+                    <SpecialRuleBlock source="story" title="Story Override">
                         Pull all remaining Piracy Jobs from the Contact Decks and discard them. Reshuffle.
                     </SpecialRuleBlock>
                 )}

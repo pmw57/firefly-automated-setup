@@ -1,3 +1,4 @@
+import React from 'react';
 import { Expansions } from '../types';
 import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../constants';
 
