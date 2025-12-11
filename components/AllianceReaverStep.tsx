@@ -30,7 +30,7 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, ga
             <li>Place an {renderAction("Alert Token")} in <strong>every planetary sector</strong>.</li>
             <li><strong>Alliance Space:</strong> Place Alliance Alert Tokens.</li>
             <li><strong>Border & Rim Space:</strong> Place Reaver Alert Tokens.</li>
-            <li className="text-red-700 italic font-bold">Do not place Alert Tokens on players' starting locations.</li>
+            <li className="text-red-700 dark:text-red-400 italic font-bold">Do not place Alert Tokens on players' starting locations.</li>
             <li><strong>Alliance Ship movement</strong> does not generate new Alert Tokens.</li>
             <li><strong>Reaver Ship movement</strong> generates new Alert Tokens.</li>
           </ul>
@@ -76,20 +76,20 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, ga
         </SpecialRuleBlock>
       )}
 
-      <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm mt-4">
-        <h3 className="text-lg font-bold text-gray-800 mb-3 font-western tracking-wide border-b-2 border-gray-100 pb-1">Standard Ship Placement</h3>
+      <div className="bg-white dark:bg-slate-900/80 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm mt-4 transition-colors duration-300">
+        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-3 font-western tracking-wide border-b-2 border-gray-100 dark:border-slate-700 pb-1">Standard Ship Placement</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-3 bg-blue-50 rounded border border-blue-100">
-            <strong className="block text-blue-900 text-sm uppercase mb-1">Alliance Cruiser</strong>
-            <p className="text-sm text-blue-800">
+          <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded border border-blue-100 dark:border-blue-800">
+            <strong className="block text-blue-900 dark:text-blue-300 text-sm uppercase mb-1">Alliance Cruiser</strong>
+            <p className="text-sm text-blue-800 dark:text-blue-200">
               {overrides.extraCruisers
                 ? <span>Place a Cruiser at <strong>Regulus</strong> AND <strong>Persephone</strong>.</span>
                 : <span>Place the Cruiser at <strong>Londinium</strong>.</span>}
             </p>
           </div>
-          <div className="p-3 bg-red-50 rounded border border-red-100">
-            <strong className="block text-red-900 text-sm uppercase mb-1">Reaver Cutter</strong>
-            <p className="text-sm text-red-800">
+          <div className="p-3 bg-red-50 dark:bg-red-900/30 rounded border border-red-100 dark:border-red-800">
+            <strong className="block text-red-900 dark:text-red-300 text-sm uppercase mb-1">Reaver Cutter</strong>
+            <p className="text-sm text-red-800 dark:text-red-200">
               {gameState.expansions.blue
                 ? <span>Place <strong>3 Cutters</strong> in the border sectors closest to <strong>Miranda</strong>.</span>
                 : <span>Place <strong>1 Cutter</strong> at the <strong>Firefly logo</strong> (Regina/Osiris).</span>}

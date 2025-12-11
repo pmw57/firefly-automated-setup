@@ -124,7 +124,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
        const showStoryOverride = (forbiddenStartingContact || (allowedStartingContacts && allowedStartingContacts.length > 0));
 
        return (
-           <div className="bg-white p-4 rounded border border-gray-200">
+           <div className="bg-white dark:bg-slate-900/80 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm transition-colors duration-300">
                {showStoryOverride && activeStoryCard.setupDescription && (
                    <SpecialRuleBlock source="story" title="Story Override">
                        {activeStoryCard.setupDescription}
@@ -166,16 +166,16 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                    </SpecialRuleBlock>
                )}
 
-               <p className="mb-3 font-bold text-gray-700">Draw 1 Job Card from each:</p>
+               <p className="mb-4 font-bold text-gray-700 dark:text-gray-200 text-lg">Draw 1 Job Card from each:</p>
                <div className="flex flex-wrap gap-2 mb-4">
                    {contacts.map(contact => (
-                       <span key={contact} className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm border border-gray-300 shadow-sm font-medium">
+                       <span key={contact} className="px-3 py-1 bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-gray-300 rounded-full text-sm border border-gray-300 dark:border-slate-600 shadow-sm font-medium">
                            {contact}
                        </span>
                    ))}
                </div>
                
-               <p className="text-sm text-gray-600 border-t pt-2 mt-2">
+               <p className="text-sm text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-slate-700 pt-3 mt-2 italic">
                   Discard any unwanted jobs. {totalJobCards > 3 && <span>Keep a hand of <strong>up to three</strong> Job Cards.</span>}
                </p>
            </div>

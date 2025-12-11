@@ -71,16 +71,16 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
   }, []);
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-200 animate-fade-in">
-       <div className="flex justify-between items-center mb-6 border-b pb-2">
-           <h2 className="text-2xl font-bold text-gray-800 font-western">Select Setup Card</h2>
-           <span className="text-xs font-bold bg-green-100 text-green-800 px-2 py-1 rounded">Part 2 of 2</span>
+    <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-lg p-6 md:p-8 border border-gray-200 dark:border-zinc-800 animate-fade-in transition-colors duration-300">
+       <div className="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-zinc-800 pb-2">
+           <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 font-western">Select Setup Card</h2>
+           <span className="text-xs font-bold bg-green-100 text-green-800 border border-green-200 px-2 py-1 rounded">Part 2 of 2</span>
         </div>
 
        <div className="mb-8 relative">
-        <label className="block font-bold text-gray-700 mb-2 uppercase tracking-wide text-xs">Available Setup Cards</label>
+        <label className="block font-bold text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-wide text-xs">Available Setup Cards</label>
         
-        <div className="w-full border border-gray-200 rounded-lg shadow-sm bg-white overflow-hidden flex flex-col">
+        <div className="w-full border border-gray-200 dark:border-zinc-800 rounded-lg shadow-sm bg-white dark:bg-black/20 overflow-hidden flex flex-col">
           {availableSetups.map(opt => {
             const isSelected = gameState.setupCardId === opt.id;
             return (
@@ -89,16 +89,28 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
                 ref={isSelected ? selectedRef : null}
                 type="button"
                 onClick={() => handleSetupCardSelect(opt.id, opt.label)}
-                className={`flex items-stretch text-left cursor-pointer border-b border-gray-100 last:border-0 transition-colors focus:outline-none focus:bg-green-50 focus:z-10 focus:ring-inset focus:ring-2 focus:ring-green-500 ${isSelected ? 'bg-green-50' : 'hover:bg-gray-50'}`}
+                className={`
+                  flex items-stretch text-left cursor-pointer border-b last:border-0 transition-colors focus:outline-none focus:z-10 focus:ring-inset focus:ring-2 focus:ring-green-500
+                  ${isSelected 
+                    ? 'bg-green-50 dark:bg-green-900/20 border-gray-200 dark:border-zinc-700' 
+                    : 'border-gray-100 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800'
+                  }
+                `}
                 aria-pressed={isSelected}
               >
-                 <div className={`w-16 flex items-center justify-center border-r border-gray-100 p-2 shrink-0 ${isSelected ? 'bg-green-100/50' : 'bg-gray-50/50'}`}>
+                 <div className={`
+                   w-16 flex items-center justify-center border-r p-2 shrink-0
+                   ${isSelected 
+                     ? 'bg-green-100/50 dark:bg-green-900/40 border-gray-200 dark:border-zinc-700' 
+                     : 'bg-gray-50/50 dark:bg-zinc-900/50 border-gray-100 dark:border-zinc-800'
+                   }
+                 `}>
                     {(opt.iconOverride || opt.requiredExpansion) ? (
-                       <div className="w-10 h-10 rounded overflow-hidden shadow-sm border border-gray-300">
+                       <div className="w-10 h-10 rounded overflow-hidden shadow-sm border border-gray-300 dark:border-zinc-600">
                          {getExpansionIcon(opt.iconOverride || opt.requiredExpansion)}
                        </div>
                     ) : (
-                       <div className="w-10 h-10 rounded bg-white flex items-center justify-center border border-gray-300 text-gray-400 font-bold text-sm">
+                       <div className="w-10 h-10 rounded bg-white dark:bg-zinc-800 flex items-center justify-center border border-gray-300 dark:border-zinc-600 text-gray-400 dark:text-zinc-500 font-bold text-sm">
                          —
                        </div>
                     )}
@@ -106,13 +118,13 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
 
                  <div className="flex-1 p-4 flex flex-col justify-center relative">
                     <div className="flex items-center justify-between mb-1">
-                      <span className={`text-lg ${isSelected ? 'font-bold text-green-900' : 'font-medium text-gray-800'}`}>
+                      <span className={`text-lg ${isSelected ? 'font-bold text-green-900 dark:text-green-300' : 'font-medium text-gray-800 dark:text-gray-300'}`}>
                           {opt.label}
                       </span>
-                      {isSelected && <span className="text-green-600 font-bold text-xl">✓</span>}
+                      {isSelected && <span className="text-green-600 dark:text-green-500 font-bold text-xl">✓</span>}
                     </div>
                     {opt.description && (
-                      <p className={`text-sm ${isSelected ? 'text-green-800' : 'text-gray-500'} line-clamp-2`}>
+                      <p className={`text-sm ${isSelected ? 'text-green-800 dark:text-green-200/60' : 'text-gray-500 dark:text-zinc-500'} line-clamp-2`}>
                         {opt.description}
                       </p>
                     )}

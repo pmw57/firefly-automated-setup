@@ -50,18 +50,13 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
     <div className="animate-fade-in-up">
       
       {/* 
-        Flex Layout for Header:
-        - flex-wrap: Allows items to wrap to new line if space runs out.
-        - Heading is FIRST in DOM, so it stays top-left.
-        - QuotePanel is SECOND.
-        - If Heading fits with Quote, they sit side-by-side.
-        - If Heading is too wide, Quote wraps to the next line (Below Heading).
-        - flex-1 on Heading ensures it takes up available space.
-        - min-w on Heading ensures it doesn't get crushed before wrapping occurs.
+        Header Section
+        Light Mode: Dark Text (Gray-800)
+        Dark Mode: Off-white Text (Gray-200) instead of pure white/yellow to reduce glare.
       */}
       <div className="flex flex-wrap items-start justify-between mb-6 gap-4">
-        <h2 className="text-2xl font-bold text-gray-800 font-western border-b-2 border-green-800 pb-2 pr-10 flex-1 min-w-[200px]">
-          <span className="text-green-700 mr-2">{stepIndex}.</span>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 font-western border-b-2 border-gray-300 dark:border-zinc-700 pb-2 pr-10 flex-1 min-w-[200px] drop-shadow-sm transition-colors duration-300">
+          <span className="text-yellow-600 dark:text-amber-500/80 mr-2">{stepIndex}.</span>
           {step.data?.title || step.id}
         </h2>
 
@@ -75,7 +70,7 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
         {renderStepBody()}
       </div>
 
-      <div className="mt-8 flex justify-between clear-both pt-6 border-t border-gray-200">
+      <div className="mt-8 flex justify-between clear-both pt-6 border-t border-gray-300 dark:border-zinc-800">
         <Button onClick={onPrev} variant="secondary" className="shadow-sm">
           ← Previous
         </Button>

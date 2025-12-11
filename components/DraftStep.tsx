@@ -103,7 +103,7 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
 
   return (
     <>
-      <p className="mb-4 text-gray-600 italic">Determine who drafts first using a D6. Ties are resolved automatically.</p>
+      <p className="mb-4 text-gray-600 dark:text-gray-400 italic">Determine who drafts first using a D6. Ties are resolved automatically.</p>
       {!draftState ? (
         <Button onClick={handleDetermineOrder} variant="secondary" fullWidth className="mb-4">
            🎲 Roll for {isHavenDraft ? 'Haven Draft' : 'Command'}
@@ -145,10 +145,10 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
           {/* DRAFT UI */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Draft Order */}
-            <div className="bg-white p-4 rounded-lg border border-gray-200 relative overflow-hidden shadow-sm">
-              <div className="absolute top-0 right-0 bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-bl">Step 1</div>
-              <h4 className="font-bold text-gray-900 mb-2 border-b border-gray-100 pb-1">Draft Phase</h4>
-              <p className="text-xs text-gray-500 mb-3 italic">
+            <div className="bg-white dark:bg-slate-900/80 p-4 rounded-lg border border-gray-200 dark:border-slate-700 relative overflow-hidden shadow-sm transition-colors duration-300">
+              <div className="absolute top-0 right-0 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 text-xs font-bold px-2 py-1 rounded-bl">Step 1</div>
+              <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2 border-b border-gray-100 dark:border-slate-800 pb-1">Draft Phase</h4>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 italic">
                 {isHavenDraft 
                    ? "Standard Order: Winner chooses Leader & Ship first."
                    : isBrowncoatDraft 
@@ -157,53 +157,53 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
               </p>
               <ul className="space-y-2">
                 {draftState.draftOrder.map((player, i) => (
-                  <li key={i} className="flex items-center bg-gray-50 p-2 rounded border border-gray-100">
-                    <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mr-2">{i + 1}</span>
-                    <span className="text-sm font-medium text-gray-800">{player}</span>
-                    {i === 0 && <span className="ml-auto text-[10px] font-bold text-blue-600 uppercase tracking-wider">First Pick</span>}
+                  <li key={i} className="flex items-center bg-gray-50 dark:bg-slate-800 p-2 rounded border border-gray-100 dark:border-slate-700">
+                    <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{player}</span>
+                    {i === 0 && <span className="ml-auto text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">First Pick</span>}
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* Placement Order */}
-            <div className="bg-white p-4 rounded-lg border border-gray-200 relative overflow-hidden shadow-sm">
-              <div className="absolute top-0 right-0 bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-bl">Step 2</div>
-              <h4 className="font-bold text-gray-900 mb-2 border-b border-gray-100 pb-1">
+            <div className="bg-white dark:bg-slate-900/80 p-4 rounded-lg border border-gray-200 dark:border-slate-700 relative overflow-hidden shadow-sm transition-colors duration-300">
+              <div className="absolute top-0 right-0 bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 text-xs font-bold px-2 py-1 rounded-bl">Step 2</div>
+              <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2 border-b border-gray-100 dark:border-slate-800 pb-1">
                  {isHavenDraft ? 'Haven Placement' : 'Placement Phase'}
               </h4>
               
               {isHavenDraft ? (
                  <>
-                   <p className="text-xs text-green-800 mb-3 italic">Reverse Order: Last player places Haven first.</p>
+                   <p className="text-xs text-green-800 dark:text-green-300 mb-3 italic">Reverse Order: Last player places Haven first.</p>
                    <ul className="space-y-2">
                       {draftState.placementOrder.map((player, i) => (
-                        <li key={i} className="flex items-center bg-gray-50 p-2 rounded border border-gray-100">
-                          <span className="w-6 h-6 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center mr-2">{i + 1}</span>
-                          <span className="text-sm font-medium text-gray-800">{player}</span>
+                        <li key={i} className="flex items-center bg-gray-50 dark:bg-slate-800 p-2 rounded border border-gray-100 dark:border-slate-700">
+                          <span className="w-6 h-6 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
+                          <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{player}</span>
                         </li>
                       ))}
                     </ul>
                  </>
               ) : (isPersephoneStart || isLondiniumStart || startAtSector) ? (
-                <div className="bg-amber-50 p-4 rounded text-center border border-amber-200">
-                  <p className="font-bold text-amber-900 mb-1">Special Placement</p>
-                  <p className="text-sm text-amber-800">All ships start at <strong>{startAtSector || (isPersephoneStart ? 'Persephone' : 'Londinium')}</strong>.</p>
-                  <p className="text-xs text-amber-700 italic mt-1">(Do not place in separate sectors)</p>
+                <div className="bg-amber-50 dark:bg-amber-950/40 p-4 rounded text-center border border-amber-200 dark:border-amber-800">
+                  <p className="font-bold text-amber-900 dark:text-amber-100 mb-1">Special Placement</p>
+                  <p className="text-sm text-amber-800 dark:text-amber-300">All ships start at <strong>{startAtSector || (isPersephoneStart ? 'Persephone' : 'Londinium')}</strong>.</p>
+                  <p className="text-xs text-amber-700 dark:text-amber-400 italic mt-1">(Do not place in separate sectors)</p>
                 </div>
               ) : (
                 <>
-                   <p className="text-xs text-gray-500 mb-3 italic">
+                   <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 italic">
                     {isBrowncoatDraft 
                       ? "Pass back to Right. Make remaining choice. Buy Fuel ($100)."
                       : "Pass to Right (Anti-Clockwise). Place Ship in Sector."}
                   </p>
                   <ul className="space-y-2">
                     {draftState.placementOrder.map((player, i) => (
-                      <li key={i} className="flex items-center bg-gray-50 p-2 rounded border border-gray-100">
-                        <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center mr-2">{i + 1}</span>
-                        <span className="text-sm font-medium text-gray-800">{player}</span>
-                        {i === 0 && <span className="ml-auto text-[10px] font-bold text-amber-600 uppercase tracking-wider">First Place</span>}
+                      <li key={i} className="flex items-center bg-gray-50 dark:bg-slate-800 p-2 rounded border border-gray-100 dark:border-slate-700">
+                        <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
+                        <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{player}</span>
+                        {i === 0 && <span className="ml-auto text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">First Place</span>}
                       </li>
                     ))}
                   </ul>
@@ -228,7 +228,7 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
                  </ul>
                  {/* Warning if Mad Verse is active */}
                  {activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' && (
-                     <div className="mt-3 p-2 rounded text-red-800 font-bold border border-red-200 bg-red-50 text-sm">
+                     <div className="mt-3 p-2 rounded text-red-800 dark:text-red-200 font-bold border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/30 text-sm">
                          ⚠️ CONFLICT: Story Card override active. Ships must start at Persephone despite Haven rules!
                      </div>
                  )}

@@ -189,15 +189,15 @@ const SetupWizard: React.FC = () => {
   return (
     <div className="max-w-2xl mx-auto">
       {/* Sticky Header with Setup Details */}
-      <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg mb-6 shadow-sm border border-gray-200 flex justify-between items-center transition-all duration-300 sticky top-0 z-30">
+      <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm p-4 rounded-lg mb-6 shadow-sm border border-gray-200 dark:border-zinc-800 flex justify-between items-center transition-all duration-300 sticky top-0 z-30">
         <div className="flex flex-col">
-           <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Active Game</span>
-           <div className="flex flex-wrap items-center gap-x-2 font-bold text-green-900 text-sm md:text-base leading-tight">
-              <span className="text-blue-900">{gameState.setupCardName}</span>
+           <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Active Game</span>
+           <div className="flex flex-wrap items-center gap-x-2 font-bold text-green-900 dark:text-green-400 text-sm md:text-base leading-tight">
+              <span className="text-blue-900 dark:text-blue-300">{gameState.setupCardName}</span>
               {gameState.selectedStoryCard && (
                 <>
-                  <span className="text-gray-400 hidden sm:inline">•</span>
-                  <span className="text-amber-800 block sm:inline">{gameState.selectedStoryCard}</span>
+                  <span className="text-gray-400 dark:text-gray-600 hidden sm:inline">•</span>
+                  <span className="text-amber-800 dark:text-amber-200 block sm:inline">{gameState.selectedStoryCard}</span>
                 </>
               )}
            </div>
@@ -209,7 +209,7 @@ const SetupWizard: React.FC = () => {
             text-xs font-bold underline focus:outline-none focus:ring-2 rounded px-2 py-1 transition-colors duration-200 ml-4 shrink-0
             ${showConfirmReset 
               ? 'bg-red-600 text-white hover:bg-red-700 ring-red-500 no-underline shadow-md' 
-              : 'text-red-600 hover:text-red-800 hover:bg-red-50 focus:ring-red-500'
+              : 'text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 focus:ring-red-500'
             }
           `}
         >
@@ -220,10 +220,10 @@ const SetupWizard: React.FC = () => {
       <ProgressBar current={currentStepIndex + 1} total={flow.length} />
 
       {isFinal ? (
-        <div className="bg-white rounded-xl shadow-xl p-8 text-center border-t-8 border-green-600 animate-fade-in-up">
+        <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-xl p-8 text-center border-t-8 border-green-600 dark:border-green-800 animate-fade-in-up border-x border-b border-gray-200 dark:border-zinc-800 transition-colors duration-300">
           <div className="text-6xl mb-4">🚀</div>
-          <h2 className="text-3xl font-bold text-gray-800 font-western mb-4">You are ready to fly!</h2>
-          <p className="text-gray-600 mb-8 text-lg">Setup is complete. Good luck, Captain.</p>
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 font-western mb-4">You are ready to fly!</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg">Setup is complete. Good luck, Captain.</p>
           <div className="flex justify-center gap-4">
             <Button onClick={handlePrev} variant="secondary">Back</Button>
             <Button onClick={performReset}>Start New Game Setup</Button>

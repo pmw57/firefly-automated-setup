@@ -42,17 +42,17 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step, gameState })
         </SpecialRuleBlock>
       )}
 
-      <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm text-center">
-        <h4 className="font-bold text-xl text-gray-800 font-western mb-4">Priming The Pump</h4>
-        <div className="text-5xl font-bold text-gray-300 mb-4">🃏</div>
-        <p className="text-lg text-gray-700">
+      <div className="bg-white dark:bg-slate-900/80 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm text-center transition-colors duration-300">
+        <h4 className="font-bold text-xl text-gray-800 dark:text-white font-western mb-4">Priming The Pump</h4>
+        <div className="text-5xl font-bold text-gray-300 dark:text-gray-600 mb-4">🃏</div>
+        <p className="text-lg text-gray-700 dark:text-gray-300">
           Shuffle all Supply Decks.
         </p>
-        <div className="my-6 bg-green-50 p-4 rounded-lg inline-block border border-green-200">
-          <span className="block text-4xl font-bold text-green-700 mb-1">{finalCount}</span>
-          <span className="text-sm font-bold text-green-800 uppercase tracking-wide">Cards Discarded</span>
+        <div className="my-6 bg-green-50 dark:bg-green-900/30 p-4 rounded-lg inline-block border border-green-200 dark:border-green-800">
+          <span className="block text-4xl font-bold text-green-700 dark:text-green-400 mb-1">{finalCount}</span>
+          <span className="text-sm font-bold text-green-800 dark:text-green-300 uppercase tracking-wide">Cards Discarded</span>
         </div>
-        <p className="text-sm text-gray-500 italic">
+        <p className="text-sm text-gray-500 dark:text-gray-400 italic">
           (From the top of each Supply Deck)
         </p>
       </div>

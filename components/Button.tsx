@@ -17,13 +17,13 @@ export const Button: React.FC<ButtonProps> = ({
   let variantStyle = "";
   switch (variant) {
     case 'primary':
-      variantStyle = "bg-green-800 text-white hover:bg-green-900 focus:ring-green-500 border border-green-900";
+      variantStyle = "bg-green-800 text-white hover:bg-green-900 focus:ring-green-500 border border-green-900 dark:bg-green-900 dark:text-green-100 dark:border-green-800 dark:hover:bg-green-950";
       break;
     case 'secondary':
-      variantStyle = "bg-amber-600 text-white hover:bg-amber-700 focus:ring-amber-500 border border-amber-800";
+      variantStyle = "bg-amber-600 text-white hover:bg-amber-700 focus:ring-amber-500 border border-amber-800 dark:bg-amber-900 dark:text-amber-100 dark:border-amber-800 dark:hover:bg-amber-950";
       break;
     case 'danger':
-      variantStyle = "bg-red-800 text-white hover:bg-red-900 focus:ring-red-500 border border-red-900";
+      variantStyle = "bg-red-800 text-white hover:bg-red-900 focus:ring-red-500 border border-red-900 dark:bg-red-900/80 dark:text-red-100 dark:border-red-900";
       break;
   }
 
