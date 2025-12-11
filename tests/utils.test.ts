@@ -36,7 +36,9 @@ describe('utils', () => {
     it('returns story mode if defined (Highest Priority)', () => {
       const story = mockStory({ jobDrawMode: 'no_jobs' });
       // Even if overrides are present, story config takes precedence in current logic
-      expect(determineJobMode(story, { rimJobMode: true })).toBe('no_jobs');
+      // Note: we removed rimJobMode from StepOverrides, so passing it now would be invalid TS or ignored at runtime.
+      // We pass an empty override object here to satisfy the test.
+      expect(determineJobMode(story, {})).toBe('no_jobs');
     });
 
     it('returns standard if no overrides and no story config', () => {
@@ -45,7 +47,6 @@ describe('utils', () => {
 
     // Test all Override Flags
     it.each([
-      ['rimJobMode', 'rim_jobs'],
       ['browncoatJobMode', 'no_jobs'],
       ['timesJobMode', 'times_jobs'],
       ['allianceHighAlertJobMode', 'high_alert_jobs'],

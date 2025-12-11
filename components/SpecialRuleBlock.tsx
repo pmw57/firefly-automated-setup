@@ -13,14 +13,14 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
       bg: 'bg-amber-50',
       text: 'text-amber-900',
       icon: '📜',
-      label: 'Mission Protocol'
+      label: 'Story Override'
     },
     scenario: {
       border: 'border-blue-500',
       bg: 'bg-blue-50',
       text: 'text-blue-900',
       icon: '⚙️',
-      label: 'Scenario Override'
+      label: 'Setup Override'
     },
     expansion: {
       border: 'border-purple-500',

@@ -528,13 +528,13 @@ export const SCENARIOS: ScenarioDef[] = [
   {
     id: "TheRimsTheThing",
     label: "The Rim's The Thing",
-    description: "Focuses on the outer planets. Uses only Border Nav cards and restricts jobs to Blue Sun and Kalidasa contacts.",
+    description: "Focuses on the outer planets. Uses only Border Nav cards. Contact Decks contain only Blue Sun and Kalidasa cards.",
     requiredExpansion: 'kalidasa',
     steps: [
       { id: 'D_RIM_JOBS' },
       { id: 'C1', overrides: { rimNavMode: true } }, // Replaces D_RIM_NAV
       { id: 'C2' }, { id: 'C3' }, { id: 'C4' }, { id: 'C5' },
-      { id: 'C6', overrides: { rimJobMode: true } },
+      { id: 'C6' },
       { id: 'C_PRIME' }
     ]
   },

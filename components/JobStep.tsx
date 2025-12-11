@@ -43,28 +43,13 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
        if (jobMode === 'wind_takes_us') {
            return (
                <SpecialRuleBlock source="story" title="Where The Wind Takes Us">
-                   {overrides.rimJobMode ? (
-                      <p className="mb-2">Each player chooses one <strong>Blue Sun or Kalidasa</strong> Contact Deck:</p>
-                   ) : (
-                      <p className="mb-2">Each player chooses <strong>one Contact Deck</strong> of their choice:</p>
-                   )}
+                   <p className="mb-2">Each player chooses <strong>one Contact Deck</strong> of their choice:</p>
                    <ul className="list-disc ml-5 mb-3 text-sm">
                        <li>Draw <strong>{gameState.playerCount <= 3 ? '4' : '3'} Jobs</strong> from that deck.</li>
                        <li>Place a <strong>Goal Token</strong> at the drop-off/destination sector of each Job.</li>
                        <li>Return all Jobs to the deck and reshuffle.</li>
                    </ul>
                    <p className="font-bold text-red-700">Do not deal Starting Jobs.</p>
-                   
-                   {overrides.rimJobMode && (
-                       <div className="mt-3 pt-3 border-t border-blue-200">
-                           <p className="text-xs font-bold text-blue-800 uppercase mb-1">Valid Decks (Rim Setup):</p>
-                           <div className="flex flex-wrap gap-2">
-                               {['Fanty & Mingo', 'Lord Harrow', 'Mr. Universe', 'Magistrate Higgins'].map(c => (
-                                   <span key={c} className="text-xs bg-white px-2 py-1 rounded border border-blue-100">{c}</span>
-                               ))}
-                           </div>
-                       </div>
-                   )}
                </SpecialRuleBlock>
            );
        }
@@ -94,11 +79,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
        // Contact List Logic for Standard / Specific Lists
        let contacts: string[] = [];
        
-       if (jobMode === 'rim_jobs') {
-           // The Rim's The Thing logic
-           if (gameState.expansions.blue) contacts.push('Fanty & Mingo', 'Lord Harrow');
-           if (gameState.expansions.kalidasa) contacts.push('Magistrate Higgins', 'Mr. Universe');
-       } else if (jobMode === 'buttons_jobs') {
+       if (jobMode === 'buttons_jobs') {
            contacts = ['Amnon Duul', 'Lord Harrow', 'Magistrate Higgins'];
        } else if (jobMode === 'awful_jobs') {
            contacts = ['Harken', 'Amnon Duul', 'Patience'];
@@ -112,7 +93,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                </SpecialRuleBlock>
            );
        } else {
-           // Standard Logic
+           // Standard Logic (Also used for Rim Jobs where decks are modified but procedure is standard)
            contacts = ['Harken', 'Badger', 'Amnon Duul', 'Patience', 'Niska'];
        }
 
@@ -127,9 +108,17 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
        // Calculate total job cards to determine if discard warning is needed.
        // Note: Caper cards (from buttons_jobs) do NOT count towards the Job Card Hand Limit.
        const totalJobCards = contacts.length;
+       
+       const showStoryOverride = (forbiddenStartingContact || (allowedStartingContacts && allowedStartingContacts.length > 0));
 
        return (
            <div className="bg-white p-4 rounded border border-gray-200">
+               {showStoryOverride && activeStoryCard.setupDescription && (
+                   <SpecialRuleBlock source="story" title="Story Override">
+                       {activeStoryCard.setupDescription}
+                   </SpecialRuleBlock>
+               )}
+
                <p className="mb-3 font-bold text-gray-700">Draw 1 Job Card from each:</p>
                <div className="flex flex-wrap gap-2 mb-4">
                    {contacts.map(contact => (
@@ -153,10 +142,12 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
       <div className="space-y-4">
           {stepId.includes('D_RIM_JOBS') ? (
              <SpecialRuleBlock source="scenario" title="Rim Space Jobs">
+               <p className="leading-relaxed mb-2">
+                 Separate the Job Cards from the <InlineExpansionIcon type="blue" /> and <InlineExpansionIcon type="kalidasa" /> expansions (marked with their icons).
+               </p>
                <p className="leading-relaxed">
-                 Separate the Job Cards from the <InlineExpansionIcon type="blue" /> and <InlineExpansionIcon type="kalidasa" /> expansions. 
-                 These are marked with a specific icon. Use <strong>only these cards</strong> as your Contact Decks. 
-                 The Job Cards from the core game will not be used.
+                 <strong>Rebuild the Contact Decks</strong> using <em>only</em> these expansion cards. 
+                 The standard Contact Decks (Harken, Badger, etc.) are still in play, but they will be significantly thinner as the Core Game cards are removed.
                </p>
              </SpecialRuleBlock>
           ) : (

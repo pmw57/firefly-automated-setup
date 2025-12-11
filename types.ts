@@ -32,7 +32,6 @@ export interface ExpansionDef {
 export interface StepOverrides {
   startingCredits?: number;
   rimNavMode?: boolean;
-  rimJobMode?: boolean;
   browncoatNavMode?: boolean;
   browncoatJobMode?: boolean;
   browncoatDraftMode?: boolean;

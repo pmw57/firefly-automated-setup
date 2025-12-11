@@ -30,7 +30,6 @@ export const determineJobMode = (activeStoryCard: StoryCardDef, overrides: StepO
   const storyJobMode = activeStoryCard.setupConfig?.jobDrawMode;
   
   if (storyJobMode) return storyJobMode;
-  if (overrides.rimJobMode) return 'rim_jobs';
   if (overrides.browncoatJobMode) return 'no_jobs';
   if (overrides.timesJobMode) return 'times_jobs';
   if (overrides.allianceHighAlertJobMode) return 'high_alert_jobs';
