@@ -1,5 +1,4 @@
-
-import { GameState, StoryCardDef, StepOverrides, DiceResult, DraftState } from './types';
+import { StoryCardDef, StepOverrides, DiceResult, DraftState } from './types';
 
 // --- Draft Logic ---
 export const calculateDraftOutcome = (currentRolls: DiceResult[], playerCount: number): DraftState => {
@@ -43,6 +42,7 @@ export const determineJobMode = (activeStoryCard: StoryCardDef, overrides: StepO
 
 // --- Credit Calculation Logic ---
 export const calculateStartingResources = (activeStoryCard: StoryCardDef, overrides: StepOverrides) => {
+  const bonusCredits = activeStoryCard.setupConfig?.startingCreditsBonus || 0;
   let totalCredits = overrides.startingCredits || 3000;
   
   // Handle explicit override from story card (e.g., Community Content)
@@ -50,14 +50,20 @@ export const calculateStartingResources = (activeStoryCard: StoryCardDef, overri
     totalCredits = activeStoryCard.setupConfig.startingCreditsOverride;
   } else {
     // Apply bonuses
-    const bonusCredits = activeStoryCard.setupConfig?.startingCreditsBonus || 0;
     totalCredits += bonusCredits;
   }
 
-  const bonusCredits = activeStoryCard.setupConfig?.startingCreditsBonus || 0;
   const noFuelParts = activeStoryCard.setupConfig?.noStartingFuelParts;
-  
   const customFuel = activeStoryCard.setupConfig?.customStartingFuel;
 
   return { totalCredits, bonusCredits, noFuelParts, customFuel };
+};
+
+// --- Story Card Helpers ---
+export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
+    if (card.setupDescription) return "Setup Changes";
+    if (card.setupConfig?.jobDrawMode === 'no_jobs') return "No Starting Jobs";
+    if (card.setupConfig?.jobDrawMode === 'caper_start') return "Starts with Caper";
+    if (card.setupConfig?.shipPlacementMode === 'persephone') return "Starts at Persephone";
+    return null;
 };

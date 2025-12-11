@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { DraftState } from '../types';
 
@@ -17,9 +16,10 @@ export const DiceControls: React.FC<DiceControlsProps> = ({ draftState, onRollCh
           key={i} 
           className={`flex flex-col items-center p-2 rounded-lg border transition-all duration-200 ${r.isWinner ? 'bg-green-100 border-green-500 shadow-md transform scale-105' : 'bg-white border-gray-300'}`}
         >
-          <label className="text-xs font-bold text-gray-600 mb-1">{r.player}</label>
+          <label htmlFor={`draft-roll-${i}`} className="text-xs font-bold text-gray-600 mb-1 cursor-pointer">{r.player}</label>
           <div className="relative">
             <input 
+              id={`draft-roll-${i}`}
               type="number" 
               min="1" 
               max="20"

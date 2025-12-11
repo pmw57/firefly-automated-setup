@@ -1,6 +1,7 @@
 import React from 'react';
 import { StoryCardDef } from '../types';
 import { InlineExpansionIcon } from './InlineExpansionIcon';
+import { getStoryCardSetupSummary } from '../utils';
 
 interface StoryCardGridItemProps {
   card: StoryCardDef;
@@ -8,15 +9,6 @@ interface StoryCardGridItemProps {
   onClick: () => void;
   isShortList?: boolean;
 }
-
-// Helper to extract a summarized badge text from the card config
-export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
-    if (card.setupDescription) return "Setup Changes";
-    if (card.setupConfig?.jobDrawMode === 'no_jobs') return "No Starting Jobs";
-    if (card.setupConfig?.jobDrawMode === 'caper_start') return "Starts with Caper";
-    if (card.setupConfig?.shipPlacementMode === 'persephone') return "Starts at Persephone";
-    return null;
-};
 
 export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSelected, onClick, isShortList = false }) => {
     const summary = getStoryCardSetupSummary(card);

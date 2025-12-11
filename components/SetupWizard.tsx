@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GameState, Step, Expansions } from '../types';
 import { SCENARIOS, SETUP_CONTENT, STORY_CARDS, EXPANSIONS_METADATA } from '../constants';
 import { InitialForm } from './InitialForm';
@@ -7,51 +6,113 @@ import { StepContent } from './StepContent';
 import { ProgressBar } from './ProgressBar';
 import { Button } from './Button';
 
-const SetupWizard: React.FC = () => {
-  // Generate initial expansions object (all true by default)
+const STORAGE_KEY = 'firefly_setup_v1';
+
+interface PersistedState {
+  gameState: GameState;
+  currentStepIndex: number;
+  isStarted: boolean;
+}
+
+// Helper to generate default state (Moved outside component for stability)
+const getDefaultGameState = (): GameState => {
   const initialExpansions = EXPANSIONS_METADATA.reduce((acc, expansion) => {
     acc[expansion.id] = true;
     return acc;
   }, {} as Expansions);
 
-  const [gameState, setGameState] = useState<GameState>({
+  return {
     playerCount: 4,
     playerNames: ['Captain 1', 'Captain 2', 'Captain 3', 'Captain 4'],
     scenarioValue: 'Standard',
     scenarioName: 'Standard Game Setup',
     selectedStoryCard: STORY_CARDS[0].title,
     expansions: initialExpansions
+  };
+};
+
+// Helper to rebuild flow from a game state (Moved outside to satisfy React Hooks deps)
+const calculateFlow = (state: GameState): Step[] => {
+  const scenarioDef = SCENARIOS.find(s => s.id === state.scenarioValue) || SCENARIOS[0];
+  const newFlow: Step[] = [];
+
+  scenarioDef.steps.forEach(scenarioStep => {
+    const content = SETUP_CONTENT[scenarioStep.id];
+    if (content) {
+      newFlow.push({
+        type: content.type,
+        id: content.id || content.elementId || scenarioStep.id,
+        data: content,
+        overrides: scenarioStep.overrides
+      });
+    }
   });
 
+  newFlow.push({ type: 'final', id: 'final' });
+  return newFlow;
+};
+
+const SetupWizard: React.FC = () => {
+  const [gameState, setGameState] = useState<GameState>(getDefaultGameState());
   const [flow, setFlow] = useState<Step[]>([]);
-  const [currentStepIndex, setCurrentStepIndex] = useState(0); // 0 is InitialForm
+  const [currentStepIndex, setCurrentStepIndex] = useState(0); 
   const [isStarted, setIsStarted] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
+  
+  // UI State for Restart Confirmation
+  const [showConfirmReset, setShowConfirmReset] = useState(false);
 
-  // Build the flow based on selection
+  // Build the flow based on selection (Public handler)
   const buildFlow = () => {
-    // Find the scenario definition from the array
-    const scenarioDef = SCENARIOS.find(s => s.id === gameState.scenarioValue) || SCENARIOS[0];
-    
-    const newFlow: Step[] = [];
-
-    // Iterate through the steps defined in the scenario
-    scenarioDef.steps.forEach(scenarioStep => {
-      const content = SETUP_CONTENT[scenarioStep.id];
-      if (content) {
-        newFlow.push({
-          type: content.type,
-          id: content.id || content.elementId || scenarioStep.id,
-          data: content,
-          overrides: scenarioStep.overrides // Pass overrides if present
-        });
-      }
-    });
-
-    newFlow.push({ type: 'final', id: 'final' });
+    const newFlow = calculateFlow(gameState);
     setFlow(newFlow);
     setIsStarted(true);
     setCurrentStepIndex(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // Load state from local storage on mount
+  useEffect(() => {
+    // Artificial delay to ensure the loading UI is visible and the browser has time to paint
+    // preventing the "frozen" feeling on initial load
+    const timer = setTimeout(() => {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          const parsed: PersistedState = JSON.parse(saved);
+          setGameState(parsed.gameState);
+          
+          if (parsed.isStarted) {
+            // Reconstruct the flow based on saved game state
+            const newFlow = calculateFlow(parsed.gameState);
+            setFlow(newFlow);
+            setCurrentStepIndex(parsed.currentStepIndex);
+            setIsStarted(true);
+          }
+        } catch (e) {
+          console.error("Failed to load saved state", e);
+        }
+      }
+      
+      // Reveal the app
+      setIsInitialized(true);
+    }, 1200); // 1.2s delay for better UX on slower devices
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Save state to local storage whenever it changes
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    const dataToSave: PersistedState = {
+      gameState,
+      currentStepIndex,
+      isStarted
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+  }, [gameState, currentStepIndex, isStarted, isInitialized]);
 
   const handleNext = () => {
     setCurrentStepIndex(prev => Math.min(prev + 1, flow.length - 1));
@@ -62,35 +123,85 @@ const SetupWizard: React.FC = () => {
     if (currentStepIndex > 0) {
       setCurrentStepIndex(prev => prev - 1);
     } else {
-      // Go back to config
       setIsStarted(false);
       setFlow([]);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleReset = () => {
-    setIsStarted(false);
-    setCurrentStepIndex(0);
+  // Hard Reset Function - State Based
+  const performReset = () => {
+    const defaultState = getDefaultGameState();
+    
+    // 1. Clear Storage
+    localStorage.removeItem(STORAGE_KEY);
+    
+    // 2. Reset React State
+    setGameState(defaultState);
     setFlow([]);
+    setCurrentStepIndex(0);
+    setIsStarted(false);
+    setShowConfirmReset(false);
+    
+    // 3. Force Re-mount of children
+    setResetKey(prev => prev + 1);
+    
+    // 4. Scroll to top
+    window.scrollTo(0, 0);
   };
 
+  const handleResetClick = () => {
+    if (showConfirmReset) {
+      performReset();
+    } else {
+      setShowConfirmReset(true);
+      // Auto-hide confirmation after 3 seconds if not clicked
+      setTimeout(() => setShowConfirmReset(false), 3000);
+    }
+  };
+
+  // Prevent rendering until we've checked local storage
+  if (!isInitialized) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-900 mb-6"></div>
+        <h2 className="text-2xl font-bold text-gray-700 font-western tracking-wider animate-pulse">Initializing Cortex...</h2>
+        <p className="text-gray-500 mt-2 text-sm italic">Accessing secure alliance servers</p>
+      </div>
+    );
+  }
+
   if (!isStarted) {
-    return <InitialForm gameState={gameState} setGameState={setGameState} onStart={buildFlow} />;
+    return <InitialForm key={resetKey} gameState={gameState} setGameState={setGameState} onStart={buildFlow} />;
   }
 
   const currentStep = flow[currentStepIndex];
+  if (!currentStep) {
+    performReset();
+    return null;
+  }
+  
   const isFinal = currentStep.type === 'final';
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg mb-6 shadow-sm border border-gray-200 flex justify-between items-center">
+      <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg mb-6 shadow-sm border border-gray-200 flex justify-between items-center transition-all duration-300">
         <div>
            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Scenario</span>
            <div className="font-bold text-green-900">{gameState.scenarioName}</div>
         </div>
-        <button onClick={handleReset} className="text-xs text-red-600 hover:text-red-800 font-bold underline">
-          Restart
+        <button 
+          type="button"
+          onClick={handleResetClick}
+          className={`
+            text-xs font-bold underline focus:outline-none focus:ring-2 rounded px-2 py-1 transition-colors duration-200
+            ${showConfirmReset 
+              ? 'bg-red-600 text-white hover:bg-red-700 ring-red-500 no-underline shadow-md' 
+              : 'text-red-600 hover:text-red-800 hover:bg-red-50 focus:ring-red-500'
+            }
+          `}
+        >
+          {showConfirmReset ? "Confirm Restart?" : "Restart"}
         </button>
       </div>
 
@@ -103,7 +214,7 @@ const SetupWizard: React.FC = () => {
           <p className="text-gray-600 mb-8 text-lg">Setup is complete. Good luck, Captain.</p>
           <div className="flex justify-center gap-4">
             <Button onClick={handlePrev} variant="secondary">Back</Button>
-            <Button onClick={handleReset}>Start New Game Setup</Button>
+            <Button onClick={performReset}>Start New Game Setup</Button>
           </div>
         </div>
       ) : (

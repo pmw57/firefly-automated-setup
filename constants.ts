@@ -1,4 +1,3 @@
-
 import { ContentMap, ScenarioDef, StoryCardDef, ExpansionDef } from './types';
 
 export const SPRITE_SHEET_URL = "https://cf.geekdo-images.com/Dskyq7T2nAeLSEPqF8FtIw__original/img/iIP5ebitvrm4XfAqdomztVuvxag=/0x0/filters:format(jpeg)/pic6421209.jpg";

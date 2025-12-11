@@ -1,0 +1,120 @@
+import React from 'react';
+import { GameState, Step } from '../types';
+import { STORY_CARDS } from '../constants';
+import { calculateStartingResources } from '../utils';
+import { SpecialRuleBlock } from './SpecialRuleBlock';
+import { JobStep } from './JobStep';
+import { DraftStep } from './DraftStep';
+
+interface DynamicStepHandlerProps {
+  step: Step;
+  gameState: GameState;
+}
+
+export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, gameState }) => {
+  const id = step.id;
+  const overrides = step.overrides || {};
+  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
+
+  if (id.includes('D_RIM_JOBS')) {
+    return <JobStep step={step} gameState={gameState} />;
+  }
+  
+  if (id.includes('D_HAVEN_DRAFT')) {
+    return <DraftStep step={step} gameState={gameState} />;
+  }
+
+  if (id.includes('D_TIME_LIMIT')) {
+    return (
+      <SpecialRuleBlock source="scenario" title="Game Timer">
+        <div className="space-y-3">
+          <p>Give a pile of <strong>20 Disgruntled Tokens</strong> to the player taking the first turn. These tokens will be used as Game Length Tokens.</p>
+          <p>Each time that player takes a turn, discard one of the Disgruntled Tokens. When the final token is discarded, everyone gets one final turn, then the game is over.</p>
+          <p className="font-bold text-red-700">If time runs out before the Story Card is completed, the player with the most credits wins.</p>
+        </div>
+      </SpecialRuleBlock>
+    );
+  }
+
+  if (id.includes('D_SHUTTLE')) {
+    return (
+      <SpecialRuleBlock source="scenario" title="Draft Shuttles from Supply">
+        <ul className="list-decimal ml-5 space-y-2">
+          <li>Pull all <strong>Shuttles</strong> from the Supply Decks.</li>
+          <li>Starting with the winner of the Ship Roll, each player takes <strong>1 Shuttle</strong> for free.</li>
+          <li>Selection passes to the <strong>left</strong>.</li>
+          <li>Place remaining Shuttles in their respective discard piles.</li>
+        </ul>
+      </SpecialRuleBlock>
+    );
+  }
+
+  if (id.includes('D_BC_CAPITOL')) {
+    const { totalCredits, bonusCredits } = calculateStartingResources(activeStoryCard, overrides);
+    return (
+      <div className="text-center bg-white p-8 rounded-lg border border-gray-200 shadow-sm">
+        <p className="text-lg text-gray-800 mb-2">Each player receives:</p>
+        <div className="text-5xl font-bold text-green-800 font-western my-4">${totalCredits}</div>
+        {bonusCredits > 0 && <p className="text-sm text-gray-500">(Includes ${bonusCredits} Story Bonus)</p>}
+      </div>
+    );
+  }
+
+  if (id.includes('D_LOCAL_HEROES')) {
+    return (
+      <SpecialRuleBlock source="scenario" title="Local Heroes Bonuses">
+        <ul className="list-disc ml-5 space-y-2">
+          <li><strong>Shore Leave:</strong> At your Haven, you may use a Buy Action to take Shore Leave for free. Remove all Disgruntled and Wanted tokens.</li>
+          <li><strong>Home Field Advantage:</strong> When you proceed with Misbehaving in the same System as your Haven, take <strong>$100</strong>.</li>
+        </ul>
+      </SpecialRuleBlock>
+    );
+  }
+
+  if (id.includes('D_ALLIANCE_ALERT')) {
+    return (
+      <SpecialRuleBlock source="scenario" title="Alliance Alert Cards">
+        <div className="space-y-3">
+          <p>Begin the game with <strong>one random Alliance Alert Card</strong> in play.</p>
+          <p className="text-sm italic">Each Alert has a rule that affects all players. When a Misbehave Card directs you to draw a new Alert Card, place the current Alert at the bottom of the Alert Deck.</p>
+        </div>
+      </SpecialRuleBlock>
+    );
+  }
+
+  if (id.includes('D_PRESSURES_HIGH')) {
+    return (
+      <SpecialRuleBlock source="scenario" title="The Pressure's High">
+        <div className="space-y-4">
+          <div>
+            <strong className="block text-red-800 mb-1">Alliance Alert</strong>
+            <p>Begin the game with one random Alliance Alert Card in play.</p>
+          </div>
+          <div className="border-t border-red-200 pt-3">
+            <strong className="block text-red-800 mb-1">Wanted Accumulation</strong>
+            <ul className="list-disc ml-5 text-sm">
+              <li>Wanted Crew and Leaders may accumulate Wanted tokens.</li>
+              <li><strong>Roll Check:</strong> When making Alliance Wanted Crew rolls, you must roll higher than the number of current Wanted tokens for that Crew/Leader to avoid effects.</li>
+            </ul>
+          </div>
+        </div>
+      </SpecialRuleBlock>
+    );
+  }
+
+  if (id.includes('D_STRIP_MINING')) {
+    return (
+      <SpecialRuleBlock source="scenario" title="The Dinosaur Draft">
+        <ol className="list-decimal ml-5 space-y-2 text-sm">
+          <li>Choose 1 Supply Deck to be "Strip Mined".</li>
+          <li>The winner of the Ship Roll claims the <strong>Dinosaur</strong>.</li>
+          <li>Reveal <strong>{gameState.playerCount} cards</strong> from the top of the chosen deck.</li>
+          <li>Starting at the Dinosaur and going left, draft one card for free.</li>
+          <li>Pass the Dinosaur to the left. Repeat until all players have been the Dinosaur once.</li>
+        </ol>
+      </SpecialRuleBlock>
+    );
+  }
+
+  return <div className="p-4 text-red-500">Content for {id} not found.</div>;
+};

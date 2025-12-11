@@ -1,10 +1,50 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => ({
   plugins: [
     react(),
+    VitePWA({ 
+      registerType: 'autoUpdate',
+      includeAssets: ['logo.svg'],
+      manifest: {
+        name: 'Firefly: The Game - Automated Setup',
+        short_name: 'Firefly Setup',
+        description: 'Automated setup wizard for Firefly: The Game',
+        theme_color: '#7f1d1d',
+        background_color: '#ffffff',
+        display: 'standalone',
+        icons: [
+          {
+            src: 'logo.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'any maskable'
+          }
+        ]
+      },
+      workbox: {
+        // Define runtime caching for external images (Sprite Sheet)
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/cf\.geekdo-images\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'firefly-images',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          }
+        ]
+      }
+    }),
     // Custom plugin to clean up index.html for production builds
     command === 'build' && {
       name: 'html-transform',
@@ -23,4 +63,9 @@ export default defineConfig(({ command }) => ({
   // Use empty string to ensure assets use relative paths.
   // This allows the app to work on both AI Studio (root) and GitHub Pages (subdirectory).
   base: '',
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './tests/setup.ts',
+  }
 }))
