@@ -51,7 +51,7 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
       {/* Floating Quote Panel - Top Right */}
       <QuotePanel stepId={stepId} />
 
-      <div className="clear-left">
+      <div>
         <h2 className="text-2xl font-bold text-gray-800 mb-4 font-western border-b-2 border-green-800 pb-2 inline-block pr-10">
           <span className="text-green-700 mr-2">{stepIndex}.</span>
           {step.data?.title || step.id}
