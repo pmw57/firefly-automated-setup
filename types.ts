@@ -116,8 +116,8 @@ export interface StoryCardDef {
 export interface GameState {
   playerCount: number;
   playerNames: string[];
-  scenarioValue: string; // Keeping variable name for persistence compatibility, effectively "setupCardId"
-  scenarioName: string;  // Keeping variable name for persistence compatibility, effectively "setupCardName"
+  setupCardId: string;
+  setupCardName: string;
   selectedStoryCard: string;
   expansions: Expansions;
 }

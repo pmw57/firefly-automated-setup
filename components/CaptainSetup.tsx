@@ -40,10 +40,10 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
         ...prev.expansions,
         [key]: !prev.expansions[key]
       };
-      // Reset scenario/setup card if requirements aren't met
-      const currentSetup = SETUP_CARDS.find(s => s.id === prev.scenarioValue);
-      let nextSetupCardId = prev.scenarioValue;
-      let nextSetupCardName = prev.scenarioName;
+      // Reset setup card if requirements aren't met
+      const currentSetup = SETUP_CARDS.find(s => s.id === prev.setupCardId);
+      let nextSetupCardId = prev.setupCardId;
+      let nextSetupCardName = prev.setupCardName;
 
       if (currentSetup?.requiredExpansion && !nextExpansions[currentSetup.requiredExpansion]) {
           nextSetupCardId = 'Standard';
@@ -53,8 +53,8 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
       return {
         ...prev,
         expansions: nextExpansions,
-        scenarioValue: nextSetupCardId,
-        scenarioName: nextSetupCardName
+        setupCardId: nextSetupCardId,
+        setupCardName: nextSetupCardName
       };
     });
   };

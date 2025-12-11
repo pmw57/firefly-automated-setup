@@ -20,11 +20,11 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, ga
   return (
     <div className="space-y-4">
       {overrides.noAlertTokens ? (
-        <SpecialRuleBlock source="scenario" title="Setup Override">
-          <strong>Safe Skies:</strong> Do not use Reaver or Alliance Alert Tokens for this scenario.
+        <SpecialRuleBlock source="setupCard" title="Setup Card Override">
+          <strong>Safe Skies:</strong> Do not use Reaver or Alliance Alert Tokens for this setup card.
         </SpecialRuleBlock>
       ) : overrides.awfulCrowdedAllianceMode && (
-        <SpecialRuleBlock source="scenario" title="Setup Override">
+        <SpecialRuleBlock source="setupCard" title="Setup Card Override">
           <strong>Awful Crowded:</strong>
           <ul className="list-disc ml-4 space-y-1 mt-1">
             <li>Place an {renderAction("Alert Token")} in <strong>every planetary sector</strong>.</li>

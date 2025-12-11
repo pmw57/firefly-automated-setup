@@ -119,7 +119,7 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
           
           {/* RULES BLOCK AREA */}
           {isWantedLeaderMode && (
-            <SpecialRuleBlock source="scenario" title="The Heat Is On">
+            <SpecialRuleBlock source="setupCard" title="The Heat Is On">
               Choose Ships & Leaders normally, but <strong>each Leader begins play with a Wanted token</strong>.
             </SpecialRuleBlock>
           )}
@@ -213,14 +213,14 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
           </div>
           
           {isBrowncoatDraft && (
-             <SpecialRuleBlock source="scenario" title="Browncoat Market">
+             <SpecialRuleBlock source="setupCard" title="Browncoat Market">
                 <strong>Market Phase:</strong> Once all players have purchased a ship and chosen a leader, everyone may buy fuel ($100) and parts ($300).
                 <br/><span className="text-xs italic opacity-75">Reminder: Free starting fuel/parts are disabled in this mode.</span>
              </SpecialRuleBlock>
           )}
 
           {isHavenDraft && (
-            <SpecialRuleBlock source="scenario" title="Placement Rules">
+            <SpecialRuleBlock source="setupCard" title="Placement Rules">
                  <ul className="list-disc ml-5 mt-1 space-y-1">
                      <li>Unoccupied Planetary Sector adjacent to a Supply Planet.</li>
                      <li>Cannot be placed in a Sector with a Contact.</li>

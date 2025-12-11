@@ -25,7 +25,7 @@ describe('utils', () => {
     });
 
     it('respects overrideWinnerIndex for forced tie breaking', () => {
-      // Scenario: P2 has highest visible roll, but override says P1 won (e.g. tie-breaker result)
+      // P2 has highest visible roll, but override says P1 won (e.g. tie-breaker result)
       const rolls: DiceResult[] = [
         { player: 'P1', roll: 2 }, 
         { player: 'P2', roll: 5 }, 
@@ -96,7 +96,7 @@ describe('utils', () => {
       expect(totalCredits).toBe(500);
     });
 
-    it('respects overrides from scenario', () => {
+    it('respects overrides from setup card', () => {
         const { totalCredits } = calculateStartingResources(mockStory(), { startingCredits: 5000 });
         expect(totalCredits).toBe(5000);
     });

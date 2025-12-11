@@ -31,7 +31,7 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step, gameState })
   return (
     <div className="space-y-4">
       {isBlitz && (
-        <SpecialRuleBlock source="scenario" title="Setup Override">
+        <SpecialRuleBlock source="setupCard" title="Setup Card Override">
           <strong>The Blitz:</strong> "Double Dip" rules are in effect. Discard the top <strong>6 cards</strong> from each deck instead of the standard amount.
         </SpecialRuleBlock>
       )}

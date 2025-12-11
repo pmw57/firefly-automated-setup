@@ -11,7 +11,7 @@ Setting up *Firefly: The Game* can be complex, especially when combining multipl
 
 This application automates the rules logic to provide a step-by-step wizard that:
 *   Filters components based on owned **Expansions**.
-*   Handles **Scenario** specific overrides (e.g., "The Browncoat Way" market rules).
+*   Handles **Setup Card** specific overrides (e.g., "The Browncoat Way" market rules).
 *   Applies **Story Card** specific setup instructions (e.g., "Smuggler's Blues" contraband placement).
 *   Manages **Drafting** for ships and leaders.
 

@@ -26,7 +26,7 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
   if (id.includes('D_TIME_LIMIT')) {
     return (
-      <SpecialRuleBlock source="scenario" title="Setup Override">
+      <SpecialRuleBlock source="setupCard" title="Setup Card Override">
         <strong>Game Timer:</strong>
         <div className="space-y-3 mt-1">
           <p>Give a pile of <strong>20 Disgruntled Tokens</strong> to the player taking the first turn. These tokens will be used as Game Length Tokens.</p>
@@ -39,7 +39,7 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
   if (id.includes('D_SHUTTLE')) {
     return (
-      <SpecialRuleBlock source="scenario" title="Setup Override">
+      <SpecialRuleBlock source="setupCard" title="Setup Card Override">
         <strong>Draft Shuttles from Supply:</strong>
         <ul className="list-decimal ml-5 space-y-2 mt-1">
           <li>Pull all <strong>Shuttles</strong> from the Supply Decks.</li>
@@ -64,7 +64,7 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
   if (id.includes('D_LOCAL_HEROES')) {
     return (
-      <SpecialRuleBlock source="scenario" title="Setup Override">
+      <SpecialRuleBlock source="setupCard" title="Setup Card Override">
         <strong>Local Heroes Bonuses:</strong>
         <ul className="list-disc ml-5 space-y-2 mt-1">
           <li><strong>Shore Leave:</strong> At your Haven, you may use a Buy Action to take Shore Leave for free. Remove all Disgruntled and Wanted tokens.</li>
@@ -76,7 +76,7 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
   if (id.includes('D_ALLIANCE_ALERT')) {
     return (
-      <SpecialRuleBlock source="scenario" title="Setup Override">
+      <SpecialRuleBlock source="setupCard" title="Setup Card Override">
         <strong>Alliance Alert Cards:</strong>
         <div className="space-y-3 mt-1">
           <p>Begin the game with <strong>one random Alliance Alert Card</strong> in play.</p>
@@ -88,7 +88,7 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
   if (id.includes('D_PRESSURES_HIGH')) {
     return (
-      <SpecialRuleBlock source="scenario" title="Setup Override">
+      <SpecialRuleBlock source="setupCard" title="Setup Card Override">
         <strong>The Pressure's High:</strong>
         <div className="space-y-4 mt-1">
           <div>
@@ -109,7 +109,7 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
   if (id.includes('D_STRIP_MINING')) {
     return (
-      <SpecialRuleBlock source="scenario" title="Setup Override">
+      <SpecialRuleBlock source="setupCard" title="Setup Card Override">
         <strong>The Dinosaur Draft:</strong>
         <ol className="list-decimal ml-5 space-y-2 text-sm mt-1">
           <li>Choose 1 Supply Deck to be "Strip Mined".</li>

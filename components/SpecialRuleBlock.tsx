@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface SpecialRuleBlockProps {
-  source: 'story' | 'scenario' | 'expansion' | 'warning' | 'info';
+  source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
   title?: string;
   children: React.ReactNode;
 }
@@ -15,12 +15,12 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
       icon: '📜',
       label: 'Story Override'
     },
-    scenario: {
+    setupCard: {
       border: 'border-blue-500',
       bg: 'bg-blue-50',
       text: 'text-blue-900',
       icon: '⚙️',
-      label: 'Setup Override'
+      label: 'Setup Card Override'
     },
     expansion: {
       border: 'border-purple-500',

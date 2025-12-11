@@ -81,7 +81,7 @@ export const EXPANSIONS_METADATA: ExpansionDef[] = [
   {
     id: 'community',
     label: "Community Content",
-    description: "Unofficial Story Cards and Scenarios created by the Firefly community.",
+    description: "Unofficial Story Cards created by the Firefly community.",
     themeColor: 'teal',
     icon: { type: 'text', value: 'CC' }
   }

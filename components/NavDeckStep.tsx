@@ -15,7 +15,7 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
   const isClearerSkies = overrides.clearerSkiesNavMode;
   const isHighPlayerCount = gameState.playerCount >= 3;
 
-  // Group "Rim Mode" and "Force Reshuffle" as scenarios that mandate Reshuffle cards at the start
+  // Group "Rim Mode" and "Force Reshuffle" as setups that mandate Reshuffle cards at the start
   const hasForcedReshuffle = isRimMode || isForceReshuffle;
 
   const renderAction = (text: string) => <span className="font-bold border-b border-gray-400 border-dotted">{text}</span>;
@@ -24,11 +24,11 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
     <>
       <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-6 overflow-hidden">
         {isBrowncoatNav ? (
-          <SpecialRuleBlock source="scenario" title="Setup Override">
+          <SpecialRuleBlock source="setupCard" title="Setup Card Override">
             <strong>Hardcore Navigation:</strong> Shuffle the {renderAction("Alliance Cruiser")} and {renderAction("Reaver Cutter")} cards into the Nav Decks immediately, regardless of player count.
           </SpecialRuleBlock>
         ) : hasForcedReshuffle ? (
-          <SpecialRuleBlock source="scenario" title="Setup Override">
+          <SpecialRuleBlock source="setupCard" title="Setup Card Override">
             <ul className="list-disc ml-4 space-y-1">
               <li>Place the {renderAction("\"RESHUFFLE\"")} cards in the Nav Decks at the start of the game, regardless of player count.</li>
               <li>{renderAction("Shuffle each of the Alliance and Border Nav Decks")}.</li>
@@ -42,7 +42,7 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
         )}
 
         {isClearerSkies && (
-          <SpecialRuleBlock source="scenario" title="Setup Override">
+          <SpecialRuleBlock source="setupCard" title="Setup Card Override">
             <strong>Clearer Skies Rule:</strong> When initiating a Full Burn, roll a die. The result is how many sectors you may move before you start drawing Nav Cards.
             <br /><span className="text-xs italic opacity-75">Note: You may not move farther than your Drive Core's range, regardless of the die roll.</span>
           </SpecialRuleBlock>

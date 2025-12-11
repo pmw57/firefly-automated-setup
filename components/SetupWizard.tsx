@@ -6,7 +6,7 @@ import { StepContent } from './StepContent';
 import { ProgressBar } from './ProgressBar';
 import { Button } from './Button';
 
-const STORAGE_KEY = 'firefly_setup_v1';
+const STORAGE_KEY = 'firefly_setup_v2';
 
 interface PersistedState {
   gameState: GameState;
@@ -24,8 +24,8 @@ const getDefaultGameState = (): GameState => {
   return {
     playerCount: 4,
     playerNames: ['Captain 1', 'Captain 2', 'Captain 3', 'Captain 4'],
-    scenarioValue: 'Standard',
-    scenarioName: 'Standard Game Setup',
+    setupCardId: 'Standard',
+    setupCardName: 'Standard Game Setup',
     selectedStoryCard: STORY_CARDS[0].title,
     expansions: initialExpansions
   };
@@ -33,7 +33,7 @@ const getDefaultGameState = (): GameState => {
 
 // Helper to rebuild flow from a game state (Moved outside to satisfy React Hooks deps)
 const calculateFlow = (state: GameState): Step[] => {
-  const setupDef = SETUP_CARDS.find(s => s.id === state.scenarioValue) || SETUP_CARDS[0];
+  const setupDef = SETUP_CARDS.find(s => s.id === state.setupCardId) || SETUP_CARDS[0];
   const newFlow: Step[] = [];
 
   setupDef.steps.forEach(setupStep => {
@@ -193,7 +193,7 @@ const SetupWizard: React.FC = () => {
         <div className="flex flex-col">
            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Active Game</span>
            <div className="flex flex-wrap items-center gap-x-2 font-bold text-green-900 text-sm md:text-base leading-tight">
-              <span className="text-blue-900">{gameState.scenarioName}</span>
+              <span className="text-blue-900">{gameState.setupCardName}</span>
               {gameState.selectedStoryCard && (
                 <>
                   <span className="text-gray-400 hidden sm:inline">•</span>

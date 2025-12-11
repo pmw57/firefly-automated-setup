@@ -110,9 +110,9 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                 </SpecialRuleBlock>
             )}
 
-            {gameState.scenarioValue === 'TheRimsTheThing' && (
-                <SpecialRuleBlock source="scenario" title="Setup Override">
-                    <strong>The Rim's The Thing:</strong> Remember that only <strong>Border Space</strong> Nav Decks are used in this scenario. Choose a mission achievable with limited navigation options.
+            {gameState.setupCardId === 'TheRimsTheThing' && (
+                <SpecialRuleBlock source="setupCard" title="Setup Card Override">
+                    <strong>The Rim's The Thing:</strong> Remember that only <strong>Border Space</strong> Nav Decks are used in this setup card. Choose a mission achievable with limited navigation options.
                 </SpecialRuleBlock>
             )}
          </div>

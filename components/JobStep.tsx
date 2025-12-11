@@ -42,7 +42,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
        if (jobMode === 'no_jobs') {
            if (overrides.browncoatJobMode) {
                return (
-                   <SpecialRuleBlock source="scenario" title="Setup Override">
+                   <SpecialRuleBlock source="setupCard" title="Setup Card Override">
                        <p><strong>No Starting Jobs.</strong></p>
                        <p>Crews must find work on their own out in the black.</p>
                    </SpecialRuleBlock>
@@ -79,11 +79,11 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
            );
        }
        
-       // 2. Scenario Overrides
+       // 2. Setup Card Overrides
 
        if (jobMode === 'times_jobs') {
            return (
-               <SpecialRuleBlock source="scenario" title="Setup Override">
+               <SpecialRuleBlock source="setupCard" title="Setup Card Override">
                    <p>Each player draws <strong>3 jobs</strong> from <strong>one Contact Deck</strong> of their choice.</p>
                    <p className="text-sm italic opacity-80 mt-1">Players may draw from the same Contact.</p>
                    <p className="opacity-75 mt-2">Players may discard any starting jobs they do not want.</p>
@@ -132,16 +132,16 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                )}
 
                {jobMode === 'high_alert_jobs' && (
-                   <SpecialRuleBlock source="scenario" title="Setup Override">
-                       <strong>Harken is unavailable.</strong> The Harken Contact Deck is removed for this scenario.
+                   <SpecialRuleBlock source="setupCard" title="Setup Card Override">
+                       <strong>Harken is unavailable.</strong> The Harken Contact Deck is removed for this setup card.
                    </SpecialRuleBlock>
                )}
 
                {jobMode === 'awful_jobs' && (
-                   <SpecialRuleBlock source="scenario" title="Setup Override">
+                   <SpecialRuleBlock source="setupCard" title="Setup Card Override">
                        {forbiddenStartingContact === 'Harken' ? (
                            <>
-                               <strong>Limited Contacts.</strong> This scenario normally draws from Harken, Amnon Duul, and Patience.
+                               <strong>Limited Contacts.</strong> This setup card normally draws from Harken, Amnon Duul, and Patience.
                                <div className="mt-1 text-amber-800 font-bold text-xs">
                                    ⚠️ Story Card Conflict: Harken is unavailable. Draw from Amnon Duul and Patience only.
                                </div>
@@ -153,15 +153,15 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                )}
 
                {jobMode === 'buttons_jobs' && (
-                   <SpecialRuleBlock source="scenario" title="Setup Override">
+                   <SpecialRuleBlock source="setupCard" title="Setup Card Override">
                         <strong>Specific Contacts:</strong> Draw from Amnon Duul, Lord Harrow, and Magistrate Higgins.
                         <br/>
                         <strong>Caper Bonus:</strong> Draw 1 Caper Card.
                    </SpecialRuleBlock>
                )}
 
-               {gameState.scenarioValue === 'TheRimsTheThing' && (
-                   <SpecialRuleBlock source="scenario" title="Setup Override">
+               {gameState.setupCardId === 'TheRimsTheThing' && (
+                   <SpecialRuleBlock source="setupCard" title="Setup Card Override">
                        <strong>Modified Contact Decks.</strong> The Contact Decks contain only cards from the Blue Sun and Kalidasa expansions.
                    </SpecialRuleBlock>
                )}
@@ -185,7 +185,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
   return (
       <div className="space-y-4">
           {stepId.includes('D_RIM_JOBS') ? (
-             <SpecialRuleBlock source="scenario" title="Setup Override">
+             <SpecialRuleBlock source="setupCard" title="Setup Card Override">
                <p className="leading-relaxed mb-2">
                  Separate the Job Cards from the <InlineExpansionIcon type="blue" /> and <InlineExpansionIcon type="kalidasa" /> expansions (marked with their icons).
                </p>

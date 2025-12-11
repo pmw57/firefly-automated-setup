@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { SETUP_CARDS, STORY_CARDS, EXPANSIONS_METADATA, SETUP_CONTENT } from '../constants';
 
 describe('Data Integrity', () => {
-  describe('Setup Cards (Scenarios)', () => {
+  describe('Setup Cards', () => {
     it('all setup cards have a valid requiredExpansion if set', () => {
       SETUP_CARDS.forEach(setup => {
         if (setup.requiredExpansion) {

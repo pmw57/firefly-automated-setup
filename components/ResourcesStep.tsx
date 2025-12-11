@@ -33,7 +33,7 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step, gameState })
       <div className={`p-4 rounded-lg border shadow-sm flex items-center justify-between ${noFuelParts ? 'bg-red-50 border-red-200' : 'bg-white border-gray-200'}`}>
         <div>
           <h4 className={`font-bold ${noFuelParts ? 'text-red-800' : 'text-gray-700'}`}>Fuel & Parts</h4>
-          {noFuelParts && <p className="text-xs text-red-600 font-bold mt-1">DISABLED BY STORY CARD / SCENARIO</p>}
+          {noFuelParts && <p className="text-xs text-red-600 font-bold mt-1">DISABLED BY STORY CARD</p>}
         </div>
         <div className="text-right">
           {noFuelParts ? (

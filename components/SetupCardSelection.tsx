@@ -22,8 +22,8 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
   const handleSetupCardSelect = (id: string, label: string) => {
     setGameState(prev => ({
       ...prev,
-      scenarioValue: id,
-      scenarioName: label
+      setupCardId: id,
+      setupCardName: label
     }));
   };
 
@@ -82,7 +82,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
         
         <div className="w-full border border-gray-200 rounded-lg shadow-sm bg-white overflow-hidden flex flex-col">
           {availableSetups.map(opt => {
-            const isSelected = gameState.scenarioValue === opt.id;
+            const isSelected = gameState.setupCardId === opt.id;
             return (
               <button 
                 key={opt.id}

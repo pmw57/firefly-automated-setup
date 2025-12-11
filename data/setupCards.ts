@@ -165,7 +165,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     ]
   },
 
-  // 9. Still Flying (No scenarios defined)
+  // 9. Still Flying (No setup cards defined)
 
   // 10. Black Market
   { 
