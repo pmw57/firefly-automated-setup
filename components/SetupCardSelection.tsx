@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { GameState } from '../types';
 import { SETUP_CARDS } from '../constants';
 import { Button } from './Button';
@@ -12,6 +12,8 @@ interface SetupCardSelectionProps {
 }
 
 export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameState, setGameState, onBack, onStart }) => {
+  const selectedRef = useRef<HTMLButtonElement>(null);
+
   const availableSetups = SETUP_CARDS.filter(setup => {
     if (!setup.requiredExpansion) return true;
     return gameState.expansions[setup.requiredExpansion];
@@ -24,6 +26,49 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
       scenarioName: label
     }));
   };
+
+  // Scroll to selected item on mount with custom 1s animation
+  useEffect(() => {
+    if (selectedRef.current) {
+      setTimeout(() => {
+        const element = selectedRef.current;
+        if (!element) return;
+
+        const rect = element.getBoundingClientRect();
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const elementTop = rect.top + scrollTop;
+        const viewportHeight = window.innerHeight;
+        
+        // Calculate target position to center the element
+        const targetScrollTop = elementTop - (viewportHeight / 2) + (rect.height / 2);
+        
+        const startScrollTop = scrollTop;
+        const distance = targetScrollTop - startScrollTop;
+        const duration = 1000; // 1 second
+        let startTime: number | null = null;
+
+        // Easing function: easeInOutQuad
+        const easeInOutQuad = (t: number) => {
+          return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        };
+
+        const animateScroll = (currentTime: number) => {
+          if (startTime === null) startTime = currentTime;
+          const timeElapsed = currentTime - startTime;
+          const progress = Math.min(timeElapsed / duration, 1);
+          const ease = easeInOutQuad(progress);
+
+          window.scrollTo(0, startScrollTop + (distance * ease));
+
+          if (timeElapsed < duration) {
+            requestAnimationFrame(animateScroll);
+          }
+        };
+
+        requestAnimationFrame(animateScroll);
+      }, 100);
+    }
+  }, []);
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-200 animate-fade-in">
@@ -41,6 +86,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
             return (
               <button 
                 key={opt.id}
+                ref={isSelected ? selectedRef : null}
                 type="button"
                 onClick={() => handleSetupCardSelect(opt.id, opt.label)}
                 className={`flex items-stretch text-left cursor-pointer border-b border-gray-100 last:border-0 transition-colors focus:outline-none focus:bg-green-50 focus:z-10 focus:ring-inset focus:ring-2 focus:ring-green-500 ${isSelected ? 'bg-green-50' : 'hover:bg-gray-50'}`}
