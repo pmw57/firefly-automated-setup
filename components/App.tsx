@@ -1,7 +1,7 @@
 import React from 'react';
-import SetupWizard from './components/SetupWizard';
-import { InstallPWA } from './components/InstallPWA';
-import { useTheme } from './components/ThemeProvider';
+import SetupWizard from './SetupWizard';
+import { InstallPWA } from './InstallPWA';
+import { useTheme } from './ThemeContext';
 
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
