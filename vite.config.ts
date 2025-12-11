@@ -2,8 +2,17 @@ import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Generate a version string based on the current date (YYYY.MM.DD)
+const getVersion = () => {
+  const date = new Date();
+  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+};
+
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => ({
+  define: {
+    '__APP_VERSION__': JSON.stringify(getVersion()),
+  },
   plugins: [
     react(),
     VitePWA({ 
