@@ -18,21 +18,47 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
 
   const handleDetermineOrder = () => {
-    const rolls: DiceResult[] = [];
-    const takenRolls = new Set<number>();
+    // 1. Initial Roll for everyone (D6)
+    // These are the values that will be displayed to the user
+    const initialRolls: DiceResult[] = gameState.playerNames.map(name => ({
+        player: name,
+        roll: Math.floor(Math.random() * 6) + 1
+    }));
 
-    for (let i = 0; i < gameState.playerCount; i++) {
-      let roll;
-      do {
-        roll = Math.floor(Math.random() * 20) + 1;
-      } while (takenRolls.has(roll));
-      takenRolls.add(roll);
-      
-      const playerName = gameState.playerNames[i] || `Captain ${i + 1}`;
-      rolls.push({ player: playerName, roll });
+    // 2. Automate Tie Breaking
+    // We use a separate array to track effective rolls for logic determination.
+    // This allows us to re-roll for ties without overwriting the visual 'initialRolls' that caused the tie.
+    let logicRolls = initialRolls.map(r => r.roll);
+    let candidates = initialRolls.map((_, i) => i); 
+    let winnerIndex = -1;
+
+    // Loop until we have a single winner
+    while (true) {
+        // Find max roll value among current candidates using the logic array
+        let currentMax = -1;
+        candidates.forEach(i => {
+            if (logicRolls[i] > currentMax) currentMax = logicRolls[i];
+        });
+
+        // Filter candidates who matched the max roll
+        const tiedCandidates = candidates.filter(i => logicRolls[i] === currentMax);
+
+        if (tiedCandidates.length === 1) {
+            // We have a winner
+            winnerIndex = tiedCandidates[0];
+            break;
+        }
+
+        // Multiple winners: Re-roll ONLY for the tied players (internal logic only)
+        candidates = tiedCandidates;
+        candidates.forEach(i => {
+            logicRolls[i] = Math.floor(Math.random() * 6) + 1;
+        });
+        // Loop continues to check results of the re-roll
     }
 
-    const newState = calculateDraftOutcome(rolls, gameState.playerCount);
+    // Pass the INITIAL display rolls to the state, but force the winner based on the logic result
+    const newState = calculateDraftOutcome(initialRolls, gameState.playerCount, winnerIndex);
     setDraftState(newState);
   };
 
@@ -41,7 +67,15 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
     const val = parseInt(newValue) || 0;
     const newRolls = [...draftState.rolls];
     newRolls[index] = { ...newRolls[index], roll: val };
+    // When manually changing, we reset the override winner index (3rd param) so it recalculates based on input
     const newState = calculateDraftOutcome(newRolls, gameState.playerCount);
+    setDraftState(newState);
+  };
+
+  const handleSetWinner = (index: number) => {
+    if (!draftState) return;
+    // Explicitly set the winner, overriding automatic calculation logic
+    const newState = calculateDraftOutcome(draftState.rolls, gameState.playerCount, index);
     setDraftState(newState);
   };
 
@@ -62,14 +96,18 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
 
   return (
     <>
-      <p className="mb-4 text-gray-600 italic">Determine who drafts first, then follow the seating order.</p>
+      <p className="mb-4 text-gray-600 italic">Determine who drafts first using a D6. Ties are resolved automatically.</p>
       {!draftState ? (
         <Button onClick={handleDetermineOrder} variant="secondary" fullWidth className="mb-4">
            🎲 Roll for {isHavenDraft ? 'Haven Draft' : 'Command'}
         </Button>
       ) : (
         <div className="animate-fade-in space-y-6">
-          <DiceControls draftState={draftState} onRollChange={handleRollChange} />
+          <DiceControls 
+            draftState={draftState} 
+            onRollChange={handleRollChange} 
+            onSetWinner={handleSetWinner}
+          />
           
           {/* RULES BLOCK AREA */}
           {isWantedLeaderMode && (

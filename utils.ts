@@ -1,9 +1,18 @@
 import { StoryCardDef, StepOverrides, DiceResult, DraftState } from './types';
 
 // --- Draft Logic ---
-export const calculateDraftOutcome = (currentRolls: DiceResult[], playerCount: number): DraftState => {
-  const maxRoll = Math.max(...currentRolls.map(r => r.roll));
-  const winnerIndex = currentRolls.findIndex(r => r.roll === maxRoll);
+export const calculateDraftOutcome = (
+  currentRolls: DiceResult[], 
+  playerCount: number,
+  overrideWinnerIndex?: number
+): DraftState => {
+  let winnerIndex = overrideWinnerIndex;
+
+  // If no winner is explicitly provided, calculate based on max roll (first player with max wins)
+  if (winnerIndex === undefined || winnerIndex === -1) {
+    const maxRoll = Math.max(...currentRolls.map(r => r.roll));
+    winnerIndex = currentRolls.findIndex(r => r.roll === maxRoll);
+  }
   
   const updatedRolls = currentRolls.map((r, i) => ({
     ...r,

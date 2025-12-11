@@ -23,10 +23,26 @@ describe('utils', () => {
       // Placement Order: Reverse of draft (P1, P4, P3, P2)
       expect(result.placementOrder).toEqual(['P1', 'P4', 'P3', 'P2']);
     });
+
+    it('respects overrideWinnerIndex for forced tie breaking', () => {
+      // Scenario: P2 has highest visible roll, but override says P1 won (e.g. tie-breaker result)
+      const rolls: DiceResult[] = [
+        { player: 'P1', roll: 2 }, 
+        { player: 'P2', roll: 5 }, 
+        { player: 'P3', roll: 4 }
+      ];
+
+      // Force P1 (Index 0) to be winner despite lower roll
+      const result = calculateDraftOutcome(rolls, 3, 0);
+
+      expect(result.rolls[0].isWinner).toBe(true);
+      expect(result.rolls[1].isWinner).toBe(false);
+      expect(result.draftOrder[0]).toBe('P1');
+    });
   });
 
   // Shared Helper
-  const mockStory = (config = {}): StoryCardDef => ({
+  const mockStory = (config: any = {}): StoryCardDef => ({
     title: 'Mock Story',
     intro: 'Intro',
     setupConfig: config
@@ -54,7 +70,8 @@ describe('utils', () => {
       ['awfulJobMode', 'awful_jobs']
     ])('returns %s when %s override is true', (key, expectedMode) => {
       const overrides = { [key]: true };
-      expect(determineJobMode(mockStory(), overrides)).toBe(expectedMode);
+      // Explicitly cast to any to allow dynamic key access for the test
+      expect(determineJobMode(mockStory(), overrides as any)).toBe(expectedMode);
     });
   });
 
