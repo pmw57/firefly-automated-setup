@@ -59,6 +59,7 @@ const SetupWizard: React.FC = () => {
   const [isStarted, setIsStarted] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [resetKey, setResetKey] = useState(0);
+  const [initialFormStep, setInitialFormStep] = useState<1 | 2>(1);
   
   // UI State for Restart Confirmation
   const [showConfirmReset, setShowConfirmReset] = useState(false);
@@ -125,6 +126,7 @@ const SetupWizard: React.FC = () => {
     } else {
       setIsStarted(false);
       setFlow([]);
+      setInitialFormStep(2);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -142,6 +144,7 @@ const SetupWizard: React.FC = () => {
     setCurrentStepIndex(0);
     setIsStarted(false);
     setShowConfirmReset(false);
+    setInitialFormStep(1);
     
     // 3. Force Re-mount of children
     setResetKey(prev => prev + 1);
@@ -172,7 +175,7 @@ const SetupWizard: React.FC = () => {
   }
 
   if (!isStarted) {
-    return <InitialForm key={resetKey} gameState={gameState} setGameState={setGameState} onStart={buildFlow} />;
+    return <InitialForm key={resetKey} gameState={gameState} setGameState={setGameState} onStart={buildFlow} initialStep={initialFormStep} />;
   }
 
   const currentStep = flow[currentStepIndex];
