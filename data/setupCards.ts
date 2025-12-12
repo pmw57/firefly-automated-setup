@@ -136,7 +136,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     id: "TheBrowncoatWay",
     label: "The Browncoat Way",
     description: "A harder economy. Ships must be purchased with starting cash. No free fuel/parts. No starting jobs.",
-    requiredExpansion: 'jetwash',
+    requiredExpansion: 'coachworks',
     steps: [
       { id: 'C4' }, // 1. Goal (First!)
       { id: 'C1', overrides: { browncoatNavMode: true } }, // 2. Nav (With overrides)
@@ -153,7 +153,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     id: "TheBlitz",
     label: "The Blitz",
     description: "Standard supplies are replaced by 'Strip Mining' (drafting cards). Priming the Pump discards double the cards.",
-    requiredExpansion: 'esmerelda',
+    requiredExpansion: 'coachworks',
     steps: [
       { id: 'C4' }, // 1. Goal
       { id: 'C1', overrides: { browncoatNavMode: true } }, // 2. Nav (Shuffle Ships rule)

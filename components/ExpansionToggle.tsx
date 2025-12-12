@@ -28,40 +28,36 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
   const isDark = theme === 'dark';
 
   const getThemeStyles = (color: ThemeColor): ThemeStyles => {
+    // Note: Using arbitrary values for specific requested colors
     if (isDark) {
-      // Dark Mode Definitions
       switch (color) {
-        case 'blue': return { border: 'border-blue-900', bg: 'bg-blue-950/40', badge: 'bg-blue-900/60 text-blue-100', toggle: 'bg-blue-700', icon: 'bg-blue-900 text-blue-100' };
-        case 'amber': return { border: 'border-amber-900', bg: 'bg-amber-950/40', badge: 'bg-amber-900/60 text-amber-100', toggle: 'bg-amber-700', icon: 'bg-amber-900 text-amber-100' };
-        case 'red': return { border: 'border-red-900', bg: 'bg-red-950/40', badge: 'bg-red-900/60 text-red-100', toggle: 'bg-red-700', icon: 'bg-red-900 text-red-100' };
-        case 'purple': return { border: 'border-purple-900', bg: 'bg-purple-950/40', badge: 'bg-purple-900/60 text-purple-100', toggle: 'bg-purple-700', icon: 'bg-purple-900 text-purple-100' };
-        case 'yellow': return { border: 'border-yellow-900', bg: 'bg-yellow-950/40', badge: 'bg-yellow-900/60 text-yellow-100', toggle: 'bg-yellow-700', icon: 'bg-yellow-900 text-yellow-100' };
-        case 'dark': return { border: 'border-zinc-700', bg: 'bg-black/40', badge: 'bg-zinc-800 text-gray-300', toggle: 'bg-zinc-700', icon: 'bg-zinc-900 text-gray-400' };
-        case 'cyan': return { border: 'border-cyan-900', bg: 'bg-cyan-950/40', badge: 'bg-cyan-900/60 text-cyan-100', toggle: 'bg-cyan-700', icon: 'bg-cyan-900 text-cyan-100' };
-        case 'paleGreen': return { border: 'border-emerald-900', bg: 'bg-emerald-950/40', badge: 'bg-emerald-900/60 text-emerald-100', toggle: 'bg-emerald-700', icon: 'bg-emerald-900 text-emerald-100' };
-        case 'firebrick': return { border: 'border-red-950', bg: 'bg-red-950/30', badge: 'bg-red-950/60 text-red-100', toggle: 'bg-red-900', icon: 'bg-red-950 text-red-200' };
-        case 'khaki': return { border: 'border-amber-900', bg: 'bg-amber-950/30', badge: 'bg-amber-900/60 text-amber-100', toggle: 'bg-amber-700', icon: 'bg-amber-900 text-amber-100' };
-        case 'cornflower': return { border: 'border-indigo-900', bg: 'bg-indigo-950/40', badge: 'bg-indigo-900/60 text-indigo-100', toggle: 'bg-indigo-700', icon: 'bg-indigo-900 text-indigo-100' };
-        case 'brown': return { border: 'border-orange-950', bg: 'bg-orange-950/30', badge: 'bg-orange-900/60 text-orange-100', toggle: 'bg-orange-900', icon: 'bg-orange-950 text-orange-200' };
+        case 'orangeRed': return { border: 'border-orange-600', bg: 'bg-[#FF4500]/20', badge: 'bg-[#FF4500]/40 text-white', toggle: 'bg-[#FF4500]', icon: 'bg-[#FF4500] text-white' };
+        case 'steelBlue': return { border: 'border-sky-600', bg: 'bg-[#4682B4]/20', badge: 'bg-[#4682B4]/40 text-sky-100', toggle: 'bg-[#4682B4]', icon: 'bg-[#4682B4] text-white' };
+        case 'black': return { border: 'border-zinc-700', bg: 'bg-black/60', badge: 'bg-zinc-800 text-white', toggle: 'bg-black', icon: 'bg-black text-white border border-zinc-700' };
+        case 'darkSlateBlue': return { border: 'border-indigo-800', bg: 'bg-[#483D8B]/30', badge: 'bg-[#483D8B]/50 text-indigo-100', toggle: 'bg-[#483D8B]', icon: 'bg-[#483D8B] text-white' };
+        case 'deepBrown': return { border: 'border-[#3E2910]', bg: 'bg-[#231709]/60', badge: 'bg-[#231709] text-amber-100', toggle: 'bg-[#231709]', icon: 'bg-[#231709] text-white' };
+        case 'rebeccaPurple': return { border: 'border-purple-800', bg: 'bg-[#663399]/30', badge: 'bg-[#663399]/50 text-purple-100', toggle: 'bg-[#663399]', icon: 'bg-[#663399] text-white' };
+        case 'cordovan': return { border: 'border-red-900', bg: 'bg-[#893f45]/30', badge: 'bg-[#893f45]/50 text-rose-100', toggle: 'bg-[#893f45]', icon: 'bg-[#893f45] text-white' };
+        case 'darkOliveGreen': return { border: 'border-lime-900', bg: 'bg-[#556b2f]/30', badge: 'bg-[#556b2f]/50 text-lime-100', toggle: 'bg-[#556b2f]', icon: 'bg-[#556b2f] text-white' };
+        case 'saddleBrown': return { border: 'border-orange-900', bg: 'bg-[#8b4513]/30', badge: 'bg-[#8b4513]/50 text-orange-100', toggle: 'bg-[#8b4513]', icon: 'bg-[#8b4513] text-white' };
         case 'teal': return { border: 'border-teal-900', bg: 'bg-teal-950/40', badge: 'bg-teal-900/60 text-teal-100', toggle: 'bg-teal-700', icon: 'bg-teal-900 text-teal-100' };
+        case 'dark': return { border: 'border-zinc-700', bg: 'bg-black/40', badge: 'bg-zinc-800 text-gray-300', toggle: 'bg-zinc-700', icon: 'bg-zinc-900 text-gray-400' };
         default: return { border: 'border-zinc-700', bg: 'bg-zinc-900/60', badge: 'bg-zinc-800 text-gray-200', toggle: 'bg-zinc-600', icon: 'bg-zinc-800 text-gray-300' };
       }
     } else {
-      // Light Mode Definitions
+      // Light Mode (Slightly brighter backgrounds)
       switch (color) {
-        case 'blue': return { border: 'border-blue-500', bg: 'bg-blue-50', badge: 'bg-blue-100 text-blue-800', toggle: 'bg-blue-600', icon: 'bg-blue-600 text-white' };
-        case 'amber': return { border: 'border-amber-500', bg: 'bg-amber-50', badge: 'bg-amber-100 text-amber-800', toggle: 'bg-amber-600', icon: 'bg-amber-600 text-white' };
-        case 'red': return { border: 'border-red-500', bg: 'bg-red-50', badge: 'bg-red-100 text-red-800', toggle: 'bg-red-600', icon: 'bg-red-600 text-white' };
-        case 'purple': return { border: 'border-purple-500', bg: 'bg-purple-50', badge: 'bg-purple-100 text-purple-800', toggle: 'bg-purple-600', icon: 'bg-purple-600 text-white' };
-        case 'yellow': return { border: 'border-yellow-500', bg: 'bg-yellow-50', badge: 'bg-yellow-100 text-yellow-800', toggle: 'bg-yellow-600', icon: 'bg-yellow-600 text-white' };
-        case 'dark': return { border: 'border-gray-800', bg: 'bg-gray-50', badge: 'bg-gray-200 text-gray-900', toggle: 'bg-gray-900', icon: 'bg-gray-900 text-white' };
-        case 'cyan': return { border: 'border-cyan-500', bg: 'bg-cyan-50', badge: 'bg-cyan-100 text-cyan-800', toggle: 'bg-cyan-600', icon: 'bg-cyan-600 text-white' };
-        case 'paleGreen': return { border: 'border-green-400', bg: 'bg-green-50', badge: 'bg-green-100 text-green-800', toggle: 'bg-green-400', icon: 'bg-green-400 text-white' };
-        case 'firebrick': return { border: 'border-red-800', bg: 'bg-red-50', badge: 'bg-red-100 text-red-900', toggle: 'bg-red-800', icon: 'bg-red-800 text-white' };
-        case 'khaki': return { border: 'border-amber-400', bg: 'bg-amber-50', badge: 'bg-amber-100 text-amber-900', toggle: 'bg-amber-400', icon: 'bg-amber-400 text-white' };
-        case 'cornflower': return { border: 'border-indigo-400', bg: 'bg-indigo-50', badge: 'bg-indigo-100 text-indigo-800', toggle: 'bg-indigo-400', icon: 'bg-indigo-400 text-white' };
-        case 'brown': return { border: 'border-orange-800', bg: 'bg-orange-50', badge: 'bg-orange-100 text-orange-900', toggle: 'bg-orange-800', icon: 'bg-orange-800 text-white' };
+        case 'orangeRed': return { border: 'border-orange-500', bg: 'bg-[#FF4500]/10', badge: 'bg-[#FF4500]/20 text-orange-900', toggle: 'bg-[#FF4500]', icon: 'bg-[#FF4500] text-white' };
+        case 'steelBlue': return { border: 'border-sky-500', bg: 'bg-[#4682B4]/10', badge: 'bg-[#4682B4]/20 text-sky-900', toggle: 'bg-[#4682B4]', icon: 'bg-[#4682B4] text-white' };
+        case 'black': return { border: 'border-gray-800', bg: 'bg-gray-100', badge: 'bg-black text-white', toggle: 'bg-black', icon: 'bg-black text-white' };
+        case 'darkSlateBlue': return { border: 'border-indigo-600', bg: 'bg-[#483D8B]/10', badge: 'bg-[#483D8B]/20 text-indigo-900', toggle: 'bg-[#483D8B]', icon: 'bg-[#483D8B] text-white' };
+        case 'deepBrown': return { border: 'border-[#5C4033]', bg: 'bg-[#231709]/10', badge: 'bg-[#231709]/20 text-black', toggle: 'bg-[#231709]', icon: 'bg-[#231709] text-white' };
+        case 'rebeccaPurple': return { border: 'border-purple-600', bg: 'bg-[#663399]/10', badge: 'bg-[#663399]/20 text-purple-900', toggle: 'bg-[#663399]', icon: 'bg-[#663399] text-white' };
+        case 'cordovan': return { border: 'border-red-800', bg: 'bg-[#893f45]/10', badge: 'bg-[#893f45]/20 text-red-900', toggle: 'bg-[#893f45]', icon: 'bg-[#893f45] text-white' };
+        case 'darkOliveGreen': return { border: 'border-lime-700', bg: 'bg-[#556b2f]/10', badge: 'bg-[#556b2f]/20 text-lime-900', toggle: 'bg-[#556b2f]', icon: 'bg-[#556b2f] text-white' };
+        case 'saddleBrown': return { border: 'border-orange-800', bg: 'bg-[#8b4513]/10', badge: 'bg-[#8b4513]/20 text-orange-900', toggle: 'bg-[#8b4513]', icon: 'bg-[#8b4513] text-white' };
         case 'teal': return { border: 'border-teal-500', bg: 'bg-teal-50', badge: 'bg-teal-100 text-teal-800', toggle: 'bg-teal-600', icon: 'bg-teal-600 text-white' };
+        case 'dark': return { border: 'border-gray-800', bg: 'bg-gray-50', badge: 'bg-gray-200 text-gray-900', toggle: 'bg-gray-900', icon: 'bg-gray-900 text-white' };
         default: return { border: 'border-gray-500', bg: 'bg-gray-100', badge: 'bg-gray-200 text-gray-800', toggle: 'bg-gray-600', icon: 'bg-gray-600 text-white' };
       }
     }

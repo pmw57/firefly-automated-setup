@@ -1,20 +1,21 @@
 
-export type ExpansionId = 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'jetwash' | 'esmerelda' | 'tenth' | 'black_market' | 'still_flying' | 'community';
+export type ExpansionId = 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'black_market' | 'still_flying' | 'community';
 
 export interface Expansions {
+  breakin_atmo: boolean;
+  big_damn_heroes: boolean;
   blue: boolean;
   kalidasa: boolean;
   pirates: boolean;
   crime: boolean; 
-  jetwash: boolean;
-  esmerelda: boolean;
+  coachworks: boolean;
   tenth: boolean;
   black_market: boolean;
   still_flying: boolean;
   community: boolean;
 }
 
-export type ThemeColor = 'blue' | 'amber' | 'red' | 'gray' | 'purple' | 'yellow' | 'dark' | 'cyan' | 'paleGreen' | 'firebrick' | 'khaki' | 'cornflower' | 'brown' | 'teal';
+export type ThemeColor = 'orangeRed' | 'steelBlue' | 'black' | 'darkSlateBlue' | 'deepBrown' | 'rebeccaPurple' | 'cordovan' | 'darkOliveGreen' | 'saddleBrown' | 'teal' | 'dark';
 
 export interface ExpansionIconConfig {
   type: 'sprite' | 'text';
