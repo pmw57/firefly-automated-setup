@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Expansions } from '../types';
 import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../constants';
@@ -24,16 +25,17 @@ export const getExpansionIcon = (id?: keyof Expansions | string) => {
       );
   } else {
       let bgColor = 'bg-gray-700 border-gray-500';
-      if (meta.themeColor === 'purple') bgColor = 'bg-purple-700 border-purple-500';
-      if (meta.themeColor === 'yellow') bgColor = 'bg-yellow-600 border-yellow-500';
-      if (meta.themeColor === 'dark') bgColor = 'bg-gray-900 border-gray-700';
-      if (meta.themeColor === 'paleGreen') bgColor = 'bg-green-500 border-green-600';
-      if (meta.themeColor === 'firebrick') bgColor = 'bg-red-800 border-red-900';
-      if (meta.themeColor === 'khaki') bgColor = 'bg-amber-400 border-amber-500';
-      if (meta.themeColor === 'cornflower') bgColor = 'bg-indigo-400 border-indigo-500';
-      if (meta.themeColor === 'brown') bgColor = 'bg-orange-800 border-orange-900';
+      if (meta.themeColor === 'orangeRed') bgColor = 'bg-[#FF4500] border-orange-600';
+      if (meta.themeColor === 'steelBlue') bgColor = 'bg-[#4682B4] border-sky-600';
+      if (meta.themeColor === 'black') bgColor = 'bg-black border-gray-700';
+      if (meta.themeColor === 'darkSlateBlue') bgColor = 'bg-[#483D8B] border-indigo-700';
+      if (meta.themeColor === 'deepBrown') bgColor = 'bg-[#231709] border-[#3E2910]';
+      if (meta.themeColor === 'rebeccaPurple') bgColor = 'bg-[#663399] border-purple-700';
+      if (meta.themeColor === 'cordovan') bgColor = 'bg-[#893f45] border-red-800';
+      if (meta.themeColor === 'darkOliveGreen') bgColor = 'bg-[#556b2f] border-lime-800';
+      if (meta.themeColor === 'saddleBrown') bgColor = 'bg-[#8b4513] border-orange-800';
       if (meta.themeColor === 'teal') bgColor = 'bg-teal-600 border-teal-700';
-      if (meta.themeColor === 'cyan') bgColor = 'bg-cyan-500 border-cyan-600';
+      if (meta.themeColor === 'dark') bgColor = 'bg-gray-900 border-gray-700';
 
       return (
         <div className={`w-full h-full rounded-md flex items-center justify-center border ${bgColor}`} title={meta.label}>

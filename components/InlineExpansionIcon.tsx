@@ -35,15 +35,17 @@ export const InlineExpansionIcon: React.FC<InlineExpansionIconProps> = ({ type, 
   } else {
     // Text Icon Fallback
     let bgColor = 'bg-gray-700';
-    if (meta.themeColor === 'paleGreen') bgColor = 'bg-green-500';
-    if (meta.themeColor === 'purple') bgColor = 'bg-purple-700';
-    if (meta.themeColor === 'yellow') bgColor = 'bg-yellow-600';
-    if (meta.themeColor === 'khaki') bgColor = 'bg-amber-400 text-amber-900';
-    if (meta.themeColor === 'cornflower') bgColor = 'bg-indigo-400 text-indigo-900';
-    if (meta.themeColor === 'brown') bgColor = 'bg-orange-800';
-    if (meta.themeColor === 'firebrick') bgColor = 'bg-red-800';
-    if (meta.themeColor === 'cyan') bgColor = 'bg-cyan-500 text-white';
+    if (meta.themeColor === 'orangeRed') bgColor = 'bg-[#FF4500]';
+    if (meta.themeColor === 'steelBlue') bgColor = 'bg-[#4682B4]';
+    if (meta.themeColor === 'black') bgColor = 'bg-black';
+    if (meta.themeColor === 'darkSlateBlue') bgColor = 'bg-[#483D8B]';
+    if (meta.themeColor === 'deepBrown') bgColor = 'bg-[#231709]';
+    if (meta.themeColor === 'rebeccaPurple') bgColor = 'bg-[#663399]';
+    if (meta.themeColor === 'cordovan') bgColor = 'bg-[#893f45]';
+    if (meta.themeColor === 'darkOliveGreen') bgColor = 'bg-[#556b2f]';
+    if (meta.themeColor === 'saddleBrown') bgColor = 'bg-[#8b4513]';
     if (meta.themeColor === 'teal') bgColor = 'bg-teal-600 text-white';
+    if (meta.themeColor === 'dark') bgColor = 'bg-gray-800 text-white';
     
     return (
       <span className={`inline-flex items-center justify-center w-8 h-8 rounded shadow-sm border ${borderClass} text-white font-bold text-xs shrink-0 ${bgColor} ${className}`} title={meta.label}>
