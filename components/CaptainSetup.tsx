@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { GameState, Expansions } from '../types';
 import { EXPANSIONS_METADATA, SETUP_CARDS } from '../constants';
 import { Button } from './Button';
 import { ExpansionToggle } from './ExpansionToggle';
+import { useTheme } from './ThemeContext';
 
 interface CaptainSetupProps {
   gameState: GameState;
@@ -11,6 +13,9 @@ interface CaptainSetupProps {
 }
 
 export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameState, onNext }) => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const updatePlayerCount = (newCount: number) => {
     const safeCount = Math.max(1, Math.min(9, newCount));
     setGameState(prev => {
@@ -59,34 +64,54 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
     });
   };
 
-  return (
-    <div className="bg-metal dark:bg-slate-900/90 rounded-xl shadow-2xl p-6 md:p-8 border-2 border-gray-400/50 dark:border-slate-700 animate-fade-in relative overflow-hidden transition-colors duration-300">
-      {/* Decorative bolts - Dark mode adjusts opacity */}
-      <div className="absolute top-3 left-3 w-3 h-3 rounded-full bg-gray-400 dark:bg-slate-600 shadow-inner border border-gray-500 dark:border-slate-700"></div>
-      <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-gray-400 dark:bg-slate-600 shadow-inner border border-gray-500 dark:border-slate-700"></div>
-      <div className="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-gray-400 dark:bg-slate-600 shadow-inner border border-gray-500 dark:border-slate-700"></div>
-      <div className="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-gray-400 dark:bg-slate-600 shadow-inner border border-gray-500 dark:border-slate-700"></div>
+  // JS Theme Variables
+  const containerBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
+  const textColor = isDark ? 'text-amber-500' : 'text-gray-900';
+  const labelColor = isDark ? 'text-zinc-400' : 'text-gray-700';
+  const subLabelColor = isDark ? 'text-zinc-500' : 'text-gray-500';
+  const inputBg = isDark ? 'bg-black' : 'bg-white';
+  const inputText = isDark ? 'text-gray-200' : 'text-gray-800';
+  const inputBorder = isDark ? 'border-zinc-700' : 'border-gray-400';
+  const inputHover = isDark ? 'hover:bg-zinc-900' : 'hover:bg-gray-100';
+  const inputPlaceholder = isDark ? 'placeholder-zinc-600' : 'placeholder-gray-400';
+  const cardBg = isDark ? 'bg-black/30' : 'bg-gray-100/50';
+  const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
+  const partBadgeBorder = isDark ? 'border-yellow-700/50' : 'border-yellow-300';
+  const partBadgeBg = isDark ? 'bg-yellow-900/40' : 'bg-yellow-100';
+  const partBadgeText = isDark ? 'text-yellow-100' : 'text-yellow-800';
 
-      <div className="flex justify-between items-center mb-6 border-b-2 border-gray-300 dark:border-slate-700 pb-2 relative z-10">
-         <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 font-western drop-shadow-sm">Mission Configuration</h2>
-         <span className="text-xs font-bold bg-yellow-100 text-yellow-800 border-yellow-300 px-3 py-1 rounded-full border shadow-sm">Part 1 of 2</span>
+  return (
+    <div className={`bg-metal rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in relative overflow-hidden transition-all duration-300`}>
+      {/* Decorative bolts - Only visible in Light Mode */}
+      {!isDark && (
+        <>
+          <div className="absolute top-3 left-3 w-3 h-3 rounded-full bg-gray-300 shadow-inner border border-gray-400"></div>
+          <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-gray-300 shadow-inner border border-gray-400"></div>
+          <div className="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-gray-300 shadow-inner border border-gray-400"></div>
+          <div className="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-gray-300 shadow-inner border border-gray-400"></div>
+        </>
+      )}
+
+      <div className={`flex justify-between items-center mb-6 border-b-2 ${inputBorder} pb-2 relative z-10`}>
+         <h2 className={`text-2xl font-bold font-western drop-shadow-sm ${textColor}`}>Mission Configuration</h2>
+         <span className={`text-xs font-bold ${partBadgeBg} ${partBadgeText} border ${partBadgeBorder} px-3 py-1 rounded-full shadow-sm`}>Part 1 of 2</span>
       </div>
       
       {/* Player Count & Names */}
       <div className="mb-8 relative z-10">
-        <label className="block font-bold text-gray-600 dark:text-gray-400 mb-2 uppercase tracking-wide text-xs">Number of Captains</label>
+        <label className={`block font-bold mb-2 uppercase tracking-wide text-xs ${labelColor}`}>Number of Captains</label>
         <div className="flex items-center space-x-4 mb-4 select-none">
           <button 
             type="button"
             onClick={() => updatePlayerCount(gameState.playerCount - 1)}
             disabled={gameState.playerCount <= 1}
             aria-label="Decrease player count"
-            className="w-12 h-12 flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-300 dark:border-slate-600 font-bold text-2xl text-gray-700 dark:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowedQl transition-all shadow-sm active:translate-y-0.5"
+            className={`w-12 h-12 flex items-center justify-center rounded-lg ${inputBg} ${inputHover} border-2 ${inputBorder} font-bold text-2xl ${inputText} disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm active:translate-y-0.5`}
           >
             -
           </button>
           
-          <div className="w-16 h-12 flex items-center justify-center text-4xl font-bold text-gray-800 dark:text-white font-western drop-shadow-md">
+          <div className={`w-16 h-12 flex items-center justify-center text-4xl font-bold font-western drop-shadow-md ${textColor}`}>
             {gameState.playerCount}
           </div>
 
@@ -95,24 +120,24 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
             onClick={() => updatePlayerCount(gameState.playerCount + 1)}
             disabled={gameState.playerCount >= 9}
             aria-label="Increase player count"
-            className="w-12 h-12 flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-300 dark:border-slate-600 font-bold text-2xl text-gray-700 dark:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowedQl transition-all shadow-sm active:translate-y-0.5"
+            className={`w-12 h-12 flex items-center justify-center rounded-lg ${inputBg} ${inputHover} border-2 ${inputBorder} font-bold text-2xl ${inputText} disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm active:translate-y-0.5`}
           >
             +
           </button>
-          <span className="text-gray-500 dark:text-gray-400 italic ml-2 font-serif">Crew Manifests</span>
+          <span className={`italic ml-2 font-serif ${subLabelColor}`}>Crew Manifests</span>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white/50 dark:bg-black/30 p-4 rounded-lg border border-gray-300 dark:border-slate-700 shadow-inner">
+        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 ${cardBg} p-4 rounded-lg border ${cardBorder} shadow-inner`}>
           {gameState.playerNames.map((name, index) => (
             <div key={index} className="flex items-center">
-              <label htmlFor={`player-${index}`} className="text-xs font-bold text-gray-500 dark:text-gray-400 w-6 mr-1 font-mono">{index + 1}.</label>
+              <label htmlFor={`player-${index}`} className={`text-xs font-bold w-6 mr-1 font-mono ${subLabelColor}`}>{index + 1}.</label>
               <input
                 id={`player-${index}`}
                 type="text"
                 value={name}
                 onChange={(e) => handleNameChange(index, e.target.value)}
                 placeholder={`Captain ${index + 1}`}
-                className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded text-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none bg-white dark:bg-slate-800 shadow-sm font-medium text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 transition-colors"
+                className={`w-full p-2 border ${inputBorder} rounded text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 focus:outline-none ${inputBg} shadow-sm font-medium ${inputText} ${inputPlaceholder} transition-colors`}
               />
             </div>
           ))}
@@ -121,7 +146,7 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
 
       {/* Expansions */}
       <div className="mb-8 relative z-10">
-        <label className="block font-bold text-gray-600 dark:text-gray-400 mb-3 uppercase tracking-wide text-xs">Active Expansions</label>
+        <label className={`block font-bold mb-3 uppercase tracking-wide text-xs ${labelColor}`}>Active Expansions</label>
         <div className="grid grid-cols-1 gap-4">
           {EXPANSIONS_METADATA.map((expansion) => (
             <ExpansionToggle 
@@ -138,7 +163,7 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
       </div>
 
       <div className="relative z-10">
-        <Button onClick={onNext} fullWidth className="text-lg py-4 shadow-xl border-b-4 border-green-900/50 hover:translate-y-[-2px] bg-gradient-to-b from-green-700 to-green-800">
+        <Button onClick={onNext} fullWidth className="text-lg py-4">
           Next: Choose Setup Card →
         </Button>
       </div>

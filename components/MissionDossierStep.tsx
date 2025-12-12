@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { GameState, StoryCardDef, Step } from '../types';
 import { STORY_CARDS, EXPANSIONS_METADATA } from '../constants';
@@ -5,6 +6,7 @@ import { Button } from './Button';
 import { StoryCardGridItem } from './StoryCardGridItem';
 import { InlineExpansionIcon } from './InlineExpansionIcon';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
+import { useTheme } from './ThemeContext';
 
 interface MissionDossierStepProps {
   step: Step;
@@ -16,6 +18,8 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
   const [searchTerm, setSearchTerm] = useState('');
   const [filterExpansion, setFilterExpansion] = useState<string>('all');
   const [shortList, setShortList] = useState<StoryCardDef[]>([]);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
 
@@ -79,27 +83,53 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
       setShortList([]);
   };
 
+  const headerColor = isDark ? 'text-amber-500' : 'text-[#5e1916]'; // Burgundy for Light, Amber for Dark
+  const mainTitleColor = isDark ? 'text-gray-100' : 'text-gray-900';
+  const italicTextColor = isDark ? 'text-gray-300' : 'text-gray-800';
+  const containerBg = isDark ? 'bg-zinc-900' : 'bg-white';
+  const containerBorder = isDark ? 'border-zinc-800' : 'border-gray-300';
+  
+  const headerBarBg = isDark ? 'bg-black/40' : 'bg-gray-100';
+  const headerBarBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
+  
+  const badgeBg = isDark ? 'bg-zinc-800' : 'bg-white';
+  const badgeText = isDark ? 'text-gray-400' : 'text-gray-600';
+  const badgeBorder = isDark ? 'border-0' : 'border border-gray-200';
+
+  const bodyBg = isDark ? 'bg-zinc-900/50' : 'bg-paper-texture'; // Ensure texture removed in dark
+  const bgIconBg = isDark ? 'bg-zinc-800' : 'bg-gray-200';
+  const bgIconBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
+  const bgIconText = isDark ? 'text-gray-400' : 'text-gray-600';
+  const quoteBorder = isDark ? 'border-zinc-700' : 'border-gray-400';
+
+  const inputBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
+  const inputBg = isDark ? 'bg-zinc-900/50' : 'bg-white';
+  const inputText = isDark ? 'text-gray-200' : 'text-gray-900';
+  const inputPlaceholder = isDark ? 'placeholder-zinc-500' : 'placeholder-gray-500';
+
+  const listContainerBorder = isDark ? 'border-zinc-800' : 'border-gray-300';
+  const listContainerBg = isDark ? 'bg-black/20' : 'bg-gray-50';
+  const emptyStateText = isDark ? 'text-zinc-500' : 'text-gray-600';
+  const countText = isDark ? 'text-zinc-500' : 'text-gray-600';
+
   return (
     <div className="space-y-6">
-      <div className="bg-white dark:bg-zinc-900 backdrop-blur-md rounded-lg shadow-md border border-gray-200 dark:border-zinc-800 overflow-hidden transition-colors duration-300">
-         <div className="bg-gray-800 dark:bg-black/40 text-white p-4 flex justify-between items-center border-b border-gray-700 dark:border-zinc-800">
-            <h3 className="font-bold text-lg font-western tracking-wider">Mission Dossier</h3>
-            <span className="text-xs uppercase tracking-widest bg-gray-700 dark:bg-zinc-800 px-2 py-1 rounded text-gray-300 dark:text-gray-400">Active Goal</span>
+      <div className={`${containerBg} backdrop-blur-md rounded-lg shadow-md border ${containerBorder} overflow-hidden transition-colors duration-300`}>
+         <div className={`${headerBarBg} p-4 flex justify-between items-center border-b ${headerBarBorder} transition-colors duration-300`}>
+            <h3 className={`font-bold text-lg font-western tracking-wider ${headerColor}`}>Mission Dossier</h3>
+            <span className={`text-xs uppercase tracking-widest ${badgeBg} ${badgeBorder} ${badgeText} px-2 py-1 rounded font-bold`}>Active Goal</span>
          </div>
-         {/* 
-            Important: The 'bg-paper-texture' class sets a background-color that might bleed through in dark mode.
-            We use 'dark:bg-none' to remove the image, and 'dark:bg-slate-900/50' to set a new dark color. 
-         */}
-         <div className="p-6 bg-paper-texture dark:bg-none dark:bg-zinc-900/50 transition-colors">
+         
+         <div className={`p-6 ${bodyBg} transition-colors`}>
             <div className="flex items-center mb-4">
                {activeStoryCard.requiredExpansion ? (
                   <InlineExpansionIcon type={activeStoryCard.requiredExpansion} className="w-10 h-10 mr-3" />
                ) : (
-                  <div className="w-10 h-10 mr-3 bg-gray-200 dark:bg-zinc-800 rounded border border-gray-300 dark:border-zinc-700 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400 font-bold">BG</div>
+                  <div className={`w-10 h-10 mr-3 ${bgIconBg} rounded border ${bgIconBorder} flex items-center justify-center text-xs ${bgIconText} font-bold`}>BG</div>
                )}
-               <h4 className="text-2xl font-bold text-gray-900 dark:text-gray-200 font-western">{activeStoryCard.title}</h4>
+               <h4 className={`text-2xl font-bold font-western ${mainTitleColor}`}>{activeStoryCard.title}</h4>
             </div>
-            <p className="text-gray-700 dark:text-gray-300 italic font-serif text-lg leading-relaxed border-l-4 border-gray-300 dark:border-zinc-700 pl-4 mb-4">"{activeStoryCard.intro}"</p>
+            <p className={`${italicTextColor} italic font-serif text-lg leading-relaxed border-l-4 ${quoteBorder} pl-4 mb-4`}>"{activeStoryCard.intro}"</p>
             
             {/* Detailed Setup Description Block */}
             {activeStoryCard.setupDescription && (
@@ -124,20 +154,20 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
 
       {/* Randomization Toolbar */}
       <div className="flex gap-3 mb-2">
-          <Button onClick={handleRandomPick} variant="secondary" className="flex-1 text-sm py-2 bg-amber-600 dark:bg-amber-900/50 dark:border-amber-800 hover:dark:bg-amber-800/60 dark:text-amber-100">
+          <Button onClick={handleRandomPick} variant="secondary" className="flex-1 text-sm py-2">
               🎰 Randomly Select 1
           </Button>
-          <Button onClick={handleGenerateShortList} className="flex-1 text-sm py-2 bg-blue-600 dark:bg-blue-900/50 dark:border-blue-800 hover:dark:bg-blue-800/60 dark:text-blue-100">
+          <Button onClick={handleGenerateShortList} className={`flex-1 text-sm py-2 ${isDark ? 'bg-blue-900/50 border-blue-800 hover:bg-blue-800/60 text-blue-100' : 'bg-sky-700 border-sky-900 text-sky-50 hover:bg-sky-600'}`}>
               🃏 Draft 3 Options
           </Button>
       </div>
 
       {/* Short List View */}
       {shortList.length > 0 && (
-          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 p-4 rounded-lg mb-4 animate-fade-in">
+          <div className={`${isDark ? 'bg-blue-950/30 border-blue-900/50' : 'bg-sky-50 border-sky-200'} border p-4 rounded-lg mb-4 animate-fade-in`}>
               <div className="flex justify-between items-center mb-3">
-                  <h4 className="font-bold text-blue-900 dark:text-blue-200">Short-Listed Missions</h4>
-                  <span className="text-xs text-blue-600 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/50 px-2 py-1 rounded-full font-bold">Pick one below or roll</span>
+                  <h4 className={`font-bold ${isDark ? 'text-blue-200' : 'text-sky-900'}`}>Short-Listed Missions</h4>
+                  <span className={`text-xs ${isDark ? 'text-blue-300 bg-blue-900/50' : 'text-sky-600 bg-sky-100'} px-2 py-1 rounded-full font-bold`}>Pick one below or roll</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                   {shortList.map((card) => (
@@ -151,10 +181,10 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                   ))}
               </div>
               <div className="flex gap-3">
-                  <Button onClick={handlePickFromShortList} className="flex-1 py-2 text-sm bg-green-600 dark:bg-green-900/60">
+                  <Button onClick={handlePickFromShortList} className="flex-1 py-2 text-sm">
                       🎲 Select Random from Hand
                   </Button>
-                  <Button onClick={handleCancelShortList} variant="danger" className="py-2 text-sm px-4 dark:bg-red-900/50">
+                  <Button onClick={handleCancelShortList} variant="danger" className="py-2 text-sm px-4">
                       Discard Hand
                   </Button>
               </div>
@@ -166,14 +196,14 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
               <input 
                 type="text" 
                 placeholder="Search Title or Intro..." 
-                className="flex-1 p-3 border border-gray-300 dark:border-zinc-700 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none bg-white dark:bg-zinc-900/50 text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-zinc-600 transition-colors"
+                className={`flex-1 p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none ${inputBg} ${inputText} ${inputPlaceholder} transition-colors`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <select 
                   value={filterExpansion} 
                   onChange={(e) => setFilterExpansion(e.target.value)}
-                  className="p-3 border border-gray-300 dark:border-zinc-700 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none bg-white dark:bg-zinc-900/50 text-gray-900 dark:text-gray-200KP transition-colors"
+                  className={`p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none ${inputBg} ${inputText} transition-colors`}
               >
                   <option value="all">All Expansions</option>
                   <option value="base">Base Game</option>
@@ -183,7 +213,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
               </select>
           </div>
           
-          <div className="h-[500px] overflow-y-auto border border-gray-200 dark:border-zinc-800 rounded-lg bg-gray-50 dark:bg-black/20 p-2 custom-scrollbar">
+          <div className={`h-[500px] overflow-y-auto border ${listContainerBorder} rounded-lg ${listContainerBg} p-2 custom-scrollbar`}>
               {filteredStories.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                       {filteredStories.map((card) => (
@@ -196,14 +226,14 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                       ))}
                   </div>
               ) : (
-                  <div className="flex flex-col items-center justify-center h-full text-gray-400 dark:text-zinc-600 italic">
+                  <div className={`flex flex-col items-center justify-center h-full ${emptyStateText} italic`}>
                       <span className="text-4xl mb-2">🕵️</span>
                       <p>No missions found.</p>
                       <Button onClick={() => {setSearchTerm(''); setFilterExpansion('all');}} variant="secondary" className="mt-4 text-sm">Clear Filters</Button>
                   </div>
               )}
           </div>
-          <div className="text-right text-xs text-gray-400 dark:text-zinc-600">
+          <div className={`text-right text-xs ${countText}`}>
               Showing {filteredStories.length} of {validStories.length} available missions
           </div>
       </div>

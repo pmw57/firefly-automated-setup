@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { GameState, Step } from '../types';
 import { STORY_CARDS } from '../constants';
 import { calculateStartingResources } from '../utils';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
+import { useTheme } from './ThemeContext';
 
 interface ResourcesStepProps {
   step: Step;
@@ -12,36 +14,52 @@ interface ResourcesStepProps {
 export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step, gameState }) => {
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   
   const { totalCredits, bonusCredits, noFuelParts, customFuel } = calculateStartingResources(activeStoryCard, overrides);
   const { startWithWarrant, startingWarrantCount, removeRiver, nandiCrewDiscount } = activeStoryCard.setupConfig || {};
 
+  const cardBg = isDark ? 'bg-black/60' : 'bg-white';
+  const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
+  const textColor = isDark ? 'text-gray-200' : 'text-gray-700';
+  const subTextColor = isDark ? 'text-gray-400' : 'text-gray-600';
+  const creditColor = isDark ? 'text-green-400' : 'text-green-700';
+
+  const disabledBg = isDark ? 'bg-red-900/20 border-red-800' : 'bg-red-50 border-red-200';
+  const disabledTitle = isDark ? 'text-red-300' : 'text-red-800';
+  const disabledSub = isDark ? 'text-red-400' : 'text-red-600';
+  const disabledValue = isDark ? 'text-red-400' : 'text-red-800';
+
+  const fuelBadgeBg = isDark ? 'bg-yellow-900/40 text-yellow-200 border-yellow-800' : 'bg-yellow-100 text-yellow-900 border-yellow-200';
+  const partsBadgeBg = isDark ? 'bg-zinc-800 text-gray-200 border-zinc-700' : 'bg-gray-200 text-gray-800 border-gray-300';
+
   return (
     <div className="space-y-4">
-      <div className="bg-white dark:bg-slate-900/80 p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm flex items-center justify-between transition-colors duration-300">
+      <div className={`${cardBg} p-4 rounded-lg border ${cardBorder} shadow-sm flex items-center justify-between transition-colors duration-300`}>
         <div>
-          <h4 className="font-bold text-gray-700 dark:text-gray-200">Credits</h4>
+          <h4 className={`font-bold ${textColor}`}>Credits</h4>
           {bonusCredits > 0 ? (
-            <p className="text-sm text-gray-500 dark:text-gray-400">Base ${overrides.startingCredits || 3000} + Bonus ${bonusCredits}</p>
+            <p className={`text-sm ${subTextColor}`}>Base ${overrides.startingCredits || 3000} + Bonus ${bonusCredits}</p>
           ) : (
-            <p className="text-sm text-gray-500 dark:text-gray-400">Standard Allocation</p>
+            <p className={`text-sm ${subTextColor}`}>Standard Allocation</p>
           )}
         </div>
-        <div className="text-3xl font-bold text-green-700 dark:text-green-400 font-western drop-shadow-sm">${totalCredits}</div>
+        <div className={`text-3xl font-bold font-western drop-shadow-sm ${creditColor}`}>${totalCredits}</div>
       </div>
 
-      <div className={`p-4 rounded-lg border shadow-sm flex items-center justify-between transition-colors duration-300 ${noFuelParts ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800' : 'bg-white dark:bg-slate-900/80 border-gray-200 dark:border-slate-700'}`}>
+      <div className={`p-4 rounded-lg border shadow-sm flex items-center justify-between transition-colors duration-300 ${noFuelParts ? disabledBg : `${cardBg} ${cardBorder}`}`}>
         <div>
-          <h4 className={`font-bold ${noFuelParts ? 'text-red-800 dark:text-red-300' : 'text-gray-700 dark:text-gray-200'}`}>Fuel & Parts</h4>
-          {noFuelParts && <p className="text-xs text-red-600 dark:text-red-400 font-bold mt-1">DISABLED BY STORY CARD</p>}
+          <h4 className={`font-bold ${noFuelParts ? disabledTitle : textColor}`}>Fuel & Parts</h4>
+          {noFuelParts && <p className={`text-xs font-bold mt-1 ${disabledSub}`}>DISABLED BY STORY CARD</p>}
         </div>
         <div className="text-right">
           {noFuelParts ? (
-            <span className="text-xl font-bold text-red-800 dark:text-red-400">None</span>
+            <span className={`text-xl font-bold ${disabledValue}`}>None</span>
           ) : (
-            <div className="text-sm font-bold text-gray-800 dark:text-gray-200">
-              <div className="bg-yellow-100 dark:bg-yellow-900/40 px-2 py-1 rounded mb-1 text-yellow-900 dark:text-yellow-200 border border-yellow-200 dark:border-yellow-800">{customFuel ?? 6} Fuel Tokens</div>
-              <div className="bg-gray-200 dark:bg-slate-700 px-2 py-1 rounded text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-slate-600">2 Part Tokens</div>
+            <div className={`text-sm font-bold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+              <div className={`px-2 py-1 rounded mb-1 border ${fuelBadgeBg}`}>{customFuel ?? 6} Fuel Tokens</div>
+              <div className={`px-2 py-1 rounded border ${partsBadgeBg}`}>2 Part Tokens</div>
             </div>
           )}
         </div>

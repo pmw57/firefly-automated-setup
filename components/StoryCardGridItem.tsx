@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { StoryCardDef } from '../types';
 import { InlineExpansionIcon } from './InlineExpansionIcon';
 import { getStoryCardSetupSummary } from '../utils';
+import { useTheme } from './ThemeContext';
 
 interface StoryCardGridItemProps {
   card: StoryCardDef;
@@ -11,6 +13,8 @@ interface StoryCardGridItemProps {
 }
 
 export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSelected, onClick, isShortList = false }) => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
     const summary = getStoryCardSetupSummary(card);
     
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -20,6 +24,26 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
         }
     };
 
+    const containerClass = isSelected
+        ? (isDark ? 'border-green-500 ring-2 ring-green-900 bg-green-900/20' : 'border-green-500 ring-2 ring-green-200 bg-green-50')
+        : (isDark ? 'bg-zinc-800 border-zinc-700 hover:border-zinc-500' : 'bg-white border-gray-200 hover:border-gray-300');
+
+    const titleColor = isSelected
+        ? (isDark ? 'text-green-300' : 'text-green-900')
+        : (isDark ? 'text-gray-200' : 'text-gray-800');
+
+    const bgIconBg = isDark ? 'bg-zinc-700 border-zinc-600' : 'bg-gray-100 border-gray-200';
+    const bgIconText = isDark ? 'text-gray-500' : 'text-gray-500';
+
+    const badgeClass = isSelected
+        ? (isDark ? 'bg-green-800 text-green-200' : 'bg-green-200 text-green-800')
+        : (isDark ? 'bg-amber-900/60 text-amber-200' : 'bg-amber-100 text-amber-800');
+
+    const introColor = isDark ? 'text-gray-400' : 'text-gray-700';
+    const footerBorder = isDark ? 'border-zinc-700/50' : 'border-gray-100';
+    const footerText = isDark ? 'text-amber-400' : 'text-amber-800';
+    const checkMarkColor = isDark ? 'text-green-400' : 'text-green-600';
+
     return (
         <div 
             onClick={onClick}
@@ -28,11 +52,8 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
             tabIndex={0}
             aria-pressed={isSelected}
             className={`
-                relative cursor-pointer rounded-lg border-2 p-3 transition-all duration-200 flex flex-col h-full shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2
-                ${isSelected 
-                    ? 'border-green-500 ring-2 ring-green-200 dark:ring-green-900 bg-green-50 dark:bg-green-900/20' 
-                    : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-500'
-                }
+                relative cursor-pointer rounded-lg border-2 p-3 transition-all duration-200 flex flex-col h-full shadow-sm hover:shadow-md focus:outline-none focus:z-10 focus:ring-2 focus:ring-green-500 focus:ring-offset-2
+                ${containerClass}
                 ${isShortList ? 'min-h-[120px]' : 'min-h-[160px]'}
             `}
         >
@@ -42,41 +63,38 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
                     {card.requiredExpansion ? (
                         <InlineExpansionIcon type={card.requiredExpansion} className="w-8 h-8" />
                     ) : (
-                        <div className="w-8 h-8 bg-gray-100 dark:bg-slate-700 rounded border border-gray-200 dark:border-slate-600 flex items-center justify-center text-xs text-gray-400 dark:text-gray-500 font-bold">BG</div>
+                        <div className={`w-8 h-8 rounded border flex items-center justify-center text-xs font-bold ${bgIconBg} ${bgIconText}`}>BG</div>
                     )}
                 </div>
 
                 {/* Right Column: Title & Intro */}
                 <div>
-                     <h4 className={`font-bold font-western leading-tight ${isSelected ? 'text-green-900 dark:text-green-300' : 'text-gray-800 dark:text-gray-200'}`}>
+                     <h4 className={`font-bold font-western leading-tight ${titleColor}`}>
                         {card.title}
                      </h4>
                      
                      {/* Setup Badge Inline */}
                      {summary && (
-                         <span className={`
-                            inline-block text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded mt-1
-                            ${isSelected ? 'bg-green-200 text-green-800 dark:bg-green-800 dark:text-green-200' : 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-200'}
-                         `}>
+                         <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded mt-1 ${badgeClass}`}>
                             {summary}
                          </span>
                      )}
                 </div>
             </div>
 
-            <p className={`text-xs text-gray-600 dark:text-gray-400 italic line-clamp-3 mb-auto pl-11 ${isShortList ? 'hidden sm:block' : ''}`}>
+            <p className={`text-xs italic line-clamp-3 mb-auto pl-11 ${introColor} ${isShortList ? 'hidden sm:block' : ''}`}>
                 "{card.intro}"
             </p>
 
             {/* Setup Description Footer */}
             {card.setupDescription && !isShortList && (
-                <div className="mt-3 pt-2 border-t border-gray-100 dark:border-slate-700/50 text-[10px] text-amber-700 dark:text-amber-400 font-bold pl-11">
+                <div className={`mt-3 pt-2 border-t text-[10px] font-bold pl-11 ${footerBorder} ${footerText}`}>
                     ⚡ {card.setupDescription}
                 </div>
             )}
             
             {isSelected && (
-                <div className="absolute top-2 right-2 text-green-600 dark:text-green-400 text-lg">
+                <div className={`absolute top-2 right-2 text-lg ${checkMarkColor}`}>
                     ✓
                 </div>
             )}

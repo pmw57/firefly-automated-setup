@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { GameState, Step } from '../types';
 import { STORY_CARDS } from '../constants';
@@ -5,6 +6,7 @@ import { calculateStartingResources } from '../utils';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { JobStep } from './JobStep';
 import { DraftStep } from './DraftStep';
+import { useTheme } from './ThemeContext';
 
 interface DynamicStepHandlerProps {
   step: Step;
@@ -15,6 +17,8 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
   const id = step.id;
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   if (id.includes('D_RIM_JOBS')) {
     return <JobStep step={step} gameState={gameState} />;
@@ -24,6 +28,15 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
     return <DraftStep step={step} gameState={gameState} />;
   }
 
+  const warningText = isDark ? 'text-red-400' : 'text-red-700';
+  const panelBg = isDark ? 'bg-slate-900/80' : 'bg-white';
+  const panelBorder = isDark ? 'border-slate-700' : 'border-gray-200';
+  const textColor = isDark ? 'text-gray-200' : 'text-gray-800';
+  const numberColor = isDark ? 'text-green-400' : 'text-green-800';
+  const subText = isDark ? 'text-gray-400' : 'text-gray-500';
+  const dangerTitle = isDark ? 'text-red-300' : 'text-red-800';
+  const dangerBorder = isDark ? 'border-red-800' : 'border-red-200';
+
   if (id.includes('D_TIME_LIMIT')) {
     return (
       <SpecialRuleBlock source="setupCard" title="Setup Card Override">
@@ -31,7 +44,7 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
         <div className="space-y-3 mt-1">
           <p>Give a pile of <strong>20 Disgruntled Tokens</strong> to the player taking the first turn. These tokens will be used as Game Length Tokens.</p>
           <p>Each time that player takes a turn, discard one of the Disgruntled Tokens. When the final token is discarded, everyone gets one final turn, then the game is over.</p>
-          <p className="font-bold text-red-700 dark:text-red-400">If time runs out before the Story Card is completed, the player with the most credits wins.</p>
+          <p className={`font-bold ${warningText}`}>If time runs out before the Story Card is completed, the player with the most credits wins.</p>
         </div>
       </SpecialRuleBlock>
     );
@@ -54,10 +67,10 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
   if (id.includes('D_BC_CAPITOL')) {
     const { totalCredits, bonusCredits } = calculateStartingResources(activeStoryCard, overrides);
     return (
-      <div className="text-center bg-white dark:bg-slate-900/80 p-8 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm transition-colors duration-300">
-        <p className="text-lg text-gray-800 dark:text-gray-200 mb-2">Each player receives:</p>
-        <div className="text-5xl font-bold text-green-800 dark:text-green-400 font-western my-4">${totalCredits}</div>
-        {bonusCredits > 0 && <p className="text-sm text-gray-500 dark:text-gray-400">(Includes ${bonusCredits} Story Bonus)</p>}
+      <div className={`text-center p-8 rounded-lg border shadow-sm transition-colors duration-300 ${panelBg} ${panelBorder}`}>
+        <p className={`text-lg mb-2 ${textColor}`}>Each player receives:</p>
+        <div className={`text-5xl font-bold font-western my-4 ${numberColor}`}>${totalCredits}</div>
+        {bonusCredits > 0 && <p className={`text-sm ${subText}`}>(Includes ${bonusCredits} Story Bonus)</p>}
       </div>
     );
   }
@@ -92,11 +105,11 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
         <strong>The Pressure's High:</strong>
         <div className="space-y-4 mt-1">
           <div>
-            <strong className="block text-red-800 dark:text-red-300 mb-1">Alliance Alert</strong>
+            <strong className={`block mb-1 ${dangerTitle}`}>Alliance Alert</strong>
             <p>Begin the game with one random Alliance Alert Card in play.</p>
           </div>
-          <div className="border-t border-red-200 dark:border-red-800 pt-3">
-            <strong className="block text-red-800 dark:text-red-300 mb-1">Wanted Accumulation</strong>
+          <div className={`border-t pt-3 ${dangerBorder}`}>
+            <strong className={`block mb-1 ${dangerTitle}`}>Wanted Accumulation</strong>
             <ul className="list-disc ml-5 text-sm">
               <li>Wanted Crew and Leaders may accumulate Wanted tokens.</li>
               <li><strong>Roll Check:</strong> When making Alliance Wanted Crew rolls, you must roll higher than the number of current Wanted tokens for that Crew/Leader to avoid effects.</li>

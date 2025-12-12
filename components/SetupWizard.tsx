@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { GameState, Step, Expansions } from '../types';
 import { SETUP_CARDS, SETUP_CONTENT, STORY_CARDS, EXPANSIONS_METADATA } from '../constants';
@@ -5,6 +6,7 @@ import { InitialForm } from './InitialForm';
 import { StepContent } from './StepContent';
 import { ProgressBar } from './ProgressBar';
 import { Button } from './Button';
+import { useTheme } from './ThemeContext';
 
 const STORAGE_KEY = 'firefly_setup_v2';
 
@@ -14,7 +16,7 @@ interface PersistedState {
   isStarted: boolean;
 }
 
-// Helper to generate default state (Moved outside component for stability)
+// Helper to generate default state
 const getDefaultGameState = (): GameState => {
   const initialExpansions = EXPANSIONS_METADATA.reduce((acc, expansion) => {
     acc[expansion.id] = true;
@@ -31,7 +33,7 @@ const getDefaultGameState = (): GameState => {
   };
 };
 
-// Helper to rebuild flow from a game state (Moved outside to satisfy React Hooks deps)
+// Helper to rebuild flow from a game state
 const calculateFlow = (state: GameState): Step[] => {
   const setupDef = SETUP_CARDS.find(s => s.id === state.setupCardId) || SETUP_CARDS[0];
   const newFlow: Step[] = [];
@@ -64,7 +66,10 @@ const SetupWizard: React.FC = () => {
   // UI State for Restart Confirmation
   const [showConfirmReset, setShowConfirmReset] = useState(false);
 
-  // Build the flow based on selection (Public handler)
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  // Build the flow based on selection
   const buildFlow = () => {
     const newFlow = calculateFlow(gameState);
     setFlow(newFlow);
@@ -75,8 +80,6 @@ const SetupWizard: React.FC = () => {
 
   // Load state from local storage on mount
   useEffect(() => {
-    // Artificial delay to ensure the loading UI is visible and the browser has time to paint
-    // preventing the "frozen" feeling on initial load
     const timer = setTimeout(() => {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -85,7 +88,6 @@ const SetupWizard: React.FC = () => {
           setGameState(parsed.gameState);
           
           if (parsed.isStarted) {
-            // Reconstruct the flow based on saved game state
             const newFlow = calculateFlow(parsed.gameState);
             setFlow(newFlow);
             setCurrentStepIndex(parsed.currentStepIndex);
@@ -95,15 +97,13 @@ const SetupWizard: React.FC = () => {
           console.error("Failed to load saved state", e);
         }
       }
-      
-      // Reveal the app
       setIsInitialized(true);
-    }, 1200); // 1.2s delay for better UX on slower devices
+    }, 1200); 
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Save state to local storage whenever it changes
+  // Save state to local storage
   useEffect(() => {
     if (!isInitialized) return;
 
@@ -131,25 +131,16 @@ const SetupWizard: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Hard Reset Function - State Based
   const performReset = () => {
     const defaultState = getDefaultGameState();
-    
-    // 1. Clear Storage
     localStorage.removeItem(STORAGE_KEY);
-    
-    // 2. Reset React State
     setGameState(defaultState);
     setFlow([]);
     setCurrentStepIndex(0);
     setIsStarted(false);
     setShowConfirmReset(false);
     setInitialFormStep(1);
-    
-    // 3. Force Re-mount of children
     setResetKey(prev => prev + 1);
-    
-    // 4. Scroll to top
     window.scrollTo(0, 0);
   };
 
@@ -158,18 +149,16 @@ const SetupWizard: React.FC = () => {
       performReset();
     } else {
       setShowConfirmReset(true);
-      // Auto-hide confirmation after 3 seconds if not clicked
       setTimeout(() => setShowConfirmReset(false), 3000);
     }
   };
 
-  // Prevent rendering until we've checked local storage
   if (!isInitialized) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-900 mb-6"></div>
         <h2 className="text-2xl font-bold text-gray-700 font-western tracking-wider animate-pulse">Initializing Cortex...</h2>
-        <p className="text-gray-500 mt-2 text-sm italic">Accessing secure alliance servers</p>
+        <p className="text-gray-600 mt-2 text-sm italic">Accessing secure alliance servers</p>
       </div>
     );
   }
@@ -186,18 +175,34 @@ const SetupWizard: React.FC = () => {
   
   const isFinal = currentStep.type === 'final';
 
+  // JS Theme Classes
+  const stickyHeaderBg = isDark ? 'bg-zinc-900/90 border-zinc-800' : 'bg-white/95 border-gray-200';
+  const labelText = isDark ? 'text-gray-400' : 'text-gray-700';
+  const mainText = isDark ? 'text-green-400' : 'text-green-900';
+  const subText = isDark ? 'text-blue-300' : 'text-blue-900';
+  const separatorColor = isDark ? 'text-gray-600' : 'text-gray-400';
+  const storyColor = isDark ? 'text-amber-200' : 'text-amber-800';
+  
+  const resetBtnDefault = isDark ? 'text-red-400 hover:text-red-300 hover:bg-red-900/20' : 'text-red-700 hover:text-red-900 hover:bg-red-50';
+  const resetBtnConfirm = 'bg-red-600 text-white hover:bg-red-700 ring-red-500 shadow-md';
+
+  const finalCardBg = isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-gray-200';
+  const finalBorderTop = isDark ? 'border-t-green-800' : 'border-t-green-600';
+  const finalTitle = isDark ? 'text-gray-100' : 'text-gray-800';
+  const finalSub = isDark ? 'text-gray-300' : 'text-gray-600';
+
   return (
     <div className="max-w-2xl mx-auto">
       {/* Sticky Header with Setup Details */}
-      <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm p-4 rounded-lg mb-6 shadow-sm border border-gray-200 dark:border-zinc-800 flex justify-between items-center transition-all duration-300 sticky top-0 z-30">
+      <div className={`${stickyHeaderBg} backdrop-blur-sm p-4 rounded-lg mb-6 shadow-sm border flex justify-between items-center transition-all duration-300 sticky top-0 z-30`}>
         <div className="flex flex-col">
-           <span className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Active Game</span>
-           <div className="flex flex-wrap items-center gap-x-2 font-bold text-green-900 dark:text-green-400 text-sm md:text-base leading-tight">
-              <span className="text-blue-900 dark:text-blue-300">{gameState.setupCardName}</span>
+           <span className={`text-[10px] font-bold uppercase tracking-widest ${labelText}`}>Active Game</span>
+           <div className={`flex flex-wrap items-center gap-x-2 font-bold text-sm md:text-base leading-tight ${mainText}`}>
+              <span className={subText}>{gameState.setupCardName}</span>
               {gameState.selectedStoryCard && (
                 <>
-                  <span className="text-gray-400 dark:text-gray-600 hidden sm:inline">•</span>
-                  <span className="text-amber-800 dark:text-amber-200 block sm:inline">{gameState.selectedStoryCard}</span>
+                  <span className={`${separatorColor} hidden sm:inline`}>•</span>
+                  <span className={`${storyColor} block sm:inline`}>{gameState.selectedStoryCard}</span>
                 </>
               )}
            </div>
@@ -207,10 +212,7 @@ const SetupWizard: React.FC = () => {
           onClick={handleResetClick}
           className={`
             text-xs font-bold underline focus:outline-none focus:ring-2 rounded px-2 py-1 transition-colors duration-200 ml-4 shrink-0
-            ${showConfirmReset 
-              ? 'bg-red-600 text-white hover:bg-red-700 ring-red-500 no-underline shadow-md' 
-              : 'text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 focus:ring-red-500'
-            }
+            ${showConfirmReset ? `${resetBtnConfirm} no-underline` : `${resetBtnDefault} focus:ring-red-500`}
           `}
         >
           {showConfirmReset ? "Confirm Restart?" : "Restart"}
@@ -220,10 +222,10 @@ const SetupWizard: React.FC = () => {
       <ProgressBar current={currentStepIndex + 1} total={flow.length} />
 
       {isFinal ? (
-        <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-xl p-8 text-center border-t-8 border-green-600 dark:border-green-800 animate-fade-in-up border-x border-b border-gray-200 dark:border-zinc-800 transition-colors duration-300">
+        <div className={`${finalCardBg} rounded-xl shadow-xl p-8 text-center border-t-8 ${finalBorderTop} animate-fade-in-up border-x border-b transition-colors duration-300`}>
           <div className="text-6xl mb-4">🚀</div>
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 font-western mb-4">You are ready to fly!</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg">Setup is complete. Good luck, Captain.</p>
+          <h2 className={`text-3xl font-bold font-western mb-4 ${finalTitle}`}>You are ready to fly!</h2>
+          <p className={`mb-8 text-lg ${finalSub}`}>Setup is complete. Good luck, Captain.</p>
           <div className="flex justify-center gap-4">
             <Button onClick={handlePrev} variant="secondary">Back</Button>
             <Button onClick={performReset}>Start New Game Setup</Button>

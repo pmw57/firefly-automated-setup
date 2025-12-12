@@ -1,4 +1,6 @@
+
 import React from 'react';
+import { useTheme } from './ThemeContext';
 
 interface SpecialRuleBlockProps {
   source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
@@ -7,58 +9,60 @@ interface SpecialRuleBlockProps {
 }
 
 export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, title, children }) => {
-  const styles = {
-    story: {
-      border: 'border-amber-500 dark:border-amber-700',
-      bg: 'bg-amber-50 dark:bg-amber-900/20',
-      text: 'text-amber-900 dark:text-amber-200/90',
-      icon: '📜',
-      label: 'Story Override'
-    },
-    setupCard: {
-      border: 'border-blue-500 dark:border-blue-800',
-      bg: 'bg-blue-50 dark:bg-blue-900/20',
-      text: 'text-blue-900 dark:text-blue-200/90',
-      icon: '⚙️',
-      label: 'Setup Card Override'
-    },
-    expansion: {
-      border: 'border-purple-500 dark:border-purple-800',
-      bg: 'bg-purple-50 dark:bg-purple-900/20',
-      text: 'text-purple-900 dark:text-purple-200/90',
-      icon: '🧩',
-      label: 'Expansion Rule'
-    },
-    warning: {
-      border: 'border-red-500 dark:border-red-800',
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      text: 'text-red-900 dark:text-red-200/90',
-      icon: '⚠️',
-      label: 'Restriction'
-    },
-    info: {
-      border: 'border-gray-400 dark:border-zinc-600',
-      bg: 'bg-gray-50 dark:bg-zinc-800/40',
-      text: 'text-gray-800 dark:text-gray-300',
-      icon: 'ℹ️',
-      label: 'Information'
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  const getStyles = () => {
+    if (isDark) {
+      switch(source) {
+        case 'story': return { border: 'border-amber-700', bg: 'bg-amber-900/20', text: 'text-amber-200/90' };
+        case 'setupCard': return { border: 'border-blue-800', bg: 'bg-blue-900/20', text: 'text-blue-200/90' };
+        case 'expansion': return { border: 'border-purple-800', bg: 'bg-purple-900/20', text: 'text-purple-200/90' };
+        case 'warning': return { border: 'border-red-800', bg: 'bg-red-900/20', text: 'text-red-200/90' };
+        case 'info': return { border: 'border-zinc-600', bg: 'bg-zinc-800/40', text: 'text-gray-300' };
+      }
+    } else {
+      switch(source) {
+        case 'story': return { border: 'border-amber-500', bg: 'bg-amber-50', text: 'text-amber-900' };
+        case 'setupCard': return { border: 'border-blue-500', bg: 'bg-blue-50', text: 'text-blue-900' };
+        case 'expansion': return { border: 'border-purple-500', bg: 'bg-purple-50', text: 'text-purple-900' };
+        case 'warning': return { border: 'border-red-500', bg: 'bg-red-50', text: 'text-red-900' };
+        case 'info': return { border: 'border-gray-400', bg: 'bg-gray-50', text: 'text-gray-800' };
+      }
     }
+    return { border: 'border-gray-500', bg: 'bg-gray-100', text: 'text-gray-800' };
   };
 
-  const s = styles[source];
+  const icons = {
+    story: '📜',
+    setupCard: '⚙️',
+    expansion: '🧩',
+    warning: '⚠️',
+    info: 'ℹ️'
+  };
+
+  const labels = {
+    story: 'Story Override',
+    setupCard: 'Setup Card Override',
+    expansion: 'Expansion Rule',
+    warning: 'Restriction',
+    info: 'Information'
+  };
+
+  const s = getStyles();
 
   return (
-    <div className={`border-l-4 ${s.border} ${s.bg} p-4 rounded-r-lg shadow-sm mb-4 transition-all hover:shadow-md backdrop-blur-sm`}>
+    <div className={`border-l-4 p-4 rounded-r-lg shadow-sm mb-4 transition-all hover:shadow-md backdrop-blur-sm ${s.border} ${s.bg}`}>
       <div className="flex items-start mb-2">
-        <span className="text-xl mr-3 mt-0.5 select-none opacity-80">{s.icon}</span>
+        <span className="text-xl mr-3 mt-0.5 select-none opacity-80">{icons[source]}</span>
         <div className="flex-1">
-           <span className={`text-[10px] font-bold uppercase tracking-widest ${s.text} opacity-60 block mb-0.5`}>
-             {s.label}
+           <span className={`text-[10px] font-bold uppercase tracking-widest opacity-60 block mb-0.5 ${s.text}`}>
+             {labels[source]}
            </span>
-           {title && <h4 className={`font-bold ${s.text} text-base leading-tight`}>{title}</h4>}
+           {title && <h4 className={`font-bold text-base leading-tight ${s.text}`}>{title}</h4>}
         </div>
       </div>
-      <div className={`${s.text} text-sm leading-relaxedQX pl-1 opacity-90`}>
+      <div className={`text-sm leading-relaxed pl-1 opacity-90 ${s.text}`}>
         {children}
       </div>
     </div>

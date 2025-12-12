@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
 import { InstallPWA } from './components/InstallPWA';
 import { useTheme } from './components/ThemeContext';
@@ -10,12 +11,12 @@ const App: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="min-h-screen font-sans pb-12 transition-colors duration-500">
+    <div className="min-h-screen font-sans pb-12 transition-colors duration-500 relative">
       {/* Thematic Header */}
       <header className="relative bg-black dark:bg-[#1a1a1a] text-white shadow-2xl mb-8 overflow-hidden border-b-4 border-yellow-600 dark:border-yellow-700/50 transition-colors">
         {/* Background Image Layer */}
         <div 
-          className="absolute inset-0 z-0 opacity-60 bg-cover bg-center"
+          className="absolute inset-0 z-0 opacity-60 bg-cover bg-center pointer-events-none"
           style={{ 
             backgroundImage: `url('https://cf.geekdo-images.com/Dskyq7T2nAeLSEPqF8FtIw__original/img/iIP5ebitvrm4XfAqdomztVuvxag=/0x0/filters:format(jpeg)/pic6421209.jpg')`,
             filter: 'blur(2px) brightness(0.6)'
@@ -23,21 +24,11 @@ const App: React.FC = () => {
         ></div>
         
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent dark:from-[#1a1a1a]/95"></div>
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent dark:from-[#1a1a1a]/95 pointer-events-none"></div>
 
-        {/* Theme Toggle & Content */}
-        <div className="container mx-auto px-4 py-8 md:py-12 relative z-20">
-          <div className="absolute top-0 right-0 p-4">
-             <button 
-               onClick={toggleTheme}
-               className="bg-black/50 hover:bg-black/70 dark:bg-zinc-800/80 dark:hover:bg-zinc-700 backdrop-blur-sm text-yellow-400 border border-yellow-600/50 rounded-full p-2 transition-all duration-300 shadow-lg"
-               aria-label="Toggle Theme"
-               title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-             >
-                {theme === 'dark' ? '☀️' : '🌙'}
-             </button>
-          </div>
-
+        {/* Content */}
+        {/* Added pt-16 to push text down on mobile, clearing the top-right button area */}
+        <div className="container mx-auto px-4 pt-16 pb-8 md:py-12 relative z-20">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-2 font-western tracking-wider drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] text-yellow-500 dark:text-amber-500">
               Firefly: The Game
@@ -69,6 +60,21 @@ const App: React.FC = () => {
         </p>
         <p className="mt-4 opacity-50 dark:opacity-40 font-mono">v{typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'DEV'}</p>
       </footer>
+
+      {/* Theme Toggle - Portaled to body to escape any stacking contexts */}
+      {createPortal(
+        <div className="fixed top-2 right-2 z-[9999] pointer-events-none">
+           <button 
+             onClick={toggleTheme}
+             className="pointer-events-auto bg-black/60 hover:bg-black/80 dark:bg-zinc-800/80 dark:hover:bg-zinc-700 backdrop-blur-md text-yellow-400 border-2 border-yellow-600/50 rounded-full p-3 transition-all duration-300 shadow-xl hover:scale-110 active:scale-95 cursor-pointer touch-manipulation"
+             aria-label="Toggle Theme"
+             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+           >
+              {theme === 'dark' ? '☀️' : '🌙'}
+           </button>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };

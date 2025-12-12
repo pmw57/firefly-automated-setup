@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { GameState, Step } from '../types';
 import { STORY_CARDS } from '../constants';
 import { determineJobMode } from '../utils';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { InlineExpansionIcon } from './InlineExpansionIcon';
+import { useTheme } from './ThemeContext';
 
 interface JobStepProps {
   step: Step;
@@ -14,9 +16,20 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const stepId = step.data?.id || step.id;
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   const jobMode = determineJobMode(activeStoryCard, overrides);
   const { forbiddenStartingContact, allowedStartingContacts, smugglersBluesSetup, removeJobDecks, sharedHandSetup } = activeStoryCard.setupConfig || {};
+
+  const cardBg = isDark ? 'bg-black/60' : 'bg-white';
+  const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
+  const textColor = isDark ? 'text-gray-200' : 'text-gray-800';
+  const pillBg = isDark ? 'bg-zinc-800' : 'bg-gray-100';
+  const pillText = isDark ? 'text-gray-300' : 'text-gray-900';
+  const pillBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
+  const dividerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
+  const noteText = isDark ? 'text-gray-400' : 'text-gray-700';
 
   const renderJobInstructions = () => {
        // 1. Story Card Modes (Highest Priority)
@@ -44,7 +57,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                return (
                    <SpecialRuleBlock source="setupCard" title="Setup Card Override">
                        <p><strong>No Starting Jobs.</strong></p>
-                       <p>Crews must find work on their own out in the black.</p>
+                       <p>Crews must find work on the own out in the black.</p>
                    </SpecialRuleBlock>
                );
            }
@@ -124,7 +137,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
        const showStoryOverride = (forbiddenStartingContact || (allowedStartingContacts && allowedStartingContacts.length > 0));
 
        return (
-           <div className="bg-white dark:bg-slate-900/80 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm transition-colors duration-300">
+           <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300`}>
                {showStoryOverride && activeStoryCard.setupDescription && (
                    <SpecialRuleBlock source="story" title="Story Override">
                        {activeStoryCard.setupDescription}
@@ -166,16 +179,16 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                    </SpecialRuleBlock>
                )}
 
-               <p className="mb-4 font-bold text-gray-700 dark:text-gray-200 text-lg">Draw 1 Job Card from each:</p>
+               <p className={`mb-4 font-bold ${textColor} text-lg`}>Draw 1 Job Card from each:</p>
                <div className="flex flex-wrap gap-2 mb-4">
                    {contacts.map(contact => (
-                       <span key={contact} className="px-3 py-1 bg-gray-100 dark:bg-slate-800 text-gray-800 dark:text-gray-300 rounded-full text-sm border border-gray-300 dark:border-slate-600 shadow-sm font-medium">
+                       <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
                            {contact}
                        </span>
                    ))}
                </div>
                
-               <p className="text-sm text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-slate-700 pt-3 mt-2 italic">
+               <p className={`text-sm ${noteText} border-t ${dividerBorder} pt-3 mt-2 italic`}>
                   Discard any unwanted jobs. {totalJobCards > 3 && <span>Keep a hand of <strong>up to three</strong> Job Cards.</span>}
                </p>
            </div>

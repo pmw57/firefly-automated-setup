@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { GameState, Step } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
+import { useTheme } from './ThemeContext';
 
 interface NavDeckStepProps {
   step: Step;
@@ -14,15 +16,33 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
   const isForceReshuffle = overrides.forceReshuffle;
   const isClearerSkies = overrides.clearerSkiesNavMode;
   const isHighPlayerCount = gameState.playerCount >= 3;
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   // Group "Rim Mode" and "Force Reshuffle" as setups that mandate Reshuffle cards at the start
   const hasForcedReshuffle = isRimMode || isForceReshuffle;
 
-  const renderAction = (text: string) => <span className="font-bold border-b border-gray-400 border-dotted">{text}</span>;
+  const renderAction = (text: string) => <span className={`font-bold border-b border-dotted ${isDark ? 'border-zinc-500' : 'border-gray-400'}`}>{text}</span>;
+
+  const panelBg = isDark ? 'bg-black/60' : 'bg-white';
+  const panelBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
+  const panelText = isDark ? 'text-gray-300' : 'text-gray-800';
+
+  const reshuffleBg = isDark ? 'bg-zinc-900' : 'bg-gray-200';
+  const reshuffleBorder = isDark ? 'border-zinc-800' : 'border-gray-300';
+  const reshuffleHeader = isDark ? 'text-zinc-500' : 'text-gray-800';
+
+  const activeBg = isDark ? 'bg-green-900/20 border-green-600' : 'bg-green-50 border-green-600';
+  const inactiveBg = isDark ? 'bg-black/40 border-zinc-800 opacity-50 grayscale' : 'bg-gray-50 border-gray-200 opacity-50 grayscale';
+  const activeTitle = isDark ? 'text-green-400' : 'text-green-900';
+  const inactiveTitle = isDark ? 'text-zinc-500' : 'text-gray-500';
+  const activeBadgeBg = isDark ? 'bg-green-900 text-green-200' : 'bg-green-200 text-green-800';
+  const activeText = isDark ? 'text-green-300' : 'text-green-900';
+  const inactiveText = isDark ? 'text-zinc-500' : 'text-gray-600';
 
   return (
     <>
-      <div className="bg-white dark:bg-slate-900/80 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm mb-6 overflow-hidden transition-colors duration-300">
+      <div className={`${panelBg} p-6 rounded-lg border ${panelBorder} shadow-sm mb-6 overflow-hidden transition-colors duration-300`}>
         {isBrowncoatNav ? (
           <SpecialRuleBlock source="setupCard" title="Setup Card Override">
             <strong>Hardcore Navigation:</strong> Shuffle the {renderAction("Alliance Cruiser")} and {renderAction("Reaver Cutter")} cards into the Nav Decks immediately, regardless of player count.
@@ -38,7 +58,7 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
             </ul>
           </SpecialRuleBlock>
         ) : (
-          <p className="mb-4 text-gray-700 dark:text-gray-200">{renderAction("Shuffle Alliance & Border Nav Cards")} standard setup.</p>
+          <p className={`mb-4 ${panelText}`}>{renderAction("Shuffle Alliance & Border Nav Cards")} standard setup.</p>
         )}
 
         {isClearerSkies && (
@@ -51,23 +71,23 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
 
       {/* Standard Reshuffle Panel */}
       {!hasForcedReshuffle && !isBrowncoatNav && (
-        <div className="border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden shadow-sm transition-colors duration-300">
-          <div className="bg-gray-100 dark:bg-slate-800 px-4 py-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-slate-700">
+        <div className={`border rounded-lg overflow-hidden shadow-sm transition-colors duration-300 ${reshuffleBorder}`}>
+          <div className={`${reshuffleBg} px-4 py-2 text-xs font-bold uppercase tracking-wider border-b ${reshuffleBorder} ${reshuffleHeader}`}>
             Reshuffle Card Rules (Player Count: {gameState.playerCount})
           </div>
-          <div className={`p-4 border-l-4 transition-all duration-300 ${!isHighPlayerCount ? 'bg-green-50 dark:bg-green-900/20 border-green-600' : 'bg-gray-50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-700 opacity-50 grayscale'}`}>
+          <div className={`p-4 border-l-4 transition-all duration-300 ${!isHighPlayerCount ? activeBg : inactiveBg}`}>
             <div className="flex justify-between items-center mb-1">
-              <div className={`font-bold ${!isHighPlayerCount ? 'text-green-900 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>1-2 Players</div>
-              {!isHighPlayerCount && <span className="text-[10px] font-bold bg-green-200 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-0.5 rounded uppercase tracking-wide">Active</span>}
+              <div className={`font-bold ${!isHighPlayerCount ? activeTitle : inactiveTitle}`}>1-2 Players</div>
+              {!isHighPlayerCount && <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide ${activeBadgeBg}`}>Active</span>}
             </div>
-            <div className={`text-sm ${!isHighPlayerCount ? 'text-green-800 dark:text-green-300' : 'text-gray-500 dark:text-gray-400'}`}>Shuffle the "RESHUFFLE" cards into the deck.</div>
+            <div className={`text-sm ${!isHighPlayerCount ? activeText : inactiveText}`}>Shuffle the "RESHUFFLE" cards into the deck.</div>
           </div>
-          <div className={`p-4 border-l-4 border-t border-t-gray-200 dark:border-t-slate-700 transition-all duration-300 ${isHighPlayerCount ? 'bg-green-50 dark:bg-green-900/20 border-green-600' : 'bg-gray-50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-700 opacity-50 grayscale'}`}>
+          <div className={`p-4 border-l-4 border-t transition-all duration-300 ${isHighPlayerCount ? activeBg : inactiveBg} ${isDark ? 'border-t-zinc-800' : 'border-t-gray-200'}`}>
             <div className="flex justify-between items-center mb-1">
-              <div className={`font-bold ${isHighPlayerCount ? 'text-green-900 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>3+ Players</div>
-              {isHighPlayerCount && <span className="text-[10px] font-bold bg-green-200 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-0.5 rounded uppercase tracking-wide">Active</span>}
+              <div className={`font-bold ${isHighPlayerCount ? activeTitle : inactiveTitle}`}>3+ Players</div>
+              {isHighPlayerCount && <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide ${activeBadgeBg}`}>Active</span>}
             </div>
-            <div className={`text-sm ${isHighPlayerCount ? 'text-green-800 dark:text-green-300' : 'text-gray-500 dark:text-gray-400'}`}>Place the "RESHUFFLE" card in the Discard Pile of <em>each</em> Nav Deck.</div>
+            <div className={`text-sm ${isHighPlayerCount ? activeText : inactiveText}`}>Place the "RESHUFFLE" card in the Discard Pile of <em>each</em> Nav Deck.</div>
           </div>
         </div>
       )}

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { GameState, Step, DraftState, DiceResult } from '../types';
 import { STORY_CARDS } from '../constants';
@@ -5,6 +6,7 @@ import { calculateDraftOutcome } from '../utils';
 import { Button } from './Button';
 import { DiceControls } from './DiceControls';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
+import { useTheme } from './ThemeContext';
 
 interface DraftStepProps {
   step: Step;
@@ -14,54 +16,44 @@ interface DraftStepProps {
 export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
   const [draftState, setDraftState] = useState<DraftState | null>(null);
   const [isManualEntry, setIsManualEntry] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
 
   const handleDetermineOrder = () => {
     // 1. Initial Roll for everyone (D6)
-    // These are the values that will be displayed to the user
     const initialRolls: DiceResult[] = gameState.playerNames.map(name => ({
         player: name,
         roll: Math.floor(Math.random() * 6) + 1
     }));
 
     // 2. Automate Tie Breaking
-    // We use a separate array to track effective rolls for logic determination.
-    // This allows us to re-roll for ties without overwriting the visual 'initialRolls' that caused the tie.
     const logicRolls = initialRolls.map(r => r.roll);
     let candidates = initialRolls.map((_, i) => i); 
     let winnerIndex = -1;
 
-    // Loop until we have a single winner
     while (winnerIndex === -1) {
-        // Find max roll value among current candidates using the logic array
         let currentMax = -1;
         candidates.forEach(i => {
             if (logicRolls[i] > currentMax) currentMax = logicRolls[i];
         });
 
-        // Filter candidates who matched the max roll
         const tiedCandidates = candidates.filter(i => logicRolls[i] === currentMax);
 
         if (tiedCandidates.length === 1) {
-            // We have a winner
             winnerIndex = tiedCandidates[0];
         } else {
-            // Multiple winners: Re-roll ONLY for the tied players (internal logic only)
             candidates = tiedCandidates;
             candidates.forEach(i => {
                 logicRolls[i] = Math.floor(Math.random() * 6) + 1;
             });
-            // Loop continues to check results of the re-roll
         }
     }
 
-    // Pass the INITIAL display rolls to the state, but force the winner based on the logic result
     const newState = calculateDraftOutcome(initialRolls, gameState.playerCount, winnerIndex);
     setDraftState(newState);
-    
-    // Disable manual override buttons since the computer calculated the result
     setIsManualEntry(false);
   };
 
@@ -70,26 +62,19 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
     const val = parseInt(newValue) || 0;
     const newRolls = [...draftState.rolls];
     newRolls[index] = { ...newRolls[index], roll: val };
-    
-    // When manually changing, we reset the override winner index (3rd param) so it recalculates based on input
     const newState = calculateDraftOutcome(newRolls, gameState.playerCount);
     setDraftState(newState);
-    
-    // Enable manual override buttons since the user is editing values
     setIsManualEntry(true);
   };
 
   const handleSetWinner = (index: number) => {
     if (!draftState) return;
-    // Explicitly set the winner, overriding automatic calculation logic
     const newState = calculateDraftOutcome(draftState.rolls, gameState.playerCount, index);
     setDraftState(newState);
   };
 
-  // Determine which mode we are in based on the Step ID
   const isHavenDraft = step.id.includes('D_HAVEN_DRAFT');
   
-  // Logic from activeStoryCard
   const isPersephoneStart = activeStoryCard.setupConfig?.shipPlacementMode === 'persephone';
   const isLondiniumStart = activeStoryCard.setupConfig?.startAtLondinium;
   const startOutsideAlliance = activeStoryCard.setupConfig?.startOutsideAllianceSpace;
@@ -97,13 +82,32 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
   const allianceSpaceOffLimits = activeStoryCard.setupConfig?.allianceSpaceOffLimits;
   const addBorderHavens = activeStoryCard.setupConfig?.addBorderSpaceHavens;
 
-  // Logic from Overrides
   const isBrowncoatDraft = overrides.browncoatDraftMode;
   const isWantedLeaderMode = overrides.wantedLeaderMode;
 
+  const introText = isDark ? 'text-gray-400' : 'text-gray-600';
+  const panelBg = isDark ? 'bg-zinc-900/80' : 'bg-white';
+  const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
+  const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
+  const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
+  const panelSubColor = isDark ? 'text-gray-400' : 'text-gray-500';
+  
+  const stepBadgeBlueBg = isDark ? 'bg-blue-900/50 text-blue-200' : 'bg-blue-100 text-blue-800';
+  const stepBadgeAmberBg = isDark ? 'bg-amber-900/50 text-amber-200' : 'bg-amber-100 text-amber-800';
+
+  const itemBg = isDark ? 'bg-zinc-800 border-zinc-700' : 'bg-gray-50 border-gray-100';
+  const itemText = isDark ? 'text-gray-200' : 'text-gray-800';
+
+  const specialPlacementBg = isDark ? 'bg-amber-950/40 border-amber-800' : 'bg-amber-50 border-amber-200';
+  const specialPlacementTitle = isDark ? 'text-amber-100' : 'text-amber-900';
+  const specialPlacementText = isDark ? 'text-amber-300' : 'text-amber-800';
+  const specialPlacementSub = isDark ? 'text-amber-400' : 'text-amber-700';
+
+  const warningConflictBg = isDark ? 'bg-red-900/30 border-red-800 text-red-200' : 'bg-red-50 border-red-200 text-red-800';
+
   return (
     <>
-      <p className="mb-4 text-gray-600 dark:text-gray-400 italic">Determine who drafts first using a D6. Ties are resolved automatically.</p>
+      <p className={`mb-4 italic ${introText}`}>Determine who drafts first using a D6. Ties are resolved automatically.</p>
       {!draftState ? (
         <Button onClick={handleDetermineOrder} variant="secondary" fullWidth className="mb-4">
            🎲 Roll for {isHavenDraft ? 'Haven Draft' : 'Command'}
@@ -117,7 +121,6 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
             allowManualOverride={isManualEntry}
           />
           
-          {/* RULES BLOCK AREA */}
           {isWantedLeaderMode && (
             <SpecialRuleBlock source="setupCard" title="The Heat Is On">
               Choose Ships & Leaders normally, but <strong>each Leader begins play with a Wanted token</strong>.
@@ -142,13 +145,12 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
             </SpecialRuleBlock>
           )}
 
-          {/* DRAFT UI */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Draft Order */}
-            <div className="bg-white dark:bg-slate-900/80 p-4 rounded-lg border border-gray-200 dark:border-slate-700 relative overflow-hidden shadow-sm transition-colors duration-300">
-              <div className="absolute top-0 right-0 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 text-xs font-bold px-2 py-1 rounded-bl">Step 1</div>
-              <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2 border-b border-gray-100 dark:border-slate-800 pb-1">Draft Phase</h4>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 italic">
+            <div className={`${panelBg} p-4 rounded-lg border ${panelBorder} relative overflow-hidden shadow-sm transition-colors duration-300`}>
+              <div className={`absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl ${stepBadgeBlueBg}`}>Step 1</div>
+              <h4 className={`font-bold mb-2 border-b pb-1 ${panelHeaderColor} ${panelHeaderBorder}`}>Draft Phase</h4>
+              <p className={`text-xs mb-3 italic ${panelSubColor}`}>
                 {isHavenDraft 
                    ? "Standard Order: Winner chooses Leader & Ship first."
                    : isBrowncoatDraft 
@@ -157,53 +159,53 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
               </p>
               <ul className="space-y-2">
                 {draftState.draftOrder.map((player, i) => (
-                  <li key={i} className="flex items-center bg-gray-50 dark:bg-slate-800 p-2 rounded border border-gray-100 dark:border-slate-700">
+                  <li key={i} className={`flex items-center p-2 rounded border ${itemBg}`}>
                     <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
-                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{player}</span>
-                    {i === 0 && <span className="ml-auto text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">First Pick</span>}
+                    <span className={`text-sm font-medium ${itemText}`}>{player}</span>
+                    {i === 0 && <span className={`ml-auto text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>First Pick</span>}
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* Placement Order */}
-            <div className="bg-white dark:bg-slate-900/80 p-4 rounded-lg border border-gray-200 dark:border-slate-700 relative overflow-hidden shadow-sm transition-colors duration-300">
-              <div className="absolute top-0 right-0 bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 text-xs font-bold px-2 py-1 rounded-bl">Step 2</div>
-              <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2 border-b border-gray-100 dark:border-slate-800 pb-1">
+            <div className={`${panelBg} p-4 rounded-lg border ${panelBorder} relative overflow-hidden shadow-sm transition-colors duration-300`}>
+              <div className={`absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl ${stepBadgeAmberBg}`}>Step 2</div>
+              <h4 className={`font-bold mb-2 border-b pb-1 ${panelHeaderColor} ${panelHeaderBorder}`}>
                  {isHavenDraft ? 'Haven Placement' : 'Placement Phase'}
               </h4>
               
               {isHavenDraft ? (
                  <>
-                   <p className="text-xs text-green-800 dark:text-green-300 mb-3 italic">Reverse Order: Last player places Haven first.</p>
+                   <p className={`text-xs mb-3 italic ${isDark ? 'text-green-300' : 'text-green-800'}`}>Reverse Order: Last player places Haven first.</p>
                    <ul className="space-y-2">
                       {draftState.placementOrder.map((player, i) => (
-                        <li key={i} className="flex items-center bg-gray-50 dark:bg-slate-800 p-2 rounded border border-gray-100 dark:border-slate-700">
+                        <li key={i} className={`flex items-center p-2 rounded border ${itemBg}`}>
                           <span className="w-6 h-6 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
-                          <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{player}</span>
+                          <span className={`text-sm font-medium ${itemText}`}>{player}</span>
                         </li>
                       ))}
                     </ul>
                  </>
               ) : (isPersephoneStart || isLondiniumStart || startAtSector) ? (
-                <div className="bg-amber-50 dark:bg-amber-950/40 p-4 rounded text-center border border-amber-200 dark:border-amber-800">
-                  <p className="font-bold text-amber-900 dark:text-amber-100 mb-1">Special Placement</p>
-                  <p className="text-sm text-amber-800 dark:text-amber-300">All ships start at <strong>{startAtSector || (isPersephoneStart ? 'Persephone' : 'Londinium')}</strong>.</p>
-                  <p className="text-xs text-amber-700 dark:text-amber-400 italic mt-1">(Do not place in separate sectors)</p>
+                <div className={`p-4 rounded text-center border ${specialPlacementBg}`}>
+                  <p className={`font-bold mb-1 ${specialPlacementTitle}`}>Special Placement</p>
+                  <p className={`text-sm ${specialPlacementText}`}>All ships start at <strong>{startAtSector || (isPersephoneStart ? 'Persephone' : 'Londinium')}</strong>.</p>
+                  <p className={`text-xs italic mt-1 ${specialPlacementSub}`}>(Do not place in separate sectors)</p>
                 </div>
               ) : (
                 <>
-                   <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 italic">
+                   <p className={`text-xs mb-3 italic ${panelSubColor}`}>
                     {isBrowncoatDraft 
                       ? "Pass back to Right. Make remaining choice. Buy Fuel ($100)."
                       : "Pass to Right (Anti-Clockwise). Place Ship in Sector."}
                   </p>
                   <ul className="space-y-2">
                     {draftState.placementOrder.map((player, i) => (
-                      <li key={i} className="flex items-center bg-gray-50 dark:bg-slate-800 p-2 rounded border border-gray-100 dark:border-slate-700">
+                      <li key={i} className={`flex items-center p-2 rounded border ${itemBg}`}>
                         <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
-                        <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{player}</span>
-                        {i === 0 && <span className="ml-auto text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">First Place</span>}
+                        <span className={`text-sm font-medium ${itemText}`}>{player}</span>
+                        {i === 0 && <span className={`ml-auto text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>First Place</span>}
                       </li>
                     ))}
                   </ul>
@@ -228,7 +230,7 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
                  </ul>
                  {/* Warning if Mad Verse is active */}
                  {activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' && (
-                     <div className="mt-3 p-2 rounded text-red-800 dark:text-red-200 font-bold border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/30 text-sm">
+                     <div className={`mt-3 p-2 rounded font-bold border text-sm ${warningConflictBg}`}>
                          ⚠️ CONFLICT: Story Card override active. Ships must start at Persephone despite Haven rules!
                      </div>
                  )}
