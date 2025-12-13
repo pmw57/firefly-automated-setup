@@ -112,6 +112,7 @@ export interface StoryCardDef {
   requiredExpansion?: keyof Expansions;
   additionalRequirements?: (keyof Expansions)[];
   setupConfig?: StoryCardConfig;
+  sourceUrl?: string;
 }
 
 export interface GameState {
