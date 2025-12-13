@@ -1,14 +1,14 @@
 import { StoryCardDef } from '../types';
 
 export const STORY_CARDS: StoryCardDef[] = [
-  // --- Base Game ---
+  // Base Game
   {
     title: "Desperadoes",
     intro: "Your checkered past is catching up with you and the Alliance is hot on your tail! It's time to make a final cash grab and head out to the Rim to retire before the Alliance makes other arrangements.",
     setupDescription: "Start with 1 Warrant. Harken jobs unavailable.",
     setupConfig: {
       startWithWarrant: true,
-      forbiddenStartingContact: 'Harken'
+      forbiddenStartingContact: "Harken"
     }
   },
   {
@@ -16,7 +16,7 @@ export const STORY_CARDS: StoryCardDef[] = [
     intro: "So you finally took the plunge and borrowed enough credits for a ship to call your own. You're in debt up to your eyeballs with a creditor that's not the sort of man to be trifled with.",
     setupDescription: "Starting Jobs drawn only from Harken and Amnon Duul.",
     setupConfig: {
-      allowedStartingContacts: ['Harken', 'Amnon Duul']
+      allowedStartingContacts: ["Harken", "Amnon Duul"]
     }
   },
   {
@@ -39,8 +39,7 @@ export const STORY_CARDS: StoryCardDef[] = [
     title: "The King Of All Londinium",
     intro: "The New Cardiff Museum is about to play host to a grand exhibit of \"Earth That Was\" artifacts, the centerpiece of which is the Crown Jewels of old England. Endeavor to swap a quality counterfeit for the \"Shiny Hat\" and make off with the real one leaving no one the wiser."
   },
-
-  // --- 10th Anniversary Expansion ---
+  // 10th Anniversary
   {
     title: "A Friend In Every Port",
     intro: "High places, low places... When you sail the Black for a living, best to have friends in ALL places.",
@@ -79,7 +78,7 @@ export const STORY_CARDS: StoryCardDef[] = [
     setupDescription: "Niska is forbidden for Starting Jobs.",
     requiredExpansion: 'tenth',
     setupConfig: {
-      forbiddenStartingContact: 'Niska'
+      forbiddenStartingContact: "Niska"
     }
   },
   {
@@ -105,8 +104,7 @@ export const STORY_CARDS: StoryCardDef[] = [
     requiredExpansion: 'tenth',
     additionalRequirements: ['blue', 'kalidasa']
   },
-
-  // --- Still Flying Expansion ---
+  // Still Flying
   {
     title: "A Rare Specimen Indeed",
     intro: "Saffron's at it again. This time, she's convinced Badger that she's from a respectable family, and now the sad little king has his eye on a psychotic blushing bride. Whoever collects the most presents gets to give the toast... before it turns into a shotgun wedding.",
@@ -132,8 +130,7 @@ export const STORY_CARDS: StoryCardDef[] = [
       placeAllianceAlertsInAllianceSpace: true
     }
   },
-
-  // --- Blue Sun Expansion ---
+  // Blue Sun
   {
     title: "Any Port In A Storm",
     intro: "The Alliance has got a burr in their collective britches: patrols have been tripled and strict enforcement of penal codes is in effect. Times such as these can make for strange bedfellows and safe harbor is where you can find it. Any port in a storm...",
@@ -144,8 +141,7 @@ export const STORY_CARDS: StoryCardDef[] = [
     intro: "Life on the raggedy edge can be a hard slog. Paying work is precious enough in the good times, but when things get lean the competition for jobs can get downright unsavory. Make hay while the sun shines or get left in the dust, beggin' for scraps.",
     requiredExpansion: 'blue'
   },
-
-  // --- Kalidasa Expansion ---
+  // Kalidasa
   {
     title: "It's All In Who You Know",
     intro: "Credits are all well and good, but a strong network of contacts will pay greater dividends in the future. That's a lesson every captain gets to learn early, or they're likely not to be around long enough to learn it at all.",
@@ -166,8 +162,7 @@ export const STORY_CARDS: StoryCardDef[] = [
     intro: "Increased Alliance oversight has made gettin' paid hard. Folks are limited to whatever cash they've got stashed under their bedrolls; even the movers and shakers are findin' the spigot's run dry.",
     requiredExpansion: 'kalidasa'
   },
-
-  // --- Pirates & Bounty Hunters Expansion ---
+  // Pirates
   {
     title: "...Another Man's Treasure",
     intro: "Wealth can be measured in many ways. In some parts of the 'Verse Alliance credits ain't worth the paper they're printed on. For those regions, a more practical measure of wealth is required. Hoard a mountain of trade goods and spare parts, through any means necessary. Break contracts, steal from your rivals or just pick the bones. Anything goes!",
@@ -188,8 +183,7 @@ export const STORY_CARDS: StoryCardDef[] = [
     intro: "The 'Verse is full of people trying to carve themselves a little slice, however they can. Even a good man can get turned about from time to time. The straight and narrow can get a might twisted when walkin' the raggedy edge. In the end, the mark a person leaves all comes down to the choices they make.",
     requiredExpansion: 'pirates'
   },
-
-  // --- Crime & Punishment Expansion ---
+  // Crime
   {
     title: "Smuggler's Blues",
     intro: "Bringin' goods to folk who want 'em is an old-fashioned way to make a living... 'cept, sometimes, a law or two gets in the way.",
@@ -211,11 +205,10 @@ export const STORY_CARDS: StoryCardDef[] = [
       startWithWarrant: true,
       startOutsideAllianceSpace: true,
       startWithAlertCard: true,
-      allowedStartingContacts: ['Patience', 'Badger', 'Niska', 'Mr. Universe', 'Fanty & Mingo']
+      allowedStartingContacts: ["Patience", "Badger", "Niska", "Mr. Universe", "Fanty & Mingo"]
     }
   },
-
-  // --- Jetwash Expansion ---
+  // Coachworks (Jetwash/Esmerelda)
   {
     title: "Down And Out",
     intro: "Once your reputation's been blemished, it's hard to get right with the right people. Compete with the other riffraff for what scraps your employers are willing to risk on the likes of you. Nothing to do but suck it up and try to prove yourself worthy.",
@@ -226,8 +219,6 @@ export const STORY_CARDS: StoryCardDef[] = [
       startWithWarrant: true
     }
   },
-
-  // --- Esmerelda Expansion ---
   {
     title: "Where The Wind Takes Us",
     intro: "The winds of fate can be fickle, blowing this way and that with no regard whatsoever for a captain's plans... Now, you might could rage through the storm and buck those headwinds, trying to hold true to your intended course. The wise captain knows to ride the currents and take opportunities as they come. After the storm, will you be the broken ginkgo tree or the leaf blown to new and greener pastures?",
@@ -237,24 +228,24 @@ export const STORY_CARDS: StoryCardDef[] = [
       jobDrawMode: 'wind_takes_us'
     }
   },
-
-  // --- Black Market Expansion ---
+  // Black Market
   {
     title: "The Old Man And The Dragons",
     intro: "The Seven Dragon Kings are preparing to go to war with Adelai Niska, but their war would be bad for your business. Figure out where the Tong leaders are meeting, and maybe you can convince both sides to come to an arrangement.",
     requiredExpansion: 'black_market'
   },
-
-  // --- Community Content ---
+  // Community
   {
     title: "Bank Job",
     intro: "There's wages belonging to no-one (Alliance don't count). Find out where, and get the tools you'll need, then pull off the heist.",
-    requiredExpansion: 'community'
+    requiredExpansion: 'community',
+    sourceUrl: 'https://boardgamegeek.com/thread/2104020/article/30675070#30675070'
   },
   {
     title: "Double Duty",
     intro: "Sometimes, It's best to work under the radar and quiet-like. Fanty and Mingo have goods and folks in need of moving throughout the 'Verse. Use your connections with others to keep the twins' names out of the picture. Do a good enough job, and you might become their new favorite captain.",
-    requiredExpansion: 'community'
+    requiredExpansion: 'community',
+    sourceUrl: 'https://boardgamegeek.com/thread/2444019/article/37316409#37316409'
   },
   {
     title: "Hospital Rescue",
@@ -263,7 +254,8 @@ export const STORY_CARDS: StoryCardDef[] = [
     requiredExpansion: 'community',
     setupConfig: {
       removeRiver: true
-    }
+    },
+    sourceUrl: 'https://boardgamegeek.com/thread/2104020/article/30617384'
   },
   {
     title: "How It All Started",
@@ -284,13 +276,15 @@ export const STORY_CARDS: StoryCardDef[] = [
     setupConfig: {
       startingWarrantCount: 2,
       allianceSpaceOffLimits: true,
-      forbiddenStartingContact: 'Harken'
-    }
+      forbiddenStartingContact: "Harken"
+    },
+    sourceUrl: 'https://boardgamegeek.com/filepage/104447/fan-made-goal-card-it-aint-easy-goin-legit'
   },
   {
     title: "Reap The Whirlwind",
     intro: "Word is, the Alliance has been hiding all manner of dirty secrets out Himinbjorg way. Convince the Dust Devils you're dangerous -- or desperate -- enough for them to come out of hiding and join forces. But hurry: the upcoming Unification Day Summit seems like the perfect time to let the truth out.",
-    requiredExpansion: 'community'
+    requiredExpansion: 'community',
+    sourceUrl: 'https://boardgamegeek.com/filepage/107073/firefly-goalset-up-card-templates'
   },
   {
     title: "Shadows Over Duul",
@@ -298,14 +292,16 @@ export const STORY_CARDS: StoryCardDef[] = [
     setupDescription: "Remove Amnon Duul Jobs. Start in border of Murphy.",
     requiredExpansion: 'community',
     setupConfig: {
-      forbiddenStartingContact: 'Amnon Duul',
-      startAtSector: 'Border of Murphy'
-    }
+      forbiddenStartingContact: "Amnon Duul",
+      startAtSector: "Border of Murphy"
+    },
+    sourceUrl: 'https://boardgamegeek.com/thread/2104020/article/30620123#30620123'
   },
   {
     title: "The Ghost Rock Run",
-    intro: 'On Anson\'s World the Sweetrock Mining Co. has discovered a rare mineral called "Ghost Rock". Will you handle the run, or sell it to the highest bidder?',
-    requiredExpansion: 'community'
+    intro: `On Anson's World the Sweetrock Mining Co. has discovered a rare mineral called "Ghost Rock". Will you handle the run, or sell it to the highest bidder?`,
+    requiredExpansion: 'community',
+    sourceUrl: 'https://boardgamegeek.com/thread/1199652/custom-story-card-the-ghost-rock-run'
   },
   {
     title: "The Magnificent Crew",
@@ -315,18 +311,21 @@ export const STORY_CARDS: StoryCardDef[] = [
     setupConfig: {
       jobDrawMode: 'no_jobs',
       removeJobDecks: true
-    }
+    },
+    sourceUrl: 'https://boardgamegeek.com/image/2277037/upstarter'
   },
   {
     title: "The Truth Will Out",
     intro: "For too long the tragic fate of the Miranda colony has been covered up by the Alliance, and Mr. Universe would like to correct that, but lacks the manpower to do so on his own. Helping him is bound to be dangerous, but who wouldn't enjoy giving the Alliance a black eye?",
     setupDescription: "Requires Blue Sun Expansion.",
     requiredExpansion: 'community',
-    additionalRequirements: ['blue']
+    additionalRequirements: ['blue'],
+    sourceUrl: 'https://boardgamegeek.com/filepage/113602/the-truth-will-out'
   },
   {
     title: "Trash Part Deux",
     intro: "Have MRP (Mrs Reynolds persona) steal and sell the latest Firefly story.",
-    requiredExpansion: 'community'
+    requiredExpansion: 'community',
+    sourceUrl: 'https://boardgamegeek.com/filepage/164355/story-card-trash-part-deux'
   }
 ];

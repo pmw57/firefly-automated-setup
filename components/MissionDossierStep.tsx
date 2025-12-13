@@ -149,6 +149,20 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                     <strong>The Rim's The Thing:</strong> Remember that only <strong>Border Space</strong> Nav Decks are used in this setup card. Choose a mission achievable with limited navigation options.
                 </SpecialRuleBlock>
             )}
+
+            {activeStoryCard.sourceUrl && (
+                <div className={`mt-4 pt-2 border-t border-dashed ${isDark ? 'border-zinc-700' : 'border-gray-300'}`}>
+                    <a 
+                        href={activeStoryCard.sourceUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className={`inline-flex items-center text-xs font-bold uppercase tracking-wider underline hover:opacity-80 transition-opacity ${isDark ? 'text-blue-400' : 'text-blue-800'}`}
+                    >
+                        <span>View Community Source</span>
+                        <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    </a>
+                </div>
+            )}
          </div>
       </div>
 
