@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Expansions, ThemeColor } from '../types';
-import { getExpansionIcon } from './iconHelpers';
+import { ExpansionIcon } from './ExpansionIcon';
 import { useTheme } from './ThemeContext';
 
 interface ThemeStyles {
@@ -87,7 +87,6 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
   const inactiveHover = isDark ? 'hover:border-zinc-600' : 'hover:border-gray-300';
   
   const inactiveBadge = isDark ? 'bg-zinc-800 text-zinc-400' : 'bg-gray-100 text-gray-600';
-  const inactiveIcon = isDark ? 'bg-zinc-800 text-gray-500' : 'bg-gray-100 text-gray-500';
   const inactiveToggle = isDark ? 'bg-zinc-700' : 'bg-gray-300';
   const toggleKnob = isDark ? 'bg-zinc-200' : 'bg-white';
 
@@ -109,9 +108,9 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
       <div className="flex items-center flex-1">
         <div className={`
           w-12 h-12 rounded-lg mr-4 flex items-center justify-center font-bold text-xl shadow-sm transition-colors duration-300 overflow-hidden shrink-0
-          ${active ? currentTheme.icon : inactiveIcon}
+          ${active ? '' : 'bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-gray-500'}
         `}>
-          {getExpansionIcon(id) || label.charAt(0)}
+          <ExpansionIcon id={id} />
         </div>
         
         <div className="flex-1 mr-4">

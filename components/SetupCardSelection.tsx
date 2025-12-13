@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { GameState } from '../types';
 import { SETUP_CARDS } from '../constants';
 import { Button } from './Button';
-import { getExpansionIcon } from './iconHelpers';
+import { ExpansionIcon } from './ExpansionIcon';
 import { useTheme } from './ThemeContext';
 
 interface SetupCardSelectionProps {
@@ -140,7 +140,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
                  `}>
                     {(opt.iconOverride || opt.requiredExpansion) ? (
                        <div className={`w-10 h-10 rounded overflow-hidden shadow-sm border ${iconBorder}`}>
-                         {getExpansionIcon(opt.iconOverride || opt.requiredExpansion)}
+                         <ExpansionIcon id={opt.iconOverride || opt.requiredExpansion || ''} />
                        </div>
                     ) : (
                        <div className={`w-10 h-10 rounded flex items-center justify-center border font-bold text-sm ${iconBox}`}>

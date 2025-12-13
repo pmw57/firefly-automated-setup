@@ -17,7 +17,7 @@ export default defineConfig(({ command }) => ({
     react(),
     VitePWA({ 
       registerType: 'autoUpdate',
-      includeAssets: ['logo.svg'],
+      includeAssets: ['logo.svg', 'expansion_sprites.png'],
       manifest: {
         name: 'Firefly: The Game - Automated Setup',
         short_name: 'Firefly Setup',
