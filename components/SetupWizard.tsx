@@ -175,21 +175,22 @@ const SetupWizard: React.FC = () => {
   
   const isFinal = currentStep.type === 'final';
 
-  // JS Theme Classes
-  const stickyHeaderBg = isDark ? 'bg-zinc-900/90 border-zinc-800' : 'bg-white/95 border-gray-200';
-  const labelText = isDark ? 'text-gray-400' : 'text-gray-700';
-  const mainText = isDark ? 'text-green-400' : 'text-green-900';
-  const subText = isDark ? 'text-blue-300' : 'text-blue-900';
-  const separatorColor = isDark ? 'text-gray-600' : 'text-gray-400';
-  const storyColor = isDark ? 'text-amber-200' : 'text-amber-800';
+  // Theme Classes - Updated for Firefly look in Light Mode
+  const stickyHeaderBg = isDark ? 'bg-zinc-900/90 border-zinc-800' : 'bg-[#faf8ef]/95 border-[#d6cbb0]';
+  const labelText = isDark ? 'text-gray-400' : 'text-[#78350f]';
+  const mainText = isDark ? 'text-green-400' : 'text-[#7f1d1d]'; // Burgundy for main
+  const subText = isDark ? 'text-blue-300' : 'text-[#451a03]'; // Deep brown
+  const separatorColor = isDark ? 'text-gray-600' : 'text-[#a8a29e]';
+  const storyColor = isDark ? 'text-amber-200' : 'text-[#b45309]'; // Amber
   
-  const resetBtnDefault = isDark ? 'text-red-400 hover:text-red-300 hover:bg-red-900/20' : 'text-red-700 hover:text-red-900 hover:bg-red-50';
+  const resetBtnDefault = isDark ? 'text-red-400 hover:text-red-300 hover:bg-red-900/20' : 'text-[#7f1d1d] hover:text-[#991b1b] hover:bg-red-50';
   const resetBtnConfirm = 'bg-red-600 text-white hover:bg-red-700 ring-red-500 shadow-md';
 
-  const finalCardBg = isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-gray-200';
-  const finalBorderTop = isDark ? 'border-t-green-800' : 'border-t-green-600';
-  const finalTitle = isDark ? 'text-gray-100' : 'text-gray-800';
-  const finalSub = isDark ? 'text-gray-300' : 'text-gray-600';
+  // Final Card
+  const finalCardBg = isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-[#faf8ef] border-[#d6cbb0]';
+  const finalBorderTop = isDark ? 'border-t-green-800' : 'border-t-[#7f1d1d]';
+  const finalTitle = isDark ? 'text-gray-100' : 'text-[#292524]';
+  const finalSub = isDark ? 'text-gray-300' : 'text-[#57534e]';
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -212,7 +213,7 @@ const SetupWizard: React.FC = () => {
           onClick={handleResetClick}
           className={`
             text-xs font-bold underline focus:outline-none focus:ring-2 rounded px-2 py-1 transition-colors duration-200 ml-4 shrink-0
-            ${showConfirmReset ? `${resetBtnConfirm} no-underline` : `${resetBtnDefault} focus:ring-red-500`}
+            ${showConfirmReset ? `${resetBtnConfirm} no-underline` : `${resetBtnDefault} focus:ring-[#d4af37]`}
           `}
         >
           {showConfirmReset ? "Confirm Restart?" : "Restart"}

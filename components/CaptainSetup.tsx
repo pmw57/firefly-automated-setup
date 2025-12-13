@@ -64,31 +64,31 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
     });
   };
 
-  // JS Theme Variables
-  const containerBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
-  const textColor = isDark ? 'text-amber-500' : 'text-gray-900';
-  const labelColor = isDark ? 'text-zinc-400' : 'text-gray-700';
-  const subLabelColor = isDark ? 'text-zinc-500' : 'text-gray-500';
-  const inputBg = isDark ? 'bg-black' : 'bg-white';
-  const inputText = isDark ? 'text-gray-200' : 'text-gray-800';
-  const inputBorder = isDark ? 'border-zinc-700' : 'border-gray-400';
-  const inputHover = isDark ? 'hover:bg-zinc-900' : 'hover:bg-gray-100';
-  const inputPlaceholder = isDark ? 'placeholder-zinc-600' : 'placeholder-gray-400';
-  const cardBg = isDark ? 'bg-black/30' : 'bg-gray-100/50';
-  const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
-  const partBadgeBorder = isDark ? 'border-yellow-700/50' : 'border-yellow-300';
-  const partBadgeBg = isDark ? 'bg-yellow-900/40' : 'bg-yellow-100';
-  const partBadgeText = isDark ? 'text-yellow-100' : 'text-yellow-800';
+  // Theme Variables
+  const containerBorder = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
+  const textColor = isDark ? 'text-amber-500' : 'text-[#292524]';
+  const labelColor = isDark ? 'text-zinc-400' : 'text-[#78350f]';
+  const subLabelColor = isDark ? 'text-zinc-500' : 'text-[#a8a29e]';
+  const inputBg = isDark ? 'bg-black' : 'bg-[#faf8ef]';
+  const inputText = isDark ? 'text-gray-200' : 'text-[#292524]';
+  const inputBorder = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
+  const inputHover = isDark ? 'hover:bg-zinc-900' : 'hover:bg-[#f5f5f4]';
+  const inputPlaceholder = isDark ? 'placeholder-zinc-600' : 'placeholder-[#a8a29e]';
+  const cardBg = isDark ? 'bg-black/30' : 'bg-[#e7e5e4]/30';
+  const cardBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
+  const partBadgeBorder = isDark ? 'border-yellow-700/50' : 'border-[#d4af37]';
+  const partBadgeBg = isDark ? 'bg-yellow-900/40' : 'bg-[#fef3c7]';
+  const partBadgeText = isDark ? 'text-yellow-100' : 'text-[#92400e]';
 
   return (
     <div className={`bg-metal rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in relative overflow-hidden transition-all duration-300`}>
       {/* Decorative bolts - Only visible in Light Mode */}
       {!isDark && (
         <>
-          <div className="absolute top-3 left-3 w-3 h-3 rounded-full bg-gray-300 shadow-inner border border-gray-400"></div>
-          <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-gray-300 shadow-inner border border-gray-400"></div>
-          <div className="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-gray-300 shadow-inner border border-gray-400"></div>
-          <div className="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-gray-300 shadow-inner border border-gray-400"></div>
+          <div className="absolute top-3 left-3 w-3 h-3 rounded-full bg-stone-300 shadow-inner border border-stone-400"></div>
+          <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-stone-300 shadow-inner border border-stone-400"></div>
+          <div className="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-stone-300 shadow-inner border border-stone-400"></div>
+          <div className="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-stone-300 shadow-inner border border-stone-400"></div>
         </>
       )}
 
@@ -163,7 +163,7 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
       </div>
 
       <div className="relative z-10">
-        <Button onClick={onNext} fullWidth className="text-lg py-4">
+        <Button onClick={onNext} fullWidth className="text-lg py-4 border-b-4 border-[#450a0a]">
           Next: Choose Setup Card →
         </Button>
       </div>

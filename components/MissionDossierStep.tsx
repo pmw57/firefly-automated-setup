@@ -83,34 +83,34 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
       setShortList([]);
   };
 
-  const headerColor = isDark ? 'text-amber-500' : 'text-[#5e1916]'; // Burgundy for Light, Amber for Dark
-  const mainTitleColor = isDark ? 'text-gray-100' : 'text-gray-900';
-  const italicTextColor = isDark ? 'text-gray-300' : 'text-gray-800';
-  const containerBg = isDark ? 'bg-zinc-900' : 'bg-white';
-  const containerBorder = isDark ? 'border-zinc-800' : 'border-gray-300';
+  const headerColor = isDark ? 'text-amber-500' : 'text-[#fef3c7]';
+  const mainTitleColor = isDark ? 'text-gray-100' : 'text-[#292524]';
+  const italicTextColor = isDark ? 'text-gray-300' : 'text-[#57534e]';
+  const containerBg = isDark ? 'bg-zinc-900' : 'bg-[#faf8ef]';
+  const containerBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
   
-  const headerBarBg = isDark ? 'bg-black/40' : 'bg-gray-100';
-  const headerBarBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
+  const headerBarBg = isDark ? 'bg-black/40' : 'bg-[#5e1916]'; // Burgundy header bar
+  const headerBarBorder = isDark ? 'border-zinc-800' : 'border-[#450a0a]';
   
-  const badgeBg = isDark ? 'bg-zinc-800' : 'bg-white';
-  const badgeText = isDark ? 'text-gray-400' : 'text-gray-600';
-  const badgeBorder = isDark ? 'border-0' : 'border border-gray-200';
+  const badgeBg = isDark ? 'bg-zinc-800' : 'bg-[#991b1b]';
+  const badgeText = isDark ? 'text-gray-400' : 'text-[#fef3c7]';
+  const badgeBorder = isDark ? 'border-0' : 'border border-[#450a0a]';
 
-  const bodyBg = isDark ? 'bg-zinc-900/50' : 'bg-paper-texture'; // Ensure texture removed in dark
-  const bgIconBg = isDark ? 'bg-zinc-800' : 'bg-gray-200';
-  const bgIconBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
-  const bgIconText = isDark ? 'text-gray-400' : 'text-gray-600';
-  const quoteBorder = isDark ? 'border-zinc-700' : 'border-gray-400';
+  const bodyBg = isDark ? 'bg-zinc-900/50' : 'bg-transparent';
+  const bgIconBg = isDark ? 'bg-zinc-800' : 'bg-[#e5e5e5]';
+  const bgIconBorder = isDark ? 'border-zinc-700' : 'border-[#d4d4d4]';
+  const bgIconText = isDark ? 'text-gray-400' : 'text-gray-500';
+  const quoteBorder = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
 
-  const inputBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
-  const inputBg = isDark ? 'bg-zinc-900/50' : 'bg-white';
-  const inputText = isDark ? 'text-gray-200' : 'text-gray-900';
-  const inputPlaceholder = isDark ? 'placeholder-zinc-500' : 'placeholder-gray-500';
+  const inputBorder = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
+  const inputBg = isDark ? 'bg-zinc-900/50' : 'bg-[#faf8ef]';
+  const inputText = isDark ? 'text-gray-200' : 'text-[#292524]';
+  const inputPlaceholder = isDark ? 'placeholder-zinc-500' : 'placeholder-[#a8a29e]';
 
-  const listContainerBorder = isDark ? 'border-zinc-800' : 'border-gray-300';
-  const listContainerBg = isDark ? 'bg-black/20' : 'bg-gray-50';
-  const emptyStateText = isDark ? 'text-zinc-500' : 'text-gray-600';
-  const countText = isDark ? 'text-zinc-500' : 'text-gray-600';
+  const listContainerBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
+  const listContainerBg = isDark ? 'bg-black/20' : 'bg-[#f5f5f4]';
+  const emptyStateText = isDark ? 'text-zinc-500' : 'text-[#78716c]';
+  const countText = isDark ? 'text-zinc-500' : 'text-[#78716c]';
 
   return (
     <div className="space-y-6">
@@ -157,17 +157,17 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
           <Button onClick={handleRandomPick} variant="secondary" className="flex-1 text-sm py-2">
               🎰 Randomly Select 1
           </Button>
-          <Button onClick={handleGenerateShortList} className={`flex-1 text-sm py-2 ${isDark ? 'bg-blue-900/50 border-blue-800 hover:bg-blue-800/60 text-blue-100' : 'bg-sky-700 border-sky-900 text-sky-50 hover:bg-sky-600'}`}>
+          <Button onClick={handleGenerateShortList} className={`flex-1 text-sm py-2 ${isDark ? 'bg-blue-900/50 border-blue-800 hover:bg-blue-800/60 text-blue-100' : 'bg-[#1e3a8a] border-[#172554] text-white hover:bg-[#1e40af]'}`}>
               🃏 Draft 3 Options
           </Button>
       </div>
 
       {/* Short List View */}
       {shortList.length > 0 && (
-          <div className={`${isDark ? 'bg-blue-950/30 border-blue-900/50' : 'bg-sky-50 border-sky-200'} border p-4 rounded-lg mb-4 animate-fade-in`}>
+          <div className={`${isDark ? 'bg-blue-950/30 border-blue-900/50' : 'bg-blue-50 border-blue-200'} border p-4 rounded-lg mb-4 animate-fade-in`}>
               <div className="flex justify-between items-center mb-3">
-                  <h4 className={`font-bold ${isDark ? 'text-blue-200' : 'text-sky-900'}`}>Short-Listed Missions</h4>
-                  <span className={`text-xs ${isDark ? 'text-blue-300 bg-blue-900/50' : 'text-sky-600 bg-sky-100'} px-2 py-1 rounded-full font-bold`}>Pick one below or roll</span>
+                  <h4 className={`font-bold ${isDark ? 'text-blue-200' : 'text-blue-900'}`}>Short-Listed Missions</h4>
+                  <span className={`text-xs ${isDark ? 'text-blue-300 bg-blue-900/50' : 'text-blue-600 bg-blue-100'} px-2 py-1 rounded-full font-bold`}>Pick one below or roll</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                   {shortList.map((card) => (
@@ -181,7 +181,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                   ))}
               </div>
               <div className="flex gap-3">
-                  <Button onClick={handlePickFromShortList} className="flex-1 py-2 text-sm">
+                  <Button onClick={handlePickFromShortList} className="flex-1 py-2 text-sm bg-green-700 dark:bg-green-800">
                       🎲 Select Random from Hand
                   </Button>
                   <Button onClick={handleCancelShortList} variant="danger" className="py-2 text-sm px-4">
@@ -196,14 +196,14 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
               <input 
                 type="text" 
                 placeholder="Search Title or Intro..." 
-                className={`flex-1 p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none ${inputBg} ${inputText} ${inputPlaceholder} transition-colors`}
+                className={`flex-1 p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-[#d4af37] focus:outline-none ${inputBg} ${inputText} ${inputPlaceholder} transition-colors`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <select 
                   value={filterExpansion} 
                   onChange={(e) => setFilterExpansion(e.target.value)}
-                  className={`p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none ${inputBg} ${inputText} transition-colors`}
+                  className={`p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-[#d4af37] focus:outline-none ${inputBg} ${inputText} transition-colors`}
               >
                   <option value="all">All Expansions</option>
                   <option value="base">Base Game</option>

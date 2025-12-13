@@ -25,24 +25,24 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
     };
 
     const containerClass = isSelected
-        ? (isDark ? 'border-green-500 ring-2 ring-green-900 bg-green-900/20' : 'border-green-500 ring-2 ring-green-200 bg-green-50')
-        : (isDark ? 'bg-zinc-800 border-zinc-700 hover:border-zinc-500' : 'bg-white border-gray-200 hover:border-gray-300');
+        ? (isDark ? 'border-green-500 ring-2 ring-green-900 bg-green-900/20' : 'border-[#7f1d1d] ring-2 ring-[#7f1d1d] bg-[#fff1f2]')
+        : (isDark ? 'bg-zinc-800 border-zinc-700 hover:border-zinc-500' : 'bg-[#faf8ef] border-[#d6cbb0] hover:border-[#a8a29e]');
 
     const titleColor = isSelected
-        ? (isDark ? 'text-green-300' : 'text-green-900')
-        : (isDark ? 'text-gray-200' : 'text-gray-800');
+        ? (isDark ? 'text-green-300' : 'text-[#7f1d1d]')
+        : (isDark ? 'text-gray-200' : 'text-[#292524]');
 
-    const bgIconBg = isDark ? 'bg-zinc-700 border-zinc-600' : 'bg-gray-100 border-gray-200';
+    const bgIconBg = isDark ? 'bg-zinc-700 border-zinc-600' : 'bg-[#e5e5e5] border-[#d4d4d4]';
     const bgIconText = isDark ? 'text-gray-500' : 'text-gray-500';
 
     const badgeClass = isSelected
-        ? (isDark ? 'bg-green-800 text-green-200' : 'bg-green-200 text-green-800')
-        : (isDark ? 'bg-amber-900/60 text-amber-200' : 'bg-amber-100 text-amber-800');
+        ? (isDark ? 'bg-green-800 text-green-200' : 'bg-[#991b1b] text-white')
+        : (isDark ? 'bg-amber-900/60 text-amber-200' : 'bg-[#fef3c7] text-[#92400e]');
 
-    const introColor = isDark ? 'text-gray-400' : 'text-gray-700';
-    const footerBorder = isDark ? 'border-zinc-700/50' : 'border-gray-100';
-    const footerText = isDark ? 'text-amber-400' : 'text-amber-800';
-    const checkMarkColor = isDark ? 'text-green-400' : 'text-green-600';
+    const introColor = isDark ? 'text-gray-400' : 'text-[#57534e]';
+    const footerBorder = isDark ? 'border-zinc-700/50' : 'border-[#e7e5e4]';
+    const footerText = isDark ? 'text-amber-400' : 'text-[#b45309]';
+    const checkMarkColor = isDark ? 'text-green-400' : 'text-[#7f1d1d]';
 
     return (
         <div 
@@ -52,7 +52,7 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
             tabIndex={0}
             aria-pressed={isSelected}
             className={`
-                relative cursor-pointer rounded-lg border-2 p-3 transition-all duration-200 flex flex-col h-full shadow-sm hover:shadow-md focus:outline-none focus:z-10 focus:ring-2 focus:ring-green-500 focus:ring-offset-2
+                relative cursor-pointer rounded-lg border-2 p-3 transition-all duration-200 flex flex-col h-full shadow-sm hover:shadow-md focus:outline-none focus:z-10 focus:ring-2 focus:ring-[#d4af37] focus:ring-offset-2
                 ${containerClass}
                 ${isShortList ? 'min-h-[120px]' : 'min-h-[160px]'}
             `}

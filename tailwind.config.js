@@ -1,3 +1,4 @@
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -9,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        western: ['Rye', 'serif'],
-        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif']
+        western: ['CIND', 'serif'],
+        sans: ['FranklinGothic', 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif']
       },
       keyframes: {
         fadeIn: {

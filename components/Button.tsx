@@ -21,7 +21,7 @@ export const Button: React.FC<ButtonProps> = ({
   let variantStyle = "";
   
   if (theme === 'dark') {
-    // Dark Mode Styles
+    // Dark Mode Styles (Space/Sci-Fi feel)
     switch (variant) {
       case 'primary':
         variantStyle = "bg-emerald-900 text-emerald-100 border-emerald-950 hover:bg-emerald-800 focus:ring-emerald-500";
@@ -34,16 +34,18 @@ export const Button: React.FC<ButtonProps> = ({
         break;
     }
   } else {
-    // Light Mode Styles
+    // Light Mode Styles (Firefly Board Game feel: Burgundy, Leather, Gold)
     switch (variant) {
       case 'primary':
-        variantStyle = "bg-emerald-700 text-emerald-50 border-emerald-900 hover:bg-emerald-600 focus:ring-emerald-500";
+        // Deep Burgundy like the game box/logo
+        variantStyle = "bg-[#7f1d1d] text-[#fef3c7] border-[#450a0a] hover:bg-[#991b1b] focus:ring-[#d4af37]";
         break;
       case 'secondary':
-        variantStyle = "bg-amber-700 text-amber-50 border-amber-900 hover:bg-amber-600 focus:ring-amber-500";
+        // Worn Leather/Amber
+        variantStyle = "bg-[#d97706] text-white border-[#78350f] hover:bg-[#b45309] focus:ring-[#f59e0b]";
         break;
       case 'danger':
-        variantStyle = "bg-red-800 text-red-50 border-red-950 hover:bg-red-700 focus:ring-red-500";
+        variantStyle = "bg-red-700 text-white border-red-900 hover:bg-red-600 focus:ring-red-500";
         break;
     }
   }

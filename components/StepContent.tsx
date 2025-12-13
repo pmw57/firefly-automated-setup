@@ -50,10 +50,10 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
     }
   };
 
-  const headerColor = isDark ? 'text-gray-200' : 'text-gray-900';
-  const indexColor = isDark ? 'text-amber-500/80' : 'text-amber-700';
-  const borderBottom = isDark ? 'border-zinc-700' : 'border-gray-300';
-  const borderTop = isDark ? 'border-zinc-800' : 'border-gray-300';
+  const headerColor = isDark ? 'text-gray-200' : 'text-[#292524]';
+  const indexColor = isDark ? 'text-amber-500/80' : 'text-[#7f1d1d]';
+  const borderBottom = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
+  const borderTop = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
 
   return (
     <div className="animate-fade-in-up">

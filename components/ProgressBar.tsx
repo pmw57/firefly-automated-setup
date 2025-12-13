@@ -14,10 +14,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ current, total }) => {
   // Ensure we don't divide by zero and clamp percentage
   const percentage = Math.min(100, Math.max(0, total > 0 ? Math.round(((current - 1) / (total - 1)) * 100) : 0));
 
-  const labelColor = isDark ? 'text-gray-400' : 'text-gray-700';
-  const percentColor = isDark ? 'text-green-400' : 'text-green-700';
-  const trackBg = isDark ? 'bg-gray-700/50' : 'bg-gray-300';
-  const trackBorder = isDark ? 'border-white/10' : 'border-gray-400';
+  const labelColor = isDark ? 'text-gray-400' : 'text-[#78350f]';
+  const percentColor = isDark ? 'text-green-400' : 'text-[#7f1d1d]';
+  const trackBg = isDark ? 'bg-gray-700/50' : 'bg-[#d6cbb0]';
+  const trackBorder = isDark ? 'border-white/10' : 'border-[#a8a29e]';
+  
+  const barGradient = isDark ? 'from-green-700 to-green-500' : 'from-[#7f1d1d] to-[#991b1b]';
 
   return (
     <div className="w-full mb-6">
@@ -27,7 +29,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ current, total }) => {
       </div>
       <div className={`w-full rounded-full h-4 shadow-inner overflow-hidden border ${trackBg} ${trackBorder}`}>
         <div 
-          className="bg-gradient-to-r from-green-700 to-green-500 h-full rounded-full transition-all duration-500 ease-out relative" 
+          className={`bg-gradient-to-r ${barGradient} h-full rounded-full transition-all duration-500 ease-out relative`}
           style={{ width: `${percentage}%` }}
         >
           {/* Shine effect */}

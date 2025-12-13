@@ -22,12 +22,18 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
         case 'info': return { border: 'border-zinc-600', bg: 'bg-zinc-800/40', text: 'text-gray-300' };
       }
     } else {
+      // Firefly Light Theme
       switch(source) {
-        case 'story': return { border: 'border-amber-500', bg: 'bg-amber-50', text: 'text-amber-900' };
-        case 'setupCard': return { border: 'border-blue-500', bg: 'bg-blue-50', text: 'text-blue-900' };
-        case 'expansion': return { border: 'border-purple-500', bg: 'bg-purple-50', text: 'text-purple-900' };
-        case 'warning': return { border: 'border-red-500', bg: 'bg-red-50', text: 'text-red-900' };
-        case 'info': return { border: 'border-gray-400', bg: 'bg-gray-50', text: 'text-gray-800' };
+        // Story: Amber/Brown
+        case 'story': return { border: 'border-[#b45309]', bg: 'bg-[#fffbeb]', text: 'text-[#92400e]' };
+        // Setup Card: Deep Blue (Alliance)
+        case 'setupCard': return { border: 'border-[#1e40af]', bg: 'bg-[#eff6ff]', text: 'text-[#1e3a8a]' };
+        // Expansion: Purple
+        case 'expansion': return { border: 'border-[#7e22ce]', bg: 'bg-[#faf5ff]', text: 'text-[#6b21a8]' };
+        // Warning: Red
+        case 'warning': return { border: 'border-[#b91c1c]', bg: 'bg-[#fef2f2]', text: 'text-[#991b1b]' };
+        // Info: Gray
+        case 'info': return { border: 'border-[#78716c]', bg: 'bg-[#f5f5f4]', text: 'text-[#44403c]' };
       }
     }
     return { border: 'border-gray-500', bg: 'bg-gray-100', text: 'text-gray-800' };

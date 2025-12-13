@@ -72,12 +72,12 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
     }
   }, []);
 
-  const headerColor = isDark ? 'text-amber-500' : 'text-gray-900';
-  const labelColor = isDark ? 'text-zinc-400' : 'text-gray-700';
-  const containerBg = isDark ? 'bg-black/60' : 'bg-white/90';
-  const containerBorder = isDark ? 'border-zinc-800' : 'border-gray-300';
-  const badgeClass = isDark ? 'bg-emerald-900/40 text-emerald-300 border-emerald-800' : 'bg-emerald-100 text-emerald-900 border-emerald-300';
-  const listBg = isDark ? 'bg-black/40' : 'bg-gray-50';
+  const headerColor = isDark ? 'text-amber-500' : 'text-[#292524]';
+  const labelColor = isDark ? 'text-zinc-400' : 'text-[#78350f]';
+  const containerBg = isDark ? 'bg-black/60' : 'bg-[#faf8ef]/95';
+  const containerBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
+  const badgeClass = isDark ? 'bg-emerald-900/40 text-emerald-300 border-emerald-800' : 'bg-[#e6ddc5] text-[#7f1d1d] border-[#d6cbb0]';
+  const listBg = isDark ? 'bg-black/40' : 'bg-[#f5f5f4]';
 
   return (
     <div className={`${containerBg} backdrop-blur-md rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in transition-all duration-300`}>
@@ -95,33 +95,33 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
             
             // Item Theme Logic
             const itemBg = isSelected 
-                ? (isDark ? 'bg-emerald-900/30' : 'bg-emerald-100/50')
-                : (isDark ? 'bg-zinc-900/40' : 'bg-white');
+                ? (isDark ? 'bg-emerald-900/30' : 'bg-[#fff1f2]')
+                : (isDark ? 'bg-zinc-900/40' : 'bg-[#faf8ef]');
             
             const itemBorder = isSelected
-                ? (isDark ? 'border-emerald-800' : 'border-emerald-200')
-                : (isDark ? 'border-zinc-800/50' : 'border-gray-100');
+                ? (isDark ? 'border-emerald-800' : 'border-[#7f1d1d]')
+                : (isDark ? 'border-zinc-800/50' : 'border-[#e7e5e4]');
 
             const itemHover = !isSelected 
-                ? (isDark ? 'hover:bg-zinc-800' : 'hover:bg-gray-100') 
+                ? (isDark ? 'hover:bg-zinc-800' : 'hover:bg-[#f5f5f4]') 
                 : '';
 
             const iconContainerBg = isSelected
-                ? (isDark ? 'bg-emerald-900/40 border-emerald-800' : 'bg-emerald-200/50 border-emerald-200')
-                : (isDark ? 'bg-zinc-900/60 border-zinc-800' : 'bg-gray-100 border-gray-100');
+                ? (isDark ? 'bg-emerald-900/40 border-emerald-800' : 'bg-[#fee2e2] border-[#7f1d1d]')
+                : (isDark ? 'bg-zinc-900/60 border-zinc-800' : 'bg-[#e7e5e4] border-[#d6cbb0]');
 
-            const iconBox = isDark ? 'bg-zinc-800 border-zinc-600 text-zinc-500' : 'bg-white border-gray-300 text-gray-400';
-            const iconBorder = isDark ? 'border-zinc-600' : 'border-gray-300';
+            const iconBox = isDark ? 'bg-zinc-800 border-zinc-600 text-zinc-500' : 'bg-white border-[#d4d4d4] text-gray-400';
+            const iconBorder = isDark ? 'border-zinc-600' : 'border-[#d6cbb0]';
 
             const titleColor = isSelected 
-                ? (isDark ? 'text-emerald-400' : 'text-emerald-900') 
-                : (isDark ? 'text-gray-300' : 'text-gray-900');
+                ? (isDark ? 'text-emerald-400' : 'text-[#7f1d1d]') 
+                : (isDark ? 'text-gray-300' : 'text-[#292524]');
             
             const descColor = isSelected
-                ? (isDark ? 'text-emerald-200/70' : 'text-emerald-800')
-                : (isDark ? 'text-zinc-400' : 'text-gray-600');
+                ? (isDark ? 'text-emerald-200/70' : 'text-[#991b1b]')
+                : (isDark ? 'text-zinc-400' : 'text-[#57534e]');
 
-            const checkMarkColor = isDark ? 'text-emerald-400' : 'text-emerald-700';
+            const checkMarkColor = isDark ? 'text-emerald-400' : 'text-[#7f1d1d]';
 
             return (
               <button 
@@ -130,7 +130,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
                 type="button"
                 onClick={() => handleSetupCardSelect(opt.id, opt.label)}
                 className={`
-                  flex items-stretch text-left cursor-pointer border-b last:border-0 transition-all duration-200 focus:outline-none focus:z-10 focus:ring-inset focus:ring-2 focus:ring-emerald-500
+                  flex items-stretch text-left cursor-pointer border-b last:border-0 transition-all duration-200 focus:outline-none focus:z-10 focus:ring-inset focus:ring-2 focus:ring-[#d4af37]
                   ${itemBg} ${itemBorder} ${itemHover}
                 `}
                 aria-pressed={isSelected}
@@ -172,7 +172,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
         <Button onClick={onBack} variant="secondary" className="w-1/3">
           ← Back
         </Button>
-        <Button onClick={onStart} fullWidth className="w-2/3 text-xl py-4">
+        <Button onClick={onStart} fullWidth className="w-2/3 text-xl py-4 border-b-4 border-[#450a0a]">
           Launch Setup Sequence
         </Button>
       </div>
