@@ -58,6 +58,13 @@ const App: React.FC = () => {
           Firefly: The Game, its expansions, artwork, and associated trademarks are copyright © Gale Force Nine and 20th Century Fox.
           Authorized use of assets for fan utility.
         </p>
+        
+        <div className="mt-4 flex justify-center gap-4 opacity-80 dark:opacity-60">
+           <a href="https://github.com/pmw57/firefly-automated-setup" target="_blank" rel="noreferrer" className="hover:text-yellow-700 dark:hover:text-amber-500 transition-colors underline">GitHub Project</a>
+           <span>•</span>
+           <a href="https://boardgamegeek.com/thread/3627152/firefly-automated-setup" target="_blank" rel="noreferrer" className="hover:text-yellow-700 dark:hover:text-amber-500 transition-colors underline">BGG Thread</a>
+        </div>
+
         <p className="mt-4 opacity-50 dark:opacity-40 font-mono">v{typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'DEV'}</p>
       </footer>
 
