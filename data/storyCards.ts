@@ -238,12 +238,14 @@ export const STORY_CARDS: StoryCardDef[] = [
   {
     title: "Bank Job",
     intro: "There's wages belonging to no-one (Alliance don't count). Find out where, and get the tools you'll need, then pull off the heist.",
-    requiredExpansion: 'community'
+    requiredExpansion: 'community',
+    sourceUrl: 'https://boardgamegeek.com/thread/2104020/article/30675070#30675070'
   },
   {
     title: "Double Duty",
     intro: "Sometimes, It's best to work under the radar and quiet-like. Fanty and Mingo have goods and folks in need of moving throughout the 'Verse. Use your connections with others to keep the twins' names out of the picture. Do a good enough job, and you might become their new favorite captain.",
-    requiredExpansion: 'community'
+    requiredExpansion: 'community',
+    sourceUrl: 'https://boardgamegeek.com/thread/2444019/article/37316409#37316409'
   },
   {
     title: "Hospital Rescue",
@@ -252,7 +254,8 @@ export const STORY_CARDS: StoryCardDef[] = [
     requiredExpansion: 'community',
     setupConfig: {
       removeRiver: true
-    }
+    },
+    sourceUrl: 'https://boardgamegeek.com/thread/2104020/article/30617384'
   },
   {
     title: "How It All Started",
@@ -280,7 +283,8 @@ export const STORY_CARDS: StoryCardDef[] = [
   {
     title: "Reap The Whirlwind",
     intro: "Word is, the Alliance has been hiding all manner of dirty secrets out Himinbjorg way. Convince the Dust Devils you're dangerous -- or desperate -- enough for them to come out of hiding and join forces. But hurry: the upcoming Unification Day Summit seems like the perfect time to let the truth out.",
-    requiredExpansion: 'community'
+    requiredExpansion: 'community',
+    sourceUrl: 'https://boardgamegeek.com/filepage/107073/firefly-goalset-up-card-templates'
   },
   {
     title: "Shadows Over Duul",
@@ -290,12 +294,14 @@ export const STORY_CARDS: StoryCardDef[] = [
     setupConfig: {
       forbiddenStartingContact: "Amnon Duul",
       startAtSector: "Border of Murphy"
-    }
+    },
+    sourceUrl: 'https://boardgamegeek.com/thread/2104020/article/30620123#30620123'
   },
   {
     title: "The Ghost Rock Run",
-    intro: "On Anson's World the Sweetrock Mining Co. has discovered a rare mineral called \"Ghost Rock\". Will you handle the run, or sell it to the highest bidder?",
-    requiredExpansion: 'community'
+    intro: `On Anson's World the Sweetrock Mining Co. has discovered a rare mineral called "Ghost Rock". Will you handle the run, or sell it to the highest bidder?`,
+    requiredExpansion: 'community',
+    sourceUrl: 'https://boardgamegeek.com/thread/1199652/custom-story-card-the-ghost-rock-run'
   },
   {
     title: "The Magnificent Crew",
@@ -305,18 +311,21 @@ export const STORY_CARDS: StoryCardDef[] = [
     setupConfig: {
       jobDrawMode: 'no_jobs',
       removeJobDecks: true
-    }
+    },
+    sourceUrl: 'https://boardgamegeek.com/image/2277037/upstarter'
   },
   {
     title: "The Truth Will Out",
     intro: "For too long the tragic fate of the Miranda colony has been covered up by the Alliance, and Mr. Universe would like to correct that, but lacks the manpower to do so on his own. Helping him is bound to be dangerous, but who wouldn't enjoy giving the Alliance a black eye?",
     setupDescription: "Requires Blue Sun Expansion.",
     requiredExpansion: 'community',
-    additionalRequirements: ['blue']
+    additionalRequirements: ['blue'],
+    sourceUrl: 'https://boardgamegeek.com/filepage/113602/the-truth-will-out'
   },
   {
     title: "Trash Part Deux",
     intro: "Have MRP (Mrs Reynolds persona) steal and sell the latest Firefly story.",
-    requiredExpansion: 'community'
+    requiredExpansion: 'community',
+    sourceUrl: 'https://boardgamegeek.com/filepage/164355/story-card-trash-part-deux'
   }
 ];
