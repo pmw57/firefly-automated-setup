@@ -46,7 +46,7 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
       }
     } else {
       // Delegate all dynamic logic to the handler
-      return <DynamicStepHandler step={step} gameState={gameState} />;
+      return <DynamicStepHandler step={step} gameState={gameState} setGameState={setGameState} />;
     }
   };
 
@@ -81,7 +81,12 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
         <Button onClick={onPrev} variant="secondary" className="shadow-sm">
           ← Previous
         </Button>
-        <Button onClick={onNext} className="shadow-lg hover:translate-y-[-2px] transition-transform">
+        <Button 
+            onClick={onNext} 
+            // Disable Next on Flying Solo Setup until a choice is made
+            disabled={step.id === 'D_FLYING_SOLO_SETUP' && !gameState.secondarySetupId}
+            className={`shadow-lg hover:translate-y-[-2px] transition-transform ${step.id === 'D_FLYING_SOLO_SETUP' && !gameState.secondarySetupId ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
           Next Step →
         </Button>
       </div>

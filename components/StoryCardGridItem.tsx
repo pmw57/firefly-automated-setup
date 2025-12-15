@@ -38,6 +38,8 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
     const badgeClass = isSelected
         ? (isDark ? 'bg-green-800 text-green-200' : 'bg-[#991b1b] text-white')
         : (isDark ? 'bg-amber-900/60 text-amber-200' : 'bg-[#fef3c7] text-[#92400e]');
+        
+    const soloBadgeClass = isDark ? 'bg-indigo-900/60 text-indigo-200' : 'bg-indigo-100 text-indigo-800';
 
     const introColor = isDark ? 'text-gray-400' : 'text-[#57534e]';
     const footerBorder = isDark ? 'border-zinc-700/50' : 'border-[#e7e5e4]';
@@ -73,12 +75,19 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
                         {card.title}
                      </h4>
                      
-                     {/* Setup Badge Inline */}
-                     {summary && (
-                         <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded mt-1 ${badgeClass}`}>
-                            {summary}
-                         </span>
-                     )}
+                     {/* Badges Container */}
+                     <div className="flex flex-wrap gap-1 mt-1">
+                         {card.isSolo && (
+                             <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded ${soloBadgeClass}`}>
+                                Solo Play
+                             </span>
+                         )}
+                         {summary && (
+                             <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded ${badgeClass}`}>
+                                {summary}
+                             </span>
+                         )}
+                     </div>
                 </div>
             </div>
 

@@ -47,6 +47,7 @@ export interface StepOverrides {
   blitzPrimeMode?: boolean;
   clearerSkiesNavMode?: boolean;
   noAlertTokens?: boolean;
+  flyingSoloNavMode?: boolean;
 }
 
 export interface SetupContentData {
@@ -72,6 +73,7 @@ export interface SetupCardDef {
   requiredExpansion?: keyof Expansions;
   iconOverride?: string;
   steps: SetupCardStep[];
+  mode?: GameMode;
 }
 
 export interface StoryCardConfig {
@@ -89,11 +91,15 @@ export interface StoryCardConfig {
   placeMixedAlertTokens?: boolean;
   // New flags
   smugglersBluesSetup?: boolean;
+  lonelySmugglerSetup?: boolean;
   startAtLondinium?: boolean;
   startWithAlertCard?: boolean;
+  startWithGoalToken?: boolean;
   startOutsideAllianceSpace?: boolean;
   createAlertTokenStackMultiplier?: number;
   sharedHandSetup?: boolean;
+  primeContactDecks?: boolean;
+  placeReaverAlertsInMotherlodeAndUroboros?: boolean;
   // Community flags
   startingCreditsOverride?: number;
   customStartingFuel?: number;
@@ -103,6 +109,20 @@ export interface StoryCardConfig {
   startAtSector?: string;
   removeJobDecks?: boolean;
   nandiCrewDiscount?: boolean;
+  // Solo specific flags
+  soloCrewDraft?: boolean;
+  soloGameTimer?: boolean;
+  disableSoloTimer?: boolean;
+}
+
+export interface StoryCardGoal {
+  title: string;
+  description: string;
+}
+
+export interface ChallengeOption {
+  id: string;
+  label: string;
 }
 
 export interface StoryCardDef {
@@ -113,14 +133,32 @@ export interface StoryCardDef {
   additionalRequirements?: (keyof Expansions)[];
   setupConfig?: StoryCardConfig;
   sourceUrl?: string;
+  goals?: StoryCardGoal[];
+  isSolo?: boolean;
+  challengeOptions?: ChallengeOption[];
+}
+
+export type GameEdition = 'original' | 'tenth';
+export type GameMode = 'multiplayer' | 'solo';
+
+export interface TimerConfig {
+    mode: 'standard' | 'unpredictable';
+    unpredictableSelectedIndices: number[]; // Indices of the [1,1,2,2,3,4] array
+    randomizeUnpredictable: boolean;
 }
 
 export interface GameState {
+  gameEdition: GameEdition;
+  gameMode: GameMode;
   playerCount: number;
   playerNames: string[];
   setupCardId: string;
   setupCardName: string;
+  secondarySetupId?: string; // Used for Flying Solo to track the "Board Setup"
   selectedStoryCard: string;
+  selectedGoal?: string;
+  challengeOptions: Record<string, boolean>; // ID -> isEnabled
+  timerConfig: TimerConfig;
   expansions: Expansions;
 }
 

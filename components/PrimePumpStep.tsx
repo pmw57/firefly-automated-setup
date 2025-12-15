@@ -15,6 +15,8 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step, gameState })
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const { soloCrewDraft } = activeStoryCard.setupConfig || {};
+  const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
   
   // House Rule State
   const [useHouseRule, setUseHouseRule] = useState(() => {
@@ -130,6 +132,20 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step, gameState })
           (From the top of each Supply Deck)
         </p>
       </div>
+      
+      {isFlyingSolo && (
+        <SpecialRuleBlock source="setupCard" title="Flying Solo">
+            <p>After priming, you may <strong>spend up to $1000</strong> to buy <strong>up to 4 Supply Cards</strong> that were revealed.</p>
+            <p className="text-sm mt-1">Discounts from special abilities apply. <strong>Replace any purchased cards.</strong></p>
+        </SpecialRuleBlock>
+      )}
+
+      {!isFlyingSolo && soloCrewDraft && (
+        <SpecialRuleBlock source="story" title="Solo Crew Recruitment">
+            <p>After priming, you may purchase <strong>up to 4 Crew or Gear cards</strong> from the <strong>discard piles</strong> of any <strong>single Supply Deck</strong>.</p>
+            <p className="text-sm mt-1">The total cost of these items must not exceed <strong>$1000</strong>.</p>
+        </SpecialRuleBlock>
+      )}
     </div>
   );
 };
