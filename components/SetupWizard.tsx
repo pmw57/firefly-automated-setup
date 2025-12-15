@@ -158,10 +158,25 @@ const SetupWizard: React.FC = () => {
         try {
           const parsed: PersistedState = JSON.parse(saved);
           if (!parsed.gameState.gameEdition) throw new Error("Legacy state");
-          setGameState(parsed.gameState);
+          
+          // Deep merge with default state to ensure new fields (like soloOptions) are present
+          const defaults = getDefaultGameState();
+          const loadedState = parsed.gameState;
+          
+          const mergedState: GameState = {
+              ...defaults,
+              ...loadedState,
+              // Safely merge nested objects that might be missing in older saved states
+              timerConfig: { ...defaults.timerConfig, ...(loadedState.timerConfig || {}) },
+              soloOptions: { ...defaults.soloOptions, ...(loadedState.soloOptions || {}) },
+              expansions: { ...defaults.expansions, ...(loadedState.expansions || {}) },
+              challengeOptions: { ...defaults.challengeOptions, ...(loadedState.challengeOptions || {}) }
+          };
+
+          setGameState(mergedState);
           
           if (parsed.isStarted) {
-            const newFlow = calculateSetupFlow(parsed.gameState);
+            const newFlow = calculateSetupFlow(mergedState);
             setFlow(newFlow);
             setCurrentStepIndex(parsed.currentStepIndex);
             setIsStarted(true);
