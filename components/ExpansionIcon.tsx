@@ -80,7 +80,18 @@ export const ExpansionIcon: React.FC<ExpansionIconProps> = ({ id, className = "w
       );
   }
 
-  // 2. Text/Fallback Mode
+  // 2. SVG Mode
+  if (meta.icon.type === 'svg') {
+       return (
+        <div className={`rounded-md flex items-center justify-center border ${themeClasses} ${className}`} title={meta.label}>
+            <svg viewBox="0 0 24 24" className="w-4/5 h-4/5 text-white" fill="currentColor">
+                <path d={meta.icon.value} />
+            </svg>
+        </div>
+      );
+  }
+
+  // 3. Text/Fallback Mode
   const textValue = meta.icon.type === 'text' ? meta.icon.value : (ABBREVIATIONS[id] || id.substring(0, 2).toUpperCase());
   
   return (

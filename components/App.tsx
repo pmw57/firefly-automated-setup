@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import SetupWizard from './SetupWizard';
 import { InstallPWA } from './InstallPWA';
 import { useTheme } from './ThemeContext';
+import { IconDevPanel } from './IconDevPanel';
 
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
@@ -61,6 +62,9 @@ const App: React.FC = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 relative z-10">
         <SetupWizard />
+        
+        {/* Development Panel for Icon Selection */}
+        <IconDevPanel />
       </main>
 
       {/* Install Prompt */}
