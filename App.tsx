@@ -11,6 +11,16 @@ declare const __APP_VERSION__: string;
 const App: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
 
+  const handleForceUpdate = async () => {
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const registration of registrations) {
+        await registration.unregister();
+      }
+    }
+    window.location.reload();
+  };
+
   return (
     <div className="min-h-screen font-sans pb-12 transition-colors duration-500 relative">
       {/* Thematic Header */}
@@ -66,7 +76,17 @@ const App: React.FC = () => {
            <a href="https://boardgamegeek.com/thread/3627152/firefly-automated-setup" target="_blank" rel="noreferrer" className="hover:text-yellow-700 dark:hover:text-amber-500 transition-colors underline">BGG Thread</a>
         </div>
 
-        <p className="mt-4 opacity-50 dark:opacity-40 font-mono">v{typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'DEV'}</p>
+        <div className="mt-4 flex justify-center items-center gap-3 opacity-80 dark:opacity-60">
+            <span className="font-mono">v{typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'DEV'}</span>
+            <span className="opacity-40">•</span>
+            <button 
+                onClick={handleForceUpdate} 
+                className="underline hover:text-yellow-700 dark:hover:text-amber-500 transition-colors focus:outline-none cursor-pointer"
+                title="Unregister Service Worker and Reload"
+            >
+                Force Update
+            </button>
+        </div>
       </footer>
 
       {/* Theme Toggle - Portaled to body to escape any stacking contexts */}
