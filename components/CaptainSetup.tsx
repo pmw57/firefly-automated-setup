@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { GameState, Expansions } from '../types';
-import { EXPANSIONS_METADATA, SETUP_CARDS } from '../constants';
+import { EXPANSIONS_METADATA, SETUP_CARDS, STORY_CARDS } from '../constants';
 import { Button } from './Button';
 import { ExpansionToggle } from './ExpansionToggle';
 import { useTheme } from './ThemeContext';
@@ -47,6 +47,23 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
           nextSetupCardName = 'Standard Game Setup';
           nextSecondary = undefined;
       }
+
+      // Check Story Card Compatibility
+      let nextSelectedStory = prev.selectedStoryCard;
+      let nextSelectedGoal = prev.selectedGoal;
+      let nextChallengeOptions = prev.challengeOptions;
+
+      const currentStoryDef = STORY_CARDS.find(c => c.title === prev.selectedStoryCard);
+
+      // If switching to multiplayer and current card is Solo-only, reset to default multiplayer story
+      if (newMode === 'multiplayer' && currentStoryDef?.isSolo) {
+          const defaultMulti = STORY_CARDS.find(c => !c.isSolo);
+          if (defaultMulti) {
+             nextSelectedStory = defaultMulti.title;
+             nextSelectedGoal = defaultMulti.goals?.[0]?.title;
+             nextChallengeOptions = {}; // Reset challenges
+          }
+      }
       
       return { 
           ...prev, 
@@ -55,7 +72,10 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
           gameMode: newMode,
           setupCardId: nextSetupCardId,
           setupCardName: nextSetupCardName,
-          secondarySetupId: nextSecondary
+          secondarySetupId: nextSecondary,
+          selectedStoryCard: nextSelectedStory,
+          selectedGoal: nextSelectedGoal,
+          challengeOptions: nextChallengeOptions
       };
     });
   };
