@@ -73,14 +73,24 @@ export const InlineExpansionIcon: React.FC<InlineExpansionIconProps> = ({ type, 
         />
       </span>
     );
-  } else {
-    // Text Icon Fallback (Used for 'text' type OR if sprite fails)
-    const textValue = meta.icon.type === 'text' ? meta.icon.value : (ABBREVIATIONS[type] || type.substring(0, 2).toUpperCase());
+  } 
+  
+  if (meta.icon.type === 'svg') {
+     return (
+      <span className={`inline-flex items-center justify-center w-8 h-8 rounded shadow-sm border ${borderClass} shrink-0 ${getBgColor()} ${className}`} title={meta.label}>
+         <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="currentColor">
+             <path d={meta.icon.value} />
+         </svg>
+      </span>
+     );
+  }
+
+  // Text Icon Fallback (Used for 'text' type OR if sprite fails)
+  const textValue = meta.icon.type === 'text' ? meta.icon.value : (ABBREVIATIONS[type] || type.substring(0, 2).toUpperCase());
     
-    return (
+  return (
       <span className={`inline-flex items-center justify-center w-8 h-8 rounded shadow-sm border ${borderClass} text-white font-bold text-xs shrink-0 ${getBgColor()} ${className}`} title={meta.label}>
         {textValue}
       </span>
-    );
-  }
+  );
 };

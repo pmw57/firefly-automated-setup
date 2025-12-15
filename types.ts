@@ -18,8 +18,8 @@ export interface Expansions {
 export type ThemeColor = 'orangeRed' | 'steelBlue' | 'black' | 'darkSlateBlue' | 'deepBrown' | 'rebeccaPurple' | 'cordovan' | 'darkOliveGreen' | 'saddleBrown' | 'teal' | 'dark';
 
 export interface ExpansionIconConfig {
-  type: 'sprite' | 'text';
-  value: string; // Background position for sprite, or text content
+  type: 'sprite' | 'text' | 'svg';
+  value: string; // Background position for sprite, text content, or SVG path d attribute
 }
 
 export interface ExpansionDef {
