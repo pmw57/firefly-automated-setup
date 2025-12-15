@@ -79,6 +79,11 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
        if (gameState.gameMode === 'multiplayer' && card.isSolo) {
            return false;
        }
+
+       // Specific Story Restrictions
+       if (card.title === "Slaying The Dragon" && gameState.playerCount !== 2) {
+           return false;
+       }
        
        // Standard Check
        const mainReq = !card.requiredExpansion || gameState.expansions[card.requiredExpansion];
