@@ -138,12 +138,12 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'tenth',
     mode: 'solo',
     steps: [
+      { id: 'D_FLYING_SOLO_SETUP' }, // 1. Board Setup Selection
       { id: 'C4' }, // Goal Of The Game
       { id: 'C1', overrides: { flyingSoloNavMode: true } }, // Nav Decks (Modified text)
       { id: 'C2' }, // Alliance & Reaver Ships
       { id: 'C3' }, // Choose Ship & Leader
       { id: 'C5' }, // Starting Supplies
-      { id: 'D_NO_SURE_THINGS' }, // No Sure Things In Life (Remove 5 cards)
       { id: 'C6' }, // Starting Jobs
       { id: 'C_PRIME' }, // Priming The Pump (Modified buying rule)
       { id: 'D_GAME_LENGTH_TOKENS' } // Game Length Tokens

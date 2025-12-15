@@ -1,5 +1,4 @@
 
-
 export type ExpansionId = 'base' | 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'black_market' | 'still_flying' | 'community';
 
 export interface Expansions {
@@ -149,6 +148,12 @@ export interface TimerConfig {
     randomizeUnpredictable: boolean;
 }
 
+export interface SoloOptions {
+  noSureThings: boolean;
+  shesTrouble: boolean;
+  recipeForUnpleasantness: boolean;
+}
+
 export interface GameState {
   gameEdition: GameEdition;
   gameMode: GameMode;
@@ -161,6 +166,7 @@ export interface GameState {
   selectedGoal?: string;
   challengeOptions: Record<string, boolean>; // ID -> isEnabled
   timerConfig: TimerConfig;
+  soloOptions: SoloOptions;
   expansions: Expansions;
 }
 
