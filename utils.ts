@@ -176,7 +176,8 @@ export const getDefaultGameState = (): GameState => {
     return acc;
   }, {} as Expansions);
 
-  const defaultStory = STORY_CARDS[0];
+  // Ensure default story is compatible with default multiplayer mode (Find first non-Solo story)
+  const defaultStory = STORY_CARDS.find(s => !s.isSolo) || STORY_CARDS[0];
 
   return {
     gameEdition: 'tenth',
