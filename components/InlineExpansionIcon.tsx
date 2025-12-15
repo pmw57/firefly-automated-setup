@@ -5,7 +5,7 @@ import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../constants';
 import { useTheme } from './ThemeContext';
 
 interface InlineExpansionIconProps {
-  type: ExpansionId;
+  type: ExpansionId | 'base';
   className?: string;
 }
 
@@ -20,7 +20,8 @@ const ABBREVIATIONS: Record<string, string> = {
   still_flying: 'SF',
   tenth: '10',
   black_market: 'BM',
-  community: 'CC'
+  community: 'CC',
+  base: 'BG'
 };
 
 export const InlineExpansionIcon: React.FC<InlineExpansionIconProps> = ({ type, className = "mx-1 align-bottom" }) => {
@@ -48,6 +49,18 @@ export const InlineExpansionIcon: React.FC<InlineExpansionIconProps> = ({ type, 
     if (meta.themeColor === 'dark') return 'bg-gray-800';
     return 'bg-gray-700';
   };
+
+  if (type === 'base') {
+      return (
+        <span className={`inline-flex items-center justify-center w-8 h-8 rounded shadow-sm border ${borderClass} shrink-0 ${getBgColor()} ${className}`} title={meta.label}>
+             <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none">
+                 <path d="M12 3L3 8l9 5 9-5-9-5z" fill="currentColor" fillOpacity="0.5"/>
+                 <path d="M3 8v8l9 5V13L3 8z" fill="currentColor" fillOpacity="0.8"/>
+                 <path d="M12 13v8l9-5V8l-9 5z" fill="currentColor" fillOpacity="1.0"/>
+             </svg>
+        </span>
+      );
+  }
 
   if (meta.icon.type === 'sprite' && !imgError) {
     return (

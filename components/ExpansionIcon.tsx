@@ -18,7 +18,8 @@ const ABBREVIATIONS: Record<string, string> = {
   still_flying: 'SF',
   tenth: '10',
   black_market: 'BM',
-  community: 'CC'
+  community: 'CC',
+  base: 'BG'
 };
 
 export const ExpansionIcon: React.FC<ExpansionIconProps> = ({ id, className = "w-full h-full" }) => {
@@ -52,6 +53,19 @@ export const ExpansionIcon: React.FC<ExpansionIconProps> = ({ id, className = "w
   };
 
   const themeClasses = getBgColorClass();
+
+  // Special Handling for Base Game "Iso Filled" Icon
+  if (id === 'base') {
+    return (
+      <div className={`rounded-md flex items-center justify-center border ${themeClasses} ${className}`} title={meta.label}>
+          <svg viewBox="0 0 24 24" className="w-4/5 h-4/5 text-white" fill="none">
+             <path d="M12 3L3 8l9 5 9-5-9-5z" fill="currentColor" fillOpacity="0.5"/>
+             <path d="M3 8v8l9 5V13L3 8z" fill="currentColor" fillOpacity="0.8"/>
+             <path d="M12 13v8l9-5V8l-9 5z" fill="currentColor" fillOpacity="1.0"/>
+          </svg>
+      </div>
+    );
+  }
 
   // 1. Sprite Mode (with fallback capability)
   if (meta.icon.type === 'sprite' && !imgError) {

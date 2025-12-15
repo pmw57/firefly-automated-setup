@@ -276,7 +276,6 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
                 ? (isDark ? 'bg-emerald-900/40 border-emerald-800' : 'bg-[#fee2e2] border-[#7f1d1d]')
                 : (isDark ? 'bg-zinc-900/60 border-zinc-800' : 'bg-[#e7e5e4] border-[#d6cbb0]');
 
-            const iconBox = isDark ? 'bg-zinc-800 border-zinc-600 text-zinc-500' : 'bg-white border-[#d4d4d4] text-gray-400';
             const iconBorder = isDark ? 'border-zinc-600' : 'border-[#d6cbb0]';
 
             const titleColor = isSelected 
@@ -309,8 +308,8 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
                          <ExpansionIcon id={opt.iconOverride || opt.requiredExpansion || ''} />
                        </div>
                     ) : (
-                       <div className={`w-10 h-10 rounded flex items-center justify-center border font-bold text-sm ${iconBox}`}>
-                         —
+                       <div className={`w-10 h-10 rounded overflow-hidden shadow-sm border ${iconBorder}`}>
+                         <ExpansionIcon id="base" />
                        </div>
                     )}
                  </div>

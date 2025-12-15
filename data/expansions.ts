@@ -4,6 +4,17 @@ import { ExpansionDef } from '../types';
 export const SPRITE_SHEET_URL = "./expansion_sprites.png";
 
 export const EXPANSIONS_METADATA: ExpansionDef[] = [
+  // Special Entry: Base Game (Hidden from toggles, used for icons)
+  {
+    id: 'base',
+    label: "Base Game",
+    description: "Core game content.",
+    themeColor: 'dark',
+    icon: { 
+      type: 'svg', 
+      value: "base_icon_placeholder" // Handled specifically in components
+    }
+  },
   // Row 1 (Y = 0%)
   // 1. Breakin' Atmo
   {

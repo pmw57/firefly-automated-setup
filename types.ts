@@ -1,7 +1,9 @@
 
-export type ExpansionId = 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'black_market' | 'still_flying' | 'community';
+
+export type ExpansionId = 'base' | 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'black_market' | 'still_flying' | 'community';
 
 export interface Expansions {
+  base: boolean;
   breakin_atmo: boolean;
   big_damn_heroes: boolean;
   blue: boolean;

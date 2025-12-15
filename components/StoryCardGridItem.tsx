@@ -4,6 +4,7 @@ import { StoryCardDef } from '../types';
 import { InlineExpansionIcon } from './InlineExpansionIcon';
 import { getStoryCardSetupSummary } from '../utils';
 import { useTheme } from './ThemeContext';
+import { ExpansionIcon } from './ExpansionIcon';
 
 interface StoryCardGridItemProps {
   card: StoryCardDef;
@@ -32,8 +33,9 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
         ? (isDark ? 'text-green-300' : 'text-[#7f1d1d]')
         : (isDark ? 'text-gray-200' : 'text-[#292524]');
 
-    const bgIconBg = isDark ? 'bg-zinc-700 border-zinc-600' : 'bg-[#e5e5e5] border-[#d4d4d4]';
-    const bgIconText = isDark ? 'text-gray-500' : 'text-gray-500';
+    // Base Game Icon Wrapper Styling (Matches SetupCardSelection)
+    const baseIconBorder = isDark ? 'border-zinc-600' : 'border-[#d4d4d4]';
+    const baseIconBg = isDark ? 'bg-zinc-900/60' : 'bg-[#e5e5e5]';
 
     const badgeClass = isSelected
         ? (isDark ? 'bg-green-800 text-green-200' : 'bg-[#991b1b] text-white')
@@ -65,7 +67,9 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
                     {card.requiredExpansion ? (
                         <InlineExpansionIcon type={card.requiredExpansion} className="w-8 h-8" />
                     ) : (
-                        <div className={`w-8 h-8 rounded border flex items-center justify-center text-xs font-bold ${bgIconBg} ${bgIconText}`}>BG</div>
+                        <div className={`w-8 h-8 rounded border overflow-hidden shadow-sm ${baseIconBg} ${baseIconBorder}`}>
+                            <ExpansionIcon id="base" />
+                        </div>
                     )}
                 </div>
 
