@@ -1,3 +1,4 @@
+
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
@@ -35,6 +36,9 @@ export default defineConfig(({ command }) => ({
         ]
       },
       workbox: {
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true,
         // Define runtime caching for external images (Sprite Sheet)
         runtimeCaching: [
           {
