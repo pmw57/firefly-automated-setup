@@ -19,7 +19,9 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
   
   const isSolo = gameState.gameMode === 'solo';
   const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
-  const totalParts = isFlyingSolo ? 3 : 2;
+  // Anticipate 3 parts if we are solo and have the expansion for Flying Solo, 
+  // as handleNextStep defaults to it.
+  const totalParts = isFlyingSolo || (isSolo && gameState.expansions.tenth) ? 3 : 2;
 
   const updatePlayerCount = (newCount: number) => {
     const safeCount = Math.max(1, Math.min(9, newCount));
