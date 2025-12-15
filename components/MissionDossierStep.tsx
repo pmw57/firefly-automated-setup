@@ -5,6 +5,7 @@ import { STORY_CARDS, EXPANSIONS_METADATA } from '../constants';
 import { Button } from './Button';
 import { StoryCardGridItem } from './StoryCardGridItem';
 import { InlineExpansionIcon } from './InlineExpansionIcon';
+import { ExpansionIcon } from './ExpansionIcon';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 
@@ -72,6 +73,11 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
        // Then we must play Awful Lonely in the Big Black.
        if (gameState.gameMode === 'solo' && gameState.setupCardId !== 'FlyingSolo') {
            return card.title === "Awful Lonely In The Big Black";
+       }
+
+       // Multiplayer Check: Hide Solo-only cards
+       if (gameState.gameMode === 'multiplayer' && card.isSolo) {
+           return false;
        }
        
        // Standard Check
@@ -144,7 +150,6 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
   const bodyBg = isDark ? 'bg-zinc-900/50' : 'bg-transparent';
   const bgIconBg = isDark ? 'bg-zinc-800' : 'bg-[#e5e5e5]';
   const bgIconBorder = isDark ? 'border-zinc-700' : 'border-[#d4d4d4]';
-  const bgIconText = isDark ? 'text-gray-400' : 'text-gray-500';
   const quoteBorder = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
 
   const inputBorder = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
@@ -157,8 +162,9 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
   const emptyStateText = isDark ? 'text-zinc-500' : 'text-[#78716c]';
   const countText = isDark ? 'text-zinc-500' : 'text-[#78350f]';
 
-  // Filter available expansions for dropdown
+  // Filter available expansions for dropdown (excluding 'base')
   const availableExpansionsForFilter = EXPANSIONS_METADATA.filter(e => {
+      if (e.id === 'base') return false;
       // Must be active
       if (!gameState.expansions[e.id]) return false;
       // Must not be Community Content if in Classic Solo (Awful Lonely)
@@ -185,7 +191,9 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                {activeStoryCard.requiredExpansion ? (
                   <InlineExpansionIcon type={activeStoryCard.requiredExpansion} className="w-10 h-10 mr-3" />
                ) : (
-                  <div className={`w-10 h-10 mr-3 ${bgIconBg} rounded border ${bgIconBorder} flex items-center justify-center text-xs ${bgIconText} font-bold`}>BG</div>
+                  <div className={`w-10 h-10 mr-3 rounded border overflow-hidden ${bgIconBg} ${bgIconBorder}`}>
+                      <ExpansionIcon id="base" />
+                  </div>
                )}
                <h4 className={`text-2xl font-bold font-western ${mainTitleColor}`}>{activeStoryCard.title}</h4>
             </div>
