@@ -11,7 +11,7 @@ export default {
     extend: {
       fontFamily: {
         western: ['CIND', 'serif'],
-        sans: ['FranklinGothic', 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif']
+        sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif']
       },
       keyframes: {
         fadeIn: {
