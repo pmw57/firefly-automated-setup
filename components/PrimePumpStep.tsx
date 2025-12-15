@@ -17,6 +17,7 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step, gameState })
   const isDark = theme === 'dark';
   const { soloCrewDraft } = activeStoryCard.setupConfig || {};
   const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
+  const isSlayingTheDragon = activeStoryCard.title === "Slaying The Dragon";
   
   // House Rule State
   const [useHouseRule, setUseHouseRule] = useState(() => {
@@ -48,7 +49,12 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step, gameState })
   }
 
   // 3. Calculate Final Count
-  const finalCount = baseDiscard * effectiveMultiplier;
+  let finalCount = baseDiscard * effectiveMultiplier;
+  
+  // Apply Slaying The Dragon modifier (+2 cards)
+  if (isSlayingTheDragon) {
+      finalCount += 2;
+  }
 
   // Theming
   const cardBg = isDark ? 'bg-black/60' : 'bg-[#faf8ef]';
@@ -108,13 +114,19 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step, gameState })
 
       {isBlitz && (
         <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-          <strong>The Blitz:</strong> "Double Dip" rules are in effect. Discard the top <strong>{finalCount} cards</strong> (2x Base) from each deck.
+          <strong>The Blitz:</strong> "Double Dip" rules are in effect. Discard the top <strong>{baseDiscard * effectiveMultiplier} cards</strong> (2x Base) from each deck.
         </SpecialRuleBlock>
       )}
 
       {storyMultiplier > 1 && !isBlitz && (
         <SpecialRuleBlock source="story" title="Story Override">
           <strong>{activeStoryCard.title}:</strong> Prime counts are increased by {storyMultiplier}x.
+        </SpecialRuleBlock>
+      )}
+
+      {isSlayingTheDragon && (
+        <SpecialRuleBlock source="story" title="Slaying The Dragon">
+            <strong>Shu-ki is greasing the rails:</strong> Turn up <strong>2 additional cards</strong> from each deck when Priming the Pump.
         </SpecialRuleBlock>
       )}
 
