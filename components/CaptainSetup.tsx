@@ -131,8 +131,8 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
   const partBadgeBg = isDark ? 'bg-yellow-900/40' : 'bg-[#fef3c7]';
   const partBadgeText = isDark ? 'text-yellow-100' : 'text-[#92400e]';
 
-  // Filter available expansions based on mode
-  const visibleExpansions = EXPANSIONS_METADATA;
+  // Filter available expansions to show (hide 'base')
+  const visibleExpansions = EXPANSIONS_METADATA.filter(e => e.id !== 'base');
 
   return (
     <div className={`bg-metal rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in relative overflow-hidden transition-all duration-300`}>

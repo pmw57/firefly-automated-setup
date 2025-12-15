@@ -81,8 +81,8 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
                                 {s.requiredExpansion ? (
                                     <ExpansionIcon id={s.requiredExpansion} />
                                 ) : (
-                                    <div className="w-full h-full bg-gray-200 dark:bg-zinc-700 rounded flex items-center justify-center font-bold text-gray-500 dark:text-gray-400 text-xs">
-                                        BG
+                                    <div className="w-full h-full bg-gray-200 dark:bg-zinc-700 rounded border border-gray-300 dark:border-zinc-600 overflow-hidden">
+                                        <ExpansionIcon id="base" />
                                     </div>
                                 )}
                             </div>
