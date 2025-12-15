@@ -1,4 +1,6 @@
-import { StoryCardDef, StepOverrides, DiceResult, DraftState } from './types';
+
+import { StoryCardDef, StepOverrides, DiceResult, DraftState, GameState, Expansions } from './types';
+import { EXPANSIONS_METADATA, STORY_CARDS } from './constants';
 
 // --- Draft Logic ---
 export const calculateDraftOutcome = (
@@ -74,4 +76,32 @@ export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     if (card.setupConfig?.jobDrawMode === 'caper_start') return "Starts with Caper";
     if (card.setupConfig?.shipPlacementMode === 'persephone') return "Starts at Persephone";
     return null;
+};
+
+// --- Default State Factory ---
+export const getDefaultGameState = (): GameState => {
+  const initialExpansions = EXPANSIONS_METADATA.reduce((acc, expansion) => {
+    acc[expansion.id] = true; // Default all to true so expansions are ON by default
+    return acc;
+  }, {} as Expansions);
+
+  const defaultStory = STORY_CARDS[0];
+
+  return {
+    gameEdition: 'tenth',
+    gameMode: 'multiplayer',
+    playerCount: 4,
+    playerNames: ['Captain 1', 'Captain 2', 'Captain 3', 'Captain 4'],
+    setupCardId: 'Standard',
+    setupCardName: 'Standard Game Setup',
+    selectedStoryCard: defaultStory.title,
+    selectedGoal: defaultStory.goals?.[0]?.title,
+    challengeOptions: {},
+    timerConfig: {
+        mode: 'standard', // Default to standard even if others are available
+        unpredictableSelectedIndices: [0, 2, 4, 5], // Default indices corresponding to one 1, one 2, one 3, one 4 from [1,1,2,2,3,4]
+        randomizeUnpredictable: false
+    },
+    expansions: initialExpansions
+  };
 };

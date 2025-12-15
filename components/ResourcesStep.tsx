@@ -18,8 +18,8 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step, gameState })
   const isDark = theme === 'dark';
   
   const { totalCredits, bonusCredits, noFuelParts, customFuel } = calculateStartingResources(activeStoryCard, overrides);
-  const { startWithWarrant, startingWarrantCount, removeRiver, nandiCrewDiscount } = activeStoryCard.setupConfig || {};
-
+  const { startWithWarrant, startingWarrantCount, removeRiver, nandiCrewDiscount, startWithGoalToken } = activeStoryCard.setupConfig || {};
+  
   const cardBg = isDark ? 'bg-black/60' : 'bg-white';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const textColor = isDark ? 'text-gray-200' : 'text-gray-700';
@@ -88,6 +88,13 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step, gameState })
       {(startWithWarrant || (startingWarrantCount && startingWarrantCount > 0)) && (
         <SpecialRuleBlock source="story" title="Warrant Issued">
           Each player begins the game with <strong>{startingWarrantCount || 1} Warrant Token{startingWarrantCount !== 1 ? 's' : ''}</strong>.
+        </SpecialRuleBlock>
+      )}
+
+      {/* Goal Token Rule */}
+      {startWithGoalToken && (
+        <SpecialRuleBlock source="story" title="Story Override">
+          Begin play with <strong>1 Goal Token</strong>.
         </SpecialRuleBlock>
       )}
     </div>

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { GameState, StoryCardDef, Step } from '../types';
 import { STORY_CARDS, EXPANSIONS_METADATA } from '../constants';
 import { Button } from './Button';
@@ -20,15 +20,60 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
   const [shortList, setShortList] = useState<StoryCardDef[]>([]);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  
+  const dossierTopRef = useRef<HTMLDivElement>(null);
 
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
 
   const handleStoryCardSelect = (title: string) => {
-    setGameState(prev => ({ ...prev, selectedStoryCard: title }));
+    const card = STORY_CARDS.find(c => c.title === title);
+    // Reset challenge options when changing story
+    setGameState(prev => ({ 
+        ...prev, 
+        selectedStoryCard: title,
+        selectedGoal: card?.goals?.[0]?.title, // Auto-select first goal if available
+        challengeOptions: {} 
+    }));
+    
+    // Scroll back up to the dossier details so the user sees specific rules/setup info
+    if (dossierTopRef.current) {
+        // Use a small timeout to allow state to update and render the new content before scrolling
+        setTimeout(() => {
+            dossierTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
+    }
   };
+
+  const handleGoalSelect = (goalTitle: string) => {
+      setGameState(prev => ({ ...prev, selectedGoal: goalTitle }));
+  };
+
+  const toggleChallengeOption = (id: string) => {
+      setGameState(prev => ({
+          ...prev,
+          challengeOptions: {
+              ...prev.challengeOptions,
+              [id]: !prev.challengeOptions[id]
+          }
+      }));
+  };
+
+  // Ensure a goal is selected if the card has goals (e.g. from legacy state or weird navigation)
+  useEffect(() => {
+    if (activeStoryCard.goals && activeStoryCard.goals.length > 0 && !gameState.selectedGoal) {
+        setGameState(prev => ({ ...prev, selectedGoal: activeStoryCard.goals![0].title }));
+    }
+  }, [activeStoryCard, gameState.selectedGoal, setGameState]);
 
   // Logic for filtering valid stories
   const validStories = STORY_CARDS.filter(card => {
+       // Classic Solo (Awful Lonely) Override: 
+       // If Game Mode is Solo AND we are NOT using the Flying Solo setup card...
+       // Then we must play Awful Lonely in the Big Black.
+       if (gameState.gameMode === 'solo' && gameState.setupCardId !== 'FlyingSolo') {
+           return card.title === "Awful Lonely In The Big Black";
+       }
+       
        // Standard Check
        const mainReq = !card.requiredExpansion || gameState.expansions[card.requiredExpansion];
        // Additional Check (Handles multi-expansion requirements like Blue Sun AND Kalidasa)
@@ -110,11 +155,26 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
   const listContainerBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
   const listContainerBg = isDark ? 'bg-black/20' : 'bg-[#f5f5f4]';
   const emptyStateText = isDark ? 'text-zinc-500' : 'text-[#78716c]';
-  const countText = isDark ? 'text-zinc-500' : 'text-[#78716c]';
+  const countText = isDark ? 'text-zinc-500' : 'text-[#78350f]';
+
+  // Filter available expansions for dropdown
+  const availableExpansionsForFilter = EXPANSIONS_METADATA.filter(e => {
+      // Must be active
+      if (!gameState.expansions[e.id]) return false;
+      // Must not be Community Content if in Classic Solo (Awful Lonely)
+      if (e.id === 'community' && gameState.gameMode === 'solo' && gameState.setupCardId !== 'FlyingSolo') return false;
+      return true;
+  });
+
+  const showRandomOption = validStories.length > 1;
+  const showDraftOption = validStories.length > 3;
 
   return (
     <div className="space-y-6">
-      <div className={`${containerBg} backdrop-blur-md rounded-lg shadow-md border ${containerBorder} overflow-hidden transition-colors duration-300`}>
+      <div 
+        ref={dossierTopRef}
+        className={`${containerBg} backdrop-blur-md rounded-lg shadow-md border ${containerBorder} overflow-hidden transition-colors duration-300 scroll-mt-24`}
+      >
          <div className={`${headerBarBg} p-4 flex justify-between items-center border-b ${headerBarBorder} transition-colors duration-300`}>
             <h3 className={`font-bold text-lg font-western tracking-wider ${headerColor}`}>Mission Dossier</h3>
             <span className={`text-xs uppercase tracking-widest ${badgeBg} ${badgeBorder} ${badgeText} px-2 py-1 rounded font-bold`}>Active Goal</span>
@@ -131,10 +191,101 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
             </div>
             <p className={`${italicTextColor} italic font-serif text-lg leading-relaxed border-l-4 ${quoteBorder} pl-4 mb-4`}>"{activeStoryCard.intro}"</p>
             
+            {/* Multi-Goal Display */}
+            {activeStoryCard.goals && activeStoryCard.goals.length > 0 && (
+                <div className={`mb-6`}>
+                    <div className={`flex items-center gap-2 mb-2`}>
+                        <span className="text-xl">🎯</span>
+                        <h5 className={`font-bold uppercase tracking-wide text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            Select Victory Condition
+                        </h5>
+                    </div>
+                    <div className="grid grid-cols-1 gap-3">
+                        {activeStoryCard.goals.map((goal, idx) => {
+                            const isSelected = gameState.selectedGoal === goal.title;
+                            const activeBorder = isDark ? 'border-green-500' : 'border-green-600';
+                            const activeBg = isDark ? 'bg-green-900/20' : 'bg-green-50';
+                            const inactiveBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
+                            const inactiveBg = isDark ? 'bg-zinc-800/40 hover:bg-zinc-800/80' : 'bg-white hover:bg-gray-50';
+                            
+                            return (
+                                <div 
+                                    key={idx} 
+                                    onClick={() => handleGoalSelect(goal.title)}
+                                    className={`
+                                        relative p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 flex items-start gap-4 shadow-sm hover:shadow-md
+                                        ${isSelected ? `${activeBorder} ${activeBg}` : `${inactiveBorder} ${inactiveBg}`}
+                                    `}
+                                    role="radio"
+                                    aria-checked={isSelected}
+                                    tabIndex={0}
+                                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleGoalSelect(goal.title)}
+                                >
+                                     <div className={`
+                                        w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5
+                                        ${isSelected ? 'border-green-500' : (isDark ? 'border-gray-500' : 'border-gray-400')}
+                                     `}>
+                                         {isSelected && <div className={`w-2.5 h-2.5 rounded-full ${isDark ? 'bg-green-400' : 'bg-green-600'}`} />}
+                                     </div>
+                                     <div>
+                                        <div className={`font-bold text-sm mb-1 ${isSelected ? (isDark ? 'text-green-300' : 'text-green-900') : (isDark ? 'text-amber-400' : 'text-amber-800')}`}>{goal.title}</div>
+                                        <div className={`text-xs leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{goal.description}</div>
+                                     </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
+            {/* Challenge Options ("Further Adventures") */}
+            {activeStoryCard.challengeOptions && activeStoryCard.challengeOptions.length > 0 && (
+                <div className={`mb-6`}>
+                    <div className={`flex items-center gap-2 mb-2`}>
+                        <span className="text-xl">🚀</span>
+                        <h5 className={`font-bold uppercase tracking-wide text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            Further Adventures (Optional Challenges)
+                        </h5>
+                    </div>
+                    <div className={`border rounded-lg ${isDark ? 'border-zinc-700 bg-zinc-800/40' : 'border-gray-300 bg-white/50'}`}>
+                        {activeStoryCard.challengeOptions.map((option) => {
+                            const isChecked = !!gameState.challengeOptions[option.id];
+                            return (
+                                <label 
+                                    key={option.id}
+                                    className={`flex items-start p-3 border-b last:border-b-0 cursor-pointer hover:bg-black/5 transition-colors ${isDark ? 'border-zinc-700 hover:bg-white/5' : 'border-gray-200'}`}
+                                >
+                                    <div className="relative flex items-center mt-0.5">
+                                        <input 
+                                            type="checkbox" 
+                                            className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                            checked={isChecked}
+                                            onChange={() => toggleChallengeOption(option.id)}
+                                        />
+                                    </div>
+                                    <div className="ml-3 text-sm">
+                                        <span className={`font-medium ${isChecked ? (isDark ? 'text-green-300' : 'text-green-800') : (isDark ? 'text-gray-300' : 'text-gray-700')}`}>
+                                            {option.label}
+                                        </span>
+                                    </div>
+                                </label>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
             {/* Detailed Setup Description Block */}
             {activeStoryCard.setupDescription && (
                 <SpecialRuleBlock source="story" title="Story Override">
                     {activeStoryCard.setupDescription}
+                </SpecialRuleBlock>
+            )}
+
+            {/* Solo Mode Information Block */}
+            {gameState.setupCardId === 'FlyingSolo' && (
+                <SpecialRuleBlock source="expansion" title="10th AE Solo Rules">
+                    <p>You may play any Story Card in Expanded Solo Mode. Automated NPC movement and Variable Timer rules apply.</p>
                 </SpecialRuleBlock>
             )}
 
@@ -167,14 +318,20 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
       </div>
 
       {/* Randomization Toolbar */}
-      <div className="flex gap-3 mb-2">
-          <Button onClick={handleRandomPick} variant="secondary" className="flex-1 text-sm py-2">
-              🎰 Randomly Select 1
-          </Button>
-          <Button onClick={handleGenerateShortList} className={`flex-1 text-sm py-2 ${isDark ? 'bg-blue-900/50 border-blue-800 hover:bg-blue-800/60 text-blue-100' : 'bg-[#1e3a8a] border-[#172554] text-white hover:bg-[#1e40af]'}`}>
-              🃏 Draft 3 Options
-          </Button>
-      </div>
+      {(showRandomOption || showDraftOption) && (
+          <div className="flex gap-3 mb-2">
+              {showRandomOption && (
+                  <Button onClick={handleRandomPick} variant="secondary" className="flex-1 text-sm py-2">
+                      🎰 Randomly Select 1
+                  </Button>
+              )}
+              {showDraftOption && (
+                  <Button onClick={handleGenerateShortList} className={`flex-1 text-sm py-2 ${isDark ? 'bg-blue-900/50 border-blue-800 hover:bg-blue-800/60 text-blue-100' : 'bg-[#1e3a8a] border-[#172554] text-white hover:bg-[#1e40af]'}`}>
+                      🃏 Draft 3 Options
+                  </Button>
+              )}
+          </div>
+      )}
 
       {/* Short List View */}
       {shortList.length > 0 && (
@@ -221,7 +378,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
               >
                   <option value="all">All Expansions</option>
                   <option value="base">Base Game</option>
-                  {EXPANSIONS_METADATA.filter(e => gameState.expansions[e.id]).map(e => (
+                  {availableExpansionsForFilter.map(e => (
                       <option key={e.id} value={e.id}>{e.label}</option>
                   ))}
               </select>
@@ -243,6 +400,9 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                   <div className={`flex flex-col items-center justify-center h-full ${emptyStateText} italic`}>
                       <span className="text-4xl mb-2">🕵️</span>
                       <p>No missions found.</p>
+                      {gameState.gameMode === 'solo' && gameState.setupCardId !== 'FlyingSolo' && (
+                        <p className="text-xs mt-2 text-red-500">Classic Solo is restricted to 'Awful Lonely in the Big Black'.</p>
+                      )}
                       <Button onClick={() => {setSearchTerm(''); setFilterExpansion('all');}} variant="secondary" className="mt-4 text-sm">Clear Filters</Button>
                   </div>
               )}

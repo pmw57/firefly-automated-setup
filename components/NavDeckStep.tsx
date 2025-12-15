@@ -15,6 +15,8 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
   const isBrowncoatNav = overrides.browncoatNavMode;
   const isForceReshuffle = overrides.forceReshuffle;
   const isClearerSkies = overrides.clearerSkiesNavMode;
+  const isFlyingSolo = overrides.flyingSoloNavMode;
+  const isSolo = gameState.playerCount === 1;
   const isHighPlayerCount = gameState.playerCount >= 3;
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -42,12 +44,26 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
 
   return (
     <>
-      <div className={`${panelBg} p-6 rounded-lg border ${panelBorder} shadow-sm mb-6 overflow-hidden transition-colors duration-300`}>
-        {isBrowncoatNav ? (
+      <div className={`${panelBg} p-6 rounded-lg border ${panelBorder} shadow-sm mb-6 overflow-hidden transition-colors duration-300 space-y-4`}>
+        {/* Default Instruction if no major overrides */}
+        {!isFlyingSolo && !isBrowncoatNav && !hasForcedReshuffle && (
+          <p className={`${panelText}`}>{renderAction("Shuffle Alliance & Border Nav Cards")} standard setup.</p>
+        )}
+
+        {isFlyingSolo && (
+           <SpecialRuleBlock source="setupCard" title="Flying Solo">
+               Shuffle the {renderAction("\"RESHUFFLE\"")} cards into their respective Nav Decks.
+           </SpecialRuleBlock>
+        )}
+        
+        {isBrowncoatNav && (
           <SpecialRuleBlock source="setupCard" title="Setup Card Override">
             <strong>Hardcore Navigation:</strong> Shuffle the {renderAction("Alliance Cruiser")} and {renderAction("Reaver Cutter")} cards into the Nav Decks immediately, regardless of player count.
           </SpecialRuleBlock>
-        ) : hasForcedReshuffle ? (
+        )}
+        
+        {/* Only show forced reshuffle if we haven't already covered it with Flying Solo (which implies reshuffle used) */}
+        {hasForcedReshuffle && !isFlyingSolo && (
           <SpecialRuleBlock source="setupCard" title="Setup Card Override">
             <ul className="list-disc ml-4 space-y-1">
               <li>Place the {renderAction("\"RESHUFFLE\"")} cards in the Nav Decks at the start of the game, regardless of player count.</li>
@@ -57,8 +73,6 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
               )}
             </ul>
           </SpecialRuleBlock>
-        ) : (
-          <p className={`mb-4 ${panelText}`}>{renderAction("Shuffle Alliance & Border Nav Cards")} standard setup.</p>
         )}
 
         {isClearerSkies && (
@@ -69,26 +83,35 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
         )}
       </div>
 
-      {/* Standard Reshuffle Panel */}
-      {!hasForcedReshuffle && !isBrowncoatNav && (
+      {/* Standard Reshuffle Panel - Hide if Flying Solo or forced, as rules are explicit above */}
+      {!isFlyingSolo && !hasForcedReshuffle && !isBrowncoatNav && (
         <div className={`border rounded-lg overflow-hidden shadow-sm transition-colors duration-300 ${reshuffleBorder}`}>
           <div className={`${reshuffleBg} px-4 py-2 text-xs font-bold uppercase tracking-wider border-b ${reshuffleBorder} ${reshuffleHeader}`}>
-            Reshuffle Card Rules (Player Count: {gameState.playerCount})
+            {isSolo ? 'Reshuffle Card Rules' : `Reshuffle Card Rules (Player Count: ${gameState.playerCount})`}
           </div>
-          <div className={`p-4 border-l-4 transition-all duration-300 ${!isHighPlayerCount ? activeBg : inactiveBg}`}>
-            <div className="flex justify-between items-center mb-1">
-              <div className={`font-bold ${!isHighPlayerCount ? activeTitle : inactiveTitle}`}>1-2 Players</div>
-              {!isHighPlayerCount && <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide ${activeBadgeBg}`}>Active</span>}
-            </div>
-            <div className={`text-sm ${!isHighPlayerCount ? activeText : inactiveText}`}>Shuffle the "RESHUFFLE" cards into the deck.</div>
-          </div>
-          <div className={`p-4 border-l-4 border-t transition-all duration-300 ${isHighPlayerCount ? activeBg : inactiveBg} ${isDark ? 'border-t-zinc-800' : 'border-t-gray-200'}`}>
-            <div className="flex justify-between items-center mb-1">
-              <div className={`font-bold ${isHighPlayerCount ? activeTitle : inactiveTitle}`}>3+ Players</div>
-              {isHighPlayerCount && <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide ${activeBadgeBg}`}>Active</span>}
-            </div>
-            <div className={`text-sm ${isHighPlayerCount ? activeText : inactiveText}`}>Place the "RESHUFFLE" card in the Discard Pile of <em>each</em> Nav Deck.</div>
-          </div>
+          
+          {isSolo ? (
+             <div className={`p-4 border-l-4 transition-all duration-300 ${activeBg}`}>
+                <div className={`text-sm ${activeText}`}>Shuffle the "RESHUFFLE" cards into the deck.</div>
+             </div>
+          ) : (
+            <>
+              <div className={`p-4 border-l-4 transition-all duration-300 ${!isHighPlayerCount ? activeBg : inactiveBg}`}>
+                <div className="flex justify-between items-center mb-1">
+                  <div className={`font-bold ${!isHighPlayerCount ? activeTitle : inactiveTitle}`}>1-2 Players</div>
+                  {!isHighPlayerCount && <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide ${activeBadgeBg}`}>Active</span>}
+                </div>
+                <div className={`text-sm ${!isHighPlayerCount ? activeText : inactiveText}`}>Shuffle the "RESHUFFLE" cards into the deck.</div>
+              </div>
+              <div className={`p-4 border-l-4 border-t transition-all duration-300 ${isHighPlayerCount ? activeBg : inactiveBg} ${isDark ? 'border-t-zinc-800' : 'border-t-gray-200'}`}>
+                <div className="flex justify-between items-center mb-1">
+                  <div className={`font-bold ${isHighPlayerCount ? activeTitle : inactiveTitle}`}>3+ Players</div>
+                  {isHighPlayerCount && <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide ${activeBadgeBg}`}>Active</span>}
+                </div>
+                <div className={`text-sm ${isHighPlayerCount ? activeText : inactiveText}`}>Place the "RESHUFFLE" card in the Discard Pile of <em>each</em> Nav Deck.</div>
+              </div>
+            </>
+          )}
         </div>
       )}
     </>

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GameState, Step, DraftState, DiceResult } from '../types';
 import { STORY_CARDS } from '../constants';
 import { calculateDraftOutcome } from '../utils';
@@ -18,9 +18,26 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
   const [isManualEntry, setIsManualEntry] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const isSolo = gameState.playerCount === 1;
 
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
+
+  // Auto-resolve for solo player
+  useEffect(() => {
+    if (isSolo && !draftState) {
+        const soloRoll: DiceResult[] = [{
+            player: gameState.playerNames[0],
+            roll: 6,
+            isWinner: true
+        }];
+        setDraftState({
+            rolls: soloRoll,
+            draftOrder: [gameState.playerNames[0]],
+            placementOrder: [gameState.playerNames[0]]
+        });
+    }
+  }, [isSolo, gameState.playerNames, draftState]);
 
   const handleDetermineOrder = () => {
     // 1. Initial Roll for everyone (D6)
@@ -75,7 +92,11 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
 
   const isHavenDraft = step.id.includes('D_HAVEN_DRAFT');
   
-  const isPersephoneStart = activeStoryCard.setupConfig?.shipPlacementMode === 'persephone';
+  // Logic for Heroes & Misfits custom setup challenge
+  const isHeroesCustomSetup = !!gameState.challengeOptions['heroes_custom_setup'];
+  const isRacingPaleHorse = activeStoryCard.title === "Racing A Pale Horse";
+
+  const isPersephoneStart = activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' && !isHeroesCustomSetup;
   const isLondiniumStart = activeStoryCard.setupConfig?.startAtLondinium;
   const startOutsideAlliance = activeStoryCard.setupConfig?.startOutsideAllianceSpace;
   const startAtSector = activeStoryCard.setupConfig?.startAtSector;
@@ -107,20 +128,38 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
 
   return (
     <>
-      <p className={`mb-4 italic ${introText}`}>Determine who drafts first using a D6. Ties are resolved automatically.</p>
+      {!isSolo && <p className={`mb-4 italic ${introText}`}>Determine who drafts first using a D6. Ties are resolved automatically.</p>}
+      
       {!draftState ? (
         <Button onClick={handleDetermineOrder} variant="secondary" fullWidth className="mb-4">
            🎲 Roll for {isHavenDraft ? 'Haven Draft' : 'Command'}
         </Button>
       ) : (
         <div className="animate-fade-in space-y-6">
-          <DiceControls 
-            draftState={draftState} 
-            onRollChange={handleRollChange} 
-            onSetWinner={handleSetWinner}
-            allowManualOverride={isManualEntry}
-          />
+          {!isSolo && (
+            <DiceControls 
+                draftState={draftState} 
+                onRollChange={handleRollChange} 
+                onSetWinner={handleSetWinner}
+                allowManualOverride={isManualEntry}
+            />
+          )}
           
+          {isHeroesCustomSetup && (
+             <SpecialRuleBlock source="warning" title="Heroes & Misfits: Further Adventures">
+                <strong>Custom Setup Active:</strong> Ignore standard crew/ship/location requirements.
+                <br/>
+                Pick your Leader, Ship, and Supply Planet. Start with $2000 and a full compliment of your favourite crew.
+             </SpecialRuleBlock>
+          )}
+
+          {isRacingPaleHorse && (
+             <SpecialRuleBlock source="story" title="Story Setup: Haven">
+                <strong>Place your Haven at Deadwood (Blue Sun).</strong>
+                <br/>If you end your turn at your Haven, remove Disgruntled from all Crew.
+             </SpecialRuleBlock>
+          )}
+
           {isWantedLeaderMode && (
             <SpecialRuleBlock source="setupCard" title="The Heat Is On">
               Choose Ships & Leaders normally, but <strong>each Leader begins play with a Wanted token</strong>.
@@ -149,20 +188,21 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
             {/* Draft Order */}
             <div className={`${panelBg} p-4 rounded-lg border ${panelBorder} relative overflow-hidden shadow-sm transition-colors duration-300`}>
               <div className={`absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl ${stepBadgeBlueBg}`}>Step 1</div>
-              <h4 className={`font-bold mb-2 border-b pb-1 ${panelHeaderColor} ${panelHeaderBorder}`}>Draft Phase</h4>
+              <h4 className={`font-bold mb-2 border-b pb-1 ${panelHeaderColor} ${panelHeaderBorder}`}>
+                  {isHavenDraft ? 'Select Haven' : 'Select Ship & Leader'}
+              </h4>
               <p className={`text-xs mb-3 italic ${panelSubColor}`}>
-                {isHavenDraft 
-                   ? "Standard Order: Winner chooses Leader & Ship first."
-                   : isBrowncoatDraft 
-                   ? "Winner selects Leader OR buys Ship. Pass to Left."
-                   : "Winner selects Leader & Ship. Pass to Left."}
+                {isSolo 
+                    ? (isHavenDraft ? "Choose a Haven." : "Choose a Leader & Ship.")
+                    : isHavenDraft 
+                    ? "Standard Order: Winner chooses Leader & Ship first.": isBrowncoatDraft ? "Winner selects Leader OR buys Ship. Pass to Left." : "Winner selects Leader & Ship. Pass to Left."}
               </p>
               <ul className="space-y-2">
                 {draftState.draftOrder.map((player, i) => (
                   <li key={i} className={`flex items-center p-2 rounded border ${itemBg}`}>
                     <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
                     <span className={`text-sm font-medium ${itemText}`}>{player}</span>
-                    {i === 0 && <span className={`ml-auto text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>First Pick</span>}
+                    {!isSolo && i === 0 && <span className={`ml-auto text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>First Pick</span>}
                   </li>
                 ))}
               </ul>
@@ -172,12 +212,14 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
             <div className={`${panelBg} p-4 rounded-lg border ${panelBorder} relative overflow-hidden shadow-sm transition-colors duration-300`}>
               <div className={`absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl ${stepBadgeAmberBg}`}>Step 2</div>
               <h4 className={`font-bold mb-2 border-b pb-1 ${panelHeaderColor} ${panelHeaderBorder}`}>
-                 {isHavenDraft ? 'Haven Placement' : 'Placement Phase'}
+                 {isHavenDraft ? 'Haven Placement' : 'Placement'}
               </h4>
               
               {isHavenDraft ? (
                  <>
-                   <p className={`text-xs mb-3 italic ${isDark ? 'text-green-300' : 'text-green-800'}`}>Reverse Order: Last player places Haven first.</p>
+                   <p className={`text-xs mb-3 italic ${isDark ? 'text-green-300' : 'text-green-800'}`}>
+                       {isSolo ? "Place Haven in a valid sector." : "Reverse Order: Last player places Haven first."}
+                   </p>
                    <ul className="space-y-2">
                       {draftState.placementOrder.map((player, i) => (
                         <li key={i} className={`flex items-center p-2 rounded border ${itemBg}`}>
@@ -196,16 +238,19 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
               ) : (
                 <>
                    <p className={`text-xs mb-3 italic ${panelSubColor}`}>
-                    {isBrowncoatDraft 
-                      ? "Pass back to Right. Make remaining choice. Buy Fuel ($100)."
-                      : "Pass to Right (Anti-Clockwise). Place Ship in Sector."}
+                    {isSolo 
+                        ? (isBrowncoatDraft ? "Buy Fuel ($100) and place ship." : "Place Ship in Sector.")
+                        : isBrowncoatDraft 
+                        ? "Pass back to Right. Make remaining choice. Buy Fuel ($100)."
+                        : "Pass to Right (Anti-Clockwise). Place Ship in Sector."
+                    }
                   </p>
                   <ul className="space-y-2">
                     {draftState.placementOrder.map((player, i) => (
                       <li key={i} className={`flex items-center p-2 rounded border ${itemBg}`}>
                         <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
                         <span className={`text-sm font-medium ${itemText}`}>{player}</span>
-                        {i === 0 && <span className={`ml-auto text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>First Place</span>}
+                        {!isSolo && i === 0 && <span className={`ml-auto text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>First Place</span>}
                       </li>
                     ))}
                   </ul>

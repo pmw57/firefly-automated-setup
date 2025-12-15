@@ -1,3 +1,4 @@
+
 import { SetupCardDef } from '../types';
 
 // Standard Flow Template
@@ -6,6 +7,28 @@ const STANDARD_STEPS = [
 ];
 
 export const SETUP_CARDS: SetupCardDef[] = [
+  // --- SOLO SPECIFIC ---
+  {
+    id: "FlyingSolo",
+    label: "Flying Solo",
+    description: "10th Anniversary Expanded Solo Mode. Pair this with another Setup Card to determine the board state.",
+    requiredExpansion: 'tenth',
+    mode: 'solo',
+    steps: [
+      { id: 'C4' }, // Goal Of The Game
+      { id: 'C1', overrides: { flyingSoloNavMode: true } }, // Nav Decks (Modified text)
+      { id: 'C2' }, // Alliance & Reaver Ships
+      { id: 'C3' }, // Choose Ship & Leader
+      { id: 'C5' }, // Starting Supplies
+      { id: 'D_NO_SURE_THINGS' }, // No Sure Things In Life (Remove 5 cards)
+      { id: 'C6' }, // Starting Jobs
+      { id: 'C_PRIME' }, // Priming The Pump (Modified buying rule)
+      { id: 'D_GAME_LENGTH_TOKENS' } // Game Length Tokens
+    ]
+  },
+
+  // --- STANDARD CARDS (Multiplayer & Solo Compatible) ---
+  
   // 1. Standard (Base Game)
   {
     id: "Standard",
@@ -53,7 +76,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     id: "AwfulCrowdedInMySky", 
     label: "Awful Crowded In My Sky", 
     description: "Alert Tokens are placed in every sector. Reshuffle cards are active. Specific starting jobs.",
-    requiredExpansion: 'blue', 
+    requiredExpansion: 'blue',
     steps: [
       { id: 'C1', overrides: { forceReshuffle: true } }, // 1. Nav (Force Reshuffle)
       { id: 'C3' }, // 2. Ships & Leaders (Order Swapped)
@@ -165,8 +188,6 @@ export const SETUP_CARDS: SetupCardDef[] = [
     ]
   },
 
-  // 9. Still Flying (No setup cards defined)
-
   // 10. Black Market
   { 
     id: "TheHeatIsOn", 
@@ -177,7 +198,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: 'D_PRESSURES_HIGH' }, // 1. The Pressure's High
       { id: 'C1', overrides: { browncoatNavMode: true } }, // 2. Nav (Shuffle Ships rule)
       { id: 'C2' }, // 3. Alliance & Reaver
-      { id: 'C3', overrides: { wantedLeaderMode: true } }, // 4. Ships & Leaders (Wanted Tokens)
+      { id: 'C3' }, // 4. Ships
       { id: 'C4' }, // 5. Goal
       { id: 'C5' }, // 6. Supplies
       { id: 'C6' }, // 7. Jobs

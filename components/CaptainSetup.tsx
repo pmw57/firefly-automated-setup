@@ -10,15 +10,23 @@ interface CaptainSetupProps {
   gameState: GameState;
   setGameState: React.Dispatch<React.SetStateAction<GameState>>;
   onNext: () => void;
+  onBack?: () => void;
 }
 
-export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameState, onNext }) => {
+export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameState, onNext, onBack }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  
+  // Is currently solo based on mode (which is synced with count)
+  const isSolo = gameState.gameMode === 'solo';
 
   const updatePlayerCount = (newCount: number) => {
     const safeCount = Math.max(1, Math.min(9, newCount));
+    
     setGameState(prev => {
+      const newMode = safeCount === 1 ? 'solo' : 'multiplayer';
+      
+      // Update names array
       const newNames = [...prev.playerNames];
       if (safeCount > newNames.length) {
         for (let i = newNames.length; i < safeCount; i++) {
@@ -27,7 +35,31 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
       } else {
         newNames.length = safeCount;
       }
-      return { ...prev, playerCount: safeCount, playerNames: newNames };
+      
+      // Logic to reset setup card if switching modes makes the current one invalid
+      let nextSetupCardId = prev.setupCardId;
+      let nextSetupCardName = prev.setupCardName;
+      let nextSecondary = prev.secondarySetupId;
+
+      // If switching to Multiplayer, reset 'FlyingSolo' (which is solo only)
+      if (newMode === 'multiplayer' && prev.setupCardId === 'FlyingSolo') {
+          nextSetupCardId = 'Standard';
+          nextSetupCardName = 'Standard Game Setup';
+          nextSecondary = undefined;
+      }
+      
+      // Note: We don't force reset when switching TO Solo, because Standard setup is valid for Solo (Classic Solo).
+      // However, if we wanted to be helpful, we could default to Awful Lonely, but let's stick to valid-check.
+
+      return { 
+          ...prev, 
+          playerCount: safeCount, 
+          playerNames: newNames,
+          gameMode: newMode,
+          setupCardId: nextSetupCardId,
+          setupCardName: nextSetupCardName,
+          secondarySetupId: nextSecondary
+      };
     });
   };
 
@@ -45,21 +77,40 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
         ...prev.expansions,
         [key]: !prev.expansions[key]
       };
-      // Reset setup card if requirements aren't met
+
+      // Synchronize gameEdition with the 10th Anniversary expansion toggle
+      let nextEdition = prev.gameEdition;
+      if (key === 'tenth') {
+        nextEdition = nextExpansions.tenth ? 'tenth' : 'original';
+      }
+
+      // Reset setup card if requirements aren't met or if mode logic changes
       const currentSetup = SETUP_CARDS.find(s => s.id === prev.setupCardId);
       let nextSetupCardId = prev.setupCardId;
       let nextSetupCardName = prev.setupCardName;
+      let nextSecondary = prev.secondarySetupId;
 
+      // If current setup requires an expansion that was just disabled
       if (currentSetup?.requiredExpansion && !nextExpansions[currentSetup.requiredExpansion]) {
           nextSetupCardId = 'Standard';
           nextSetupCardName = 'Standard Game Setup';
+          nextSecondary = undefined; // Reset secondary if main reset
+      }
+      
+      // If disabling 10th, and we were in Flying Solo mode (which is 10th only), reset.
+      if (key === 'tenth' && !nextExpansions.tenth && prev.setupCardId === 'FlyingSolo') {
+          nextSetupCardId = 'Standard';
+          nextSetupCardName = 'Standard Game Setup';
+          nextSecondary = undefined;
       }
 
       return {
         ...prev,
         expansions: nextExpansions,
+        gameEdition: nextEdition,
         setupCardId: nextSetupCardId,
-        setupCardName: nextSetupCardName
+        setupCardName: nextSetupCardName,
+        secondarySetupId: nextSecondary
       };
     });
   };
@@ -80,9 +131,12 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
   const partBadgeBg = isDark ? 'bg-yellow-900/40' : 'bg-[#fef3c7]';
   const partBadgeText = isDark ? 'text-yellow-100' : 'text-[#92400e]';
 
+  // Filter available expansions based on mode
+  const visibleExpansions = EXPANSIONS_METADATA;
+
   return (
     <div className={`bg-metal rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in relative overflow-hidden transition-all duration-300`}>
-      {/* Decorative bolts - Only visible in Light Mode */}
+      {/* Decorative bolts */}
       {!isDark && (
         <>
           <div className="absolute top-3 left-3 w-3 h-3 rounded-full bg-stone-300 shadow-inner border border-stone-400"></div>
@@ -106,7 +160,7 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
             onClick={() => updatePlayerCount(gameState.playerCount - 1)}
             disabled={gameState.playerCount <= 1}
             aria-label="Decrease player count"
-            className={`w-12 h-12 flex items-center justify-center rounded-lg ${inputBg} ${inputHover} border-2 ${inputBorder} font-bold text-2xl ${inputText} disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm active:translate-y-0.5`}
+            className={`w-12 h-12 flex items-center justify-center rounded-lg ${inputBg} ${gameState.playerCount <= 1 ? 'opacity-50 cursor-not-allowed' : inputHover} border-2 ${inputBorder} font-bold text-2xl ${inputText} disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm active:translate-y-0.5`}
           >
             -
           </button>
@@ -120,11 +174,13 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
             onClick={() => updatePlayerCount(gameState.playerCount + 1)}
             disabled={gameState.playerCount >= 9}
             aria-label="Increase player count"
-            className={`w-12 h-12 flex items-center justify-center rounded-lg ${inputBg} ${inputHover} border-2 ${inputBorder} font-bold text-2xl ${inputText} disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm active:translate-y-0.5`}
+            className={`w-12 h-12 flex items-center justify-center rounded-lg ${inputBg} ${gameState.playerCount >= 9 ? 'opacity-50 cursor-not-allowed' : inputHover} border-2 ${inputBorder} font-bold text-2xl ${inputText} disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm active:translate-y-0.5`}
           >
             +
           </button>
-          <span className={`italic ml-2 font-serif ${subLabelColor}`}>Crew Manifests</span>
+          <span className={`italic ml-2 font-serif ${subLabelColor}`}>
+            {isSolo ? '(Solo Mode)' : 'Crew Manifests'}
+          </span>
         </div>
         
         <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 ${cardBg} p-4 rounded-lg border ${cardBorder} shadow-inner`}>
@@ -148,7 +204,7 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
       <div className="mb-8 relative z-10">
         <label className={`block font-bold mb-3 uppercase tracking-wide text-xs ${labelColor}`}>Active Expansions</label>
         <div className="grid grid-cols-1 gap-4">
-          {EXPANSIONS_METADATA.map((expansion) => (
+          {visibleExpansions.map((expansion) => (
             <ExpansionToggle 
               key={expansion.id}
               id={expansion.id} 
@@ -162,8 +218,13 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
         </div>
       </div>
 
-      <div className="relative z-10">
-        <Button onClick={onNext} fullWidth className="text-lg py-4 border-b-4 border-[#450a0a]">
+      <div className="flex gap-4 relative z-10">
+        {onBack && (
+          <Button onClick={onBack} variant="secondary" className="w-1/3">
+            ← Back
+          </Button>
+        )}
+        <Button onClick={onNext} fullWidth className={`${onBack ? 'w-2/3' : 'w-full'} text-lg py-4 border-b-4 border-[#450a0a]`}>
           Next: Choose Setup Card →
         </Button>
       </div>

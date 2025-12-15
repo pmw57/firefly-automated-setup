@@ -13,7 +13,7 @@ interface AllianceReaverStepProps {
 export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, gameState }) => {
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
-  const { placeAllianceAlertsInAllianceSpace, placeMixedAlertTokens, smugglersBluesSetup, startWithAlertCard, createAlertTokenStackMultiplier } = activeStoryCard.setupConfig || {};
+  const { placeAllianceAlertsInAllianceSpace, placeMixedAlertTokens, smugglersBluesSetup, lonelySmugglerSetup, startWithAlertCard, createAlertTokenStackMultiplier } = activeStoryCard.setupConfig || {};
   const useSmugglersRimRule = smugglersBluesSetup && gameState.expansions.blue && gameState.expansions.kalidasa;
   const alertStackCount = createAlertTokenStackMultiplier ? createAlertTokenStackMultiplier * gameState.playerCount : 0;
   const { theme } = useTheme();
@@ -87,6 +87,12 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, ga
             <span>Place <strong>3 Contraband</strong> on each Planetary Sector in <strong>Alliance Space</strong>.</span>
           )}
         </SpecialRuleBlock>
+      )}
+
+      {lonelySmugglerSetup && (
+         <SpecialRuleBlock source="story" title="Story Override">
+            Place <strong>3 Contraband</strong> on each Supply Planet <strong>except Persephone and Space Bazaar</strong>.
+         </SpecialRuleBlock>
       )}
 
       {startWithAlertCard && (

@@ -20,7 +20,15 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
   const isDark = theme === 'dark';
 
   const jobMode = determineJobMode(activeStoryCard, overrides);
-  const { forbiddenStartingContact, allowedStartingContacts, smugglersBluesSetup, removeJobDecks, sharedHandSetup } = activeStoryCard.setupConfig || {};
+  const { forbiddenStartingContact, allowedStartingContacts, smugglersBluesSetup, lonelySmugglerSetup, removeJobDecks, sharedHandSetup, primeContactDecks } = activeStoryCard.setupConfig || {};
+
+  // Get active challenges (Further Adventures)
+  const activeChallenges = activeStoryCard.challengeOptions?.filter(
+    opt => gameState.challengeOptions[opt.id]
+  ) || [];
+  
+  const isSingleContactChallenge = !!gameState.challengeOptions['single_contact'];
+  const isDontPrimeChallenge = !!gameState.challengeOptions['dont_prime_contacts'];
 
   const cardBg = isDark ? 'bg-black/60' : 'bg-white';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -53,11 +61,33 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
 
        // Special Handling for 'no_jobs' to distinguish source
        if (jobMode === 'no_jobs') {
+           if (primeContactDecks && !isDontPrimeChallenge) {
+               return (
+                  <SpecialRuleBlock source="story" title="Story Override">
+                       <p><strong>No Starting Jobs are dealt.</strong></p>
+                       <p className="mt-2">Instead, <strong>prime the Contact Decks</strong>:</p>
+                       <ul className="list-disc ml-5 mt-1 text-sm">
+                           <li>Reveal the top <strong>3 cards</strong> of each Contact Deck.</li>
+                           <li>Place the revealed Job Cards in their discard piles.</li>
+                       </ul>
+                  </SpecialRuleBlock>
+               );
+           }
+           
+           if (isDontPrimeChallenge) {
+               return (
+                   <SpecialRuleBlock source="warning" title="Challenge Active">
+                       <p><strong>No Starting Jobs.</strong></p>
+                       <p className="mt-1"><strong>Do not prime the Contact Decks.</strong> (Challenge Override)</p>
+                   </SpecialRuleBlock>
+               );
+           }
+
            if (overrides.browncoatJobMode) {
                return (
                    <SpecialRuleBlock source="setupCard" title="Setup Card Override">
                        <p><strong>No Starting Jobs.</strong></p>
-                       <p>Crews must find work on the own out in the black.</p>
+                       <p>Crews must find work on their own out in the black.</p>
                    </SpecialRuleBlock>
                );
            }
@@ -81,7 +111,18 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                </SpecialRuleBlock>
            );
        }
+       
        if (jobMode === 'draft_choice') {
+           if (isSingleContactChallenge) {
+                return (
+                   <SpecialRuleBlock source="story" title="Story Override (Challenge Active)">
+                       <p className="mb-2">In reverse player order, each player chooses <strong>1 Contact Deck</strong> (instead of 3).</p>
+                       <p className="mb-2">Draw the top <strong>3 Job Cards</strong> from that deck.</p>
+                       {forbiddenStartingContact === 'Niska' && <p className="text-red-600 text-sm font-bold">Note: Mr. Universe is excluded.</p>}
+                       <p className="opacity-75 mt-2">Players may discard any starting jobs they do not want.</p>
+                   </SpecialRuleBlock>
+                );
+           }
            return (
                <SpecialRuleBlock source="story" title="Story Override">
                    <p className="mb-2">In reverse player order, each player chooses <strong>3 different Contact Decks</strong>.</p>
@@ -179,17 +220,39 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                    </SpecialRuleBlock>
                )}
 
-               <p className={`mb-4 font-bold ${textColor} text-lg`}>Draw 1 Job Card from each:</p>
-               <div className="flex flex-wrap gap-2 mb-4">
-                   {contacts.map(contact => (
-                       <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
-                           {contact}
-                       </span>
-                   ))}
-               </div>
+               {/* SINGLE CONTACT CHALLENGE OVERRIDE */}
+               {isSingleContactChallenge ? (
+                   <>
+                       <SpecialRuleBlock source="warning" title="Challenge Active">
+                           <p><strong>Single Contact Only:</strong> You may only work for one contact.</p>
+                       </SpecialRuleBlock>
+                       <p className={`mb-4 font-bold ${textColor} text-lg`}>Choose 1 Contact from the available list:</p>
+                       <div className="flex flex-wrap gap-2 mb-4">
+                           {contacts.map(contact => (
+                               <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
+                                   {contact}
+                               </span>
+                           ))}
+                       </div>
+                       <p className={`text-lg font-bold ${isDark ? 'text-amber-400' : 'text-amber-800'} mb-2`}>
+                           Draw 3 Job Cards from your chosen contact.
+                       </p>
+                   </>
+               ) : (
+                   <>
+                       <p className={`mb-4 font-bold ${textColor} text-lg`}>Draw 1 Job Card from each:</p>
+                       <div className="flex flex-wrap gap-2 mb-4">
+                           {contacts.map(contact => (
+                               <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
+                                   {contact}
+                               </span>
+                           ))}
+                       </div>
+                   </>
+               )}
                
                <p className={`text-sm ${noteText} border-t ${dividerBorder} pt-3 mt-2 italic`}>
-                  Discard any unwanted jobs. {totalJobCards > 3 && <span>Keep a hand of <strong>up to three</strong> Job Cards.</span>}
+                  Discard any unwanted jobs. {totalJobCards > 3 && !isSingleContactChallenge && <span>Keep a hand of <strong>up to three</strong> Job Cards.</span>}
                </p>
            </div>
        );
@@ -220,9 +283,26 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
 
                 {renderJobInstructions()}
                 
+                {activeChallenges.length > 0 && (
+                   <SpecialRuleBlock source="warning" title="Mission Directives (Challenges)">
+                      <ul className="list-disc ml-5 space-y-1 text-sm">
+                          {activeChallenges.map(opt => (
+                              <li key={opt.id}>{opt.label}</li>
+                          ))}
+                      </ul>
+                      <p className="mt-2 text-xs italic opacity-80">These restrictions apply throughout the game.</p>
+                   </SpecialRuleBlock>
+                )}
+
                 {smugglersBluesSetup && (
                      <SpecialRuleBlock source="story" title="Story Override">
                         Place a $2000 bill under Amnon Duul, Patience, Badger, and Niska's Contact Decks.
+                     </SpecialRuleBlock>
+                )}
+
+                {lonelySmugglerSetup && (
+                     <SpecialRuleBlock source="story" title="Story Override">
+                        Place a <strong>Goal Token</strong> on the Contact Decks for <strong>Amnon Duul, Patience, Badger, and Niska</strong>.
                      </SpecialRuleBlock>
                 )}
 
