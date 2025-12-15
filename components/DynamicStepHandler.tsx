@@ -7,7 +7,6 @@ import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { JobStep } from './JobStep';
 import { DraftStep } from './DraftStep';
 import { useTheme } from './ThemeContext';
-import { Button } from './Button';
 import { ExpansionIcon } from './ExpansionIcon';
 
 interface DynamicStepHandlerProps {
@@ -59,14 +58,14 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
     };
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-6">
             <SpecialRuleBlock source="expansion" title="Paired Setup Card">
                 In Expanded Solo Mode, you must pair the "Flying Solo" rules with a standard Setup Card to determine the initial board state, decks, and starting resources.
             </SpecialRuleBlock>
             
             <p className={`mb-4 font-bold ${textColor}`}>Choose your Board Setup:</p>
             
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 gap-3 mb-8">
                 {availableSetups.map(s => {
                     const isSelected = gameState.secondarySetupId === s.id;
                     const bColor = isSelected ? (isDark ? 'border-green-500 bg-green-900/20' : 'border-green-600 bg-green-50') : (isDark ? 'border-zinc-700 bg-zinc-800' : 'border-gray-300 bg-white');
@@ -119,8 +118,8 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
                </SpecialRuleBlock>
            );
       }
-
-      const hasPirates = gameState.expansions.pirates;
+      
+      const { shesTrouble, recipeForUnpleasantness } = gameState.soloOptions || {};
       
       const AVAILABLE_TOKENS = [1, 1, 2, 2, 3, 4]; // The complete pool
       const BASE_INDICES = [0, 2, 4, 5]; // Corresponds to 1, 2, 3, 4
@@ -130,13 +129,6 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
 
       // Determine if extra tokens are currently active based on length
       const isExtraTokensActive = unpredictableSelectedIndices.length > 4;
-
-      const setMode = (m: 'standard' | 'unpredictable') => {
-          setGameState(prev => ({
-              ...prev,
-              timerConfig: { ...prev.timerConfig, mode: m }
-          }));
-      };
 
       const toggleExtraTokens = () => {
           const newIndices = isExtraTokensActive ? BASE_INDICES : ALL_INDICES;
@@ -169,27 +161,39 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
       const totalTokens = 20;
       const numNumbered = selectedTokens.length;
       const topDisgruntled = Math.max(0, totalTokens - 1 - numNumbered);
+      
+      const warningBg = isDark ? 'bg-amber-900/30' : 'bg-amber-50';
+      const warningBorder = isDark ? 'border-amber-700/50' : 'border-amber-200';
 
       return (
         <div className="space-y-6">
-            <div className="flex flex-wrap gap-2 mb-4">
-                <Button 
-                    onClick={() => setMode('standard')} 
-                    variant={mode === 'standard' ? 'primary' : 'secondary'}
-                    className="flex-1 text-sm py-2"
-                >
-                    Standard Timer
-                </Button>
-                {hasPirates && (
-                    <Button 
-                        onClick={() => setMode('unpredictable')} 
-                        variant={mode === 'unpredictable' ? 'primary' : 'secondary'}
-                        className="flex-1 text-sm py-2"
-                    >
-                        Unpredictable Timer
-                    </Button>
-                )}
-            </div>
+            
+            {/* Solo Rules Summary Block */}
+            {(shesTrouble || recipeForUnpleasantness) && (
+                <div className={`p-4 rounded-lg border ${warningBorder} ${warningBg} mb-4`}>
+                    <h4 className={`font-bold text-sm uppercase tracking-wide mb-3 ${isDark ? 'text-amber-400' : 'text-amber-800'}`}>Active Solo Rules</h4>
+                    <div className="space-y-3">
+                        {shesTrouble && (
+                            <div>
+                                <strong className={`block text-xs ${isDark ? 'text-amber-200' : 'text-amber-900'}`}>She's Trouble</strong>
+                                <p className={`text-xs mt-1 ${isDark ? 'text-amber-200/80' : 'text-amber-800'}`}>
+                                    Whenever you begin a turn with a <strong>Deceptive Crew</strong> on your ship and deceptive crew cards in a discard pile, roll a die. If you roll a 1, disgruntle your deceptive crew.
+                                    <br/><em className="opacity-80">Note: If a deceptive crew is part of your crew and you hire another, you may remove one from play.</em>
+                                </p>
+                            </div>
+                        )}
+                        {recipeForUnpleasantness && (
+                            <div className={shesTrouble ? `pt-3 border-t ${warningBorder}` : ''}>
+                                <strong className={`block text-xs ${isDark ? 'text-amber-200' : 'text-amber-900'}`}>Recipe For Unpleasantness</strong>
+                                <p className={`text-xs mt-1 ${isDark ? 'text-amber-200/80' : 'text-amber-800'}`}>
+                                    Whenever you begin a turn with <strong>1 or more disgruntled crew</strong> (including your leader), roll a die. If you roll equal to or lower than the number of disgruntled crew on your ship, add a disgruntled token to the crew of your choice.
+                                    <br/><em className="opacity-80">Crew who jump ship or are fired as a result are removed from play.</em>
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
 
             {mode === 'standard' && (
                 <div className={`${panelBg} p-4 rounded-lg border ${panelBorder} shadow-sm animate-fade-in`}>

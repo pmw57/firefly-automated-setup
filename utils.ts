@@ -1,6 +1,6 @@
 
-import { StoryCardDef, StepOverrides, DiceResult, DraftState, GameState, Expansions } from './types';
-import { EXPANSIONS_METADATA, STORY_CARDS } from './constants';
+import { StoryCardDef, StepOverrides, DiceResult, DraftState, GameState, Expansions, Step } from './types';
+import { EXPANSIONS_METADATA, STORY_CARDS, SETUP_CARDS, SETUP_CONTENT } from './constants';
 
 // --- Draft Logic ---
 export const calculateDraftOutcome = (
@@ -78,6 +78,97 @@ export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     return null;
 };
 
+// --- Setup Flow Logic ---
+
+// Helper to inject a dynamic step safely
+const createStep = (id: string, overrides: StepOverrides = {}): Step | null => {
+  const content = SETUP_CONTENT[id];
+  if (!content) return null;
+  return {
+    type: content.type === 'core' ? 'core' : 'dynamic',
+    id: content.id || content.elementId || id,
+    data: content,
+    overrides
+  };
+};
+
+export const calculateSetupFlow = (state: GameState): Step[] => {
+  const newFlow: Step[] = [];
+  const activeStory = STORY_CARDS.find(c => c.title === state.selectedStoryCard);
+  const isFlyingSolo = state.setupCardId === 'FlyingSolo';
+
+  // 1. Determine the Base Definition (The source of truth for steps)
+  let baseDef = SETUP_CARDS.find(s => s.id === state.setupCardId);
+  
+  // In Flying Solo, the base definition steps come from the *Secondary* card (Board Setup),
+  // but wrapped in the context of the Flying Solo rules.
+  if (isFlyingSolo && state.secondarySetupId) {
+      baseDef = SETUP_CARDS.find(s => s.id === state.secondarySetupId);
+  }
+  
+  // Fallback
+  if (!baseDef) baseDef = SETUP_CARDS[0];
+
+  // 2. Iterate Steps
+  // If Flying Solo, we actually iterate the Flying Solo steps first, 
+  // but we merge overrides from the Secondary card.
+  const sourceSteps = isFlyingSolo 
+    ? (SETUP_CARDS.find(s => s.id === 'FlyingSolo')?.steps || [])
+    : baseDef.steps;
+
+  let noSureThingsInserted = false;
+
+  sourceSteps.forEach(setupStep => {
+      const stepId = setupStep.id;
+
+      // Injection: No Sure Things (Before C6/Jobs or C_PRIME)
+      const shouldInjectNST = state.soloOptions?.noSureThings && !noSureThingsInserted && (stepId === 'C6' || stepId === 'C_PRIME');
+      
+      // For Flying Solo, we allow it. For Classic Solo (Awful Lonely), we also allow it.
+      const isSoloMode = state.gameMode === 'solo'; // Covers both Flying Solo and Classic
+      
+      if (isSoloMode && shouldInjectNST) {
+          const step = createStep('D_NO_SURE_THINGS');
+          if (step) {
+             newFlow.push(step);
+             noSureThingsInserted = true;
+          }
+      }
+
+      // Calculate Overrides
+      let finalOverrides = setupStep.overrides || {};
+      
+      // If Flying Solo, merge overrides from the secondary board setup
+      if (isFlyingSolo && state.secondarySetupId) {
+           const secondaryStep = baseDef?.steps.find(s => s.id === stepId);
+           if (secondaryStep) {
+               finalOverrides = { ...finalOverrides, ...secondaryStep.overrides };
+           }
+      }
+
+      const step = createStep(stepId, finalOverrides);
+      if (step) {
+          newFlow.push(step);
+      }
+  });
+
+  // Injection: Game Length Tokens (For Classic Solo / Awful Lonely)
+  // Flying Solo handles this in its own step definition, so we only need to inject for classic.
+  if (state.gameMode === 'solo' && !isFlyingSolo && activeStory?.setupConfig?.soloGameTimer) {
+       const step = createStep('D_GAME_LENGTH_TOKENS');
+       if (step) newFlow.push(step);
+  }
+
+  // Fallback: NST wasn't inserted due to weird step order
+  if (state.gameMode === 'solo' && state.soloOptions?.noSureThings && !noSureThingsInserted) {
+      const step = createStep('D_NO_SURE_THINGS');
+      if (step) newFlow.push(step);
+  }
+
+  newFlow.push({ type: 'final', id: 'final' });
+  return newFlow;
+};
+
 // --- Default State Factory ---
 export const getDefaultGameState = (): GameState => {
   const initialExpansions = EXPANSIONS_METADATA.reduce((acc, expansion) => {
@@ -101,6 +192,11 @@ export const getDefaultGameState = (): GameState => {
         mode: 'standard', // Default to standard even if others are available
         unpredictableSelectedIndices: [0, 2, 4, 5], // Default indices corresponding to one 1, one 2, one 3, one 4 from [1,1,2,2,3,4]
         randomizeUnpredictable: false
+    },
+    soloOptions: {
+        noSureThings: false,
+        shesTrouble: false,
+        recipeForUnpleasantness: false
     },
     expansions: initialExpansions
   };

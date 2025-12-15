@@ -1,11 +1,12 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { GameState, Step } from '../types';
 import { STORY_CARDS } from '../constants';
 import { determineJobMode } from '../utils';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { InlineExpansionIcon } from './InlineExpansionIcon';
 import { useTheme } from './ThemeContext';
+import { Button } from './Button';
 
 interface JobStepProps {
   step: Step;
@@ -29,6 +30,8 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
   
   const isSingleContactChallenge = !!gameState.challengeOptions['single_contact'];
   const isDontPrimeChallenge = !!gameState.challengeOptions['dont_prime_contacts'];
+  const isHeroesAndMisfits = activeStoryCard.title === "Heroes & Misfits";
+  const [showGoalList, setShowGoalList] = useState(false);
 
   const cardBg = isDark ? 'bg-black/60' : 'bg-white';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -38,6 +41,33 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
   const pillBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
   const dividerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const noteText = isDark ? 'text-gray-400' : 'text-gray-700';
+
+  const threeGoalStories = [
+    "Bank Job",
+    "Black Market Beagles",
+    "Double Duty",
+    "First Time in the Captain's Chair",
+    "Fruity Oat Bar",
+    "Goin' Reaver",
+    "Harken's Folly",
+    "Hospital Rescue",
+    "How It All Started",
+    "Jail Break",
+    "Miranda",
+    "Niska's Holiday",
+    "Old Friends And New",
+    "Patience's War",
+    "Reap The Whirlwind",
+    "Red Skies Over Ransom",
+    "Running On Empty",
+    "Shadows Over Duul",
+    "The King Of All Londinium",
+    "The Magnificent Crew",
+    "The Old Man And The Dragons",
+    "The Rumrunner's Seasonal",
+    "The Smuggly Bustle",
+    "The Wobbly Headed Doll Caper"
+  ].sort();
 
   const renderJobInstructions = () => {
        // 1. Story Card Modes (Highest Priority)
@@ -279,6 +309,23 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                              These face up Jobs form a shared hand of Inactive Jobs that everyone may use.
                          </p>
                     </SpecialRuleBlock>
+                )}
+
+                {isHeroesAndMisfits && (
+                   <SpecialRuleBlock source="story" title="Adventure Deck Setup">
+                       <p className="mb-2">Shuffle all <strong>3-Goal Story Cards</strong> into a single deck.</p>
+                       <Button onClick={() => setShowGoalList(!showGoalList)} className="text-xs py-1 px-3 mb-2 bg-amber-600 hover:bg-amber-700">
+                         {showGoalList ? "Hide" : "Show"} Qualifying Stories
+                       </Button>
+                       {showGoalList && (
+                          <div className={`mt-2 p-3 rounded border text-sm max-h-60 overflow-y-auto custom-scrollbar ${isDark ? 'bg-black/30 border-amber-800' : 'bg-white/50 border-amber-200'}`}>
+                             <p className="mb-2 font-bold opacity-80">Qualifying 3-Goal Story Cards:</p>
+                             <ul className="list-disc ml-5 space-y-1">
+                                {threeGoalStories.map(s => <li key={s}>{s}</li>)}
+                             </ul>
+                          </div>
+                       )}
+                   </SpecialRuleBlock>
                 )}
 
                 {renderJobInstructions()}
