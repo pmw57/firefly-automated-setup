@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { GameState } from '../types';
-import { STORY_CARDS, EXPANSIONS_METADATA } from '../constants';
-// FIX: Changed import path to point to the utils directory index.
-import { getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../utils/index';
+import { getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../utils/ui';
 import { useTheme } from './ThemeContext';
+import { STORY_CARDS } from '../data/storyCards';
+import { EXPANSIONS_METADATA } from '../data/expansions';
 
 interface FinalSummaryProps {
   gameState: GameState;

@@ -1,6 +1,8 @@
-
 import { GameState, Expansions } from '../types';
-import { STORY_CARDS, SETUP_CARDS, EXPANSIONS_METADATA, SETUP_CARD_IDS } from '../constants';
+import { STORY_CARDS } from '../data/storyCards';
+import { SETUP_CARDS } from '../data/setupCards';
+import { EXPANSIONS_METADATA } from '../data/expansions';
+import { SETUP_CARD_IDS } from '../data/ids';
 
 const calculatePlayerNames = (currentNames: string[], newCount: number): string[] => {
     const newNames = [...currentNames];

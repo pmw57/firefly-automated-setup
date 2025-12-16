@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { SETUP_CARDS, STORY_CARDS, EXPANSIONS_METADATA, SETUP_CONTENT } from '../constants';
+import { SETUP_CARDS } from '../data/setupCards';
+import { STORY_CARDS } from '../data/storyCards';
+import { EXPANSIONS_METADATA } from '../data/expansions';
+import { SETUP_CONTENT } from '../data/steps';
 
 describe('Data Integrity', () => {
   describe('Setup Cards', () => {

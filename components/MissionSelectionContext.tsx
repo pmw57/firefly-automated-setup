@@ -1,11 +1,10 @@
-
 import React, { useState, useMemo, useCallback } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types';
 import { useGameState } from '../hooks/useGameState';
-import { STORY_CARDS, SETUP_CARD_IDS } from '../constants';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
-// FIX: Changed import path to point to the utils directory index.
-import { isStoryCompatible } from '../utils/index';
+import { isStoryCompatible } from '../utils/filters';
+import { STORY_CARDS } from '../data/storyCards';
+import { SETUP_CARD_IDS } from '../data/ids';
 
 export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { gameState, setGameState } = useGameState();

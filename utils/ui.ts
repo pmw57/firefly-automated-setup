@@ -1,6 +1,6 @@
-
 import { GameState, StoryCardDef } from '../types';
-import { SETUP_CARDS, SETUP_CARD_IDS } from '../constants';
+import { SETUP_CARDS } from '../data/setupCards';
+import { SETUP_CARD_IDS } from '../data/ids';
 
 export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     if (card.setupDescription) return "Setup Changes";

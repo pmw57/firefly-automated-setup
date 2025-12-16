@@ -1,9 +1,7 @@
-
 import React from 'react';
 import { StoryCardDef } from '../types';
 import { InlineExpansionIcon } from './InlineExpansionIcon';
-// FIX: Changed import path to point to the utils directory index.
-import { getStoryCardSetupSummary } from '../utils/index';
+import { getStoryCardSetupSummary } from '../utils/ui';
 import { useTheme } from './ThemeContext';
 import { ExpansionIcon } from './ExpansionIcon';
 
