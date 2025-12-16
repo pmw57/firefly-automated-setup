@@ -27,7 +27,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   handleReset = () => {
-    // FIX: `this.setState` is now available on the component instance because the class extends React.Component.
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
@@ -42,7 +41,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       );
     }
 
-    // FIX: `this.props` is now available on the component instance because the class extends React.Component.
     return this.props.children;
   }
 }
