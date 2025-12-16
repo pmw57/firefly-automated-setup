@@ -1,7 +1,9 @@
 
+
 import React from 'react';
 import { GameState } from '../types';
-import { STORY_CARDS, EXPANSIONS_METADATA } from '../constants';
+import { STORY_CARDS } from '../data/storyCards';
+import { EXPANSIONS_METADATA } from '../data/expansions';
 import { getDisplaySetupName } from '../utils';
 import { useTheme } from './ThemeContext';
 

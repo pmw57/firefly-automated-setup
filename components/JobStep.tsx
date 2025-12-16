@@ -1,19 +1,48 @@
 
-import React, { useState } from 'react';
-import { GameState, Step } from '../types';
-import { STORY_CARDS } from '../constants';
+
+import React, { useState, useMemo } from 'react';
+import { Step } from '../types';
+import { STORY_CARDS } from '../data/storyCards';
 import { determineJobMode } from '../utils';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { InlineExpansionIcon } from './InlineExpansionIcon';
 import { useTheme } from './ThemeContext';
 import { Button } from './Button';
+import { useGameState } from '../hooks/useGameState';
 
 interface JobStepProps {
   step: Step;
-  gameState: GameState;
 }
 
-export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
+const threeGoalStories = [
+  "Bank Job",
+  "Black Market Beagles",
+  "Double Duty",
+  "First Time in the Captain's Chair",
+  "Fruity Oat Bar",
+  "Goin' Reaver",
+  "Harken's Folly",
+  "Hospital Rescue",
+  "How It All Started",
+  "Jail Break",
+  "Miranda",
+  "Niska's Holiday",
+  "Old Friends And New",
+  "Patience's War",
+  "Reap The Whirlwind",
+  "Red Skies Over Ransom",
+  "Running On Empty",
+  "Shadows Over Duul",
+  "The King Of All Londinium",
+  "The Magnificent Crew",
+  "The Old Man And The Dragons",
+  "The Rumrunner's Seasonal",
+  "The Smuggly Bustle",
+  "The Wobbly Headed Doll Caper"
+].sort();
+
+export const JobStep: React.FC<JobStepProps> = ({ step }) => {
+  const { gameState } = useGameState();
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const stepId = step.data?.id || step.id;
@@ -24,10 +53,11 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
   const jobMode = determineJobMode(activeStoryCard, overrides);
   const { forbiddenStartingContact, allowedStartingContacts, smugglersBluesSetup, lonelySmugglerSetup, removeJobDecks, sharedHandSetup, primeContactDecks } = activeStoryCard.setupConfig || {};
 
-  // Get active challenges (Further Adventures)
-  const activeChallenges = activeStoryCard.challengeOptions?.filter(
-    opt => gameState.challengeOptions[opt.id]
-  ) || [];
+  const activeChallenges = useMemo(() => 
+    activeStoryCard.challengeOptions?.filter(
+      opt => gameState.challengeOptions[opt.id]
+    ) || [], 
+  [activeStoryCard.challengeOptions, gameState.challengeOptions]);
   
   const isSingleContactChallenge = !!gameState.challengeOptions['single_contact'];
   const isDontPrimeChallenge = !!gameState.challengeOptions['dont_prime_contacts'];
@@ -42,252 +72,6 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
   const pillBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
   const dividerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const noteText = isDark ? 'text-gray-400' : 'text-gray-700';
-
-  const threeGoalStories = [
-    "Bank Job",
-    "Black Market Beagles",
-    "Double Duty",
-    "First Time in the Captain's Chair",
-    "Fruity Oat Bar",
-    "Goin' Reaver",
-    "Harken's Folly",
-    "Hospital Rescue",
-    "How It All Started",
-    "Jail Break",
-    "Miranda",
-    "Niska's Holiday",
-    "Old Friends And New",
-    "Patience's War",
-    "Reap The Whirlwind",
-    "Red Skies Over Ransom",
-    "Running On Empty",
-    "Shadows Over Duul",
-    "The King Of All Londinium",
-    "The Magnificent Crew",
-    "The Old Man And The Dragons",
-    "The Rumrunner's Seasonal",
-    "The Smuggly Bustle",
-    "The Wobbly Headed Doll Caper"
-  ].sort();
-
-  const renderJobInstructions = () => {
-       // 1. Story Card Modes (Highest Priority)
-       if (removeJobDecks) {
-           return (
-               <SpecialRuleBlock source="story" title="Setup Restriction">
-                   <p><strong>Remove all Job Card decks from the game.</strong></p>
-                   <p>There's no time for working other Jobs.</p>
-               </SpecialRuleBlock>
-           );
-       }
-
-       if (jobMode === 'caper_start') {
-           return (
-               <SpecialRuleBlock source="story" title="Story Override">
-                   <p><strong>Do not deal Starting Jobs.</strong></p>
-                   <p>Each player begins the game with <strong>one Caper Card</strong> instead.</p>
-               </SpecialRuleBlock>
-           );
-       }
-
-       // Special Handling for 'no_jobs' to distinguish source
-       if (jobMode === 'no_jobs') {
-           if (primeContactDecks && !isDontPrimeChallenge) {
-               return (
-                  <SpecialRuleBlock source="story" title="Story Override">
-                       <p><strong>No Starting Jobs are dealt.</strong></p>
-                       <p className="mt-2">Instead, <strong>prime the Contact Decks</strong>:</p>
-                       <ul className="list-disc ml-5 mt-1 text-sm">
-                           <li>Reveal the top <strong>3 cards</strong> of each Contact Deck.</li>
-                           <li>Place the revealed Job Cards in their discard piles.</li>
-                       </ul>
-                  </SpecialRuleBlock>
-               );
-           }
-           
-           if (isDontPrimeChallenge) {
-               return (
-                   <SpecialRuleBlock source="warning" title="Challenge Active">
-                       <p><strong>No Starting Jobs.</strong></p>
-                       <p className="mt-1"><strong>Do not prime the Contact Decks.</strong> (Challenge Override)</p>
-                   </SpecialRuleBlock>
-               );
-           }
-
-           if (overrides.browncoatJobMode) {
-               return (
-                   <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-                       <p><strong>No Starting Jobs.</strong></p>
-                       <p>Crews must find work on their own out in the black.</p>
-                   </SpecialRuleBlock>
-               );
-           }
-           return (
-               <SpecialRuleBlock source="story" title="Story Override">
-                   <p><strong>Do not take Starting Jobs.</strong></p>
-               </SpecialRuleBlock>
-           );
-       }
-
-       if (jobMode === 'wind_takes_us') {
-           return (
-               <SpecialRuleBlock source="story" title="Story Override">
-                   <p className="mb-2">Each player chooses <strong>one Contact Deck</strong> of their choice:</p>
-                   <ul className="list-disc ml-5 mb-3 text-sm">
-                       <li>Draw <strong>{gameState.playerCount <= 3 ? '4' : '3'} Jobs</strong> from that deck.</li>
-                       <li>Place a <strong>Goal Token</strong> at the drop-off/destination sector of each Job.</li>
-                       <li>Return all Jobs to the deck and reshuffle.</li>
-                   </ul>
-                   <p className="font-bold text-red-700">Do not deal Starting Jobs.</p>
-               </SpecialRuleBlock>
-           );
-       }
-       
-       if (jobMode === 'draft_choice') {
-           if (isSingleContactChallenge) {
-                return (
-                   <SpecialRuleBlock source="story" title="Story Override (Challenge Active)">
-                       <p className="mb-2">In reverse player order, each player chooses <strong>1 Contact Deck</strong> (instead of 3).</p>
-                       <p className="mb-2">Draw the top <strong>3 Job Cards</strong> from that deck.</p>
-                       {forbiddenStartingContact === 'Niska' && <p className="text-red-600 text-sm font-bold">Note: Mr. Universe is excluded.</p>}
-                       <p className="opacity-75 mt-2">Players may discard any starting jobs they do not want.</p>
-                   </SpecialRuleBlock>
-                );
-           }
-           return (
-               <SpecialRuleBlock source="story" title="Story Override">
-                   <p className="mb-2">In reverse player order, each player chooses <strong>3 different Contact Decks</strong>.</p>
-                   <p className="mb-2">Draw the top Job Card from each chosen deck.</p>
-                   {forbiddenStartingContact === 'Niska' && <p className="text-red-600 text-sm font-bold">Note: Mr. Universe is excluded.</p>}
-                   <p className="opacity-75 mt-2">Players may discard any starting jobs they do not want.</p>
-               </SpecialRuleBlock>
-           );
-       }
-       
-       // 2. Setup Card Overrides
-
-       if (jobMode === 'times_jobs') {
-           return (
-               <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-                   <p>Each player draws <strong>3 jobs</strong> from <strong>one Contact Deck</strong> of their choice.</p>
-                   <p className="text-sm italic opacity-80 mt-1">Players may draw from the same Contact.</p>
-                   <p className="opacity-75 mt-2">Players may discard any starting jobs they do not want.</p>
-               </SpecialRuleBlock>
-           );
-       }
-
-       // Contact List Logic for Standard / Specific Lists
-       let contacts: string[] = [];
-       
-       if (jobMode === 'buttons_jobs') {
-           contacts = ['Amnon Duul', 'Lord Harrow', 'Magistrate Higgins'];
-       } else if (jobMode === 'awful_jobs') {
-           contacts = ['Harken', 'Amnon Duul', 'Patience'];
-       } else {
-           // Standard Logic (Also used for Rim Jobs where decks are modified but procedure is standard)
-           // This also serves as the base for Alliance High Alert
-           contacts = ['Harken', 'Badger', 'Amnon Duul', 'Patience', 'Niska'];
-       }
-
-       // High Alert Logic: Remove Harken from standard list
-       if (jobMode === 'high_alert_jobs') {
-           contacts = contacts.filter(c => c !== 'Harken');
-       }
-
-       // Apply Filters (Forbidden / Allowed)
-       if (forbiddenStartingContact) {
-           contacts = contacts.filter(c => c !== forbiddenStartingContact);
-       }
-       if (allowedStartingContacts && allowedStartingContacts.length > 0) {
-           contacts = contacts.filter(c => allowedStartingContacts.includes(c));
-       }
-
-       // Calculate total job cards to determine if discard warning is needed.
-       // Note: Caper cards (from buttons_jobs) do NOT count towards the Job Card Hand Limit.
-       const totalJobCards = contacts.length;
-       
-       const showStoryOverride = (forbiddenStartingContact || (allowedStartingContacts && allowedStartingContacts.length > 0));
-
-       return (
-           <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300`}>
-               {showStoryOverride && activeStoryCard.setupDescription && (
-                   <SpecialRuleBlock source="story" title="Story Override">
-                       {activeStoryCard.setupDescription}
-                   </SpecialRuleBlock>
-               )}
-
-               {jobMode === 'high_alert_jobs' && (
-                   <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-                       <strong>Harken is unavailable.</strong> The Harken Contact Deck is removed for this setup card.
-                   </SpecialRuleBlock>
-               )}
-
-               {jobMode === 'awful_jobs' && (
-                   <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-                       {forbiddenStartingContact === 'Harken' ? (
-                           <>
-                               <strong>Limited Contacts.</strong> This setup card normally draws from Harken, Amnon Duul, and Patience.
-                               <div className="mt-1 text-amber-800 font-bold text-xs">
-                                   ⚠️ Story Card Conflict: Harken is unavailable. Draw from Amnon Duul and Patience only.
-                               </div>
-                           </>
-                       ) : (
-                           <><strong>Limited Contacts.</strong> Starting Jobs are drawn only from Harken, Amnon Duul, and Patience.</>
-                       )}
-                   </SpecialRuleBlock>
-               )}
-
-               {jobMode === 'buttons_jobs' && (
-                   <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-                        <strong>Specific Contacts:</strong> Draw from Amnon Duul, Lord Harrow, and Magistrate Higgins.
-                        <br/>
-                        <strong>Caper Bonus:</strong> Draw 1 Caper Card.
-                   </SpecialRuleBlock>
-               )}
-
-               {gameState.setupCardId === 'TheRimsTheThing' && (
-                   <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-                       <strong>Modified Contact Decks.</strong> The Contact Decks contain only cards from the Blue Sun and Kalidasa expansions.
-                   </SpecialRuleBlock>
-               )}
-
-               {/* SINGLE CONTACT CHALLENGE OVERRIDE */}
-               {isSingleContactChallenge ? (
-                   <>
-                       <SpecialRuleBlock source="warning" title="Challenge Active">
-                           <p><strong>Single Contact Only:</strong> You may only work for one contact.</p>
-                       </SpecialRuleBlock>
-                       <p className={`mb-4 font-bold ${textColor} text-lg`}>Choose 1 Contact from the available list:</p>
-                       <div className="flex flex-wrap gap-2 mb-4">
-                           {contacts.map(contact => (
-                               <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
-                                   {contact}
-                               </span>
-                           ))}
-                       </div>
-                       <p className={`text-lg font-bold ${isDark ? 'text-amber-400' : 'text-amber-800'} mb-2`}>
-                           Draw 3 Job Cards from your chosen contact.
-                       </p>
-                   </>
-               ) : (
-                   <>
-                       <p className={`mb-4 font-bold ${textColor} text-lg`}>Draw 1 Job Card from each:</p>
-                       <div className="flex flex-wrap gap-2 mb-4">
-                           {contacts.map(contact => (
-                               <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
-                                   {contact}
-                               </span>
-                           ))}
-                       </div>
-                   </>
-               )}
-               
-               <p className={`text-sm ${noteText} border-t ${dividerBorder} pt-3 mt-2 italic`}>
-                  Discard any unwanted jobs. {totalJobCards > 3 && !isSingleContactChallenge && <span>Keep a hand of <strong>up to three</strong> Job Cards.</span>}
-               </p>
-           </div>
-       );
-  };
 
   return (
       <div className="space-y-4">
@@ -336,7 +120,210 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                    </SpecialRuleBlock>
                 )}
 
-                {renderJobInstructions()}
+                {(() => {
+                    // 1. Story Card Modes (Highest Priority)
+                    if (removeJobDecks) {
+                        return (
+                            <SpecialRuleBlock source="story" title="Setup Restriction">
+                                <p><strong>Remove all Job Card decks from the game.</strong></p>
+                                <p>There's no time for working other Jobs.</p>
+                            </SpecialRuleBlock>
+                        );
+                    }
+
+                    if (jobMode === 'caper_start') {
+                        return (
+                            <SpecialRuleBlock source="story" title="Story Override">
+                                <p><strong>Do not deal Starting Jobs.</strong></p>
+                                <p>Each player begins the game with <strong>one Caper Card</strong> instead.</p>
+                            </SpecialRuleBlock>
+                        );
+                    }
+
+                    // Special Handling for 'no_jobs' to distinguish source
+                    if (jobMode === 'no_jobs') {
+                        if (primeContactDecks && !isDontPrimeChallenge) {
+                            return (
+                                <SpecialRuleBlock source="story" title="Story Override">
+                                    <p><strong>No Starting Jobs are dealt.</strong></p>
+                                    <p className="mt-2">Instead, <strong>prime the Contact Decks</strong>:</p>
+                                    <ul className="list-disc ml-5 mt-1 text-sm">
+                                        <li>Reveal the top <strong>3 cards</strong> of each Contact Deck.</li>
+                                        <li>Place the revealed Job Cards in their discard piles.</li>
+                                    </ul>
+                                </SpecialRuleBlock>
+                            );
+                        }
+                        
+                        if (isDontPrimeChallenge) {
+                            return (
+                                <SpecialRuleBlock source="warning" title="Challenge Active">
+                                    <p><strong>No Starting Jobs.</strong></p>
+                                    <p className="mt-1"><strong>Do not prime the Contact Decks.</strong> (Challenge Override)</p>
+                                </SpecialRuleBlock>
+                            );
+                        }
+
+                        if (overrides.browncoatJobMode) {
+                            return (
+                                <SpecialRuleBlock source="setupCard" title="Setup Card Override">
+                                    <p><strong>No Starting Jobs.</strong></p>
+                                    <p>Crews must find work on their own out in the black.</p>
+                                </SpecialRuleBlock>
+                            );
+                        }
+                        return (
+                            <SpecialRuleBlock source="story" title="Story Override">
+                                <p><strong>Do not take Starting Jobs.</strong></p>
+                            </SpecialRuleBlock>
+                        );
+                    }
+
+                    if (jobMode === 'wind_takes_us') {
+                        return (
+                            <SpecialRuleBlock source="story" title="Story Override">
+                                <p className="mb-2">Each player chooses <strong>one Contact Deck</strong> of their choice:</p>
+                                <ul className="list-disc ml-5 mb-3 text-sm">
+                                    <li>Draw <strong>{gameState.playerCount <= 3 ? '4' : '3'} Jobs</strong> from that deck.</li>
+                                    <li>Place a <strong>Goal Token</strong> at the drop-off/destination sector of each Job.</li>
+                                    <li>Return all Jobs to the deck and reshuffle.</li>
+                                </ul>
+                                <p className="font-bold text-red-700">Do not deal Starting Jobs.</p>
+                            </SpecialRuleBlock>
+                        );
+                    }
+                    
+                    if (jobMode === 'draft_choice') {
+                        if (isSingleContactChallenge) {
+                            return (
+                                <SpecialRuleBlock source="story" title="Story Override (Challenge Active)">
+                                    <p className="mb-2">In reverse player order, each player chooses <strong>1 Contact Deck</strong> (instead of 3).</p>
+                                    <p className="mb-2">Draw the top <strong>3 Job Cards</strong> from that deck.</p>
+                                    {forbiddenStartingContact === 'Niska' && <p className="text-red-600 text-sm font-bold">Note: Mr. Universe is excluded.</p>}
+                                    <p className="opacity-75 mt-2">Players may discard any starting jobs they do not want.</p>
+                                </SpecialRuleBlock>
+                            );
+                        }
+                        return (
+                            <SpecialRuleBlock source="story" title="Story Override">
+                                <p className="mb-2">In reverse player order, each player chooses <strong>3 different Contact Decks</strong>.</p>
+                                <p className="mb-2">Draw the top Job Card from each chosen deck.</p>
+                                {forbiddenStartingContact === 'Niska' && <p className="text-red-600 text-sm font-bold">Note: Mr. Universe is excluded.</p>}
+                                <p className="opacity-75 mt-2">Players may discard any starting jobs they do not want.</p>
+                            </SpecialRuleBlock>
+                        );
+                    }
+                    
+                    // 2. Setup Card Overrides
+                    if (jobMode === 'times_jobs') {
+                        return (
+                            <SpecialRuleBlock source="setupCard" title="Setup Card Override">
+                                <p>Each player draws <strong>3 jobs</strong> from <strong>one Contact Deck</strong> of their choice.</p>
+                                <p className="text-sm italic opacity-80 mt-1">Players may draw from the same Contact.</p>
+                                <p className="opacity-75 mt-2">Players may discard any starting jobs they do not want.</p>
+                            </SpecialRuleBlock>
+                        );
+                    }
+
+                    // Contact List Logic for Standard / Specific Lists
+                    let contacts: string[] = [];
+                    if (jobMode === 'buttons_jobs') {
+                        contacts = ['Amnon Duul', 'Lord Harrow', 'Magistrate Higgins'];
+                    } else if (jobMode === 'awful_jobs') {
+                        contacts = ['Harken', 'Amnon Duul', 'Patience'];
+                    } else {
+                        contacts = ['Harken', 'Badger', 'Amnon Duul', 'Patience', 'Niska'];
+                    }
+
+                    // High Alert Logic: Remove Harken from standard list
+                    if (jobMode === 'high_alert_jobs') {
+                        contacts = contacts.filter(c => c !== 'Harken');
+                    }
+
+                    // Apply Filters (Forbidden / Allowed)
+                    if (forbiddenStartingContact) {
+                        contacts = contacts.filter(c => c !== forbiddenStartingContact);
+                    }
+                    if (allowedStartingContacts && allowedStartingContacts.length > 0) {
+                        contacts = contacts.filter(c => allowedStartingContacts.includes(c));
+                    }
+
+                    const totalJobCards = contacts.length;
+                    const showStoryOverride = (forbiddenStartingContact || (allowedStartingContacts && allowedStartingContacts.length > 0));
+
+                    return (
+                        <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300`}>
+                            {showStoryOverride && activeStoryCard.setupDescription && (
+                                <SpecialRuleBlock source="story" title="Story Override">
+                                    {activeStoryCard.setupDescription}
+                                </SpecialRuleBlock>
+                            )}
+                            {jobMode === 'high_alert_jobs' && (
+                                <SpecialRuleBlock source="setupCard" title="Setup Card Override">
+                                    <strong>Harken is unavailable.</strong> The Harken Contact Deck is removed for this setup card.
+                                </SpecialRuleBlock>
+                            )}
+                            {jobMode === 'awful_jobs' && (
+                                <SpecialRuleBlock source="setupCard" title="Setup Card Override">
+                                    {forbiddenStartingContact === 'Harken' ? (
+                                        <>
+                                            <strong>Limited Contacts.</strong> This setup card normally draws from Harken, Amnon Duul, and Patience.
+                                            <div className="mt-1 text-amber-800 font-bold text-xs">
+                                                ⚠️ Story Card Conflict: Harken is unavailable. Draw from Amnon Duul and Patience only.
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <><strong>Limited Contacts.</strong> Starting Jobs are drawn only from Harken, Amnon Duul, and Patience.</>
+                                    )}
+                                </SpecialRuleBlock>
+                            )}
+                            {jobMode === 'buttons_jobs' && (
+                                <SpecialRuleBlock source="setupCard" title="Setup Card Override">
+                                    <strong>Specific Contacts:</strong> Draw from Amnon Duul, Lord Harrow, and Magistrate Higgins.
+                                    <br/>
+                                    <strong>Caper Bonus:</strong> Draw 1 Caper Card.
+                                </SpecialRuleBlock>
+                            )}
+                            {gameState.setupCardId === 'TheRimsTheThing' && (
+                                <SpecialRuleBlock source="setupCard" title="Setup Card Override">
+                                    <strong>Modified Contact Decks.</strong> The Contact Decks contain only cards from the Blue Sun and Kalidasa expansions.
+                                </SpecialRuleBlock>
+                            )}
+                            {isSingleContactChallenge ? (
+                                <>
+                                    <SpecialRuleBlock source="warning" title="Challenge Active">
+                                        <p><strong>Single Contact Only:</strong> You may only work for one contact.</p>
+                                    </SpecialRuleBlock>
+                                    <p className={`mb-4 font-bold ${textColor} text-lg`}>Choose 1 Contact from the available list:</p>
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {contacts.map(contact => (
+                                            <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
+                                                {contact}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <p className={`text-lg font-bold ${isDark ? 'text-amber-400' : 'text-amber-800'} mb-2`}>
+                                        Draw 3 Job Cards from your chosen contact.
+                                    </p>
+                                </>
+                            ) : (
+                                <>
+                                    <p className={`mb-4 font-bold ${textColor} text-lg`}>Draw 1 Job Card from each:</p>
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {contacts.map(contact => (
+                                            <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
+                                                {contact}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+                            <p className={`text-sm ${noteText} border-t ${dividerBorder} pt-3 mt-2 italic`}>
+                                Discard any unwanted jobs. {totalJobCards > 3 && !isSingleContactChallenge && <span>Keep a hand of <strong>up to three</strong> Job Cards.</span>}
+                            </p>
+                        </div>
+                    );
+                })()}
                 
                 {activeChallenges.length > 0 && (
                    <SpecialRuleBlock source="warning" title="Story Directives (Challenges)">

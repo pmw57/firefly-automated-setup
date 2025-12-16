@@ -1,15 +1,14 @@
 
 import React from 'react';
-import { GameState, StoryCardDef } from '../../types';
+import { StoryCardDef } from '../../types';
 import { SpecialRuleBlock } from '../SpecialRuleBlock';
 import { useTheme } from '../ThemeContext';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionIcon } from '../ExpansionIcon';
+import { useGameState } from '../../hooks/useGameState';
 
 interface StoryDossierProps {
   activeStoryCard: StoryCardDef;
-  gameState: GameState;
-  setGameState: React.Dispatch<React.SetStateAction<GameState>>;
 }
 
 const SOLO_TIMER_ADJUSTMENTS: Record<string, string> = {
@@ -18,7 +17,8 @@ const SOLO_TIMER_ADJUSTMENTS: Record<string, string> = {
   "A Rare Specimen Indeed": "Send Out Invites before discarding your last token to win the game."
 };
 
-export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard, gameState, setGameState }) => {
+export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) => {
+  const { gameState, setGameState } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 

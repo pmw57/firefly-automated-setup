@@ -1,6 +1,7 @@
 
+
 import React from 'react';
-import { GameState, Step } from '../types';
+import { Step } from '../types';
 import { JobStep } from './JobStep';
 import { DraftStep } from './DraftStep';
 
@@ -17,19 +18,17 @@ import { StripMiningStep } from './steps/dynamic/StripMiningStep';
 
 interface DynamicStepHandlerProps {
   step: Step;
-  gameState: GameState;
-  setGameState?: React.Dispatch<React.SetStateAction<GameState>>; 
 }
 
-export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = (props) => {
-  const { id } = props.step;
+export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step }) => {
+  const { id } = step;
 
   // --- Core Logic Steps Delegated ---
   if (id.includes('D_RIM_JOBS')) {
-    return <JobStep {...props} />;
+    return <JobStep step={step} />;
   }
   if (id.includes('D_HAVEN_DRAFT')) {
-    return <DraftStep {...props} />;
+    return <DraftStep step={step} />;
   }
 
   // --- Individual Dynamic Steps ---
@@ -37,7 +36,7 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = (props) => 
     return <NoSureThingsStep />;
   }
   if (id.includes('D_GAME_LENGTH_TOKENS')) {
-    return <GameLengthTokensStep {...props} />;
+    return <GameLengthTokensStep step={step} />;
   }
   if (id.includes('D_TIME_LIMIT')) {
     return <TimeLimitStep />;
@@ -46,7 +45,7 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = (props) => 
     return <ShuttleDraftStep />;
   }
   if (id.includes('D_BC_CAPITOL')) {
-    return <StartingCapitolStep {...props} />;
+    return <StartingCapitolStep step={step} />;
   }
   if (id.includes('D_LOCAL_HEROES')) {
     return <LocalHeroesStep />;
@@ -58,7 +57,7 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = (props) => 
     return <PressuresHighStep />;
   }
   if (id.includes('D_STRIP_MINING')) {
-    return <StripMiningStep {...props} />;
+    return <StripMiningStep step={step} />;
   }
 
   // Fallback for any unhandled dynamic step

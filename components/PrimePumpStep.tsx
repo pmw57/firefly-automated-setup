@@ -1,16 +1,18 @@
 
+
 import React, { useState, useEffect } from 'react';
-import { GameState, Step } from '../types';
-import { STORY_CARDS } from '../constants';
+import { Step } from '../types';
+import { STORY_CARDS } from '../data/storyCards';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
+import { useGameState } from '../hooks/useGameState';
 
 interface PrimePumpStepProps {
   step: Step;
-  gameState: GameState;
 }
 
-export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step, gameState }) => {
+export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
+  const { gameState } = useGameState();
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const { theme } = useTheme();

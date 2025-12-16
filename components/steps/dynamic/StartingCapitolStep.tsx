@@ -1,16 +1,18 @@
 
+
 import React from 'react';
-import { GameState, Step } from '../../../types';
+import { Step } from '../../../types';
 import { STORY_CARDS } from '../../../constants';
 import { calculateStartingResources } from '../../../utils';
 import { useTheme } from '../../ThemeContext';
+import { useGameState } from '../../../hooks/useGameState';
 
 interface StartingCapitolStepProps {
   step: Step;
-  gameState: GameState;
 }
 
-export const StartingCapitolStep: React.FC<StartingCapitolStepProps> = ({ step, gameState }) => {
+export const StartingCapitolStep: React.FC<StartingCapitolStepProps> = ({ step }) => {
+  const { gameState } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const overrides = step.overrides || {};

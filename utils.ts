@@ -1,6 +1,10 @@
 
+
 import { StoryCardDef, StepOverrides, DiceResult, DraftState, GameState, Expansions, Step } from './types';
-import { EXPANSIONS_METADATA, STORY_CARDS, SETUP_CARDS, SETUP_CONTENT } from './constants';
+import { SETUP_CARDS } from './data/setupCards';
+import { SETUP_CONTENT } from './data/steps';
+import { STORY_CARDS } from './data/storyCards';
+import { EXPANSIONS_METADATA } from './data/expansions';
 
 // --- Draft Logic ---
 export const calculateDraftOutcome = (

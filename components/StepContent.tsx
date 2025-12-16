@@ -1,6 +1,7 @@
 
+
 import React from 'react';
-import { GameState, Step } from '../types';
+import { Step } from '../types';
 import { Button } from './Button';
 import { QuotePanel } from './QuotePanel';
 import { useTheme } from './ThemeContext';
@@ -26,13 +27,11 @@ import { OptionalRulesSelection } from './OptionalRulesSelection';
 interface StepContentProps {
   step: Step;
   stepIndex: number;
-  gameState: GameState;
-  setGameState: React.Dispatch<React.SetStateAction<GameState>>;
   onNext: () => void;
   onPrev: () => void;
 }
 
-export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameState, setGameState, onNext, onPrev }) => {
+export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, onNext, onPrev }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const stepId = step.id;
@@ -44,26 +43,26 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
   const renderStepBody = () => {
     switch (step.type) {
       case 'setup':
-        if (step.id === 'setup-1') return <CaptainSetup gameState={gameState} setGameState={setGameState} onNext={onNext} />;
-        if (step.id === 'setup-2') return <SetupCardSelection gameState={gameState} setGameState={setGameState} onNext={onNext} onBack={onPrev} />;
-        if (step.id === 'setup-3') return <OptionalRulesSelection gameState={gameState} setGameState={setGameState} onStart={onNext} onBack={onPrev} />;
+        if (step.id === 'setup-1') return <CaptainSetup onNext={onNext} />;
+        if (step.id === 'setup-2') return <SetupCardSelection onNext={onNext} onBack={onPrev} />;
+        if (step.id === 'setup-3') return <OptionalRulesSelection onStart={onNext} onBack={onPrev} />;
         return <div className="text-red-500">Unknown Setup Step: {step.id}</div>;
       
       case 'core':
         switch (step.id) {
-          case 'core-1': return <NavDeckStep step={step} gameState={gameState} />;
-          case 'core-2': return <AllianceReaverStep step={step} gameState={gameState} />;
-          case 'core-3': return <DraftStep step={step} gameState={gameState} />;
-          case 'core-4': return <MissionDossierStep step={step} gameState={gameState} setGameState={setGameState} onNext={onNext} onPrev={onPrev} />;
-          case 'core-5': return <ResourcesStep step={step} gameState={gameState} />;
-          case 'core-6': return <JobStep step={step} gameState={gameState} />;
-          case 'core-prime': return <PrimePumpStep step={step} gameState={gameState} />;
+          case 'core-1': return <NavDeckStep step={step} />;
+          case 'core-2': return <AllianceReaverStep step={step} />;
+          case 'core-3': return <DraftStep step={step} />;
+          case 'core-4': return <MissionDossierStep step={step} onNext={onNext} onPrev={onPrev} />;
+          case 'core-5': return <ResourcesStep step={step} />;
+          case 'core-6': return <JobStep step={step} />;
+          case 'core-prime': return <PrimePumpStep step={step} />;
           default: return <div className="text-red-500">Unknown Core Step: {step.id}</div>;
         }
 
       case 'dynamic':
         // Delegate all dynamic logic to the handler
-        return <DynamicStepHandler step={step} gameState={gameState} setGameState={setGameState} />;
+        return <DynamicStepHandler step={step} />;
 
       default:
         return <div className="text-red-500">Unknown Step Type: {step.type}</div>;

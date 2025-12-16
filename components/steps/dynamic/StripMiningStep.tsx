@@ -1,14 +1,16 @@
 
+
 import React from 'react';
-import { GameState, Step } from '../../../types';
+import { Step } from '../../../types';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
+import { useGameState } from '../../../hooks/useGameState';
 
 interface StripMiningStepProps {
   step: Step;
-  gameState: GameState;
 }
 
-export const StripMiningStep: React.FC<StripMiningStepProps> = ({ gameState }) => {
+export const StripMiningStep: React.FC<StripMiningStepProps> = () => {
+  const { gameState } = useGameState();
   return (
     <SpecialRuleBlock source="setupCard" title="The Dinosaur Draft">
       <ol className="list-decimal ml-5 space-y-2 text-sm mt-1">

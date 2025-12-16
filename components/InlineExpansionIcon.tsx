@@ -1,7 +1,8 @@
 
+
 import React, { useState } from 'react';
 import { ExpansionId } from '../types';
-import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../constants';
+import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../data/expansions';
 import { useTheme } from './ThemeContext';
 
 interface InlineExpansionIconProps {

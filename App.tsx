@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
 import { InstallPWA } from './components/InstallPWA';
 import { useTheme } from './components/ThemeContext';
+import { GameStateProvider } from './components/GameStateContext';
 
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
@@ -56,7 +57,9 @@ const App: React.FC = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 relative z-10">
-        <SetupWizard />
+        <GameStateProvider>
+          <SetupWizard />
+        </GameStateProvider>
       </main>
 
       {/* Install Prompt */}

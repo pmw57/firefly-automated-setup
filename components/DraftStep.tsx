@@ -1,19 +1,21 @@
 
+
 import React, { useState, useEffect } from 'react';
-import { GameState, Step, DraftState, DiceResult } from '../types';
-import { STORY_CARDS } from '../constants';
+import { Step, DraftState, DiceResult } from '../types';
+import { STORY_CARDS } from '../data/storyCards';
 import { calculateDraftOutcome } from '../utils';
 import { Button } from './Button';
 import { DiceControls } from './DiceControls';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
+import { useGameState } from '../hooks/useGameState';
 
 interface DraftStepProps {
   step: Step;
-  gameState: GameState;
 }
 
-export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
+export const DraftStep: React.FC<DraftStepProps> = ({ step }) => {
+  const { gameState } = useGameState();
   const [draftState, setDraftState] = useState<DraftState | null>(null);
   const [isManualEntry, setIsManualEntry] = useState(false);
   const { theme } = useTheme();
