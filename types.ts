@@ -126,6 +126,12 @@ export interface ChallengeOption {
   label: string;
 }
 
+export interface AdvancedRuleDef {
+  id: string;
+  title: string;
+  description?: string;
+}
+
 export interface StoryCardDef {
   title: string;
   intro: string;
@@ -137,6 +143,7 @@ export interface StoryCardDef {
   goals?: StoryCardGoal[];
   isSolo?: boolean;
   challengeOptions?: ChallengeOption[];
+  advancedRule?: AdvancedRuleDef;
 }
 
 export type GameEdition = 'original' | 'tenth';
