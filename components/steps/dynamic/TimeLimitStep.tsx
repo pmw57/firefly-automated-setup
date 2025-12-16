@@ -3,7 +3,7 @@ import React from 'react';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 import { useTheme } from '../../ThemeContext';
 
-export const TimeLimitStep: React.FC = () => {
+export const TimeLimitStep = (): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const warningText = isDark ? 'text-red-400' : 'text-red-700';

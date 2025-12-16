@@ -3,7 +3,7 @@ import React from 'react';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 import { useTheme } from '../../ThemeContext';
 
-export const PressuresHighStep: React.FC = () => {
+export const PressuresHighStep = (): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const dangerTitle = isDark ? 'text-red-300' : 'text-red-800';

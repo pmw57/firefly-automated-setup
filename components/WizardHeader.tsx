@@ -1,8 +1,8 @@
 
-
 import React, { useState, useMemo } from 'react';
 import { GameState, Step } from '../types';
-import { getDisplaySetupName } from '../utils';
+// FIX: Changed import path to point to the utils directory index.
+import { getDisplaySetupName } from '../utils/index';
 import { useTheme } from './ThemeContext';
 import { STEP_IDS } from '../constants';
 
@@ -13,7 +13,7 @@ interface WizardHeaderProps {
     currentStepIndex: number;
 }
 
-export const WizardHeader: React.FC<WizardHeaderProps> = ({ gameState, onReset, flow, currentStepIndex }) => {
+export const WizardHeader = ({ gameState, onReset, flow, currentStepIndex }: WizardHeaderProps): React.ReactElement => {
     const [showConfirmReset, setShowConfirmReset] = useState(false);
     const { theme } = useTheme();
     const isDark = theme === 'dark';

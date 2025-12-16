@@ -10,7 +10,7 @@ interface DiceControlsProps {
   allowManualOverride?: boolean;
 }
 
-export const DiceControls: React.FC<DiceControlsProps> = ({ draftState, onRollChange, onSetWinner, allowManualOverride = false }) => {
+export const DiceControls = ({ draftState, onRollChange, onSetWinner, allowManualOverride = false }: DiceControlsProps): React.ReactElement | null => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 

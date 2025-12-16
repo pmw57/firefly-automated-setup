@@ -11,15 +11,12 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
+// FIX: Class components must extend React.Component to have access to `this.props`, `this.setState`, and other lifecycle methods.
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  // FIX: Reverted to using a constructor for state initialization to resolve issues where `this.state`, `this.props`, and `this.setState` were not found.
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = {
-      hasError: false,
-      error: null,
-    };
-  }
+  state: ErrorBoundaryState = {
+    hasError: false,
+    error: null,
+  };
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };

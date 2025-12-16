@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Step, DraftState } from '../types';
 import { STORY_CARDS } from '../data/storyCards';
-import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils';
+// FIX: Changed import path to point to the utils directory index.
+import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/index';
 import { Button } from './Button';
 import { DiceControls } from './DiceControls';
 import { SpecialRuleBlock } from './SpecialRuleBlock';

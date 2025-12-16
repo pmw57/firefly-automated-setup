@@ -2,14 +2,15 @@
 import React from 'react';
 import { GameState } from '../types';
 import { STORY_CARDS, EXPANSIONS_METADATA } from '../constants';
-import { getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../utils';
+// FIX: Changed import path to point to the utils directory index.
+import { getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../utils/index';
 import { useTheme } from './ThemeContext';
 
 interface FinalSummaryProps {
   gameState: GameState;
 }
 
-export const FinalSummary: React.FC<FinalSummaryProps> = ({ gameState }) => {
+export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactElement => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     

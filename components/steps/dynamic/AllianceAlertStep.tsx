@@ -2,7 +2,7 @@
 import React from 'react';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 
-export const AllianceAlertStep: React.FC = () => {
+export const AllianceAlertStep = (): React.ReactElement => {
   return (
     <SpecialRuleBlock source="setupCard" title="Setup Card Override">
       <strong>Alliance Alert Cards:</strong>

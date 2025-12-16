@@ -5,7 +5,7 @@ import { useTheme } from './ThemeContext';
 interface SpecialRuleBlockProps {
   source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
   title?: string;
-  children: React.ReactNode;
+  // FIX: Switched to React.FC, which provides the `children` prop automatically.
 }
 
 export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, title, children }) => {

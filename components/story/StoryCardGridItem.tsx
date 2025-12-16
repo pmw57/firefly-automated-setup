@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { StoryCardDef } from '../types';
-import { InlineExpansionIcon } from './InlineExpansionIcon';
+import { StoryCardDef } from '../../types';
+import { InlineExpansionIcon } from '../InlineExpansionIcon';
 // FIX: Changed import path to point to the utils directory index.
-import { getStoryCardSetupSummary } from '../utils/index';
-import { useTheme } from './ThemeContext';
-import { ExpansionIcon } from './ExpansionIcon';
+import { getStoryCardSetupSummary } from '../../utils/index';
+import { useTheme } from '../ThemeContext';
+import { ExpansionIcon } from '../ExpansionIcon';
 
 interface StoryCardGridItemProps {
   card: StoryCardDef;

@@ -1,5 +1,7 @@
+
 import { describe, it, expect } from 'vitest';
-import { calculateDraftOutcome, determineJobMode, calculateStartingResources } from '../utils';
+// FIX: Changed import path to point to the utils directory index.
+import { calculateDraftOutcome, determineJobMode, calculateStartingResources } from '../utils/index';
 import { DiceResult, StoryCardDef, StoryCardConfig, StepOverrides } from '../types';
 
 describe('utils', () => {

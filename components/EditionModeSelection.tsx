@@ -10,7 +10,7 @@ interface EditionModeSelectionProps {
   onNext: () => void;
 }
 
-export const EditionModeSelection: React.FC<EditionModeSelectionProps> = ({ gameState, setGameState, onNext }) => {
+export const EditionModeSelection = ({ gameState, setGameState, onNext }: EditionModeSelectionProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 

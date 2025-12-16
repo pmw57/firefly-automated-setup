@@ -4,9 +4,9 @@ import { StoryCardDef, AdvancedRuleDef } from '../types';
 import { useGameState } from '../hooks/useGameState';
 import { STORY_CARDS, SETUP_CARD_IDS } from '../constants';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
-import { isStoryCompatible } from '../utils';
+// FIX: Changed import path to point to the utils directory index.
+import { isStoryCompatible } from '../utils/index';
 
-// FIX: Changed from a function declaration to a const with React.FC to resolve typing issues with children props.
 export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { gameState, setGameState } = useGameState();
   

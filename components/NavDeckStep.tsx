@@ -1,19 +1,18 @@
 
-
-
-
 import React, { useMemo } from 'react';
 import { Step } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { determineNavDeckDetails } from '../utils';
+// FIX: Changed import path to point to the utils directory index.
+import { determineNavDeckDetails } from '../utils/index';
 
 interface NavDeckStepProps {
   step: Step;
 }
 
-const ActionText: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+// FIX: Made children optional to resolve type errors.
+const ActionText = ({ children }: { children?: React.ReactNode }): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   return (
@@ -23,7 +22,7 @@ const ActionText: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
-export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step }) => {
+export const NavDeckStep = ({ step }: NavDeckStepProps): React.ReactElement => {
   const { gameState } = useGameState();
   const overrides = useMemo(() => step.overrides || {}, [step.overrides]);
   

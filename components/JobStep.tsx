@@ -1,12 +1,9 @@
 
-
-
-
-
 import React, { useMemo } from 'react';
 import { Step } from '../types';
 import { STORY_CARDS } from '../data/storyCards';
-import { determineJobSetupDetails } from '../utils';
+// FIX: Changed import path to point to the utils directory index.
+import { determineJobSetupDetails } from '../utils/index';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
@@ -16,7 +13,7 @@ interface JobStepProps {
   step: Step;
 }
 
-export const JobStep: React.FC<JobStepProps> = ({ step }) => {
+export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
   const { gameState } = useGameState();
   const overrides = useMemo(() => step.overrides || {}, [step.overrides]);
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];

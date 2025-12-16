@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 import { STEP_QUOTES } from '../data/steps';
 import { useTheme } from './ThemeContext';
@@ -9,7 +8,7 @@ interface QuotePanelProps {
   className?: string;
 }
 
-export const QuotePanel: React.FC<QuotePanelProps> = ({ stepId, className = '' }) => {
+export const QuotePanel = ({ stepId, className = '' }: QuotePanelProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const quote = STEP_QUOTES[stepId] || { text: "We're just happy to be doing good works.", author: "Shepherd Book" };

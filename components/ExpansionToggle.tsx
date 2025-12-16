@@ -21,6 +21,7 @@ interface ExpansionToggleProps {
   onToggle: (id: keyof Expansions) => void;
 }
 
+// FIX: Using React.FC correctly types the component for JSX transformation, resolving `key` prop errors.
 export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({ 
   id, label, active, themeColor, description, onToggle
 }) => {
