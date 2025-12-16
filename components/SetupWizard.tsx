@@ -55,6 +55,16 @@ const FinalSummary: React.FC<{ gameState: GameState }> = ({ gameState }) => {
     if (gameState.soloOptions?.noSureThings) activeOptionalRules.push("No Sure Things");
     if (gameState.soloOptions?.shesTrouble) activeOptionalRules.push("She's Trouble");
     if (gameState.soloOptions?.recipeForUnpleasantness) activeOptionalRules.push("Recipe For Unpleasantness");
+    if (gameState.optionalRules?.optionalShipUpgrades) activeOptionalRules.push("Ship Upgrades");
+    
+    // Disgruntled Die
+    const disgruntledDieMode = gameState.optionalRules?.disgruntledDie || 'standard';
+    const disgruntledLabels: Record<string, string> = {
+        standard: "Standard (Just a 1)",
+        disgruntle: "Disgruntled Crew",
+        auto_fail: "Automatic Failure",
+        success_at_cost: "Success At Cost"
+    };
 
     // Styles
     const summaryBg = isDark ? 'bg-black/20' : 'bg-amber-50/50';
@@ -107,6 +117,13 @@ const FinalSummary: React.FC<{ gameState: GameState }> = ({ gameState }) => {
                      <div>
                         <div className={labelClass}>Solo Timer</div>
                         <div className={valueClass}>{timerSummary}</div>
+                     </div>
+                 )}
+
+                 {disgruntledDieMode !== 'standard' && (
+                     <div>
+                         <div className={labelClass}>Disgruntled Die</div>
+                         <div className={valueClass}>{disgruntledLabels[disgruntledDieMode]}</div>
                      </div>
                  )}
 
@@ -169,6 +186,7 @@ const SetupWizard: React.FC = () => {
               // Safely merge nested objects that might be missing in older saved states
               timerConfig: { ...defaults.timerConfig, ...(loadedState.timerConfig || {}) },
               soloOptions: { ...defaults.soloOptions, ...(loadedState.soloOptions || {}) },
+              optionalRules: { ...defaults.optionalRules, ...(loadedState.optionalRules || {}) },
               expansions: { ...defaults.expansions, ...(loadedState.expansions || {}) },
               challengeOptions: { ...defaults.challengeOptions, ...(loadedState.challengeOptions || {}) }
           };

@@ -60,7 +60,7 @@ export const SoloRulesSelection: React.FC<SoloRulesSelectionProps> = ({ gameStat
 
         <div className="space-y-4 mb-8">
             <p className={`text-sm ${textSub} mb-4`}>
-                Customize your solo experience with these optional modules.
+                Customize your solo experience with these optional rules.
             </p>
 
             {/* No Sure Things */}

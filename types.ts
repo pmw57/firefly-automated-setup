@@ -154,6 +154,13 @@ export interface SoloOptions {
   recipeForUnpleasantness: boolean;
 }
 
+export type DisgruntledDieOption = 'standard' | 'disgruntle' | 'auto_fail' | 'success_at_cost';
+
+export interface OptionalRules {
+    disgruntledDie: DisgruntledDieOption;
+    optionalShipUpgrades: boolean;
+}
+
 export interface GameState {
   gameEdition: GameEdition;
   gameMode: GameMode;
@@ -167,6 +174,7 @@ export interface GameState {
   challengeOptions: Record<string, boolean>; // ID -> isEnabled
   timerConfig: TimerConfig;
   soloOptions: SoloOptions;
+  optionalRules: OptionalRules;
   expansions: Expansions;
 }
 

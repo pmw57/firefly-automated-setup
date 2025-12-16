@@ -199,6 +199,10 @@ export const getDefaultGameState = (): GameState => {
         shesTrouble: false,
         recipeForUnpleasantness: false
     },
+    optionalRules: {
+        disgruntledDie: 'standard',
+        optionalShipUpgrades: true
+    },
     expansions: initialExpansions
   };
 };

@@ -22,7 +22,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
   const has10th = gameState.expansions.tenth;
   
   const isFlyingSoloActive = gameState.setupCardId === 'FlyingSolo';
-  const totalParts = isFlyingSoloActive ? 3 : 2;
+  const totalParts = (isFlyingSoloActive || has10th) ? 3 : 2;
   const isFlyingSoloEligible = isSolo && has10th;
 
   // Retrieve the Flying Solo card definition
@@ -113,6 +113,8 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
   const fsTitle = isDark 
      ? (isFlyingSoloActive ? 'text-indigo-300' : 'text-gray-400')
      : (isFlyingSoloActive ? 'text-indigo-900' : 'text-gray-600');
+
+  const showOptionalRules = isFlyingSoloActive || has10th;
 
   return (
     <div className={`${containerBg} backdrop-blur-md rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in transition-all duration-300`}>
@@ -216,7 +218,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameStat
           ← Back
         </Button>
         <Button onClick={onNext} fullWidth className="w-2/3 text-xl py-4 border-b-4 border-[#450a0a]">
-          {isFlyingSoloActive ? "Next: Optional Rules →" : "Launch Setup Sequence"}
+          {showOptionalRules ? "Next: Optional Rules →" : "Launch Setup Sequence"}
         </Button>
       </div>
     </div>
