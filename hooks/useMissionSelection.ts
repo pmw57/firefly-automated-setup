@@ -1,3 +1,4 @@
+
 import { createContext, useContext } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types';
 
@@ -9,7 +10,7 @@ export interface MissionSelectionContextType {
   subStep: number;
   
   // Derived Data
-  activeStoryCard: StoryCardDef;
+  activeStoryCard: StoryCardDef | undefined;
   validStories: StoryCardDef[];
   filteredStories: StoryCardDef[];
   availableAdvancedRules: AdvancedRuleDef[];

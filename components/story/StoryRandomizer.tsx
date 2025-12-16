@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '../Button';
 import { StoryCardGridItem } from '../StoryCardGridItem';
@@ -61,7 +62,7 @@ export const StoryRandomizer: React.FC<StoryRandomizerProps> = ({ onSelect }) =>
               <StoryCardGridItem 
                 key={card.title}
                 card={card}
-                isSelected={activeStoryCard.title === card.title}
+                isSelected={activeStoryCard?.title === card.title}
                 onClick={() => onSelect(card.title)}
                 isShortList={true}
               />

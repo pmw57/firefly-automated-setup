@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { StoryCardGridItem } from '../StoryCardGridItem';
 import { Button } from '../Button';
@@ -69,7 +70,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
               <StoryCardGridItem 
                 key={card.title}
                 card={card}
-                isSelected={activeStoryCard.title === card.title}
+                isSelected={activeStoryCard?.title === card.title}
                 onClick={() => onSelect(card.title)}
               />
             ))}
