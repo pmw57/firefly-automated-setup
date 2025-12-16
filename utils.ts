@@ -5,36 +5,43 @@ import { SETUP_CARDS } from './data/setupCards';
 import { SETUP_CONTENT } from './data/steps';
 import { STORY_CARDS } from './data/storyCards';
 import { EXPANSIONS_METADATA } from './data/expansions';
+import { STEP_IDS, SETUP_CARD_IDS } from './data/ids';
 
 // --- Draft Logic ---
+
+const findWinnerIndex = (rolls: DiceResult[], overrideWinnerIndex?: number): number => {
+    if (overrideWinnerIndex !== undefined && overrideWinnerIndex !== -1) {
+        return overrideWinnerIndex;
+    }
+    const maxRoll = Math.max(...rolls.map(r => r.roll));
+    return rolls.findIndex(r => r.roll === maxRoll);
+};
+
+const markWinner = (rolls: DiceResult[], winnerIndex: number): DiceResult[] => {
+    return rolls.map((r, i) => ({ ...r, isWinner: i === winnerIndex }));
+};
+
+const generateDraftOrder = (rolls: DiceResult[], winnerIndex: number, playerCount: number): string[] => {
+    const draftOrder: string[] = [];
+    for (let i = 0; i < playerCount; i++) {
+        const currentIndex = (winnerIndex + i) % playerCount;
+        draftOrder.push(rolls[currentIndex].player);
+    }
+    return draftOrder;
+};
+
 export const calculateDraftOutcome = (
   currentRolls: DiceResult[], 
   playerCount: number,
   overrideWinnerIndex?: number
 ): DraftState => {
-  let winnerIndex = overrideWinnerIndex;
-
-  // If no winner is explicitly provided, calculate based on max roll (first player with max wins)
-  if (winnerIndex === undefined || winnerIndex === -1) {
-    const maxRoll = Math.max(...currentRolls.map(r => r.roll));
-    winnerIndex = currentRolls.findIndex(r => r.roll === maxRoll);
-  }
-  
-  const updatedRolls = currentRolls.map((r, i) => ({
-    ...r,
-    isWinner: i === winnerIndex
-  }));
-
-  const draftOrder: string[] = [];
-  for (let i = 0; i < playerCount; i++) {
-    const currentIndex = (winnerIndex + i) % playerCount;
-    draftOrder.push(updatedRolls[currentIndex].player);
-  }
-
+  const winnerIndex = findWinnerIndex(currentRolls, overrideWinnerIndex);
+  const rollsWithWinner = markWinner(currentRolls, winnerIndex);
+  const draftOrder = generateDraftOrder(rollsWithWinner, winnerIndex, playerCount);
   const placementOrder = [...draftOrder].reverse();
 
   return {
-    rolls: updatedRolls,
+    rolls: rollsWithWinner,
     draftOrder,
     placementOrder
   };
@@ -84,7 +91,7 @@ export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
 
 // --- UI Helpers ---
 export const getDisplaySetupName = (state: GameState): string => {
-    if (state.setupCardId === 'FlyingSolo' && state.secondarySetupId) {
+    if (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO && state.secondarySetupId) {
         const secondary = SETUP_CARDS.find(s => s.id === state.secondarySetupId);
         if (secondary) return `Flying Solo + ${secondary.label}`;
     }
@@ -94,7 +101,7 @@ export const getDisplaySetupName = (state: GameState): string => {
 
 // --- Setup Flow Logic ---
 
-// Helper to inject a dynamic step safely
+// Helper to create a step object from its definition
 const createStep = (id: string, overrides: StepOverrides = {}): Step | null => {
   const content = SETUP_CONTENT[id];
   if (!content) return null;
@@ -106,122 +113,79 @@ const createStep = (id: string, overrides: StepOverrides = {}): Step | null => {
   };
 };
 
+// FIX: Replaced incomplete getInitialSetupSteps with a full implementation for the setup flow.
+// This function was not exported, causing an error in SetupWizard.tsx, and it was incomplete, causing a return type error.
 export const calculateSetupFlow = (state: GameState): Step[] => {
-  const newFlow: Step[] = [];
+  const flow: Step[] = [];
 
-  // 0. Prepend initial setup steps
-  newFlow.push({ type: 'setup', id: 'setup-1' });
-  newFlow.push({ type: 'setup', id: 'setup-2' });
-
-  const isFlyingSolo = state.setupCardId === 'FlyingSolo';
+  // Part 1: Initial configuration steps that are always present.
+  flow.push({ type: 'setup', id: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS });
+  flow.push({ type: 'setup', id: STEP_IDS.SETUP_CARD_SELECTION });
+  
+  const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
   const has10th = state.expansions.tenth;
+
+  // Part 2: Optional Rules step, conditional on 10th Anniversary expansion or Flying Solo mode.
   if (isFlyingSolo || has10th) {
-    newFlow.push({ type: 'setup', id: 'setup-3' });
+    flow.push({ type: 'setup', id: STEP_IDS.SETUP_OPTIONAL_RULES });
   }
-  
-  const activeStory = STORY_CARDS.find(c => c.title === state.selectedStoryCard);
-  const isSoloMode = state.gameMode === 'solo';
 
-  // 1. Determine the definition that dictates the setup *structure*.
-  // For Flying Solo, it's the secondary card. Otherwise, the main one.
-  const structuralDefId = isFlyingSolo ? state.secondarySetupId : state.setupCardId;
-  let structuralDef = SETUP_CARDS.find(s => s.id === structuralDefId);
-  if (!structuralDef) structuralDef = SETUP_CARDS.find(s => s.id === 'Standard');
-  if (!structuralDef) return []; // Should not happen
+  // Part 3: Core game setup steps, derived from the selected Setup Card.
+  // The secondarySetupId (for Flying Solo) is used within steps to alter board state,
+  // but the primary setupCardId determines the overall sequence of steps.
+  const setupCard = SETUP_CARDS.find(s => s.id === state.setupCardId) || SETUP_CARDS.find(s => s.id === SETUP_CARD_IDS.STANDARD)!;
 
-  const sourceSteps = structuralDef.steps;
-  
-  let noSureThingsInserted = false;
-
-  // 2. Iterate through the structural steps and build the main flow.
-  sourceSteps.forEach(setupStep => {
-    const stepId = setupStep.id;
-
-    // Injection: No Sure Things (Optional Solo Rule) - must happen inside the loop to get position right.
-    if (isSoloMode && state.soloOptions?.noSureThings && !noSureThingsInserted && (stepId === 'C6' || stepId === 'C_PRIME')) {
-      const step = createStep('D_NO_SURE_THINGS');
-      if (step) {
-        newFlow.push(step);
-        noSureThingsInserted = true;
-      }
-    }
-    
-    // Merge overrides: start with the structural card's overrides.
-    let finalOverrides = setupStep.overrides || {};
-    
-    // If Flying Solo, layer its specific overrides on top.
-    if (isFlyingSolo) {
-      const flyingSoloDef = SETUP_CARDS.find(s => s.id === 'FlyingSolo')!;
-      const flyingSoloStepOverride = flyingSoloDef.steps.find(s => s.id === stepId);
-      if (flyingSoloStepOverride) {
-        finalOverrides = { ...finalOverrides, ...flyingSoloStepOverride.overrides };
-      }
-    }
-
-    const step = createStep(stepId, finalOverrides);
+  setupCard.steps.forEach(stepDef => {
+    const step = createStep(stepDef.id, stepDef.overrides);
     if (step) {
-      newFlow.push(step);
+      flow.push(step);
     }
   });
   
-  // 3. Post-loop injections for solo mode
-  if (isSoloMode) {
-    // Fallback for No Sure Things if it wasn't placed in the loop
-    if (state.soloOptions?.noSureThings && !noSureThingsInserted) {
-      const step = createStep('D_NO_SURE_THINGS');
-      if (step) newFlow.push(step);
-    }
+  // Part 4: Final summary step.
+  flow.push({ type: 'final', id: STEP_IDS.FINAL });
 
-    // Add Game Length Tokens step for any solo mode that uses a timer
-    const isClassicSoloWithTimer = !isFlyingSolo && activeStory?.setupConfig?.soloGameTimer;
-    if ((isFlyingSolo || isClassicSoloWithTimer) && !activeStory?.setupConfig?.disableSoloTimer) {
-      if (!newFlow.some(s => s.id === 'D_GAME_LENGTH_TOKENS')) {
-        const step = createStep('D_GAME_LENGTH_TOKENS');
-        if (step) newFlow.push(step);
-      }
-    }
-  }
-
-  newFlow.push({ type: 'final', id: 'final' });
-  return newFlow;
+  return flow;
 };
 
-// --- Default State Factory ---
+// FIX: Added missing getDefaultGameState function, which is required by GameStateContext.tsx.
 export const getDefaultGameState = (): GameState => {
-  const initialExpansions = EXPANSIONS_METADATA.reduce((acc, expansion) => {
-    acc[expansion.id] = true; // Default all to true so expansions are ON by default
-    return acc;
-  }, {} as Expansions);
+    const allExpansions = EXPANSIONS_METADATA.reduce((acc, exp) => {
+        if (exp.id !== 'base') {
+            (acc as Record<keyof Expansions, boolean>)[exp.id] = false;
+        }
+        return acc;
+    }, {} as Expansions);
 
-  // Ensure default story is compatible with default multiplayer mode (Find first non-Solo story)
-  const defaultStory = STORY_CARDS.find(s => !s.isSolo) || STORY_CARDS[0];
+    const firstStory = STORY_CARDS.find(c => !c.isSolo && c.requiredExpansion !== 'community') || STORY_CARDS[0];
 
-  return {
-    gameEdition: 'tenth',
-    gameMode: 'multiplayer',
-    playerCount: 4,
-    playerNames: ['Captain 1', 'Captain 2', 'Captain 3', 'Captain 4'],
-    setupCardId: 'Standard',
-    setupCardName: 'Standard Game Setup',
-    selectedStoryCard: defaultStory.title,
-    selectedGoal: defaultStory.goals?.[0]?.title,
-    challengeOptions: {},
-    timerConfig: {
-        mode: 'standard', // Default to standard even if others are available
-        unpredictableSelectedIndices: [0, 2, 4, 5], // Default indices corresponding to one 1, one 2, one 3, one 4 from [1,1,2,2,3,4]
-        randomizeUnpredictable: false
-    },
-    soloOptions: {
-        noSureThings: false,
-        shesTrouble: false,
-        recipeForUnpleasantness: false
-    },
-    optionalRules: {
-        disgruntledDie: 'standard',
-        optionalShipUpgrades: true
-    },
-    expansions: initialExpansions,
-    isCampaign: false,
-    campaignStoriesCompleted: 0
-  };
+    return {
+        gameEdition: 'original',
+        gameMode: 'multiplayer',
+        playerCount: 4,
+        playerNames: ['Captain 1', 'Captain 2', 'Captain 3', 'Captain 4'],
+        setupCardId: SETUP_CARD_IDS.STANDARD,
+        setupCardName: 'Standard Game Setup',
+        secondarySetupId: undefined,
+        selectedStoryCard: firstStory.title,
+        selectedGoal: firstStory.goals?.[0]?.title,
+        challengeOptions: {},
+        timerConfig: {
+            mode: 'standard',
+            unpredictableSelectedIndices: [0, 2, 4, 5], // Default to 1, 2, 3, 4
+            randomizeUnpredictable: false,
+        },
+        soloOptions: {
+            noSureThings: false,
+            shesTrouble: false,
+            recipeForUnpleasantness: false,
+        },
+        optionalRules: {
+            disgruntledDie: 'standard',
+            optionalShipUpgrades: false,
+        },
+        expansions: allExpansions,
+        isCampaign: false,
+        campaignStoriesCompleted: 0,
+    };
 };

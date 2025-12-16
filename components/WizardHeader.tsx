@@ -1,8 +1,10 @@
 
+
 import React, { useState, useMemo } from 'react';
 import { GameState, Step } from '../types';
 import { getDisplaySetupName } from '../utils';
 import { useTheme } from './ThemeContext';
+import { STEP_IDS } from '../constants';
 
 interface WizardHeaderProps {
     gameState: GameState;
@@ -19,8 +21,8 @@ export const WizardHeader: React.FC<WizardHeaderProps> = ({ gameState, onReset, 
     const displaySetupName = getDisplaySetupName(gameState);
     
     const { showSetupCard, showStoryCard, setupCardStepIndex } = useMemo(() => {
-        const setupCardIdx = flow.findIndex(step => step.id === 'setup-2');
-        const storyCardIdx = flow.findIndex(step => step.id === 'core-4');
+        const setupCardIdx = flow.findIndex(step => step.id === STEP_IDS.SETUP_CARD_SELECTION);
+        const storyCardIdx = flow.findIndex(step => step.id === STEP_IDS.CORE_MISSION);
     
         const shouldShowSetup = setupCardIdx !== -1 && currentStepIndex >= setupCardIdx;
         const shouldShowStory = storyCardIdx !== -1 && currentStepIndex >= storyCardIdx;

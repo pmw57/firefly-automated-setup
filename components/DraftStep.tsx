@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useEffect } from 'react';
 import { Step, DraftState, DiceResult } from '../types';
 import { STORY_CARDS } from '../data/storyCards';
@@ -9,6 +10,7 @@ import { DiceControls } from './DiceControls';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
+import { STEP_IDS, CHALLENGE_IDS, STORY_TITLES } from '../constants';
 
 interface DraftStepProps {
   step: Step;
@@ -93,11 +95,11 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step }) => {
     setDraftState(newState);
   };
 
-  const isHavenDraft = step.id.includes('D_HAVEN_DRAFT');
+  const isHavenDraft = step.id.includes(STEP_IDS.D_HAVEN_DRAFT);
   
   // Logic for Heroes & Misfits custom setup challenge
-  const isHeroesCustomSetup = !!gameState.challengeOptions['heroes_custom_setup'];
-  const isRacingPaleHorse = activeStoryCard.title === "Racing A Pale Horse";
+  const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
+  const isRacingPaleHorse = activeStoryCard.title === STORY_TITLES.RACING_A_PALE_HORSE;
 
   const isPersephoneStart = activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' && !isHeroesCustomSetup;
   const isLondiniumStart = activeStoryCard.setupConfig?.startAtLondinium;

@@ -1,9 +1,11 @@
 
 
+
 import React from 'react';
 import { Step } from '../types';
 import { JobStep } from './JobStep';
 import { DraftStep } from './DraftStep';
+import { STEP_IDS } from '../constants';
 
 // Import newly created individual step components
 import { NoSureThingsStep } from './steps/dynamic/NoSureThingsStep';
@@ -24,39 +26,39 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step }) 
   const { id } = step;
 
   // --- Core Logic Steps Delegated ---
-  if (id.includes('D_RIM_JOBS')) {
+  if (id.includes(STEP_IDS.D_RIM_JOBS)) {
     return <JobStep step={step} />;
   }
-  if (id.includes('D_HAVEN_DRAFT')) {
+  if (id.includes(STEP_IDS.D_HAVEN_DRAFT)) {
     return <DraftStep step={step} />;
   }
 
   // --- Individual Dynamic Steps ---
-  if (id.includes('D_NO_SURE_THINGS')) {
+  if (id.includes(STEP_IDS.D_NO_SURE_THINGS)) {
     return <NoSureThingsStep />;
   }
-  if (id.includes('D_GAME_LENGTH_TOKENS')) {
+  if (id.includes(STEP_IDS.D_GAME_LENGTH_TOKENS)) {
     return <GameLengthTokensStep step={step} />;
   }
-  if (id.includes('D_TIME_LIMIT')) {
+  if (id.includes(STEP_IDS.D_TIME_LIMIT)) {
     return <TimeLimitStep />;
   }
-  if (id.includes('D_SHUTTLE')) {
+  if (id.includes(STEP_IDS.D_SHUTTLE)) {
     return <ShuttleDraftStep />;
   }
-  if (id.includes('D_BC_CAPITOL')) {
+  if (id.includes(STEP_IDS.D_BC_CAPITOL)) {
     return <StartingCapitolStep step={step} />;
   }
-  if (id.includes('D_LOCAL_HEROES')) {
+  if (id.includes(STEP_IDS.D_LOCAL_HEROES)) {
     return <LocalHeroesStep />;
   }
-  if (id.includes('D_ALLIANCE_ALERT')) {
+  if (id.includes(STEP_IDS.D_ALLIANCE_ALERT)) {
     return <AllianceAlertStep />;
   }
-  if (id.includes('D_PRESSURES_HIGH')) {
+  if (id.includes(STEP_IDS.D_PRESSURES_HIGH)) {
     return <PressuresHighStep />;
   }
-  if (id.includes('D_STRIP_MINING')) {
+  if (id.includes(STEP_IDS.D_STRIP_MINING)) {
     return <StripMiningStep step={step} />;
   }
 

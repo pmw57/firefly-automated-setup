@@ -1,8 +1,10 @@
+
 import React, { useState, useMemo, useCallback } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types';
 import { useGameState } from '../hooks/useGameState';
 import { STORY_CARDS } from '../data/storyCards';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
+import { SETUP_CARD_IDS, STORY_TITLES } from '../constants';
 
 const SOLO_EXCLUDED_STORIES = [
   "The Great Recession",
@@ -29,15 +31,15 @@ export function MissionSelectionProvider({ children }: { children: React.ReactNo
   );
 
   const isClassicSolo = useMemo(() => 
-    gameState.gameMode === 'solo' && gameState.setupCardId !== 'FlyingSolo',
+    gameState.gameMode === 'solo' && gameState.setupCardId !== SETUP_CARD_IDS.FLYING_SOLO,
     [gameState.gameMode, gameState.setupCardId]
   );
 
   const validStories = useMemo(() => STORY_CARDS.filter(card => {
-    if (isClassicSolo) return card.title === "Awful Lonely In The Big Black";
+    if (isClassicSolo) return card.title === STORY_TITLES.AWFUL_LONELY;
     if (gameState.gameMode === 'multiplayer' && card.isSolo) return false;
     if (gameState.gameMode === 'solo' && SOLO_EXCLUDED_STORIES.includes(card.title)) return false;
-    if (card.title === "Slaying The Dragon" && gameState.playerCount !== 2) return false;
+    if (card.title === STORY_TITLES.SLAYING_THE_DRAGON && gameState.playerCount !== 2) return false;
     
     const mainReq = !card.requiredExpansion || gameState.expansions[card.requiredExpansion];
     const addReq = !card.additionalRequirements || card.additionalRequirements.every(req => gameState.expansions[req]);

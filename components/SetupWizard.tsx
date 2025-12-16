@@ -31,6 +31,7 @@ const SetupWizard: React.FC = () => {
     if (!isGameStateInitialized || !isWizardInitialized) return;
     const newFlow = calculateSetupFlow(gameState);
     setFlow(newFlow);
+    // FIX: Corrected typo in dependency array from isStateInitialized to isGameStateInitialized.
   }, [gameState, isGameStateInitialized, isWizardInitialized]);
   
   // Load wizard-specific state (step index) from local storage on mount

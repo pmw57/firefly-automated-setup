@@ -1,10 +1,12 @@
 
 
+
 import React from 'react';
 import { Step } from '../types';
 import { Button } from './Button';
 import { QuotePanel } from './QuotePanel';
 import { useTheme } from './ThemeContext';
+import { STEP_IDS } from '../constants';
 
 // Core Steps
 import { NavDeckStep } from './NavDeckStep';
@@ -37,26 +39,26 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, onNex
   const stepId = step.id;
 
   // MissionDossierStep has its own nav buttons
-  const isMissionDossier = step.id === 'core-4';
+  const isMissionDossier = step.id === STEP_IDS.CORE_MISSION;
 
   // Render logic based on Step Type and ID
   const renderStepBody = () => {
     switch (step.type) {
       case 'setup':
-        if (step.id === 'setup-1') return <CaptainSetup onNext={onNext} />;
-        if (step.id === 'setup-2') return <SetupCardSelection onNext={onNext} onBack={onPrev} />;
-        if (step.id === 'setup-3') return <OptionalRulesSelection onStart={onNext} onBack={onPrev} />;
+        if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) return <CaptainSetup onNext={onNext} />;
+        if (step.id === STEP_IDS.SETUP_CARD_SELECTION) return <SetupCardSelection onNext={onNext} onBack={onPrev} />;
+        if (step.id === STEP_IDS.SETUP_OPTIONAL_RULES) return <OptionalRulesSelection onStart={onNext} onBack={onPrev} />;
         return <div className="text-red-500">Unknown Setup Step: {step.id}</div>;
       
       case 'core':
         switch (step.id) {
-          case 'core-1': return <NavDeckStep step={step} />;
-          case 'core-2': return <AllianceReaverStep step={step} />;
-          case 'core-3': return <DraftStep step={step} />;
-          case 'core-4': return <MissionDossierStep step={step} onNext={onNext} onPrev={onPrev} />;
-          case 'core-5': return <ResourcesStep step={step} />;
-          case 'core-6': return <JobStep step={step} />;
-          case 'core-prime': return <PrimePumpStep step={step} />;
+          case STEP_IDS.CORE_NAV_DECKS: return <NavDeckStep step={step} />;
+          case STEP_IDS.CORE_ALLIANCE_REAVER: return <AllianceReaverStep step={step} />;
+          case STEP_IDS.CORE_DRAFT: return <DraftStep step={step} />;
+          case STEP_IDS.CORE_MISSION: return <MissionDossierStep step={step} onNext={onNext} onPrev={onPrev} />;
+          case STEP_IDS.CORE_RESOURCES: return <ResourcesStep step={step} />;
+          case STEP_IDS.CORE_JOBS: return <JobStep step={step} />;
+          case STEP_IDS.CORE_PRIME_PUMP: return <PrimePumpStep step={step} />;
           default: return <div className="text-red-500">Unknown Core Step: {step.id}</div>;
         }
 
@@ -76,9 +78,9 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, onNex
   
   // Custom titles for setup steps that don't have them in constants
   const getStepTitle = () => {
-    if (step.id === 'setup-1') return 'Captain & Expansions';
-    if (step.id === 'setup-2') return 'Setup Card';
-    if (step.id === 'setup-3') return 'Optional Rules';
+    if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) return 'Captain & Expansions';
+    if (step.id === STEP_IDS.SETUP_CARD_SELECTION) return 'Setup Card';
+    if (step.id === STEP_IDS.SETUP_OPTIONAL_RULES) return 'Optional Rules';
     return step.data?.title || step.id;
   };
 
