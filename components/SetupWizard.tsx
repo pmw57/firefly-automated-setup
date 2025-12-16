@@ -130,7 +130,7 @@ const SetupWizard: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto" key={resetKey}>
-      <WizardHeader gameState={gameState} onReset={performReset} />
+      <WizardHeader gameState={gameState} onReset={performReset} flow={flow} currentStepIndex={currentStepIndex} />
 
       <ProgressBar current={currentStepIndex + 1} total={flow.length} />
 

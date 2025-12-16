@@ -184,6 +184,8 @@ export interface GameState {
   soloOptions: SoloOptions;
   optionalRules: OptionalRules;
   expansions: Expansions;
+  isCampaign: boolean;
+  campaignStoriesCompleted: number;
 }
 
 export interface Step {

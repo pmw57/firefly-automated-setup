@@ -20,8 +20,6 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
   const isSolo = gameState.gameMode === 'solo';
   const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
   
-  // Optional Rules (Step 3) are available if 10th Anniversary is active OR Flying Solo is active
-  // This applies to both Solo and Multiplayer games if they use the 10th Anniversary expansion.
   const totalParts = gameState.expansions.tenth || isFlyingSolo ? 3 : 2;
 
   const updatePlayerCount = (newCount: number) => {
@@ -30,7 +28,6 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
     setGameState(prev => {
       const newMode = safeCount === 1 ? 'solo' : 'multiplayer';
       
-      // Update names array
       const newNames = [...prev.playerNames];
       if (safeCount > newNames.length) {
         for (let i = newNames.length; i < safeCount; i++) {
@@ -40,7 +37,6 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
         newNames.length = safeCount;
       }
       
-      // Reset FlyingSolo if switching to multiplayer
       let nextSetupCardId = prev.setupCardId;
       let nextSetupCardName = prev.setupCardName;
       let nextSecondary = prev.secondarySetupId;
@@ -51,20 +47,18 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
           nextSecondary = undefined;
       }
 
-      // Check Story Card Compatibility
       let nextSelectedStory = prev.selectedStoryCard;
       let nextSelectedGoal = prev.selectedGoal;
       let nextChallengeOptions = prev.challengeOptions;
 
       const currentStoryDef = STORY_CARDS.find(c => c.title === prev.selectedStoryCard);
 
-      // If switching to multiplayer and current card is Solo-only, reset to default multiplayer story
       if (newMode === 'multiplayer' && currentStoryDef?.isSolo) {
           const defaultMulti = STORY_CARDS.find(c => !c.isSolo);
           if (defaultMulti) {
              nextSelectedStory = defaultMulti.title;
              nextSelectedGoal = defaultMulti.goals?.[0]?.title;
-             nextChallengeOptions = {}; // Reset challenges
+             nextChallengeOptions = {};
           }
       }
       
@@ -78,7 +72,8 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
           secondarySetupId: nextSecondary,
           selectedStoryCard: nextSelectedStory,
           selectedGoal: nextSelectedGoal,
-          challengeOptions: nextChallengeOptions
+          challengeOptions: nextChallengeOptions,
+          isCampaign: newMode === 'multiplayer' ? false : prev.isCampaign // Reset campaign for multiplayer
       };
     });
   };
@@ -98,26 +93,22 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
         [key]: !prev.expansions[key]
       };
 
-      // 10th Anniversary Logic
       let nextEdition = prev.gameEdition;
       if (key === 'tenth') {
         nextEdition = nextExpansions.tenth ? 'tenth' : 'original';
       }
 
-      // Check Setup Card Requirements
       const currentSetup = SETUP_CARDS.find(s => s.id === prev.setupCardId);
       let nextSetupCardId = prev.setupCardId;
       let nextSetupCardName = prev.setupCardName;
       let nextSecondary = prev.secondarySetupId;
 
-      // Reset if requirement missing
       if (currentSetup?.requiredExpansion && !nextExpansions[currentSetup.requiredExpansion]) {
           nextSetupCardId = 'Standard';
           nextSetupCardName = 'Standard Game Setup';
           nextSecondary = undefined;
       }
       
-      // Reset Flying Solo if 10th is disabled
       if (key === 'tenth' && !nextExpansions.tenth && prev.setupCardId === 'FlyingSolo') {
           nextSetupCardId = 'Standard';
           nextSetupCardName = 'Standard Game Setup';
@@ -135,8 +126,22 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
     });
   };
 
+  const handleCampaignToggle = () => {
+      setGameState(prev => ({
+          ...prev,
+          isCampaign: !prev.isCampaign
+      }));
+  };
+
+  const handleCampaignStoriesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const num = parseInt(e.target.value, 10);
+      setGameState(prev => ({
+          ...prev,
+          campaignStoriesCompleted: isNaN(num) || num < 0 ? 0 : num
+      }));
+  };
+
   const handleNextStep = () => {
-    // Default to Flying Solo if eligible and not already set
     if (isSolo && gameState.expansions.tenth) {
         setGameState(prev => {
             if (!prev.setupCardId || prev.setupCardId === 'Standard') {
@@ -165,7 +170,6 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
 
   return (
     <div className={`bg-metal rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in relative overflow-hidden transition-all duration-300`}>
-      {/* Decorative bolts omitted for brevity but preserved in rendering if needed by parent styles */}
       
       <div className={`flex justify-between items-center mb-6 border-b-2 ${inputBorder} pb-2 relative z-10`}>
          <h2 className={`text-2xl font-bold font-western drop-shadow-sm ${textColor}`}>Mission Configuration</h2>
@@ -216,6 +220,41 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
           ))}
         </div>
       </div>
+      
+      {/* Campaign Mode Section */}
+      {isSolo && (
+          <div className="mb-8 relative z-10">
+            <label className={`block font-bold mb-2 uppercase tracking-wide text-xs ${labelColor}`}>Campaign Mode</label>
+            <div className={`${isDark ? 'bg-black/30' : 'bg-white/50'} p-4 rounded-lg border ${containerBorder} shadow-inner`}>
+                <div 
+                    onClick={handleCampaignToggle}
+                    className="flex justify-between items-center cursor-pointer"
+                >
+                    <label htmlFor="campaign-toggle" className={`font-bold ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Continuing a Solo Campaign?
+                    </label>
+                    <div className={`w-12 h-6 rounded-full p-1 transition-colors duration-300 ease-in-out flex items-center ${gameState.isCampaign ? 'bg-green-600' : (isDark ? 'bg-zinc-600' : 'bg-gray-300')}`}>
+                        <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${gameState.isCampaign ? 'translate-x-6' : 'translate-x-0'}`} />
+                    </div>
+                </div>
+                {gameState.isCampaign && (
+                    <div className="mt-4 pt-4 border-t border-dashed border-gray-300 dark:border-zinc-700 animate-fade-in">
+                        <label htmlFor="campaign-stories" className={`block text-sm font-medium mb-2 ${labelColor}`}>
+                            How many stories have you completed in this campaign?
+                        </label>
+                        <input
+                            id="campaign-stories"
+                            type="number"
+                            min="0"
+                            value={gameState.campaignStoriesCompleted}
+                            onChange={handleCampaignStoriesChange}
+                            className={`w-24 p-2 border ${inputBorder} rounded text-center focus:ring-2 focus:ring-amber-500 focus:border-amber-500 focus:outline-none ${inputBg} shadow-sm font-medium ${inputText} transition-colors`}
+                        />
+                    </div>
+                )}
+            </div>
+        </div>
+      )}
 
       {/* Expansions */}
       <div className="mb-8 relative z-10">

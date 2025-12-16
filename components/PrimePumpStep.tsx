@@ -18,6 +18,7 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step, gameState })
   const { soloCrewDraft } = activeStoryCard.setupConfig || {};
   const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
   const isSlayingTheDragon = activeStoryCard.title === "Slaying The Dragon";
+  const { isCampaign } = gameState;
   
   // House Rule State
   const [useHouseRule, setUseHouseRule] = useState(() => {
@@ -145,14 +146,21 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step, gameState })
         </p>
       </div>
       
-      {isFlyingSolo && (
+      {isCampaign ? (
+        <SpecialRuleBlock source="story" title="Campaign Rules: Supplies">
+          <p>You receive your standard starting credits. <strong>Remember to add any money you saved from the last game.</strong></p>
+          <p className="mt-2">After priming, you may spend up to <strong>$1000 (plus your saved money)</strong> to repurchase any Supply Cards you set aside at the end of the last game.</p>
+          <p className="mt-2 text-xs italic opacity-75">Place any unpurchased cards into their discard piles.</p>
+        </SpecialRuleBlock>
+      ) : isFlyingSolo ? (
         <SpecialRuleBlock source="setupCard" title="Flying Solo">
             <p>After priming, you may <strong>spend up to $1000</strong> to buy <strong>up to 4 Supply Cards</strong> that were revealed.</p>
             <p className="text-sm mt-1">Discounts from special abilities apply. <strong>Replace any purchased cards.</strong></p>
         </SpecialRuleBlock>
-      )}
+      ) : null}
 
-      {!isFlyingSolo && soloCrewDraft && (
+
+      {!isFlyingSolo && !isCampaign && soloCrewDraft && (
         <SpecialRuleBlock source="story" title="Solo Crew Recruitment">
             <p>After priming, you may purchase <strong>up to 4 Crew or Gear cards</strong> from the <strong>discard piles</strong> of any <strong>single Supply Deck</strong>.</p>
             <p className="text-sm mt-1">The total cost of these items must not exceed <strong>$1000</strong>.</p>

@@ -216,6 +216,8 @@ export const getDefaultGameState = (): GameState => {
         disgruntledDie: 'standard',
         optionalShipUpgrades: true
     },
-    expansions: initialExpansions
+    expansions: initialExpansions,
+    isCampaign: false,
+    campaignStoriesCompleted: 0
   };
 };
