@@ -11,15 +11,15 @@ interface ErrorBoundaryState {
 }
 
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  // FIX: Replaced class property state initialization with a constructor.
-  // This ensures state is set up correctly and provides a place to bind methods.
+  // FIX: Switched to a constructor for state initialization and method binding.
+  // This is a more robust pattern for class components and resolves an issue where
+  // TypeScript was unable to find `setState` and `props` on `this`.
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
       hasError: false,
-      error: null
+      error: null,
     };
-
     this.handleReset = this.handleReset.bind(this);
   }
 
@@ -31,8 +31,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     console.error("Uncaught error:", error, errorInfo);
   }
 
-  // FIX: Changed from an arrow function to a class method, bound in the constructor.
-  // This explicitly sets the context of `this` to fix the `setState` error.
   handleReset() {
     this.setState({ hasError: false, error: null });
     window.location.reload();
