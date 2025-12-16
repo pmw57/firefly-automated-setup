@@ -1,4 +1,3 @@
-// Fix: Remove named import `Component` to use `React.Component` directly. This avoids potential type resolution issues.
 import React, { ErrorInfo, ReactNode } from 'react';
 import { ErrorFallback } from './ErrorFallback';
 
@@ -11,7 +10,8 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-// Fix: Extend `React.Component` to resolve typing issues where `setState` and `props` were not found.
+// FIX: The ErrorBoundary class must extend React.Component to be a valid class component.
+// This gives it access to `this.props`, `this.state`, and methods like `setState`.
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = {
     hasError: false,
@@ -27,6 +27,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   handleReset = () => {
+    // FIX: `this.setState` is now available on the component instance because the class extends React.Component.
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
@@ -41,6 +42,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       );
     }
 
+    // FIX: `this.props` is now available on the component instance because the class extends React.Component.
     return this.props.children;
   }
 }

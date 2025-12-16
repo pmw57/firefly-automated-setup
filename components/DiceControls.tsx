@@ -36,6 +36,7 @@ export const DiceControls: React.FC<DiceControlsProps> = ({ draftState, onRollCh
         let inputStyle = isDark 
             ? "text-gray-200 border-zinc-500 bg-zinc-700 focus:ring-blue-500" 
             : "text-gray-800 border-gray-300 bg-white focus:ring-blue-500";
+        let arrowColor = isDark ? 'text-gray-400' : 'text-gray-700';
         
         if (isWinner) {
             containerStyle = isDark 
@@ -45,12 +46,14 @@ export const DiceControls: React.FC<DiceControlsProps> = ({ draftState, onRollCh
             inputStyle = isDark
                 ? "text-green-100 border-green-600 bg-zinc-700 focus:ring-green-500"
                 : "text-green-900 border-green-400 bg-white focus:ring-green-500";
+            arrowColor = isDark ? 'text-green-300' : 'text-green-800';
         } else if (isMax) {
             // Highlight players who tied for first but aren't currently the winner
             containerStyle = isDark
                 ? "bg-amber-900/20 border-amber-700 ring-1 ring-amber-900/30"
                 : "bg-amber-50 border-amber-300 ring-1 ring-amber-100";
             labelStyle = isDark ? "text-amber-400 font-semibold" : "text-amber-800 font-semibold";
+            arrowColor = isDark ? 'text-amber-400' : 'text-amber-800';
         }
 
         const tieBreakerBtnClass = isDark
@@ -73,15 +76,18 @@ export const DiceControls: React.FC<DiceControlsProps> = ({ draftState, onRollCh
           </button>
           
           <div className="relative">
-            <input 
+            <select 
               id={`draft-roll-${i}`}
-              type="number" 
-              min="1" 
-              max="6"
               value={r.roll} 
               onChange={(e) => onRollChange(i, e.target.value)}
-              className={`w-16 text-center font-bold text-lg rounded border focus:outline-none focus:ring-2 transition-colors ${inputStyle}`}
-            />
+              aria-label={`Dice roll for ${r.player}`}
+              className={`w-16 font-bold text-lg rounded border focus:outline-none focus:ring-2 transition-colors appearance-none pl-5 ${inputStyle}`}
+            >
+                {[1,2,3,4,5,6].map(v => <option key={v} value={v}>{v}</option>)}
+            </select>
+            <div className={`pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 ${arrowColor}`}>
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
           </div>
           
           {/* Tie Breaker Action - Only show if Manual Mode is active */}
