@@ -18,16 +18,21 @@ export const WizardHeader: React.FC<WizardHeaderProps> = ({ gameState, onReset, 
 
     const displaySetupName = getDisplaySetupName(gameState);
     
-    const { showSetupCard, showStoryCard } = useMemo(() => {
-        const setupCardStepIndex = flow.findIndex(step => step.id === 'setup-2');
-        const storyCardStepIndex = flow.findIndex(step => step.id === 'core-4');
+    const { showSetupCard, showStoryCard, setupCardStepIndex } = useMemo(() => {
+        const setupCardIdx = flow.findIndex(step => step.id === 'setup-2');
+        const storyCardIdx = flow.findIndex(step => step.id === 'core-4');
     
-        const shouldShowSetup = setupCardStepIndex !== -1 && currentStepIndex >= setupCardStepIndex;
-        const shouldShowStory = storyCardStepIndex !== -1 && currentStepIndex >= storyCardStepIndex;
+        const shouldShowSetup = setupCardIdx !== -1 && currentStepIndex >= setupCardIdx;
+        const shouldShowStory = storyCardIdx !== -1 && currentStepIndex >= storyCardIdx;
     
-        return { showSetupCard: shouldShowSetup, showStoryCard: shouldShowStory };
+        return { 
+            showSetupCard: shouldShowSetup, 
+            showStoryCard: shouldShowStory,
+            setupCardStepIndex: setupCardIdx
+        };
     }, [flow, currentStepIndex]);
 
+    const showSoloModeIndicator = gameState.gameMode !== 'multiplayer' && setupCardStepIndex !== -1 && currentStepIndex >= setupCardStepIndex;
 
     const handleResetClick = () => {
         if (showConfirmReset) {
@@ -55,7 +60,7 @@ export const WizardHeader: React.FC<WizardHeaderProps> = ({ gameState, onReset, 
                         </>
                     )}
                 </div>
-                {gameState.gameMode !== 'multiplayer' && (
+                {showSoloModeIndicator && (
                     <span className={`text-[10px] uppercase font-bold mt-1 ${isDark ? 'text-purple-400' : 'text-purple-800'}`}>
                         {gameState.setupCardId === 'FlyingSolo' ? 'Solo (Expanded)' : 'Solo (Classic)'}
                     </span>
