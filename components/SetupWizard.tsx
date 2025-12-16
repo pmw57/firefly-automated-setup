@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Step } from '../types';
 import { calculateSetupFlow } from '../utils';
@@ -13,7 +12,8 @@ import { WizardHeader } from './WizardHeader';
 
 const WIZARD_STEP_STORAGE_KEY = 'firefly_wizardStep_v3';
 
-const SetupWizard: React.FC = () => {
+// FIX: Changed from React.FC to a standard function component to avoid implicit children issues.
+const SetupWizard = (): React.ReactElement | null => {
   const { gameState, isStateInitialized: isGameStateInitialized, resetGameState } = useGameState();
 
   const [flow, setFlow] = useState<Step[]>([]);
@@ -31,26 +31,21 @@ const SetupWizard: React.FC = () => {
     if (!isGameStateInitialized || !isWizardInitialized) return;
     const newFlow = calculateSetupFlow(gameState);
     setFlow(newFlow);
-    // FIX: Corrected typo in dependency array from isStateInitialized to isGameStateInitialized.
   }, [gameState, isGameStateInitialized, isWizardInitialized]);
   
   // Load wizard-specific state (step index) from local storage on mount
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const savedStep = localStorage.getItem(WIZARD_STEP_STORAGE_KEY);
-      if (savedStep) {
-        try {
-          const parsedStep: number = JSON.parse(savedStep);
-          setCurrentStepIndex(parsedStep);
-        } catch (e) {
-          console.warn("Wizard step reset due to error", e);
-          localStorage.removeItem(WIZARD_STEP_STORAGE_KEY);
-        }
+    const savedStep = localStorage.getItem(WIZARD_STEP_STORAGE_KEY);
+    if (savedStep) {
+      try {
+        const parsedStep: number = JSON.parse(savedStep);
+        setCurrentStepIndex(parsedStep);
+      } catch (e) {
+        console.warn("Wizard step reset due to error", e);
+        localStorage.removeItem(WIZARD_STEP_STORAGE_KEY);
       }
-      setIsWizardInitialized(true);
-    }, 1200); 
-
-    return () => clearTimeout(timer);
+    }
+    setIsWizardInitialized(true);
   }, []);
 
   // Save wizard-specific state (step index) to local storage

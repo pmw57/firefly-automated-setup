@@ -10,7 +10,7 @@ import { determineJobSetupDetails } from '../utils';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { STEP_IDS, CHALLENGE_IDS } from '../constants';
+import { STEP_IDS } from '../constants';
 
 interface JobStepProps {
   step: Step;
@@ -18,7 +18,7 @@ interface JobStepProps {
 
 export const JobStep: React.FC<JobStepProps> = ({ step }) => {
   const { gameState } = useGameState();
-  const overrides = step.overrides || {};
+  const overrides = useMemo(() => step.overrides || {}, [step.overrides]);
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const stepId = step.data?.id || step.id;
   const { theme } = useTheme();

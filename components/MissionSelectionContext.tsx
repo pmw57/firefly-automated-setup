@@ -6,7 +6,8 @@ import { STORY_CARDS, SETUP_CARD_IDS } from '../constants';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
 import { isStoryCompatible } from '../utils';
 
-export function MissionSelectionProvider({ children }: { children: React.ReactNode }) {
+// FIX: Changed from a function declaration to a const with React.FC to resolve typing issues with children props.
+export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { gameState, setGameState } = useGameState();
   
   // Local UI State for this step

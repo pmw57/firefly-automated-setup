@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
@@ -10,7 +9,7 @@ import { GameStateProvider } from './components/GameStateContext';
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
 
-const App: React.FC = () => {
+const App = (): React.ReactElement => {
   const { theme, toggleTheme } = useTheme();
 
   const handleForceUpdate = async () => {

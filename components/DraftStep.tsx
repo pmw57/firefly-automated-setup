@@ -1,10 +1,8 @@
 
-
-
 import React, { useState, useEffect } from 'react';
-import { Step, DraftState, DiceResult } from '../types';
+import { Step, DraftState } from '../types';
 import { STORY_CARDS } from '../data/storyCards';
-import { calculateDraftOutcome } from '../utils';
+import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils';
 import { Button } from './Button';
 import { DiceControls } from './DiceControls';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
@@ -16,7 +14,7 @@ interface DraftStepProps {
   step: Step;
 }
 
-export const DraftStep: React.FC<DraftStepProps> = ({ step }) => {
+export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
   const { gameState } = useGameState();
   const [draftState, setDraftState] = useState<DraftState | null>(null);
   const [isManualEntry, setIsManualEntry] = useState(false);
@@ -31,51 +29,12 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step }) => {
   // Auto-resolve for solo player
   useEffect(() => {
     if (isSolo && !draftState) {
-        const soloRoll: DiceResult[] = [{
-            player: gameState.playerNames[0],
-            roll: 6,
-            isWinner: true
-        }];
-        setDraftState({
-            rolls: soloRoll,
-            draftOrder: [gameState.playerNames[0]],
-            placementOrder: [gameState.playerNames[0]]
-        });
+        setDraftState(getInitialSoloDraftState(gameState.playerNames[0]));
     }
   }, [isSolo, gameState.playerNames, draftState]);
 
   const handleDetermineOrder = () => {
-    // 1. Initial Roll for everyone (D6)
-    const initialRolls: DiceResult[] = gameState.playerNames.map(name => ({
-        player: name,
-        roll: Math.floor(Math.random() * 6) + 1
-    }));
-
-    // 2. Automate Tie Breaking
-    const logicRolls = initialRolls.map(r => r.roll);
-    let candidates = initialRolls.map((_, i) => i); 
-    let winnerIndex = -1;
-
-    while (winnerIndex === -1) {
-        let currentMax = -1;
-        candidates.forEach(i => {
-            if (logicRolls[i] > currentMax) currentMax = logicRolls[i];
-        });
-
-        const tiedCandidates = candidates.filter(i => logicRolls[i] === currentMax);
-
-        if (tiedCandidates.length === 1) {
-            winnerIndex = tiedCandidates[0];
-        } else {
-            candidates = tiedCandidates;
-            candidates.forEach(i => {
-                logicRolls[i] = Math.floor(Math.random() * 6) + 1;
-            });
-        }
-    }
-
-    const newState = calculateDraftOutcome(initialRolls, gameState.playerCount, winnerIndex);
-    setDraftState(newState);
+    setDraftState(runAutomatedDraft(gameState.playerNames));
     setIsManualEntry(false);
   };
 

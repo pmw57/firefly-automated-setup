@@ -1,6 +1,5 @@
 
-
-
+import React from 'react';
 
 export type ExpansionId = 'base' | 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'black_market' | 'still_flying' | 'community';
 
@@ -209,7 +208,7 @@ export interface DraftState {
   placementOrder: string[];
 }
 
-// --- New Types for Refactored Job Logic ---
+// --- New Types for Refactored Logic ---
 export interface JobSetupMessage {
   source: 'story' | 'setupCard' | 'warning' | 'info' | 'expansion';
   title: string;
@@ -223,4 +222,12 @@ export interface JobSetupDetails {
   messages: JobSetupMessage[];
   showStandardContactList: boolean;
   totalJobCards: number;
+}
+
+export interface NavDeckSetupDetails {
+  specialRule: 'hardcore' | 'reshuffle' | 'flyingSolo' | null;
+  clearerSkies: boolean;
+  showStandardRules: boolean;
+  isSolo: boolean;
+  isHighPlayerCount: boolean;
 }

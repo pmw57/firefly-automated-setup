@@ -1,10 +1,13 @@
 
 
-import React from 'react';
+
+
+import React, { useMemo } from 'react';
 import { Step } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
+import { determineNavDeckDetails } from '../utils';
 
 interface NavDeckStepProps {
   step: Step;
@@ -22,19 +25,18 @@ const ActionText: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step }) => {
   const { gameState } = useGameState();
-  const overrides = step.overrides || {};
-  const isRimMode = overrides.rimNavMode;
-  const isBrowncoatNav = overrides.browncoatNavMode;
-  const isForceReshuffle = overrides.forceReshuffle;
-  const isClearerSkies = overrides.clearerSkiesNavMode;
-  const isFlyingSolo = overrides.flyingSoloNavMode;
-  const isSolo = gameState.playerCount === 1;
-  const isHighPlayerCount = gameState.playerCount >= 3;
+  const overrides = useMemo(() => step.overrides || {}, [step.overrides]);
+  
+  const { 
+    specialRule, 
+    clearerSkies, 
+    showStandardRules, 
+    isSolo, 
+    isHighPlayerCount 
+  } = useMemo(() => determineNavDeckDetails(gameState, overrides), [gameState, overrides]);
+
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-
-  // Group "Rim Mode" and "Force Reshuffle" as setups that mandate Reshuffle cards at the start
-  const hasForcedReshuffle = isRimMode || isForceReshuffle;
 
   const panelBg = isDark ? 'bg-black/60' : 'bg-white';
   const panelBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -55,25 +57,23 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step }) => {
   return (
     <>
       <div className={`${panelBg} p-6 rounded-lg border ${panelBorder} shadow-sm mb-6 overflow-hidden transition-colors duration-300 space-y-4`}>
-        {/* Default Instruction if no major overrides */}
-        {!isFlyingSolo && !isBrowncoatNav && !hasForcedReshuffle && (
+        {specialRule === null && (
           <p className={`${panelText}`}><ActionText>Shuffle Alliance & Border Nav Cards</ActionText> standard setup.</p>
         )}
 
-        {isFlyingSolo && (
+        {specialRule === 'flyingSolo' && (
            <SpecialRuleBlock source="setupCard" title="Flying Solo">
                Shuffle the <ActionText>"RESHUFFLE"</ActionText> cards into their respective Nav Decks.
            </SpecialRuleBlock>
         )}
         
-        {isBrowncoatNav && (
+        {specialRule === 'hardcore' && (
           <SpecialRuleBlock source="setupCard" title="Setup Card Override">
             <strong>Hardcore Navigation:</strong> Shuffle the <ActionText>Alliance Cruiser</ActionText> and <ActionText>Reaver Cutter</ActionText> cards into the Nav Decks immediately, regardless of player count.
           </SpecialRuleBlock>
         )}
         
-        {/* Only show forced reshuffle if we haven't already covered it with Flying Solo (which implies reshuffle used) */}
-        {hasForcedReshuffle && !isFlyingSolo && (
+        {specialRule === 'reshuffle' && (
           <SpecialRuleBlock source="setupCard" title="Setup Card Override">
             <ul className="list-disc ml-4 space-y-1">
               <li>Place the <ActionText>"RESHUFFLE"</ActionText> cards in the Nav Decks at the start of the game, regardless of player count.</li>
@@ -85,7 +85,7 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step }) => {
           </SpecialRuleBlock>
         )}
 
-        {isClearerSkies && (
+        {clearerSkies && (
           <SpecialRuleBlock source="setupCard" title="Setup Card Override">
             <strong>Clearer Skies Rule:</strong> When initiating a Full Burn, roll a die. The result is how many sectors you may move before you start drawing Nav Cards.
             <br /><span className="text-xs italic opacity-75">Note: You may not move farther than your Drive Core's range, regardless of the die roll.</span>
@@ -93,8 +93,7 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step }) => {
         )}
       </div>
 
-      {/* Standard Reshuffle Panel - Hide if Flying Solo or forced, as rules are explicit above */}
-      {!isFlyingSolo && !hasForcedReshuffle && !isBrowncoatNav && (
+      {showStandardRules && (
         <div className={`border rounded-lg overflow-hidden shadow-sm transition-colors duration-300 ${reshuffleBorder}`}>
           <div className={`${reshuffleBg} px-4 py-2 text-xs font-bold uppercase tracking-wider border-b ${reshuffleBorder} ${reshuffleHeader}`}>
             {isSolo ? 'Reshuffle Card Rules' : `Reshuffle Card Rules (Player Count: ${gameState.playerCount})`}
