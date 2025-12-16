@@ -1,9 +1,8 @@
 
-
 import React from 'react';
 import { GameState } from '../types';
-import { STORY_CARDS, EXPANSIONS_METADATA, SETUP_CARD_IDS } from '../constants';
-import { getDisplaySetupName } from '../utils';
+import { STORY_CARDS, EXPANSIONS_METADATA } from '../constants';
+import { getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../utils';
 import { useTheme } from './ThemeContext';
 
 interface FinalSummaryProps {
@@ -18,31 +17,8 @@ export const FinalSummary: React.FC<FinalSummaryProps> = ({ gameState }) => {
     const activeExpansions = EXPANSIONS_METADATA.filter(e => gameState.expansions[e.id as keyof typeof gameState.expansions] && e.id !== 'base').map(e => e.label);
     
     const displaySetupName = getDisplaySetupName(gameState);
-
-    // Timer Summary
-    let timerSummary = null;
-    const isSoloTimerActive = gameState.gameMode === 'solo' && 
-                              !activeStory?.setupConfig?.disableSoloTimer &&
-                              (gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO || activeStory?.setupConfig?.soloGameTimer);
-    
-    if (isSoloTimerActive) {
-        if (gameState.timerConfig.mode === 'standard') {
-            timerSummary = "Standard (20 Turns)";
-        } else {
-            const extraTokens = gameState.timerConfig.unpredictableSelectedIndices.length > 4;
-            const randomized = gameState.timerConfig.randomizeUnpredictable;
-            timerSummary = `Unpredictable${extraTokens ? ' (Extra Tokens)' : ''}${randomized ? ' (Randomized)' : ''}`;
-        }
-    } else if (gameState.gameMode === 'solo' && activeStory?.setupConfig?.disableSoloTimer) {
-        timerSummary = "Disabled (Story Override)";
-    }
-
-    // Optional Rules
-    const activeOptionalRules: string[] = [];
-    if (gameState.soloOptions?.noSureThings) activeOptionalRules.push("No Sure Things");
-    if (gameState.soloOptions?.shesTrouble) activeOptionalRules.push("She's Trouble");
-    if (gameState.soloOptions?.recipeForUnpleasantness) activeOptionalRules.push("Recipe For Unpleasantness");
-    if (gameState.optionalRules?.optionalShipUpgrades) activeOptionalRules.push("Ship Upgrades");
+    const timerSummary = getTimerSummaryText(gameState, activeStory);
+    const activeOptionalRules = getActiveOptionalRulesText(gameState);
     
     // Disgruntled Die
     const disgruntledDieMode = gameState.optionalRules?.disgruntledDie || 'standard';
@@ -123,7 +99,7 @@ export const FinalSummary: React.FC<FinalSummaryProps> = ({ gameState }) => {
                     </div>
                  </div>
 
-                 {(isSoloTimerActive || timerSummary) && (
+                 {timerSummary && (
                      <div>
                         <div className={labelClass}>Solo Timer</div>
                         <div className={valueClass}>{timerSummary}</div>

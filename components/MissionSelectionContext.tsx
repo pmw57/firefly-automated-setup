@@ -2,18 +2,9 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types';
 import { useGameState } from '../hooks/useGameState';
-import { STORY_CARDS } from '../data/storyCards';
+import { STORY_CARDS, SETUP_CARD_IDS } from '../constants';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
-import { SETUP_CARD_IDS, STORY_TITLES } from '../constants';
-
-const SOLO_EXCLUDED_STORIES = [
-  "The Great Recession",
-  "The Well's Run Dry",
-  "It's All In Who You Know",
-  "The Scavenger's 'Verse",
-  "Smuggler's Blues",
-  "Aces Up Your Sleeve"
-];
+import { isStoryCompatible } from '../utils';
 
 export function MissionSelectionProvider({ children }: { children: React.ReactNode }) {
   const { gameState, setGameState } = useGameState();
@@ -35,17 +26,10 @@ export function MissionSelectionProvider({ children }: { children: React.ReactNo
     [gameState.gameMode, gameState.setupCardId]
   );
 
-  const validStories = useMemo(() => STORY_CARDS.filter(card => {
-    if (isClassicSolo) return card.title === STORY_TITLES.AWFUL_LONELY;
-    if (gameState.gameMode === 'multiplayer' && card.isSolo) return false;
-    if (gameState.gameMode === 'solo' && SOLO_EXCLUDED_STORIES.includes(card.title)) return false;
-    if (card.title === STORY_TITLES.SLAYING_THE_DRAGON && gameState.playerCount !== 2) return false;
-    
-    const mainReq = !card.requiredExpansion || gameState.expansions[card.requiredExpansion];
-    const addReq = !card.additionalRequirements || card.additionalRequirements.every(req => gameState.expansions[req]);
-    
-    return mainReq && addReq;
-  }), [isClassicSolo, gameState.gameMode, gameState.playerCount, gameState.expansions]);
+  const validStories = useMemo(() => 
+    STORY_CARDS.filter(card => isStoryCompatible(card, gameState)),
+    [gameState]
+  );
 
   const filteredStories = useMemo(() => validStories.filter(card => {
     const matchesSearch = searchTerm === '' || 
