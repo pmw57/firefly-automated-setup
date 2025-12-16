@@ -1,8 +1,7 @@
-
 import { describe, it, expect } from 'vitest';
 import { determineJobMode, determineJobSetupDetails } from '../../utils/jobs';
 import { GameState, StoryCardDef, StoryCardConfig, StepOverrides } from '../../types';
-import { getDefaultGameState } from '../../utils/state';
+import { getDefaultGameState } from '../../state/reducer';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../../data/ids';
 
 describe('utils/jobs', () => {

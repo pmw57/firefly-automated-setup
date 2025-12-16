@@ -1,10 +1,9 @@
-
-
 import React from 'react';
 import { DisgruntledDieOption } from '../types';
 import { Button } from './Button';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
+import { ActionType } from '../state/actions';
 
 interface OptionalRulesSelectionProps {
   onBack: () => void;
@@ -12,40 +11,22 @@ interface OptionalRulesSelectionProps {
 }
 
 export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ onBack, onStart }) => {
-  const { gameState, setGameState } = useGameState();
+  const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const isSolo = gameState.gameMode === 'solo';
   const has10th = gameState.expansions.tenth;
 
   const toggleSoloOption = (key: keyof typeof gameState.soloOptions) => {
-    setGameState(prev => ({
-      ...prev,
-      soloOptions: {
-        ...prev.soloOptions,
-        [key]: !prev.soloOptions[key]
-      }
-    }));
+    dispatch({ type: ActionType.TOGGLE_SOLO_OPTION, payload: key });
   };
 
   const toggleTimer = () => {
-    setGameState(prev => ({
-      ...prev,
-      timerConfig: {
-        ...prev.timerConfig,
-        mode: prev.timerConfig.mode === 'standard' ? 'unpredictable' : 'standard'
-      }
-    }));
+    dispatch({ type: ActionType.TOGGLE_TIMER_MODE });
   };
 
   const setDisgruntledDie = (mode: DisgruntledDieOption) => {
-      setGameState(prev => ({
-          ...prev,
-          optionalRules: {
-              ...prev.optionalRules,
-              disgruntledDie: mode
-          }
-      }));
+    dispatch({ type: ActionType.SET_DISGRUNTLED_DIE, payload: mode });
   };
 
   const toggleGorrammit = () => {
@@ -60,13 +41,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
   const isGorrammitActive = gameState.optionalRules.disgruntledDie !== 'standard';
 
   const toggleShipUpgrades = () => {
-      setGameState(prev => ({
-          ...prev,
-          optionalRules: {
-              ...prev.optionalRules,
-              optionalShipUpgrades: !prev.optionalRules.optionalShipUpgrades
-          }
-      }));
+    dispatch({ type: ActionType.TOGGLE_SHIP_UPGRADES });
   };
 
   const containerBg = isDark ? 'bg-black/60' : 'bg-[#faf8ef]/95';

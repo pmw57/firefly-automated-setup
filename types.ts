@@ -1,6 +1,5 @@
-
-
 import React from 'react';
+import { SETUP_CARD_IDS } from './data/ids';
 
 export type ExpansionId = 'base' | 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'black_market' | 'still_flying' | 'community';
 
@@ -70,8 +69,11 @@ export interface SetupCardStep {
   overrides?: StepOverrides;
 }
 
+// Stricter type for SetupCard IDs derived from constants
+export type SetupCardId = typeof SETUP_CARD_IDS[keyof typeof SETUP_CARD_IDS];
+
 export interface SetupCardDef {
-  id: string;
+  id: SetupCardId | string; // Allow string for flexibility, but prefer SetupCardId
   label: string;
   description?: string;
   requiredExpansion?: keyof Expansions;
@@ -177,9 +179,9 @@ export interface GameState {
   gameMode: GameMode;
   playerCount: number;
   playerNames: string[];
-  setupCardId: string;
+  setupCardId: SetupCardId | string;
   setupCardName: string;
-  secondarySetupId?: string; // Used for Flying Solo to track the "Board Setup"
+  secondarySetupId?: SetupCardId | string; // Used for Flying Solo
   selectedStoryCard: string;
   selectedGoal?: string;
   challengeOptions: Record<string, boolean>; // ID -> isEnabled

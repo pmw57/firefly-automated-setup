@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../../types';
 import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionIcon } from '../ExpansionIcon';
+import { ActionType } from '../../state/actions';
 
 interface SoloOptionsPartProps {
   activeStoryCard: StoryCardDef;
@@ -15,18 +15,12 @@ export const SoloOptionsPart: React.FC<SoloOptionsPartProps> = ({
   activeStoryCard,
   availableAdvancedRules
 }) => {
-  const { gameState, setGameState } = useGameState();
+  const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   const toggleChallengeOption = (id: string) => {
-    setGameState(prev => ({
-      ...prev,
-      challengeOptions: {
-        ...prev.challengeOptions,
-        [id]: !prev.challengeOptions[id]
-      }
-    }));
+    dispatch({ type: ActionType.TOGGLE_CHALLENGE_OPTION, payload: id });
   };
 
   const bodyBg = isDark ? 'bg-zinc-900/50' : 'bg-transparent';

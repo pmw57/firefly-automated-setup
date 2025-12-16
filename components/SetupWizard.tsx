@@ -11,7 +11,7 @@ import { WizardHeader } from './WizardHeader';
 const WIZARD_STEP_STORAGE_KEY = 'firefly_wizardStep_v3';
 
 const SetupWizard = (): React.ReactElement | null => {
-  const { gameState, isStateInitialized: isGameStateInitialized, resetGameState } = useGameState();
+  const { state: gameState, isStateInitialized: isGameStateInitialized, resetGameState } = useGameState();
   const { flow } = useSetupFlow();
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0);

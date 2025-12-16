@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { useTheme } from './ThemeContext';
 
-// FIX: Changed interface to a type alias with an intersection to correctly include all button attributes.
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'secondary' | 'danger';
   fullWidth?: boolean;
@@ -38,12 +36,10 @@ export const Button = ({
     // Light Mode Styles (Firefly Board Game feel: Burgundy, Leather, Gold)
     switch (variant) {
       case 'primary':
-        // Deep Burgundy like the game box/logo
-        variantStyle = "bg-[#7f1d1d] text-[#fef3c7] border-[#450a0a] hover:bg-[#991b1b] focus:ring-[#d4af37]";
+        variantStyle = "bg-firefly-red text-firefly-parchment-subtle border-firefly-red-dark hover:bg-firefly-red-light focus:ring-firefly-gold";
         break;
       case 'secondary':
-        // Worn Leather/Amber
-        variantStyle = "bg-[#d97706] text-white border-[#78350f] hover:bg-[#b45309] focus:ring-[#f59e0b]";
+        variantStyle = "bg-firefly-leather text-white border-firefly-brown hover:bg-firefly-leather-dark focus:ring-amber-500";
         break;
       case 'danger':
         variantStyle = "bg-red-700 text-white border-red-900 hover:bg-red-600 focus:ring-red-500";

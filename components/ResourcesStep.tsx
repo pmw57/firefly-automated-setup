@@ -11,7 +11,7 @@ interface ResourcesStepProps {
 }
 
 export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
-  const { gameState } = useGameState();
+  const { state: gameState } = useGameState();
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const { theme } = useTheme();

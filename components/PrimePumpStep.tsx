@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { Step } from '../types';
 import { STORY_CARDS } from '../data/storyCards';
@@ -12,7 +10,7 @@ interface PrimePumpStepProps {
 }
 
 export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
-  const { gameState } = useGameState();
+  const { state: gameState } = useGameState();
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const { theme } = useTheme();

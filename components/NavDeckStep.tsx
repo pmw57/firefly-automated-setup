@@ -21,7 +21,7 @@ const ActionText = ({ children }: { children?: React.ReactNode }): React.ReactEl
 };
 
 export const NavDeckStep = ({ step }: NavDeckStepProps): React.ReactElement => {
-  const { gameState } = useGameState();
+  const { state: gameState } = useGameState();
   const overrides = useMemo(() => step.overrides || {}, [step.overrides]);
   
   const { 

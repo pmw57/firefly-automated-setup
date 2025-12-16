@@ -1,8 +1,7 @@
-
 import { describe, it, expect } from 'vitest';
 import { calculatePrimeDetails } from '../../utils/prime';
 import { GameState, StoryCardDef } from '../../types';
-import { getDefaultGameState } from '../../utils/state';
+import { getDefaultGameState } from '../../state/reducer';
 import { STORY_TITLES } from '../../data/ids';
 
 describe('utils/prime', () => {

@@ -10,7 +10,7 @@ interface StartingCapitolStepProps {
 }
 
 export const StartingCapitolStep = ({ step }: StartingCapitolStepProps): React.ReactElement => {
-  const { gameState } = useGameState();
+  const { state: gameState } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const overrides = step.overrides || {};

@@ -4,7 +4,7 @@ import { calculateSetupFlow as calculateFlow } from '../utils/flow';
 import { useGameState } from './useGameState';
 
 export const useSetupFlow = (): { flow: Step[] } => {
-  const { gameState, isStateInitialized } = useGameState();
+  const { state: gameState, isStateInitialized } = useGameState();
 
   const flow = useMemo(() => {
     if (!isStateInitialized) {

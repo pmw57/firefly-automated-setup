@@ -5,6 +5,7 @@ import { Button } from './Button';
 import { ExpansionIcon } from './ExpansionIcon';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
+import { ActionType } from '../state/actions';
 
 interface SetupCardSelectionProps {
   onBack: () => void;
@@ -12,7 +13,7 @@ interface SetupCardSelectionProps {
 }
 
 export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onBack, onNext }) => {
-  const { gameState, setGameState } = useGameState();
+  const { state: gameState, dispatch } = useGameState();
   const selectedRef = useRef<HTMLButtonElement>(null);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -39,47 +40,11 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onBack, 
   }), [gameState.expansions, isSolo]);
 
   const handleSetupCardSelect = useCallback((id: string, label: string) => {
-    setGameState(prev => {
-        const currentIsFlyingSolo = prev.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
-        return {
-            ...prev,
-            // If currently Flying Solo, we are setting the SECONDARY card.
-            // If Standard, we are setting the MAIN card.
-            setupCardId: currentIsFlyingSolo ? SETUP_CARD_IDS.FLYING_SOLO : id,
-            setupCardName: currentIsFlyingSolo ? 'Flying Solo' : label,
-            secondarySetupId: currentIsFlyingSolo ? id : undefined
-        };
-    });
-  }, [setGameState]);
+    dispatch({ type: ActionType.SET_SETUP_CARD, payload: { id, name: label } });
+  }, [dispatch]);
 
   const toggleFlyingSolo = () => {
-      setGameState(prev => {
-          const currentIsFlyingSolo = prev.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
-          const firstAvailable = availableSetups[0];
-          const defaultId = firstAvailable?.id || SETUP_CARD_IDS.STANDARD;
-          const defaultLabel = firstAvailable?.label || 'Standard Game Setup';
-
-          if (currentIsFlyingSolo) {
-              // Turning OFF -> Revert to secondary or default
-              const newId = prev.secondarySetupId || defaultId;
-              const newDef = SETUP_CARDS.find(c => c.id === newId);
-              return {
-                  ...prev,
-                  setupCardId: newId,
-                  setupCardName: newDef?.label || defaultLabel,
-                  secondarySetupId: undefined
-              };
-          } else {
-              // Turning ON -> Set main to FlyingSolo, keep current as secondary if valid
-              const currentIsValid = availableSetups.some(c => c.id === prev.setupCardId);
-              return {
-                  ...prev,
-                  setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
-                  setupCardName: 'Flying Solo',
-                  secondarySetupId: currentIsValid ? prev.setupCardId : defaultId
-              };
-          }
-      });
+    dispatch({ type: ActionType.TOGGLE_FLYING_SOLO });
   };
 
   // Initial Selection Guard: Ensure a valid selection exists when mounting

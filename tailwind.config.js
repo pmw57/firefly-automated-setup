@@ -1,4 +1,3 @@
-
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -6,9 +5,32 @@ export default {
     "./components/**/*.{js,ts,jsx,tsx}",
     "./*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class', // Enable manual dark mode toggling via class
+  darkMode: 'class',
   theme: {
     extend: {
+      colors: {
+        'firefly': {
+          'red': '#7f1d1d',
+          'red-light': '#991b1b',
+          'red-dark': '#450a0a',
+          'gold': '#d4af37',
+          'brown': '#78350f',
+          'leather': {
+            'DEFAULT': '#d97706',
+            'dark': '#b45309',
+          },
+          'parchment': {
+            'bg': '#faf8ef',
+            'text': '#292524',
+            'border': '#d6cbb0',
+            'subtle': '#fef3c7',
+          },
+          'stone': {
+            'DEFAULT': '#a8a29e',
+            'dark': '#57534e',
+          }
+        }
+      },
       fontFamily: {
         western: ['CIND', 'serif'],
         sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif']

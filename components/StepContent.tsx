@@ -78,10 +78,10 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
   const isMissionDossier = step.id === STEP_IDS.CORE_MISSION;
   const showNav = !isMissionDossier;
 
-  const headerColor = isDark ? 'text-gray-200' : 'text-[#292524]';
-  const indexColor = isDark ? 'text-amber-500/80' : 'text-[#7f1d1d]';
-  const borderBottom = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
-  const borderTop = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
+  const headerColor = isDark ? 'text-gray-200' : 'text-firefly-parchment-text';
+  const indexColor = isDark ? 'text-amber-500/80' : 'text-firefly-red';
+  const borderBottom = isDark ? 'border-zinc-700' : 'border-firefly-parchment-border';
+  const borderTop = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
   
   return (
     <div className="animate-fade-in-up">
