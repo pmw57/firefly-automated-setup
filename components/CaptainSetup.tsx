@@ -1,13 +1,14 @@
 
 
-
 import React from 'react';
 import { Expansions } from '../types';
-import { EXPANSIONS_METADATA, SETUP_CARDS, STORY_CARDS, SETUP_CARD_IDS } from '../constants';
+import { EXPANSIONS_METADATA, SETUP_CARD_IDS } from '../constants';
 import { Button } from './Button';
 import { ExpansionToggle } from './ExpansionToggle';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
+import { updatePlayerCountState, updateExpansionState, autoSelectFlyingSoloState } from '../utils';
+
 
 interface CaptainSetupProps {
   onNext: () => void;
@@ -25,59 +26,7 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ onNext, onBack }) =>
   const totalParts = gameState.expansions.tenth || isFlyingSolo ? 3 : 2;
 
   const updatePlayerCount = (newCount: number) => {
-    const safeCount = Math.max(1, Math.min(9, newCount));
-    
-    setGameState(prev => {
-      const newMode = safeCount === 1 ? 'solo' : 'multiplayer';
-      
-      const newNames = [...prev.playerNames];
-      if (safeCount > newNames.length) {
-        for (let i = newNames.length; i < safeCount; i++) {
-          newNames.push(`Captain ${i + 1}`);
-        }
-      } else {
-        newNames.length = safeCount;
-      }
-      
-      let nextSetupCardId = prev.setupCardId;
-      let nextSetupCardName = prev.setupCardName;
-      let nextSecondary = prev.secondarySetupId;
-
-      if (newMode === 'multiplayer' && prev.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
-          nextSetupCardId = SETUP_CARD_IDS.STANDARD;
-          nextSetupCardName = 'Standard Game Setup';
-          nextSecondary = undefined;
-      }
-
-      let nextSelectedStory = prev.selectedStoryCard;
-      let nextSelectedGoal = prev.selectedGoal;
-      let nextChallengeOptions = prev.challengeOptions;
-
-      const currentStoryDef = STORY_CARDS.find(c => c.title === prev.selectedStoryCard);
-
-      if (newMode === 'multiplayer' && currentStoryDef?.isSolo) {
-          const defaultMulti = STORY_CARDS.find(c => !c.isSolo);
-          if (defaultMulti) {
-             nextSelectedStory = defaultMulti.title;
-             nextSelectedGoal = defaultMulti.goals?.[0]?.title;
-             nextChallengeOptions = {};
-          }
-      }
-      
-      return { 
-          ...prev, 
-          playerCount: safeCount, 
-          playerNames: newNames,
-          gameMode: newMode,
-          setupCardId: nextSetupCardId,
-          setupCardName: nextSetupCardName,
-          secondarySetupId: nextSecondary,
-          selectedStoryCard: nextSelectedStory,
-          selectedGoal: nextSelectedGoal,
-          challengeOptions: nextChallengeOptions,
-          isCampaign: newMode === 'multiplayer' ? false : prev.isCampaign // Reset campaign for multiplayer
-      };
-    });
+    setGameState(prevState => updatePlayerCountState(prevState, newCount));
   };
 
   const handleNameChange = (index: number, value: string) => {
@@ -89,43 +38,7 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ onNext, onBack }) =>
   };
 
   const handleExpansionChange = (key: keyof Expansions) => {
-    setGameState(prev => {
-      const nextExpansions = {
-        ...prev.expansions,
-        [key]: !prev.expansions[key]
-      };
-
-      let nextEdition = prev.gameEdition;
-      if (key === 'tenth') {
-        nextEdition = nextExpansions.tenth ? 'tenth' : 'original';
-      }
-
-      const currentSetup = SETUP_CARDS.find(s => s.id === prev.setupCardId);
-      let nextSetupCardId = prev.setupCardId;
-      let nextSetupCardName = prev.setupCardName;
-      let nextSecondary = prev.secondarySetupId;
-
-      if (currentSetup?.requiredExpansion && !nextExpansions[currentSetup.requiredExpansion]) {
-          nextSetupCardId = SETUP_CARD_IDS.STANDARD;
-          nextSetupCardName = 'Standard Game Setup';
-          nextSecondary = undefined;
-      }
-      
-      if (key === 'tenth' && !nextExpansions.tenth && prev.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
-          nextSetupCardId = SETUP_CARD_IDS.STANDARD;
-          nextSetupCardName = 'Standard Game Setup';
-          nextSecondary = undefined;
-      }
-
-      return {
-        ...prev,
-        expansions: nextExpansions,
-        gameEdition: nextEdition,
-        setupCardId: nextSetupCardId,
-        setupCardName: nextSetupCardName,
-        secondarySetupId: nextSecondary
-      };
-    });
+    setGameState(prevState => updateExpansionState(prevState, key));
   };
 
   const handleCampaignToggle = () => {
@@ -144,19 +57,9 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ onNext, onBack }) =>
   };
 
   const handleNextStep = () => {
-    if (isSolo && gameState.expansions.tenth) {
-        setGameState(prev => {
-            if (!prev.setupCardId || prev.setupCardId === SETUP_CARD_IDS.STANDARD) {
-                return {
-                    ...prev,
-                    setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
-                    setupCardName: 'Flying Solo',
-                    secondarySetupId: SETUP_CARD_IDS.STANDARD
-                };
-            }
-            return prev;
-        });
-    }
+    // This state update pre-configures the next step if conditions are met.
+    // React 18 batches this with the `onNext` call that follows.
+    setGameState(autoSelectFlyingSoloState);
     onNext();
   };
 

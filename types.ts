@@ -1,5 +1,7 @@
 
 
+
+
 export type ExpansionId = 'base' | 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'black_market' | 'still_flying' | 'community';
 
 export interface Expansions {
@@ -205,4 +207,20 @@ export interface DraftState {
   rolls: DiceResult[];
   draftOrder: string[];
   placementOrder: string[];
+}
+
+// --- New Types for Refactored Job Logic ---
+export interface JobSetupMessage {
+  source: 'story' | 'setupCard' | 'warning' | 'info' | 'expansion';
+  title: string;
+  content: React.ReactNode;
+}
+
+export interface JobSetupDetails {
+  contacts: string[];
+  cardsToDraw?: number;
+  isSingleContactChoice: boolean;
+  messages: JobSetupMessage[];
+  showStandardContactList: boolean;
+  totalJobCards: number;
 }
