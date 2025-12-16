@@ -78,6 +78,16 @@ export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     return null;
 };
 
+// --- UI Helpers ---
+export const getDisplaySetupName = (state: GameState): string => {
+    if (state.setupCardId === 'FlyingSolo' && state.secondarySetupId) {
+        const secondary = SETUP_CARDS.find(s => s.id === state.secondarySetupId);
+        if (secondary) return `Flying Solo + ${secondary.label}`;
+    }
+    return state.setupCardName;
+};
+
+
 // --- Setup Flow Logic ---
 
 // Helper to inject a dynamic step safely
@@ -85,7 +95,7 @@ const createStep = (id: string, overrides: StepOverrides = {}): Step | null => {
   const content = SETUP_CONTENT[id];
   if (!content) return null;
   return {
-    type: content.type === 'core' ? 'core' : 'dynamic',
+    type: content.type,
     id: content.id || content.elementId || id,
     data: content,
     overrides
@@ -94,8 +104,18 @@ const createStep = (id: string, overrides: StepOverrides = {}): Step | null => {
 
 export const calculateSetupFlow = (state: GameState): Step[] => {
   const newFlow: Step[] = [];
-  const activeStory = STORY_CARDS.find(c => c.title === state.selectedStoryCard);
+
+  // 0. Prepend initial setup steps
+  newFlow.push({ type: 'setup', id: 'setup-1' });
+  newFlow.push({ type: 'setup', id: 'setup-2' });
+
   const isFlyingSolo = state.setupCardId === 'FlyingSolo';
+  const has10th = state.expansions.tenth;
+  if (isFlyingSolo || has10th) {
+    newFlow.push({ type: 'setup', id: 'setup-3' });
+  }
+  
+  const activeStory = STORY_CARDS.find(c => c.title === state.selectedStoryCard);
   const isSoloMode = state.gameMode === 'solo';
 
   // 1. Determine the definition that dictates the setup *structure*.

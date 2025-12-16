@@ -17,6 +17,12 @@ import { PrimePumpStep } from './PrimePumpStep';
 // Dynamic Step
 import { DynamicStepHandler } from './DynamicStepHandler';
 
+// Setup Steps (from old InitialForm)
+import { CaptainSetupStep } from './steps/setup/CaptainSetupStep';
+import { SetupCardStep } from './steps/setup/SetupCardStep';
+import { OptionalRulesStep } from './steps/setup/OptionalRulesStep';
+
+
 interface StepContentProps {
   step: Step;
   stepIndex: number;
@@ -29,25 +35,40 @@ interface StepContentProps {
 export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameState, setGameState, onNext, onPrev }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const stepId = step.data?.id || step.id || '';
-  const isMissionDossier = step.data?.id === 'core-4';
+  const stepId = step.id;
+
+  // MissionDossierStep has its own nav buttons
+  const isMissionDossier = step.id === 'core-4';
 
   // Render logic based on Step Type and ID
   const renderStepBody = () => {
-    if (step.type === 'core') {
-      switch (step.data?.id) {
-        case 'core-1': return <NavDeckStep step={step} gameState={gameState} />;
-        case 'core-2': return <AllianceReaverStep step={step} gameState={gameState} />;
-        case 'core-3': return <DraftStep step={step} gameState={gameState} />;
-        case 'core-4': return <MissionDossierStep step={step} gameState={gameState} setGameState={setGameState} onNext={onNext} onPrev={onPrev} />;
-        case 'core-5': return <ResourcesStep step={step} gameState={gameState} />;
-        case 'core-6': return <JobStep step={step} gameState={gameState} />;
-        case 'core-prime': return <PrimePumpStep step={step} gameState={gameState} />;
-        default: return <div className="text-red-500">Unknown Core Step: {step.data?.id}</div>;
-      }
-    } else {
-      // Delegate all dynamic logic to the handler
-      return <DynamicStepHandler step={step} gameState={gameState} setGameState={setGameState} />;
+    switch (step.type) {
+      case 'setup':
+        if (step.id === 'setup-1') return <CaptainSetupStep gameState={gameState} setGameState={setGameState} onNext={onNext} />;
+        // FIX: The `SetupCardStep` component expects an `onBack` prop, but was receiving `onPrev`. This change maps `onPrev` to the correct prop name.
+        if (step.id === 'setup-2') return <SetupCardStep gameState={gameState} setGameState={setGameState} onNext={onNext} onBack={onPrev} />;
+        // FIX: The `OptionalRulesStep` component expects an `onBack` prop, but was receiving `onPrev`. This change maps `onPrev` to the correct prop name.
+        if (step.id === 'setup-3') return <OptionalRulesStep gameState={gameState} setGameState={setGameState} onNext={onNext} onBack={onPrev} />;
+        return <div className="text-red-500">Unknown Setup Step: {step.id}</div>;
+      
+      case 'core':
+        switch (step.id) {
+          case 'core-1': return <NavDeckStep step={step} gameState={gameState} />;
+          case 'core-2': return <AllianceReaverStep step={step} gameState={gameState} />;
+          case 'core-3': return <DraftStep step={step} gameState={gameState} />;
+          case 'core-4': return <MissionDossierStep step={step} gameState={gameState} setGameState={setGameState} onNext={onNext} onPrev={onPrev} />;
+          case 'core-5': return <ResourcesStep step={step} gameState={gameState} />;
+          case 'core-6': return <JobStep step={step} gameState={gameState} />;
+          case 'core-prime': return <PrimePumpStep step={step} gameState={gameState} />;
+          default: return <div className="text-red-500">Unknown Core Step: {step.id}</div>;
+        }
+
+      case 'dynamic':
+        // Delegate all dynamic logic to the handler
+        return <DynamicStepHandler step={step} gameState={gameState} setGameState={setGameState} />;
+
+      default:
+        return <div className="text-red-500">Unknown Step Type: {step.type}</div>;
     }
   };
 
@@ -55,6 +76,16 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
   const indexColor = isDark ? 'text-amber-500/80' : 'text-[#7f1d1d]';
   const borderBottom = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
   const borderTop = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
+  
+  // Custom titles for setup steps that don't have them in constants
+  const getStepTitle = () => {
+    if (step.id === 'setup-1') return 'Captain & Expansions';
+    if (step.id === 'setup-2') return 'Setup Card';
+    if (step.id === 'setup-3') return 'Optional Rules';
+    return step.data?.title || step.id;
+  };
+
+  const showNav = !isMissionDossier && step.type !== 'setup';
 
   return (
     <div className="animate-fade-in-up">
@@ -65,7 +96,7 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
       <div className="flex flex-wrap items-start justify-between mb-6 gap-4">
         <h2 className={`text-2xl font-bold ${headerColor} font-western border-b-2 ${borderBottom} pb-2 pr-10 flex-1 min-w-[200px] drop-shadow-sm transition-colors duration-300`}>
           <span className={`${indexColor} mr-2`}>{stepIndex}.</span>
-          {step.data?.title || step.id}
+          {getStepTitle()}
         </h2>
 
         <div className="w-full lg:w-1/3 shrink-0">
@@ -78,7 +109,7 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
         {renderStepBody()}
       </div>
 
-      {!isMissionDossier && (
+      {showNav && (
         <div className={`mt-8 flex justify-between clear-both pt-6 border-t ${borderTop}`}>
           <Button onClick={onPrev} variant="secondary" className="shadow-sm">
             ← Previous
