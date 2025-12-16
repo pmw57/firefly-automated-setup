@@ -42,22 +42,26 @@ describe('utils/state', () => {
   });
   
   describe('updateExpansionState', () => {
-    it('toggles an expansion on', () => {
+    it('toggles an expansion off', () => {
+      // 'blue' is on by default in the new base state
       const newState = updateExpansionState(baseGameState, 'blue');
-      expect(newState.expansions.blue).toBe(true);
+      expect(newState.expansions.blue).toBe(false);
     });
     
-    it('toggles an expansion off', () => {
-      const stateWithBlue: GameState = { ...baseGameState, expansions: { ...baseGameState.expansions, blue: true } };
-      const newState = updateExpansionState(stateWithBlue, 'blue');
-      expect(newState.expansions.blue).toBe(false);
+    it('toggles an expansion on', () => {
+      const stateWithBlueOff: GameState = { ...baseGameState, expansions: { ...baseGameState.expansions, blue: false } };
+      const newState = updateExpansionState(stateWithBlueOff, 'blue');
+      expect(newState.expansions.blue).toBe(true);
     });
 
     it('updates gameEdition when tenth is toggled', () => {
+      // baseGameState has tenth: true, so gameEdition is 'tenth'. First toggle turns it off.
       const state1 = updateExpansionState(baseGameState, 'tenth');
-      expect(state1.gameEdition).toBe('tenth');
+      expect(state1.gameEdition).toBe('original');
+
+      // state1 has tenth: false, so gameEdition is 'original'. Second toggle turns it back on.
       const state2 = updateExpansionState(state1, 'tenth');
-      expect(state2.gameEdition).toBe('original');
+      expect(state2.gameEdition).toBe('tenth');
     });
 
     it('resets setup card if its required expansion is disabled', () => {

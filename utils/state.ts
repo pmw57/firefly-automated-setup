@@ -94,7 +94,7 @@ export const autoSelectFlyingSoloState = (prevState: GameState): GameState => {
 export const getDefaultGameState = (): GameState => {
     const allExpansions = EXPANSIONS_METADATA.reduce((acc, exp) => {
         if (exp.id !== 'base') {
-            (acc as Record<keyof Expansions, boolean>)[exp.id] = false;
+            (acc as Record<keyof Expansions, boolean>)[exp.id] = true; // Default all expansions to ON
         }
         return acc;
     }, {} as Expansions);
@@ -102,7 +102,7 @@ export const getDefaultGameState = (): GameState => {
     const firstStory = STORY_CARDS.find(c => !c.isSolo && c.requiredExpansion !== 'community') || STORY_CARDS[0];
 
     return {
-        gameEdition: 'original',
+        gameEdition: 'tenth', // Default to tenth since expansions are on
         gameMode: 'multiplayer',
         playerCount: 4,
         playerNames: ['Captain 1', 'Captain 2', 'Captain 3', 'Captain 4'],

@@ -76,8 +76,10 @@ describe('components/CaptainSetup', () => {
     fireEvent.click(blueSunToggle!);
 
     const updaterFn = mockSetGameState.mock.calls[0][0];
+    // The updater function is called with the previous state.
+    // Since the default state has blue: true, toggling it should result in false.
     const newState = updaterFn(getDefaultGameState());
-    expect(newState.expansions.blue).toBe(true);
+    expect(newState.expansions.blue).toBe(false);
   });
 
   it('calls onNext when the next button is clicked', () => {

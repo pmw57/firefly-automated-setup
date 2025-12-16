@@ -58,10 +58,17 @@ describe('components/SetupWizard', () => {
     // Step 2: SetupCardSelection
     expect(await screen.findByText('Select Setup Card')).toBeInTheDocument();
     
-    const nextButton2 = screen.getByRole('button', { name: /Launch Setup Sequence/i });
+    // Because 10th anniversary is on by default, we go to optional rules
+    const nextButton2 = await screen.findByRole('button', { name: /Next: Optional Rules/i });
     fireEvent.click(nextButton2);
+
+    // Step 3: OptionalRulesSelection
+    // FIX: Make query more specific to avoid finding multiple elements.
+    expect(await screen.findByRole('heading', { level: 2, name: /Optional Rules/i })).toBeInTheDocument();
+    const nextButton3 = screen.getByRole('button', { name: /Begin Setup Sequence/i });
+    fireEvent.click(nextButton3);
     
-    // Step 3: Core step
+    // Step 4: Core step
     // FIX: Use findByRole to correctly query the heading. The text "1. Nav Decks" is split across a <span> and a text node, which `findByText` cannot match as a single string.
     expect(await screen.findByRole('heading', { name: /1\.\s*Nav Decks/i })).toBeInTheDocument();
   });
