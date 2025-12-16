@@ -11,7 +11,21 @@ describe('utils/prime', () => {
     const mockStory: StoryCardDef = { title: 'Mock Story', intro: '' };
 
     it('calculates standard priming (3 cards)', () => {
-      const details = calculatePrimeDetails(baseGameState, {}, mockStory, false);
+      // The default game state enables all expansions. To test the "standard" priming
+      // without high supply volume, we must explicitly disable supply-heavy expansions.
+      const stateForStandardTest: GameState = {
+        ...baseGameState,
+        expansions: {
+            ...baseGameState.expansions,
+            kalidasa: false,
+            pirates: false,
+            breakin_atmo: false,
+            still_flying: false,
+        }
+      };
+      
+      const details = calculatePrimeDetails(stateForStandardTest, {}, mockStory, false);
+      
       expect(details.finalCount).toBe(3);
       expect(details.baseDiscard).toBe(3);
       expect(details.effectiveMultiplier).toBe(1);
@@ -21,7 +35,7 @@ describe('utils/prime', () => {
     it('identifies high supply volume with 3+ relevant expansions', () => {
       const state: GameState = {
         ...baseGameState,
-        expansions: { ...baseGameState.expansions, kalidasa: true, pirates: true, breakin_atmo: true }
+        expansions: { ...baseGameState.expansions, kalidasa: true, pirates: true, breakin_atmo: true, still_flying: false }
       };
       const details = calculatePrimeDetails(state, {}, mockStory, false);
       expect(details.isHighSupplyVolume).toBe(true);

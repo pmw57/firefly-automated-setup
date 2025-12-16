@@ -23,7 +23,16 @@ describe('utils/filters', () => {
     });
 
     it('returns false for a story with unmet expansion requirements', () => {
-      expect(isStoryCompatible(expansionStory, baseGameState)).toBe(false);
+      // The default game state now enables all expansions, so we must explicitly
+      // create a state where the required expansion is disabled for this test.
+      const stateWithBlueOff = {
+        ...baseGameState,
+        expansions: {
+          ...baseGameState.expansions,
+          blue: false
+        }
+      };
+      expect(isStoryCompatible(expansionStory, stateWithBlueOff)).toBe(false);
     });
 
     it('returns true for a story when expansion requirements are met', () => {

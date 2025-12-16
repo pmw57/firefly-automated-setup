@@ -4,6 +4,7 @@ import { calculateAllianceReaverDetails } from '../utils/alliance';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/draft';
 import { isStoryCompatible } from '../utils/filters';
 import { calculateSetupFlow } from '../utils/flow';
+import { calculatePrimeDetails } from '../utils/prime';
 import { getDefaultGameState } from '../utils/state';
 import { GameState, StoryCardDef, DiceResult } from '../types';
 import { STORY_TITLES, STEP_IDS } from '../data/ids';
@@ -47,7 +48,10 @@ describe('utils', () => {
   describe('filters', () => {
     it('returns false for a story if required expansion is missing', () => {
       const story: StoryCardDef = { title: 'T', intro: '', requiredExpansion: 'blue' };
-      expect(isStoryCompatible(story, baseGameState)).toBe(false);
+      // Create an isolated state for this test to ensure 'blue' is false.
+      const stateWithBlueOff = getDefaultGameState();
+      stateWithBlueOff.expansions.blue = false;
+      expect(isStoryCompatible(story, stateWithBlueOff)).toBe(false);
     });
     
     it('returns true for a story if required expansion is present', () => {
@@ -64,17 +68,56 @@ describe('utils', () => {
   });
 
   describe('flow', () => {
-    it('generates the standard flow by default', () => {
+    it('generates the standard flow with optional rules by default', () => {
       const flow = calculateSetupFlow(baseGameState);
       const ids = flow.map(f => f.id);
       expect(ids).toContain(STEP_IDS.CORE_NAV_DECKS);
+      expect(ids).toContain(STEP_IDS.SETUP_OPTIONAL_RULES);
       expect(ids).not.toContain(STEP_IDS.D_HAVEN_DRAFT);
     });
+    
+    it('generates a different flow for "The Browncoat Way"', () => {
+      const state: GameState = { ...baseGameState, setupCardId: 'TheBrowncoatWay' };
+      const flow = calculateSetupFlow(state);
+      const flowIds = flow.map(f => f.id);
+      
+      expect(flowIds).toEqual([
+        STEP_IDS.SETUP_CAPTAIN_EXPANSIONS,
+        STEP_IDS.SETUP_CARD_SELECTION,
+        STEP_IDS.CORE_MISSION,
+        STEP_IDS.CORE_NAV_DECKS,
+        STEP_IDS.CORE_ALLIANCE_REAVER,
+        STEP_IDS.D_BC_CAPITOL,
+        STEP_IDS.CORE_DRAFT,
+        STEP_IDS.CORE_JOBS,
+        STEP_IDS.CORE_PRIME_PUMP,
+        STEP_IDS.FINAL,
+      ]);
+    });
+  });
 
-    it('includes optional rules step if 10th anniversary is active', () => {
-        const state: GameState = { ...baseGameState, expansions: { ...baseGameState.expansions, tenth: true }};
-        const flow = calculateSetupFlow(state);
-        expect(flow.some(f => f.id === STEP_IDS.SETUP_OPTIONAL_RULES)).toBe(true);
+  describe('prime', () => {
+    // Create a version of the default state with supply-heavy expansions turned OFF
+    // to test baseline behavior.
+    const baseStateForPrimingTests: GameState = {
+        ...baseGameState,
+        expansions: {
+            ...baseGameState.expansions,
+            kalidasa: false,
+            pirates: false,
+            breakin_atmo: false,
+            still_flying: false,
+        }
+    };
+    
+    const mockStory: StoryCardDef = { title: 'Mock Story', intro: '' };
+
+    it('calculates standard priming (3 cards)', () => {
+      const details = calculatePrimeDetails(baseStateForPrimingTests, {}, mockStory, false);
+      expect(details.finalCount).toBe(3);
+      expect(details.baseDiscard).toBe(3);
+      expect(details.effectiveMultiplier).toBe(1);
+      expect(details.isHighSupplyVolume).toBe(false);
     });
   });
 });

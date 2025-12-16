@@ -23,14 +23,30 @@ const getInitialSetupSteps = (): Step[] => [
 const getOptionalRulesStep = (state: GameState): Step[] => {
     const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
     const has10th = state.expansions.tenth;
-    if (isFlyingSolo || has10th) {
+    const isBrowncoatWay = state.setupCardId === SETUP_CARD_IDS.THE_BROWNCOAT_WAY;
+
+    if ((isFlyingSolo || has10th) && !isBrowncoatWay) {
         return [{ type: 'setup', id: STEP_IDS.SETUP_OPTIONAL_RULES }];
     }
     return [];
 };
 
 const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
-    const setupCard = SETUP_CARDS.find(s => s.id === state.setupCardId) || SETUP_CARDS.find(s => s.id === SETUP_CARD_IDS.STANDARD)!;
+    // If Flying Solo is active, the core board setup is determined by the secondary card.
+    const setupId = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO 
+        ? state.secondarySetupId 
+        : state.setupCardId;
+        
+    const setupCard = SETUP_CARDS.find(s => s.id === setupId) || SETUP_CARDS.find(s => s.id === SETUP_CARD_IDS.STANDARD)!;
+    
+    // For Flying Solo, we use the secondary card's steps but the primary card's definition for the main flow
+    if (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
+        const flyingSoloCard = SETUP_CARDS.find(c => c.id === SETUP_CARD_IDS.FLYING_SOLO)!;
+        return flyingSoloCard.steps
+            .map(stepDef => createStep(stepDef.id, stepDef.overrides))
+            .filter((step): step is Step => step !== null);
+    }
+
     return setupCard.steps
         .map(stepDef => createStep(stepDef.id, stepDef.overrides))
         .filter((step): step is Step => step !== null);

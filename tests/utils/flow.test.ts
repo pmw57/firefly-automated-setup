@@ -10,7 +10,14 @@ describe('utils/flow', () => {
     const baseGameState = getDefaultGameState();
 
     it('generates the standard flow for a default game', () => {
-      const flow = calculateSetupFlow(baseGameState);
+      // The new default state enables all expansions. To test the "standard" flow
+      // without optional rules, we must explicitly create a state where the 10th
+      // Anniversary expansion is disabled.
+      const stateWithout10th: GameState = {
+        ...baseGameState,
+        expansions: { ...baseGameState.expansions, tenth: false },
+      };
+      const flow = calculateSetupFlow(stateWithout10th);
       const flowIds = flow.map(f => f.id);
       
       expect(flowIds).toEqual([

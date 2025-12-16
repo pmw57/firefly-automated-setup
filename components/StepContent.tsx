@@ -36,9 +36,6 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
   const isDark = theme === 'dark';
   const stepId = step.id;
 
-  // MissionDossierStep has its own nav buttons
-  const isMissionDossier = step.id === STEP_IDS.CORE_MISSION;
-
   // Render logic based on Step Type and ID
   const renderStepBody = () => {
     switch (step.type) {
@@ -61,7 +58,6 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
         }
 
       case 'dynamic':
-        // Delegate all dynamic logic to the handler
         return <DynamicStepHandler step={step} />;
 
       default:
@@ -69,41 +65,37 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
     }
   };
 
+  // Setup steps are self-contained components with their own layout, header, and nav.
+  // We just render them directly, wrapped in the animation container.
+  if (step.type === 'setup') {
+      return (
+          <div className="animate-fade-in-up">
+              {renderStepBody()}
+          </div>
+      );
+  }
+
+  // Core and Dynamic steps use the standard StepContent wrapper.
+  const isMissionDossier = step.id === STEP_IDS.CORE_MISSION;
+  const showNav = !isMissionDossier;
+
   const headerColor = isDark ? 'text-gray-200' : 'text-[#292524]';
   const indexColor = isDark ? 'text-amber-500/80' : 'text-[#7f1d1d]';
   const borderBottom = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
   const borderTop = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
   
-  // Custom titles for setup steps that don't have them in constants
-  const getStepTitle = () => {
-    if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) return 'Captain & Expansions';
-    if (step.id === STEP_IDS.SETUP_CARD_SELECTION) return 'Setup Card';
-    if (step.id === STEP_IDS.SETUP_OPTIONAL_RULES) return 'Optional Rules';
-    return step.data?.title || step.id;
-  };
-
-  const showNav = !isMissionDossier && step.type !== 'setup';
-
   return (
     <div className="animate-fade-in-up">
-      
-      {/* 
-        Header Section
-      */}
       <div className="flex flex-wrap items-start justify-between mb-6 gap-4">
         <h2 className={`text-2xl font-bold ${headerColor} font-western border-b-2 ${borderBottom} pb-2 pr-10 flex-1 min-w-[200px] drop-shadow-sm transition-colors duration-300`}>
-          {step.type !== 'setup' && (
-            <span className={`${indexColor} mr-2`}>{stepIndex}.</span>
-          )}
-          {getStepTitle()}
+          <span className={`${indexColor} mr-2`}>{stepIndex}.</span>
+          {step.data?.title || step.id}
         </h2>
-
         <div className="w-full lg:w-1/3 shrink-0">
            <QuotePanel stepId={stepId} />
         </div>
       </div>
 
-      {/* Main Content Area */}
       <div className="relative">
         {renderStepBody()}
       </div>
