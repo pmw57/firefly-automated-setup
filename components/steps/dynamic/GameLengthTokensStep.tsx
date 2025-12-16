@@ -59,7 +59,8 @@ export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = ({ game
         displayStack.sort((a, b) => a - b);
     }
 
-    const totalTokens = 20;
+    const tokensToRemove = gameState.isCampaign ? gameState.campaignStoriesCompleted * 2 : 0;
+    const totalTokens = Math.max(0, 20 - tokensToRemove);
     const numNumbered = selectedTokens.length;
     const topDisgruntled = Math.max(0, totalTokens - 1 - numNumbered);
     
@@ -72,6 +73,12 @@ export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = ({ game
 
     return (
         <div className="space-y-6">
+            {tokensToRemove > 0 && (
+                <SpecialRuleBlock source="story" title="Campaign Rule: Time Catches Up">
+                    Removing <strong>{tokensToRemove} tokens</strong> from the timer for your <strong>{gameState.campaignStoriesCompleted}</strong> completed stories.
+                </SpecialRuleBlock>
+            )}
+
             {(shesTrouble || recipeForUnpleasantness) && (
                 <div className={`p-4 rounded-lg border ${warningBorder} ${warningBg} mb-4`}>
                     <h4 className={`font-bold text-sm uppercase tracking-wide mb-3 ${isDark ? 'text-amber-400' : 'text-amber-800'}`}>Active Solo Rules</h4>
@@ -101,7 +108,7 @@ export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = ({ game
             {mode === 'standard' && (
                 <div className={`${panelBg} p-4 rounded-lg border ${panelBorder} shadow-sm animate-fade-in`}>
                     <h4 className={`font-bold mb-2 ${textColor}`}>Standard Solo Timer</h4>
-                    <p className={subText}>Set aside <strong>20 Disgruntled Tokens</strong> to use as Game Length Tokens.</p>
+                    <p className={subText}>Set aside <strong>{totalTokens} Disgruntled Tokens</strong> to use as Game Length Tokens.</p>
                     <p className={`text-sm mt-2 opacity-80 border-t ${isDark ? 'border-zinc-700' : 'border-gray-200'} pt-2`}>
                         Discard one token at the start of every turn. When the last token is gone, you have one final turn.
                     </p>

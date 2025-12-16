@@ -19,6 +19,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
   const stepId = step.data?.id || step.id;
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const { isCampaign } = gameState;
 
   const jobMode = determineJobMode(activeStoryCard, overrides);
   const { forbiddenStartingContact, allowedStartingContacts, smugglersBluesSetup, lonelySmugglerSetup, removeJobDecks, sharedHandSetup, primeContactDecks } = activeStoryCard.setupConfig || {};
@@ -290,6 +291,13 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
 
   return (
       <div className="space-y-4">
+          {isCampaign && (
+            <SpecialRuleBlock source="story" title="Campaign Rules: Jobs & Contacts">
+              <p>For each Contact you were Solid with at the end of the last game, remove 2 of your completed Jobs from play.</p>
+              <p className="mt-2">Keep any remaining completed Jobs; you begin the game <strong>Solid with those Contacts</strong>.</p>
+            </SpecialRuleBlock>
+          )}
+
           {stepId.includes('D_RIM_JOBS') ? (
              <SpecialRuleBlock source="setupCard" title="Setup Card Override">
                <p className="leading-relaxed mb-2">
