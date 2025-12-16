@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTheme } from './ThemeContext';
 
@@ -11,15 +10,14 @@ export const ProgressBar = ({ current, total }: ProgressBarProps): React.ReactEl
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  // Ensure we don't divide by zero and clamp percentage
   const percentage = Math.min(100, Math.max(0, total > 0 ? Math.round(((current - 1) / (total - 1)) * 100) : 0));
 
-  const labelColor = isDark ? 'text-gray-400' : 'text-[#78350f]';
-  const percentColor = isDark ? 'text-green-400' : 'text-[#7f1d1d]';
-  const trackBg = isDark ? 'bg-gray-700/50' : 'bg-[#d6cbb0]';
-  const trackBorder = isDark ? 'border-white/10' : 'border-[#a8a29e]';
+  const labelColor = isDark ? 'text-gray-400' : 'text-firefly-brown';
+  const percentColor = isDark ? 'text-green-400' : 'text-firefly-red';
+  const trackBg = isDark ? 'bg-gray-700/50' : 'bg-firefly-parchment-border';
+  const trackBorder = isDark ? 'border-white/10' : 'border-firefly-stone';
   
-  const barGradient = isDark ? 'from-green-700 to-green-500' : 'from-[#7f1d1d] to-[#991b1b]';
+  const barGradient = isDark ? 'from-green-700 to-green-500' : 'from-firefly-red to-firefly-red-light';
 
   return (
     <div className="w-full mb-6">

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
@@ -66,7 +65,7 @@ const App = (): React.ReactElement => {
 
       {/* Footer */}
       <footer className="mt-16 text-center text-gray-500 dark:text-gray-500 text-xs py-8 px-4 border-t border-gray-300 dark:border-zinc-800 bg-white/50 dark:bg-black/20 backdrop-blur-sm transition-colors duration-300">
-        <p className="mb-2 font-western text-yellow-700 dark:text-amber-700/80 text-lg">Keep flying. Stay shiny.</p>
+        <p className="mb-2 font-western text-firefly-brown dark:text-amber-700/80 text-lg">Keep flying. Stay shiny.</p>
         <p className="max-w-2xl mx-auto opacity-80 dark:opacity-60">
           This is an unofficial fan-made application. 
           Firefly: The Game, its expansions, artwork, and associated trademarks are copyright © Gale Force Nine and 20th Century Fox.
@@ -74,9 +73,9 @@ const App = (): React.ReactElement => {
         </p>
         
         <div className="mt-4 flex justify-center gap-4 opacity-80 dark:opacity-60">
-           <a href="https://github.com/pmw57/firefly-automated-setup" target="_blank" rel="noreferrer" className="hover:text-yellow-700 dark:hover:text-amber-500 transition-colors underline">GitHub Project</a>
+           <a href="https://github.com/pmw57/firefly-automated-setup" target="_blank" rel="noreferrer" className="hover:text-firefly-brown dark:hover:text-amber-500 transition-colors underline">GitHub Project</a>
            <span>•</span>
-           <a href="https://boardgamegeek.com/thread/3627152/firefly-automated-setup" target="_blank" rel="noreferrer" className="hover:text-yellow-700 dark:hover:text-amber-500 transition-colors underline">BGG Thread</a>
+           <a href="https://boardgamegeek.com/thread/3627152/firefly-automated-setup" target="_blank" rel="noreferrer" className="hover:text-firefly-brown dark:hover:text-amber-500 transition-colors underline">BGG Thread</a>
         </div>
 
         <div className="mt-4 flex justify-center items-center gap-3 opacity-80 dark:opacity-60">
@@ -84,7 +83,7 @@ const App = (): React.ReactElement => {
             <span className="opacity-40">•</span>
             <button 
                 onClick={handleForceUpdate} 
-                className="underline hover:text-yellow-700 dark:hover:text-amber-500 transition-colors focus:outline-none cursor-pointer"
+                className="underline hover:text-firefly-brown dark:hover:text-amber-500 transition-colors focus:outline-none cursor-pointer"
                 title="Unregister Service Worker and Reload"
             >
                 Force Update

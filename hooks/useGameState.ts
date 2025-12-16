@@ -1,9 +1,10 @@
 import React, { createContext, useContext } from 'react';
 import { GameState } from '../types';
+import { Action } from '../state/actions';
 
 export interface GameStateContextType {
-  gameState: GameState;
-  setGameState: React.Dispatch<React.SetStateAction<GameState>>;
+  state: GameState;
+  dispatch: React.Dispatch<Action>;
   isStateInitialized: boolean;
   resetGameState: () => void;
 }

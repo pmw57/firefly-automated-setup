@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { Step } from '../types';
 import { STORY_CARDS } from '../data/storyCards';
@@ -22,7 +20,7 @@ const ActionText: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) => {
-  const { gameState } = useGameState();
+  const { state: gameState } = useGameState();
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const { placeAllianceAlertsInAllianceSpace, placeMixedAlertTokens, smugglersBluesSetup, lonelySmugglerSetup, startWithAlertCard, createAlertTokenStackMultiplier } = activeStoryCard.setupConfig || {};

@@ -1,21 +1,21 @@
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CaptainSetup } from '../../components/CaptainSetup';
 import { GameStateContext } from '../../hooks/useGameState';
 import { GameState } from '../../types';
-import { getDefaultGameState } from '../../utils/state';
+import { getDefaultGameState } from '../../state/reducer';
+import { ActionType } from '../../state/actions';
 import React from 'react';
 
 // Mock the useGameState to provide a controllable state
-const mockSetGameState = vi.fn();
+const mockDispatch = vi.fn();
 const mockOnNext = vi.fn();
 
 const renderWithState = (initialState: GameState) => {
   return render(
     <GameStateContext.Provider value={{
-      gameState: initialState,
-      setGameState: mockSetGameState,
+      state: initialState,
+      dispatch: mockDispatch,
       isStateInitialized: true,
       resetGameState: vi.fn(),
     }}>
@@ -26,7 +26,7 @@ const renderWithState = (initialState: GameState) => {
 
 describe('components/CaptainSetup', () => {
   beforeEach(() => {
-    mockSetGameState.mockClear();
+    mockDispatch.mockClear();
     mockOnNext.mockClear();
   });
 
@@ -37,55 +37,56 @@ describe('components/CaptainSetup', () => {
     expect(screen.getByDisplayValue('Captain 1')).toBeInTheDocument();
   });
 
-  it('calls setGameState to increase player count when "+" is clicked', () => {
+  it('dispatches SET_PLAYER_COUNT to increase player count when "+" is clicked', () => {
     renderWithState(getDefaultGameState());
     const increaseButton = screen.getByText('+');
     fireEvent.click(increaseButton);
 
-    // We expect setGameState to be called with a function
-    expect(mockSetGameState).toHaveBeenCalledOnce();
-    const updaterFn = mockSetGameState.mock.calls[0][0];
-    const newState = updaterFn(getDefaultGameState());
-    expect(newState.playerCount).toBe(5);
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: ActionType.SET_PLAYER_COUNT,
+      payload: 5
+    });
   });
 
-  it('calls setGameState to decrease player count when "-" is clicked', () => {
+  it('dispatches SET_PLAYER_COUNT to decrease player count when "-" is clicked', () => {
     renderWithState(getDefaultGameState());
     const decreaseButton = screen.getByText('-');
     fireEvent.click(decreaseButton);
     
-    const updaterFn = mockSetGameState.mock.calls[0][0];
-    const newState = updaterFn(getDefaultGameState());
-    expect(newState.playerCount).toBe(3);
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: ActionType.SET_PLAYER_COUNT,
+      payload: 3
+    });
   });
 
-  it('updates a player name on input change', () => {
+  it('dispatches SET_PLAYER_NAME on input change', () => {
     renderWithState(getDefaultGameState());
     const player1Input = screen.getByDisplayValue('Captain 1');
     fireEvent.change(player1Input, { target: { value: 'Mal' } });
 
-    const updaterFn = mockSetGameState.mock.calls[0][0];
-    const newState = updaterFn(getDefaultGameState());
-    expect(newState.playerNames[0]).toBe('Mal');
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: ActionType.SET_PLAYER_NAME,
+      payload: { index: 0, name: 'Mal' }
+    });
   });
 
-  it('toggles an expansion when clicked', () => {
+  it('dispatches TOGGLE_EXPANSION when clicked', () => {
     renderWithState(getDefaultGameState());
     const blueSunToggle = screen.getByText("Blue Sun").closest('div[role="switch"]');
     expect(blueSunToggle).not.toBeNull();
     fireEvent.click(blueSunToggle!);
 
-    const updaterFn = mockSetGameState.mock.calls[0][0];
-    // The updater function is called with the previous state.
-    // Since the default state has blue: true, toggling it should result in false.
-    const newState = updaterFn(getDefaultGameState());
-    expect(newState.expansions.blue).toBe(false);
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: ActionType.TOGGLE_EXPANSION,
+      payload: 'blue'
+    });
   });
 
-  it('calls onNext when the next button is clicked', () => {
+  it('calls onNext and dispatches auto-select when the next button is clicked', () => {
     renderWithState(getDefaultGameState());
     const nextButton = screen.getByText(/Next: Choose Setup Card/);
     fireEvent.click(nextButton);
+    expect(mockDispatch).toHaveBeenCalledWith({ type: ActionType.AUTO_SELECT_FLYING_SOLO });
     expect(mockOnNext).toHaveBeenCalledOnce();
   });
 
@@ -96,7 +97,7 @@ describe('components/CaptainSetup', () => {
     
     const soloState: GameState = { ...getDefaultGameState(), gameMode: 'solo', playerCount: 1 };
     rerender(
-      <GameStateContext.Provider value={{ gameState: soloState, setGameState: mockSetGameState, isStateInitialized: true, resetGameState: vi.fn() }}>
+      <GameStateContext.Provider value={{ state: soloState, dispatch: mockDispatch, isStateInitialized: true, resetGameState: vi.fn() }}>
         <CaptainSetup onNext={mockOnNext} />
       </GameStateContext.Provider>
     );

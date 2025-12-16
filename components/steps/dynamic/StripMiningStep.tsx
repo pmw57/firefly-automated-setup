@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 import { useGameState } from '../../../hooks/useGameState';
 
 export const StripMiningStep = (): React.ReactElement => {
-  const { gameState } = useGameState();
+  const { state: gameState } = useGameState();
   return (
     <SpecialRuleBlock source="setupCard" title="The Dinosaur Draft">
       <ol className="list-decimal ml-5 space-y-2 text-sm mt-1">

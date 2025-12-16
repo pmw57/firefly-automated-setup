@@ -6,8 +6,7 @@ import { Button } from './Button';
 import { ExpansionToggle } from './ExpansionToggle';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { updatePlayerCountState, updateExpansionState, autoSelectFlyingSoloState } from '../utils/state';
-
+import { ActionType } from '../state/actions';
 
 interface CaptainSetupProps {
   onNext: () => void;
@@ -15,7 +14,7 @@ interface CaptainSetupProps {
 }
 
 export const CaptainSetup = ({ onNext, onBack }: CaptainSetupProps): React.ReactElement => {
-  const { gameState, setGameState } = useGameState();
+  const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
@@ -25,40 +24,28 @@ export const CaptainSetup = ({ onNext, onBack }: CaptainSetupProps): React.React
   const totalParts = gameState.expansions.tenth || isFlyingSolo ? 3 : 2;
 
   const updatePlayerCount = (newCount: number) => {
-    setGameState(prevState => updatePlayerCountState(prevState, newCount));
+    dispatch({ type: ActionType.SET_PLAYER_COUNT, payload: newCount });
   };
 
   const handleNameChange = (index: number, value: string) => {
-    setGameState(prev => {
-      const newNames = [...prev.playerNames];
-      newNames[index] = value;
-      return { ...prev, playerNames: newNames };
-    });
+    dispatch({ type: ActionType.SET_PLAYER_NAME, payload: { index, name: value } });
   };
 
   const handleExpansionChange = (key: keyof Expansions) => {
-    setGameState(prevState => updateExpansionState(prevState, key));
+    dispatch({ type: ActionType.TOGGLE_EXPANSION, payload: key });
   };
 
   const handleCampaignToggle = () => {
-      setGameState(prev => ({
-          ...prev,
-          isCampaign: !prev.isCampaign
-      }));
+    dispatch({ type: ActionType.SET_CAMPAIGN_MODE, payload: !gameState.isCampaign });
   };
 
   const updateCampaignStories = (newCount: number) => {
-      const safeCount = Math.max(0, newCount);
-      setGameState(prev => ({
-          ...prev,
-          campaignStoriesCompleted: safeCount
-      }));
+    dispatch({ type: ActionType.SET_CAMPAIGN_STORIES, payload: newCount });
   };
 
   const handleNextStep = () => {
     // This state update pre-configures the next step if conditions are met.
-    // React 18 batches this with the `onNext` call that follows.
-    setGameState(autoSelectFlyingSoloState);
+    dispatch({ type: ActionType.AUTO_SELECT_FLYING_SOLO });
     onNext();
   };
 

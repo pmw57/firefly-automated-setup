@@ -1,7 +1,6 @@
-
 import { describe, it, expect } from 'vitest';
 import { determineNavDeckDetails } from '../../utils/nav';
-import { getDefaultGameState } from '../../utils/state';
+import { getDefaultGameState } from '../../state/reducer';
 
 describe('utils/nav', () => {
   describe('determineNavDeckDetails', () => {

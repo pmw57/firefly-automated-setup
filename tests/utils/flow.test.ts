@@ -1,8 +1,7 @@
-
 import { describe, it, expect } from 'vitest';
 import { calculateSetupFlow } from '../../utils/flow';
 import { GameState } from '../../types';
-import { getDefaultGameState } from '../../utils/state';
+import { getDefaultGameState } from '../../state/reducer';
 import { STEP_IDS, SETUP_CARD_IDS } from '../../data/ids';
 
 describe('utils/flow', () => {

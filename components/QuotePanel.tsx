@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { STEP_QUOTES } from '../data/steps';
 import { useTheme } from './ThemeContext';
@@ -20,7 +19,7 @@ export const QuotePanel = ({ stepId, className = '' }: QuotePanelProps): React.R
   const opacityClass = isDark ? 'opacity-10' : 'opacity-20';
   
   const textColor = isDark ? 'text-gray-200' : 'text-amber-900/90';
-  const authorColor = isDark ? 'text-yellow-500' : 'text-amber-700';
+  const authorColor = isDark ? 'text-yellow-500' : 'text-firefly-brown';
   const separatorBorder = isDark ? 'border-white/10' : 'border-amber-900/10';
 
   return (

@@ -1,10 +1,10 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Button } from './Button';
 import { useGameState } from '../hooks/useGameState';
 import { MissionSelectionProvider } from './MissionSelectionContext';
 import { useMissionSelection } from '../hooks/useMissionSelection';
 import { useTheme } from './ThemeContext';
+import { ActionType } from '../state/actions';
 
 // Child Components
 import { StoryDossier } from './story/StoryDossier';
@@ -18,7 +18,7 @@ interface MissionDossierStepProps {
 }
 
 const MissionDossierStepContent = ({ onNext, onPrev }: { onNext: () => void; onPrev: () => void }): React.ReactElement => {
-  const { gameState, setGameState } = useGameState();
+  const { state: gameState, dispatch } = useGameState();
   const {
     subStep,
     setSubStep,
@@ -43,9 +43,9 @@ const MissionDossierStepContent = ({ onNext, onPrev }: { onNext: () => void; onP
   // Effect to ensure a goal is selected if the story has goals
   useEffect(() => {
     if (activeStoryCard && activeStoryCard.goals && activeStoryCard.goals.length > 0 && !gameState.selectedGoal) {
-      setGameState(prev => ({ ...prev, selectedGoal: activeStoryCard.goals![0].title }));
+      dispatch({ type: ActionType.SET_GOAL, payload: activeStoryCard.goals[0].title });
     }
-  }, [activeStoryCard, gameState.selectedGoal, setGameState]);
+  }, [activeStoryCard, gameState.selectedGoal, dispatch]);
 
   const handleNextStep = () => {
     if (subStep === 1 && enablePart2) {

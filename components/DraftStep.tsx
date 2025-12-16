@@ -14,7 +14,7 @@ interface DraftStepProps {
 }
 
 export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
-  const { gameState } = useGameState();
+  const { state: gameState } = useGameState();
   const [draftState, setDraftState] = useState<DraftState | null>(null);
   const [isManualEntry, setIsManualEntry] = useState(false);
   const { theme } = useTheme();

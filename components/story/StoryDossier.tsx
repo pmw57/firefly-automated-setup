@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { StoryCardDef } from '../../types';
 import { SpecialRuleBlock } from '../SpecialRuleBlock';
@@ -6,6 +5,7 @@ import { useTheme } from '../ThemeContext';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionIcon } from '../ExpansionIcon';
 import { useGameState } from '../../hooks/useGameState';
+import { ActionType } from '../../state/actions';
 
 interface StoryDossierProps {
   activeStoryCard: StoryCardDef;
@@ -18,12 +18,12 @@ const SOLO_TIMER_ADJUSTMENTS: Record<string, string> = {
 };
 
 export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) => {
-  const { gameState, setGameState } = useGameState();
+  const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   const handleGoalSelect = (goalTitle: string) => {
-    setGameState(prev => ({ ...prev, selectedGoal: goalTitle }));
+    dispatch({ type: ActionType.SET_GOAL, payload: goalTitle });
   };
 
   const setupNote = activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' 

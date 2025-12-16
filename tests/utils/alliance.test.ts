@@ -1,8 +1,7 @@
-
 import { describe, it, expect } from 'vitest';
 import { calculateAllianceReaverDetails } from '../../utils/alliance';
 import { StoryCardDef } from '../../types';
-import { getDefaultGameState } from '../../utils/state';
+import { getDefaultGameState } from '../../state/reducer';
 
 describe('utils/alliance', () => {
   describe('calculateAllianceReaverDetails', () => {

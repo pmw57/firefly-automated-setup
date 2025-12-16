@@ -1,8 +1,7 @@
-
 import { describe, it, expect } from 'vitest';
 import { isStoryCompatible } from '../../utils/filters';
 import { GameState, StoryCardDef } from '../../types';
-import { getDefaultGameState } from '../../utils/state';
+import { getDefaultGameState } from '../../state/reducer';
 import { SETUP_CARD_IDS, STORY_TITLES } from '../../data/ids';
 
 describe('utils/filters', () => {

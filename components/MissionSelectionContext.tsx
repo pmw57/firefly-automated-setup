@@ -5,9 +5,10 @@ import { MissionSelectionContext } from '../hooks/useMissionSelection';
 import { isStoryCompatible } from '../utils/filters';
 import { STORY_CARDS } from '../data/storyCards';
 import { SETUP_CARD_IDS } from '../data/ids';
+import { ActionType } from '../state/actions';
 
 export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { gameState, setGameState } = useGameState();
+  const { state: gameState, dispatch } = useGameState();
   
   // Local UI State for this step
   const [searchTerm, setSearchTerm] = useState('');
@@ -61,13 +62,14 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   // Actions wrapped in useCallback for performance
   const handleStoryCardSelect = useCallback((title: string) => {
     const card = STORY_CARDS.find(c => c.title === title);
-    setGameState(prev => ({ 
-      ...prev, 
-      selectedStoryCard: title,
-      selectedGoal: card?.goals?.[0]?.title,
-      challengeOptions: {} 
-    }));
-  }, [setGameState]);
+    dispatch({ 
+      type: ActionType.SET_STORY_CARD, 
+      payload: { 
+        title, 
+        goal: card?.goals?.[0]?.title 
+      } 
+    });
+  }, [dispatch]);
 
   const handleRandomPick = useCallback(() => {
     if (validStories.length === 0) return;

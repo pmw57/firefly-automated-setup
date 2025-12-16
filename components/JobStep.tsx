@@ -12,7 +12,7 @@ interface JobStepProps {
 }
 
 export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
-  const { gameState } = useGameState();
+  const { state: gameState } = useGameState();
   const overrides = useMemo(() => step.overrides || {}, [step.overrides]);
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const stepId = step.data?.id || step.id;
