@@ -1,4 +1,5 @@
 
+
 export type ExpansionId = 'base' | 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'black_market' | 'still_flying' | 'community';
 
 export interface Expansions {
@@ -52,7 +53,7 @@ export interface StepOverrides {
 }
 
 export interface SetupContentData {
-  type: 'core' | 'dynamic';
+  type: 'core' | 'dynamic' | 'setup';
   id?: string;        // For core steps
   elementId?: string; // For dynamic steps
   title: string;
@@ -186,7 +187,7 @@ export interface GameState {
 }
 
 export interface Step {
-  type: 'core' | 'dynamic' | 'final';
+  type: 'core' | 'dynamic' | 'final' | 'setup';
   id: string;
   data?: SetupContentData;
   overrides?: StepOverrides;
