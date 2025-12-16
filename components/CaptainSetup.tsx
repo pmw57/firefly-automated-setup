@@ -19,9 +19,10 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
   
   const isSolo = gameState.gameMode === 'solo';
   const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
-  // Anticipate 3 parts if we are solo and have the expansion for Flying Solo, 
-  // as handleNextStep defaults to it.
-  const totalParts = isFlyingSolo || (isSolo && gameState.expansions.tenth) ? 3 : 2;
+  
+  // Optional Rules (Step 3) are available if 10th Anniversary is active OR Flying Solo is active
+  // This applies to both Solo and Multiplayer games if they use the 10th Anniversary expansion.
+  const totalParts = gameState.expansions.tenth || isFlyingSolo ? 3 : 2;
 
   const updatePlayerCount = (newCount: number) => {
     const safeCount = Math.max(1, Math.min(9, newCount));
