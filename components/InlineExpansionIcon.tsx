@@ -1,5 +1,4 @@
 
-
 import React, { useState } from 'react';
 import { ExpansionId } from '../types';
 import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../data/expansions';
@@ -25,7 +24,7 @@ const ABBREVIATIONS: Record<string, string> = {
   base: 'BG'
 };
 
-export const InlineExpansionIcon: React.FC<InlineExpansionIconProps> = ({ type, className = "mx-1 align-bottom" }) => {
+export const InlineExpansionIcon = ({ type, className = "mx-1 align-bottom" }: InlineExpansionIconProps): React.ReactElement | null => {
   const [imgError, setImgError] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';

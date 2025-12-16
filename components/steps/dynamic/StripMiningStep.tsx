@@ -1,15 +1,9 @@
 
-
 import React from 'react';
-import { Step } from '../../../types';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 import { useGameState } from '../../../hooks/useGameState';
 
-interface StripMiningStepProps {
-  step: Step;
-}
-
-export const StripMiningStep: React.FC<StripMiningStepProps> = () => {
+export const StripMiningStep = (): React.ReactElement => {
   const { gameState } = useGameState();
   return (
     <SpecialRuleBlock source="setupCard" title="The Dinosaur Draft">

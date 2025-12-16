@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 
 export type ExpansionId = 'base' | 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'black_market' | 'still_flying' | 'community';
@@ -230,4 +231,24 @@ export interface NavDeckSetupDetails {
   showStandardRules: boolean;
   isSolo: boolean;
   isHighPlayerCount: boolean;
+}
+
+export interface ResourceDetails {
+  totalCredits: number;
+  bonusCredits: number;
+  noFuelParts?: boolean;
+  customFuel?: number;
+}
+
+export interface PrimeDetails {
+  baseDiscard: number;
+  effectiveMultiplier: number;
+  finalCount: number;
+  isHighSupplyVolume: boolean;
+  isBlitz: boolean;
+}
+
+export interface AllianceReaverDetails {
+  useSmugglersRimRule: boolean;
+  alertStackCount: number;
 }

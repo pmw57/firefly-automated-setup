@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 import { Expansions } from '../types';
 import { EXPANSIONS_METADATA, SETUP_CARD_IDS } from '../constants';
@@ -7,7 +6,8 @@ import { Button } from './Button';
 import { ExpansionToggle } from './ExpansionToggle';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { updatePlayerCountState, updateExpansionState, autoSelectFlyingSoloState } from '../utils';
+// FIX: Changed import path to point to the utils directory index.
+import { updatePlayerCountState, updateExpansionState, autoSelectFlyingSoloState } from '../utils/index';
 
 
 interface CaptainSetupProps {
@@ -15,7 +15,7 @@ interface CaptainSetupProps {
   onBack?: () => void;
 }
 
-export const CaptainSetup: React.FC<CaptainSetupProps> = ({ onNext, onBack }) => {
+export const CaptainSetup = ({ onNext, onBack }: CaptainSetupProps): React.ReactElement => {
   const { gameState, setGameState } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -183,9 +183,9 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ onNext, onBack }) =>
           {EXPANSIONS_METADATA.filter(e => e.id !== 'base').map((expansion) => (
             <ExpansionToggle 
               key={expansion.id}
-              id={expansion.id} 
+              id={expansion.id as keyof Expansions} 
               label={expansion.label} 
-              active={gameState.expansions[expansion.id]} 
+              active={gameState.expansions[expansion.id as keyof Expansions]} 
               themeColor={expansion.themeColor}
               description={expansion.description}
               onToggle={handleExpansionChange}

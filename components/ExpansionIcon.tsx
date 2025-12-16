@@ -1,7 +1,4 @@
 
-
-
-
 import React, { useState } from 'react';
 import { ExpansionDef, ThemeColor } from '../types';
 import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../data/expansions';
@@ -42,7 +39,7 @@ const THEME_COLOR_CLASSES: Record<ThemeColor, string> = {
 
 const getMeta = (id: string): ExpansionDef | undefined => EXPANSIONS_METADATA.find(e => e.id === id);
 
-export const ExpansionIcon: React.FC<ExpansionIconProps> = ({ id, className = "w-full h-full" }) => {
+export const ExpansionIcon = ({ id, className = "w-full h-full" }: ExpansionIconProps): React.ReactElement => {
   const [imgError, setImgError] = useState(false);
   const meta = getMeta(id);
 

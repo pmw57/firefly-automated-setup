@@ -7,7 +7,7 @@ interface ProgressBarProps {
   total: number;
 }
 
-export const ProgressBar: React.FC<ProgressBarProps> = ({ current, total }) => {
+export const ProgressBar = ({ current, total }: ProgressBarProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   

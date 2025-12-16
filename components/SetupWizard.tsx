@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Step } from '../types';
-import { calculateSetupFlow } from '../utils';
+// FIX: Changed import path to point to the utils directory index.
+import { calculateSetupFlow } from '../utils/index';
 import { useGameState } from '../hooks/useGameState';
 import { StepContent } from './StepContent';
 import { ProgressBar } from './ProgressBar';
@@ -12,7 +13,6 @@ import { WizardHeader } from './WizardHeader';
 
 const WIZARD_STEP_STORAGE_KEY = 'firefly_wizardStep_v3';
 
-// FIX: Changed from React.FC to a standard function component to avoid implicit children issues.
 const SetupWizard = (): React.ReactElement | null => {
   const { gameState, isStateInitialized: isGameStateInitialized, resetGameState } = useGameState();
 

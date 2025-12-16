@@ -1,9 +1,9 @@
 
-
 import React from 'react';
 import { Step } from '../../../types';
 import { STORY_CARDS } from '../../../constants';
-import { calculateStartingResources } from '../../../utils';
+// FIX: Changed import path to point to the utils directory index.
+import { calculateStartingResources } from '../../../utils/index';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
 
@@ -11,7 +11,7 @@ interface StartingCapitolStepProps {
   step: Step;
 }
 
-export const StartingCapitolStep: React.FC<StartingCapitolStepProps> = ({ step }) => {
+export const StartingCapitolStep = ({ step }: StartingCapitolStepProps): React.ReactElement => {
   const { gameState } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';

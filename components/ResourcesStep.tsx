@@ -3,7 +3,8 @@
 import React from 'react';
 import { Step } from '../types';
 import { STORY_CARDS } from '../constants';
-import { calculateStartingResources } from '../utils';
+// FIX: Changed import path to point to the utils directory index.
+import { calculateStartingResources } from '../utils/index';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';

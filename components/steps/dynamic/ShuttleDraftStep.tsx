@@ -2,7 +2,7 @@
 import React from 'react';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 
-export const ShuttleDraftStep: React.FC = () => {
+export const ShuttleDraftStep = (): React.ReactElement => {
   return (
     <SpecialRuleBlock source="setupCard" title="Setup Card Override">
       <strong>Draft Shuttles from Supply:</strong>

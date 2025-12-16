@@ -2,7 +2,7 @@
 import React from 'react';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 
-export const LocalHeroesStep: React.FC = () => {
+export const LocalHeroesStep = (): React.ReactElement => {
   return (
     <SpecialRuleBlock source="setupCard" title="Setup Card Override">
       <strong>Local Heroes Bonuses:</strong>

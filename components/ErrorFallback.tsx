@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from './Button';
 
@@ -6,7 +7,7 @@ interface ErrorFallbackProps {
   resetErrorBoundary: () => void;
 }
 
-export const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, resetErrorBoundary }) => {
+export const ErrorFallback = ({ error, resetErrorBoundary }: ErrorFallbackProps): React.ReactElement => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="bg-white p-8 rounded-xl shadow-xl max-w-md w-full text-center border-t-8 border-red-800">

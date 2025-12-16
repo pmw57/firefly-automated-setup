@@ -1,6 +1,4 @@
 
-
-
 import React from 'react';
 import { Step } from '../types';
 import { JobStep } from './JobStep';
@@ -22,7 +20,7 @@ interface DynamicStepHandlerProps {
   step: Step;
 }
 
-export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step }) => {
+export const DynamicStepHandler = ({ step }: DynamicStepHandlerProps): React.ReactElement => {
   const { id } = step;
 
   // --- Core Logic Steps Delegated ---
@@ -59,7 +57,7 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step }) 
     return <PressuresHighStep />;
   }
   if (id.includes(STEP_IDS.D_STRIP_MINING)) {
-    return <StripMiningStep step={step} />;
+    return <StripMiningStep />;
   }
 
   // Fallback for any unhandled dynamic step
