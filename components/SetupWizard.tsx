@@ -66,6 +66,12 @@ const FinalSummary: React.FC<{ gameState: GameState }> = ({ gameState }) => {
         success_at_cost: "Success At Cost"
     };
 
+    // Calculate Active Challenges & Advanced Rules
+    const activeStoryChallenges = activeStory?.challengeOptions?.filter(o => gameState.challengeOptions[o.id]) || [];
+    const activeAdvancedRules = STORY_CARDS
+        .filter(c => c.advancedRule && gameState.challengeOptions[c.advancedRule.id])
+        .map(c => c.advancedRule!);
+
     // Styles
     const summaryBg = isDark ? 'bg-black/20' : 'bg-amber-50/50';
     const summaryBorder = isDark ? 'border-white/10' : 'border-amber-900/10';
@@ -97,12 +103,26 @@ const FinalSummary: React.FC<{ gameState: GameState }> = ({ gameState }) => {
                  )}
 
                  {/* Challenges */}
-                 {Object.values(gameState.challengeOptions).some(Boolean) && (
+                 {activeStoryChallenges.length > 0 && (
                      <div className="sm:col-span-2">
                         <div className={labelClass}>Directives & Challenges</div>
                         <ul className={`list-disc ml-4 text-xs ${isDark ? 'text-gray-300' : 'text-gray-800'}`}>
-                            {activeStory?.challengeOptions?.filter(o => gameState.challengeOptions[o.id]).map(o => (
+                            {activeStoryChallenges.map(o => (
                                 <li key={o.id}>{o.label}</li>
+                            ))}
+                        </ul>
+                     </div>
+                 )}
+
+                 {/* Advanced Rules */}
+                 {activeAdvancedRules.length > 0 && (
+                     <div className="sm:col-span-2">
+                        <div className={labelClass}>Advanced Rules</div>
+                        <ul className={`list-disc ml-4 text-xs ${isDark ? 'text-gray-300' : 'text-gray-800'}`}>
+                            {activeAdvancedRules.map(o => (
+                                <li key={o.id}>
+                                    <strong>{o.title}</strong>
+                                </li>
                             ))}
                         </ul>
                      </div>
@@ -111,6 +131,9 @@ const FinalSummary: React.FC<{ gameState: GameState }> = ({ gameState }) => {
                  <div>
                     <div className={labelClass}>Captain(s)</div>
                     <div className={valueClass}>{gameState.playerCount}</div>
+                    <div className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                        {gameState.playerNames.join(', ')}
+                    </div>
                  </div>
 
                  {(isSoloTimerActive || timerSummary) && (
