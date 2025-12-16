@@ -138,7 +138,6 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'tenth',
     mode: 'solo',
     steps: [
-      { id: 'D_FLYING_SOLO_SETUP' }, // 1. Board Setup Selection
       { id: 'C4' }, // Goal Of The Game
       { id: 'C1', overrides: { flyingSoloNavMode: true } }, // Nav Decks (Modified text)
       { id: 'C2' }, // Alliance & Reaver Ships

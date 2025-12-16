@@ -23,7 +23,6 @@ export const SETUP_CONTENT: ContentMap = {
   D_STRIP_MINING: { type: 'dynamic', elementId: 'D_STRIP_MINING', title: "Strip Mining: Starting Cards" },
   
   // Flying Solo Specifics
-  D_FLYING_SOLO_SETUP: { type: 'dynamic', elementId: 'D_FLYING_SOLO_SETUP', title: "Select Paired Setup Card" },
   D_SOLO_OPTIONAL_RULES: { type: 'dynamic', elementId: 'D_SOLO_OPTIONAL_RULES', title: "Optional Solo Rules" },
   D_NO_SURE_THINGS: { type: 'dynamic', elementId: 'D_NO_SURE_THINGS', title: "No Sure Things" },
   D_GAME_LENGTH_TOKENS: { type: 'dynamic', elementId: 'D_GAME_LENGTH_TOKENS', title: "Game Length Tokens" },
@@ -46,7 +45,6 @@ export const STEP_QUOTES: { [key: string]: { text: string; author: string } } = 
   'D_ALLIANCE_ALERT': { text: "Surely there must be some Alliance rule.", author: "Simon Tam" },
   'D_PRESSURES_HIGH': { text: "Things go wrong.", author: "Mal Reynolds" },
   'D_STRIP_MINING': { text: "You want a slanging match, we can have a slanging match.", author: "Badger" },
-  'D_FLYING_SOLO_SETUP': { text: "I aim to misbehave.", author: "Mal Reynolds" },
   'D_SOLO_OPTIONAL_RULES': { text: "Half of writing history is hiding the truth.", author: "Mal Reynolds" },
   'D_NO_SURE_THINGS': { text: "Sometimes a thing gets broke, can't be fixed.", author: "Mal Reynolds"},
   'D_GAME_LENGTH_TOKENS': { text: "Here's to the sunny side of the truth.", author: "Mal Reynolds" },

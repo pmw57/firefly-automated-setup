@@ -84,10 +84,8 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
             ← Previous
           </Button>
           <Button 
-              onClick={onNext} 
-              // Disable Next on Flying Solo Setup until a choice is made
-              disabled={step.id === 'D_FLYING_SOLO_SETUP' && !gameState.secondarySetupId}
-              className={`shadow-lg hover:translate-y-[-2px] transition-transform ${step.id === 'D_FLYING_SOLO_SETUP' && !gameState.secondarySetupId ? 'opacity-50 cursor-not-allowed' : ''}`}
+              onClick={onNext}
+              className="shadow-lg hover:translate-y-[-2px] transition-transform"
           >
             Next Step →
           </Button>

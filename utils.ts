@@ -107,15 +107,9 @@ export const calculateSetupFlow = (state: GameState): Step[] => {
 
   const sourceSteps = structuralDef.steps;
   
-  // 2. Prepend Flying Solo specific steps if active.
-  if (isFlyingSolo) {
-    const step = createStep('D_FLYING_SOLO_SETUP');
-    if (step) newFlow.push(step);
-  }
-
   let noSureThingsInserted = false;
 
-  // 3. Iterate through the structural steps and build the main flow.
+  // 2. Iterate through the structural steps and build the main flow.
   sourceSteps.forEach(setupStep => {
     const stepId = setupStep.id;
 
@@ -146,7 +140,7 @@ export const calculateSetupFlow = (state: GameState): Step[] => {
     }
   });
   
-  // 4. Post-loop injections for solo mode
+  // 3. Post-loop injections for solo mode
   if (isSoloMode) {
     // Fallback for No Sure Things if it wasn't placed in the loop
     if (state.soloOptions?.noSureThings && !noSureThingsInserted) {
