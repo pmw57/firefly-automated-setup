@@ -1,9 +1,6 @@
-
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Step } from '../types';
-// FIX: Changed import path to point to the utils directory index.
-import { calculateSetupFlow } from '../utils/index';
 import { useGameState } from '../hooks/useGameState';
+import { useSetupFlow } from '../hooks/useSetupFlow';
 import { StepContent } from './StepContent';
 import { ProgressBar } from './ProgressBar';
 import { Button } from './Button';
@@ -15,8 +12,8 @@ const WIZARD_STEP_STORAGE_KEY = 'firefly_wizardStep_v3';
 
 const SetupWizard = (): React.ReactElement | null => {
   const { gameState, isStateInitialized: isGameStateInitialized, resetGameState } = useGameState();
+  const { flow } = useSetupFlow();
 
-  const [flow, setFlow] = useState<Step[]>([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isWizardInitialized, setIsWizardInitialized] = useState(false);
   const [resetKey, setResetKey] = useState(0);
@@ -25,13 +22,6 @@ const SetupWizard = (): React.ReactElement | null => {
   const isDark = theme === 'dark';
 
   const setupStepCount = useMemo(() => flow.filter(s => s.type === 'setup').length, [flow]);
-
-  // Re-calculate the flow whenever gameState changes
-  useEffect(() => {
-    if (!isGameStateInitialized || !isWizardInitialized) return;
-    const newFlow = calculateSetupFlow(gameState);
-    setFlow(newFlow);
-  }, [gameState, isGameStateInitialized, isWizardInitialized]);
   
   // Load wizard-specific state (step index) from local storage on mount
   useEffect(() => {
@@ -53,6 +43,13 @@ const SetupWizard = (): React.ReactElement | null => {
     if (!isWizardInitialized) return;
     localStorage.setItem(WIZARD_STEP_STORAGE_KEY, JSON.stringify(currentStepIndex));
   }, [currentStepIndex, isWizardInitialized]);
+  
+  // When the flow changes (e.g., options selected), ensure the current index is still valid.
+  useEffect(() => {
+    if (currentStepIndex >= flow.length && flow.length > 0) {
+      setCurrentStepIndex(flow.length - 1);
+    }
+  }, [flow, currentStepIndex]);
 
   const handleNext = useCallback(() => {
     setCurrentStepIndex(prev => {
@@ -82,7 +79,7 @@ const SetupWizard = (): React.ReactElement | null => {
     window.scrollTo(0, 0);
   }, [resetGameState]);
 
-  if (!isGameStateInitialized || !isWizardInitialized) {
+  if (!isGameStateInitialized || !isWizardInitialized || flow.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-900 mb-6"></div>
@@ -94,12 +91,12 @@ const SetupWizard = (): React.ReactElement | null => {
   const currentStep = flow[currentStepIndex];
   if (!currentStep) {
     // This can happen briefly while flow recalculates, especially on reset.
-    // A more robust solution might show a loading spinner, but for now this is fine.
     return null;
   }
   
   const isFinal = currentStep.type === 'final';
 
+  // Don't show step numbers for the initial setup screens
   const displayStepIndex = currentStep.type === 'setup' ? 0 : currentStepIndex - setupStepCount + 1;
 
   return (

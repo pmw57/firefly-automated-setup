@@ -1,13 +1,12 @@
-
 import React from 'react';
 import { Expansions } from '../types';
-import { EXPANSIONS_METADATA, SETUP_CARD_IDS } from '../constants';
+import { EXPANSIONS_METADATA } from '../data/expansions';
+import { SETUP_CARD_IDS } from '../data/ids';
 import { Button } from './Button';
 import { ExpansionToggle } from './ExpansionToggle';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-// FIX: Changed import path to point to the utils directory index.
-import { updatePlayerCountState, updateExpansionState, autoSelectFlyingSoloState } from '../utils/index';
+import { updatePlayerCountState, updateExpansionState, autoSelectFlyingSoloState } from '../utils/state';
 
 
 interface CaptainSetupProps {

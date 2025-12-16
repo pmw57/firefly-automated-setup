@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Step } from '../types';
 import { Button } from './Button';
 import { QuotePanel } from './QuotePanel';
 import { useTheme } from './ThemeContext';
-import { STEP_IDS } from '../constants';
+import { STEP_IDS } from '../data/ids';
 
 // Core Steps
 import { NavDeckStep } from './NavDeckStep';

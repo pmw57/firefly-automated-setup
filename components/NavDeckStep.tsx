@@ -1,11 +1,9 @@
-
 import React, { useMemo } from 'react';
 import { Step } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-// FIX: Changed import path to point to the utils directory index.
-import { determineNavDeckDetails } from '../utils/index';
+import { determineNavDeckDetails } from '../utils/nav';
 
 interface NavDeckStepProps {
   step: Step;

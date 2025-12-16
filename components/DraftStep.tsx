@@ -1,15 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { Step, DraftState } from '../types';
-import { STORY_CARDS } from '../data/storyCards';
-// FIX: Changed import path to point to the utils directory index.
-import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/index';
+import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/draft';
 import { Button } from './Button';
 import { DiceControls } from './DiceControls';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { STEP_IDS, CHALLENGE_IDS, STORY_TITLES } from '../constants';
+import { STORY_CARDS } from '../data/storyCards';
+import { STEP_IDS, CHALLENGE_IDS, STORY_TITLES } from '../data/ids';
 
 interface DraftStepProps {
   step: Step;

@@ -1,13 +1,11 @@
-
 import React, { useMemo } from 'react';
 import { Step } from '../types';
-import { STORY_CARDS } from '../data/storyCards';
-// FIX: Changed import path to point to the utils directory index.
-import { determineJobSetupDetails } from '../utils/index';
+import { determineJobSetupDetails } from '../utils/jobs';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { STEP_IDS } from '../constants';
+import { STORY_CARDS } from '../data/storyCards';
+import { STEP_IDS } from '../data/ids';
 
 interface JobStepProps {
   step: Step;

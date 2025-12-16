@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Step } from '../types';
 import { JobStep } from './JobStep';
 import { DraftStep } from './DraftStep';
-import { STEP_IDS } from '../constants';
+import { STEP_IDS } from '../data/ids';
 
 // Import newly created individual step components
 import { NoSureThingsStep } from './steps/dynamic/NoSureThingsStep';

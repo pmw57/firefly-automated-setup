@@ -1,13 +1,10 @@
-
-
 import React from 'react';
 import { Step } from '../types';
-import { STORY_CARDS } from '../constants';
-// FIX: Changed import path to point to the utils directory index.
-import { calculateStartingResources } from '../utils/index';
+import { calculateStartingResources } from '../utils/resources';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
+import { STORY_CARDS } from '../data/storyCards';
 
 interface ResourcesStepProps {
   step: Step;

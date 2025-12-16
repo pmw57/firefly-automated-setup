@@ -1,10 +1,8 @@
-
 import React, { useState, useMemo } from 'react';
 import { GameState, Step } from '../types';
-// FIX: Changed import path to point to the utils directory index.
-import { getDisplaySetupName } from '../utils/index';
+import { getDisplaySetupName } from '../utils/ui';
 import { useTheme } from './ThemeContext';
-import { STEP_IDS } from '../constants';
+import { STEP_IDS } from '../data/ids';
 
 interface WizardHeaderProps {
     gameState: GameState;

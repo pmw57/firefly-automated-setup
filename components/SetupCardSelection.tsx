@@ -1,8 +1,6 @@
-
-
-
 import React, { useEffect, useRef, useMemo, useCallback } from 'react';
-import { SETUP_CARDS, SETUP_CARD_IDS } from '../constants';
+import { SETUP_CARDS } from '../data/setupCards';
+import { SETUP_CARD_IDS } from '../data/ids';
 import { Button } from './Button';
 import { ExpansionIcon } from './ExpansionIcon';
 import { useTheme } from './ThemeContext';
