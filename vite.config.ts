@@ -1,4 +1,5 @@
 
+
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
@@ -26,9 +27,9 @@ export default defineConfig(({ command }) => ({
       registerType: 'autoUpdate',
       includeAssets: ['logo.svg', 'expansion_sprites.png'],
       manifest: {
-        name: 'Firefly: The Game - Automated Setup',
+        name: 'Firefly: The Game - Automated Setup Guide',
         short_name: 'Firefly Setup',
-        description: 'Automated setup wizard for Firefly: The Game',
+        description: 'Automated setup guide for Firefly: The Game',
         theme_color: '#7f1d1d',
         background_color: '#ffffff',
         display: 'standalone',

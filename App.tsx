@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
@@ -46,7 +47,7 @@ const App: React.FC = () => {
             </h1>
             <div className="inline-block border-t-2 border-yellow-700/50 pt-2 px-8">
               <p className="text-yellow-100/90 dark:text-gray-300 font-medium tracking-[0.3em] uppercase text-sm md:text-base">
-                Automated Setup Assistant
+                Automated Setup Guide
               </p>
             </div>
           </div>
