@@ -15,6 +15,21 @@ interface MissionDossierStepProps {
   setGameState: React.Dispatch<React.SetStateAction<GameState>>;
 }
 
+const SOLO_EXCLUDED_STORIES = [
+  "The Great Recession",
+  "The Well's Run Dry",
+  "It's All In Who You Know",
+  "The Scavenger's 'Verse",
+  "Smuggler's Blues",
+  "Aces Up Your Sleeve"
+];
+
+const SOLO_TIMER_ADJUSTMENTS: Record<string, string> = {
+  "Desperadoes": "Declare Last Call before discarding your last token to win the game.",
+  "\"Respectable\" Persons Of Business": "Declare Last Call before discarding your last token to win the game.",
+  "A Rare Specimen Indeed": "Send Out Invites before discarding your last token to win the game."
+};
+
 export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameState, setGameState }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterExpansion, setFilterExpansion] = useState<string>('all');
@@ -77,6 +92,11 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
 
        // Multiplayer Check: Hide Solo-only cards
        if (gameState.gameMode === 'multiplayer' && card.isSolo) {
+           return false;
+       }
+
+       // Solo Check: Hide incompatible multiplayer stories
+       if (gameState.gameMode === 'solo' && SOLO_EXCLUDED_STORIES.includes(card.title)) {
            return false;
        }
 
@@ -295,6 +315,13 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                 </SpecialRuleBlock>
             )}
 
+            {/* Solo Adjustments */}
+            {gameState.gameMode === 'solo' && SOLO_TIMER_ADJUSTMENTS[activeStoryCard.title] && (
+                <SpecialRuleBlock source="expansion" title="Solo Adjustment">
+                    {SOLO_TIMER_ADJUSTMENTS[activeStoryCard.title]}
+                </SpecialRuleBlock>
+            )}
+
             {/* Solo Mode Information Block */}
             {gameState.setupCardId === 'FlyingSolo' && (
                 <SpecialRuleBlock source="expansion" title="10th AE Solo Rules">
@@ -380,14 +407,14 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
               <input 
                 type="text" 
                 placeholder="Search Title or Intro..." 
-                className={`flex-1 p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-[#d4af37] focus:outline-none ${inputBg} ${inputText} ${inputPlaceholder} transition-colors`}
+                className={`flex-1 p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none ${inputBg} ${inputText} ${inputPlaceholder} transition-colors`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <select 
                   value={filterExpansion} 
                   onChange={(e) => setFilterExpansion(e.target.value)}
-                  className={`p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-[#d4af37] focus:outline-none ${inputBg} ${inputText} transition-colors`}
+                  className={`p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none ${inputBg} ${inputText} transition-colors`}
               >
                   <option value="all">All Expansions</option>
                   <option value="base">Base Game</option>
@@ -415,6 +442,9 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                       <p>No missions found.</p>
                       {gameState.gameMode === 'solo' && gameState.setupCardId !== 'FlyingSolo' && (
                         <p className="text-xs mt-2 text-red-500">Classic Solo is restricted to 'Awful Lonely in the Big Black'.</p>
+                      )}
+                      {gameState.gameMode === 'solo' && (
+                        <p className="text-xs mt-2 text-amber-600">Some multiplayer-centric missions are hidden in Solo.</p>
                       )}
                       <Button onClick={() => {setSearchTerm(''); setFilterExpansion('all');}} variant="secondary" className="mt-4 text-sm">Clear Filters</Button>
                   </div>
