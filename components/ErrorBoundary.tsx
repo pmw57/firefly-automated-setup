@@ -11,10 +11,17 @@ interface ErrorBoundaryState {
 }
 
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  state: ErrorBoundaryState = {
-    hasError: false,
-    error: null
-  };
+  // FIX: Replaced class property state initialization with a constructor.
+  // This ensures state is set up correctly and provides a place to bind methods.
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null
+    };
+
+    this.handleReset = this.handleReset.bind(this);
+  }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
@@ -24,10 +31,12 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     console.error("Uncaught error:", error, errorInfo);
   }
 
-  handleReset = () => {
+  // FIX: Changed from an arrow function to a class method, bound in the constructor.
+  // This explicitly sets the context of `this` to fix the `setState` error.
+  handleReset() {
     this.setState({ hasError: false, error: null });
     window.location.reload();
-  };
+  }
 
   render(): ReactNode {
     if (this.state.hasError) {

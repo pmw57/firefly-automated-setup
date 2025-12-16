@@ -96,73 +96,72 @@ export const calculateSetupFlow = (state: GameState): Step[] => {
   const newFlow: Step[] = [];
   const activeStory = STORY_CARDS.find(c => c.title === state.selectedStoryCard);
   const isFlyingSolo = state.setupCardId === 'FlyingSolo';
+  const isSoloMode = state.gameMode === 'solo';
 
-  // 1. Determine the Base Definition (The source of truth for steps)
-  let baseDef = SETUP_CARDS.find(s => s.id === state.setupCardId);
+  // 1. Determine the definition that dictates the setup *structure*.
+  // For Flying Solo, it's the secondary card. Otherwise, the main one.
+  const structuralDefId = isFlyingSolo ? state.secondarySetupId : state.setupCardId;
+  let structuralDef = SETUP_CARDS.find(s => s.id === structuralDefId);
+  if (!structuralDef) structuralDef = SETUP_CARDS.find(s => s.id === 'Standard');
+  if (!structuralDef) return []; // Should not happen
+
+  const sourceSteps = structuralDef.steps;
   
-  // In Flying Solo, the base definition steps come from the *Secondary* card (Board Setup),
-  // but wrapped in the context of the Flying Solo rules.
-  if (isFlyingSolo && state.secondarySetupId) {
-      baseDef = SETUP_CARDS.find(s => s.id === state.secondarySetupId);
+  // 2. Prepend Flying Solo specific steps if active.
+  if (isFlyingSolo) {
+    const step = createStep('D_FLYING_SOLO_SETUP');
+    if (step) newFlow.push(step);
   }
-  
-  // Fallback
-  if (!baseDef) baseDef = SETUP_CARDS[0];
-
-  // 2. Iterate Steps
-  // If Flying Solo, we actually iterate the Flying Solo steps first, 
-  // but we merge overrides from the Secondary card.
-  const sourceSteps = isFlyingSolo 
-    ? (SETUP_CARDS.find(s => s.id === 'FlyingSolo')?.steps || [])
-    : baseDef.steps;
 
   let noSureThingsInserted = false;
 
+  // 3. Iterate through the structural steps and build the main flow.
   sourceSteps.forEach(setupStep => {
-      const stepId = setupStep.id;
+    const stepId = setupStep.id;
 
-      // Injection: No Sure Things (Before C6/Jobs or C_PRIME)
-      const shouldInjectNST = state.soloOptions?.noSureThings && !noSureThingsInserted && (stepId === 'C6' || stepId === 'C_PRIME');
-      
-      // For Flying Solo, we allow it. For Classic Solo (Awful Lonely), we also allow it.
-      const isSoloMode = state.gameMode === 'solo'; // Covers both Flying Solo and Classic
-      
-      if (isSoloMode && shouldInjectNST) {
-          const step = createStep('D_NO_SURE_THINGS');
-          if (step) {
-             newFlow.push(step);
-             noSureThingsInserted = true;
-          }
-      }
-
-      // Calculate Overrides
-      let finalOverrides = setupStep.overrides || {};
-      
-      // If Flying Solo, merge overrides from the secondary board setup
-      if (isFlyingSolo && state.secondarySetupId) {
-           const secondaryStep = baseDef?.steps.find(s => s.id === stepId);
-           if (secondaryStep) {
-               finalOverrides = { ...finalOverrides, ...secondaryStep.overrides };
-           }
-      }
-
-      const step = createStep(stepId, finalOverrides);
+    // Injection: No Sure Things (Optional Solo Rule) - must happen inside the loop to get position right.
+    if (isSoloMode && state.soloOptions?.noSureThings && !noSureThingsInserted && (stepId === 'C6' || stepId === 'C_PRIME')) {
+      const step = createStep('D_NO_SURE_THINGS');
       if (step) {
-          newFlow.push(step);
+        newFlow.push(step);
+        noSureThingsInserted = true;
       }
+    }
+    
+    // Merge overrides: start with the structural card's overrides.
+    let finalOverrides = setupStep.overrides || {};
+    
+    // If Flying Solo, layer its specific overrides on top.
+    if (isFlyingSolo) {
+      const flyingSoloDef = SETUP_CARDS.find(s => s.id === 'FlyingSolo')!;
+      const flyingSoloStepOverride = flyingSoloDef.steps.find(s => s.id === stepId);
+      if (flyingSoloStepOverride) {
+        finalOverrides = { ...finalOverrides, ...flyingSoloStepOverride.overrides };
+      }
+    }
+
+    const step = createStep(stepId, finalOverrides);
+    if (step) {
+      newFlow.push(step);
+    }
   });
-
-  // Injection: Game Length Tokens (For Classic Solo / Awful Lonely)
-  // Flying Solo handles this in its own step definition, so we only need to inject for classic.
-  if (state.gameMode === 'solo' && !isFlyingSolo && activeStory?.setupConfig?.soloGameTimer) {
-       const step = createStep('D_GAME_LENGTH_TOKENS');
-       if (step) newFlow.push(step);
-  }
-
-  // Fallback: NST wasn't inserted due to weird step order
-  if (state.gameMode === 'solo' && state.soloOptions?.noSureThings && !noSureThingsInserted) {
+  
+  // 4. Post-loop injections for solo mode
+  if (isSoloMode) {
+    // Fallback for No Sure Things if it wasn't placed in the loop
+    if (state.soloOptions?.noSureThings && !noSureThingsInserted) {
       const step = createStep('D_NO_SURE_THINGS');
       if (step) newFlow.push(step);
+    }
+
+    // Add Game Length Tokens step for any solo mode that uses a timer
+    const isClassicSoloWithTimer = !isFlyingSolo && activeStory?.setupConfig?.soloGameTimer;
+    if ((isFlyingSolo || isClassicSoloWithTimer) && !activeStory?.setupConfig?.disableSoloTimer) {
+      if (!newFlow.some(s => s.id === 'D_GAME_LENGTH_TOKENS')) {
+        const step = createStep('D_GAME_LENGTH_TOKENS');
+        if (step) newFlow.push(step);
+      }
+    }
   }
 
   newFlow.push({ type: 'final', id: 'final' });
