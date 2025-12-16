@@ -245,7 +245,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
     <div className="space-y-6">
       
       {/* 
-         PART 1: MISSION SELECTION & GOAL
+         PART 1: STORY SELECTION & GOAL
       */}
       {subStep === 1 && (
       <div className="animate-fade-in space-y-6">
@@ -254,7 +254,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
             className={`${containerBg} backdrop-blur-md rounded-lg shadow-md border ${containerBorder} overflow-hidden transition-colors duration-300 scroll-mt-24`}
           >
              <div className={`${headerBarBg} p-4 flex justify-between items-center border-b ${headerBarBorder} transition-colors duration-300`}>
-                <h3 className={`font-bold text-lg font-western tracking-wider ${headerColor}`}>Mission Selection</h3>
+                <h3 className={`font-bold text-lg font-western tracking-wider ${headerColor}`}>Story Selection</h3>
                 {enablePart2 && <span className={`text-xs uppercase tracking-widest ${badgeBg} ${badgeBorder} ${badgeText} px-2 py-1 rounded font-bold`}>Part 1 of 2</span>}
              </div>
              
@@ -387,7 +387,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
           {shortList.length > 0 && (
               <div className={`${isDark ? 'bg-blue-950/30 border-blue-900/50' : 'bg-blue-50 border-blue-200'} border p-4 rounded-lg mb-4 animate-fade-in`}>
                   <div className="flex justify-between items-center mb-3">
-                      <h4 className={`font-bold ${isDark ? 'text-blue-200' : 'text-blue-900'}`}>Short-Listed Missions</h4>
+                      <h4 className={`font-bold ${isDark ? 'text-blue-200' : 'text-blue-900'}`}>Short-Listed Stories</h4>
                       <span className={`text-xs ${isDark ? 'text-blue-300 bg-blue-900/50' : 'text-blue-600 bg-blue-100'} px-2 py-1 rounded-full font-bold`}>Pick one below or roll</span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
@@ -449,7 +449,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                   ) : (
                       <div className={`flex flex-col items-center justify-center h-full ${emptyStateText} italic`}>
                           <span className="text-4xl mb-2">🕵️</span>
-                          <p>No missions found.</p>
+                          <p>No stories found.</p>
                           {gameState.gameMode === 'solo' && gameState.setupCardId !== 'FlyingSolo' && (
                             <p className="text-xs mt-2 text-red-500">Classic Solo is restricted to 'Awful Lonely in the Big Black'.</p>
                           )}
@@ -461,7 +461,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                   )}
               </div>
               <div className={`text-right text-xs ${countText}`}>
-                  Showing {filteredStories.length} of {validStories.length} available missions
+                  Showing {filteredStories.length} of {validStories.length} available stories
               </div>
           </div>
       </div>
@@ -477,7 +477,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
           >
               <div className={`${containerBg} backdrop-blur-md rounded-lg shadow-md border ${containerBorder} overflow-hidden transition-colors duration-300`}>
                  <div className={`${headerBarBg} p-4 flex justify-between items-center border-b ${headerBarBorder} transition-colors duration-300`}>
-                    <h3 className={`font-bold text-lg font-western tracking-wider ${headerColor}`}>Mission Options</h3>
+                    <h3 className={`font-bold text-lg font-western tracking-wider ${headerColor}`}>Story Options</h3>
                     <span className={`text-xs uppercase tracking-widest ${badgeBg} ${badgeBorder} ${badgeText} px-2 py-1 rounded font-bold`}>Part 2 of 2</span>
                  </div>
                  <div className={`p-6 ${bodyBg} transition-colors`}>
@@ -491,7 +491,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                             </div>
                          )}
                          <div>
-                             <div className={`text-xs uppercase font-bold tracking-wide opacity-70 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Selected Mission</div>
+                             <div className={`text-xs uppercase font-bold tracking-wide opacity-70 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Selected Story</div>
                              <div className={`font-bold font-western ${mainTitleColor}`}>{activeStoryCard.title}</div>
                          </div>
                      </div>
@@ -580,7 +580,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
                     
                     {(!activeStoryCard.challengeOptions || activeStoryCard.challengeOptions.length === 0) && availableAdvancedRules.length === 0 && (
                         <div className={`p-8 text-center italic ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
-                            No optional rules available for this mission/configuration.
+                            No optional rules available for this story/configuration.
                         </div>
                     )}
                  </div>
@@ -591,7 +591,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
       {/* Internal Navigation Footer */}
       <div className={`mt-8 flex justify-between clear-both pt-6 border-t ${navBorderTop}`}>
           <Button onClick={handlePrevStep} variant="secondary" className="shadow-sm">
-             {subStep === 1 ? '← Previous' : '← Back to Mission'}
+             {subStep === 1 ? '← Previous' : '← Back to Story'}
           </Button>
           <Button 
               onClick={handleNextStep} 
