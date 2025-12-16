@@ -1,5 +1,6 @@
-import React, { ErrorInfo, ReactNode } from 'react';
-import { Button } from './Button';
+// Fix: Import `Component` directly from `react` to avoid potential type resolution issues.
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { ErrorFallback } from './ErrorFallback';
 
 interface ErrorBoundaryProps {
   children?: ReactNode;
@@ -10,18 +11,12 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  // FIX: Switched to a constructor for state initialization and method binding.
-  // This is a more robust pattern for class components and resolves an issue where
-  // TypeScript was unable to find `setState` and `props` on `this`.
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = {
-      hasError: false,
-      error: null,
-    };
-    this.handleReset = this.handleReset.bind(this);
-  }
+// Fix: Extend `Component` directly instead of `React.Component` to resolve typing issues where `setState` and `props` were not found.
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  state: ErrorBoundaryState = {
+    hasError: false,
+    error: null,
+  };
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
@@ -31,29 +26,18 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     console.error("Uncaught error:", error, errorInfo);
   }
 
-  handleReset() {
+  handleReset = () => {
     this.setState({ hasError: false, error: null });
     window.location.reload();
-  }
+  };
 
   render(): ReactNode {
-    if (this.state.hasError) {
+    if (this.state.hasError && this.state.error) {
       return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-          <div className="bg-white p-8 rounded-xl shadow-xl max-w-md w-full text-center border-t-8 border-red-800">
-            <div className="text-6xl mb-4">💥</div>
-            <h1 className="text-2xl font-bold text-gray-800 font-western mb-2">Primary Buffer Panel Just Fell Off</h1>
-            <p className="text-gray-600 mb-6">
-              Something went wrong with the setup guide. It might be a gorram glitch in the Cortex.
-            </p>
-            <div className="bg-gray-100 p-3 rounded text-left text-xs text-red-700 font-mono mb-6 overflow-auto max-h-32">
-              {this.state.error?.message}
-            </div>
-            <Button onClick={this.handleReset} fullWidth>
-              Reboot System
-            </Button>
-          </div>
-        </div>
+        <ErrorFallback
+          error={this.state.error}
+          resetErrorBoundary={this.handleReset}
+        />
       );
     }
 

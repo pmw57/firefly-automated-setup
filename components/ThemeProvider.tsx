@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Theme, ThemeContext } from './ThemeContext';
+import { Theme, themeContext } from './ThemeContext';
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Initialize state based on storage or system preference immediately to avoid flash of incorrect theme
@@ -51,8 +51,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <themeContext.Provider value={{ theme, toggleTheme }}>
       {children}
-    </ThemeContext.Provider>
+    </themeContext.Provider>
   );
 };

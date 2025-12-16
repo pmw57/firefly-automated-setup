@@ -71,9 +71,9 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({
         </select>
       </div>
       
-      <div className={`h-[500px] overflow-y-auto border ${listContainerBorder} rounded-lg ${listContainerBg} p-2 custom-scrollbar`}>
+      <div className={`h-[350px] overflow-y-auto border ${listContainerBorder} rounded-lg ${listContainerBg} p-2 custom-scrollbar`}>
         {filteredStories.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="space-y-3">
             {filteredStories.map((card) => (
               <StoryCardGridItem 
                 key={card.title}

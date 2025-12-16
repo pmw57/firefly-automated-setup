@@ -158,7 +158,7 @@ export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ gameStat
       >
         <div className={`${headerBarBg} p-4 flex justify-between items-center border-b ${headerBarBorder} transition-colors duration-300`}>
           <h3 className={`font-bold text-lg font-western tracking-wider ${headerColor}`}>
-            {subStep === 1 ? 'Story Selection' : 'Story Options'}
+            {subStep === 1 ? 'Goal of the Game' : 'Story Options'}
           </h3>
           {enablePart2 && <span className={`text-xs uppercase tracking-widest ${badgeBg} ${badgeBorder} ${badgeText} px-2 py-1 rounded font-bold`}>Part {subStep} of 2</span>}
         </div>
