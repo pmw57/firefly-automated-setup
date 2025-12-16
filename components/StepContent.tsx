@@ -30,6 +30,7 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const stepId = step.data?.id || step.id || '';
+  const isMissionDossier = step.data?.id === 'core-4';
 
   // Render logic based on Step Type and ID
   const renderStepBody = () => {
@@ -38,7 +39,7 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
         case 'core-1': return <NavDeckStep step={step} gameState={gameState} />;
         case 'core-2': return <AllianceReaverStep step={step} gameState={gameState} />;
         case 'core-3': return <DraftStep step={step} gameState={gameState} />;
-        case 'core-4': return <MissionDossierStep step={step} gameState={gameState} setGameState={setGameState} />;
+        case 'core-4': return <MissionDossierStep step={step} gameState={gameState} setGameState={setGameState} onNext={onNext} onPrev={onPrev} />;
         case 'core-5': return <ResourcesStep step={step} gameState={gameState} />;
         case 'core-6': return <JobStep step={step} gameState={gameState} />;
         case 'core-prime': return <PrimePumpStep step={step} gameState={gameState} />;
@@ -77,19 +78,21 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, gameS
         {renderStepBody()}
       </div>
 
-      <div className={`mt-8 flex justify-between clear-both pt-6 border-t ${borderTop}`}>
-        <Button onClick={onPrev} variant="secondary" className="shadow-sm">
-          ← Previous
-        </Button>
-        <Button 
-            onClick={onNext} 
-            // Disable Next on Flying Solo Setup until a choice is made
-            disabled={step.id === 'D_FLYING_SOLO_SETUP' && !gameState.secondarySetupId}
-            className={`shadow-lg hover:translate-y-[-2px] transition-transform ${step.id === 'D_FLYING_SOLO_SETUP' && !gameState.secondarySetupId ? 'opacity-50 cursor-not-allowed' : ''}`}
-        >
-          Next Step →
-        </Button>
-      </div>
+      {!isMissionDossier && (
+        <div className={`mt-8 flex justify-between clear-both pt-6 border-t ${borderTop}`}>
+          <Button onClick={onPrev} variant="secondary" className="shadow-sm">
+            ← Previous
+          </Button>
+          <Button 
+              onClick={onNext} 
+              // Disable Next on Flying Solo Setup until a choice is made
+              disabled={step.id === 'D_FLYING_SOLO_SETUP' && !gameState.secondarySetupId}
+              className={`shadow-lg hover:translate-y-[-2px] transition-transform ${step.id === 'D_FLYING_SOLO_SETUP' && !gameState.secondarySetupId ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            Next Step →
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

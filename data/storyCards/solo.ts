@@ -35,7 +35,11 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { id: 'illegal_jobs_only', label: "Work only Illegal Jobs." },
       { id: 'recover_1_glt', label: "Only recover 1 Game Length Token each time you become Solid." },
       { id: 'caper_first', label: "Complete a Caper before gaining any Solid Rep." }
-    ]
+    ],
+    advancedRule: {
+        id: "adv_alt_alliance_contacts",
+        title: "Alternate Alliance Contacts"
+    }
   },
   {
     title: "For A Few Credits More",
@@ -55,7 +59,11 @@ export const SOLO_STORIES: StoryCardDef[] = [
         { id: 'legal_jobs_only', label: "Work only Legal Jobs, including Bounties." },
         { id: 'single_contact', label: "Work for a single Contact only." },
         { id: 'pay_on_botch', label: "Pay your Crew whenever you Botch. Otherwise, Disgruntle them." }
-    ]
+    ],
+    advancedRule: {
+        id: "adv_alt_corvette_contacts",
+        title: "Alternate Corvette Contacts"
+    }
   },
   {
     title: "Goin' Reaver",
@@ -67,6 +75,10 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupConfig: {
         placeReaverAlertsInMotherlodeAndUroboros: true,
         soloGameTimer: true
+    },
+    advancedRule: {
+        id: "adv_wolf_at_your_door",
+        title: "Wolf At Your Door"
     }
   },
   {
@@ -83,7 +95,11 @@ export const SOLO_STORIES: StoryCardDef[] = [
     },
     challengeOptions: [
       { id: 'heroes_custom_setup', label: "Why should Mal have all the fun? Pick the Leader, Ship, and Supply Planet of your choice. Begin the game with $2000 and a full compliment of your favourite Crew from the show or game." }
-    ]
+    ],
+    advancedRule: {
+        id: "adv_contact_quirks_work",
+        title: "Contact Quirks - Work"
+    }
   },
   {
     title: "Once Upon A Time In The Big Black",
@@ -99,7 +115,11 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { id: 'no_capers', label: "No Capers allowed!" },
       { id: 'no_aces', label: "Don't use Aces." },
       { id: 'universe_challenge', label: "Attach a Mr. Universe Challenge Card to every Job." }
-    ]
+    ],
+    advancedRule: {
+        id: "adv_alt_reaver_contacts",
+        title: "Alternate Reaver Contacts"
+    }
   },
   {
     title: "Racing A Pale Horse",
@@ -110,6 +130,10 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     setupConfig: {
         disableSoloTimer: true
+    },
+    advancedRule: {
+        id: "adv_automated_movement",
+        title: "Automated Movement"
     }
   },
   {
@@ -122,6 +146,10 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupConfig: {
         soloGameTimer: true,
         forbiddenStartingContact: "Harken"
+    },
+    advancedRule: {
+        id: "adv_lost_little_lambs",
+        title: "Lost Little Lambs"
     }
   },
   {
@@ -137,6 +165,10 @@ export const SOLO_STORIES: StoryCardDef[] = [
         jobDrawMode: "no_jobs",
         startAtLondinium: true,
         startWithAlertCard: true
+    },
+    advancedRule: {
+        id: "adv_lone_targets",
+        title: "Lone Targets"
     }
   },
   {
@@ -150,6 +182,10 @@ export const SOLO_STORIES: StoryCardDef[] = [
         disableSoloTimer: true,
         startWithAlertCard: true,
         startWithGoalToken: true
+    },
+    advancedRule: {
+        id: "adv_contact_quirks_deal",
+        title: "Contact Quirks - Deal"
     }
   },
 ];
