@@ -1,7 +1,9 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { GameState, Step } from '../types';
-import { getDefaultGameState, calculateSetupFlow } from '../utils';
+
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Step } from '../types';
+import { calculateSetupFlow } from '../utils';
+import { useGameState } from '../hooks/useGameState';
 import { StepContent } from './StepContent';
 import { ProgressBar } from './ProgressBar';
 import { Button } from './Button';
@@ -9,78 +11,54 @@ import { useTheme } from './ThemeContext';
 import { FinalSummary } from './FinalSummary';
 import { WizardHeader } from './WizardHeader';
 
-const STORAGE_KEY = 'firefly_setup_v2';
-
-interface PersistedState {
-  gameState: GameState;
-  currentStepIndex: number;
-}
+const WIZARD_STEP_STORAGE_KEY = 'firefly_wizardStep_v3';
 
 const SetupWizard: React.FC = () => {
-  const [gameState, setGameState] = useState<GameState>(getDefaultGameState());
+  const { gameState, isStateInitialized: isGameStateInitialized, resetGameState } = useGameState();
+
   const [flow, setFlow] = useState<Step[]>([]);
-  const [currentStepIndex, setCurrentStepIndex] = useState(0); 
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [isWizardInitialized, setIsWizardInitialized] = useState(false);
   const [resetKey, setResetKey] = useState(0);
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  // The first few steps are for configuration and should not be numbered.
-  // The actual numbered steps correspond to the steps on the physical setup cards.
   const setupStepCount = useMemo(() => flow.filter(s => s.type === 'setup').length, [flow]);
 
   // Re-calculate the flow whenever gameState changes
   useEffect(() => {
-      if (!isInitialized) return;
-      const newFlow = calculateSetupFlow(gameState);
-      setFlow(newFlow);
-  }, [gameState, isInitialized]);
+    if (!isGameStateInitialized || !isWizardInitialized) return;
+    const newFlow = calculateSetupFlow(gameState);
+    setFlow(newFlow);
+  }, [gameState, isGameStateInitialized, isWizardInitialized]);
   
-  // Load state from local storage on mount
+  // Load wizard-specific state (step index) from local storage on mount
   useEffect(() => {
     const timer = setTimeout(() => {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
+      const savedStep = localStorage.getItem(WIZARD_STEP_STORAGE_KEY);
+      if (savedStep) {
         try {
-          const parsed: PersistedState = JSON.parse(saved);
-          if (!parsed.gameState.gameEdition) throw new Error("Legacy state");
-          
-          // Deep merge with default state to ensure new fields are present
-          const defaults = getDefaultGameState();
-          const loadedState = parsed.gameState;
-          
-          const mergedState: GameState = {
-              ...defaults,
-              ...loadedState,
-              timerConfig: { ...defaults.timerConfig, ...(loadedState.timerConfig || {}) },
-              soloOptions: { ...defaults.soloOptions, ...(loadedState.soloOptions || {}) },
-              optionalRules: { ...defaults.optionalRules, ...(loadedState.optionalRules || {}) },
-              expansions: { ...defaults.expansions, ...(loadedState.expansions || {}) },
-              challengeOptions: { ...defaults.challengeOptions, ...(loadedState.challengeOptions || {}) }
-          };
-
-          setGameState(mergedState);
-          setCurrentStepIndex(parsed.currentStepIndex);
-
+          const parsedStep: number = JSON.parse(savedStep);
+          setCurrentStepIndex(parsedStep);
         } catch (e) {
-          console.warn("State reset due to version update or error", e);
+          console.warn("Wizard step reset due to error", e);
+          localStorage.removeItem(WIZARD_STEP_STORAGE_KEY);
         }
       }
-      setIsInitialized(true);
+      setIsWizardInitialized(true);
     }, 1200); 
 
     return () => clearTimeout(timer);
   }, []);
 
-  // Save state to local storage
+  // Save wizard-specific state (step index) to local storage
   useEffect(() => {
-    if (!isInitialized) return;
-    const dataToSave: PersistedState = { gameState, currentStepIndex };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
-  }, [gameState, currentStepIndex, isInitialized]);
+    if (!isWizardInitialized) return;
+    localStorage.setItem(WIZARD_STEP_STORAGE_KEY, JSON.stringify(currentStepIndex));
+  }, [currentStepIndex, isWizardInitialized]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setCurrentStepIndex(prev => {
         const nextIndex = Math.min(prev + 1, flow.length - 1);
         if (nextIndex !== prev) {
@@ -88,9 +66,9 @@ const SetupWizard: React.FC = () => {
         }
         return nextIndex;
     });
-  };
+  }, [flow.length]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setCurrentStepIndex(prev => {
         const nextIndex = Math.max(prev - 1, 0);
         if (nextIndex !== prev) {
@@ -98,17 +76,17 @@ const SetupWizard: React.FC = () => {
         }
         return nextIndex;
     });
-  };
+  }, []);
 
-  const performReset = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    setGameState(getDefaultGameState());
+  const performReset = useCallback(() => {
+    resetGameState();
+    localStorage.removeItem(WIZARD_STEP_STORAGE_KEY);
     setCurrentStepIndex(0);
     setResetKey(prev => prev + 1);
     window.scrollTo(0, 0);
-  };
+  }, [resetGameState]);
 
-  if (!isInitialized) {
+  if (!isGameStateInitialized || !isWizardInitialized) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-900 mb-6"></div>
@@ -119,8 +97,8 @@ const SetupWizard: React.FC = () => {
 
   const currentStep = flow[currentStepIndex];
   if (!currentStep) {
-    // This can happen briefly while flow recalculates.
-    // A more robust solution might show a loading spinner.
+    // This can happen briefly while flow recalculates, especially on reset.
+    // A more robust solution might show a loading spinner, but for now this is fine.
     return null;
   }
   
@@ -151,8 +129,6 @@ const SetupWizard: React.FC = () => {
         <StepContent 
           step={currentStep} 
           stepIndex={displayStepIndex}
-          gameState={gameState}
-          setGameState={setGameState}
           onNext={handleNext} 
           onPrev={handlePrev}
         />

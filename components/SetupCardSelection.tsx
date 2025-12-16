@@ -1,20 +1,19 @@
 
+
 import React, { useEffect, useRef, useMemo, useCallback } from 'react';
-import { GameState } from '../types';
 import { SETUP_CARDS } from '../constants';
 import { Button } from './Button';
 import { ExpansionIcon } from './ExpansionIcon';
 import { useTheme } from './ThemeContext';
+import { useGameState } from '../hooks/useGameState';
 
 interface SetupCardSelectionProps {
-  gameState: GameState;
-  setGameState: React.Dispatch<React.SetStateAction<GameState>>;
   onBack: () => void;
   onNext: () => void;
-  onStart?: () => void; // Kept for interface compatibility
 }
 
-export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ gameState, setGameState, onBack, onNext }) => {
+export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onBack, onNext }) => {
+  const { gameState, setGameState } = useGameState();
   const selectedRef = useRef<HTMLButtonElement>(null);
   const { theme } = useTheme();
   const isDark = theme === 'dark';

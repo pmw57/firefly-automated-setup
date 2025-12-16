@@ -1,41 +1,32 @@
-
 import React from 'react';
-import { StoryCardDef } from '../../types';
-import { EXPANSIONS_METADATA } from '../../constants';
 import { StoryCardGridItem } from '../StoryCardGridItem';
 import { Button } from '../Button';
+import { useMissionSelection } from '../../hooks/useMissionSelection';
+import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { useTheme } from '../ThemeContext';
 
 interface StoryCardGridProps {
-  filteredStories: StoryCardDef[];
-  validStories: StoryCardDef[];
-  selectedStoryCard: string;
   onSelect: (title: string) => void;
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  filterExpansion: string;
-  setFilterExpansion: (id: string) => void;
   isClassicSolo: boolean;
 }
 
-export const StoryCardGrid: React.FC<StoryCardGridProps> = ({
-  filteredStories,
-  validStories,
-  selectedStoryCard,
-  onSelect,
-  searchTerm,
-  setSearchTerm,
-  filterExpansion,
-  setFilterExpansion,
-  isClassicSolo
-}) => {
+export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassicSolo }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  
+  const {
+    filteredStories,
+    validStories,
+    searchTerm,
+    setSearchTerm,
+    filterExpansion,
+    setFilterExpansion,
+    activeStoryCard,
+  } = useMissionSelection();
 
   const availableExpansionsForFilter = EXPANSIONS_METADATA.filter(e => {
     if (e.id === 'base') return false;
     if (isClassicSolo && e.id === 'community') return false;
-    // In the future, we could check if any valid stories use this expansion
     return true;
   });
 
@@ -78,7 +69,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({
               <StoryCardGridItem 
                 key={card.title}
                 card={card}
-                isSelected={selectedStoryCard === card.title}
+                isSelected={activeStoryCard.title === card.title}
                 onClick={() => onSelect(card.title)}
               />
             ))}

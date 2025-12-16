@@ -1,6 +1,7 @@
 
+
 import React, { useState } from 'react';
-import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../constants';
+import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../data/expansions';
 
 interface ExpansionIconProps {
   id: string;

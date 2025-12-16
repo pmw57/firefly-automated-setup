@@ -1,15 +1,27 @@
 
+
 import React from 'react';
-import { GameState, Step } from '../types';
+import { Step } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
+import { useGameState } from '../hooks/useGameState';
 
 interface NavDeckStepProps {
   step: Step;
-  gameState: GameState;
 }
 
-export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => {
+const ActionText: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  return (
+    <span className={`font-bold border-b border-dotted ${isDark ? 'border-zinc-500' : 'border-gray-400'}`}>
+      {children}
+    </span>
+  );
+};
+
+export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step }) => {
+  const { gameState } = useGameState();
   const overrides = step.overrides || {};
   const isRimMode = overrides.rimNavMode;
   const isBrowncoatNav = overrides.browncoatNavMode;
@@ -23,8 +35,6 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
 
   // Group "Rim Mode" and "Force Reshuffle" as setups that mandate Reshuffle cards at the start
   const hasForcedReshuffle = isRimMode || isForceReshuffle;
-
-  const renderAction = (text: string) => <span className={`font-bold border-b border-dotted ${isDark ? 'border-zinc-500' : 'border-gray-400'}`}>{text}</span>;
 
   const panelBg = isDark ? 'bg-black/60' : 'bg-white';
   const panelBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -47,18 +57,18 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
       <div className={`${panelBg} p-6 rounded-lg border ${panelBorder} shadow-sm mb-6 overflow-hidden transition-colors duration-300 space-y-4`}>
         {/* Default Instruction if no major overrides */}
         {!isFlyingSolo && !isBrowncoatNav && !hasForcedReshuffle && (
-          <p className={`${panelText}`}>{renderAction("Shuffle Alliance & Border Nav Cards")} standard setup.</p>
+          <p className={`${panelText}`}><ActionText>Shuffle Alliance & Border Nav Cards</ActionText> standard setup.</p>
         )}
 
         {isFlyingSolo && (
            <SpecialRuleBlock source="setupCard" title="Flying Solo">
-               Shuffle the {renderAction("\"RESHUFFLE\"")} cards into their respective Nav Decks.
+               Shuffle the <ActionText>"RESHUFFLE"</ActionText> cards into their respective Nav Decks.
            </SpecialRuleBlock>
         )}
         
         {isBrowncoatNav && (
           <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-            <strong>Hardcore Navigation:</strong> Shuffle the {renderAction("Alliance Cruiser")} and {renderAction("Reaver Cutter")} cards into the Nav Decks immediately, regardless of player count.
+            <strong>Hardcore Navigation:</strong> Shuffle the <ActionText>Alliance Cruiser</ActionText> and <ActionText>Reaver Cutter</ActionText> cards into the Nav Decks immediately, regardless of player count.
           </SpecialRuleBlock>
         )}
         
@@ -66,8 +76,8 @@ export const NavDeckStep: React.FC<NavDeckStepProps> = ({ step, gameState }) => 
         {hasForcedReshuffle && !isFlyingSolo && (
           <SpecialRuleBlock source="setupCard" title="Setup Card Override">
             <ul className="list-disc ml-4 space-y-1">
-              <li>Place the {renderAction("\"RESHUFFLE\"")} cards in the Nav Decks at the start of the game, regardless of player count.</li>
-              <li>{renderAction("Shuffle each of the Alliance and Border Nav Decks")}.</li>
+              <li>Place the <ActionText>"RESHUFFLE"</ActionText> cards in the Nav Decks at the start of the game, regardless of player count.</li>
+              <li><ActionText>Shuffle each of the Alliance and Border Nav Decks</ActionText>.</li>
               {(gameState.expansions.blue || gameState.expansions.kalidasa) && (
                 <li className="italic opacity-80">Applies to all active decks (including Rim Space).</li>
               )}

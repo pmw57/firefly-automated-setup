@@ -1,23 +1,21 @@
 
 import React from 'react';
-import { GameState, StoryCardDef, AdvancedRuleDef } from '../../types';
+import { StoryCardDef, AdvancedRuleDef } from '../../types';
 import { useTheme } from '../ThemeContext';
+import { useGameState } from '../../hooks/useGameState';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionIcon } from '../ExpansionIcon';
 
 interface SoloOptionsPartProps {
   activeStoryCard: StoryCardDef;
-  gameState: GameState;
-  setGameState: React.Dispatch<React.SetStateAction<GameState>>;
   availableAdvancedRules: AdvancedRuleDef[];
 }
 
 export const SoloOptionsPart: React.FC<SoloOptionsPartProps> = ({
   activeStoryCard,
-  gameState,
-  setGameState,
   availableAdvancedRules
 }) => {
+  const { gameState, setGameState } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 

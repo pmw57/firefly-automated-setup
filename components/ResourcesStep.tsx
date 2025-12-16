@@ -1,17 +1,19 @@
 
+
 import React from 'react';
-import { GameState, Step } from '../types';
+import { Step } from '../types';
 import { STORY_CARDS } from '../constants';
 import { calculateStartingResources } from '../utils';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
+import { useGameState } from '../hooks/useGameState';
 
 interface ResourcesStepProps {
   step: Step;
-  gameState: GameState;
 }
 
-export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step, gameState }) => {
+export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
+  const { gameState } = useGameState();
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const { theme } = useTheme();

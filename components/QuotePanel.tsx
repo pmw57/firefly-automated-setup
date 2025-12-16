@@ -1,6 +1,7 @@
 
+
 import React from 'react';
-import { STEP_QUOTES } from '../constants';
+import { STEP_QUOTES } from '../data/steps';
 import { useTheme } from './ThemeContext';
 
 interface QuotePanelProps {

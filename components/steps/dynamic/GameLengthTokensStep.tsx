@@ -1,17 +1,18 @@
 
+
 import React from 'react';
-import { GameState, Step } from '../../../types';
-import { STORY_CARDS } from '../../../constants';
+import { Step } from '../../../types';
+import { STORY_CARDS } from '../../../data/storyCards';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 import { useTheme } from '../../ThemeContext';
+import { useGameState } from '../../../hooks/useGameState';
 
 interface GameLengthTokensStepProps {
   step: Step;
-  gameState: GameState;
-  setGameState?: React.Dispatch<React.SetStateAction<GameState>>;
 }
 
-export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = ({ gameState, setGameState }) => {
+export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = () => {
+    const { gameState, setGameState } = useGameState();
     const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
     const { theme } = useTheme();
     const isDark = theme === 'dark';

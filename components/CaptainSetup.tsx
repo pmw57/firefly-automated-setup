@@ -1,19 +1,20 @@
 
+
 import React from 'react';
-import { GameState, Expansions } from '../types';
+import { Expansions } from '../types';
 import { EXPANSIONS_METADATA, SETUP_CARDS, STORY_CARDS } from '../constants';
 import { Button } from './Button';
 import { ExpansionToggle } from './ExpansionToggle';
 import { useTheme } from './ThemeContext';
+import { useGameState } from '../hooks/useGameState';
 
 interface CaptainSetupProps {
-  gameState: GameState;
-  setGameState: React.Dispatch<React.SetStateAction<GameState>>;
   onNext: () => void;
   onBack?: () => void;
 }
 
-export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameState, onNext, onBack }) => {
+export const CaptainSetup: React.FC<CaptainSetupProps> = ({ onNext, onBack }) => {
+  const { gameState, setGameState } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   

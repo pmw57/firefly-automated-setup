@@ -1,16 +1,28 @@
 
+
 import React from 'react';
-import { GameState, Step } from '../types';
-import { STORY_CARDS } from '../constants';
+import { Step } from '../types';
+import { STORY_CARDS } from '../data/storyCards';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
+import { useGameState } from '../hooks/useGameState';
 
 interface AllianceReaverStepProps {
   step: Step;
-  gameState: GameState;
 }
 
-export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, gameState }) => {
+const ActionText: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  return (
+    <span className={`font-bold border-b border-dotted ${isDark ? 'border-zinc-500' : 'border-gray-400'}`}>
+      {children}
+    </span>
+  );
+};
+
+export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) => {
+  const { gameState } = useGameState();
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const { placeAllianceAlertsInAllianceSpace, placeMixedAlertTokens, smugglersBluesSetup, lonelySmugglerSetup, startWithAlertCard, createAlertTokenStackMultiplier } = activeStoryCard.setupConfig || {};
@@ -18,8 +30,6 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, ga
   const alertStackCount = createAlertTokenStackMultiplier ? createAlertTokenStackMultiplier * gameState.playerCount : 0;
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-
-  const renderAction = (text: string) => <span className={`font-bold border-b border-dotted ${isDark ? 'border-zinc-500' : 'border-gray-400'}`}>{text}</span>;
 
   const standardContainerBg = isDark ? 'bg-black/60' : 'bg-white';
   const standardContainerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -46,7 +56,7 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, ga
         <SpecialRuleBlock source="setupCard" title="Setup Card Override">
           <strong>Awful Crowded:</strong>
           <ul className="list-disc ml-4 space-y-1 mt-1">
-            <li>Place an {renderAction("Alert Token")} in <strong>every planetary sector</strong>.</li>
+            <li>Place an <ActionText>Alert Token</ActionText> in <strong>every planetary sector</strong>.</li>
             <li><strong>Alliance Space:</strong> Place Alliance Alert Tokens.</li>
             <li><strong>Border & Rim Space:</strong> Place Reaver Alert Tokens.</li>
             <li className={`${warningText} italic font-bold`}>Do not place Alert Tokens on players' starting locations.</li>
@@ -58,7 +68,7 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step, ga
 
       {placeAllianceAlertsInAllianceSpace && (
         <SpecialRuleBlock source="story" title="Story Override">
-          Place an {renderAction("Alliance Alert Token")} on <strong>every planetary sector in Alliance Space</strong>.
+          Place an <ActionText>Alliance Alert Token</ActionText> on <strong>every planetary sector in Alliance Space</strong>.
         </SpecialRuleBlock>
       )}
 
