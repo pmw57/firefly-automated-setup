@@ -198,7 +198,6 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
             <Button onClick={onBack} variant="secondary" className="w-1/3">
             ← Back
             </Button>
-            {/* FIX: Changed onClick from onNext to onStart to match component props. */}
             <Button onClick={onStart} fullWidth className="w-2/3 text-lg py-4 border-b-4 border-[#450a0a]">
             Begin Setup Sequence
             </Button>
