@@ -1,8 +1,9 @@
 
 
+
 import React from 'react';
 import { Expansions } from '../types';
-import { EXPANSIONS_METADATA, SETUP_CARDS, STORY_CARDS } from '../constants';
+import { EXPANSIONS_METADATA, SETUP_CARDS, STORY_CARDS, SETUP_CARD_IDS } from '../constants';
 import { Button } from './Button';
 import { ExpansionToggle } from './ExpansionToggle';
 import { useTheme } from './ThemeContext';
@@ -19,7 +20,7 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ onNext, onBack }) =>
   const isDark = theme === 'dark';
   
   const isSolo = gameState.gameMode === 'solo';
-  const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
+  const isFlyingSolo = gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
   
   const totalParts = gameState.expansions.tenth || isFlyingSolo ? 3 : 2;
 
@@ -42,8 +43,8 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ onNext, onBack }) =>
       let nextSetupCardName = prev.setupCardName;
       let nextSecondary = prev.secondarySetupId;
 
-      if (newMode === 'multiplayer' && prev.setupCardId === 'FlyingSolo') {
-          nextSetupCardId = 'Standard';
+      if (newMode === 'multiplayer' && prev.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
+          nextSetupCardId = SETUP_CARD_IDS.STANDARD;
           nextSetupCardName = 'Standard Game Setup';
           nextSecondary = undefined;
       }
@@ -105,13 +106,13 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ onNext, onBack }) =>
       let nextSecondary = prev.secondarySetupId;
 
       if (currentSetup?.requiredExpansion && !nextExpansions[currentSetup.requiredExpansion]) {
-          nextSetupCardId = 'Standard';
+          nextSetupCardId = SETUP_CARD_IDS.STANDARD;
           nextSetupCardName = 'Standard Game Setup';
           nextSecondary = undefined;
       }
       
-      if (key === 'tenth' && !nextExpansions.tenth && prev.setupCardId === 'FlyingSolo') {
-          nextSetupCardId = 'Standard';
+      if (key === 'tenth' && !nextExpansions.tenth && prev.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
+          nextSetupCardId = SETUP_CARD_IDS.STANDARD;
           nextSetupCardName = 'Standard Game Setup';
           nextSecondary = undefined;
       }
@@ -145,12 +146,12 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ onNext, onBack }) =>
   const handleNextStep = () => {
     if (isSolo && gameState.expansions.tenth) {
         setGameState(prev => {
-            if (!prev.setupCardId || prev.setupCardId === 'Standard') {
+            if (!prev.setupCardId || prev.setupCardId === SETUP_CARD_IDS.STANDARD) {
                 return {
                     ...prev,
-                    setupCardId: 'FlyingSolo',
+                    setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
                     setupCardName: 'Flying Solo',
-                    secondarySetupId: 'Standard'
+                    secondarySetupId: SETUP_CARD_IDS.STANDARD
                 };
             }
             return prev;

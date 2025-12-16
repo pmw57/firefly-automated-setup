@@ -1,7 +1,8 @@
 
 
+
 import React, { useEffect, useRef, useMemo, useCallback } from 'react';
-import { SETUP_CARDS } from '../constants';
+import { SETUP_CARDS, SETUP_CARD_IDS } from '../constants';
 import { Button } from './Button';
 import { ExpansionIcon } from './ExpansionIcon';
 import { useTheme } from './ThemeContext';
@@ -20,19 +21,19 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onBack, 
   const isSolo = gameState.gameMode === 'solo';
   const has10th = gameState.expansions.tenth;
   
-  const isFlyingSoloActive = gameState.setupCardId === 'FlyingSolo';
+  const isFlyingSoloActive = gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
   const totalParts = (isFlyingSoloActive || has10th) ? 3 : 2;
   const isFlyingSoloEligible = isSolo && has10th;
 
   // Retrieve the Flying Solo card definition
-  const flyingSoloCard = useMemo(() => SETUP_CARDS.find(c => c.id === 'FlyingSolo'), []);
+  const flyingSoloCard = useMemo(() => SETUP_CARDS.find(c => c.id === SETUP_CARD_IDS.FLYING_SOLO), []);
 
   // Filter available setup cards based on current state
   const availableSetups = useMemo(() => SETUP_CARDS.filter(setup => {
     // 1. Expansion Check
     if (setup.requiredExpansion && !gameState.expansions[setup.requiredExpansion]) return false;
     // 2. Hide "Flying Solo" from main list (handled by toggle)
-    if (setup.id === 'FlyingSolo') return false;
+    if (setup.id === SETUP_CARD_IDS.FLYING_SOLO) return false;
     // 3. Mode Check (Multiplayer hides solo cards)
     if (!isSolo && setup.mode === 'solo') return false;
     
@@ -41,13 +42,13 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onBack, 
 
   const handleSetupCardSelect = useCallback((id: string, label: string) => {
     setGameState(prev => {
-        const currentIsFlyingSolo = prev.setupCardId === 'FlyingSolo';
+        const currentIsFlyingSolo = prev.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
         return {
             ...prev,
             // If currently Flying Solo, we are setting the SECONDARY card.
             // If Standard, we are setting the MAIN card.
-            setupCardId: currentIsFlyingSolo ? 'FlyingSolo' : id,
-            setupCardName: currentIsFlyingSolo ? 'FlyingSolo' : label,
+            setupCardId: currentIsFlyingSolo ? SETUP_CARD_IDS.FLYING_SOLO : id,
+            setupCardName: currentIsFlyingSolo ? 'Flying Solo' : label,
             secondarySetupId: currentIsFlyingSolo ? id : undefined
         };
     });
@@ -55,9 +56,9 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onBack, 
 
   const toggleFlyingSolo = () => {
       setGameState(prev => {
-          const currentIsFlyingSolo = prev.setupCardId === 'FlyingSolo';
+          const currentIsFlyingSolo = prev.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
           const firstAvailable = availableSetups[0];
-          const defaultId = firstAvailable?.id || 'Standard';
+          const defaultId = firstAvailable?.id || SETUP_CARD_IDS.STANDARD;
           const defaultLabel = firstAvailable?.label || 'Standard Game Setup';
 
           if (currentIsFlyingSolo) {
@@ -75,7 +76,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onBack, 
               const currentIsValid = availableSetups.some(c => c.id === prev.setupCardId);
               return {
                   ...prev,
-                  setupCardId: 'FlyingSolo',
+                  setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
                   setupCardName: 'Flying Solo',
                   secondarySetupId: currentIsValid ? prev.setupCardId : defaultId
               };
@@ -85,7 +86,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onBack, 
 
   // Initial Selection Guard: Ensure a valid selection exists when mounting
   useEffect(() => {
-      if (!isFlyingSoloActive && (!gameState.setupCardId || gameState.setupCardId === 'FlyingSolo')) {
+      if (!isFlyingSoloActive && (!gameState.setupCardId || gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO)) {
            const defaultCard = availableSetups[0];
            if (defaultCard) handleSetupCardSelect(defaultCard.id, defaultCard.label);
       }

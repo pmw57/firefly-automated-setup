@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useMemo } from 'react';
 import { Step } from '../types';
 import { STORY_CARDS } from '../data/storyCards';
@@ -9,6 +10,7 @@ import { InlineExpansionIcon } from './InlineExpansionIcon';
 import { useTheme } from './ThemeContext';
 import { Button } from './Button';
 import { useGameState } from '../hooks/useGameState';
+import { STEP_IDS, CHALLENGE_IDS, STORY_TITLES, CONTACT_NAMES } from '../constants';
 
 interface JobStepProps {
   step: Step;
@@ -59,9 +61,9 @@ export const JobStep: React.FC<JobStepProps> = ({ step }) => {
     ) || [], 
   [activeStoryCard.challengeOptions, gameState.challengeOptions]);
   
-  const isSingleContactChallenge = !!gameState.challengeOptions['single_contact'];
-  const isDontPrimeChallenge = !!gameState.challengeOptions['dont_prime_contacts'];
-  const isHeroesAndMisfits = activeStoryCard.title === "Heroes & Misfits";
+  const isSingleContactChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
+  const isDontPrimeChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
+  const isHeroesAndMisfits = activeStoryCard.title === STORY_TITLES.HEROES_AND_MISFITS;
   const [showGoalList, setShowGoalList] = useState(false);
 
   const cardBg = isDark ? 'bg-black/60' : 'bg-white';
@@ -82,7 +84,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step }) => {
             </SpecialRuleBlock>
           )}
 
-          {stepId.includes('D_RIM_JOBS') ? (
+          {stepId.includes(STEP_IDS.D_RIM_JOBS) ? (
              <SpecialRuleBlock source="setupCard" title="Setup Card Override">
                <p className="leading-relaxed mb-2">
                  Separate the Job Cards from the <InlineExpansionIcon type="blue" /> and <InlineExpansionIcon type="kalidasa" /> expansions (marked with their icons).
@@ -199,7 +201,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step }) => {
                                 <SpecialRuleBlock source="story" title="Story Override (Challenge Active)">
                                     <p className="mb-2">In reverse player order, each player chooses <strong>1 Contact Deck</strong> (instead of 3).</p>
                                     <p className="mb-2">Draw the top <strong>3 Job Cards</strong> from that deck.</p>
-                                    {forbiddenStartingContact === 'Niska' && <p className="text-red-600 text-sm font-bold">Note: Mr. Universe is excluded.</p>}
+                                    {forbiddenStartingContact === CONTACT_NAMES.NISKA && <p className="text-red-600 text-sm font-bold">Note: Mr. Universe is excluded.</p>}
                                     <p className="opacity-75 mt-2">Players may discard any starting jobs they do not want.</p>
                                 </SpecialRuleBlock>
                             );
@@ -208,7 +210,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step }) => {
                             <SpecialRuleBlock source="story" title="Story Override">
                                 <p className="mb-2">In reverse player order, each player chooses <strong>3 different Contact Decks</strong>.</p>
                                 <p className="mb-2">Draw the top Job Card from each chosen deck.</p>
-                                {forbiddenStartingContact === 'Niska' && <p className="text-red-600 text-sm font-bold">Note: Mr. Universe is excluded.</p>}
+                                {forbiddenStartingContact === CONTACT_NAMES.NISKA && <p className="text-red-600 text-sm font-bold">Note: Mr. Universe is excluded.</p>}
                                 <p className="opacity-75 mt-2">Players may discard any starting jobs they do not want.</p>
                             </SpecialRuleBlock>
                         );
@@ -230,14 +232,14 @@ export const JobStep: React.FC<JobStepProps> = ({ step }) => {
                     if (jobMode === 'buttons_jobs') {
                         contacts = ['Amnon Duul', 'Lord Harrow', 'Magistrate Higgins'];
                     } else if (jobMode === 'awful_jobs') {
-                        contacts = ['Harken', 'Amnon Duul', 'Patience'];
+                        contacts = [CONTACT_NAMES.HARKEN, 'Amnon Duul', 'Patience'];
                     } else {
-                        contacts = ['Harken', 'Badger', 'Amnon Duul', 'Patience', 'Niska'];
+                        contacts = [CONTACT_NAMES.HARKEN, 'Badger', 'Amnon Duul', 'Patience', CONTACT_NAMES.NISKA];
                     }
 
                     // High Alert Logic: Remove Harken from standard list
                     if (jobMode === 'high_alert_jobs') {
-                        contacts = contacts.filter(c => c !== 'Harken');
+                        contacts = contacts.filter(c => c !== CONTACT_NAMES.HARKEN);
                     }
 
                     // Apply Filters (Forbidden / Allowed)
@@ -265,7 +267,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step }) => {
                             )}
                             {jobMode === 'awful_jobs' && (
                                 <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-                                    {forbiddenStartingContact === 'Harken' ? (
+                                    {forbiddenStartingContact === CONTACT_NAMES.HARKEN ? (
                                         <>
                                             <strong>Limited Contacts.</strong> This setup card normally draws from Harken, Amnon Duul, and Patience.
                                             <div className="mt-1 text-amber-800 font-bold text-xs">
@@ -284,7 +286,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step }) => {
                                     <strong>Caper Bonus:</strong> Draw 1 Caper Card.
                                 </SpecialRuleBlock>
                             )}
-                            {gameState.setupCardId === 'TheRimsTheThing' && (
+                            {gameState.setupCardId === STEP_IDS.D_RIM_JOBS && (
                                 <SpecialRuleBlock source="setupCard" title="Setup Card Override">
                                     <strong>Modified Contact Decks.</strong> The Contact Decks contain only cards from the Blue Sun and Kalidasa expansions.
                                 </SpecialRuleBlock>

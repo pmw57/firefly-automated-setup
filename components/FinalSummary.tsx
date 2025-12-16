@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { GameState } from '../types';
-import { STORY_CARDS } from '../data/storyCards';
-import { EXPANSIONS_METADATA } from '../data/expansions';
+import { STORY_CARDS, EXPANSIONS_METADATA, SETUP_CARD_IDS } from '../constants';
 import { getDisplaySetupName } from '../utils';
 import { useTheme } from './ThemeContext';
 
@@ -16,7 +15,7 @@ export const FinalSummary: React.FC<FinalSummaryProps> = ({ gameState }) => {
     const isDark = theme === 'dark';
     
     const activeStory = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard);
-    const activeExpansions = EXPANSIONS_METADATA.filter(e => gameState.expansions[e.id] && e.id !== 'base').map(e => e.label);
+    const activeExpansions = EXPANSIONS_METADATA.filter(e => gameState.expansions[e.id as keyof typeof gameState.expansions] && e.id !== 'base').map(e => e.label);
     
     const displaySetupName = getDisplaySetupName(gameState);
 
@@ -24,7 +23,7 @@ export const FinalSummary: React.FC<FinalSummaryProps> = ({ gameState }) => {
     let timerSummary = null;
     const isSoloTimerActive = gameState.gameMode === 'solo' && 
                               !activeStory?.setupConfig?.disableSoloTimer &&
-                              (gameState.setupCardId === 'FlyingSolo' || activeStory?.setupConfig?.soloGameTimer);
+                              (gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO || activeStory?.setupConfig?.soloGameTimer);
     
     if (isSoloTimerActive) {
         if (gameState.timerConfig.mode === 'standard') {
@@ -148,7 +147,7 @@ export const FinalSummary: React.FC<FinalSummaryProps> = ({ gameState }) => {
                  <div className="sm:col-span-2">
                     <div className={labelClass}>Active Expansions</div>
                     <div className={`text-xs leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>
-                        {activeExpansions.join(', ')}
+                        {activeExpansions.length > 0 ? activeExpansions.join(', ') : 'None'}
                     </div>
                  </div>
             </div>
