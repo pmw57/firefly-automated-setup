@@ -133,11 +133,11 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
       }));
   };
 
-  const handleCampaignStoriesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const num = parseInt(e.target.value, 10);
+  const updateCampaignStories = (newCount: number) => {
+      const safeCount = Math.max(0, newCount);
       setGameState(prev => ({
           ...prev,
-          campaignStoriesCompleted: isNaN(num) || num < 0 ? 0 : num
+          campaignStoriesCompleted: safeCount
       }));
   };
 
@@ -239,17 +239,32 @@ export const CaptainSetup: React.FC<CaptainSetupProps> = ({ gameState, setGameSt
                 </div>
                 {gameState.isCampaign && (
                     <div className="mt-4 pt-4 border-t border-dashed border-gray-300 dark:border-zinc-700 animate-fade-in">
-                        <label htmlFor="campaign-stories" className={`block text-sm font-medium mb-2 ${labelColor}`}>
-                            How many stories have you completed in this campaign?
+                        <label className={`block text-sm font-medium mb-2 text-center ${labelColor}`}>
+                            Stories Completed in Campaign
                         </label>
-                        <input
-                            id="campaign-stories"
-                            type="number"
-                            min="0"
-                            value={gameState.campaignStoriesCompleted}
-                            onChange={handleCampaignStoriesChange}
-                            className={`w-24 p-2 border ${inputBorder} rounded text-center focus:ring-2 focus:ring-amber-500 focus:border-amber-500 focus:outline-none ${inputBg} shadow-sm font-medium ${inputText} transition-colors`}
-                        />
+                        <div className="flex items-center justify-center space-x-4">
+                          <button
+                            type="button"
+                            onClick={() => updateCampaignStories(gameState.campaignStoriesCompleted - 1)}
+                            disabled={gameState.campaignStoriesCompleted <= 0}
+                            className={`w-10 h-10 flex items-center justify-center rounded-lg ${inputBg} border-2 ${inputBorder} font-bold text-xl ${inputText} disabled:opacity-50 transition-all shadow-sm active:translate-y-0.5 hover:bg-opacity-80`}
+                            aria-label="Decrease stories completed"
+                          >
+                            -
+                          </button>
+                          <div className={`w-14 h-10 flex items-center justify-center text-3xl font-bold font-western drop-shadow-md ${textColor}`}>
+                              {gameState.campaignStoriesCompleted}
+                          </div>
+                          <button
+                              type="button"
+                              onClick={() => updateCampaignStories(gameState.campaignStoriesCompleted + 1)}
+                              disabled={gameState.campaignStoriesCompleted >= 50}
+                              className={`w-10 h-10 flex items-center justify-center rounded-lg ${inputBg} border-2 ${inputBorder} font-bold text-xl ${inputText} disabled:opacity-50 transition-all shadow-sm active:translate-y-0.5 hover:bg-opacity-80`}
+                              aria-label="Increase stories completed"
+                          >
+                              +
+                          </button>
+                        </div>
                     </div>
                 )}
             </div>
