@@ -158,12 +158,12 @@ export const DraftStep: React.FC<DraftStepProps> = ({ step, gameState }) => {
              <SpecialRuleBlock source="expansion" title="Optional Ship Upgrades">
                  <p className="mb-2">The following ships have <strong>Optional Ship Upgrade</strong> cards available. If you choose one of these ships, take its corresponding upgrade card.</p>
                  <ul className="list-disc ml-5 grid grid-cols-2 gap-x-4 text-sm font-medium mb-3">
-                     <li>Bonanza</li>
-                     <li>Bonnie Mae</li>
-                     <li>Interceptor</li>
-                     <li>Serenity</li>
-                     <li>Walden</li>
-                     <li>Yun Qi</li>
+                     <li><strong style={{ color: 'OliveDrab' }}>Bonanza</strong></li>
+                     <li><strong style={{ color: 'RoyalBlue' }}>Bonnie Mae</strong></li>
+                     <li><strong style={{ color: 'DimGrey' }}>Interceptor</strong></li>
+                     <li><strong style={{ color: 'DarkOrange' }}>Serenity</strong></li>
+                     <li><strong style={{ color: 'DarkRed' }}>Walden</strong></li>
+                     <li><strong style={{ color: 'DarkGoldenrod' }}>Yun Qi</strong></li>
                  </ul>
                  <div className={`text-xs p-2 rounded border ${isDark ? 'bg-amber-900/30 border-amber-800 text-amber-200' : 'bg-amber-50 border-amber-200 text-amber-800'}`}>
                     <strong>Walden & Interceptor:</strong> These upgrades are double-sided. Choose your side during setup—you cannot switch later.
