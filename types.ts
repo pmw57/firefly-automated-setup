@@ -78,6 +78,7 @@ export interface SetupCardDef {
   iconOverride?: string;
   steps: SetupCardStep[];
   mode?: GameMode;
+  overrides?: StepOverrides;
 }
 
 export interface StoryCardConfig {
