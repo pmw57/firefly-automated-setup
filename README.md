@@ -1,5 +1,6 @@
+
 <div align="center">
-  <h1 align="center">Firefly: The Game - Automated Setup</h1>
+  <h1 align="center">Firefly: The Game - Automated Setup Guide</h1>
   <p align="center">
     A digital companion app to streamline the setup process for the board game <strong>Firefly: The Game</strong>.
   </p>
@@ -7,20 +8,20 @@
 
 ## 🚀 Overview
 
-Setting up *Firefly: The Game* can be complex, especially when combining multiple expansions (Blue Sun, Kalidasa, Pirates, etc.) with specific Story Card requirements. 
+Setting up *Firefly: The Game* can be complex, especially when combining multiple expansions with specific Story Card requirements. This application automates the rules logic to provide a step-by-step, guided setup for any game configuration.
 
-This application automates the rules logic to provide a step-by-step wizard that:
-*   Filters components based on owned **Expansions**.
-*   Handles **Setup Card** specific overrides (e.g., "The Browncoat Way" market rules).
-*   Applies **Story Card** specific setup instructions (e.g., "Smuggler's Blues" contraband placement).
-*   Manages **Drafting** for ships and leaders.
+This guide ensures you never miss a rule by dynamically adjusting the setup flow based on your selections.
 
 ## ✨ Features
 
+*   **Comprehensive Setup Support**: Handles all official Setup Cards (like "The Blitz" and "The Browncoat Way") and Story Cards, applying specific rule overrides automatically.
+*   **Full Expansion Compatibility**: Supports all official expansions, from *Breakin' Atmo* to the *10th Anniversary Edition*.
+*   **Solo Campaign Mode**: Streamlines setup for continuing solo campaigns with adjusted rules for supplies, jobs, and game length.
+*   **Interactive Draft Tools**: Manages ship/leader drafting and tie-breaking rolls.
 *   **Dynamic Rule Engine**: Automatically calculates starting credits, fuel/parts, and deck composition based on selected options.
-*   **Expansion Management**: Toggle any combination of the 10+ available expansions.
-*   **Persistence**: Saves your progress locally, so you don't lose your setup if you refresh or switch apps.
-*   **Offline Ready (PWA)**: Installable on iOS and Android. Works perfectly without an internet connection.
+*   **PWA & Offline Ready**: Installable on any device for full offline functionality.
+*   **Persistent State**: Saves your setup progress locally, so you never lose your place.
+*   **Light & Dark Modes**: Themed UI for any environment.
 *   **Accessibility**: Keyboard navigation support and screen-reader friendly structure.
 
 ## 🛠️ Tech Stack
