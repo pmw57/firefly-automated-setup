@@ -1,7 +1,5 @@
 
-
 import React, { useEffect, useRef } from 'react';
-import { Step } from '../types';
 import { Button } from './Button';
 import { useGameState } from '../hooks/useGameState';
 import { MissionSelectionProvider } from './MissionSelectionContext';
@@ -14,12 +12,11 @@ import { StoryCardGrid } from './story/StoryCardGrid';
 import { SoloOptionsPart } from './story/SoloOptionsPart';
 
 interface MissionDossierStepProps {
-  step: Step;
   onNext: () => void;
   onPrev: () => void;
 }
 
-const MissionDossierStepContent: React.FC<{ onNext: () => void; onPrev: () => void }> = ({ onNext, onPrev }) => {
+const MissionDossierStepContent = ({ onNext, onPrev }: { onNext: () => void; onPrev: () => void }): React.ReactElement => {
   const { gameState, setGameState } = useGameState();
   const {
     subStep,
@@ -124,7 +121,7 @@ const MissionDossierStepContent: React.FC<{ onNext: () => void; onPrev: () => vo
   );
 }
 
-export const MissionDossierStep: React.FC<MissionDossierStepProps> = ({ onNext, onPrev }) => {
+export const MissionDossierStep = ({ onNext, onPrev }: MissionDossierStepProps): React.ReactElement => {
   return (
     <MissionSelectionProvider>
       <MissionDossierStepContent onNext={onNext} onPrev={onPrev} />

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { GameState } from '../types';
 import { getDefaultGameState } from '../utils';
@@ -5,7 +6,8 @@ import { GameStateContext } from '../hooks/useGameState';
 
 const GAME_STATE_STORAGE_KEY = 'firefly_gameState_v3';
 
-export function GameStateProvider({ children }: { children: React.ReactNode }) {
+// FIX: Changed from a function declaration to a const with React.FC to resolve typing issues with children props.
+export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [gameState, setGameState] = useState<GameState>(getDefaultGameState());
   const [isStateInitialized, setIsStateInitialized] = useState(false);
 

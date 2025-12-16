@@ -2,18 +2,19 @@
 import React from 'react';
 import { useTheme } from './ThemeContext';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+// FIX: Changed interface to a type alias with an intersection to correctly include all button attributes.
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'secondary' | 'danger';
   fullWidth?: boolean;
-}
+};
 
-export const Button: React.FC<ButtonProps> = ({ 
+export const Button = ({ 
   children, 
   variant = 'primary', 
   fullWidth = false, 
   className = '',
   ...props 
-}) => {
+}: ButtonProps): React.ReactElement => {
   const { theme } = useTheme();
   
   const baseStyle = "px-6 py-3 rounded-lg font-bold transition duration-300 ease-in-out transform active:scale-95 shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-50 border-b-4 active:border-b-0 active:translate-y-1";

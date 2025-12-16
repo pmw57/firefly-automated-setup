@@ -1,6 +1,4 @@
 
-
-
 import React from 'react';
 import { Step } from '../types';
 import { Button } from './Button';
@@ -33,7 +31,7 @@ interface StepContentProps {
   onPrev: () => void;
 }
 
-export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, onNext, onPrev }) => {
+export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const stepId = step.id;
@@ -55,7 +53,7 @@ export const StepContent: React.FC<StepContentProps> = ({ step, stepIndex, onNex
           case STEP_IDS.CORE_NAV_DECKS: return <NavDeckStep step={step} />;
           case STEP_IDS.CORE_ALLIANCE_REAVER: return <AllianceReaverStep step={step} />;
           case STEP_IDS.CORE_DRAFT: return <DraftStep step={step} />;
-          case STEP_IDS.CORE_MISSION: return <MissionDossierStep step={step} onNext={onNext} onPrev={onPrev} />;
+          case STEP_IDS.CORE_MISSION: return <MissionDossierStep onNext={onNext} onPrev={onPrev} />;
           case STEP_IDS.CORE_RESOURCES: return <ResourcesStep step={step} />;
           case STEP_IDS.CORE_JOBS: return <JobStep step={step} />;
           case STEP_IDS.CORE_PRIME_PUMP: return <PrimePumpStep step={step} />;
