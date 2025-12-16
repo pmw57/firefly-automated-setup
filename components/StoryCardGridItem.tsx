@@ -56,9 +56,9 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
             tabIndex={0}
             aria-pressed={isSelected}
             className={`
-                relative cursor-pointer rounded-lg border-2 p-3 transition-all duration-200 flex flex-col h-full shadow-sm hover:shadow-md focus:outline-none focus:z-10 focus:ring-2 focus:ring-[#d4af37] focus:ring-offset-2
+                relative cursor-pointer rounded-lg border-2 p-3 transition-all duration-200 flex flex-col shadow-sm hover:shadow-md focus:outline-none focus:z-10 focus:ring-2 focus:ring-[#d4af37] focus:ring-offset-2
+                ${isShortList ? 'h-full' : ''}
                 ${containerClass}
-                ${isShortList ? 'min-h-[120px]' : 'min-h-[160px]'}
             `}
         >
             <div className="flex items-start mb-2">
@@ -95,7 +95,7 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
                 </div>
             </div>
 
-            <p className={`text-xs italic line-clamp-3 mb-auto pl-11 ${introColor} ${isShortList ? 'hidden sm:block' : ''}`}>
+            <p className={`text-xs italic line-clamp-3 pl-11 ${introColor} ${isShortList ? 'hidden sm:block' : ''}`}>
                 "{card.intro}"
             </p>
 

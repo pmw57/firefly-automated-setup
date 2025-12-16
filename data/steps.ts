@@ -6,7 +6,7 @@ export const SETUP_CONTENT: ContentMap = {
   C1: { type: 'core', id: 'core-1', title: "Nav Decks" },
   C2: { type: 'core', id: 'core-2', title: "Alliance & Reaver Ships" },
   C3: { type: 'core', id: 'core-3', title: "Choose Ships & Leaders" },
-  C4: { type: 'core', id: 'core-4', title: "Story Selection" },
+  C4: { type: 'core', id: 'core-4', title: "Goal of the Game" },
   C5: { type: 'core', id: 'core-5', title: "Starting Supplies" },
   C6: { type: 'core', id: 'core-6', title: "Starting Jobs" },
   C_PRIME: { type: 'core', id: 'core-prime', title: "Priming The Pump" },

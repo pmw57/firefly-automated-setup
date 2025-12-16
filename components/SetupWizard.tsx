@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { GameState, Step } from '../types';
 import { getDefaultGameState, calculateSetupFlow } from '../utils';
 import { StepContent } from './StepContent';
@@ -25,6 +25,10 @@ const SetupWizard: React.FC = () => {
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+
+  // The first few steps are for configuration and should not be numbered.
+  // The actual numbered steps correspond to the steps on the physical setup cards.
+  const setupStepCount = useMemo(() => flow.filter(s => s.type === 'setup').length, [flow]);
 
   // Re-calculate the flow whenever gameState changes
   useEffect(() => {
@@ -122,6 +126,8 @@ const SetupWizard: React.FC = () => {
   
   const isFinal = currentStep.type === 'final';
 
+  const displayStepIndex = currentStep.type === 'setup' ? 0 : currentStepIndex - setupStepCount + 1;
+
   return (
     <div className="max-w-2xl mx-auto" key={resetKey}>
       <WizardHeader gameState={gameState} onReset={performReset} />
@@ -144,7 +150,7 @@ const SetupWizard: React.FC = () => {
       ) : (
         <StepContent 
           step={currentStep} 
-          stepIndex={currentStepIndex + 1}
+          stepIndex={displayStepIndex}
           gameState={gameState}
           setGameState={setGameState}
           onNext={handleNext} 
