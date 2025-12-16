@@ -40,64 +40,6 @@ export const DynamicStepHandler: React.FC<DynamicStepHandlerProps> = ({ step, ga
   const dangerTitle = isDark ? 'text-red-300' : 'text-red-800';
   const dangerBorder = isDark ? 'border-red-800' : 'border-red-200';
 
-  if (id.includes('D_FLYING_SOLO_SETUP')) {
-    if (!setGameState) return null;
-
-    const availableSetups = SETUP_CARDS.filter(s => 
-        s.id !== 'FlyingSolo' && 
-        (!s.requiredExpansion || gameState.expansions[s.requiredExpansion])
-    );
-
-    const handleSelect = (setupId: string) => {
-        setGameState(prev => ({
-            ...prev,
-            secondarySetupId: setupId
-        }));
-        // Scroll slightly to indicate progress or change
-        window.scrollTo({ top: 100, behavior: 'smooth' });
-    };
-
-    return (
-        <div className="space-y-6">
-            <SpecialRuleBlock source="expansion" title="Paired Setup Card">
-                In Expanded Solo Mode, you must pair the "Flying Solo" rules with a standard Setup Card to determine the initial board state, decks, and starting resources.
-            </SpecialRuleBlock>
-            
-            <p className={`mb-4 font-bold ${textColor}`}>Choose your Board Setup:</p>
-            
-            <div className="grid grid-cols-1 gap-3 mb-8">
-                {availableSetups.map(s => {
-                    const isSelected = gameState.secondarySetupId === s.id;
-                    const bColor = isSelected ? (isDark ? 'border-green-500 bg-green-900/20' : 'border-green-600 bg-green-50') : (isDark ? 'border-zinc-700 bg-zinc-800' : 'border-gray-300 bg-white');
-                    
-                    return (
-                        <button
-                            key={s.id}
-                            onClick={() => handleSelect(s.id)}
-                            className={`flex items-center p-3 rounded-lg border-2 text-left transition-all ${bColor} hover:shadow-md focus:outline-none focus:z-10 focus:ring-2 focus:ring-green-500`}
-                        >
-                            <div className="w-10 h-10 mr-3 shrink-0">
-                                {s.requiredExpansion ? (
-                                    <ExpansionIcon id={s.requiredExpansion} />
-                                ) : (
-                                    <div className="w-full h-full bg-gray-200 dark:bg-zinc-700 rounded border border-gray-300 dark:border-zinc-600 overflow-hidden">
-                                        <ExpansionIcon id="base" />
-                                    </div>
-                                )}
-                            </div>
-                            <div className="flex-1">
-                                <h4 className={`font-bold ${isSelected ? 'text-green-600 dark:text-green-400' : textColor}`}>{s.label}</h4>
-                                <p className={`text-xs ${subText} line-clamp-1`}>{s.description}</p>
-                            </div>
-                            {isSelected && <span className="text-green-500 text-xl font-bold ml-2">✓</span>}
-                        </button>
-                    );
-                })}
-            </div>
-        </div>
-    );
-  }
-
   if (id.includes('D_NO_SURE_THINGS')) {
     return (
         <SpecialRuleBlock source="setupCard" title="No Sure Things In Life">
