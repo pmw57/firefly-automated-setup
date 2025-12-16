@@ -331,7 +331,7 @@ export const JobStep: React.FC<JobStepProps> = ({ step, gameState }) => {
                 {renderJobInstructions()}
                 
                 {activeChallenges.length > 0 && (
-                   <SpecialRuleBlock source="warning" title="Mission Directives (Challenges)">
+                   <SpecialRuleBlock source="warning" title="Story Directives (Challenges)">
                       <ul className="list-disc ml-5 space-y-1 text-sm">
                           {activeChallenges.map(opt => (
                               <li key={opt.id}>{opt.label}</li>

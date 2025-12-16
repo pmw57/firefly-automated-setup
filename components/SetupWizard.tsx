@@ -91,7 +91,7 @@ const FinalSummary: React.FC<{ gameState: GameState }> = ({ gameState }) => {
                  </div>
 
                  <div>
-                    <div className={labelClass}>Mission</div>
+                    <div className={labelClass}>Story</div>
                     <div className={valueClass}>{gameState.selectedStoryCard}</div>
                  </div>
 
@@ -105,7 +105,7 @@ const FinalSummary: React.FC<{ gameState: GameState }> = ({ gameState }) => {
                  {/* Challenges */}
                  {activeStoryChallenges.length > 0 && (
                      <div className="sm:col-span-2">
-                        <div className={labelClass}>Directives & Challenges</div>
+                        <div className={labelClass}>Story Directives & Challenges</div>
                         <ul className={`list-disc ml-4 text-xs ${isDark ? 'text-gray-300' : 'text-gray-800'}`}>
                             {activeStoryChallenges.map(o => (
                                 <li key={o.id}>{o.label}</li>
