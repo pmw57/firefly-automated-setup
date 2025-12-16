@@ -99,8 +99,6 @@ export const getDefaultGameState = (): GameState => {
         return acc;
     }, {} as Expansions);
 
-    const firstStory = STORY_CARDS.find(c => !c.isSolo && c.requiredExpansion !== 'community') || STORY_CARDS[0];
-
     return {
         gameEdition: 'tenth', // Default to tenth since expansions are on
         gameMode: 'multiplayer',
@@ -109,8 +107,8 @@ export const getDefaultGameState = (): GameState => {
         setupCardId: SETUP_CARD_IDS.STANDARD,
         setupCardName: 'Standard Game Setup',
         secondarySetupId: undefined,
-        selectedStoryCard: firstStory.title,
-        selectedGoal: firstStory.goals?.[0]?.title,
+        selectedStoryCard: '',
+        selectedGoal: undefined,
         challengeOptions: {},
         timerConfig: {
             mode: 'standard',

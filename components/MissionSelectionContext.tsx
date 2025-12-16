@@ -18,7 +18,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
 
   // Memoized derived data
   const activeStoryCard = useMemo(() => 
-    STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0],
+    STORY_CARDS.find(c => c.title === gameState.selectedStoryCard),
     [gameState.selectedStoryCard]
   );
 
@@ -42,7 +42,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
 
   const availableAdvancedRules: AdvancedRuleDef[] = useMemo(() => {
     const rules: AdvancedRuleDef[] = [];
-    if (gameState.gameMode === 'solo' && gameState.expansions.tenth) {
+    if (gameState.gameMode === 'solo' && gameState.expansions.tenth && activeStoryCard) {
       STORY_CARDS.forEach(card => {
         if (card.advancedRule && card.title !== activeStoryCard.title) {
           const hasReq = !card.requiredExpansion || gameState.expansions[card.requiredExpansion];
@@ -52,7 +52,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
       rules.sort((a, b) => a.title.localeCompare(b.title));
     }
     return rules;
-  }, [gameState.gameMode, gameState.expansions, activeStoryCard.title]);
+  }, [gameState.gameMode, gameState.expansions, activeStoryCard]);
 
   const enablePart2 = useMemo(() => 
     gameState.gameMode === 'solo' && gameState.expansions.tenth,

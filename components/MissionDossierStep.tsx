@@ -4,6 +4,7 @@ import { Button } from './Button';
 import { useGameState } from '../hooks/useGameState';
 import { MissionSelectionProvider } from './MissionSelectionContext';
 import { useMissionSelection } from '../hooks/useMissionSelection';
+import { useTheme } from './ThemeContext';
 
 // Child Components
 import { StoryDossier } from './story/StoryDossier';
@@ -27,6 +28,8 @@ const MissionDossierStepContent = ({ onNext, onPrev }: { onNext: () => void; onP
     enablePart2,
     handleStoryCardSelect,
   } = useMissionSelection();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   const dossierTopRef = useRef<HTMLDivElement>(null);
 
@@ -39,7 +42,7 @@ const MissionDossierStepContent = ({ onNext, onPrev }: { onNext: () => void; onP
 
   // Effect to ensure a goal is selected if the story has goals
   useEffect(() => {
-    if (activeStoryCard.goals && activeStoryCard.goals.length > 0 && !gameState.selectedGoal) {
+    if (activeStoryCard && activeStoryCard.goals && activeStoryCard.goals.length > 0 && !gameState.selectedGoal) {
       setGameState(prev => ({ ...prev, selectedGoal: activeStoryCard.goals![0].title }));
     }
   }, [activeStoryCard, gameState.selectedGoal, setGameState]);
@@ -87,14 +90,26 @@ const MissionDossierStepContent = ({ onNext, onPrev }: { onNext: () => void; onP
         
         {subStep === 1 ? (
           <div className="animate-fade-in">
-            <StoryDossier activeStoryCard={activeStoryCard} />
+            {activeStoryCard ? (
+              <StoryDossier activeStoryCard={activeStoryCard} />
+            ) : (
+              <div className="p-8 text-center">
+                <div className="text-5xl mb-4" role="img" aria-label="Dossier icon">📜</div>
+                <h4 className={`font-bold text-xl mb-2 ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Select Your Story</h4>
+                <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+                  Choose a story from the list below, or use the randomizer tools to begin.
+                </p>
+              </div>
+            )}
           </div>
         ) : (
           <div className="animate-fade-in">
-            <SoloOptionsPart 
-              activeStoryCard={activeStoryCard}
-              availableAdvancedRules={availableAdvancedRules}
-            />
+            {activeStoryCard && (
+              <SoloOptionsPart 
+                activeStoryCard={activeStoryCard}
+                availableAdvancedRules={availableAdvancedRules}
+              />
+            )}
           </div>
         )}
       </div>
@@ -113,6 +128,7 @@ const MissionDossierStepContent = ({ onNext, onPrev }: { onNext: () => void; onP
         <Button 
           onClick={handleNextStep} 
           className="shadow-lg hover:translate-y-[-2px] transition-transform"
+          disabled={!activeStoryCard}
         >
           {subStep === 1 && enablePart2 ? 'Next: Options →' : 'Next Step →'}
         </Button>
