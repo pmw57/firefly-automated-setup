@@ -233,6 +233,9 @@ export function gameReducer(state: GameState, action: Action): GameState {
     case ActionType.TOGGLE_TIMER_MODE:
       return { ...state, timerConfig: { ...state.timerConfig, mode: state.timerConfig.mode === 'standard' ? 'unpredictable' : 'standard' } };
 
+    case ActionType.RESET_GAME:
+      return getDefaultGameState();
+
     default:
       return state;
   }
