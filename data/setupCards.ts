@@ -1,4 +1,3 @@
-
 import { SetupCardDef } from '../types';
 
 // Standard Flow Template
@@ -45,7 +44,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: 'C3' }, // 2. Ships & Leaders (Order Swapped)
       { id: 'C2', overrides: { awfulCrowdedAllianceMode: true } }, // 3. Alliance & Reaver (Alert Tokens rule)
       { id: 'C4' }, // 4. Goal
-      { id: 'C5' }, // 5. Supplies
+      { id: 'C5' }, // 6. Supplies
       { id: 'C6', overrides: { awfulJobMode: true } }, // 6. Jobs
       { id: 'C_PRIME' } // 7. Prime
     ]
@@ -59,8 +58,10 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'kalidasa',
     steps: [
       { id: 'D_RIM_JOBS' },
-      { id: 'C1', overrides: { rimNavMode: true } }, // Replaces D_RIM_NAV
-      { id: 'C2' }, { id: 'C3' }, { id: 'C4' }, { id: 'C5' },
+      { id: 'C1', overrides: { rimNavMode: true } },
+      { id: 'C3' }, // Swap: Choose Ships & Leaders first
+      { id: 'C2' }, // Then place Alliance & Reaver
+      { id: 'C4' }, { id: 'C5' },
       { id: 'C6' },
       { id: 'C_PRIME' }
     ]
@@ -86,6 +87,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     id: "TheBrowncoatWay",
     label: "The Browncoat Way",
     description: "A harder economy. Ships must be purchased with starting cash. No free fuel/parts. No starting jobs.",
+    // FIX: Corrected expansion key to match type Expansions
     requiredExpansion: 'coachworks',
     steps: [
       { id: 'C4' }, // 1. Goal (First!)
@@ -101,6 +103,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     id: "TheBlitz",
     label: "The Blitz",
     description: "Standard supplies are replaced by 'Strip Mining' (drafting cards). Priming the Pump discards double the cards.",
+    // FIX: Corrected expansion key to match type Expansions
     requiredExpansion: 'coachworks',
     steps: [
       { id: 'C4' }, // 1. Goal
@@ -124,7 +127,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: 'C2', overrides: { noAlertTokens: true } }, // 2. Alliance (No Alert Tokens)
       { id: 'C3' }, // 3. Ships
       { id: 'C4' }, // 4. Goal
-      { id: 'C5' }, // 5. Supplies
+      { id: 'C5' }, // 6. Supplies
       { id: 'C6' }, // 6. Jobs
       { id: 'C_PRIME' } // 7. Prime
     ]
@@ -191,7 +194,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: 'D_PRESSURES_HIGH' }, // 1. The Pressure's High
       { id: 'C1', overrides: { browncoatNavMode: true } }, // 2. Nav (Shuffle Ships rule)
       { id: 'C2' }, // 3. Alliance & Reaver
-      { id: 'C3' }, // 4. Ships
+      { id: 'C3', overrides: { wantedLeaderMode: true } }, // 4. Ships
       { id: 'C4' }, // 5. Goal
       { id: 'C5' }, // 6. Supplies
       { id: 'C6' }, // 7. Jobs
