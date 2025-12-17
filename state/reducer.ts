@@ -96,7 +96,6 @@ const handlePlayerCountChange = (state: GameState, count: number): GameState => 
     };
 
     // Apply specific constraints if switching to multiplayer, otherwise return as is
-    // This uses a ternary to allow `const` usage, satisfying the linter.
     const finalState = newMode === 'multiplayer' 
         ? enforceMultiplayerConstraints(baseNewState) 
         : baseNewState;

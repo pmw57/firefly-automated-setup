@@ -4,6 +4,7 @@ import { Button } from './Button';
 import { QuotePanel } from './QuotePanel';
 import { useTheme } from './ThemeContext';
 import { STEP_IDS } from '../data/ids';
+import { cls } from '../utils/style';
 
 // Core Steps
 import { NavDeckStep } from './NavDeckStep';
@@ -97,8 +98,8 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
   return (
     <div className="animate-fade-in-up">
       <div className="flex flex-wrap items-start justify-between mb-6 gap-4">
-        <h2 className={`text-2xl font-bold ${headerColor} font-western border-b-2 ${borderBottom} pb-2 pr-10 flex-1 min-w-[200px] drop-shadow-sm transition-colors duration-300`}>
-          <span className={`${indexColor} mr-2`}>{stepIndex}.</span>
+        <h2 className={cls("text-2xl font-bold font-western border-b-2 pb-2 pr-10 flex-1 min-w-[200px] drop-shadow-sm transition-colors duration-300", headerColor, borderBottom)}>
+          <span className={cls("mr-2", indexColor)}>{stepIndex + 1}.</span>
           {step.data?.title || step.id}
         </h2>
         <div className="w-full lg:w-1/3 shrink-0">
@@ -111,7 +112,7 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
       </div>
 
       {showNav && (
-        <div className={`mt-8 flex justify-between clear-both pt-6 border-t ${borderTop}`}>
+        <div className={cls("mt-8 flex justify-between clear-both pt-6 border-t", borderTop)}>
           <Button onClick={onPrev} variant="secondary" className="shadow-sm">
             ← Previous
           </Button>

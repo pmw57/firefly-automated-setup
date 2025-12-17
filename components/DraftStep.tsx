@@ -41,22 +41,22 @@ const DraftOrderPanel = ({
 
     return (
         <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
-              <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Step 1</div>
+              <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Phase 1</div>
               <h4 className={cls("font-bold mb-2 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
-                  {isHavenDraft ? 'Select Haven' : 'Select Ship & Leader'}
+                  {isHavenDraft ? 'Select Leader & Ship' : 'Select Ship & Leader'}
               </h4>
               <p className={cls("text-xs mb-3 italic", panelSubColor)}>
                 {isSolo 
-                    ? (isHavenDraft ? "Choose a Haven." : "Choose a Leader & Ship.")
+                    ? (isHavenDraft ? "Choose a Leader & Ship." : "Choose a Leader & Ship.")
                     : isHavenDraft 
-                    ? "Standard Order: Winner chooses Leader & Ship first.": isBrowncoatDraft ? "Winner selects Leader OR buys Ship. Pass to Left." : "Winner selects Leader & Ship. Pass to Left."}
+                    ? "The player with the highest die roll chooses a Leader & Ship first. Pass to Left.": isBrowncoatDraft ? "Winner selects Leader OR buys Ship. Pass to Left." : "Winner selects Leader & Ship. Pass to Left."}
               </p>
               <ul className="space-y-2">
                 {draftOrder.map((player, i) => (
                   <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
                     <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
                     <span className={cls("text-sm font-medium", itemText)}>{player}</span>
-                    {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-blue-400' : 'text-blue-600')}>First Pick</span>}
+                    {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-blue-400' : 'text-blue-600')}>Pick 1</span>}
                   </li>
                 ))}
               </ul>
@@ -90,7 +90,6 @@ const PlacementOrderPanel = ({
     const itemBg = isDark ? 'bg-zinc-800 border-zinc-700' : 'bg-gray-50 border-gray-100';
     const itemText = isDark ? 'text-gray-200' : 'text-gray-800';
     
-    // Special Placement Styles
     const specialPlacementBg = isDark ? 'bg-amber-950/40 border-amber-800' : 'bg-amber-50 border-amber-200';
     const specialPlacementTitle = isDark ? 'text-amber-100' : 'text-amber-900';
     const specialPlacementText = isDark ? 'text-amber-300' : 'text-amber-800';
@@ -98,7 +97,8 @@ const PlacementOrderPanel = ({
 
     return (
         <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
-            <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Step 2</div>
+            {/* Fix for Error on line 100: Property 'd' does not exist. Replacing with 'stepBadgeClass'. */}
+            <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Phase 2</div>
             <h4 className={cls("font-bold mb-2 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
                 {isHavenDraft ? 'Haven Placement' : 'Placement'}
             </h4>
@@ -106,13 +106,14 @@ const PlacementOrderPanel = ({
             {isHavenDraft ? (
                 <>
                 <p className={cls("text-xs mb-3 italic", isDark ? 'text-green-300' : 'text-green-800')}>
-                    {isSolo ? "Place Haven in a valid sector." : "Reverse Order: Last player places Haven first."}
+                    {isSolo ? "Place Haven in a valid sector." : "The last player to choose a Leader places their Haven first. Remaining players in reverse order."}
                 </p>
                 <ul className="space-y-2">
                     {placementOrder.map((player, i) => (
                     <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
                         <span className="w-6 h-6 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
                         <span className={cls("text-sm font-medium", itemText)}>{player}</span>
+                        {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-green-400' : 'text-green-600')}>Placement 1</span>}
                     </li>
                     ))}
                 </ul>
@@ -138,7 +139,7 @@ const PlacementOrderPanel = ({
                     <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
                         <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
                         <span className={cls("text-sm font-medium", itemText)}>{player}</span>
-                        {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-amber-400' : 'text-amber-600')}>First Place</span>}
+                        {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-amber-400' : 'text-amber-600')}>Placement 1</span>}
                     </li>
                     ))}
                 </ul>
@@ -160,7 +161,6 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const { optionalShipUpgrades } = gameState.optionalRules || {};
 
-  // Auto-resolve for solo player
   useEffect(() => {
     if (isSolo && !draftState) {
         setDraftState(getInitialSoloDraftState(gameState.playerNames[0]));
@@ -189,22 +189,17 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
   };
 
   const isHavenDraft = step.id.includes(STEP_IDS.D_HAVEN_DRAFT);
-  
-  // Logic for Heroes & Misfits custom setup challenge
   const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
   const isRacingPaleHorse = activeStoryCard.title === STORY_TITLES.RACING_A_PALE_HORSE;
-
   const isPersephoneStart = activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' && !isHeroesCustomSetup;
   const isLondiniumStart = hasFlag(activeStoryCard.setupConfig, 'startAtLondinium');
-  const startOutsideAlliance = hasFlag(activeStoryCard.setupConfig, 'startOutsideAllianceSpace');
+  const startOutsideAllianceSpace = hasFlag(activeStoryCard.setupConfig, 'startOutsideAllianceSpace');
   const startAtSector = activeStoryCard.setupConfig?.startAtSector;
   const allianceSpaceOffLimits = hasFlag(activeStoryCard.setupConfig, 'allianceSpaceOffLimits');
   const addBorderHavens = hasFlag(activeStoryCard.setupConfig, 'addBorderSpaceHavens');
-
   const isBrowncoatDraft = !!overrides.browncoatDraftMode;
   const isWantedLeaderMode = !!overrides.wantedLeaderMode;
 
-  // Determine Special Start Sector String
   let specialStartSector: string | null = null;
   if (startAtSector) specialStartSector = startAtSector;
   else if (isPersephoneStart) specialStartSector = 'Persephone';
@@ -278,7 +273,7 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
             </SpecialRuleBlock>
           )}
 
-          {startOutsideAlliance && (
+          {startOutsideAllianceSpace && (
             <SpecialRuleBlock source="warning" title="Placement Restriction">
                Players' starting locations <strong>may not be within Alliance Space</strong>.
             </SpecialRuleBlock>
@@ -317,13 +312,13 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
           )}
 
           {isHavenDraft && (
-            <SpecialRuleBlock source="setupCard" title="Placement Rules">
-                 <ul className="list-disc ml-5 mt-1 space-y-1">
-                     <li>Unoccupied Planetary Sector adjacent to a Supply Planet.</li>
-                     <li>Cannot be placed in a Sector with a Contact.</li>
-                     <li><strong>Important:</strong> Ships start at their Havens.</li>
+            <SpecialRuleBlock source="setupCard" title="Home Sweet Haven: Placement Rules">
+                 <ul className="list-disc ml-5 mt-1 space-y-1 text-sm">
+                     <li>Each Haven must be placed in an unoccupied <strong>Planetary Sector adjacent to a Supply Planet</strong>.</li>
+                     <li>Havens may not be placed in a Sector with a <strong>Contact</strong>.</li>
+                     <li>Remaining players place their Havens in <strong>reverse order</strong>.</li>
+                     <li><strong>Players' ships start at their Havens.</strong></li>
                  </ul>
-                 {/* Warning if Mad Verse is active */}
                  {activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' && (
                      <div className={cls("mt-3 p-2 rounded font-bold border text-sm", warningConflictBg)}>
                          ⚠️ CONFLICT: Story Card override active. Ships must start at Persephone despite Haven rules!
