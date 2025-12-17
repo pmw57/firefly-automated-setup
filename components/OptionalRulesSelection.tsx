@@ -44,6 +44,14 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
     dispatch({ type: ActionType.TOGGLE_SHIP_UPGRADES });
   };
 
+  // Helper for keyboard events on custom clickable divs
+  const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      action();
+    }
+  };
+
   const containerBg = isDark ? 'bg-black/60' : 'bg-[#faf8ef]/95';
   const containerBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
   const headerColor = isDark ? 'text-amber-500' : 'text-[#292524]';
@@ -96,7 +104,14 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
                 <section>
                     <h3 className={`font-bold uppercase tracking-wide text-xs mb-4 pb-1 border-b ${isDark ? 'border-zinc-700 text-amber-500' : 'border-gray-300 text-amber-800'}`}>10th Anniversary Rules</h3>
                     
-                    <div onClick={toggleGorrammit} className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} mb-4`}>
+                    <div 
+                        role="checkbox"
+                        aria-checked={isGorrammitActive}
+                        tabIndex={0}
+                        onClick={toggleGorrammit} 
+                        onKeyDown={(e) => handleKeyDown(e, toggleGorrammit)}
+                        className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} mb-4 focus:outline-none focus:ring-2 focus:ring-green-500`}
+                    >
                         <div className="mt-1 mr-4 shrink-0"><Checkbox checked={isGorrammitActive} /></div>
                         <div>
                             <h3 className={`font-bold text-base ${textMain}`}>Gorrammit! (Disgruntled Die)</h3>
@@ -120,7 +135,14 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
                         </div>
                     )}
 
-                    <div onClick={toggleShipUpgrades} className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover}`}>
+                    <div 
+                        role="checkbox"
+                        aria-checked={gameState.optionalRules.optionalShipUpgrades}
+                        tabIndex={0}
+                        onClick={toggleShipUpgrades} 
+                        onKeyDown={(e) => handleKeyDown(e, toggleShipUpgrades)}
+                        className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
+                    >
                         <div className="mt-1 mr-4 shrink-0"><Checkbox checked={gameState.optionalRules.optionalShipUpgrades} /></div>
                         <div>
                             <h3 className={`font-bold text-base ${textMain}`}>Optional Ship Upgrades</h3>
@@ -136,28 +158,56 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
                 <section>
                     <h3 className={`font-bold uppercase tracking-wide text-xs mb-4 pb-1 border-b ${isDark ? 'border-zinc-700 text-amber-500' : 'border-gray-300 text-amber-800'}`}>Solo Rules</h3>
                     <div className="space-y-4">
-                        <div onClick={() => toggleSoloOption('noSureThings')} className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover}`}>
+                        <div 
+                            role="checkbox"
+                            aria-checked={gameState.soloOptions.noSureThings}
+                            tabIndex={0}
+                            onClick={() => toggleSoloOption('noSureThings')} 
+                            onKeyDown={(e) => handleKeyDown(e, () => toggleSoloOption('noSureThings'))}
+                            className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
+                        >
                             <div className="mt-1 mr-4 shrink-0"><Checkbox checked={gameState.soloOptions.noSureThings} /></div>
                             <div>
                                 <h3 className={`font-bold text-base ${textMain}`}>No Sure Things In Life</h3>
                                 <p className={`text-xs mt-1 ${textSub}`}>Remove 5 cards from every Supply/Contact deck during setup to simulate a lived-in 'Verse.</p>
                             </div>
                         </div>
-                        <div onClick={toggleTimer} className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover}`}>
+                        <div 
+                            role="checkbox"
+                            aria-checked={gameState.timerConfig.mode === 'unpredictable'}
+                            tabIndex={0}
+                            onClick={toggleTimer} 
+                            onKeyDown={(e) => handleKeyDown(e, toggleTimer)}
+                            className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
+                        >
                             <div className="mt-1 mr-4 shrink-0"><Checkbox checked={gameState.timerConfig.mode === 'unpredictable'} /></div>
                             <div>
                                 <h3 className={`font-bold text-base ${textMain}`}>Unpredictable Timer</h3>
                                 <p className={`text-xs mt-1 ${textSub}`}>Use numbered tokens in the discard stack. The game might end suddenly when a token matches a die roll.</p>
                             </div>
                         </div>
-                        <div onClick={() => toggleSoloOption('shesTrouble')} className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover}`}>
+                        <div 
+                            role="checkbox"
+                            aria-checked={gameState.soloOptions.shesTrouble}
+                            tabIndex={0}
+                            onClick={() => toggleSoloOption('shesTrouble')} 
+                            onKeyDown={(e) => handleKeyDown(e, () => toggleSoloOption('shesTrouble'))}
+                            className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
+                        >
                             <div className="mt-1 mr-4 shrink-0"><Checkbox checked={gameState.soloOptions.shesTrouble} /></div>
                             <div>
                                 <h3 className={`font-bold text-base ${textMain}`}>She's Trouble</h3>
                                 <p className={`text-xs mt-1 ${textSub}`}>Whenever you begin a turn with a <strong>Deceptive Crew</strong> on your ship and deceptive crew cards in a discard pile, roll a die. On a 1, they become Disgruntled.</p>
                             </div>
                         </div>
-                        <div onClick={() => toggleSoloOption('recipeForUnpleasantness')} className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover}`}>
+                        <div 
+                            role="checkbox"
+                            aria-checked={gameState.soloOptions.recipeForUnpleasantness}
+                            tabIndex={0}
+                            onClick={() => toggleSoloOption('recipeForUnpleasantness')} 
+                            onKeyDown={(e) => handleKeyDown(e, () => toggleSoloOption('recipeForUnpleasantness'))}
+                            className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
+                        >
                             <div className="mt-1 mr-4 shrink-0"><Checkbox checked={gameState.soloOptions.recipeForUnpleasantness} /></div>
                             <div>
                                 <h3 className={`font-bold text-base ${textMain}`}>Recipe For Unpleasantness</h3>

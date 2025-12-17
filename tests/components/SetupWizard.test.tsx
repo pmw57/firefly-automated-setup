@@ -3,25 +3,6 @@ import { screen, fireEvent, act } from '@testing-library/react';
 import { render } from '../test-utils';
 import SetupWizard from '../../components/SetupWizard';
 
-// Mock localStorage
-const localStorageMock = (() => {
-  let store: Record<string, string> = {};
-  return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
-      store[key] = value.toString();
-    },
-    removeItem: (key: string) => {
-      delete store[key];
-    },
-    clear: () => {
-      store = {};
-    },
-  };
-})();
-
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-
 describe('components/SetupWizard', () => {
 
   beforeEach(() => {

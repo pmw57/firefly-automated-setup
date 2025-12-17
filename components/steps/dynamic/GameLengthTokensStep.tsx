@@ -34,10 +34,6 @@ export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = () => {
     const { mode, unpredictableSelectedIndices, randomizeUnpredictable } = gameState.timerConfig;
 
     const toggleExtraTokens = () => {
-        // Since the actual implementation of specific timer config updates wasn't in the reducer
-        // we'll implement a toggle mode for now which switches between standard and unpredictable.
-        // A full implementation would require new action types for specific timer config properties.
-        // For this fix, we will just use the TOGGLE_TIMER_MODE action which switches between standard and unpredictable.
         dispatch({ type: ActionType.TOGGLE_TIMER_MODE });
     };
 
@@ -115,7 +111,6 @@ export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = () => {
                         <h5 className={`font-bold text-sm uppercase tracking-wide mb-3 ${textColor}`}>Configure Stack</h5>
                         
                         <div className="space-y-3 mb-6">
-                            {/* Note: Full customization controls disabled for this fix, using simple toggle */}
                             <label className={`flex items-center cursor-pointer p-2 rounded border ${isDark ? 'border-zinc-700 hover:bg-zinc-800' : 'border-gray-200 hover:bg-gray-50'}`}>
                                 <input 
                                     type="checkbox" 
