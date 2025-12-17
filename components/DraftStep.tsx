@@ -97,7 +97,6 @@ const PlacementOrderPanel = ({
 
     return (
         <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
-            {/* Fix for Error on line 100: Property 'd' does not exist. Replacing with 'stepBadgeClass'. */}
             <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Phase 2</div>
             <h4 className={cls("font-bold mb-2 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
                 {isHavenDraft ? 'Haven Placement' : 'Placement'}
