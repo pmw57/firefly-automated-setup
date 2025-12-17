@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useCallback } from 'react';
 import { SETUP_CARDS } from '../data/setupCards';
 import { SETUP_CARD_IDS } from '../data/ids';
+import { EXPANSIONS_METADATA } from '../data/expansions';
 import { Button } from './Button';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
@@ -27,17 +28,38 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onBack, 
   // Retrieve the Flying Solo card definition
   const flyingSoloCard = useMemo(() => SETUP_CARDS.find(c => c.id === SETUP_CARD_IDS.FLYING_SOLO), []);
 
-  // Filter available setup cards based on current state
-  const availableSetups = useMemo(() => SETUP_CARDS.filter(setup => {
-    // 1. Expansion Check
-    if (setup.requiredExpansion && !gameState.expansions[setup.requiredExpansion]) return false;
-    // 2. Hide "Flying Solo" from main list (handled by toggle)
-    if (setup.id === SETUP_CARD_IDS.FLYING_SOLO) return false;
-    // 3. Mode Check (Multiplayer hides solo cards)
-    if (!isSolo && setup.mode === 'solo') return false;
-    
-    return true;
-  }), [gameState.expansions, isSolo]);
+  // Filter and Sort available setup cards based on current state and expansion metadata order
+  const availableSetups = useMemo(() => {
+    // Map expansion IDs to their index in the metadata for consistent sorting
+    const expansionIndices = EXPANSIONS_METADATA.reduce((acc, exp, idx) => {
+        acc[exp.id] = idx;
+        return acc;
+    }, {} as Record<string, number>);
+
+    return SETUP_CARDS
+        .filter(setup => {
+            // 1. Expansion Check
+            if (setup.requiredExpansion && !gameState.expansions[setup.requiredExpansion]) return false;
+            // 2. Hide "Flying Solo" from main list (handled by banner toggle)
+            if (setup.id === SETUP_CARD_IDS.FLYING_SOLO) return false;
+            // 3. Mode Check (Multiplayer hides solo-only cards)
+            if (!isSolo && setup.mode === 'solo') return false;
+            
+            return true;
+        })
+        .sort((a, b) => {
+            // Base game cards (no requiredExpansion) get index -1 to stay at the very top
+            const idxA = a.requiredExpansion ? (expansionIndices[a.requiredExpansion] ?? 999) : -1;
+            const idxB = b.requiredExpansion ? (expansionIndices[b.requiredExpansion] ?? 999) : -1;
+            
+            if (idxA !== idxB) {
+                return idxA - idxB;
+            }
+            
+            // If both cards belong to the same expansion, maintain their relative order from the original data array
+            return SETUP_CARDS.indexOf(a) - SETUP_CARDS.indexOf(b);
+        });
+  }, [gameState.expansions, isSolo]);
 
   const handleSetupCardSelect = useCallback((id: string, label: string) => {
     dispatch({ type: ActionType.SET_SETUP_CARD, payload: { id, name: label } });
