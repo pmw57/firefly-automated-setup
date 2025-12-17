@@ -4,6 +4,7 @@ import { STORY_CARDS } from '../data/storyCards';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
+import { hasFlag } from '../utils/data';
 
 interface AllianceReaverStepProps {
   step: Step;
@@ -23,7 +24,14 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) 
   const { state: gameState } = useGameState();
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
-  const { placeAllianceAlertsInAllianceSpace, placeMixedAlertTokens, smugglersBluesSetup, lonelySmugglerSetup, startWithAlertCard, createAlertTokenStackMultiplier } = activeStoryCard.setupConfig || {};
+  const { createAlertTokenStackMultiplier } = activeStoryCard.setupConfig || {};
+  
+  const placeAllianceAlertsInAllianceSpace = hasFlag(activeStoryCard.setupConfig, 'placeAllianceAlertsInAllianceSpace');
+  const placeMixedAlertTokens = hasFlag(activeStoryCard.setupConfig, 'placeMixedAlertTokens');
+  const smugglersBluesSetup = hasFlag(activeStoryCard.setupConfig, 'smugglersBluesSetup');
+  const lonelySmugglerSetup = hasFlag(activeStoryCard.setupConfig, 'lonelySmugglerSetup');
+  const startWithAlertCard = hasFlag(activeStoryCard.setupConfig, 'startWithAlertCard');
+
   const useSmugglersRimRule = smugglersBluesSetup && gameState.expansions.blue && gameState.expansions.kalidasa;
   const alertStackCount = createAlertTokenStackMultiplier ? createAlertTokenStackMultiplier * gameState.playerCount : 0;
   const { theme } = useTheme();

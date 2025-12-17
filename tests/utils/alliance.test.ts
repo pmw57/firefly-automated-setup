@@ -27,7 +27,7 @@ describe('utils/alliance', () => {
     it('does not enable smugglersRimRule if only one required expansion is active', () => {
       const storyWithSmugglers: StoryCardDef = {
         ...mockStory,
-        setupConfig: { smugglersBluesSetup: true },
+        setupConfig: { flags: ['smugglersBluesSetup'] },
       };
       const state = { ...baseGameState, expansions: { ...baseGameState.expansions, blue: true, kalidasa: false }};
       const details = calculateAllianceReaverDetails(state, storyWithSmugglers);
@@ -37,7 +37,7 @@ describe('utils/alliance', () => {
     it('enables smugglersRimRule if story flag and both required expansions are active', () => {
       const storyWithSmugglers: StoryCardDef = {
         ...mockStory,
-        setupConfig: { smugglersBluesSetup: true },
+        setupConfig: { flags: ['smugglersBluesSetup'] },
       };
       const state = { ...baseGameState, expansions: { ...baseGameState.expansions, blue: true, kalidasa: true }};
       const details = calculateAllianceReaverDetails(state, storyWithSmugglers);

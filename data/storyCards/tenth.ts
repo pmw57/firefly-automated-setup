@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../types';
 
 export const TENTH_STORIES: StoryCardDef[] = [
@@ -56,8 +55,8 @@ export const TENTH_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     setupConfig: {
-      startingCreditsBonus: 1200,
-      noStartingFuelParts: true
+      flags: ['noStartingFuelParts'],
+      startingCreditsBonus: 1200
     }
   },
   {

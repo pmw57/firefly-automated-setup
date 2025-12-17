@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../types';
 
 export const SOLO_STORIES: StoryCardDef[] = [
@@ -7,9 +6,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     intro: "It takes a brave soul to sail the Big Black alone... Pick your goal and test your skills.",
     setupDescription: "Solo Play. Draft Crew ($1000 limit). Stack 20 Disgruntled Tokens (Timer). Remove Piracy Jobs.",
     setupConfig: {
-      removePiracyJobs: true,
-      soloCrewDraft: true,
-      soloGameTimer: true
+      flags: ['removePiracyJobs', 'soloCrewDraft', 'soloGameTimer']
     },
     goals: [
       { title: "Goal 1: The Good", description: "Making Connections: End the game Solid with 5 different Contacts." },
@@ -26,9 +23,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
     setupConfig: {
-        soloGameTimer: true,
+        flags: ['soloGameTimer', 'primeContactDecks'],
         jobDrawMode: "no_jobs",
-        primeContactDecks: true
     },
     challengeOptions: [
       { id: 'dont_prime_contacts', label: "Don't prime the Contact decks." },
@@ -49,10 +45,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["crime"],
     isSolo: true,
     setupConfig: {
-        soloGameTimer: true,
+        flags: ['soloGameTimer', 'startWithAlertCard', 'primeContactDecks'],
         jobDrawMode: "no_jobs",
-        startWithAlertCard: true,
-        primeContactDecks: true
     },
     challengeOptions: [
         { id: 'one_job_per_contact', label: "Work no more than one Job per Contact." },
@@ -73,8 +67,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
     setupConfig: {
-        placeReaverAlertsInMotherlodeAndUroboros: true,
-        soloGameTimer: true
+        flags: ['placeReaverAlertsInMotherlodeAndUroboros', 'soloGameTimer']
     },
     advancedRule: {
         id: "adv_wolf_at_your_door",
@@ -88,8 +81,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     isSolo: true,
     setupConfig: {
-        soloGameTimer: true,
-        startWithAlertCard: true,
+        flags: ['soloGameTimer', 'startWithAlertCard'],
         shipPlacementMode: "persephone",
         startingCreditsOverride: 2000
     },
@@ -108,7 +100,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     isSolo: true,
     setupConfig: {
-        soloGameTimer: true
+        flags: ['soloGameTimer']
     },
     challengeOptions: [
       { id: 'no_immoral', label: "Don't work Immoral Jobs." },
@@ -129,7 +121,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
     setupConfig: {
-        disableSoloTimer: true
+        flags: ['disableSoloTimer']
     },
     advancedRule: {
         id: "adv_automated_movement",
@@ -144,7 +136,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
     setupConfig: {
-        soloGameTimer: true,
+        flags: ['soloGameTimer'],
         forbiddenStartingContact: "Harken"
     },
     advancedRule: {
@@ -160,11 +152,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["crime"],
     isSolo: true,
     setupConfig: {
-        soloGameTimer: true,
-        lonelySmugglerSetup: true,
+        flags: ['soloGameTimer', 'lonelySmugglerSetup', 'startAtLondinium', 'startWithAlertCard'],
         jobDrawMode: "no_jobs",
-        startAtLondinium: true,
-        startWithAlertCard: true
     },
     advancedRule: {
         id: "adv_lone_targets",
@@ -179,9 +168,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["crime"],
     isSolo: true,
     setupConfig: {
-        disableSoloTimer: true,
-        startWithAlertCard: true,
-        startWithGoalToken: true
+        flags: ['disableSoloTimer', 'startWithAlertCard', 'startWithGoalToken']
     },
     advancedRule: {
         id: "adv_contact_quirks_deal",

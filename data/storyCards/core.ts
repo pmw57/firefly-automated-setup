@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../types';
 
 export const CORE_STORIES: StoryCardDef[] = [
@@ -7,7 +6,7 @@ export const CORE_STORIES: StoryCardDef[] = [
     intro: "Your checkered past is catching up with you and the Alliance is hot on your tail! It's time to make a final cash grab and head out to the Rim to retire before the Alliance makes other arrangements.",
     setupDescription: "Start with 1 Warrant. Harken jobs unavailable.",
     setupConfig: {
-      startWithWarrant: true,
+      flags: ['startWithWarrant'],
       forbiddenStartingContact: "Harken"
     }
   },

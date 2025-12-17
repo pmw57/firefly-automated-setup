@@ -6,6 +6,7 @@ import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionIcon } from '../ExpansionIcon';
 import { useGameState } from '../../hooks/useGameState';
 import { ActionType } from '../../state/actions';
+import { hasFlag } from '../../utils/data';
 
 interface StoryDossierProps {
   activeStoryCard: StoryCardDef;
@@ -28,7 +29,7 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
 
   const setupNote = activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' 
       ? "⚠️ Change of setup: Players now begin at Persephone." 
-      : activeStoryCard.setupConfig?.startAtLondinium
+      : hasFlag(activeStoryCard.setupConfig, 'startAtLondinium')
       ? "⚠️ Change of setup: Players now begin at Londinium."
       : null;
 

@@ -49,7 +49,7 @@ describe('utils/ui', () => {
 
         it('returns "Disabled" if story card disables solo timer', () => {
             const state: GameState = { ...baseGameState, gameMode: 'solo' };
-            const story: StoryCardDef = { title: 'T', intro: 'I', setupConfig: { disableSoloTimer: true } };
+            const story: StoryCardDef = { title: 'T', intro: 'I', setupConfig: { flags: ['disableSoloTimer'] } };
             expect(getTimerSummaryText(state, story)).toBe("Disabled (Story Override)");
         });
 

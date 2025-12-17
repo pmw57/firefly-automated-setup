@@ -8,6 +8,7 @@ import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { STORY_CARDS } from '../data/storyCards';
 import { STEP_IDS, CHALLENGE_IDS, STORY_TITLES } from '../data/ids';
+import { hasFlag } from '../utils/data';
 
 interface DraftStepProps {
   step: Step;
@@ -60,11 +61,11 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
   const isRacingPaleHorse = activeStoryCard.title === STORY_TITLES.RACING_A_PALE_HORSE;
 
   const isPersephoneStart = activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' && !isHeroesCustomSetup;
-  const isLondiniumStart = activeStoryCard.setupConfig?.startAtLondinium;
-  const startOutsideAlliance = activeStoryCard.setupConfig?.startOutsideAllianceSpace;
+  const isLondiniumStart = hasFlag(activeStoryCard.setupConfig, 'startAtLondinium');
+  const startOutsideAlliance = hasFlag(activeStoryCard.setupConfig, 'startOutsideAllianceSpace');
   const startAtSector = activeStoryCard.setupConfig?.startAtSector;
-  const allianceSpaceOffLimits = activeStoryCard.setupConfig?.allianceSpaceOffLimits;
-  const addBorderHavens = activeStoryCard.setupConfig?.addBorderSpaceHavens;
+  const allianceSpaceOffLimits = hasFlag(activeStoryCard.setupConfig, 'allianceSpaceOffLimits');
+  const addBorderHavens = hasFlag(activeStoryCard.setupConfig, 'addBorderSpaceHavens');
 
   const isBrowncoatDraft = overrides.browncoatDraftMode;
   const isWantedLeaderMode = overrides.wantedLeaderMode;

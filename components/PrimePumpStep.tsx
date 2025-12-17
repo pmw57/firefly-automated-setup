@@ -4,6 +4,7 @@ import { STORY_CARDS } from '../data/storyCards';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
+import { hasFlag } from '../utils/data';
 
 interface PrimePumpStepProps {
   step: Step;
@@ -15,7 +16,9 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const { soloCrewDraft } = activeStoryCard.setupConfig || {};
+  
+  const soloCrewDraft = hasFlag(activeStoryCard.setupConfig, 'soloCrewDraft');
+  
   const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
   const isSlayingTheDragon = activeStoryCard.title === "Slaying The Dragon";
   const { isCampaign } = gameState;
