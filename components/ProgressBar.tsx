@@ -10,7 +10,8 @@ export const ProgressBar = ({ current, total }: ProgressBarProps): React.ReactEl
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  const percentage = Math.min(100, Math.max(0, total > 0 ? Math.round(((current - 1) / (total - 1)) * 100) : 0));
+  // Safe calculation to avoid NaN if total is 0 or 1, clamped between 0 and 100
+  const percentage = Math.min(100, Math.max(0, total > 1 ? Math.round(((current - 1) / (total - 1)) * 100) : 0));
 
   const labelColor = isDark ? 'text-gray-400' : 'text-firefly-brown';
   const percentColor = isDark ? 'text-green-400' : 'text-firefly-red';
@@ -20,7 +21,14 @@ export const ProgressBar = ({ current, total }: ProgressBarProps): React.ReactEl
   const barGradient = isDark ? 'from-green-700 to-green-500' : 'from-firefly-red to-firefly-red-light';
 
   return (
-    <div className="w-full mb-6">
+    <div 
+      className="w-full mb-6"
+      role="progressbar"
+      aria-valuenow={percentage}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label="Setup Progress"
+    >
       <div className="flex justify-between items-center mb-1">
         <span className={`text-sm font-bold uppercase tracking-wider text-[10px] ${labelColor}`}>Setup Progress</span>
         <span className={`text-sm font-semibold font-mono ${percentColor}`}>{percentage}% Complete</span>
