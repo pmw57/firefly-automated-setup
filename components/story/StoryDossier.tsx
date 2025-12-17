@@ -128,12 +128,6 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
         </SpecialRuleBlock>
       )}
 
-      {gameState.setupCardId === 'TheRimsTheThing' && (
-        <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-          <strong>The Rim's The Thing:</strong> Remember that only <strong>Border Space</strong> Nav Decks are used in this setup card. Choose a mission achievable with limited navigation options.
-        </SpecialRuleBlock>
-      )}
-
       {activeStoryCard.sourceUrl && (
         <div className={`mt-4 pt-2 border-t border-dashed ${isDark ? 'border-zinc-700' : 'border-gray-300'}`}>
           <a 
