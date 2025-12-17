@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTheme } from './ThemeContext';
+import { cls } from '../utils/style';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'secondary' | 'danger';
@@ -14,12 +15,13 @@ export const Button = ({
   ...props 
 }: ButtonProps): React.ReactElement => {
   const { theme } = useTheme();
+  const isDark = theme === 'dark';
   
   const baseStyle = "px-6 py-3 rounded-lg font-bold transition duration-300 ease-in-out transform active:scale-95 shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-50 border-b-4 active:border-b-0 active:translate-y-1";
   
   let variantStyle = "";
   
-  if (theme === 'dark') {
+  if (isDark) {
     // Dark Mode Styles (Space/Sci-Fi feel)
     switch (variant) {
       case 'primary':
@@ -47,11 +49,9 @@ export const Button = ({
     }
   }
 
-  const widthStyle = fullWidth ? "w-full" : "";
-
   return (
     <button 
-      className={`${baseStyle} ${variantStyle} ${widthStyle} ${className}`} 
+      className={cls(baseStyle, variantStyle, fullWidth && "w-full", className)}
       {...props}
     >
       {children}

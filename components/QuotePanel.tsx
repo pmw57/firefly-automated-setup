@@ -1,6 +1,7 @@
 import React from 'react';
 import { STEP_QUOTES } from '../data/steps';
 import { useTheme } from './ThemeContext';
+import { cls } from '../utils/style';
 
 interface QuotePanelProps {
   stepId: string;
@@ -23,29 +24,24 @@ export const QuotePanel = ({ stepId, className = '' }: QuotePanelProps): React.R
   const separatorBorder = isDark ? 'border-white/10' : 'border-amber-900/10';
 
   return (
-     <div className={`
-        ${bgClass}
-        backdrop-blur-sm 
-        border ${borderClass}
-        p-5 rounded-xl shadow-lg 
-        relative overflow-hidden 
-        text-center lg:text-left 
-        relative z-20 
-        transition-colors duration-300
-        ${className}
-     `}>
+     <div className={cls(
+        bgClass,
+        "backdrop-blur-sm border p-5 rounded-xl shadow-lg relative overflow-hidden text-center lg:text-left z-20 transition-colors duration-300",
+        borderClass,
+        className
+     )}>
          {/* Background decorative tint */}
-         <div className={`absolute inset-0 ${tintClass} pointer-events-none`}></div>
+         <div className={cls("absolute inset-0 pointer-events-none", tintClass)}></div>
          
-         <div className={`absolute top-0 right-0 p-2 ${opacityClass}`}>
-            <span className={`text-6xl ${quoteIconColor} font-western`}>"</span>
+         <div className={cls("absolute top-0 right-0 p-2", opacityClass)}>
+            <span className={cls("text-6xl font-western", quoteIconColor)}>"</span>
          </div>
          
          <div className="relative z-10">
-           <p className={`${textColor} italic font-serif text-sm leading-relaxed mb-2 drop-shadow-sm`}>
+           <p className={cls("italic font-serif text-sm leading-relaxed mb-2 drop-shadow-sm", textColor)}>
              "{quote.text}"
            </p>
-           <p className={`${authorColor} font-bold font-western tracking-wider text-xs uppercase border-t ${separatorBorder} pt-1 inline-block`}>
+           <p className={cls("font-bold font-western tracking-wider text-xs uppercase border-t pt-1 inline-block", authorColor, separatorBorder)}>
              — {quote.author}
            </p>
          </div>
