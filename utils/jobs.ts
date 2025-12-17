@@ -2,7 +2,14 @@ import React from 'react';
 import { StoryCardDef, StepOverrides, GameState, JobSetupDetails, JobSetupMessage } from '../types';
 import { CHALLENGE_IDS, CONTACT_NAMES } from '../data/ids';
 
-// Map of override flags to their corresponding job mode string.
+// --- Types for Strategy Pattern ---
+interface JobModeStrategy {
+    getContacts: () => string[];
+    getMessage: (forbiddenContact?: string) => JobSetupMessage | null;
+}
+
+// --- Constants & Maps ---
+
 const OVERRIDE_TO_MODE_MAP: Array<[keyof StepOverrides, string]> = [
   ['browncoatJobMode', 'no_jobs'],
   ['timesJobMode', 'times_jobs'],
@@ -11,23 +18,51 @@ const OVERRIDE_TO_MODE_MAP: Array<[keyof StepOverrides, string]> = [
   ['awfulJobMode', 'awful_jobs'],
 ];
 
+const STANDARD_CONTACTS = [CONTACT_NAMES.HARKEN, 'Badger', 'Amnon Duul', 'Patience', CONTACT_NAMES.NISKA];
+
+// --- Strategies ---
+
+const jobModeStrategies: Record<string, JobModeStrategy> = {
+    buttons_jobs: {
+        getContacts: () => ['Amnon Duul', 'Lord Harrow', 'Magistrate Higgins'],
+        getMessage: () => ({
+            source: 'setupCard',
+            title: 'Setup Card Override',
+            content: React.createElement(React.Fragment, null, React.createElement("strong", null, "Specific Contacts:"), " Draw from Amnon Duul, Lord Harrow, and Magistrate Higgins.", React.createElement("br", null), React.createElement("strong", null, "Caper Bonus:"), " Draw 1 Caper Card.")
+        })
+    },
+    awful_jobs: {
+        getContacts: () => [CONTACT_NAMES.HARKEN, 'Amnon Duul', 'Patience'],
+        getMessage: (forbiddenContact) => {
+             const harkenContent = forbiddenContact === CONTACT_NAMES.HARKEN 
+            ? React.createElement(React.Fragment, null, React.createElement("strong", null, "Limited Contacts."), " This setup card normally draws from Harken, Amnon Duul, and Patience.", React.createElement("div", { className: "mt-1 text-amber-800 dark:text-amber-400 font-bold text-xs" }, "⚠️ Story Card Conflict: Harken is unavailable. Draw from Amnon Duul and Patience only."))
+            : React.createElement(React.Fragment, null, React.createElement("strong", null, "Limited Contacts."), " Starting Jobs are drawn only from Harken, Amnon Duul, and Patience.");
+            return { source: 'setupCard', title: 'Setup Card Override', content: harkenContent };
+        }
+    },
+    high_alert_jobs: {
+        getContacts: () => STANDARD_CONTACTS.filter(c => c !== CONTACT_NAMES.HARKEN),
+        getMessage: () => ({
+            source: 'setupCard',
+            title: 'Setup Card Override',
+            content: React.createElement("strong", null, "Harken is unavailable.")
+        })
+    },
+    standard: {
+        getContacts: () => STANDARD_CONTACTS,
+        getMessage: () => null
+    }
+};
+
+// --- Helper Functions ---
+
 export const determineJobMode = (activeStoryCard: StoryCardDef, overrides: StepOverrides): string => {
-  // 1. Story Card configuration takes highest precedence
   if (activeStoryCard.setupConfig?.jobDrawMode) {
       return activeStoryCard.setupConfig.jobDrawMode;
   }
-
-  // 2. Check setup card overrides using the map
   const foundOverride = OVERRIDE_TO_MODE_MAP.find(([key]) => overrides[key]);
-  if (foundOverride) {
-      return foundOverride[1];
-  }
-  
-  // 3. Default
-  return 'standard';
+  return foundOverride ? foundOverride[1] : 'standard';
 };
-
-// --- Content Builders ---
 
 const buildNoJobsContent = (mode: string, overrides: StepOverrides, primeContactDecks: boolean | undefined, isDontPrimeChallenge: boolean): { title: string, source: JobSetupMessage['source'], content: React.ReactNode } => {
     if (mode === 'no_jobs') {
@@ -58,8 +93,10 @@ const buildNoJobsContent = (mode: string, overrides: StepOverrides, primeContact
             content: React.createElement("p", null, React.createElement("strong", null, "Do not take Starting Jobs."))
         };
     }
-    return { source: 'info', title: 'Info', content: null }; // Should not happen
+    return { source: 'info', title: 'Info', content: null };
 };
+
+// --- Main Logic ---
 
 export const determineJobSetupDetails = (
   gameState: GameState, 
@@ -116,31 +153,14 @@ export const determineJobSetupDetails = (
     return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
   }
 
-  // 3. Standard UI Modes (List of Contacts)
-  let contacts: string[] = [];
+  // 3. Standard UI Modes (Use Strategies)
   
-  switch(jobMode) {
-      case 'buttons_jobs':
-          contacts = ['Amnon Duul', 'Lord Harrow', 'Magistrate Higgins'];
-          messages.push({ source: 'setupCard', title: 'Setup Card Override', content: React.createElement(React.Fragment, null, React.createElement("strong", null, "Specific Contacts:"), " Draw from Amnon Duul, Lord Harrow, and Magistrate Higgins.", React.createElement("br", null), React.createElement("strong", null, "Caper Bonus:"), " Draw 1 Caper Card.") });
-          break;
-      case 'awful_jobs': {
-          contacts = [CONTACT_NAMES.HARKEN, 'Amnon Duul', 'Patience'];
-          const harkenContent = forbiddenStartingContact === CONTACT_NAMES.HARKEN 
-            ? React.createElement(React.Fragment, null, React.createElement("strong", null, "Limited Contacts."), " This setup card normally draws from Harken, Amnon Duul, and Patience.", React.createElement("div", { className: "mt-1 text-amber-800 dark:text-amber-400 font-bold text-xs" }, "⚠️ Story Card Conflict: Harken is unavailable. Draw from Amnon Duul and Patience only."))
-            : React.createElement(React.Fragment, null, React.createElement("strong", null, "Limited Contacts."), " Starting Jobs are drawn only from Harken, Amnon Duul, and Patience.");
-          messages.push({ source: 'setupCard', title: 'Setup Card Override', content: harkenContent });
-          break;
-      }
-      default:
-          contacts = [CONTACT_NAMES.HARKEN, 'Badger', 'Amnon Duul', 'Patience', CONTACT_NAMES.NISKA];
-          if (jobMode === 'high_alert_jobs') {
-            contacts = contacts.filter(c => c !== CONTACT_NAMES.HARKEN);
-            messages.push({ source: 'setupCard', title: 'Setup Card Override', content: React.createElement("strong", null, "Harken is unavailable.") });
-          }
-  }
+  const strategy = jobModeStrategies[jobMode] || jobModeStrategies.standard;
+  let contacts = strategy.getContacts();
+  const msg = strategy.getMessage(forbiddenStartingContact);
+  if (msg) messages.push(msg);
 
-  // 4. Filters & Challenges
+  // 4. Filters & Challenges (Post-Processing)
   if (forbiddenStartingContact) contacts = contacts.filter(c => c !== forbiddenStartingContact);
   if (allowedStartingContacts && allowedStartingContacts.length > 0) contacts = contacts.filter(c => allowedStartingContacts.includes(c));
   
