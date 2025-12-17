@@ -7,6 +7,7 @@ import { Button } from './Button';
 import { useTheme } from './ThemeContext';
 import { FinalSummary } from './FinalSummary';
 import { WizardHeader } from './WizardHeader';
+import { cls } from '../utils/style';
 
 const WIZARD_STEP_STORAGE_KEY = 'firefly_wizardStep_v3';
 
@@ -96,8 +97,9 @@ const SetupWizard = (): React.ReactElement | null => {
   
   const isFinal = currentStep.type === 'final';
 
-  // Don't show step numbers for the initial setup screens
-  const displayStepIndex = currentStep.type === 'setup' ? 0 : currentStepIndex - setupStepCount + 1;
+  // 0-based indexing for internal state logic
+  // but for UI, the StepContent will handle display incrementing
+  const displayStepIndex = currentStep.type === 'setup' ? 0 : currentStepIndex - setupStepCount;
 
   return (
     <div className="max-w-2xl mx-auto" key={resetKey}>
@@ -106,10 +108,10 @@ const SetupWizard = (): React.ReactElement | null => {
       <ProgressBar current={currentStepIndex + 1} total={flow.length} />
 
       {isFinal ? (
-        <div className={`${isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-[#faf8ef] border-[#d6cbb0]'} rounded-xl shadow-xl p-8 text-center border-t-8 ${isDark ? 'border-t-green-800' : 'border-t-[#7f1d1d]'} animate-fade-in-up border-x border-b transition-colors duration-300`}>
+        <div className={cls(isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-[#faf8ef] border-[#d6cbb0]', "rounded-xl shadow-xl p-8 text-center border-t-8 animate-fade-in-up border-x border-b transition-colors duration-300", isDark ? 'border-t-green-800' : 'border-t-[#7f1d1d]')}>
           <div className="text-6xl mb-4">🚀</div>
-          <h2 className={`text-3xl font-bold font-western mb-4 ${isDark ? 'text-gray-100' : 'text-[#292524]'}`}>You are ready to fly!</h2>
-          <p className={`mb-8 text-lg ${isDark ? 'text-gray-300' : 'text-[#57534e]'}`}>Setup is complete. Good luck, Captain.</p>
+          <h2 className={cls("text-3xl font-bold font-western mb-4", isDark ? 'text-gray-100' : 'text-[#292524]')}>You are ready to fly!</h2>
+          <p className={cls("mb-8 text-lg", isDark ? 'text-gray-300' : 'text-[#57534e]')}>Setup is complete. Good luck, Captain.</p>
           
           <FinalSummary gameState={gameState} />
 
