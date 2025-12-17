@@ -17,6 +17,7 @@ export enum ActionType {
   TOGGLE_SOLO_OPTION = 'TOGGLE_SOLO_OPTION',
   TOGGLE_TIMER_MODE = 'TOGGLE_TIMER_MODE',
   RESET_CHALLENGES = 'RESET_CHALLENGES',
+  RESET_GAME = 'RESET_GAME',
 }
 
 // You can also define payload types here for more complex actions
@@ -36,4 +37,5 @@ export type Action =
   | { type: ActionType.TOGGLE_SHIP_UPGRADES }
   | { type: ActionType.TOGGLE_SOLO_OPTION; payload: keyof GameState['soloOptions'] }
   | { type: ActionType.TOGGLE_TIMER_MODE }
-  | { type: ActionType.RESET_CHALLENGES };
+  | { type: ActionType.RESET_CHALLENGES }
+  | { type: ActionType.RESET_GAME };

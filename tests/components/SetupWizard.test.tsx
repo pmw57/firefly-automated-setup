@@ -63,32 +63,23 @@ describe('components/SetupWizard', () => {
   });
   
   it('resets the game state when "Restart" is clicked and confirmed', async () => {
-    // Mock window.location.reload
-    const { reload } = window.location;
-    Object.defineProperty(window, 'location', {
-      value: { reload: vi.fn() },
-      writable: true,
-    });
-
     render(<SetupWizard />);
     
+    // Navigate to step 2
     const nextButton = await screen.findByRole('button', { name: /Next: Choose Setup Card/i });
     fireEvent.click(nextButton);
     expect(await screen.findByText('Select Setup Card')).toBeInTheDocument();
 
+    // Trigger restart flow
     const restartButton = screen.getByRole('button', { name: /Restart/i });
     fireEvent.click(restartButton);
 
     const confirmButton = await screen.findByRole('button', { name: /Confirm Restart?/i });
     fireEvent.click(confirmButton);
 
-    expect(window.location.reload).toHaveBeenCalled();
-
-    // Restore original window.location
-    Object.defineProperty(window, 'location', {
-      value: { reload },
-      writable: true,
-    });
+    // Verify reset by checking if we are back at the first step
+    expect(await screen.findByText('Mission Configuration')).toBeInTheDocument();
+    expect(screen.queryByText('Select Setup Card')).not.toBeInTheDocument();
   });
 
   it('reaches the final summary screen', async () => {

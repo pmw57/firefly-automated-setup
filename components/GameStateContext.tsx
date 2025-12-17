@@ -3,6 +3,7 @@ import { GameState } from '../types';
 import { gameReducer, getDefaultGameState } from '../state/reducer';
 import { GameStateContext } from '../hooks/useGameState';
 import { LocalStorageService } from '../utils/storage';
+import { ActionType } from '../state/actions';
 
 const GAME_STATE_STORAGE_KEY = 'firefly_gameState_v3';
 const storageService = new LocalStorageService(GAME_STATE_STORAGE_KEY);
@@ -51,10 +52,8 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const resetGameState = useCallback(() => {
     storageService.clear();
-    // A proper reducer-based reset would involve dispatching a 'RESET' action.
-    // For now, to avoid a full re-architecture, we can reload or dispatch a special action
-    // to reset to default. For simplicity and to match existing logic:
-    window.location.reload(); // This is the simplest way to get a clean state.
+    // Dispatch RESET_GAME instead of reload to stay within the same route context
+    dispatch({ type: ActionType.RESET_GAME });
   }, []);
 
   const value = { state, dispatch, isStateInitialized, resetGameState };

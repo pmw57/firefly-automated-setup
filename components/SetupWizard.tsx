@@ -73,8 +73,13 @@ const SetupWizard = (): React.ReactElement | null => {
   }, []);
 
   const performReset = useCallback(() => {
+    // 1. Reset core game state in reducer
     resetGameState();
+    
+    // 2. Reset wizard-specific persistence
     localStorage.removeItem(WIZARD_STEP_STORAGE_KEY);
+    
+    // 3. Reset local component state
     setCurrentStepIndex(0);
     setResetKey(prev => prev + 1);
     window.scrollTo(0, 0);
