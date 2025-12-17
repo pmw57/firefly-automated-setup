@@ -43,7 +43,7 @@ const jobModeStrategies: Record<string, JobModeStrategy> = {
         }
     },
     high_alert_jobs: {
-        getContacts: () => STANDARD_CONTACTS.filter(c => c !== CONTACT_NAMES.HARKEN),
+        getContacts: () => STANDARD_CONTACTS.filter(i => i !== CONTACT_NAMES.HARKEN),
         getMessage: () => ({
             source: 'setupCard',
             title: 'Setup Card Override',
@@ -52,15 +52,7 @@ const jobModeStrategies: Record<string, JobModeStrategy> = {
     },
     rim_jobs: {
         getContacts: () => ['Lord Harrow', 'Mr. Universe', 'Fanty & Mingo', 'Magistrate Higgins'],
-        getMessage: () => ({
-            source: 'setupCard',
-            title: 'The Rim\'s The Thing',
-            content: React.createElement(React.Fragment, null, 
-                React.createElement("p", { className: "mb-2 font-bold text-red-700 dark:text-red-400" }, "⚠️ PRE-REQUISITE: Remove all core Job cards from every Contact deck before proceeding."),
-                React.createElement("p", { className: "mb-2" }, "Decks should only contain cards with expansion icons (Blue Sun / Kalidasa)."),
-                React.createElement("p", null, React.createElement("strong", null, "Expansion Contacts:"), " Draw 1 starting Job from each of the 4 contacts listed below.")
-            )
-        })
+        getMessage: () => null
     },
     standard: {
         getContacts: () => STANDARD_CONTACTS,
