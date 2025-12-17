@@ -10,17 +10,18 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-// FIX: To be a valid React class component, ErrorBoundary must extend `Component`.
-// This provides access to `this.props`, `this.setState`, and lifecycle methods.
+/**
+ * ErrorBoundary class component to catch rendering errors in its children.
+ * Directly extending Component and using class fields for state helps resolve TypeScript resolution issues
+ * that can occur with class-based components in some configurations.
+ */
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  // Added constructor to ensure proper state initialization and property inheritance in all TS environments
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = {
-      hasError: false,
-      error: null,
-    };
-  }
+  // Fix for Error on line 21: Property 'state' does not exist on type 'ErrorBoundary'.
+  // Using a class field for state initialization ensures the property is recognized by the compiler on the instance.
+  public state: ErrorBoundaryState = {
+    hasError: false,
+    error: null,
+  };
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
@@ -31,12 +32,15 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   handleReset = () => {
-    // FIX: Using inherited setState from Component
+    // Fix for Error on line 37: Property 'setState' does not exist on type 'ErrorBoundary'.
+    // setState is inherited from the base Component class.
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
 
   render(): ReactNode {
+    // Fix for Error on line 43 & 46: Property 'state' does not exist on type 'ErrorBoundary'.
+    // Accessing the 'state' property inherited from Component.
     if (this.state.hasError && this.state.error) {
       return (
         <ErrorFallback
@@ -46,7 +50,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       );
     }
 
-    // FIX: Accessing children from inherited props
+    // Fix for Error on line 53: Property 'props' does not exist on type 'ErrorBoundary'.
+    // Accessing the 'props' property inherited from Component.
     return this.props.children;
   }
 }

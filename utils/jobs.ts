@@ -17,6 +17,7 @@ const OVERRIDE_TO_MODE_MAP: Array<[keyof StepOverrides, string]> = [
   ['allianceHighAlertJobMode', 'high_alert_jobs'],
   ['buttonsJobMode', 'buttons_jobs'],
   ['awfulJobMode', 'awful_jobs'],
+  ['rimJobMode', 'rim_jobs'],
 ];
 
 const STANDARD_CONTACTS = [CONTACT_NAMES.HARKEN, 'Badger', 'Amnon Duul', 'Patience', CONTACT_NAMES.NISKA];
@@ -47,6 +48,18 @@ const jobModeStrategies: Record<string, JobModeStrategy> = {
             source: 'setupCard',
             title: 'Setup Card Override',
             content: React.createElement("strong", null, "Harken is unavailable.")
+        })
+    },
+    rim_jobs: {
+        getContacts: () => ['Lord Harrow', 'Mr. Universe', 'Fanty & Mingo', 'Magistrate Higgins'],
+        getMessage: () => ({
+            source: 'setupCard',
+            title: 'The Rim\'s The Thing',
+            content: React.createElement(React.Fragment, null, 
+                React.createElement("p", { className: "mb-2 font-bold text-red-700 dark:text-red-400" }, "⚠️ PRE-REQUISITE: Remove all core Job cards from every Contact deck before proceeding."),
+                React.createElement("p", { className: "mb-2" }, "Decks should only contain cards with expansion icons (Blue Sun / Kalidasa)."),
+                React.createElement("p", null, React.createElement("strong", null, "Expansion Contacts:"), " Draw 1 starting Job from each of the 4 contacts listed below.")
+            )
         })
     },
     standard: {

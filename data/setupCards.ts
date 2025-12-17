@@ -59,10 +59,10 @@ export const SETUP_CARDS: SetupCardDef[] = [
     steps: [
       { id: 'D_RIM_JOBS' },
       { id: 'C1', overrides: { rimNavMode: true } },
-      { id: 'C3' }, // Swap: Choose Ships & Leaders first
-      { id: 'C2' }, // Then place Alliance & Reaver
+      { id: 'C3' }, // Swap: Choose Ships & Leaders first (Phase 3)
+      { id: 'C2' }, // Then place Alliance & Reaver (Phase 4)
       { id: 'C4' }, { id: 'C5' },
-      { id: 'C6' },
+      { id: 'C6', overrides: { rimJobMode: true } }, // Expansion contacts only
       { id: 'C_PRIME' }
     ]
   },
