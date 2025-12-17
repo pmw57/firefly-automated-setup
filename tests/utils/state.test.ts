@@ -63,8 +63,8 @@ describe('state/reducer', () => {
     });
 
     it('resets setup card if its required expansion is disabled', () => {
-        const stateWithSetup: GameState = { ...baseGameState, expansions: { ...baseGameState.expansions, pirates: true }, setupCardId: 'AllianceHighAlert' };
-        const newState = gameReducer(stateWithSetup, { type: ActionType.TOGGLE_EXPANSION, payload: 'pirates' });
+        const stateWithSetup: GameState = { ...baseGameState, expansions: { ...baseGameState.expansions, crime: true }, setupCardId: 'AllianceHighAlert' };
+        const newState = gameReducer(stateWithSetup, { type: ActionType.TOGGLE_EXPANSION, payload: 'crime' });
         expect(newState.setupCardId).toBe(SETUP_CARD_IDS.STANDARD);
     });
   });

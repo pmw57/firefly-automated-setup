@@ -15,23 +15,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
   },
 
   // 2. Pirates & Bounty Hunters
-  {
-    id: "AllianceHighAlert",
-    label: "Alliance High Alert",
-    description: "Starts with an Alliance Alert card in play. Harken is unavailable for starting jobs.",
-    requiredExpansion: 'pirates',
-    iconOverride: 'crime',
-    steps: [
-      { id: 'D_ALLIANCE_ALERT' }, // 1. Alert Cards
-      { id: 'C1' }, // 2. Nav
-      { id: 'C2' }, // 3. Alliance & Reaver
-      { id: 'C3' }, // 4. Ships
-      { id: 'C4' }, // 5. Goal
-      { id: 'C5' }, // 6. Supplies
-      { id: 'C6', overrides: { allianceHighAlertJobMode: true } }, // 7. Jobs (No Harken)
-      { id: 'C_PRIME' } // 8. Prime
-    ]
-  },
+  // No standalone setup cards currently defined for Pirates that aren't grouped elsewhere.
 
   // 3. Blue Sun
   { 
@@ -87,7 +71,6 @@ export const SETUP_CARDS: SetupCardDef[] = [
     id: "TheBrowncoatWay",
     label: "The Browncoat Way",
     description: "A harder economy. Ships must be purchased with starting cash. No free fuel/parts. No starting jobs.",
-    // FIX: Corrected expansion key to match type Expansions
     requiredExpansion: 'coachworks',
     steps: [
       { id: 'C4' }, // 1. Goal (First!)
@@ -103,7 +86,6 @@ export const SETUP_CARDS: SetupCardDef[] = [
     id: "TheBlitz",
     label: "The Blitz",
     description: "Standard supplies are replaced by 'Strip Mining' (drafting cards). Priming the Pump discards double the cards.",
-    // FIX: Corrected expansion key to match type Expansions
     requiredExpansion: 'coachworks',
     steps: [
       { id: 'C4' }, // 1. Goal
@@ -117,6 +99,22 @@ export const SETUP_CARDS: SetupCardDef[] = [
   },
 
   // 6. Crime & Punishment
+  {
+    id: "AllianceHighAlert",
+    label: "Alliance High Alert",
+    description: "Starts with an Alliance Alert card in play. Harken is unavailable for starting jobs.",
+    requiredExpansion: 'crime',
+    steps: [
+      { id: 'D_ALLIANCE_ALERT' }, // 1. Alert Cards
+      { id: 'C1' }, // 2. Nav
+      { id: 'C2' }, // 3. Alliance & Reaver
+      { id: 'C3' }, // 4. Ships
+      { id: 'C4' }, // 5. Goal
+      { id: 'C5' }, // 6. Supplies
+      { id: 'C6', overrides: { allianceHighAlertJobMode: true } }, // 7. Jobs (No Harken)
+      { id: 'C_PRIME' } // 8. Prime
+    ]
+  },
   { 
     id: "ClearerSkiesBetterDays", 
     label: "Clearer Skies, Better Days", 
