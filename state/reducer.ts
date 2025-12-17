@@ -60,20 +60,11 @@ const adjustPlayerNames = (currentNames: string[], targetCount: number): string[
     return newNames;
 };
 
-const handlePlayerCountChange = (state: GameState, count: number): GameState => {
-    const safeCount = Math.max(1, Math.min(9, count));
-    const newMode = safeCount === 1 ? 'solo' : 'multiplayer';
-    
-    const newState: GameState = {
-        ...state,
-        playerCount: safeCount,
-        gameMode: newMode,
-        playerNames: adjustPlayerNames(state.playerNames, safeCount),
-        isCampaign: newMode === 'multiplayer' ? false : state.isCampaign,
-    };
+const enforceMultiplayerConstraints = (state: GameState): GameState => {
+    const newState = { ...state };
 
     // Reset setup card if switching modes makes current selection invalid
-    if (newMode === 'multiplayer' && state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
+    if (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
         newState.setupCardId = SETUP_CARD_IDS.STANDARD;
         newState.setupCardName = 'Standard Game Setup';
         newState.secondarySetupId = undefined;
@@ -81,13 +72,36 @@ const handlePlayerCountChange = (state: GameState, count: number): GameState => 
 
     // Reset Story Card if it was Solo-only and we are now Multiplayer
     const currentStoryDef = STORY_CARDS.find(c => c.title === state.selectedStoryCard);
-    if (newMode === 'multiplayer' && currentStoryDef?.isSolo) {
+    if (currentStoryDef?.isSolo) {
         const defaultMulti = STORY_CARDS.find(c => !c.isSolo && c.requiredExpansion !== 'community') || STORY_CARDS[0];
         newState.selectedStoryCard = defaultMulti.title;
         newState.selectedGoal = defaultMulti.goals?.[0]?.title;
         newState.challengeOptions = {};
     }
+
     return newState;
+};
+
+const handlePlayerCountChange = (state: GameState, count: number): GameState => {
+    const safeCount = Math.max(1, Math.min(9, count));
+    const newMode = safeCount === 1 ? 'solo' : 'multiplayer';
+    
+    // Create base new state with updated count and mode
+    const baseNewState: GameState = {
+        ...state,
+        playerCount: safeCount,
+        gameMode: newMode,
+        playerNames: adjustPlayerNames(state.playerNames, safeCount),
+        isCampaign: newMode === 'multiplayer' ? false : state.isCampaign,
+    };
+
+    // Apply specific constraints if switching to multiplayer, otherwise return as is
+    // This uses a ternary to allow `const` usage, satisfying the linter.
+    const finalState = newMode === 'multiplayer' 
+        ? enforceMultiplayerConstraints(baseNewState) 
+        : baseNewState;
+    
+    return finalState;
 };
 
 const handleExpansionToggle = (state: GameState, expansionId: keyof GameState['expansions']): GameState => {

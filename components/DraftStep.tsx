@@ -9,10 +9,144 @@ import { useGameState } from '../hooks/useGameState';
 import { STORY_CARDS } from '../data/storyCards';
 import { STEP_IDS, CHALLENGE_IDS, STORY_TITLES } from '../data/ids';
 import { hasFlag } from '../utils/data';
+import { cls } from '../utils/style';
 
 interface DraftStepProps {
   step: Step;
 }
+
+// Sub-component for Draft Order
+const DraftOrderPanel = ({ 
+    draftOrder, 
+    isSolo, 
+    isHavenDraft, 
+    isBrowncoatDraft,
+    stepBadgeClass 
+}: { 
+    draftOrder: string[]; 
+    isSolo: boolean; 
+    isHavenDraft: boolean; 
+    isBrowncoatDraft: boolean;
+    stepBadgeClass: string; 
+}) => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
+    const panelBg = isDark ? 'bg-zinc-900/80' : 'bg-white';
+    const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
+    const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
+    const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
+    const panelSubColor = isDark ? 'text-gray-400' : 'text-gray-500';
+    const itemBg = isDark ? 'bg-zinc-800 border-zinc-700' : 'bg-gray-50 border-gray-100';
+    const itemText = isDark ? 'text-gray-200' : 'text-gray-800';
+
+    return (
+        <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
+              <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Step 1</div>
+              <h4 className={cls("font-bold mb-2 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
+                  {isHavenDraft ? 'Select Haven' : 'Select Ship & Leader'}
+              </h4>
+              <p className={cls("text-xs mb-3 italic", panelSubColor)}>
+                {isSolo 
+                    ? (isHavenDraft ? "Choose a Haven." : "Choose a Leader & Ship.")
+                    : isHavenDraft 
+                    ? "Standard Order: Winner chooses Leader & Ship first.": isBrowncoatDraft ? "Winner selects Leader OR buys Ship. Pass to Left." : "Winner selects Leader & Ship. Pass to Left."}
+              </p>
+              <ul className="space-y-2">
+                {draftOrder.map((player, i) => (
+                  <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
+                    <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
+                    <span className={cls("text-sm font-medium", itemText)}>{player}</span>
+                    {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-blue-400' : 'text-blue-600')}>First Pick</span>}
+                  </li>
+                ))}
+              </ul>
+        </div>
+    );
+};
+
+// Sub-component for Placement Order
+const PlacementOrderPanel = ({
+    placementOrder,
+    isSolo,
+    isHavenDraft,
+    isBrowncoatDraft,
+    specialStartSector,
+    stepBadgeClass
+}: {
+    placementOrder: string[];
+    isSolo: boolean;
+    isHavenDraft: boolean;
+    isBrowncoatDraft: boolean;
+    specialStartSector: string | null;
+    stepBadgeClass: string;
+}) => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
+    const panelBg = isDark ? 'bg-zinc-900/80' : 'bg-white';
+    const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
+    const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
+    const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
+    const panelSubColor = isDark ? 'text-gray-400' : 'text-gray-500';
+    const itemBg = isDark ? 'bg-zinc-800 border-zinc-700' : 'bg-gray-50 border-gray-100';
+    const itemText = isDark ? 'text-gray-200' : 'text-gray-800';
+    
+    // Special Placement Styles
+    const specialPlacementBg = isDark ? 'bg-amber-950/40 border-amber-800' : 'bg-amber-50 border-amber-200';
+    const specialPlacementTitle = isDark ? 'text-amber-100' : 'text-amber-900';
+    const specialPlacementText = isDark ? 'text-amber-300' : 'text-amber-800';
+    const specialPlacementSub = isDark ? 'text-amber-400' : 'text-amber-700';
+
+    return (
+        <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
+            <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Step 2</div>
+            <h4 className={cls("font-bold mb-2 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
+                {isHavenDraft ? 'Haven Placement' : 'Placement'}
+            </h4>
+            
+            {isHavenDraft ? (
+                <>
+                <p className={cls("text-xs mb-3 italic", isDark ? 'text-green-300' : 'text-green-800')}>
+                    {isSolo ? "Place Haven in a valid sector." : "Reverse Order: Last player places Haven first."}
+                </p>
+                <ul className="space-y-2">
+                    {placementOrder.map((player, i) => (
+                    <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
+                        <span className="w-6 h-6 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
+                        <span className={cls("text-sm font-medium", itemText)}>{player}</span>
+                    </li>
+                    ))}
+                </ul>
+                </>
+            ) : specialStartSector ? (
+                <div className={cls("p-4 rounded text-center border", specialPlacementBg)}>
+                    <p className={cls("font-bold mb-1", specialPlacementTitle)}>Special Placement</p>
+                    <p className={cls("text-sm", specialPlacementText)}>All ships start at <strong>{specialStartSector}</strong>.</p>
+                    <p className={cls("text-xs italic mt-1", specialPlacementSub)}>(Do not place in separate sectors)</p>
+                </div>
+            ) : (
+                <>
+                <p className={cls("text-xs mb-3 italic", panelSubColor)}>
+                    {isSolo 
+                        ? (isBrowncoatDraft ? "Buy Fuel ($100) and place ship." : "Place Ship in Sector.")
+                        : isBrowncoatDraft 
+                        ? "Pass back to Right. Make remaining choice. Buy Fuel ($100)."
+                        : "Pass to Right (Anti-Clockwise). Place Ship in Sector."
+                    }
+                </p>
+                <ul className="space-y-2">
+                    {placementOrder.map((player, i) => (
+                    <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
+                        <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
+                        <span className={cls("text-sm font-medium", itemText)}>{player}</span>
+                        {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-amber-400' : 'text-amber-600')}>First Place</span>}
+                    </li>
+                    ))}
+                </ul>
+                </>
+            )}
+        </div>
+    );
+};
 
 export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
   const { state: gameState } = useGameState();
@@ -67,32 +201,23 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
   const allianceSpaceOffLimits = hasFlag(activeStoryCard.setupConfig, 'allianceSpaceOffLimits');
   const addBorderHavens = hasFlag(activeStoryCard.setupConfig, 'addBorderSpaceHavens');
 
-  const isBrowncoatDraft = overrides.browncoatDraftMode;
-  const isWantedLeaderMode = overrides.wantedLeaderMode;
+  const isBrowncoatDraft = !!overrides.browncoatDraftMode;
+  const isWantedLeaderMode = !!overrides.wantedLeaderMode;
+
+  // Determine Special Start Sector String
+  let specialStartSector: string | null = null;
+  if (startAtSector) specialStartSector = startAtSector;
+  else if (isPersephoneStart) specialStartSector = 'Persephone';
+  else if (isLondiniumStart) specialStartSector = 'Londinium';
 
   const introText = isDark ? 'text-gray-400' : 'text-gray-600';
-  const panelBg = isDark ? 'bg-zinc-900/80' : 'bg-white';
-  const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
-  const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
-  const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
-  const panelSubColor = isDark ? 'text-gray-400' : 'text-gray-500';
-  
   const stepBadgeBlueBg = isDark ? 'bg-blue-900/50 text-blue-200' : 'bg-blue-100 text-blue-800';
   const stepBadgeAmberBg = isDark ? 'bg-amber-900/50 text-amber-200' : 'bg-amber-100 text-amber-800';
-
-  const itemBg = isDark ? 'bg-zinc-800 border-zinc-700' : 'bg-gray-50 border-gray-100';
-  const itemText = isDark ? 'text-gray-200' : 'text-gray-800';
-
-  const specialPlacementBg = isDark ? 'bg-amber-950/40 border-amber-800' : 'bg-amber-50 border-amber-200';
-  const specialPlacementTitle = isDark ? 'text-amber-100' : 'text-amber-900';
-  const specialPlacementText = isDark ? 'text-amber-300' : 'text-amber-800';
-  const specialPlacementSub = isDark ? 'text-amber-400' : 'text-amber-700';
-
   const warningConflictBg = isDark ? 'bg-red-900/30 border-red-800 text-red-200' : 'bg-red-50 border-red-200 text-red-800';
 
   return (
     <>
-      {!isSolo && <p className={`mb-4 italic ${introText}`}>Determine who drafts first using a D6. Ties are resolved automatically.</p>}
+      {!isSolo && <p className={cls("mb-4 italic", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>}
       
       {!draftState ? (
         <Button onClick={handleDetermineOrder} variant="secondary" fullWidth className="mb-4">
@@ -128,7 +253,7 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
                      <li><strong style={{ color: 'DarkRed' }}>Walden</strong></li>
                      <li><strong style={{ color: 'DarkGoldenrod' }}>Yun Qi</strong></li>
                  </ul>
-                 <div className={`text-xs p-2 rounded border ${isDark ? 'bg-amber-900/30 border-amber-800 text-amber-200' : 'bg-amber-50 border-amber-200 text-amber-800'}`}>
+                 <div className={cls("text-xs p-2 rounded border", isDark ? 'bg-amber-900/30 border-amber-800 text-amber-200' : 'bg-amber-50 border-amber-200 text-amber-800')}>
                     <strong>Walden & Interceptor:</strong> These upgrades are double-sided. Choose your side during setup—you cannot switch later.
                  </div>
              </SpecialRuleBlock>
@@ -166,78 +291,22 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Draft Order */}
-            <div className={`${panelBg} p-4 rounded-lg border ${panelBorder} relative overflow-hidden shadow-sm transition-colors duration-300`}>
-              <div className={`absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl ${stepBadgeBlueBg}`}>Step 1</div>
-              <h4 className={`font-bold mb-2 border-b pb-1 ${panelHeaderColor} ${panelHeaderBorder}`}>
-                  {isHavenDraft ? 'Select Haven' : 'Select Ship & Leader'}
-              </h4>
-              <p className={`text-xs mb-3 italic ${panelSubColor}`}>
-                {isSolo 
-                    ? (isHavenDraft ? "Choose a Haven." : "Choose a Leader & Ship.")
-                    : isHavenDraft 
-                    ? "Standard Order: Winner chooses Leader & Ship first.": isBrowncoatDraft ? "Winner selects Leader OR buys Ship. Pass to Left." : "Winner selects Leader & Ship. Pass to Left."}
-              </p>
-              <ul className="space-y-2">
-                {draftState.draftOrder.map((player, i) => (
-                  <li key={i} className={`flex items-center p-2 rounded border ${itemBg}`}>
-                    <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
-                    <span className={`text-sm font-medium ${itemText}`}>{player}</span>
-                    {!isSolo && i === 0 && <span className={`ml-auto text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>First Pick</span>}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <DraftOrderPanel 
+                draftOrder={draftState.draftOrder}
+                isSolo={isSolo}
+                isHavenDraft={isHavenDraft}
+                isBrowncoatDraft={isBrowncoatDraft}
+                stepBadgeClass={stepBadgeBlueBg}
+            />
 
-            {/* Placement Order */}
-            <div className={`${panelBg} p-4 rounded-lg border ${panelBorder} relative overflow-hidden shadow-sm transition-colors duration-300`}>
-              <div className={`absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl ${stepBadgeAmberBg}`}>Step 2</div>
-              <h4 className={`font-bold mb-2 border-b pb-1 ${panelHeaderColor} ${panelHeaderBorder}`}>
-                 {isHavenDraft ? 'Haven Placement' : 'Placement'}
-              </h4>
-              
-              {isHavenDraft ? (
-                 <>
-                   <p className={`text-xs mb-3 italic ${isDark ? 'text-green-300' : 'text-green-800'}`}>
-                       {isSolo ? "Place Haven in a valid sector." : "Reverse Order: Last player places Haven first."}
-                   </p>
-                   <ul className="space-y-2">
-                      {draftState.placementOrder.map((player, i) => (
-                        <li key={i} className={`flex items-center p-2 rounded border ${itemBg}`}>
-                          <span className="w-6 h-6 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
-                          <span className={`text-sm font-medium ${itemText}`}>{player}</span>
-                        </li>
-                      ))}
-                    </ul>
-                 </>
-              ) : (isPersephoneStart || isLondiniumStart || startAtSector) ? (
-                <div className={`p-4 rounded text-center border ${specialPlacementBg}`}>
-                  <p className={`font-bold mb-1 ${specialPlacementTitle}`}>Special Placement</p>
-                  <p className={`text-sm ${specialPlacementText}`}>All ships start at <strong>{startAtSector || (isPersephoneStart ? 'Persephone' : 'Londinium')}</strong>.</p>
-                  <p className={`text-xs italic mt-1 ${specialPlacementSub}`}>(Do not place in separate sectors)</p>
-                </div>
-              ) : (
-                <>
-                   <p className={`text-xs mb-3 italic ${panelSubColor}`}>
-                    {isSolo 
-                        ? (isBrowncoatDraft ? "Buy Fuel ($100) and place ship." : "Place Ship in Sector.")
-                        : isBrowncoatDraft 
-                        ? "Pass back to Right. Make remaining choice. Buy Fuel ($100)."
-                        : "Pass to Right (Anti-Clockwise). Place Ship in Sector."
-                    }
-                  </p>
-                  <ul className="space-y-2">
-                    {draftState.placementOrder.map((player, i) => (
-                      <li key={i} className={`flex items-center p-2 rounded border ${itemBg}`}>
-                        <span className="w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
-                        <span className={`text-sm font-medium ${itemText}`}>{player}</span>
-                        {!isSolo && i === 0 && <span className={`ml-auto text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>First Place</span>}
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </div>
+            <PlacementOrderPanel 
+                placementOrder={draftState.placementOrder}
+                isSolo={isSolo}
+                isHavenDraft={isHavenDraft}
+                isBrowncoatDraft={isBrowncoatDraft}
+                specialStartSector={specialStartSector}
+                stepBadgeClass={stepBadgeAmberBg}
+            />
           </div>
           
           {isBrowncoatDraft && (
@@ -256,7 +325,7 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
                  </ul>
                  {/* Warning if Mad Verse is active */}
                  {activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' && (
-                     <div className={`mt-3 p-2 rounded font-bold border text-sm ${warningConflictBg}`}>
+                     <div className={cls("mt-3 p-2 rounded font-bold border text-sm", warningConflictBg)}>
                          ⚠️ CONFLICT: Story Card override active. Ships must start at Persephone despite Haven rules!
                      </div>
                  )}

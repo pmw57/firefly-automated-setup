@@ -66,35 +66,39 @@ export const determineJobMode = (activeStoryCard: StoryCardDef, overrides: StepO
 };
 
 const buildNoJobsContent = (mode: string, overrides: StepOverrides, primeContactDecks: boolean, isDontPrimeChallenge: boolean): { title: string, source: JobSetupMessage['source'], content: React.ReactNode } => {
-    if (mode === 'no_jobs') {
-        if (primeContactDecks && !isDontPrimeChallenge) {
-             return {
-                 source: 'story',
-                 title: 'Story Override',
-                 content: React.createElement(React.Fragment, null, React.createElement("p", null, React.createElement("strong", null, "No Starting Jobs are dealt.")), React.createElement("p", { className: "mt-2" }, "Instead, ", React.createElement("strong", null, "prime the Contact Decks"), ":"), React.createElement("ul", { className: "list-disc ml-5 mt-1 text-sm" }, React.createElement("li", null, "Reveal the top ", React.createElement("strong", null, "3 cards"), " of each Contact Deck."), React.createElement("li", null, "Place the revealed Job Cards in their discard piles.")))
-             };
-        }
-        if (isDontPrimeChallenge) {
-             return {
-                 source: 'warning',
-                 title: 'Challenge Active',
-                 content: React.createElement(React.Fragment, null, React.createElement("p", null, React.createElement("strong", null, "No Starting Jobs.")), React.createElement("p", { className: "mt-1" }, React.createElement("strong", null, "Do not prime the Contact Decks."), " (Challenge Override)"))
-             };
-        }
-        if (overrides.browncoatJobMode) {
-             return {
-                 source: 'setupCard',
-                 title: 'Setup Card Override',
-                 content: React.createElement(React.Fragment, null, React.createElement("p", null, React.createElement("strong", null, "No Starting Jobs.")), React.createElement("p", null, "Crews must find work on their own out in the black."))
-             };
-        }
+    if (mode !== 'no_jobs') {
+        return { source: 'info', title: 'Info', content: null };
+    }
+
+    if (primeContactDecks && !isDontPrimeChallenge) {
         return {
             source: 'story',
             title: 'Story Override',
-            content: React.createElement("p", null, React.createElement("strong", null, "Do not take Starting Jobs."))
+            content: React.createElement(React.Fragment, null, React.createElement("p", null, React.createElement("strong", null, "No Starting Jobs are dealt.")), React.createElement("p", { className: "mt-2" }, "Instead, ", React.createElement("strong", null, "prime the Contact Decks"), ":"), React.createElement("ul", { className: "list-disc ml-5 mt-1 text-sm" }, React.createElement("li", null, "Reveal the top ", React.createElement("strong", null, "3 cards"), " of each Contact Deck."), React.createElement("li", null, "Place the revealed Job Cards in their discard piles.")))
         };
     }
-    return { source: 'info', title: 'Info', content: null };
+    
+    if (isDontPrimeChallenge) {
+        return {
+            source: 'warning',
+            title: 'Challenge Active',
+            content: React.createElement(React.Fragment, null, React.createElement("p", null, React.createElement("strong", null, "No Starting Jobs.")), React.createElement("p", { className: "mt-1" }, React.createElement("strong", null, "Do not prime the Contact Decks."), " (Challenge Override)"))
+        };
+    }
+
+    if (overrides.browncoatJobMode) {
+        return {
+            source: 'setupCard',
+            title: 'Setup Card Override',
+            content: React.createElement(React.Fragment, null, React.createElement("p", null, React.createElement("strong", null, "No Starting Jobs.")), React.createElement("p", null, "Crews must find work on their own out in the black."))
+        };
+    }
+
+    return {
+        source: 'story',
+        title: 'Story Override',
+        content: React.createElement("p", null, React.createElement("strong", null, "Do not take Starting Jobs."))
+    };
 };
 
 // --- Main Logic ---
