@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { Expansions, ThemeColor } from '../types';
 import { ExpansionIcon } from './ExpansionIcon';
 import { useTheme } from './ThemeContext';
+import { cls } from '../utils/style';
 
 interface ThemeStyles {
   border: string;
@@ -74,46 +74,46 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
       tabIndex={0}
       onClick={() => onToggle(id)}
       onKeyDown={handleKeyDown}
-      className={`
-        relative cursor-pointer rounded-xl border-2 p-5 transition-all duration-300 ease-in-out flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 backdrop-blur-sm
-        ${active 
-          ? `${currentTheme.border} ${currentTheme.bg} shadow-md` 
-          : `${inactiveBorder} ${inactiveBg} ${inactiveHover}`
-        }
-      `}
+      className={cls(
+        "relative cursor-pointer rounded-xl border-2 p-5 transition-all duration-300 ease-in-out flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 backdrop-blur-sm",
+        active 
+          ? cls(currentTheme.border, currentTheme.bg, "shadow-md")
+          : cls(inactiveBorder, inactiveBg, inactiveHover)
+      )}
     >
       <div className="flex items-center flex-1">
-        <div className={`
-          w-12 h-12 rounded-lg mr-4 flex items-center justify-center font-bold text-xl shadow-sm transition-colors duration-300 overflow-hidden shrink-0
-          ${active ? '' : 'bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-gray-500'}
-        `}>
+        <div className={cls(
+          "w-12 h-12 rounded-lg mr-4 flex items-center justify-center font-bold text-xl shadow-sm transition-colors duration-300 overflow-hidden shrink-0",
+          !active && "bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-gray-500"
+        )}>
           <ExpansionIcon id={id} />
         </div>
         
         <div className="flex-1 mr-4">
-          <h3 className={`font-bold text-lg leading-tight transition-colors duration-300 ${titleColor}`}>
+          <h3 className={cls("font-bold text-lg leading-tight transition-colors duration-300", titleColor)}>
             {label}
           </h3>
-          <p className={`text-xs mt-1 leading-snug ${descColor}`}>
+          <p className={cls("text-xs mt-1 leading-snug", descColor)}>
              {description}
           </p>
-          <span className={`
-            inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded mt-2 transition-colors duration-300
-            ${active ? currentTheme.badge : inactiveBadge}
-          `}>
+          <span className={cls(
+            "inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded mt-2 transition-colors duration-300",
+            active ? currentTheme.badge : inactiveBadge
+          )}>
             {active ? 'Active' : 'Inactive'}
           </span>
         </div>
       </div>
 
-      <div className={`
-        w-14 h-8 rounded-full p-1 transition-colors duration-300 ease-in-out flex items-center shrink-0 ml-2
-        ${active ? currentTheme.toggle : inactiveToggle}
-      `}>
-        <div className={`
-          ${toggleKnob} w-6 h-6 rounded-full shadow-sm transform transition-transform duration-300 ease-in-out
-          ${active ? 'translate-x-6' : 'translate-x-0'}
-        `}></div>
+      <div className={cls(
+        "w-14 h-8 rounded-full p-1 transition-colors duration-300 ease-in-out flex items-center shrink-0 ml-2",
+        active ? currentTheme.toggle : inactiveToggle
+      )}>
+        <div className={cls(
+          toggleKnob, 
+          "w-6 h-6 rounded-full shadow-sm transform transition-transform duration-300 ease-in-out",
+          active ? 'translate-x-6' : 'translate-x-0'
+        )}></div>
       </div>
     </div>
   );
