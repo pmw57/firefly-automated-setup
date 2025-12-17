@@ -42,14 +42,6 @@ const jobModeStrategies: Record<string, JobModeStrategy> = {
             return { source: 'setupCard', title: 'Setup Card Override', content: harkenContent };
         }
     },
-    high_alert_jobs: {
-        getContacts: () => STANDARD_CONTACTS.filter(i => i !== CONTACT_NAMES.HARKEN),
-        getMessage: () => ({
-            source: 'setupCard',
-            title: 'Setup Card Override',
-            content: React.createElement("strong", null, "Harken is unavailable.")
-        })
-    },
     rim_jobs: {
         getContacts: () => ['Lord Harrow', 'Mr. Universe', 'Fanty & Mingo', 'Magistrate Higgins'],
         getMessage: () => null
@@ -110,17 +102,20 @@ const buildNoJobsContent = (mode: string, overrides: StepOverrides, primeContact
 
 export const determineJobSetupDetails = (
   gameState: GameState, 
-  activeStoryCard: StoryCardDef, 
+  activeStoryCard: StoryCardDef | undefined, 
   overrides: StepOverrides
 ): JobSetupDetails => {
-  const jobMode = determineJobMode(activeStoryCard, overrides);
+  // Use empty baseline if no story card is active (prevents default fallback leaks)
+  const safeStory: StoryCardDef = activeStoryCard || { title: '', intro: '' };
+  
+  const jobMode = determineJobMode(safeStory, overrides);
   const { 
       forbiddenStartingContact, 
       allowedStartingContacts, 
-  } = activeStoryCard.setupConfig || {};
+  } = safeStory.setupConfig || {};
   
-  const removeJobDecks = hasFlag(activeStoryCard.setupConfig, 'removeJobDecks');
-  const primeContactDecks = hasFlag(activeStoryCard.setupConfig, 'primeContactDecks');
+  const removeJobDecks = hasFlag(safeStory.setupConfig, 'removeJobDecks');
+  const primeContactDecks = hasFlag(safeStory.setupConfig, 'primeContactDecks');
   
   const isSingleContactChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
   const isDontPrimeChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
@@ -164,6 +159,19 @@ export const determineJobSetupDetails = (
     return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
   }
 
+  if (jobMode === 'high_alert_jobs') {
+    messages.push({
+      source: 'setupCard',
+      title: 'Alliance High Alert',
+      content: React.createElement(React.Fragment, null, 
+        React.createElement("p", { className: "mb-2" }, React.createElement("strong", null, "Harken's Contact Deck is removed from the game.")),
+        React.createElement("p", { className: "mb-2" }, "Each player draws ", React.createElement("strong", null, "3 Starting Jobs"), " from any Contact or combination of Contacts of their choice."),
+        React.createElement("p", { className: "text-sm italic opacity-80" }, "Players may keep, or discard, any of the three Jobs they've drawn.")
+      )
+    });
+    return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+  }
+
   // 3. Standard UI Modes (Use Strategies)
   
   const strategy = jobModeStrategies[jobMode] || jobModeStrategies.standard;
@@ -175,8 +183,8 @@ export const determineJobSetupDetails = (
   if (forbiddenStartingContact) contacts = contacts.filter(c => c !== forbiddenStartingContact);
   if (allowedStartingContacts && allowedStartingContacts.length > 0) contacts = contacts.filter(c => allowedStartingContacts.includes(c));
   
-  if (activeStoryCard.setupDescription && (forbiddenStartingContact || (allowedStartingContacts && allowedStartingContacts.length > 0))) {
-    messages.push({ source: 'story', title: 'Story Override', content: activeStoryCard.setupDescription });
+  if (safeStory.setupDescription && (forbiddenStartingContact || (allowedStartingContacts && allowedStartingContacts.length > 0))) {
+    messages.push({ source: 'story', title: 'Story Override', content: safeStory.setupDescription });
   }
 
   if (isSingleContactChallenge) {
