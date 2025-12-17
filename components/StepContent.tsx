@@ -14,7 +14,7 @@ import { ResourcesStep } from './ResourcesStep';
 import { JobStep } from './JobStep';
 import { PrimePumpStep } from './PrimePumpStep';
 
-// Dynamic Step
+// Dynamic Step Handler
 import { DynamicStepHandler } from './DynamicStepHandler';
 
 // Setup Steps
@@ -30,6 +30,17 @@ interface StepContentProps {
   onPrev: () => void;
 }
 
+// Registry for Core Step Components
+// Excludes MissionDossierStep because it has a different prop signature
+const CORE_STEP_COMPONENTS: Record<string, React.FC<{ step: Step }>> = {
+  [STEP_IDS.CORE_NAV_DECKS]: NavDeckStep,
+  [STEP_IDS.CORE_ALLIANCE_REAVER]: AllianceReaverStep,
+  [STEP_IDS.CORE_DRAFT]: DraftStep,
+  [STEP_IDS.CORE_RESOURCES]: ResourcesStep,
+  [STEP_IDS.CORE_JOBS]: JobStep,
+  [STEP_IDS.CORE_PRIME_PUMP]: PrimePumpStep,
+};
+
 export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -44,17 +55,18 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
         if (step.id === STEP_IDS.SETUP_OPTIONAL_RULES) return <OptionalRulesSelection onStart={onNext} onBack={onPrev} />;
         return <div className="text-red-500">Unknown Setup Step: {step.id}</div>;
       
-      case 'core':
-        switch (step.id) {
-          case STEP_IDS.CORE_NAV_DECKS: return <NavDeckStep step={step} />;
-          case STEP_IDS.CORE_ALLIANCE_REAVER: return <AllianceReaverStep step={step} />;
-          case STEP_IDS.CORE_DRAFT: return <DraftStep step={step} />;
-          case STEP_IDS.CORE_MISSION: return <MissionDossierStep onNext={onNext} onPrev={onPrev} />;
-          case STEP_IDS.CORE_RESOURCES: return <ResourcesStep step={step} />;
-          case STEP_IDS.CORE_JOBS: return <JobStep step={step} />;
-          case STEP_IDS.CORE_PRIME_PUMP: return <PrimePumpStep step={step} />;
-          default: return <div className="text-red-500">Unknown Core Step: {step.id}</div>;
+      case 'core': {
+        // Handle Mission Dossier separately due to different props
+        if (step.id === STEP_IDS.CORE_MISSION) {
+             return <MissionDossierStep onNext={onNext} onPrev={onPrev} />;
         }
+
+        const Component = CORE_STEP_COMPONENTS[step.id];
+        if (Component) {
+          return <Component step={step} />;
+        }
+        return <div className="text-red-500">Unknown Core Step: {step.id}</div>;
+      }
 
       case 'dynamic':
         return <DynamicStepHandler step={step} />;
@@ -65,7 +77,6 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
   };
 
   // Setup steps are self-contained components with their own layout, header, and nav.
-  // We just render them directly, wrapped in the animation container.
   if (step.type === 'setup') {
       return (
           <div className="animate-fade-in-up">
