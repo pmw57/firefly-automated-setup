@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../types';
 
 export const PIRATES_STORIES: StoryCardDef[] = [
@@ -8,8 +7,7 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     setupDescription: "Choose Havens in Border Space. Remove all Piracy Jobs from decks after setup.",
     requiredExpansion: "pirates",
     setupConfig: {
-      addBorderSpaceHavens: true,
-      removePiracyJobs: true
+      flags: ['addBorderSpaceHavens', 'removePiracyJobs']
     }
   },
   {

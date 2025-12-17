@@ -83,43 +83,45 @@ export interface SetupCardDef {
   overrides?: StepOverrides;
 }
 
+export type StoryFlag = 
+  | 'noStartingFuelParts'
+  | 'startWithWarrant'
+  | 'placeAllianceAlertsInAllianceSpace'
+  | 'addBorderSpaceHavens'
+  | 'removePiracyJobs'
+  | 'placeMixedAlertTokens'
+  | 'smugglersBluesSetup'
+  | 'lonelySmugglerSetup'
+  | 'startAtLondinium'
+  | 'startWithAlertCard'
+  | 'startWithGoalToken'
+  | 'startOutsideAllianceSpace'
+  | 'sharedHandSetup'
+  | 'primeContactDecks'
+  | 'placeReaverAlertsInMotherlodeAndUroboros'
+  | 'removeRiver'
+  | 'allianceSpaceOffLimits'
+  | 'removeJobDecks'
+  | 'nandiCrewDiscount'
+  | 'soloCrewDraft'
+  | 'soloGameTimer'
+  | 'disableSoloTimer';
+
 export interface StoryCardConfig {
   jobDrawMode?: 'standard' | 'draft_choice' | 'caper_start' | 'wind_takes_us' | 'no_jobs';
   primingMultiplier?: number;
   startingCreditsBonus?: number;
-  noStartingFuelParts?: boolean;
-  forbiddenStartingContact?: string;
-  allowedStartingContacts?: string[];
-  shipPlacementMode?: 'persephone';
-  startWithWarrant?: boolean;
-  placeAllianceAlertsInAllianceSpace?: boolean;
-  addBorderSpaceHavens?: boolean;
-  removePiracyJobs?: boolean;
-  placeMixedAlertTokens?: boolean;
-  // New flags
-  smugglersBluesSetup?: boolean;
-  lonelySmugglerSetup?: boolean;
-  startAtLondinium?: boolean;
-  startWithAlertCard?: boolean;
-  startWithGoalToken?: boolean;
-  startOutsideAllianceSpace?: boolean;
-  createAlertTokenStackMultiplier?: number;
-  sharedHandSetup?: boolean;
-  primeContactDecks?: boolean;
-  placeReaverAlertsInMotherlodeAndUroboros?: boolean;
-  // Community flags
   startingCreditsOverride?: number;
   customStartingFuel?: number;
   startingWarrantCount?: number;
-  removeRiver?: boolean;
-  allianceSpaceOffLimits?: boolean;
+  createAlertTokenStackMultiplier?: number;
+  shipPlacementMode?: 'persephone';
   startAtSector?: string;
-  removeJobDecks?: boolean;
-  nandiCrewDiscount?: boolean;
-  // Solo specific flags
-  soloCrewDraft?: boolean;
-  soloGameTimer?: boolean;
-  disableSoloTimer?: boolean;
+  
+  forbiddenStartingContact?: string;
+  allowedStartingContacts?: string[];
+  
+  flags?: StoryFlag[];
 }
 
 export interface StoryCardGoal {

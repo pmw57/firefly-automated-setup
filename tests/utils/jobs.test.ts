@@ -77,14 +77,14 @@ describe('utils/jobs', () => {
     });
     
     it('handles story card "no_jobs" mode with priming', () => {
-      const story = mockStory({ jobDrawMode: 'no_jobs', primeContactDecks: true });
+      const story = mockStory({ jobDrawMode: 'no_jobs', flags: ['primeContactDecks'] });
       const { showStandardContactList, messages } = determineJobSetupDetails(baseGameState, story, {});
       expect(showStandardContactList).toBe(false);
       expect(messages[0].content).toMatchSnapshot(); // snapshot the React element
     });
 
     it('handles "no_jobs" with "Don\'t Prime Contacts" challenge override', () => {
-        const story = mockStory({ jobDrawMode: 'no_jobs', primeContactDecks: true });
+        const story = mockStory({ jobDrawMode: 'no_jobs', flags: ['primeContactDecks'] });
         const state: GameState = {
             ...baseGameState,
             challengeOptions: { [CHALLENGE_IDS.DONT_PRIME_CONTACTS]: true }

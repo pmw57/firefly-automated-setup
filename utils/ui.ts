@@ -1,6 +1,7 @@
 import { GameState, StoryCardDef } from '../types';
 import { SETUP_CARDS } from '../data/setupCards';
 import { SETUP_CARD_IDS } from '../data/ids';
+import { hasFlag } from './data';
 
 export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     if (card.setupDescription) return "Setup Changes";
@@ -19,12 +20,15 @@ export const getDisplaySetupName = (state: GameState): string => {
 };
 
 export const getTimerSummaryText = (state: GameState, activeStory?: StoryCardDef): string | null => {
+    const disableSoloTimer = hasFlag(activeStory?.setupConfig, 'disableSoloTimer');
+    const soloGameTimer = hasFlag(activeStory?.setupConfig, 'soloGameTimer');
+
     const isSoloTimerActive = state.gameMode === 'solo' &&
-                              !activeStory?.setupConfig?.disableSoloTimer &&
-                              (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO || activeStory?.setupConfig?.soloGameTimer);
+                              !disableSoloTimer &&
+                              (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO || soloGameTimer);
 
     if (!isSoloTimerActive) {
-        return state.gameMode === 'solo' && activeStory?.setupConfig?.disableSoloTimer
+        return state.gameMode === 'solo' && disableSoloTimer
             ? "Disabled (Story Override)"
             : null;
     }

@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../types';
 
 export const COACHWORKS_STORIES: StoryCardDef[] = [
@@ -8,8 +7,7 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
     setupDescription: "Create shared hand of Inactive Jobs. Start with Warrant Token.",
     requiredExpansion: "coachworks",
     setupConfig: {
-      sharedHandSetup: true,
-      startWithWarrant: true
+      flags: ['sharedHandSetup', 'startWithWarrant']
     }
   },
   {

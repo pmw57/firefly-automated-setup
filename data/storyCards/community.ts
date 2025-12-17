@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../types';
 
 export const COMMUNITY_STORIES: StoryCardDef[] = [
@@ -38,7 +37,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Remove River Tam from play.",
     requiredExpansion: "community",
     setupConfig: {
-      removeRiver: true
+      flags: ['removeRiver']
     }
   },
   {
@@ -47,9 +46,9 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Start with $500, 2 Fuel, 2 Parts. Nandi discounts.",
     requiredExpansion: "community",
     setupConfig: {
+      flags: ['nandiCrewDiscount'],
       startingCreditsOverride: 500,
-      customStartingFuel: 2,
-      nandiCrewDiscount: true
+      customStartingFuel: 2
     },
     sourceUrl: "https://boardgamegeek.com/filepage/186593/where-it-all-started-story-card"
   },
@@ -59,8 +58,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Start with 2 Warrants. Alliance Space off limits. No Harken.",
     requiredExpansion: "community",
     setupConfig: {
+      flags: ['allianceSpaceOffLimits'],
       startingWarrantCount: 2,
-      allianceSpaceOffLimits: true,
       forbiddenStartingContact: "Harken"
     }
   },
@@ -113,8 +112,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Remove all Job Decks. High-value cargo sales.",
     requiredExpansion: "community",
     setupConfig: {
-      jobDrawMode: "no_jobs",
-      removeJobDecks: true
+      flags: ['removeJobDecks'],
+      jobDrawMode: "no_jobs"
     }
   },
   {

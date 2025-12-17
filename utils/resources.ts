@@ -1,5 +1,5 @@
-
 import { StoryCardDef, StepOverrides, ResourceDetails } from '../types';
+import { hasFlag } from './data';
 
 export const calculateStartingResources = (activeStoryCard: StoryCardDef, overrides: StepOverrides): ResourceDetails => {
   const bonusCredits = activeStoryCard.setupConfig?.startingCreditsBonus || 0;
@@ -13,7 +13,7 @@ export const calculateStartingResources = (activeStoryCard: StoryCardDef, overri
     totalCredits += bonusCredits;
   }
 
-  const noFuelParts = activeStoryCard.setupConfig?.noStartingFuelParts;
+  const noFuelParts = hasFlag(activeStoryCard.setupConfig, 'noStartingFuelParts');
   const customFuel = activeStoryCard.setupConfig?.customStartingFuel;
 
   return { totalCredits, bonusCredits, noFuelParts, customFuel };

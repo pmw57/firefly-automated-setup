@@ -1,6 +1,7 @@
 import React from 'react';
 import { StoryCardDef, StepOverrides, GameState, JobSetupDetails, JobSetupMessage } from '../types';
 import { CHALLENGE_IDS, CONTACT_NAMES } from '../data/ids';
+import { hasFlag } from './data';
 
 // --- Types for Strategy Pattern ---
 interface JobModeStrategy {
@@ -64,7 +65,7 @@ export const determineJobMode = (activeStoryCard: StoryCardDef, overrides: StepO
   return foundOverride ? foundOverride[1] : 'standard';
 };
 
-const buildNoJobsContent = (mode: string, overrides: StepOverrides, primeContactDecks: boolean | undefined, isDontPrimeChallenge: boolean): { title: string, source: JobSetupMessage['source'], content: React.ReactNode } => {
+const buildNoJobsContent = (mode: string, overrides: StepOverrides, primeContactDecks: boolean, isDontPrimeChallenge: boolean): { title: string, source: JobSetupMessage['source'], content: React.ReactNode } => {
     if (mode === 'no_jobs') {
         if (primeContactDecks && !isDontPrimeChallenge) {
              return {
@@ -107,9 +108,10 @@ export const determineJobSetupDetails = (
   const { 
       forbiddenStartingContact, 
       allowedStartingContacts, 
-      removeJobDecks, 
-      primeContactDecks 
   } = activeStoryCard.setupConfig || {};
+  
+  const removeJobDecks = hasFlag(activeStoryCard.setupConfig, 'removeJobDecks');
+  const primeContactDecks = hasFlag(activeStoryCard.setupConfig, 'primeContactDecks');
   
   const isSingleContactChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
   const isDontPrimeChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];

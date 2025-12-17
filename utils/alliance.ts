@@ -1,5 +1,5 @@
-
 import { GameState, StoryCardDef } from '../types';
+import { hasFlag } from './data';
 
 export interface AllianceReaverDetails {
   useSmugglersRimRule: boolean;
@@ -13,7 +13,8 @@ export const calculateAllianceReaverDetails = (
   gameState: GameState,
   activeStoryCard: StoryCardDef
 ): AllianceReaverDetails => {
-  const { smugglersBluesSetup, createAlertTokenStackMultiplier } = activeStoryCard.setupConfig || {};
+  const { createAlertTokenStackMultiplier } = activeStoryCard.setupConfig || {};
+  const smugglersBluesSetup = hasFlag(activeStoryCard.setupConfig, 'smugglersBluesSetup');
 
   const useSmugglersRimRule = !!(
     smugglersBluesSetup &&

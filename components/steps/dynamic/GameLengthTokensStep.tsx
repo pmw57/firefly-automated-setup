@@ -5,6 +5,7 @@ import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
 import { ActionType } from '../../../state/actions';
+import { hasFlag } from '../../../utils/data';
 
 interface GameLengthTokensStepProps {
   step: Step;
@@ -19,7 +20,7 @@ export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = () => {
     if (!dispatch) return null;
 
     // Handle Disable Flag
-    if (activeStoryCard.setupConfig?.disableSoloTimer) {
+    if (hasFlag(activeStoryCard.setupConfig, 'disableSoloTimer')) {
         return (
             <SpecialRuleBlock source="story" title="Story Override">
                 <strong>No Timer:</strong> Do not use a Game Timer for this game.

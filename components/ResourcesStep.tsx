@@ -5,6 +5,7 @@ import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { STORY_CARDS } from '../data/storyCards';
+import { hasFlag } from '../utils/data';
 
 interface ResourcesStepProps {
   step: Step;
@@ -19,7 +20,12 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
   
   const resourceDetails = calculateStartingResources(activeStoryCard, overrides);
   const { totalCredits, noFuelParts, customFuel } = resourceDetails;
-  const { startWithWarrant, startingWarrantCount, removeRiver, nandiCrewDiscount, startWithGoalToken } = activeStoryCard.setupConfig || {};
+  
+  const startWithWarrant = hasFlag(activeStoryCard.setupConfig, 'startWithWarrant');
+  const removeRiver = hasFlag(activeStoryCard.setupConfig, 'removeRiver');
+  const nandiCrewDiscount = hasFlag(activeStoryCard.setupConfig, 'nandiCrewDiscount');
+  const startWithGoalToken = hasFlag(activeStoryCard.setupConfig, 'startWithGoalToken');
+  const { startingWarrantCount } = activeStoryCard.setupConfig || {};
   
   const cardBg = isDark ? 'bg-black/60' : 'bg-white';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';

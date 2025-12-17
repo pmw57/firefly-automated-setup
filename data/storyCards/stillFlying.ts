@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../types';
 
 export const STILL_FLYING_STORIES: StoryCardDef[] = [
@@ -24,7 +23,7 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     requiredExpansion: "still_flying",
     additionalRequirements: ["blue", "kalidasa"],
     setupConfig: {
-      placeAllianceAlertsInAllianceSpace: true
+      flags: ['placeAllianceAlertsInAllianceSpace']
     }
   },
 ];

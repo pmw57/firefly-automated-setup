@@ -6,6 +6,7 @@ import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { STORY_CARDS } from '../data/storyCards';
 import { STEP_IDS } from '../data/ids';
+import { hasFlag } from '../utils/data';
 
 interface JobStepProps {
   step: Step;
@@ -32,7 +33,10 @@ export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
     [gameState, activeStoryCard, overrides]
   );
   
-  const { smugglersBluesSetup, lonelySmugglerSetup, sharedHandSetup } = activeStoryCard.setupConfig || {};
+  const smugglersBluesSetup = hasFlag(activeStoryCard.setupConfig, 'smugglersBluesSetup');
+  const lonelySmugglerSetup = hasFlag(activeStoryCard.setupConfig, 'lonelySmugglerSetup');
+  const sharedHandSetup = hasFlag(activeStoryCard.setupConfig, 'sharedHandSetup');
+  const removePiracyJobs = hasFlag(activeStoryCard.setupConfig, 'removePiracyJobs');
 
   const activeChallenges = useMemo(() => 
     activeStoryCard.challengeOptions?.filter(
@@ -137,7 +141,7 @@ export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
         </SpecialRuleBlock>
       )}
 
-      {activeStoryCard.setupConfig?.removePiracyJobs && (
+      {removePiracyJobs && (
         <SpecialRuleBlock source="story" title="Story Override">
           Pull all remaining Piracy Jobs from the Contact Decks and discard them. Reshuffle.
         </SpecialRuleBlock>

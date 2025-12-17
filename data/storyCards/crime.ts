@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../types';
 
 export const CRIME_STORIES: StoryCardDef[] = [
@@ -8,10 +7,8 @@ export const CRIME_STORIES: StoryCardDef[] = [
     setupDescription: "Place 3 Contraband in Alliance sectors. Place $2000 under specified decks. No Starting Jobs. Start at Londinium. Start with Alert Card.",
     requiredExpansion: "crime",
     setupConfig: {
-      smugglersBluesSetup: true,
-      startWithAlertCard: true,
-      jobDrawMode: "no_jobs",
-      startAtLondinium: true
+      flags: ['smugglersBluesSetup', 'startWithAlertCard', 'startAtLondinium'],
+      jobDrawMode: "no_jobs"
     }
   },
   {
@@ -20,9 +17,7 @@ export const CRIME_STORIES: StoryCardDef[] = [
     setupDescription: "Start with 1 Warrant. Start Outside Alliance Space. Start with Alert Card. Limited Starting Job Contacts.",
     requiredExpansion: "crime",
     setupConfig: {
-      startWithWarrant: true,
-      startOutsideAllianceSpace: true,
-      startWithAlertCard: true,
+      flags: ['startWithWarrant', 'startOutsideAllianceSpace', 'startWithAlertCard'],
       allowedStartingContacts: ["Patience", "Badger", "Niska", "Mr. Universe", "Fanty & Mingo"]
     }
   },
