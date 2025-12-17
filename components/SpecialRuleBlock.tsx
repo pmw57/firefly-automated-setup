@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTheme } from './ThemeContext';
+import { cls } from '../utils/style';
 
 interface SpecialRuleBlockProps {
   source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
@@ -57,17 +58,17 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
   const s = getStyles();
 
   return (
-    <div className={`border-l-4 p-4 rounded-r-lg shadow-sm mb-4 transition-all hover:shadow-md backdrop-blur-sm ${s.border} ${s.bg}`}>
+    <div className={cls("border-l-4 p-4 rounded-r-lg shadow-sm mb-4 transition-all hover:shadow-md backdrop-blur-sm", s.border, s.bg)}>
       <div className="flex items-start mb-2">
         <span className="text-xl mr-3 mt-0.5 select-none opacity-80">{icons[source]}</span>
         <div className="flex-1">
-           <span className={`text-[10px] font-bold uppercase tracking-widest opacity-60 block mb-0.5 ${s.text}`}>
+           <span className={cls("text-[10px] font-bold uppercase tracking-widest opacity-60 block mb-0.5", s.text)}>
              {labels[source]}
            </span>
-           {title && <h4 className={`font-bold text-base leading-tight ${s.text}`}>{title}</h4>}
+           {title && <h4 className={cls("font-bold text-base leading-tight", s.text)}>{title}</h4>}
         </div>
       </div>
-      <div className={`text-sm leading-relaxed pl-1 opacity-90 ${s.text}`}>
+      <div className={cls("text-sm leading-relaxed pl-1 opacity-90", s.text)}>
         {children}
       </div>
     </div>
