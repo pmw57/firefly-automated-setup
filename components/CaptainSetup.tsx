@@ -75,6 +75,7 @@ export const CaptainSetup = ({ onNext, onBack }: CaptainSetupProps): React.React
             type="button"
             onClick={() => updatePlayerCount(gameState.playerCount - 1)}
             disabled={gameState.playerCount <= 1}
+            aria-label="Decrease player count"
             className={`w-12 h-12 flex items-center justify-center rounded-lg ${inputBg} border-2 ${inputBorder} font-bold text-2xl ${inputText} disabled:opacity-50 transition-all shadow-sm active:translate-y-0.5 hover:bg-opacity-80`}
           >
             -
@@ -86,6 +87,7 @@ export const CaptainSetup = ({ onNext, onBack }: CaptainSetupProps): React.React
             type="button"
             onClick={() => updatePlayerCount(gameState.playerCount + 1)}
             disabled={gameState.playerCount >= 9}
+            aria-label="Increase player count"
             className={`w-12 h-12 flex items-center justify-center rounded-lg ${inputBg} border-2 ${inputBorder} font-bold text-2xl ${inputText} disabled:opacity-50 transition-all shadow-sm active:translate-y-0.5 hover:bg-opacity-80`}
           >
             +
