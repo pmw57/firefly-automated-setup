@@ -8,6 +8,7 @@ export interface MissionSelectionContextType {
   filterExpansion: string;
   shortList: StoryCardDef[];
   subStep: number;
+  sortMode: 'expansion' | 'name';
   
   // Derived Data
   activeStoryCard: StoryCardDef | undefined;
@@ -26,6 +27,7 @@ export interface MissionSelectionContextType {
   handleGenerateShortList: () => void;
   handlePickFromShortList: () => void;
   handleCancelShortList: () => void;
+  toggleSortMode: () => void;
 }
 
 export const MissionSelectionContext = createContext<MissionSelectionContextType | undefined>(undefined);

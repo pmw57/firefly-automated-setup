@@ -15,6 +15,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   const [filterExpansion, setFilterExpansion] = useState<string>('all');
   const [shortList, setShortList] = useState<StoryCardDef[]>([]);
   const [subStep, setSubStep] = useState(1);
+  const [sortMode, setSortMode] = useState<'expansion' | 'name'>('expansion');
 
   // Memoized derived data
   const activeStoryCard = useMemo(() => 
@@ -32,13 +33,27 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     [gameState]
   );
 
-  const filteredStories = useMemo(() => validStories.filter(card => {
-    const matchesSearch = searchTerm === '' || 
-       card.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-       card.intro.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesExpansion = filterExpansion === 'all' || card.requiredExpansion === filterExpansion || (!card.requiredExpansion && filterExpansion === 'base');
-    return matchesSearch && matchesExpansion;
-  }), [validStories, searchTerm, filterExpansion]);
+  const filteredStories = useMemo(() => {
+    // 1. Filter by search term and expansion dropdown
+    const stories = validStories.filter(card => {
+        const matchesSearch = searchTerm === '' || 
+           card.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+           card.intro.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesExpansion = filterExpansion === 'all' || card.requiredExpansion === filterExpansion || (!card.requiredExpansion && filterExpansion === 'base');
+        return matchesSearch && matchesExpansion;
+    });
+    
+    // 2. Sort the filtered results
+    if (sortMode === 'name') {
+      const getSortableTitle = (str: string) => {
+        return str.replace(/^[^a-zA-Z0-9]+/, '').replace(/^The\s+/i, '');
+      };
+      stories.sort((a, b) => getSortableTitle(a.title).localeCompare(getSortableTitle(b.title)));
+    } 
+    // Default 'expansion' sort is handled by the initial `STORY_CARDS` array sort order.
+    
+    return stories;
+  }, [validStories, searchTerm, filterExpansion, sortMode]);
 
   const availableAdvancedRules: AdvancedRuleDef[] = useMemo(() => {
     const rules: AdvancedRuleDef[] = [];
@@ -91,6 +106,10 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   }, [shortList, handleStoryCardSelect]);
 
   const handleCancelShortList = useCallback(() => setShortList([]), []);
+  
+  const toggleSortMode = useCallback(() => {
+    setSortMode(prev => prev === 'expansion' ? 'name' : 'expansion');
+  }, []);
 
   const value = {
     searchTerm,
@@ -103,6 +122,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     availableAdvancedRules,
     isClassicSolo,
     enablePart2,
+    sortMode,
     setSearchTerm,
     setFilterExpansion,
     setSubStep,
@@ -111,6 +131,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     handleGenerateShortList,
     handlePickFromShortList,
     handleCancelShortList,
+    toggleSortMode,
   };
 
   return (
