@@ -82,16 +82,66 @@ describe('components/SetupWizard', () => {
     expect(screen.queryByText('Select Setup Card')).not.toBeInTheDocument();
   });
 
+  it('interacts correctly with the Optional Rules step', async () => {
+    render(<SetupWizard />);
+    
+    // Go to Solo mode to enable all options.
+    // We must re-query for the button after each click because the component re-renders
+    // and the old button reference becomes stale. We also wait for the text to update.
+    fireEvent.click(await screen.findByRole('button', { name: /Decrease player count/i }));
+    await screen.findByText('3'); // Wait for re-render
+    
+    fireEvent.click(await screen.findByRole('button', { name: /Decrease player count/i }));
+    await screen.findByText('2'); // Wait for re-render
+    
+    fireEvent.click(await screen.findByRole('button', { name: /Decrease player count/i }));
+    await screen.findByText('1'); // Wait for re-render
+
+    // Use a robust regex matcher to wait for the final state update to render.
+    expect(await screen.findByText(/\(Solo Mode\)/)).toBeInTheDocument();
+
+    // Navigate to Optional Rules step
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /Next: Choose Setup Card/i }));
+    });
+    await act(async () => {
+      // It's flying solo by default in solo mode with 10th
+      fireEvent.click(await screen.findByRole('button', { name: /Next: Optional Rules/i }));
+    });
+    
+    expect(await screen.findByRole('heading', { name: /Optional Rules/i })).toBeInTheDocument();
+    
+    // Verify 10th anniversary rules are present (default state)
+    expect(screen.getByRole('heading', { name: /10th Anniversary Rules/i })).toBeInTheDocument();
+    // Verify Solo rules are present
+    expect(screen.getByRole('heading', { name: /Solo Rules/i })).toBeInTheDocument();
+
+    // Interact with a checkbox and check its state
+    const shipUpgradesContainer = screen.getByText('Optional Ship Upgrades').closest('div[role="checkbox"]');
+    expect(shipUpgradesContainer?.querySelector('svg')).toBeNull(); // Not checked
+    fireEvent.click(shipUpgradesContainer!);
+    await screen.findByText('Optional Ship Upgrades'); // wait for re-render
+    expect(shipUpgradesContainer?.querySelector('svg')).toBeInTheDocument(); // Checked
+
+    // Interact with a solo checkbox
+    const noSureThingsContainer = screen.getByText('No Sure Things In Life').closest('div[role="checkbox"]');
+    expect(noSureThingsContainer?.querySelector('svg')).toBeNull();
+    fireEvent.click(noSureThingsContainer!);
+    await screen.findByText('No Sure Things In Life');
+    expect(noSureThingsContainer?.querySelector('svg')).toBeInTheDocument(); // Checked
+  });
+
   it('reaches the final summary screen', async () => {
     render(<SetupWizard />);
 
     await act(async () => {
       let nextButton;
       let i = 0;
+      // Use a more specific query for the next button to avoid matching other buttons.
       while ((nextButton = screen.queryByRole('button', { name: /Next|Launch Setup|Begin Setup/i }))) {
-        if (i++ > 20) break;
+        if (i++ > 20) break; // safety break
         fireEvent.click(nextButton);
-        await new Promise(r => setTimeout(r, 0));
+        await new Promise(r => setTimeout(r, 5)); // small delay for state updates
       }
     });
 
