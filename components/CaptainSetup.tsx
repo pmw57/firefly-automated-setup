@@ -21,8 +21,9 @@ export const CaptainSetup = ({ onNext, onBack }: CaptainSetupProps): React.React
   
   const isSolo = gameState.gameMode === 'solo';
   const isFlyingSolo = gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
+  const has10th = gameState.expansions.tenth;
   
-  const totalParts = gameState.expansions.tenth || isFlyingSolo ? 3 : 2;
+  const totalParts = has10th || isFlyingSolo ? 3 : 2;
 
   // Handlers - Dispatch actions
   const updatePlayerCount = (newCount: number) => {
@@ -80,12 +81,14 @@ export const CaptainSetup = ({ onNext, onBack }: CaptainSetupProps): React.React
             storiesCompleted={gameState.campaignStoriesCompleted}
             onToggle={handleCampaignToggle}
             onStoriesChange={updateCampaignStories}
+            has10th={has10th}
         />
       )}
 
       <ExpansionListSection 
         expansions={gameState.expansions}
         onToggle={handleExpansionChange}
+        has10th={has10th}
       />
 
       <div className="flex gap-4 relative z-10">

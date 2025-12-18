@@ -1,6 +1,7 @@
 import React from 'react';
 import { GameState } from '../../types';
 import { useTheme } from '../ThemeContext';
+import { PageReference } from '../PageReference';
 
 interface SoloRulesSectionProps {
     soloOptions: GameState['soloOptions'];
@@ -22,7 +23,10 @@ export const SoloRulesSection: React.FC<SoloRulesSectionProps> = ({
     const optionHover = isDark ? 'hover:bg-zinc-800/50' : 'hover:bg-gray-50';
     const textMain = isDark ? 'text-gray-200' : 'text-gray-900';
     const textSub = isDark ? 'text-gray-400' : 'text-gray-600';
-    const headerBorder = isDark ? 'border-zinc-700 text-amber-500' : 'border-gray-300 text-amber-800';
+    
+    const headerBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
+    const headerText = isDark ? 'text-amber-500' : 'text-amber-800';
+
 
     const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -39,22 +43,11 @@ export const SoloRulesSection: React.FC<SoloRulesSectionProps> = ({
 
     return (
         <section>
-            <h3 className={`font-bold uppercase tracking-wide text-xs mb-4 pb-1 border-b ${headerBorder}`}>Solo Rules</h3>
+            <div className={`flex justify-between items-baseline mb-4 pb-1 border-b ${headerBorder}`}>
+                <h3 className={`font-bold uppercase tracking-wide text-xs ${headerText}`}>Solo Rules</h3>
+                <PageReference page={55} manual="10th AE" />
+            </div>
             <div className="space-y-4">
-                <div 
-                    role="checkbox"
-                    aria-checked={soloOptions.noSureThings}
-                    tabIndex={0}
-                    onClick={() => onToggleOption('noSureThings')} 
-                    onKeyDown={(e) => handleKeyDown(e, () => onToggleOption('noSureThings'))}
-                    className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
-                >
-                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={soloOptions.noSureThings} /></div>
-                    <div>
-                        <h3 className={`font-bold text-base ${textMain}`}>No Sure Things In Life</h3>
-                        <p className={`text-xs mt-1 ${textSub}`}>Remove 5 cards from every Supply/Contact deck during setup to simulate a lived-in 'Verse.</p>
-                    </div>
-                </div>
                 <div 
                     role="checkbox"
                     aria-checked={timerConfig.mode === 'unpredictable'}
@@ -67,6 +60,20 @@ export const SoloRulesSection: React.FC<SoloRulesSectionProps> = ({
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>Unpredictable Timer</h3>
                         <p className={`text-xs mt-1 ${textSub}`}>Use numbered tokens in the discard stack. The game might end suddenly when a token matches a die roll.</p>
+                    </div>
+                </div>
+                <div 
+                    role="checkbox"
+                    aria-checked={soloOptions.noSureThings}
+                    tabIndex={0}
+                    onClick={() => onToggleOption('noSureThings')} 
+                    onKeyDown={(e) => handleKeyDown(e, () => onToggleOption('noSureThings'))}
+                    className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
+                >
+                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={soloOptions.noSureThings} /></div>
+                    <div>
+                        <h3 className={`font-bold text-base ${textMain}`}>No Sure Things In Life</h3>
+                        <p className={`text-xs mt-1 ${textSub}`}>Remove 5 cards from every Supply/Contact deck during setup to simulate a lived-in 'Verse.</p>
                     </div>
                 </div>
                 <div 

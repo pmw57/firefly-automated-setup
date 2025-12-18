@@ -3,6 +3,7 @@ import { Expansions, ThemeColor } from '../types';
 import { ExpansionIcon } from './ExpansionIcon';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';
+import { PageReference } from './PageReference';
 
 interface ThemeStyles {
   border: string;
@@ -19,6 +20,8 @@ interface ExpansionToggleProps {
   themeColor: ThemeColor;
   description: string;
   onToggle: (id: keyof Expansions) => void;
+  has10th: boolean;
+  page_10th?: number;
 }
 
 const THEME_COLOR_STYLES: Record<ThemeColor, { light: ThemeStyles, dark: ThemeStyles }> = {
@@ -36,7 +39,7 @@ const THEME_COLOR_STYLES: Record<ThemeColor, { light: ThemeStyles, dark: ThemeSt
 };
 
 export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({ 
-  id, label, active, themeColor, description, onToggle
+  id, label, active, themeColor, description, onToggle, has10th, page_10th
 }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -90,9 +93,14 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
         </div>
         
         <div className="flex-1 mr-4">
-          <h3 className={cls("font-bold text-lg leading-tight transition-colors duration-300", titleColor)}>
-            {label}
-          </h3>
+          <div className="flex items-baseline gap-2">
+            <h3 className={cls("font-bold text-lg leading-tight transition-colors duration-300", titleColor)}>
+              {label}
+            </h3>
+            {has10th && page_10th && (
+              <PageReference page={page_10th} manual="10th AE" />
+            )}
+          </div>
           <p className={cls("text-xs mt-1 leading-snug", descColor)}>
              {description}
           </p>

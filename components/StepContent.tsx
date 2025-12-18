@@ -8,6 +8,7 @@ import { cls } from '../utils/style';
 import { useGameState } from '../hooks/useGameState';
 import { STORY_CARDS } from '../data/storyCards';
 import { hasFlag } from '../utils/data';
+import { PageReference } from './PageReference';
 
 // Core Steps
 import { NavDeckStep } from './NavDeckStep';
@@ -179,7 +180,10 @@ export const StepContent = ({ step, onNext, onPrev }: StepContentProps): React.R
     <div className="animate-fade-in-up">
       <div className="flex flex-wrap items-start justify-between mb-6 gap-4">
         <h2 className={cls("text-2xl font-bold font-western flex-1 min-w-[200px] transition-colors duration-300 flex justify-between items-center p-3 rounded-lg shadow-md", headerBg, headerColor)}>
-          <span>{displayTitle}</span>
+          <div className="flex items-baseline gap-2">
+            <span>{displayTitle}</span>
+            {step.page && <PageReference page={step.page} manual={step.manual} />}
+          </div>
           <span className={cls("text-xs font-bold uppercase tracking-wider", tagColor)}>
               {isSpecial ? 'Special' : 'Standard'}
           </span>
