@@ -129,8 +129,50 @@
         <div class="app-loader">
           <div class="app-loader-spinner"></div>
           <div class="app-loader-text">Initializing Cortex...</div>
+          <div id="loader-fallback" style="display: none; margin-top: 2rem; text-align: center; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;">
+            <p style="color: #6b7280; font-size: 0.875rem;">Still waiting? There might be a problem with a cached version.</p>
+            <button id="reset-button" style="margin-top: 1rem; padding: 0.5rem 1rem; font-weight: bold; color: white; background-color: #7f1d1d; border: none; border-radius: 0.5rem; cursor: pointer;">
+              Hard Reset
+            </button>
+          </div>
         </div>
     </div>
+    
+    <script>
+      // Failsafe for stuck PWA cache
+      const fallbackTimeout = setTimeout(() => {
+        const fallback = document.getElementById('loader-fallback');
+        if (fallback) {
+          fallback.style.display = 'block';
+        }
+      }, 5000);
+
+      // Main app will clear this timeout if it loads
+      window.addEventListener('load', () => {
+        clearTimeout(fallbackTimeout);
+      });
+
+      const resetButton = document.getElementById('reset-button');
+      if (resetButton) {
+        resetButton.addEventListener('click', async () => {
+          try {
+            if ('serviceWorker' in navigator) {
+              const registrations = await navigator.serviceWorker.getRegistrations();
+              for (const registration of registrations) {
+                await registration.unregister();
+              }
+              console.log('All service workers unregistered.');
+            }
+          } catch (error) {
+            console.error('Error unregistering service workers:', error);
+          } finally {
+            // Hard reload, bypassing all caches.
+            window.location.reload(true);
+          }
+        });
+      }
+    </script>
+    
     <!-- This script tag is required for Vite to bundle your application -->
     <script type="module" src="/index.tsx"></script>
 </body>

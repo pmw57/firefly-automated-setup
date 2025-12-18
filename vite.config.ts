@@ -34,6 +34,11 @@ export default defineConfig({
             purpose: 'any maskable'
           }
         ]
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png}'],
+        // Don't add revision query param to assets with hash in filename
+        dontCacheBustURLsMatching: /\.[a-f0-9]{8}\./,
       }
     })
   ],
