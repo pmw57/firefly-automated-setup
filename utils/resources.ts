@@ -25,7 +25,7 @@ export const getCreditsLabel = (details: ResourceDetails, overrides: StepOverrid
         return `Story Override (${activeStoryCard.title})`;
     }
     if (details.bonusCredits > 0) {
-        return `Base $${overrides.startingCredits || 3000} + Bonus $${details.bonusCredits}`;
+        return `Base $${(overrides.startingCredits || 3000).toLocaleString()} + Bonus $${details.bonusCredits.toLocaleString()}`;
     }
     return "Standard Allocation";
 };
