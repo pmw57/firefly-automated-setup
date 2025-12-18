@@ -23,7 +23,10 @@ beforeEach(() => {
   });
 
   // Mock window.scrollTo as it is not implemented in jsdom
-  window.scrollTo = vi.fn();
+  Object.defineProperty(window, 'scrollTo', {
+    writable: true,
+    value: vi.fn(),
+  });
 
   // Mock Element.prototype.scrollIntoView as it is not implemented in jsdom
   Element.prototype.scrollIntoView = vi.fn();
