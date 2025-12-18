@@ -15,6 +15,7 @@ export default {
           'red-dark': '#450a0a',
           'gold': '#d4af37',
           'brown': '#78350f',
+          'saddleBrown': '#8B4513',
           'leather': {
             'DEFAULT': '#d97706',
             'dark': '#b45309',

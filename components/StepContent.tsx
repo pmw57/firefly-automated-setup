@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Step } from '../types';
 import { Button } from './Button';
 import { QuotePanel } from './QuotePanel';
 import { useTheme } from './ThemeContext';
-import { STEP_IDS } from '../data/ids';
+import { STEP_IDS, STORY_TITLES } from '../data/ids';
 import { cls } from '../utils/style';
+import { useGameState } from '../hooks/useGameState';
+import { STORY_CARDS } from '../data/storyCards';
+import { hasFlag } from '../utils/data';
 
 // Core Steps
 import { NavDeckStep } from './NavDeckStep';
@@ -46,6 +49,74 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const stepId = step.id;
+  const { state: gameState } = useGameState();
+
+  const activeStoryCard = useMemo(() => 
+    STORY_CARDS.find(c => c.title === gameState.selectedStoryCard),
+    [gameState.selectedStoryCard]
+  );
+  
+  const isSpecial = useMemo(() => {
+    // Dynamic steps are special by definition.
+    if (step.type === 'dynamic') {
+        return true;
+    }
+
+    // A step is special if the setup card provides any rule overrides for it.
+    const hasSetupOverrides = Object.keys(step.overrides || {}).length > 0;
+    if (hasSetupOverrides) {
+        return true;
+    }
+
+    if (!activeStoryCard?.setupConfig) {
+        return false;
+    }
+
+    const config = activeStoryCard.setupConfig;
+
+    switch (step.id) {
+        case STEP_IDS.CORE_NAV_DECKS:
+            // No story cards directly affect this step's core rules, only setup cards.
+            return false;
+        
+        case STEP_IDS.CORE_ALLIANCE_REAVER:
+            return hasFlag(config, 'placeAllianceAlertsInAllianceSpace') ||
+                   hasFlag(config, 'placeMixedAlertTokens') ||
+                   hasFlag(config, 'smugglersBluesSetup') ||
+                   hasFlag(config, 'lonelySmugglerSetup') ||
+                   hasFlag(config, 'startWithAlertCard') ||
+                   !!config.createAlertTokenStackMultiplier;
+
+        case STEP_IDS.CORE_DRAFT:
+            return !!config.shipPlacementMode || !!config.startAtSector;
+        
+        case STEP_IDS.CORE_RESOURCES:
+            return config.startingCreditsBonus !== undefined ||
+                   config.startingCreditsOverride !== undefined ||
+                   hasFlag(config, 'noStartingFuelParts') ||
+                   config.customStartingFuel !== undefined ||
+                   hasFlag(config, 'startWithWarrant') ||
+                   hasFlag(config, 'removeRiver') ||
+                   hasFlag(config, 'nandiCrewDiscount') ||
+                   hasFlag(config, 'startWithGoalToken');
+
+        case STEP_IDS.CORE_JOBS:
+             return (config.jobDrawMode !== undefined && config.jobDrawMode !== 'standard') ||
+                    !!config.forbiddenStartingContact ||
+                    (!!config.allowedStartingContacts && config.allowedStartingContacts.length > 0) ||
+                    hasFlag(config, 'removeJobDecks') ||
+                    hasFlag(config, 'sharedHandSetup');
+
+        case STEP_IDS.CORE_PRIME_PUMP:
+            return (config.primingMultiplier !== undefined && config.primingMultiplier > 1) ||
+                   (activeStoryCard?.title === STORY_TITLES.SLAYING_THE_DRAGON);
+
+        // Mission Dossier is conceptually core.
+        case STEP_IDS.CORE_MISSION:
+        default:
+            return false;
+    }
+  }, [step, activeStoryCard]);
 
   // Render logic based on Step Type and ID
   const renderStepBody = () => {
@@ -90,20 +161,32 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
   const isMissionDossier = step.id === STEP_IDS.CORE_MISSION;
   const showNav = !isMissionDossier;
 
-  const headerColor = isDark ? 'text-gray-200' : 'text-firefly-parchment-text';
-  const indexColor = isDark ? 'text-amber-500/80' : 'text-firefly-red';
-  const borderBottom = isDark ? 'border-zinc-700' : 'border-firefly-parchment-border';
   const borderTop = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
   
+  const headerBg = isSpecial
+    ? (isDark ? 'bg-green-800' : 'bg-green-600')
+    : 'bg-firefly-saddleBrown';
+
+  const headerColor = 'text-white';
+  const indexColor = 'text-white/70';
+  const tagColor = isSpecial
+    ? (isDark ? 'text-green-300' : 'text-green-200')
+    : (isDark ? 'text-amber-300' : 'text-amber-200');
+
   return (
     <div className="animate-fade-in-up">
       <div className="flex flex-wrap items-start justify-between mb-6 gap-4">
-        <h2 className={cls("text-2xl font-bold font-western border-b-2 pb-2 pr-10 flex-1 min-w-[200px] drop-shadow-sm transition-colors duration-300", headerColor, borderBottom)}>
-          <span className={cls("mr-2", indexColor)}>{stepIndex + 1}.</span>
-          {step.data?.title || step.id}
+        <h2 className={cls("text-2xl font-bold font-western flex-1 min-w-[200px] transition-colors duration-300 flex justify-between items-center p-3 rounded-lg shadow-md", headerBg, headerColor)}>
+          <div className="flex items-center">
+            <span className={cls("mr-2", indexColor)}>{stepIndex + 1}.</span>
+            <span>{step.data?.title || step.id}</span>
+          </div>
+          <span className={cls("text-xs font-bold uppercase tracking-wider", tagColor)}>
+              {isSpecial ? 'Special' : 'Current'}
+          </span>
         </h2>
-        <div className="w-full lg:w-1/3 shrink-0">
-           <QuotePanel stepId={stepId} />
+        <div className="w-full lg:w-1/3 shrink-0 flex">
+           <QuotePanel stepId={stepId} className="flex-1" />
         </div>
       </div>
 
