@@ -35,7 +35,7 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
 
   const mainTitleColor = isDark ? 'text-gray-100' : 'text-[#292524]';
   const italicTextColor = isDark ? 'text-gray-300' : 'text-[#57534e]';
-  const bodyBg = isDark ? 'bg-zinc-900/50' : 'bg-transparent';
+  const bodyBg = isDark ? 'bg-zinc-900/50' : 'bg-paper-texture';
   const bgIconBg = isDark ? 'bg-zinc-800' : 'bg-[#e5e5e5]';
   const bgIconBorder = isDark ? 'border-zinc-700' : 'border-[#d4d4d4]';
   const quoteBorder = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
