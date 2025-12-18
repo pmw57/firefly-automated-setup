@@ -73,7 +73,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     description: "A harder economy. Ships must be purchased with starting cash. No free fuel/parts. No starting jobs.",
     requiredExpansion: 'coachworks',
     steps: [
-      { id: 'C4' }, // 1. Goal (First!)
+      { id: 'D_FIRST_GOAL' }, // 1. Goal (First!)
       { id: 'C1', overrides: { browncoatNavMode: true } }, // 2. Nav (With overrides)
       { id: 'C2' }, // 3. Alliance & Reaver
       { id: 'D_BC_CAPITOL', overrides: { startingCredits: 12000 } }, // 4. Starting Capitol (Override base credits)
@@ -88,7 +88,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     description: "Standard supplies are replaced by 'Strip Mining' (drafting cards). Priming the Pump discards double the cards.",
     requiredExpansion: 'coachworks',
     steps: [
-      { id: 'C4' }, // 1. Goal
+      { id: 'D_FIRST_GOAL' }, // 1. Goal
       { id: 'C1', overrides: { browncoatNavMode: true } }, // 2. Nav (Shuffle Ships rule)
       { id: 'C2' }, // 3. Alliance & Reaver
       { id: 'C3' }, // 4. Ships
@@ -139,7 +139,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'tenth',
     mode: 'solo',
     steps: [
-      { id: 'C4' }, // Goal Of The Game
+      { id: 'D_FIRST_GOAL' }, // Goal Of The Game
       { id: 'C1', overrides: { flyingSoloNavMode: true } }, // Nav Decks (Modified text)
       { id: 'C2' }, // Alliance & Reaver Ships
       { id: 'C3' }, // Choose Ship & Leader
@@ -155,7 +155,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     description: "Players draft Shuttles from the supply deck. Specific starting jobs from Amnon Duul, Lord Harrow, and Magistrate Higgins.",
     requiredExpansion: 'tenth',
     steps: [
-      { id: 'C4' }, // 1. Goal
+      { id: 'D_FIRST_GOAL' }, // 1. Goal
       { id: 'C1', overrides: { browncoatNavMode: true } }, // 2. Nav (Shuffle Ships rule)
       { id: 'C2' }, // 3. Alliance & Reaver
       { id: 'C3' }, // 4. Ships
@@ -171,7 +171,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     description: "Draft Haven tokens to establish a home base. Ships start at Havens. Includes 'Local Heroes' bonuses.",
     requiredExpansion: 'tenth',
     steps: [
-      { id: 'C4' }, // 1. Goal
+      { id: 'D_FIRST_GOAL' }, // 1. Goal
       { id: 'C1', overrides: { browncoatNavMode: true } }, // 2. Nav (Uses Shuffle Ships rule)
       { id: 'C2' }, // 3. Alliance & Reaver
       { id: 'D_HAVEN_DRAFT' }, // 4. Leaders, Havens & Ships

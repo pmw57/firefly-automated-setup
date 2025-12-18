@@ -40,10 +40,10 @@ describe('utils/flow', () => {
       expect(flow.find(f => f.id === STEP_IDS.SETUP_OPTIONAL_RULES)).toBeDefined();
     });
     
-    it('includes optional rules step if Flying Solo is the setup card', () => {
-      const state: GameState = { ...baseGameState, setupCardId: SETUP_CARD_IDS.FLYING_SOLO };
+    it('does not include optional rules step if Flying Solo is selected but 10th is off', () => {
+      const state: GameState = { ...baseGameState, setupCardId: SETUP_CARD_IDS.FLYING_SOLO, expansions: { ...baseGameState.expansions, tenth: false }};
       const flow = calculateSetupFlow(state);
-      expect(flow.find(f => f.id === STEP_IDS.SETUP_OPTIONAL_RULES)).toBeDefined();
+      expect(flow.find(f => f.id === STEP_IDS.SETUP_OPTIONAL_RULES)).toBeUndefined();
     });
 
     it('generates a different flow for "The Browncoat Way"', () => {
@@ -55,7 +55,7 @@ describe('utils/flow', () => {
         STEP_IDS.SETUP_CAPTAIN_EXPANSIONS,
         STEP_IDS.SETUP_CARD_SELECTION,
         STEP_IDS.SETUP_OPTIONAL_RULES,
-        STEP_IDS.CORE_MISSION,
+        STEP_IDS.D_FIRST_GOAL,
         STEP_IDS.CORE_NAV_DECKS,
         STEP_IDS.CORE_ALLIANCE_REAVER,
         STEP_IDS.D_BC_CAPITOL,

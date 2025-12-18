@@ -1,4 +1,3 @@
-
 import { ContentMap } from '../types';
 
 export const SETUP_CONTENT: ContentMap = {
@@ -12,6 +11,7 @@ export const SETUP_CONTENT: ContentMap = {
   C_PRIME: { type: 'core', id: 'core-prime', title: "Priming The Pump" },
 
   // Distinct Dynamic Steps (Cannot be merged easily)
+  D_FIRST_GOAL: { type: 'dynamic', elementId: 'D_FIRST_GOAL', title: "Goal of the Game" },
   D_RIM_JOBS: { type: 'dynamic', elementId: 'D_RIM_JOBS', title: "Rim Space Jobs" },
   D_TIME_LIMIT: { type: 'dynamic', elementId: 'D_TIME_LIMIT', title: "Only So Much Time" },
   D_SHUTTLE: { type: 'dynamic', elementId: 'D_SHUTTLE', title: "Choose Shuttles" },
@@ -36,6 +36,7 @@ export const STEP_QUOTES: { [key: string]: { text: string; author: string } } = 
   'core-5': { text: "Ten percent of nothin' is... let me do the math here... nothin' into nothin', carry the nothin'...", author: "Jayne Cobb" },
   'core-6': { text: "I do the job, and then I get paid.", author: "Mal Reynolds" },
   'core-prime': { text: "Everything's shiny, Cap'n. Not to fret.", author: "Kaylee Frye" },
+  'D_FIRST_GOAL': { text: "We have done the impossible, and that makes us mighty.", author: "Mal Reynolds" },
   'D_RIM_JOBS': { text: "We're in the raggedy edge. Don't push me, and I won't push you.", author: "Mal Reynolds" },
   'D_TIME_LIMIT': { text: "Time for some thrilling heroics.", author: "Jayne Cobb" },
   'D_SHUTTLE': { text: "It's a short range transport.", author: "Manual" },

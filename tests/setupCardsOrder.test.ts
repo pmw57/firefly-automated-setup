@@ -8,12 +8,12 @@ describe('Setup Cards Step Regression', () => {
     AwfulCrowdedInMySky: ['C1', 'C3', 'C2', 'C4', 'C5', 'C6', 'C_PRIME'],
     TheRimsTheThing: ['D_RIM_JOBS', 'C1', 'C3', 'C2', 'C4', 'C5', 'C6', 'C_PRIME'],
     TimesNotOnOurSide: ['D_TIME_LIMIT', 'C1', 'C3', 'C2', 'C4', 'C5', 'C6', 'C_PRIME'],
-    TheBrowncoatWay: ['C4', 'C1', 'C2', 'D_BC_CAPITOL', 'C3', 'C6', 'C_PRIME'],
-    TheBlitz: ['C4', 'C1', 'C2', 'C3', 'D_STRIP_MINING', 'C6', 'C_PRIME'],
+    TheBrowncoatWay: ['D_FIRST_GOAL', 'C1', 'C2', 'D_BC_CAPITOL', 'C3', 'C6', 'C_PRIME'],
+    TheBlitz: ['D_FIRST_GOAL', 'C1', 'C2', 'C3', 'D_STRIP_MINING', 'C6', 'C_PRIME'],
     ClearerSkiesBetterDays: ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C_PRIME'],
-    FlyingSolo: ['C4', 'C1', 'C2', 'C3', 'C5', 'C6', 'C_PRIME', 'D_GAME_LENGTH_TOKENS'],
-    AintAllButtonsAndCharts: ['C4', 'C1', 'C2', 'C3', 'D_SHUTTLE', 'C5', 'C6', 'C_PRIME'],
-    HomeSweetHaven: ['C4', 'C1', 'C2', 'D_HAVEN_DRAFT', 'C5', 'C6', 'C_PRIME', 'D_LOCAL_HEROES'],
+    FlyingSolo: ['D_FIRST_GOAL', 'C1', 'C2', 'C3', 'C5', 'C6', 'C_PRIME', 'D_GAME_LENGTH_TOKENS'],
+    AintAllButtonsAndCharts: ['D_FIRST_GOAL', 'C1', 'C2', 'C3', 'D_SHUTTLE', 'C5', 'C6', 'C_PRIME'],
+    HomeSweetHaven: ['D_FIRST_GOAL', 'C1', 'C2', 'D_HAVEN_DRAFT', 'C5', 'C6', 'C_PRIME', 'D_LOCAL_HEROES'],
     TheHeatIsOn: ['D_PRESSURES_HIGH', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C_PRIME'],
   };
 
@@ -30,7 +30,7 @@ describe('Setup Cards Step Regression', () => {
   SETUP_CARDS.forEach(card => {
     it(`should have the correct step sequence for ${card.id}`, () => {
       const actualStepIds = card.steps.map(s => s.id);
-      const expectedStepIds = expectedSteps[card.id];
+      const expectedStepIds = expectedSteps[card.id as keyof typeof expectedSteps];
       
       expect(actualStepIds, `Step order mismatch for ${card.id}`).toEqual(expectedStepIds);
     });
