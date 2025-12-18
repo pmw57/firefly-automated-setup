@@ -8,32 +8,32 @@ describe('utils/nav', () => {
 
     it('returns standard rules for default state', () => {
       const details = determineNavDeckDetails(baseGameState, {});
-      expect(details.specialRule).toBeNull();
+      expect(details.forceReshuffle).toBe(false);
       expect(details.showStandardRules).toBe(true);
       expect(details.clearerSkies).toBe(false);
     });
 
-    it('identifies browncoat "hardcore" mode', () => {
+    it('identifies browncoatNavMode as a forced reshuffle mode', () => {
       const details = determineNavDeckDetails(baseGameState, { browncoatNavMode: true });
-      expect(details.specialRule).toBe('hardcore');
+      expect(details.forceReshuffle).toBe(true);
       expect(details.showStandardRules).toBe(false);
     });
 
-    it('identifies "reshuffle" mode for rimNavMode', () => {
+    it('identifies rimNavMode as a forced reshuffle mode', () => {
       const details = determineNavDeckDetails(baseGameState, { rimNavMode: true });
-      expect(details.specialRule).toBe('reshuffle');
+      expect(details.forceReshuffle).toBe(true);
       expect(details.showStandardRules).toBe(false);
     });
     
-    it('identifies "reshuffle" mode for forceReshuffle', () => {
+    it('identifies forceReshuffle override', () => {
       const details = determineNavDeckDetails(baseGameState, { forceReshuffle: true });
-      expect(details.specialRule).toBe('reshuffle');
+      expect(details.forceReshuffle).toBe(true);
       expect(details.showStandardRules).toBe(false);
     });
 
-    it('identifies flyingSolo mode', () => {
+    it('identifies flyingSoloNavMode as a forced reshuffle mode', () => {
       const details = determineNavDeckDetails(baseGameState, { flyingSoloNavMode: true });
-      expect(details.specialRule).toBe('flyingSolo');
+      expect(details.forceReshuffle).toBe(true);
       expect(details.showStandardRules).toBe(false);
     });
 
