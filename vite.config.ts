@@ -39,6 +39,20 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png}'],
         // Don't add revision query param to assets with hash in filename
         dontCacheBustURLsMatching: /\.[a-f0-9]{8}\./,
+        // Prioritize fetching the latest index.html to avoid stale cache issues.
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pages',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
+              },
+            },
+          },
+        ],
       }
     })
   ],
