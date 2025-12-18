@@ -19,7 +19,8 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
   const isDark = theme === 'dark';
   
   const resourceDetails = calculateStartingResources(activeStoryCard, overrides);
-  const { totalCredits, noFuelParts, customFuel } = resourceDetails;
+  const { totalCredits, bonusCredits, noFuelParts, customFuel } = resourceDetails;
+  const { startingCreditsOverride } = activeStoryCard.setupConfig || {};
   
   const startWithWarrant = hasFlag(activeStoryCard.setupConfig, 'startWithWarrant');
   const removeRiver = hasFlag(activeStoryCard.setupConfig, 'removeRiver');
@@ -43,6 +44,17 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
 
   return (
     <div className="space-y-4">
+      {/* Show explicit override/bonus info in a prominent block */}
+      {startingCreditsOverride !== undefined ? (
+        <SpecialRuleBlock source="story" title="Credits Override">
+          Your crew begins with <strong>${startingCreditsOverride.toLocaleString()}</strong>.
+        </SpecialRuleBlock>
+      ) : bonusCredits > 0 && (
+        <SpecialRuleBlock source="story" title="Bonus Credits">
+          Receive a bonus of <strong>${bonusCredits.toLocaleString()} credits</strong>.
+        </SpecialRuleBlock>
+      )}
+
       <div className={`${cardBg} p-4 rounded-lg border ${cardBorder} shadow-sm flex items-center justify-between transition-colors duration-300`}>
         <div>
           <h4 className={`font-bold ${textColor}`}>Credits</h4>
@@ -50,8 +62,14 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
             {getCreditsLabel(resourceDetails, overrides, activeStoryCard)}
           </p>
         </div>
-        <div className={`text-3xl font-bold font-western drop-shadow-sm ${creditColor}`}>${totalCredits}</div>
+        <div className={`text-3xl font-bold font-western drop-shadow-sm ${creditColor}`}>${totalCredits.toLocaleString()}</div>
       </div>
+      
+      {customFuel !== undefined && !noFuelParts && (
+        <SpecialRuleBlock source="story" title="Fuel Override">
+            Your crew begins with <strong>{customFuel} Fuel Tokens</strong> instead of the standard 6.
+        </SpecialRuleBlock>
+      )}
 
       <div className={`p-4 rounded-lg border shadow-sm flex items-center justify-between transition-colors duration-300 ${noFuelParts ? disabledBg : `${cardBg} ${cardBorder}`}`}>
         <div>

@@ -189,6 +189,7 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
 
   const isHavenDraft = step.id.includes(STEP_IDS.D_HAVEN_DRAFT);
   const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
+  const isHeroesAndMisfits = activeStoryCard.title === STORY_TITLES.HEROES_AND_MISFITS;
   const isRacingPaleHorse = activeStoryCard.title === STORY_TITLES.RACING_A_PALE_HORSE;
   const isPersephoneStart = activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' && !isHeroesCustomSetup;
   const isLondiniumStart = hasFlag(activeStoryCard.setupConfig, 'startAtLondinium');
@@ -228,6 +229,22 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
             />
           )}
           
+          {isBrowncoatDraft && isHeroesAndMisfits && (
+            <SpecialRuleBlock source="warning" title="Story & Setup Card Interaction">
+              <p className="mb-2">
+                The <strong>"{activeStoryCard.title}"</strong> story provides a specific starting Ship & Crew, which overrides the standard "buy" phase of <strong>"The Browncoat Way"</strong>.
+              </p>
+              <div className={cls("text-sm p-3 rounded border", isDark ? 'bg-red-950/40 border-red-900/50' : 'bg-red-100 border-red-200')}>
+                <p className="mb-2">
+                  Your starting Capitol is reduced by the cost of your assigned ship (e.g., Serenity costs $4,800), but not below $0.
+                </p>
+                <p className="font-bold">
+                  This will likely leave you with $0, unable to purchase Fuel or Parts during the Browncoat Market phase.
+                </p>
+              </div>
+            </SpecialRuleBlock>
+          )}
+
           {isHeroesCustomSetup && (
              <SpecialRuleBlock source="warning" title="Heroes & Misfits: Further Adventures">
                 <strong>Custom Setup Active:</strong> Ignore standard crew/ship/location requirements.
