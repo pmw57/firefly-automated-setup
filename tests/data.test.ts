@@ -15,11 +15,14 @@ describe('Data Integrity', () => {
       });
     });
 
-    it('all steps in setup cards map to valid SETUP_CONTENT', () => {
+    it('all steps in setup cards map to valid SETUP_CONTENT and have a title', () => {
       SETUP_CARDS.forEach(setup => {
         setup.steps.forEach(step => {
           const content = SETUP_CONTENT[step.id];
           expect(content, `Setup Card "${setup.id}" references missing step "${step.id}"`).toBeDefined();
+          expect(step.title, `Setup Card "${setup.id}" step "${step.id}" is missing a title`).toBeDefined();
+          expect(typeof step.title).toBe('string');
+          expect(step.title.length).toBeGreaterThan(0);
         });
       });
     });
