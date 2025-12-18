@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+// Fix: Correct import path.
 import { calculatePrimeDetails } from '../../utils/prime';
 import { GameState, StoryCardDef } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';

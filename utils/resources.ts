@@ -1,86 +1,75 @@
-import { StoryCardDef, StepOverrides, ResourceDetails, GameState, ResourceConflict } from '../types';
+import { GameState, StoryCardDef, StepOverrides, ResourceDetails, ResourceConflict } from '../types';
 import { hasFlag } from './data';
 
 export const calculateStartingResources = (
   gameState: GameState,
-  activeStoryCard: StoryCardDef,
+  activeStoryCard: StoryCardDef | undefined,
   overrides: StepOverrides,
   manualSelection?: 'story' | 'setupCard'
 ): ResourceDetails => {
-  const { resolveConflictsManually } = gameState.optionalRules;
-  const bonusCredits = activeStoryCard.setupConfig?.startingCreditsBonus || 0;
-  const storyOverride = activeStoryCard.setupConfig?.startingCreditsOverride;
-  const setupOverride = overrides.startingCredits;
+    const storyConfig = activeStoryCard?.setupConfig;
+    const storyBonus = storyConfig?.startingCreditsBonus || 0;
+    
+    const baseSetupCredits = overrides.startingCredits || 3000;
+    const setupCardValue = baseSetupCredits + storyBonus;
 
-  let totalCredits: number;
-  let conflict: ResourceConflict | undefined = undefined;
+    const storyValue = storyConfig?.startingCreditsOverride;
 
-  const storyValue = storyOverride; // Story override is absolute, no bonus
-  const setupValue = (setupOverride || 3000) + bonusCredits;
+    let totalCredits = setupCardValue;
+    let conflict: ResourceConflict | undefined;
 
-  if (storyOverride !== undefined && setupOverride !== undefined && storyValue !== setupValue) {
-    // A conflict exists
-    conflict = {
-      story: { value: storyValue!, label: `Story: ${activeStoryCard.title}` },
-      setupCard: { value: setupValue, label: `Setup Card: ${gameState.setupCardName}` }
-    };
+    if (storyValue !== undefined) {
+        const storyLabel = `Override from "${activeStoryCard?.title}"`;
+        const setupLabel = overrides.startingCredits ? `From Setup Card (+ Story Bonus)` : `Standard Credits (+ Story Bonus)`;
+        
+        conflict = {
+            story: { value: storyValue, label: storyLabel },
+            setupCard: { value: setupCardValue, label: setupLabel },
+        };
 
-    if (resolveConflictsManually) {
-      if (manualSelection === 'story') {
-        totalCredits = storyValue!;
-      } else if (manualSelection === 'setupCard') {
-        totalCredits = setupValue;
-      } else {
-        // No selection made yet, default to story but show conflict UI
-        totalCredits = storyValue!;
-      }
-    } else {
-      // Default behavior: story priority
-      totalCredits = storyValue!;
+        if (manualSelection === 'setupCard' && gameState.optionalRules.resolveConflictsManually) {
+            totalCredits = setupCardValue;
+        } else {
+            totalCredits = storyValue; // Story has priority by default or when selected
+        }
     }
-  } else if (storyOverride !== undefined) {
-    // Only story override
-    totalCredits = storyValue!;
-  } else {
-    // Only setup override or default
-    totalCredits = (setupOverride || 3000) + bonusCredits;
-  }
-  
-  const noFuelParts = hasFlag(activeStoryCard.setupConfig, 'noStartingFuelParts');
-  const customFuel = activeStoryCard.setupConfig?.customStartingFuel;
 
-  return { totalCredits, bonusCredits, noFuelParts, customFuel, conflict };
+    return {
+        totalCredits,
+        bonusCredits: storyBonus,
+        noFuelParts: hasFlag(storyConfig, 'noStartingFuelParts') || !!overrides.browncoatJobMode,
+        customFuel: storyConfig?.customStartingFuel,
+        conflict,
+    };
 };
 
-
 export const getCreditsLabel = (
-    details: ResourceDetails, 
-    overrides: StepOverrides, 
-    activeStoryCard: StoryCardDef,
+    details: ResourceDetails,
+    overrides: StepOverrides,
+    activeStoryCard: StoryCardDef | undefined,
     manualSelection?: 'story' | 'setupCard'
 ): string => {
-    if (manualSelection) {
-        return `Manual Selection (${manualSelection === 'story' ? 'Story Card' : 'Setup Card'})`;
-    }
-    if (details.conflict && activeStoryCard.setupConfig?.startingCreditsOverride !== undefined) {
-        return 'Conflict (Defaulting to Story)';
-    }
-    if (activeStoryCard.setupConfig?.startingCreditsOverride !== undefined) {
-        return `Story Override (${activeStoryCard.title})`;
+    if (details.conflict) {
+        if (manualSelection === 'setupCard' && details.conflict.setupCard) {
+            return details.conflict.setupCard.label;
+        }
+        // Default to story or if story is selected
+        if (details.conflict.story) {
+            return details.conflict.story.label;
+        }
     }
 
-    const setupCredits = overrides.startingCredits;
-    if (setupCredits !== undefined && setupCredits !== 3000) {
-        let label = `Setup Card ($${setupCredits.toLocaleString()})`;
-        if (details.bonusCredits > 0) {
-            label += ` + Bonus $${details.bonusCredits.toLocaleString()}`;
-        }
-        return label;
+    if (activeStoryCard?.setupConfig?.startingCreditsOverride !== undefined) {
+        return `Story Override (${activeStoryCard?.title})`;
     }
     
     if (details.bonusCredits > 0) {
-        const base = setupCredits || 3000;
-        return `Base $${base.toLocaleString()} + Bonus $${details.bonusCredits.toLocaleString()}`;
+        return `Base $${(overrides.startingCredits || 3000).toLocaleString()} + Bonus $${details.bonusCredits.toLocaleString()}`;
     }
+
+    if (overrides.startingCredits) {
+        return "Setup Card Allocation";
+    }
+    
     return "Standard Allocation";
 };

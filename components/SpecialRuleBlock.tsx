@@ -66,11 +66,13 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
         <span className="text-xl mr-3 mt-0.5 select-none opacity-80">{icons[source]}</span>
         <div className="flex-1">
           <div className="flex justify-between items-baseline">
-            <div>
-              <span className={cls("text-[10px] font-bold uppercase tracking-widest opacity-60 block mb-0.5", s.text)}>
-                {labels[source]}
-              </span>
-              {title && <h4 className={cls("font-bold text-base leading-tight", s.text)}>{title}</h4>}
+            <div className="flex items-center gap-2">
+              <div>
+                <span className={cls("text-[10px] font-bold uppercase tracking-widest opacity-60 block mb-0.5", s.text)}>
+                  {labels[source]}
+                </span>
+                {title && <h4 className={cls("font-bold text-base leading-tight", s.text)}>{title}</h4>}
+              </div>
             </div>
             {page && <PageReference page={page} manual={manual} />}
           </div>

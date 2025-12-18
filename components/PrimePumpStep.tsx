@@ -5,6 +5,8 @@ import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { hasFlag } from '../utils/data';
+import { calculatePrimeDetails } from '../utils/prime';
+import { STORY_TITLES } from '../data/ids';
 
 interface PrimePumpStepProps {
   step: Step;
@@ -12,15 +14,15 @@ interface PrimePumpStepProps {
 
 export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
   const { state: gameState } = useGameState();
-  const overrides = step.overrides || {};
-  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
+  const overrides = React.useMemo(() => step.overrides || {}, [step.overrides]);
+  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  const soloCrewDraft = hasFlag(activeStoryCard.setupConfig, 'soloCrewDraft');
+  const soloCrewDraft = hasFlag(activeStoryCard?.setupConfig, 'soloCrewDraft');
   
   const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
-  const isSlayingTheDragon = activeStoryCard.title === "Slaying The Dragon";
+  const isSlayingTheDragon = activeStoryCard?.title === STORY_TITLES.SLAYING_THE_DRAGON;
   const { isCampaign } = gameState;
   
   // House Rule State
@@ -32,30 +34,18 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
   useEffect(() => {
     localStorage.setItem('firefly_setup_house_rule_prime4', JSON.stringify(useHouseRule));
   }, [useHouseRule]);
-
-  // Logic for Supply Deck Volume
-  const supplyHeavyExpansions = ['kalidasa', 'pirates', 'breakin_atmo', 'still_flying'];
-  const activeSupplyCount = supplyHeavyExpansions.filter(id => gameState.expansions[id as keyof typeof gameState.expansions]).length;
-  const isHighSupplyVolume = activeSupplyCount >= 3;
-
-  const baseDiscard = (isHighSupplyVolume && useHouseRule) ? 4 : 3;
-
-  const isBlitz = !!overrides.blitzPrimeMode;
-  const storyMultiplier = activeStoryCard.setupConfig?.primingMultiplier || 1;
   
-  let effectiveMultiplier = 1;
-  // Both "The Blitz" and the relevant Story Card use a 2x multiplier.
-  // There is no conflict, so we just apply the multiplier if either is active.
-  if (isBlitz || storyMultiplier > 1) {
-    effectiveMultiplier = 2;
-  }
-
-  let finalCount = baseDiscard * effectiveMultiplier;
+  const {
+    baseDiscard,
+    effectiveMultiplier,
+    finalCount,
+    isHighSupplyVolume,
+    isBlitz,
+  } = React.useMemo(() => 
+    calculatePrimeDetails(gameState, overrides, activeStoryCard, useHouseRule),
+    [gameState, overrides, activeStoryCard, useHouseRule]
+  );
   
-  if (isSlayingTheDragon) {
-      finalCount += 2;
-  }
-
   // Theming
   const cardBg = isDark ? 'bg-black/60' : 'bg-[#faf8ef]';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
@@ -99,13 +89,11 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
             <p className={`text-xs leading-relaxed ${isDark ? 'text-gray-400' : 'text-[#78350f]'}`}>
                {useHouseRule ? (
                    <>
-                     Due to the number of large expansions active ({activeSupplyCount}), the Supply Decks are massive. 
-                     <strong> Base priming is increased to 4 cards</strong> to ensure turnover.
-                     {effectiveMultiplier > 1 && <span> Multipliers (Blitz/Story) apply to this new base.</span>}
+                     Due to the number of large Supply expansions active, the base priming count is increased to 4 cards to ensure deck turnover.
                    </>
                ) : (
                    <>
-                     House rule disabled. Priming remains at standard 3 cards despite large supply decks.
+                     House rule disabled. Priming remains at the standard 3 cards despite large supply decks.
                    </>
                )}
             </p>
@@ -118,14 +106,14 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
         </SpecialRuleBlock>
       )}
 
-      {storyMultiplier > 1 && !isBlitz && (
+      {effectiveMultiplier > 1 && !isBlitz && activeStoryCard && (
         <SpecialRuleBlock source="story" title="Story Override">
-          <strong>{activeStoryCard.title}:</strong> Prime counts are increased by {storyMultiplier}x.
+          <strong>{activeStoryCard.title}:</strong> Prime counts are increased by {effectiveMultiplier}x.
         </SpecialRuleBlock>
       )}
 
       {isSlayingTheDragon && (
-        <SpecialRuleBlock source="story" title="Slaying The Dragon">
+        <SpecialRuleBlock source="story" title={STORY_TITLES.SLAYING_THE_DRAGON}>
             <strong>Shu-ki is greasing the rails:</strong> Turn up <strong>2 additional cards</strong> from each deck when Priming the Pump.
         </SpecialRuleBlock>
       )}

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Step } from '../types';
 import { determineJobSetupDetails } from '../utils/jobs';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
@@ -7,7 +7,6 @@ import { useGameState } from '../hooks/useGameState';
 import { STORY_CARDS } from '../data/storyCards';
 import { STEP_IDS } from '../data/ids';
 import { hasFlag } from '../utils/data';
-import { ConflictResolver } from './ConflictResolver';
 
 interface JobStepProps {
   step: Step;
@@ -16,12 +15,11 @@ interface JobStepProps {
 export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
   const { state: gameState } = useGameState();
   const overrides = useMemo(() => step.overrides || {}, [step.overrides]);
-  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
+  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard);
   const stepId = step.data?.id || step.id;
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const { isCampaign } = gameState;
-  const [manualSelection, setManualSelection] = useState<'story' | 'setupCard'>('story');
   
   const { 
     contacts, 
@@ -30,26 +28,24 @@ export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
     isSingleContactChoice,
     cardsToDraw,
     totalJobCards,
-    conflict
   } = useMemo(() => 
-    determineJobSetupDetails(gameState, activeStoryCard, overrides, manualSelection),
-    [gameState, activeStoryCard, overrides, manualSelection]
+    determineJobSetupDetails(gameState, activeStoryCard, overrides),
+    [gameState, activeStoryCard, overrides]
   );
   
-  const showConflictUI = conflict && gameState.optionalRules.resolveConflictsManually;
   const isSelectedStory = !!gameState.selectedStoryCard;
   const isRimDeckBuild = stepId.includes(STEP_IDS.D_RIM_JOBS);
   
-  const smugglersBluesSetup = hasFlag(activeStoryCard.setupConfig, 'smugglersBluesSetup');
-  const lonelySmugglerSetup = hasFlag(activeStoryCard.setupConfig, 'lonelySmugglerSetup');
-  const sharedHandSetup = hasFlag(activeStoryCard.setupConfig, 'sharedHandSetup');
-  const removePiracyJobs = hasFlag(activeStoryCard.setupConfig, 'removePiracyJobs');
+  const smugglersBluesSetup = hasFlag(activeStoryCard?.setupConfig, 'smugglersBluesSetup');
+  const lonelySmugglerSetup = hasFlag(activeStoryCard?.setupConfig, 'lonelySmugglerSetup');
+  const sharedHandSetup = hasFlag(activeStoryCard?.setupConfig, 'sharedHandSetup');
+  const removePiracyJobs = hasFlag(activeStoryCard?.setupConfig, 'removePiracyJobs');
 
   const activeChallenges = useMemo(() => 
-    activeStoryCard.challengeOptions?.filter(
+    activeStoryCard?.challengeOptions?.filter(
       opt => gameState.challengeOptions[opt.id]
     ) || [], 
-  [activeStoryCard.challengeOptions, gameState.challengeOptions]);
+  [activeStoryCard?.challengeOptions, gameState.challengeOptions]);
 
   const cardBg = isDark ? 'bg-black/60' : 'bg-white';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -62,23 +58,6 @@ export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
 
   return (
     <div className="space-y-4">
-      {showConflictUI && conflict && (
-        <ConflictResolver
-          title="Starting Jobs Conflict"
-          conflict={{
-            story: { value: conflict.story.value, label: conflict.story.label },
-            setupCard: { value: conflict.setupCard.value, label: conflict.setupCard.label }
-          }}
-          selection={manualSelection}
-          onSelect={setManualSelection}
-        />
-      )}
-      {!showConflictUI && conflict && (
-        <SpecialRuleBlock source="info" title="Conflict Resolved">
-            <strong>Story Priority:</strong> Following "{conflict.story.value}" rules from "{activeStoryCard.title}", overriding Setup Card rules.
-        </SpecialRuleBlock>
-      )}
-
       {isSelectedStory && isCampaign && (
         <SpecialRuleBlock source="story" title="Campaign Rules: Jobs & Contacts">
           <p>For each Contact you were Solid with at the end of the last game, remove 2 of your completed Jobs from play.</p>

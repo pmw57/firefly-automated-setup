@@ -16,7 +16,6 @@ const getVersion = () => {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/firefly-automated-setup/',
   plugins: [
     react(),
     VitePWA({

@@ -34,79 +34,27 @@
     <!-- Preload Sprite Sheet to prevent flicker -->
     <link rel="preload" href="expansion_sprites.png" as="image">
 
-    <!-- Tailwind CDN (Restored for Preview) -->
+    <link rel="stylesheet" href="/index.css">
+    
+    <!-- Tailwind CSS JIT CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'firefly': {
-                'red': '#7f1d1d',
-                'red-light': '#991b1b',
-                'red-dark': '#450a0a',
-                'gold': '#d4af37',
-                'brown': '#78350f',
-                'saddleBrown': '#8B4513',
-                'leather': {
-                  'DEFAULT': '#d97706',
-                  'dark': '#b45309',
-                },
-                'parchment': {
-                  'bg': '#faf8ef',
-                  'text': '#292524',
-                  'border': '#d6cbb0',
-                  'subtle': '#fef3c7',
-                },
-                'stone': {
-                  'DEFAULT': '#a8a29e',
-                  'dark': '#57534e',
-                }
-              }
-            },
-            fontFamily: {
-              western: ['CIND', 'serif'],
-              sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif']
-            },
-            keyframes: {
-              fadeIn: {
-                '0%': { opacity: '0' },
-                '100%': { opacity: '1' },
-              },
-              fadeInUp: {
-                '0%': { opacity: '0', transform: 'translateY(10px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' },
-              }
-            },
-            animation: {
-              'fade-in': 'fadeIn 0.5s ease-out',
-              'fade-in-up': 'fadeInUp 0.5s ease-out',
-            }
-          }
-        }
-      }
-    </script>
 
-    <!-- AI Studio Import Map (Restored for Preview) -->
-    <script type="importmap">
+<script type="importmap">
 {
   "imports": {
-    "react": "https://aistudiocdn.com/react@18.2.0",
-    "react-dom/client": "https://aistudiocdn.com/react-dom@18.2.0/client",
-    "react/": "https://aistudiocdn.com/react@18.2.0/",
-    "vite": "https://aistudiocdn.com/vite@^7.2.7",
-    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.2",
-    "react-dom/": "https://aistudiocdn.com/react-dom@18.2.0/",
-    "vitest/": "https://aistudiocdn.com/vitest@^4.0.15/",
-    "vitest": "https://aistudiocdn.com/vitest@^4.0.15",
-    "@testing-library/jest-dom": "https://aistudiocdn.com/@testing-library/jest-dom@^6.9.1",
-    "vite-plugin-pwa": "https://aistudiocdn.com/vite-plugin-pwa@^1.2.0",
-    "react-dom": "https://aistudiocdn.com/react-dom@18.2.0",
-    "@testing-library/react": "https://esm.sh/@testing-library/react@^16.3.1"
+    "react": "https://esm.sh/react@^18.2.0",
+    "react-dom/": "https://esm.sh/react-dom@^18.2.0/",
+    "react/": "https://esm.sh/react@^18.2.0/",
+    "vitest/": "https://esm.sh/vitest@^4.0.16/",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "vite-plugin-pwa": "https://esm.sh/vite-plugin-pwa@^1.2.0",
+    "@testing-library/jest-dom": "https://esm.sh/@testing-library/jest-dom@^6.9.1",
+    "vitest": "https://esm.sh/vitest@^4.0.16",
+    "@testing-library/react": "https://esm.sh/@testing-library/react@^16.3.1",
+    "react-dom": "https://esm.sh/react-dom@^18.2.0"
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
 <body>
     <div id="root">

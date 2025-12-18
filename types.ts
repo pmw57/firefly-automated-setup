@@ -250,7 +250,6 @@ export interface JobSetupDetails {
   messages: JobSetupMessage[];
   showStandardContactList: boolean;
   totalJobCards: number;
-  conflict?: JobConflict;
 }
 
 export interface NavDeckSetupDetails {
@@ -285,4 +284,9 @@ export interface PrimeDetails {
 export interface AllianceReaverDetails {
   useSmugglersRimRule: boolean;
   alertStackCount: number;
+  placeAllianceAlertsInAllianceSpace: boolean;
+  placeMixedAlertTokens: boolean;
+  smugglersBluesSetup: boolean;
+  lonelySmugglerSetup: boolean;
+  startWithAlertCard: boolean;
 }
