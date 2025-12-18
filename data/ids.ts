@@ -65,6 +65,9 @@ export const STORY_TITLES = {
   HEROES_AND_MISFITS: "Heroes & Misfits",
   AWFUL_LONELY: "Awful Lonely In The Big Black",
   SLAYING_THE_DRAGON: "Slaying The Dragon",
+  DESPERADOES: "Desperadoes",
+  RESPECTABLE_PERSONS: '"Respectable" Persons Of Business',
+  RARE_SPECIMEN: "A Rare Specimen Indeed",
 };
 
 export const CONTACT_NAMES = {
