@@ -38,7 +38,7 @@ export const calculateStartingResources = (
         totalCredits,
         bonusCredits: storyBonus,
         noFuelParts: hasFlag(storyConfig, 'noStartingFuelParts') || !!overrides.browncoatJobMode,
-        customFuel: storyConfig?.customStartingFuel,
+        customStartingFuel: storyConfig?.customStartingFuel,
         conflict,
     };
 };

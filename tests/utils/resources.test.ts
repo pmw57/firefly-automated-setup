@@ -14,11 +14,12 @@ describe('utils/resources', () => {
 
   describe('calculateStartingResources', () => {
     it('returns default 3000 credits and empty flags', () => {
-      const { totalCredits, bonusCredits, noFuelParts, customFuel, conflict } = calculateStartingResources(baseGameState, mockStory(), {});
+      // Fix: Renamed `customFuel` to `customStartingFuel` to match the `ResourceDetails` type.
+      const { totalCredits, bonusCredits, noFuelParts, customStartingFuel, conflict } = calculateStartingResources(baseGameState, mockStory(), {});
       expect(totalCredits).toBe(3000);
       expect(bonusCredits).toBe(0);
       expect(noFuelParts).toBe(false);
-      expect(customFuel).toBeUndefined();
+      expect(customStartingFuel).toBeUndefined();
       expect(conflict).toBeUndefined();
     });
 
@@ -71,9 +72,10 @@ describe('utils/resources', () => {
         flags: ['noStartingFuelParts'],
         customStartingFuel: 4
       });
-      const { noFuelParts, customFuel } = calculateStartingResources(baseGameState, story, {});
+      // Fix: Renamed `customFuel` to `customStartingFuel` to match the `ResourceDetails` type.
+      const { noFuelParts, customStartingFuel } = calculateStartingResources(baseGameState, story, {});
       expect(noFuelParts).toBe(true);
-      expect(customFuel).toBe(4);
+      expect(customStartingFuel).toBe(4);
     });
   });
 

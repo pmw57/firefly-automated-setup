@@ -27,7 +27,7 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
     [gameState, activeStoryCard, overrides, manualSelection]
   );
   
-  const { totalCredits, noFuelParts, customFuel, conflict } = resourceDetails;
+  const { totalCredits, noFuelParts, customStartingFuel, conflict } = resourceDetails;
 
   useEffect(() => {
     if (totalCredits !== gameState.finalStartingCredits) {
@@ -88,9 +88,9 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
         <div className={`text-3xl font-bold font-western drop-shadow-sm ${creditColor}`}>${totalCredits.toLocaleString()}</div>
       </div>
       
-      {customFuel !== undefined && !noFuelParts && (
+      {customStartingFuel !== undefined && !noFuelParts && (
         <SpecialRuleBlock source="story" title="Fuel Override">
-            Your crew begins with <strong>{customFuel} Fuel Tokens</strong> instead of the standard 6.
+            Your crew begins with <strong>{customStartingFuel} Fuel Tokens</strong> instead of the standard 6.
         </SpecialRuleBlock>
       )}
 
@@ -104,7 +104,7 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
             <span className={`text-xl font-bold ${disabledValue}`}>None</span>
           ) : (
             <div className={`text-sm font-bold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
-              <div className={`px-2 py-1 rounded mb-1 border ${fuelBadgeBg}`}>{customFuel ?? 6} Fuel Tokens</div>
+              <div className={`px-2 py-1 rounded mb-1 border ${fuelBadgeBg}`}>{customStartingFuel ?? 6} Fuel Tokens</div>
               <div className={`px-2 py-1 rounded border ${partsBadgeBg}`}>2 Part Tokens</div>
             </div>
           )}
