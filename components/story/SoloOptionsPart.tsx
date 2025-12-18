@@ -23,7 +23,7 @@ export const SoloOptionsPart: React.FC<SoloOptionsPartProps> = ({
     dispatch({ type: ActionType.TOGGLE_CHALLENGE_OPTION, payload: id });
   };
 
-  const bodyBg = isDark ? 'bg-zinc-900/50' : 'bg-transparent';
+  const bodyBg = isDark ? 'bg-zinc-900/50' : 'bg-paper-texture';
   const mainTitleColor = isDark ? 'text-gray-100' : 'text-[#292524]';
   const bgIconBg = isDark ? 'bg-zinc-800' : 'bg-[#e5e5e5]';
   const bgIconBorder = isDark ? 'border-zinc-700' : 'border-[#d4d4d4]';
