@@ -1,15 +1,68 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
 import { InstallPWA } from './components/InstallPWA';
 import { useTheme } from './components/ThemeContext';
 import { GameStateProvider } from './components/GameStateContext';
+import { UpdatePrompt } from './components/UpdatePrompt';
 
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
 
 const App = (): React.ReactElement => {
   const { theme, toggleTheme } = useTheme();
+
+  const [offlineReady, setOfflineReady] = useState(false);
+  const [needRefresh, setNeedRefresh] = useState(false);
+  const [updateServiceWorker, setUpdateServiceWorker] = useState<((reloadPage?: boolean) => Promise<void>) | undefined>();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      import('virtual:pwa-register')
+        .then(mod => {
+          if (mod && mod.registerSW) {
+            const updateSW = mod.registerSW({
+              onRegisteredSW(swUrl, r) {
+                console.log(`Service Worker at: ${swUrl}`);
+                // check for new version every hour
+                r && setInterval(async() => {
+                  if (!(!r.installing && navigator))
+                    return;
+          
+                  if (('connection' in navigator) && !navigator.onLine)
+                    return;
+                  
+                  const resp = await fetch(swUrl, {
+                    cache: 'no-store',
+                    headers: {
+                      'cache': 'no-store',
+                      'cache-control': 'no-cache',
+                    },
+                  });
+          
+                  if (resp?.status === 200)
+                    await r.update();
+                }, 60 * 60 * 1000 /* 1 hour */)
+              },
+              onNeedRefresh() {
+                setNeedRefresh(true);
+              },
+              onOfflineReady() {
+                setOfflineReady(true);
+              },
+              onRegisterError(error) {
+                console.log('SW registration error', error);
+              },
+            });
+            setUpdateServiceWorker(() => updateSW);
+          }
+        })
+        .catch(e => {
+          // PWA virtual module doesn't exist in all environments (e.g. preview), this is not critical.
+          console.log('PWA registration failed. This is expected in some environments:', e.message);
+        });
+    }
+  }, []);
 
   const handleForceUpdate = async () => {
     if ('serviceWorker' in navigator) {
@@ -62,6 +115,17 @@ const App = (): React.ReactElement => {
 
       {/* Install Prompt */}
       <InstallPWA />
+
+      {/* PWA Updater Prompt */}
+      <UpdatePrompt
+        offlineReady={offlineReady}
+        needRefresh={needRefresh}
+        onUpdate={() => updateServiceWorker && updateServiceWorker(true)}
+        onClose={() => {
+          setOfflineReady(false);
+          setNeedRefresh(false);
+        }}
+      />
 
       {/* Footer */}
       <footer className="mt-16 text-center text-gray-500 dark:text-gray-500 text-xs py-8 px-4 border-t border-gray-300 dark:border-zinc-800 bg-white/50 dark:bg-black/20 backdrop-blur-sm transition-colors duration-300">

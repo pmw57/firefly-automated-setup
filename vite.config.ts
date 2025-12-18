@@ -24,7 +24,7 @@ export default defineConfig(({ command }) => ({
   plugins: [
     react(),
     VitePWA({ 
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['logo.svg', 'expansion_sprites.png'],
       manifest: {
         name: 'Firefly: The Game - Automated Setup Guide',
@@ -44,8 +44,6 @@ export default defineConfig(({ command }) => ({
       },
       workbox: {
         cleanupOutdatedCaches: true,
-        clientsClaim: true,
-        skipWaiting: true,
         // Define runtime caching for external images (Sprite Sheet)
         runtimeCaching: [
           {
