@@ -58,7 +58,7 @@ describe('utils/resources', () => {
       const details = { totalCredits: 4000, bonusCredits: 1000, noFuelParts: false };
       const overrides = { startingCredits: 3000 };
       const label = getCreditsLabel(details, overrides, mockStory());
-      expect(label).toBe("Base $3000 + Bonus $1000");
+      expect(label).toBe("Base $3,000 + Bonus $1,000");
     });
 
     it('shows story override text when applicable', () => {

@@ -20,33 +20,67 @@ const getInitialSetupSteps = (): Step[] => [
 ];
 
 const getOptionalRulesStep = (state: GameState): Step[] => {
-    const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
-    const has10th = state.expansions.tenth;
-    const isBrowncoatWay = state.setupCardId === SETUP_CARD_IDS.THE_BROWNCOAT_WAY;
-
-    // Guard clause: If Browncoat Way is active, skip optional rules (usually)
-    if (isBrowncoatWay) {
-        return [];
-    }
-
-    if (isFlyingSolo || has10th) {
+    // Optional rules are part of the 10th Anniversary Expansion content.
+    // They should show if the expansion is enabled.
+    if (state.expansions.tenth) {
         return [{ type: 'setup', id: STEP_IDS.SETUP_OPTIONAL_RULES }];
     }
+
     return [];
 };
 
 const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
-    // In Flying Solo mode, the steps flow is determined by the Flying Solo card itself.
-    // In standard mode, steps come from the selected setup card.
-    const targetSetupId = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO 
-        ? SETUP_CARD_IDS.FLYING_SOLO 
-        : state.setupCardId;
+    const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
+    
+    // If Flying Solo is active and paired with a specific setup card, that card's sequence should be prioritized.
+    // If it's just "Flying Solo" (paired with Standard), then Flying Solo's own sequence is correct.
+    const primarySequenceCardId = isFlyingSolo && (state.secondarySetupId && state.secondarySetupId !== SETUP_CARD_IDS.STANDARD)
+        ? state.secondarySetupId
+        : (isFlyingSolo ? SETUP_CARD_IDS.FLYING_SOLO : state.setupCardId);
 
-    const setupCard = SETUP_CARDS.find(s => s.id === targetSetupId) || SETUP_CARDS.find(s => s.id === SETUP_CARD_IDS.STANDARD)!;
+    const setupCard = SETUP_CARDS.find(s => s.id === primarySequenceCardId) || SETUP_CARDS.find(s => s.id === SETUP_CARD_IDS.STANDARD)!;
 
-    return setupCard.steps
+    let steps = setupCard.steps
         .map(stepDef => createStep(stepDef.id, stepDef.overrides))
         .filter((step): step is Step => step !== null);
+
+    // If Flying Solo is active, we merge its specific overrides and add any unique steps.
+    if (isFlyingSolo) {
+        const flyingSoloCard = SETUP_CARDS.find(s => s.id === SETUP_CARD_IDS.FLYING_SOLO)!;
+        
+        // Create a map of overrides from the Flying Solo card for easy lookup.
+        const flyingSoloOverrides = flyingSoloCard.steps.reduce((acc, step) => {
+            if (step.overrides) {
+                acc[step.id] = step.overrides;
+            }
+            return acc;
+        }, {} as Record<string, StepOverrides>);
+        
+        // Merge the Flying Solo overrides into the base steps from the secondary card.
+        steps = steps.map(step => {
+            if (flyingSoloOverrides[step.id]) {
+                return {
+                    ...step,
+                    overrides: { ...step.overrides, ...flyingSoloOverrides[step.id] },
+                };
+            }
+            return step;
+        });
+
+        // Ensure the unique "Game Length Tokens" step from Flying Solo is always added at the end.
+        const hasGameLengthStep = steps.some(s => s.id === STEP_IDS.D_GAME_LENGTH_TOKENS);
+        if (!hasGameLengthStep) {
+            const gameLengthStepDef = flyingSoloCard.steps.find(s => s.id === STEP_IDS.D_GAME_LENGTH_TOKENS);
+            if (gameLengthStepDef) {
+                const gameLengthStep = createStep(gameLengthStepDef.id, gameLengthStepDef.overrides);
+                if (gameLengthStep) {
+                    steps.push(gameLengthStep);
+                }
+            }
+        }
+    }
+    
+    return steps;
 };
 
 const getFinalStep = (): Step => ({ type: 'final', id: STEP_IDS.FINAL });
