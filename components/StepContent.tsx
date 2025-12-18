@@ -168,7 +168,7 @@ export const StepContent = ({ step, onNext, onPrev }: StepContentProps): React.R
   const borderTop = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
   
   const headerBg = isSpecial
-    ? (isDark ? 'bg-green-800' : 'bg-green-600')
+    ? (isDark ? 'bg-green-900' : 'bg-green-800')
     : 'bg-firefly-saddleBrown';
 
   const headerColor = 'text-white';
