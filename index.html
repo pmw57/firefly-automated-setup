@@ -34,113 +34,8 @@
     <!-- Preload Sprite Sheet to prevent flicker -->
     <link rel="preload" href="expansion_sprites.png" as="image">
     
-    <!-- Robust CSS Solution using Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            colors: {
-              'firefly': {
-                'red': '#7f1d1d',
-                'red-light': '#991b1b',
-                'red-dark': '#450a0a',
-                'gold': '#d4af37',
-                'brown': '#78350f',
-                'saddleBrown': '#8B4513',
-                'leather': {
-                  'DEFAULT': '#d97706',
-                  'dark': '#b45309',
-                },
-                'parchment': {
-                  'bg': '#faf8ef',
-                  'text': '#292524',
-                  'border': '#d6cbb0',
-                  'subtle': '#fef3c7',
-                },
-                'stone': {
-                  'DEFAULT': '#a8a29e',
-                  'dark': '#57534e',
-                }
-              }
-            },
-            fontFamily: {
-              western: ['CIND', 'serif'],
-              sans: ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif']
-            },
-            keyframes: {
-              fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-              fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
-            },
-            animation: {
-              'fade-in': 'fadeIn 0.5s ease-out',
-              'fade-in-up': 'fadeInUp 0.5s ease-out',
-            }
-          }
-        }
-      }
-    </script>
-    <style type="text/tailwindcss">
-      @font-face {
-        font-family: 'CIND';
-        src: url('./fonts/CIND.otf') format('opentype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-
-      /* Custom font utility for the 'Firefly' feel */
-      .font-western {
-        font-family: 'CIND', serif;
-      }
-
-      /* Paper texture effect for mission dossiers and light mode body */
-      .bg-paper-texture {
-        background-color: #f5f0e1; /* Warm Parchment */
-        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d6cbb0' fill-opacity='0.2'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' /%3E%3C/g%3E%3C/svg%3E");
-      }
-
-      /* Starfield Background (Applied in Dark Mode) */
-      .dark body {
-        background-color: #0c0c0c; /* Deep Space Black */
-        background-image: 
-          radial-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0.05) 2px, transparent 3px),
-          radial-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.05) 1px, transparent 2px);
-        background-size: 550px 550px, 350px 350px;
-        background-position: 0 0, 40px 60px;
-        background-attachment: fixed;
-        color: #e4e4e7; /* Zinc-200 */
-      }
-
-      /* Parchment/Map Background (Applied in Light Mode) */
-      body {
-        background-color: #f5f0e1; /* Warm Parchment */
-        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238c7b60' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        @apply text-firefly-parchment-text;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      }
-
-      /* Metallic Panel Texture */
-      .bg-metal {
-        background-color: #fcfbf9;
-        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.06'/%3E%3C/svg%3E");
-      }
-
-      /* Dark Mode Metal Override */
-      .dark .bg-metal {
-        background-image: none !important;
-        background-color: rgba(24, 24, 27, 0.9); /* Zinc 900, high opacity */
-        border-color: #52525b; /* Zinc 600 */
-        box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-      }
-
-      /* Custom Scrollbar for Story Grid */
-      .custom-scrollbar::-webkit-scrollbar { width: 8px; }
-      .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
-      .custom-scrollbar::-webkit-scrollbar-thumb { background: #a8a29e; border-radius: 4px; }
-      .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #78716c; }
-    </style>
+    <!-- Link to the CSS file that Vite will process -->
+    <link rel="stylesheet" href="/index.css">
 <script type="importmap">
 {
   "imports": {
@@ -157,7 +52,6 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
 <body>
     <div id="root">
