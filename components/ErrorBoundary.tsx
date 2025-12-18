@@ -16,12 +16,16 @@ interface ErrorBoundaryState {
  * that can occur with class-based components in some configurations.
  */
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  // Fix for Error on line 21: Property 'state' does not exist on type 'ErrorBoundary'.
-  // Using a class field for state initialization ensures the property is recognized by the compiler on the instance.
-  public state: ErrorBoundaryState = {
-    hasError: false,
-    error: null,
-  };
+  // Fix: Resolve TypeScript errors where properties from React.Component (like 'state', 'setState', and 'props')
+  // were not correctly inferred. Using a constructor with super(props) ensures the base class is properly
+  // initialized, making these properties available on the class instance.
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null,
+    };
+  }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
@@ -32,15 +36,11 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   handleReset = () => {
-    // Fix for Error on line 37: Property 'setState' does not exist on type 'ErrorBoundary'.
-    // setState is inherited from the base Component class.
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
 
   render(): ReactNode {
-    // Fix for Error on line 43 & 46: Property 'state' does not exist on type 'ErrorBoundary'.
-    // Accessing the 'state' property inherited from Component.
     if (this.state.hasError && this.state.error) {
       return (
         <ErrorFallback
@@ -50,8 +50,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       );
     }
 
-    // Fix for Error on line 53: Property 'props' does not exist on type 'ErrorBoundary'.
-    // Accessing the 'props' property inherited from Component.
     return this.props.children;
   }
 }

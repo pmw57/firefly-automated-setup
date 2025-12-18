@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Step } from '../types';
 import { calculateStartingResources, getCreditsLabel } from '../utils/resources';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
@@ -6,21 +6,32 @@ import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { STORY_CARDS } from '../data/storyCards';
 import { hasFlag } from '../utils/data';
+import { ConflictResolver } from './ConflictResolver';
+import { ActionType } from '../state/actions';
 
 interface ResourcesStepProps {
   step: Step;
 }
 
 export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
-  const { state: gameState } = useGameState();
+  const { state: gameState, dispatch } = useGameState();
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+
+  const [manualSelection, setManualSelection] = useState<'story' | 'setupCard'>('story');
   
-  const resourceDetails = calculateStartingResources(activeStoryCard, overrides);
-  const { totalCredits, bonusCredits, noFuelParts, customFuel } = resourceDetails;
-  const { startingCreditsOverride } = activeStoryCard.setupConfig || {};
+  const resourceDetails = calculateStartingResources(gameState, activeStoryCard, overrides, manualSelection);
+  const { totalCredits, noFuelParts, customFuel, conflict } = resourceDetails;
+
+  useEffect(() => {
+    if (totalCredits !== gameState.finalStartingCredits) {
+        dispatch({ type: ActionType.SET_FINAL_STARTING_CREDITS, payload: totalCredits });
+    }
+  }, [totalCredits, dispatch, gameState.finalStartingCredits]);
+  
+  const showConflictUI = conflict && gameState.optionalRules.resolveConflictsManually;
   
   const startWithWarrant = hasFlag(activeStoryCard.setupConfig, 'startWithWarrant');
   const removeRiver = hasFlag(activeStoryCard.setupConfig, 'removeRiver');
@@ -44,22 +55,30 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
 
   return (
     <div className="space-y-4">
-      {/* Show explicit override/bonus info in a prominent block */}
-      {startingCreditsOverride !== undefined ? (
-        <SpecialRuleBlock source="story" title="Credits Override">
-          Your crew begins with <strong>${startingCreditsOverride.toLocaleString()}</strong>.
-        </SpecialRuleBlock>
-      ) : bonusCredits > 0 && (
-        <SpecialRuleBlock source="story" title="Bonus Credits">
-          Receive a bonus of <strong>${bonusCredits.toLocaleString()} credits</strong>.
+      {showConflictUI && conflict && (
+        <ConflictResolver
+          title="Starting Credits Conflict"
+          conflict={{
+            story: { value: `$${conflict.story.value.toLocaleString()}`, label: conflict.story.label },
+            setupCard: { value: `$${conflict.setupCard.value.toLocaleString()}`, label: conflict.setupCard.label }
+          }}
+          selection={manualSelection}
+          onSelect={setManualSelection}
+        />
+      )}
+
+      {!showConflictUI && (resourceDetails.bonusCredits > 0 || activeStoryCard.setupConfig?.startingCreditsOverride !== undefined) && (
+        <SpecialRuleBlock source="story" title={activeStoryCard.setupConfig?.startingCreditsOverride !== undefined ? "Credits Override" : "Bonus Credits"}>
+           Your crew begins with <strong>${totalCredits.toLocaleString()}</strong>.
         </SpecialRuleBlock>
       )}
+
 
       <div className={`${cardBg} p-4 rounded-lg border ${cardBorder} shadow-sm flex items-center justify-between transition-colors duration-300`}>
         <div>
           <h4 className={`font-bold ${textColor}`}>Credits</h4>
           <p className={`text-sm ${subTextColor}`}>
-            {getCreditsLabel(resourceDetails, overrides, activeStoryCard)}
+            {getCreditsLabel(resourceDetails, overrides, activeStoryCard, showConflictUI ? manualSelection : undefined)}
           </p>
         </div>
         <div className={`text-3xl font-bold font-western drop-shadow-sm ${creditColor}`}>${totalCredits.toLocaleString()}</div>
@@ -88,7 +107,6 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
         </div>
       </div>
 
-      {/* Special Rule for Running On Empty or similar */}
       {noFuelParts && (
         <SpecialRuleBlock source="story" title="Market Scarcity">
           <strong>Market Update:</strong> Fuel costs $300 each (unless purchased from Harken for $100).
@@ -107,14 +125,12 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
         </SpecialRuleBlock>
       )}
 
-      {/* Warrant Token Rule */}
       {(startWithWarrant || (startingWarrantCount && startingWarrantCount > 0)) && (
         <SpecialRuleBlock source="story" title="Warrant Issued">
           Each player begins the game with <strong>{startingWarrantCount || 1} Warrant Token{startingWarrantCount !== 1 ? 's' : ''}</strong>.
         </SpecialRuleBlock>
       )}
 
-      {/* Goal Token Rule */}
       {startWithGoalToken && (
         <SpecialRuleBlock source="story" title="Story Override">
           Begin play with <strong>1 Goal Token</strong>.

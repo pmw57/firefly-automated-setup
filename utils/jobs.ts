@@ -1,5 +1,5 @@
 import React from 'react';
-import { StoryCardDef, StepOverrides, GameState, JobSetupDetails, JobSetupMessage } from '../types';
+import { StoryCardDef, StepOverrides, GameState, JobSetupDetails, JobSetupMessage, JobConflict } from '../types';
 import { CHALLENGE_IDS, CONTACT_NAMES } from '../data/ids';
 import { hasFlag } from './data';
 
@@ -19,6 +19,19 @@ const OVERRIDE_TO_MODE_MAP: Array<[keyof StepOverrides, string]> = [
   ['awfulJobMode', 'awful_jobs'],
   ['rimJobMode', 'rim_jobs'],
 ];
+
+export const JOB_MODE_LABELS: Record<string, string> = {
+    standard: "Standard Jobs",
+    no_jobs: "No Starting Jobs",
+    caper_start: "Start with 1 Caper Card",
+    wind_takes_us: "Place Goal Tokens instead",
+    draft_choice: "Draft Contact Decks",
+    times_jobs: "Draw 3 from any 1 Contact",
+    high_alert_jobs: "Draw 3 from any Contacts",
+    buttons_jobs: "Draw from specific Contacts + Caper",
+    awful_jobs: "Draw from specific Contacts",
+    rim_jobs: "Draw from Rim Contacts"
+};
 
 const STANDARD_CONTACTS = [CONTACT_NAMES.HARKEN, 'Badger', 'Amnon Duul', 'Patience', CONTACT_NAMES.NISKA];
 
@@ -53,14 +66,6 @@ const jobModeStrategies: Record<string, JobModeStrategy> = {
 };
 
 // --- Helper Functions ---
-
-export const determineJobMode = (activeStoryCard: StoryCardDef, overrides: StepOverrides): string => {
-  if (activeStoryCard.setupConfig?.jobDrawMode) {
-      return activeStoryCard.setupConfig.jobDrawMode;
-  }
-  const foundOverride = OVERRIDE_TO_MODE_MAP.find(([key]) => overrides[key]);
-  return foundOverride ? foundOverride[1] : 'standard';
-};
 
 const buildNoJobsContent = (mode: string, overrides: StepOverrides, primeContactDecks: boolean, isDontPrimeChallenge: boolean): { title: string, source: JobSetupMessage['source'], content: React.ReactNode } => {
     if (mode !== 'no_jobs') {
@@ -103,20 +108,41 @@ const buildNoJobsContent = (mode: string, overrides: StepOverrides, primeContact
 export const determineJobSetupDetails = (
   gameState: GameState, 
   activeStoryCard: StoryCardDef | undefined, 
-  overrides: StepOverrides
+  overrides: StepOverrides,
+  manualSelection?: 'story' | 'setupCard'
 ): JobSetupDetails => {
-  // Use empty baseline if no story card is active (prevents default fallback leaks)
   const safeStory: StoryCardDef = activeStoryCard || { title: '', intro: '' };
   
-  const jobMode = determineJobMode(safeStory, overrides);
-  const { 
-      forbiddenStartingContact, 
-      allowedStartingContacts, 
-  } = safeStory.setupConfig || {};
-  
+  // Resolve Job Mode and Conflicts
+  const setupCardModeTuple = OVERRIDE_TO_MODE_MAP.find(([key]) => overrides[key]);
+  const setupCardMode = setupCardModeTuple ? setupCardModeTuple[1] : undefined;
+  const storyMode = safeStory.setupConfig?.jobDrawMode;
+  let conflict: JobConflict | undefined = undefined;
+  let resolvedMode: string;
+
+  if (storyMode && setupCardMode && storyMode !== setupCardMode) {
+      conflict = {
+          story: { 
+              value: JOB_MODE_LABELS[storyMode] || storyMode, 
+              label: `Story: ${safeStory.title}` 
+          },
+          setupCard: { 
+              value: JOB_MODE_LABELS[setupCardMode] || setupCardMode, 
+              label: `Setup Card: ${gameState.setupCardName}` 
+          }
+      };
+      if (gameState.optionalRules.resolveConflictsManually) {
+          resolvedMode = manualSelection === 'story' ? storyMode : (setupCardMode as string);
+      } else {
+          resolvedMode = storyMode; // Default priority
+      }
+  } else {
+      resolvedMode = storyMode || setupCardMode || 'standard';
+  }
+
+  const { forbiddenStartingContact, allowedStartingContacts } = safeStory.setupConfig || {};
   const removeJobDecks = hasFlag(safeStory.setupConfig, 'removeJobDecks');
   const primeContactDecks = hasFlag(safeStory.setupConfig, 'primeContactDecks');
-  
   const isSingleContactChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
   const isDontPrimeChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
   const messages: JobSetupMessage[] = [];
@@ -124,21 +150,21 @@ export const determineJobSetupDetails = (
   // 1. Critical Stop: No Decks
   if (removeJobDecks) {
     messages.push({ source: 'story', title: 'Setup Restriction', content: React.createElement(React.Fragment, null, React.createElement("p", null, React.createElement("strong", null, "Remove all Job Card decks from the game.")), React.createElement("p", null, "There's no time for working other Jobs.")) });
-    return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+    return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, conflict };
   }
   
   // 2. Special Modes (No standard contact list)
-  if (jobMode === 'caper_start') {
+  if (resolvedMode === 'caper_start') {
       messages.push({ source: 'story', title: 'Story Override', content: React.createElement(React.Fragment, null, React.createElement("p", null, React.createElement("strong", null, "Do not deal Starting Jobs.")), React.createElement("p", null, "Each player begins the game with ", React.createElement("strong", null, "one Caper Card"), " instead.")) });
-      return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+      return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, conflict };
   }
   
-  if (jobMode === 'wind_takes_us') {
+  if (resolvedMode === 'wind_takes_us') {
       messages.push({ source: 'story', title: 'Story Override', content: React.createElement(React.Fragment, null, React.createElement("p", { className: "mb-2" }, "Each player chooses ", React.createElement("strong", null, "one Contact Deck"), " of their choice:"), React.createElement("ul", { className: "list-disc ml-5 mb-3 text-sm" }, React.createElement("li", null, "Draw ", React.createElement("strong", null, gameState.playerCount <= 3 ? '4' : '3', " Jobs"), " from that deck."), React.createElement("li", null, "Place a ", React.createElement("strong", null, "Goal Token"), " at the drop-off/destination sector of each Job."), React.createElement("li", null, "Return all Jobs to the deck and reshuffle.")), React.createElement("p", { className: "font-bold text-red-700 dark:text-red-400" }, "Do not deal Starting Jobs.")) });
-      return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+      return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, conflict };
   }
 
-  if (jobMode === 'draft_choice') {
+  if (resolvedMode === 'draft_choice') {
       const cardCount = isSingleContactChallenge ? "1 Contact Deck" : "3 different Contact Decks";
       const jobsPerDeck = isSingleContactChallenge ? "3 Job Cards" : "Job Card";
       const title = isSingleContactChallenge ? 'Story Override (Challenge Active)' : 'Story Override';
@@ -146,20 +172,20 @@ export const determineJobSetupDetails = (
       const content = React.createElement(React.Fragment, null, React.createElement("p", { className: "mb-2" }, "In reverse player order, each player chooses ", React.createElement("strong", null, cardCount), "."), React.createElement("p", { className: "mb-2" }, "Draw the top ", React.createElement("strong", null, jobsPerDeck), " from each chosen deck."), forbiddenStartingContact === CONTACT_NAMES.NISKA && React.createElement("p", { className: "text-red-600 dark:text-red-400 text-sm font-bold" }, "Note: Mr. Universe is excluded."), React.createElement("p", { className: "opacity-75 mt-2" }, "Players may discard any starting jobs they do not want."));
       
       messages.push({ source: 'story', title, content });
-      return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+      return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, conflict };
   }
 
-  if (jobMode === 'no_jobs') {
-      messages.push(buildNoJobsContent(jobMode, overrides, primeContactDecks, isDontPrimeChallenge));
-      return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+  if (resolvedMode === 'no_jobs') {
+      messages.push(buildNoJobsContent(resolvedMode, overrides, primeContactDecks, isDontPrimeChallenge));
+      return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, conflict };
   }
   
-  if (jobMode === 'times_jobs') {
+  if (resolvedMode === 'times_jobs') {
     messages.push({ source: 'setupCard', title: 'Setup Card Override', content: React.createElement(React.Fragment, null, React.createElement("p", null, "Each player draws ", React.createElement("strong", null, "3 jobs"), " from ", React.createElement("strong", null, "one Contact Deck"), " of their choice."), React.createElement("p", { className: "text-sm italic opacity-80 mt-1" }, "Players may draw from the same Contact."), React.createElement("p", { className: "opacity-75 mt-2" }, "Players may discard any starting jobs they do not want.")) });
-    return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+    return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, conflict };
   }
 
-  if (jobMode === 'high_alert_jobs') {
+  if (resolvedMode === 'high_alert_jobs') {
     messages.push({
       source: 'setupCard',
       title: 'Alliance High Alert',
@@ -169,12 +195,12 @@ export const determineJobSetupDetails = (
         React.createElement("p", { className: "text-sm italic opacity-80" }, "Players may keep, or discard, any of the three Jobs they've drawn.")
       )
     });
-    return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+    return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, conflict };
   }
 
   // 3. Standard UI Modes (Use Strategies)
   
-  const strategy = jobModeStrategies[jobMode] || jobModeStrategies.standard;
+  const strategy = jobModeStrategies[resolvedMode] || jobModeStrategies.standard;
   let contacts = strategy.getContacts();
   const msg = strategy.getMessage(forbiddenStartingContact);
   if (msg) messages.push(msg);
@@ -189,9 +215,9 @@ export const determineJobSetupDetails = (
 
   if (isSingleContactChallenge) {
     messages.push({ source: 'warning', title: 'Challenge Active', content: React.createElement("p", null, React.createElement("strong", null, "Single Contact Only:"), " You may only work for one contact.") });
-    return { contacts, messages, showStandardContactList: true, isSingleContactChoice: true, cardsToDraw: 3, totalJobCards: 0 };
+    return { contacts, messages, showStandardContactList: true, isSingleContactChoice: true, cardsToDraw: 3, totalJobCards: 0, conflict };
   }
   
   const totalJobCards = contacts.length;
-  return { contacts, messages, showStandardContactList: true, isSingleContactChoice: false, totalJobCards };
+  return { contacts, messages, showStandardContactList: true, isSingleContactChoice: false, totalJobCards, conflict };
 };

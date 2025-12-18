@@ -38,24 +38,20 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
   const activeSupplyCount = supplyHeavyExpansions.filter(id => gameState.expansions[id as keyof typeof gameState.expansions]).length;
   const isHighSupplyVolume = activeSupplyCount >= 3;
 
-  // 1. Determine Base Discard Count
   const baseDiscard = (isHighSupplyVolume && useHouseRule) ? 4 : 3;
 
-  // 2. Determine Multiplier
-  // "The Blitz" setup card enforces "Double Dip" rules (x2).
-  // Story cards might also have a multiplier.
-  const isBlitz = overrides.blitzPrimeMode;
+  const isBlitz = !!overrides.blitzPrimeMode;
   const storyMultiplier = activeStoryCard.setupConfig?.primingMultiplier || 1;
   
-  let effectiveMultiplier = storyMultiplier;
-  if (isBlitz) {
-      effectiveMultiplier = 2;
+  let effectiveMultiplier = 1;
+  // Both "The Blitz" and the relevant Story Card use a 2x multiplier.
+  // There is no conflict, so we just apply the multiplier if either is active.
+  if (isBlitz || storyMultiplier > 1) {
+    effectiveMultiplier = 2;
   }
 
-  // 3. Calculate Final Count
   let finalCount = baseDiscard * effectiveMultiplier;
   
-  // Apply Slaying The Dragon modifier (+2 cards)
   if (isSlayingTheDragon) {
       finalCount += 2;
   }
@@ -118,7 +114,7 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
 
       {isBlitz && (
         <SpecialRuleBlock source="setupCard" title="The Blitz: Double Dip" page={22} manual="Core">
-          "Double Dip" rules are in effect. Discard the top <strong>{baseDiscard * effectiveMultiplier} cards</strong> (2x Base) from each deck.
+          "Double Dip" rules are in effect. Discard the top <strong>{baseDiscard * 2} cards</strong> (2x Base) from each deck.
         </SpecialRuleBlock>
       )}
 
