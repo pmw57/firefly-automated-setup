@@ -141,6 +141,9 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
       }
 
       case 'dynamic':
+        if (step.id === STEP_IDS.D_FIRST_GOAL) {
+            return <MissionDossierStep onNext={onNext} onPrev={onPrev} titleOverride="First, Choose a Story Card" />;
+        }
         return <DynamicStepHandler step={step} />;
 
       default:
@@ -158,7 +161,7 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
   }
 
   // Core and Dynamic steps use the standard StepContent wrapper.
-  const isMissionDossier = step.id === STEP_IDS.CORE_MISSION;
+  const isMissionDossier = step.id === STEP_IDS.CORE_MISSION || step.id === STEP_IDS.D_FIRST_GOAL;
   const showNav = !isMissionDossier;
 
   const borderTop = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';

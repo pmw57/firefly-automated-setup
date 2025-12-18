@@ -15,9 +15,10 @@ import { SoloOptionsPart } from './story/SoloOptionsPart';
 interface MissionDossierStepProps {
   onNext: () => void;
   onPrev: () => void;
+  titleOverride?: string;
 }
 
-const MissionDossierStepContent = ({ onNext, onPrev }: { onNext: () => void; onPrev: () => void }): React.ReactElement => {
+const MissionDossierStepContent = ({ onNext, onPrev, titleOverride }: { onNext: () => void; onPrev: () => void; titleOverride?: string }): React.ReactElement => {
   const { state: gameState, dispatch } = useGameState();
   const {
     subStep,
@@ -77,13 +78,19 @@ const MissionDossierStepContent = ({ onNext, onPrev }: { onNext: () => void; onP
 
   return (
     <div className="space-y-6">
+      {subStep === 1 && (
+        <h4 className={`text-center font-bold text-sm uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            {titleOverride || 'Choose a Story Card'}
+        </h4>
+      )}
+      
       <div 
         ref={dossierTopRef}
         className={`${containerBg} backdrop-blur-md rounded-lg shadow-md border ${containerBorder} overflow-hidden transition-colors duration-300 scroll-mt-24`}
       >
         <div className={`${headerBarBg} p-4 flex justify-between items-center border-b ${headerBarBorder} transition-colors duration-300`}>
           <h3 className={`font-bold text-lg font-western tracking-wider ${headerColor}`}>
-            {subStep === 1 ? 'Goal of the Game' : 'Story Options'}
+            {subStep === 1 ? 'Story Card' : 'Story Options'}
           </h3>
           {enablePart2 && <span className={`text-xs uppercase tracking-widest ${badgeBg} ${badgeBorder} ${badgeText} px-2 py-1 rounded font-bold`}>Part {subStep} of 2</span>}
         </div>
@@ -95,9 +102,8 @@ const MissionDossierStepContent = ({ onNext, onPrev }: { onNext: () => void; onP
             ) : (
               <div className="p-8 text-center">
                 <div className="text-5xl mb-4" role="img" aria-label="Dossier icon">📜</div>
-                <h4 className={`font-bold text-xl mb-2 ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Select Your Story</h4>
                 <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>
-                  Choose a story from the list below, or use the randomizer tools to begin.
+                  Your selected story will appear here.
                 </p>
               </div>
             )}
@@ -137,10 +143,10 @@ const MissionDossierStepContent = ({ onNext, onPrev }: { onNext: () => void; onP
   );
 }
 
-export const MissionDossierStep = ({ onNext, onPrev }: MissionDossierStepProps): React.ReactElement => {
+export const MissionDossierStep = ({ onNext, onPrev, titleOverride }: MissionDossierStepProps): React.ReactElement => {
   return (
     <MissionSelectionProvider>
-      <MissionDossierStepContent onNext={onNext} onPrev={onPrev} />
+      <MissionDossierStepContent onNext={onNext} onPrev={onPrev} titleOverride={titleOverride} />
     </MissionSelectionProvider>
   );
 };
