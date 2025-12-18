@@ -214,6 +214,12 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
     <>
       {!isSolo && <p className={cls("mb-4 italic", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>}
       
+      {isWantedLeaderMode && (
+        <SpecialRuleBlock source="setupCard" title="The Heat Is On">
+          Choose Ships & Leaders normally, but <strong>each Leader begins play with a Wanted token</strong>.
+        </SpecialRuleBlock>
+      )}
+
       {!draftState ? (
         <Button onClick={handleDetermineOrder} variant="secondary" fullWidth className="mb-4">
            🎲 Roll for {isHavenDraft ? 'Haven Draft' : 'Command'}
@@ -275,12 +281,6 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
                 <strong>Place your Haven at Deadwood (Blue Sun).</strong>
                 <br/>If you end your turn at your Haven, remove Disgruntled from all Crew.
              </SpecialRuleBlock>
-          )}
-
-          {isWantedLeaderMode && (
-            <SpecialRuleBlock source="setupCard" title="The Heat Is On">
-              Choose Ships & Leaders normally, but <strong>each Leader begins play with a Wanted token</strong>.
-            </SpecialRuleBlock>
           )}
           
           {addBorderHavens && (
