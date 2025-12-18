@@ -1,16 +1,22 @@
-import { StepOverrides, GameState, Step } from '../types';
+import { StepOverrides, GameState, Step, SetupCardStep, SetupContentData } from '../types';
 import { SETUP_CARDS } from '../data/setupCards';
 import { SETUP_CONTENT } from '../data/steps';
 import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
 
-const createStep = (id: string, overrides: StepOverrides = {}): Step | null => {
-  const content = SETUP_CONTENT[id];
-  if (!content) return null;
+const createStep = (stepDef: SetupCardStep): Step | null => {
+  const template = SETUP_CONTENT[stepDef.id];
+  if (!template) return null;
+
+  const stepData: SetupContentData = {
+    ...template,
+    title: stepDef.title,
+  };
+
   return {
-    type: content.type,
-    id: content.id || content.elementId || id,
-    data: content,
-    overrides
+    type: stepData.type,
+    id: stepData.id || stepData.elementId || stepDef.id,
+    data: stepData,
+    overrides: stepDef.overrides,
   };
 };
 
@@ -41,7 +47,7 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
     const setupCard = SETUP_CARDS.find(s => s.id === primarySequenceCardId) || SETUP_CARDS.find(s => s.id === SETUP_CARD_IDS.STANDARD)!;
 
     let steps = setupCard.steps
-        .map(stepDef => createStep(stepDef.id, stepDef.overrides))
+        .map(stepDef => createStep(stepDef))
         .filter((step): step is Step => step !== null);
 
     // If Flying Solo is active, we merge its specific overrides and add any unique steps.
@@ -51,6 +57,7 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
         // Create a map of overrides from the Flying Solo card for easy lookup.
         const flyingSoloOverrides = flyingSoloCard.steps.reduce((acc, step) => {
             if (step.overrides) {
+                // Use the raw ID for matching (C1, C2 etc.)
                 acc[step.id] = step.overrides;
             }
             return acc;
@@ -58,10 +65,11 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
         
         // Merge the Flying Solo overrides into the base steps from the secondary card.
         steps = steps.map(step => {
-            if (flyingSoloOverrides[step.id]) {
+            const rawId = Object.keys(SETUP_CONTENT).find(key => SETUP_CONTENT[key].id === step.id || SETUP_CONTENT[key].elementId === step.id);
+            if (rawId && flyingSoloOverrides[rawId]) {
                 return {
                     ...step,
-                    overrides: { ...step.overrides, ...flyingSoloOverrides[step.id] },
+                    overrides: { ...step.overrides, ...flyingSoloOverrides[rawId] },
                 };
             }
             return step;
@@ -72,7 +80,7 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
         if (!hasGameLengthStep) {
             const gameLengthStepDef = flyingSoloCard.steps.find(s => s.id === STEP_IDS.D_GAME_LENGTH_TOKENS);
             if (gameLengthStepDef) {
-                const gameLengthStep = createStep(gameLengthStepDef.id, gameLengthStepDef.overrides);
+                const gameLengthStep = createStep(gameLengthStepDef);
                 if (gameLengthStep) {
                     steps.push(gameLengthStep);
                 }

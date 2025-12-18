@@ -2,30 +2,30 @@ import { ContentMap } from '../types';
 
 export const SETUP_CONTENT: ContentMap = {
   // Core Steps
-  C1: { type: 'core', id: 'core-1', title: "Nav Decks" },
-  C2: { type: 'core', id: 'core-2', title: "Alliance & Reaver Ships" },
-  C3: { type: 'core', id: 'core-3', title: "Choose Ships & Leaders" },
-  C4: { type: 'core', id: 'core-4', title: "Goal of the Game" },
-  C5: { type: 'core', id: 'core-5', title: "Starting Supplies" },
-  C6: { type: 'core', id: 'core-6', title: "Starting Jobs" },
-  C_PRIME: { type: 'core', id: 'core-prime', title: "Priming The Pump" },
+  C1: { type: 'core', id: 'core-1' },
+  C2: { type: 'core', id: 'core-2' },
+  C3: { type: 'core', id: 'core-3' },
+  C4: { type: 'core', id: 'core-4' },
+  C5: { type: 'core', id: 'core-5' },
+  C6: { type: 'core', id: 'core-6' },
+  C_PRIME: { type: 'core', id: 'core-prime' },
 
   // Distinct Dynamic Steps (Cannot be merged easily)
-  D_FIRST_GOAL: { type: 'dynamic', elementId: 'D_FIRST_GOAL', title: "Goal of the Game" },
-  D_RIM_JOBS: { type: 'dynamic', elementId: 'D_RIM_JOBS', title: "Rim Space Jobs" },
-  D_TIME_LIMIT: { type: 'dynamic', elementId: 'D_TIME_LIMIT', title: "Only So Much Time" },
-  D_SHUTTLE: { type: 'dynamic', elementId: 'D_SHUTTLE', title: "Choose Shuttles" },
-  D_HAVEN_DRAFT: { type: 'dynamic', elementId: 'D_HAVEN_DRAFT', title: "Choose Leaders, Havens & Ships" },
-  D_BC_CAPITOL: { type: 'dynamic', elementId: 'D_BC_CAPITOL', title: "Starting Capitol" },
-  D_LOCAL_HEROES: { type: 'dynamic', elementId: 'D_LOCAL_HEROES', title: "Local Heroes" },
-  D_ALLIANCE_ALERT: { type: 'dynamic', elementId: 'D_ALLIANCE_ALERT', title: "Alliance Alert Cards" },
-  D_PRESSURES_HIGH: { type: 'dynamic', elementId: 'D_PRESSURES_HIGH', title: "The Pressure's High" },
-  D_STRIP_MINING: { type: 'dynamic', elementId: 'D_STRIP_MINING', title: "Strip Mining: Starting Cards" },
+  D_FIRST_GOAL: { type: 'dynamic', elementId: 'D_FIRST_GOAL' },
+  D_RIM_JOBS: { type: 'dynamic', elementId: 'D_RIM_JOBS' },
+  D_TIME_LIMIT: { type: 'dynamic', elementId: 'D_TIME_LIMIT' },
+  D_SHUTTLE: { type: 'dynamic', elementId: 'D_SHUTTLE' },
+  D_HAVEN_DRAFT: { type: 'dynamic', elementId: 'D_HAVEN_DRAFT' },
+  D_BC_CAPITOL: { type: 'dynamic', elementId: 'D_BC_CAPITOL' },
+  D_LOCAL_HEROES: { type: 'dynamic', elementId: 'D_LOCAL_HEROES' },
+  D_ALLIANCE_ALERT: { type: 'dynamic', elementId: 'D_ALLIANCE_ALERT' },
+  D_PRESSURES_HIGH: { type: 'dynamic', elementId: 'D_PRESSURES_HIGH' },
+  D_STRIP_MINING: { type: 'dynamic', elementId: 'D_STRIP_MINING' },
   
   // Flying Solo Specifics
-  D_SOLO_OPTIONAL_RULES: { type: 'dynamic', elementId: 'D_SOLO_OPTIONAL_RULES', title: "Optional Solo Rules" },
-  D_NO_SURE_THINGS: { type: 'dynamic', elementId: 'D_NO_SURE_THINGS', title: "No Sure Things" },
-  D_GAME_LENGTH_TOKENS: { type: 'dynamic', elementId: 'D_GAME_LENGTH_TOKENS', title: "Game Length Tokens" },
+  D_SOLO_OPTIONAL_RULES: { type: 'dynamic', elementId: 'D_SOLO_OPTIONAL_RULES' },
+  D_NO_SURE_THINGS: { type: 'dynamic', elementId: 'D_NO_SURE_THINGS' },
+  D_GAME_LENGTH_TOKENS: { type: 'dynamic', elementId: 'D_GAME_LENGTH_TOKENS' },
 };
 
 export const STEP_QUOTES: { [key: string]: { text: string; author: string } } = {
