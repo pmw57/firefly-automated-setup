@@ -9,12 +9,13 @@ import { ActionType } from '../state/actions';
 import { FlyingSoloBanner } from './setup/FlyingSoloBanner';
 import { SetupCardList } from './setup/SetupCardList';
 
+// Fix: Add props interface to accept onNext and onBack handlers.
 interface SetupCardSelectionProps {
-  onBack: () => void;
   onNext: () => void;
+  onBack: () => void;
 }
 
-export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onBack, onNext }) => {
+export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, onBack }) => {
   const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';

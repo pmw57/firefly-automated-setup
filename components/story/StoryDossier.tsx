@@ -7,15 +7,16 @@ import { ExpansionIcon } from '../ExpansionIcon';
 import { useGameState } from '../../hooks/useGameState';
 import { ActionType } from '../../state/actions';
 import { hasFlag } from '../../utils/data';
+import { STORY_TITLES } from '../../data/ids';
 
 interface StoryDossierProps {
   activeStoryCard: StoryCardDef;
 }
 
 const SOLO_TIMER_ADJUSTMENTS: Record<string, string> = {
-  "Desperadoes": "Declare Last Call before discarding your last token to win the game.",
-  "\"Respectable\" Persons Of Business": "Declare Last Call before discarding your last token to win the game.",
-  "A Rare Specimen Indeed": "Send Out Invites before discarding your last token to win the game."
+  [STORY_TITLES.DESPERADOES]: "Declare Last Call before discarding your last token to win the game.",
+  [STORY_TITLES.RESPECTABLE_PERSONS]: "Declare Last Call before discarding your last token to win the game.",
+  [STORY_TITLES.RARE_SPECIMEN]: "Send Out Invites before discarding your last token to win the game."
 };
 
 export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) => {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Expansions } from '../types';
-import { SETUP_CARD_IDS } from '../data/ids';
 import { Button } from './Button';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
@@ -8,13 +7,14 @@ import { ActionType } from '../state/actions';
 import { PlayerConfigSection } from './setup/PlayerConfigSection';
 import { CampaignConfigSection } from './setup/CampaignConfigSection';
 import { ExpansionListSection } from './setup/ExpansionListSection';
+import { SETUP_CARD_IDS } from '../data/ids';
 
+// Fix: Add props interface to accept onNext handler from parent.
 interface CaptainSetupProps {
   onNext: () => void;
-  onBack?: () => void;
 }
 
-export const CaptainSetup = ({ onNext, onBack }: CaptainSetupProps): React.ReactElement => {
+export const CaptainSetup = ({ onNext }: CaptainSetupProps): React.ReactElement => {
   const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -92,12 +92,7 @@ export const CaptainSetup = ({ onNext, onBack }: CaptainSetupProps): React.React
       />
 
       <div className="flex gap-4 relative z-10">
-        {onBack && (
-          <Button onClick={onBack} variant="secondary" className="w-1/3">
-            ← Back
-          </Button>
-        )}
-        <Button onClick={handleNextStep} fullWidth className={`${onBack ? 'w-2/3' : 'w-full'} text-lg py-4 border-b-4 border-[#450a0a]`}>
+        <Button onClick={handleNextStep} fullWidth className={'w-full text-lg py-4 border-b-4 border-[#450a0a]'}>
           Next: Choose Setup Card →
         </Button>
       </div>
