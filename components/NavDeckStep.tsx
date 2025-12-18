@@ -83,7 +83,7 @@ export const NavDeckStep = ({ step }: NavDeckStepProps): React.ReactElement => {
   const overrides = useMemo(() => step.overrides || {}, [step.overrides]);
   
   const { 
-    specialRule, 
+    forceReshuffle,
     clearerSkies, 
     showStandardRules, 
     isSolo, 
@@ -96,40 +96,28 @@ export const NavDeckStep = ({ step }: NavDeckStepProps): React.ReactElement => {
   const panelBg = isDark ? 'bg-black/60' : 'bg-white';
   const panelBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const panelText = isDark ? 'text-gray-300' : 'text-gray-800';
+  const hasRimDecks = gameState.expansions.blue || gameState.expansions.kalidasa;
 
   return (
     <>
       <div className={cls(panelBg, "p-6 rounded-lg border shadow-sm mb-6 overflow-hidden transition-colors duration-300 space-y-4", panelBorder)}>
-        {specialRule === null && (
-          <p className={cls(panelText)}><ActionText>Shuffle Alliance & Border Nav Cards</ActionText> standard setup.</p>
-        )}
-
-        {specialRule === 'flyingSolo' && (
-           <SpecialRuleBlock source="setupCard" title="Flying Solo">
-               Shuffle the <ActionText>"RESHUFFLE"</ActionText> cards into their respective Nav Decks.
-           </SpecialRuleBlock>
+        {showStandardRules && (
+          <p className={cls(panelText)}><ActionText>Shuffle Alliance & Border Nav Cards</ActionText> according to standard player count rules.</p>
         )}
         
-        {specialRule === 'hardcore' && (
-          <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-            <strong>Hardcore Navigation:</strong> Shuffle the <ActionText>Alliance Cruiser</ActionText> and <ActionText>Reaver Cutter</ActionText> cards into the Nav Decks immediately, regardless of player count.
-          </SpecialRuleBlock>
-        )}
-        
-        {specialRule === 'reshuffle' && (
-          <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-            <ul className="list-disc ml-4 space-y-1">
-              <li>Place the <ActionText>"RESHUFFLE"</ActionText> cards in the Nav Decks at the start of the game, regardless of player count.</li>
-              <li><ActionText>Shuffle each of the Alliance and Border Nav Decks</ActionText>.</li>
-              {(gameState.expansions.blue || gameState.expansions.kalidasa) && (
-                <li className="italic opacity-80">Applies to all active decks (including Rim Space).</li>
-              )}
-            </ul>
+        {forceReshuffle && (
+          <SpecialRuleBlock source="setupCard" title="Forced Reshuffle">
+             <p>
+                Place the <ActionText>"RESHUFFLE"</ActionText> cards in the Nav Decks at the start of the game, regardless of the number of players.
+            </p>
+            {hasRimDecks && (
+                <p className="text-xs italic opacity-80 mt-2">This applies to all active decks (including Rim Space).</p>
+            )}
           </SpecialRuleBlock>
         )}
 
         {clearerSkies && (
-          <SpecialRuleBlock source="setupCard" title="Setup Card Override">
+          <SpecialRuleBlock source="setupCard" title="Clearer Skies">
             <strong>Clearer Skies Rule:</strong> When initiating a Full Burn, roll a die. The result is how many sectors you may move before you start drawing Nav Cards.
             <br /><span className="text-xs italic opacity-75">Note: You may not move farther than your Drive Core's range, regardless of the die roll.</span>
           </SpecialRuleBlock>

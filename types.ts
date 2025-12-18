@@ -232,7 +232,7 @@ export interface JobSetupDetails {
 }
 
 export interface NavDeckSetupDetails {
-  specialRule: 'hardcore' | 'reshuffle' | 'flyingSolo' | null;
+  forceReshuffle: boolean;
   clearerSkies: boolean;
   showStandardRules: boolean;
   isSolo: boolean;
