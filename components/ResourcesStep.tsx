@@ -15,14 +15,18 @@ interface ResourcesStepProps {
 
 export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
   const { state: gameState, dispatch } = useGameState();
-  const overrides = step.overrides || {};
-  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
+  const overrides = React.useMemo(() => step.overrides || {}, [step.overrides]);
+  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   const [manualSelection, setManualSelection] = useState<'story' | 'setupCard'>('story');
   
-  const resourceDetails = calculateStartingResources(gameState, activeStoryCard, overrides, manualSelection);
+  const resourceDetails = React.useMemo(() => 
+    calculateStartingResources(gameState, activeStoryCard, overrides, manualSelection),
+    [gameState, activeStoryCard, overrides, manualSelection]
+  );
+  
   const { totalCredits, noFuelParts, customFuel, conflict } = resourceDetails;
 
   useEffect(() => {
@@ -33,11 +37,11 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
   
   const showConflictUI = conflict && gameState.optionalRules.resolveConflictsManually;
   
-  const startWithWarrant = hasFlag(activeStoryCard.setupConfig, 'startWithWarrant');
-  const removeRiver = hasFlag(activeStoryCard.setupConfig, 'removeRiver');
-  const nandiCrewDiscount = hasFlag(activeStoryCard.setupConfig, 'nandiCrewDiscount');
-  const startWithGoalToken = hasFlag(activeStoryCard.setupConfig, 'startWithGoalToken');
-  const { startingWarrantCount } = activeStoryCard.setupConfig || {};
+  const startWithWarrant = hasFlag(activeStoryCard?.setupConfig, 'startWithWarrant');
+  const removeRiver = hasFlag(activeStoryCard?.setupConfig, 'removeRiver');
+  const nandiCrewDiscount = hasFlag(activeStoryCard?.setupConfig, 'nandiCrewDiscount');
+  const startWithGoalToken = hasFlag(activeStoryCard?.setupConfig, 'startWithGoalToken');
+  const { startingWarrantCount } = activeStoryCard?.setupConfig || {};
   
   const cardBg = isDark ? 'bg-black/60' : 'bg-white';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -67,8 +71,8 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = ({ step }) => {
         />
       )}
 
-      {!showConflictUI && (resourceDetails.bonusCredits > 0 || activeStoryCard.setupConfig?.startingCreditsOverride !== undefined) && (
-        <SpecialRuleBlock source="story" title={activeStoryCard.setupConfig?.startingCreditsOverride !== undefined ? "Credits Override" : "Bonus Credits"}>
+      {!showConflictUI && (resourceDetails.bonusCredits > 0 || activeStoryCard?.setupConfig?.startingCreditsOverride !== undefined) && (
+        <SpecialRuleBlock source="story" title={activeStoryCard?.setupConfig?.startingCreditsOverride !== undefined ? "Credits Override" : "Bonus Credits"}>
            Your crew begins with <strong>${totalCredits.toLocaleString()}</strong>.
         </SpecialRuleBlock>
       )}

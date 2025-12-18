@@ -1,44 +1,29 @@
-
-import { GameState, StepOverrides, StoryCardDef } from '../types';
+import { GameState, StoryCardDef, StepOverrides } from '../types';
 import { STORY_TITLES } from '../data/ids';
-
-export interface PrimeDetails {
-  baseDiscard: number;
-  effectiveMultiplier: number;
-  finalCount: number;
-  isHighSupplyVolume: boolean;
-  isBlitz: boolean;
-}
 
 export const calculatePrimeDetails = (
   gameState: GameState,
   overrides: StepOverrides,
-  activeStoryCard: StoryCardDef,
+  activeStoryCard: StoryCardDef | undefined,
   useHouseRule: boolean
-): PrimeDetails => {
-  // Logic for Supply Deck Volume
-  const supplyHeavyExpansions = ['kalidasa', 'pirates', 'breakin_atmo', 'still_flying'];
-  const activeSupplyCount = supplyHeavyExpansions.filter(id => gameState.expansions[id as keyof typeof gameState.expansions]).length;
-  const isHighSupplyVolume = activeSupplyCount >= 3;
+) => {
+  const supplyHeavyExpansions: (keyof GameState['expansions'])[] = ['kalidasa', 'pirates', 'breakin_atmo', 'still_flying'];
+  const activeSupplyHeavyCount = supplyHeavyExpansions.filter(exp => gameState.expansions[exp]).length;
+  const isHighSupplyVolume = activeSupplyHeavyCount >= 3;
 
-  // 1. Determine Base Discard Count
-  const baseDiscard = (isHighSupplyVolume && useHouseRule) ? 4 : 3;
-
-  // 2. Determine Multiplier
+  const baseDiscard = isHighSupplyVolume && useHouseRule ? 4 : 3;
+  const storyMultiplier = activeStoryCard?.setupConfig?.primingMultiplier || 1;
   const isBlitz = !!overrides.blitzPrimeMode;
-  const storyMultiplier = activeStoryCard.setupConfig?.primingMultiplier || 1;
-  
+  const isSlayingTheDragon = activeStoryCard?.title === STORY_TITLES.SLAYING_THE_DRAGON;
+
   let effectiveMultiplier = storyMultiplier;
   if (isBlitz) {
-      effectiveMultiplier = 2;
+    effectiveMultiplier = 2;
   }
-
-  // 3. Calculate Final Count
-  let finalCount = baseDiscard * effectiveMultiplier;
   
-  const isSlayingTheDragon = activeStoryCard.title === STORY_TITLES.SLAYING_THE_DRAGON;
+  let finalCount = baseDiscard * effectiveMultiplier;
   if (isSlayingTheDragon) {
-      finalCount += 2;
+    finalCount += 2;
   }
 
   return {

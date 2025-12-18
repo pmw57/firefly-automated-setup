@@ -1,35 +1,43 @@
-
-import { StoryCardDef, GameState } from '../types';
-import { SETUP_CARD_IDS, STORY_TITLES } from '../data/ids';
+import { GameState, StoryCardDef } from '../types';
 import { SOLO_EXCLUDED_STORIES } from '../data/collections';
+import { SETUP_CARD_IDS, STORY_TITLES } from '../data/ids';
 
-const SOLO_EXCLUDED_STORIES_SET = new Set(SOLO_EXCLUDED_STORIES);
-
-/**
- * Checks if a story card is valid based on the current game state.
- * This function encapsulates all filtering logic for story card availability.
- */
 export const isStoryCompatible = (card: StoryCardDef, state: GameState): boolean => {
-    const isClassicSolo = state.gameMode === 'solo' && state.setupCardId !== SETUP_CARD_IDS.FLYING_SOLO;
-
-    if (isClassicSolo) {
-        return card.title === STORY_TITLES.AWFUL_LONELY;
-    }
-
+    // Rule 1: Game Mode compatibility
     if (state.gameMode === 'multiplayer' && card.isSolo) {
         return false;
     }
-
-    if (state.gameMode === 'solo' && SOLO_EXCLUDED_STORIES_SET.has(card.title)) {
+    
+    // Rule 2: Expansion requirements
+    if (card.requiredExpansion && !state.expansions[card.requiredExpansion]) {
         return false;
     }
-    
+    if (card.additionalRequirements) {
+        if (!card.additionalRequirements.every(req => state.expansions[req])) {
+            return false;
+        }
+    }
+
+    // Rule 3: Specific story card rules
     if (card.title === STORY_TITLES.SLAYING_THE_DRAGON && state.playerCount !== 2) {
         return false;
     }
 
-    const mainReq = !card.requiredExpansion || state.expansions[card.requiredExpansion];
-    const addReq = !card.additionalRequirements || card.additionalRequirements.every(req => state.expansions[req]);
+    // Rule 4: Solo mode variants
+    const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
+    const isClassicSolo = state.gameMode === 'solo' && !isFlyingSolo;
     
-    return mainReq && addReq;
+    if (isClassicSolo) {
+        // Classic solo only allows one story card.
+        return card.title === STORY_TITLES.AWFUL_LONELY;
+    }
+    
+    if (isFlyingSolo) {
+        // Flying solo excludes a specific list of cards.
+        if (SOLO_EXCLUDED_STORIES.includes(card.title)) {
+            return false;
+        }
+    }
+
+    return true;
 };

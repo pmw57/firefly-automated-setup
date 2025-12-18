@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Step } from '../../../types';
+// Fix: Correct import path for module resolution.
 import { calculateStartingResources, getCreditsLabel } from '../../../utils/resources';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';

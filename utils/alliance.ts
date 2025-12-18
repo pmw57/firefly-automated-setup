@@ -1,30 +1,20 @@
-import { GameState, StoryCardDef } from '../types';
+import { GameState, AllianceReaverDetails } from '../types';
 import { hasFlag } from './data';
+import { STORY_CARDS } from '../data/storyCards';
 
-export interface AllianceReaverDetails {
-  useSmugglersRimRule: boolean;
-  alertStackCount: number;
-}
+export const calculateAllianceReaverDetails = (gameState: GameState): AllianceReaverDetails => {
+  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard);
+  const storyConfig = activeStoryCard?.setupConfig;
 
-/**
- * Calculates details specific to the Alliance & Reaver setup step.
- */
-export const calculateAllianceReaverDetails = (
-  gameState: GameState,
-  activeStoryCard: StoryCardDef
-): AllianceReaverDetails => {
-  const { createAlertTokenStackMultiplier } = activeStoryCard.setupConfig || {};
-  const smugglersBluesSetup = hasFlag(activeStoryCard.setupConfig, 'smugglersBluesSetup');
+  const smugglersBluesSetup = hasFlag(storyConfig, 'smugglersBluesSetup');
 
-  const useSmugglersRimRule = !!(
-    smugglersBluesSetup &&
-    gameState.expansions.blue &&
-    gameState.expansions.kalidasa
-  );
-
-  const alertStackCount = createAlertTokenStackMultiplier
-    ? createAlertTokenStackMultiplier * gameState.playerCount
-    : 0;
-
-  return { useSmugglersRimRule, alertStackCount };
+  return {
+      useSmugglersRimRule: smugglersBluesSetup && gameState.expansions.blue && gameState.expansions.kalidasa,
+      alertStackCount: storyConfig?.createAlertTokenStackMultiplier ? storyConfig.createAlertTokenStackMultiplier * gameState.playerCount : 0,
+      placeAllianceAlertsInAllianceSpace: hasFlag(storyConfig, 'placeAllianceAlertsInAllianceSpace'),
+      placeMixedAlertTokens: hasFlag(storyConfig, 'placeMixedAlertTokens'),
+      smugglersBluesSetup,
+      lonelySmugglerSetup: hasFlag(storyConfig, 'lonelySmugglerSetup'),
+      startWithAlertCard: hasFlag(storyConfig, 'startWithAlertCard'),
+  };
 };
