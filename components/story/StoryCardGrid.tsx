@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { StoryCardGridItem } from '../StoryCardGridItem';
 import { Button } from '../Button';
@@ -23,6 +22,8 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
     filterExpansion,
     setFilterExpansion,
     activeStoryCard,
+    sortMode,
+    toggleSortMode,
   } = useMissionSelection();
 
   const availableExpansionsForFilter = EXPANSIONS_METADATA.filter(e => {
@@ -42,7 +43,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
 
   return (
     <div className="space-y-3">
-      <div className="flex gap-3 flex-col sm:flex-row">
+      <div className="flex gap-3 flex-col sm:flex-row items-center">
         <input 
           type="text" 
           placeholder="Search Title or Intro..." 
@@ -61,6 +62,14 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
             <option key={e.id} value={e.id}>{e.label}</option>
           ))}
         </select>
+         <Button
+            onClick={toggleSortMode}
+            variant="secondary"
+            className="py-2 px-4 text-xs w-full sm:w-auto shrink-0"
+            title={`Currently sorted by ${sortMode}. Click to change.`}
+        >
+            Sort by {sortMode === 'expansion' ? 'Name' : 'Expansion'}
+        </Button>
       </div>
       
       <div className={`h-[350px] overflow-y-auto border ${listContainerBorder} rounded-lg ${listContainerBg} p-2 custom-scrollbar`}>

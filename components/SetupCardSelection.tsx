@@ -32,9 +32,11 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onBack, 
   const availableSetups = useMemo(() => {
     // Map expansion IDs to their index in the metadata for consistent sorting
     const expansionIndices = EXPANSIONS_METADATA.reduce((acc, exp, idx) => {
-        acc[exp.id] = idx;
+        (acc as Record<string, number>)[exp.id] = idx;
         return acc;
     }, {} as Record<string, number>);
+
+    const stripThe = (str: string) => str.replace(/^The\s+/i, '');
 
     return SETUP_CARDS
         .filter(setup => {
@@ -56,8 +58,8 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onBack, 
                 return idxA - idxB;
             }
             
-            // If both cards belong to the same expansion, maintain their relative order from the original data array
-            return SETUP_CARDS.indexOf(a) - SETUP_CARDS.indexOf(b);
+            // If both cards belong to the same expansion, sort alphabetically by label
+            return stripThe(a.label).localeCompare(stripThe(b.label));
         });
   }, [gameState.expansions, isSolo]);
 
