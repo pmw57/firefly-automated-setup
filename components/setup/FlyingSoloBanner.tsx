@@ -2,6 +2,7 @@ import React from 'react';
 import { SetupCardDef } from '../../types';
 import { ExpansionIcon } from '../ExpansionIcon';
 import { useTheme } from '../ThemeContext';
+import { PageReference } from '../PageReference';
 
 interface FlyingSoloBannerProps {
     isActive: boolean;
@@ -36,7 +37,10 @@ export const FlyingSoloBanner: React.FC<FlyingSoloBannerProps> = ({
             </div>
             <div className="flex-1">
                 <div className="flex justify-between items-start">
-                    <h3 className={`font-bold text-lg ${titleColor}`}>Flying Solo (10th)</h3>
+                    <div className="flex items-baseline gap-2">
+                        <h3 className={`font-bold text-lg ${titleColor}`}>Flying Solo (10th)</h3>
+                        <PageReference page={50} manual="10th AE" />
+                    </div>
                     
                     <div 
                         role="switch"

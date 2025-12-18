@@ -7,9 +7,10 @@ import { useTheme } from '../ThemeContext';
 interface ExpansionListSectionProps {
     expansions: Expansions;
     onToggle: (key: keyof Expansions) => void;
+    has10th: boolean;
 }
 
-export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expansions, onToggle }) => {
+export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expansions, onToggle, has10th }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     const labelColor = isDark ? 'text-zinc-400' : 'text-[#78350f]';
@@ -27,6 +28,8 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
                         themeColor={expansion.themeColor}
                         description={expansion.description}
                         onToggle={onToggle}
+                        has10th={has10th}
+                        page_10th={expansion.page_10th}
                     />
                 ))}
             </div>

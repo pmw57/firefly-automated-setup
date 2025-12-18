@@ -31,6 +31,7 @@ export interface ExpansionDef {
   description: string;
   themeColor: ThemeColor;
   icon: ExpansionIconConfig;
+  page_10th?: number;
 }
 
 export interface StepOverrides {
@@ -77,6 +78,8 @@ export interface SetupCardStep {
   id: string;
   title: string;
   overrides?: StepOverrides;
+  page?: number | string;
+  manual?: string;
 }
 
 // Stricter type for SetupCard IDs derived from constants
@@ -210,6 +213,8 @@ export interface Step {
   id: string;
   data?: SetupContentData;
   overrides?: StepOverrides;
+  page?: number | string;
+  manual?: string;
 }
 
 export interface DiceResult {

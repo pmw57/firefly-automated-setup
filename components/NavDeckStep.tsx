@@ -117,7 +117,7 @@ export const NavDeckStep = ({ step }: NavDeckStepProps): React.ReactElement => {
         )}
 
         {clearerSkies && (
-          <SpecialRuleBlock source="setupCard" title="Clearer Skies">
+          <SpecialRuleBlock source="setupCard" title="Clearer Skies" page={6} manual="C&P">
             <strong>Clearer Skies Rule:</strong> When initiating a Full Burn, roll a die. The result is how many sectors you may move before you start drawing Nav Cards.
             <br /><span className="text-xs italic opacity-75">Note: You may not move farther than your Drive Core's range, regardless of the die roll.</span>
           </SpecialRuleBlock>

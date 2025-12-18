@@ -104,7 +104,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'coachworks',
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { browncoatNavMode: true } },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { browncoatNavMode: true }, page: 22, manual: 'Core' },
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'D_BC_CAPITOL', title: `4. ${BASE_TITLES.D_BC_CAPITOL}`, overrides: { startingCredits: 12000 } },
       { id: 'C3', title: `5. ${BASE_TITLES.C3}`, overrides: { browncoatDraftMode: true } },
@@ -202,7 +202,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'tenth',
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { browncoatNavMode: true } },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { browncoatNavMode: true }, page: 54, manual: '10th AE'},
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'D_HAVEN_DRAFT', title: `4. ${BASE_TITLES.D_HAVEN_DRAFT}` },
       { id: 'C5', title: `5. ${BASE_TITLES.C5}` },

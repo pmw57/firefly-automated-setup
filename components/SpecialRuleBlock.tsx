@@ -1,14 +1,17 @@
 import React from 'react';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';
+import { PageReference } from './PageReference';
 
 interface SpecialRuleBlockProps {
   source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
   title?: string;
   children?: React.ReactNode;
+  page?: string | number;
+  manual?: string;
 }
 
-export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, title, children }) => {
+export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, title, children, page, manual }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -62,10 +65,15 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
       <div className="flex items-start mb-2">
         <span className="text-xl mr-3 mt-0.5 select-none opacity-80">{icons[source]}</span>
         <div className="flex-1">
-           <span className={cls("text-[10px] font-bold uppercase tracking-widest opacity-60 block mb-0.5", s.text)}>
-             {labels[source]}
-           </span>
-           {title && <h4 className={cls("font-bold text-base leading-tight", s.text)}>{title}</h4>}
+          <div className="flex justify-between items-baseline">
+            <div>
+              <span className={cls("text-[10px] font-bold uppercase tracking-widest opacity-60 block mb-0.5", s.text)}>
+                {labels[source]}
+              </span>
+              {title && <h4 className={cls("font-bold text-base leading-tight", s.text)}>{title}</h4>}
+            </div>
+            {page && <PageReference page={page} manual={manual} />}
+          </div>
         </div>
       </div>
       <div className={cls("text-sm leading-relaxed pl-1 opacity-90", s.text)}>

@@ -117,8 +117,8 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
       )}
 
       {isBlitz && (
-        <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-          <strong>The Blitz:</strong> "Double Dip" rules are in effect. Discard the top <strong>{baseDiscard * effectiveMultiplier} cards</strong> (2x Base) from each deck.
+        <SpecialRuleBlock source="setupCard" title="The Blitz: Double Dip" page={22} manual="Core">
+          "Double Dip" rules are in effect. Discard the top <strong>{baseDiscard * effectiveMultiplier} cards</strong> (2x Base) from each deck.
         </SpecialRuleBlock>
       )}
 

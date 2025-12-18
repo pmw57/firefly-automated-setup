@@ -1,6 +1,7 @@
 import React from 'react';
 import { GameState, DisgruntledDieOption } from '../../types';
 import { useTheme } from '../ThemeContext';
+import { PageReference } from '../PageReference';
 
 interface TenthRulesSectionProps {
     optionalRules: GameState['optionalRules'];
@@ -22,7 +23,10 @@ export const TenthRulesSection: React.FC<TenthRulesSectionProps> = ({
     const optionHover = isDark ? 'hover:bg-zinc-800/50' : 'hover:bg-gray-50';
     const textMain = isDark ? 'text-gray-200' : 'text-gray-900';
     const textSub = isDark ? 'text-gray-400' : 'text-gray-600';
-    const headerBorder = isDark ? 'border-zinc-700 text-amber-500' : 'border-gray-300 text-amber-800';
+
+    const headerBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
+    const headerText = isDark ? 'text-amber-500' : 'text-amber-800';
+
 
     const isGorrammitActive = optionalRules.disgruntledDie !== 'standard';
 
@@ -41,7 +45,10 @@ export const TenthRulesSection: React.FC<TenthRulesSectionProps> = ({
 
     return (
         <section>
-            <h3 className={`font-bold uppercase tracking-wide text-xs mb-4 pb-1 border-b ${headerBorder}`}>10th Anniversary Rules</h3>
+            <div className={`flex justify-between items-baseline mb-4 pb-1 border-b ${headerBorder}`}>
+                <h3 className={`font-bold uppercase tracking-wide text-xs ${headerText}`}>10th Anniversary Rules</h3>
+                <PageReference page={53} manual="10th AE" />
+            </div>
             
             <div 
                 role="checkbox"

@@ -5,6 +5,7 @@ import { MissionSelectionProvider } from './MissionSelectionContext';
 import { useMissionSelection } from '../hooks/useMissionSelection';
 import { useTheme } from './ThemeContext';
 import { ActionType } from '../state/actions';
+import { PageReference } from './PageReference';
 
 // Child Components
 import { StoryDossier } from './story/StoryDossier';
@@ -66,6 +67,10 @@ const MissionDossierStepContent = ({ onNext, onPrev, titleOverride }: { onNext: 
     }
   };
 
+  const hasTenth = gameState.expansions.tenth;
+  const storyPage = hasTenth ? 25 : 16;
+  const storyManual = hasTenth ? '10th AE' : 'Core';
+
   const containerBg = 'bg-[#faf8ef] dark:bg-zinc-900';
   const containerBorder = 'border-[#d6cbb0] dark:border-zinc-800';
   const headerBarBg = 'bg-[#5e1916] dark:bg-black/40';
@@ -89,9 +94,12 @@ const MissionDossierStepContent = ({ onNext, onPrev, titleOverride }: { onNext: 
         className={`${containerBg} backdrop-blur-md rounded-lg shadow-md border ${containerBorder} overflow-hidden transition-colors duration-300 scroll-mt-24`}
       >
         <div className={`${headerBarBg} p-4 flex justify-between items-center border-b ${headerBarBorder} transition-colors duration-300`}>
-          <h3 className={`font-bold text-lg font-western tracking-wider ${headerColor}`}>
-            {subStep === 1 ? 'Story Card' : 'Story Options'}
-          </h3>
+          <div className="flex items-baseline gap-2">
+            <h3 className={`font-bold text-lg font-western tracking-wider ${headerColor}`}>
+              {subStep === 1 ? 'Story Card' : 'Story Options'}
+            </h3>
+            {subStep === 1 && <PageReference page={storyPage} manual={storyManual} />}
+          </div>
           {enablePart2 && <span className={`text-xs uppercase tracking-widest ${badgeBg} ${badgeBorder} ${badgeText} px-2 py-1 rounded font-bold`}>Part {subStep} of 2</span>}
         </div>
         

@@ -1,4 +1,3 @@
-
 import { ExpansionDef } from '../types';
 
 export const SPRITE_SHEET_URL = "./expansion_sprites.png";
@@ -22,7 +21,8 @@ export const EXPANSIONS_METADATA: ExpansionDef[] = [
     label: "Breakin' Atmo",
     description: "Adds 50 new jobs and 25 new supply cards to the 'Verse.",
     themeColor: 'steelBlue',
-    icon: { type: 'sprite', value: '0% 0%' }
+    icon: { type: 'sprite', value: '0% 0%' },
+    page_10th: 28
   },
   // 2. Big Damn Heroes
   {
@@ -30,7 +30,8 @@ export const EXPANSIONS_METADATA: ExpansionDef[] = [
     label: "Big Damn Heroes",
     description: "Adds 5 new leaders and over 50 new cards. (Rule: Take $100 when proceeding while misbehaving).",
     themeColor: 'steelBlue',
-    icon: { type: 'sprite', value: '25% 0%' }
+    icon: { type: 'sprite', value: '25% 0%' },
+    page_10th: 28
   },
   // 3. Pirates & Bounty Hunters
   {
@@ -38,7 +39,8 @@ export const EXPANSIONS_METADATA: ExpansionDef[] = [
     label: "Pirates & Bounty Hunters",
     description: "Introduces piracy, bounties, and direct player conflict.",
     themeColor: 'black',
-    icon: { type: 'sprite', value: '50% 0%' }
+    icon: { type: 'sprite', value: '50% 0%' },
+    page_10th: 29
   },
   // 4. Blue Sun
   {
@@ -46,7 +48,8 @@ export const EXPANSIONS_METADATA: ExpansionDef[] = [
     label: "Blue Sun",
     description: "Expands the 'Verse with the Western Rim (Lord Harrow, Mr. Universe) and Reaver mechanics.",
     themeColor: 'darkSlateBlue',
-    icon: { type: 'sprite', value: '75% 0%' }
+    icon: { type: 'sprite', value: '75% 0%' },
+    page_10th: 36
   },
   // 5. Kalidasa
   {
@@ -54,7 +57,8 @@ export const EXPANSIONS_METADATA: ExpansionDef[] = [
     label: "Kalidasa",
     description: "Expands the 'Verse with the Eastern Rim (Fanty & Mingo, Magistrate Higgins) and the Operative.",
     themeColor: 'deepBrown',
-    icon: { type: 'sprite', value: '100% 0%' }
+    icon: { type: 'sprite', value: '100% 0%' },
+    page_10th: 42
   },
 
   // Row 2 (Y = 25% in a 5-row grid)
@@ -64,7 +68,8 @@ export const EXPANSIONS_METADATA: ExpansionDef[] = [
     label: "Coachworks",
     description: "Adds the Jetwash and Esmerelda ships, plus new setup cards.",
     themeColor: 'rebeccaPurple',
-    icon: { type: 'sprite', value: '0% 25%' }
+    icon: { type: 'sprite', value: '0% 25%' },
+    page_10th: 47
   },
   // 2. Crime & Punishment
   {
@@ -72,7 +77,8 @@ export const EXPANSIONS_METADATA: ExpansionDef[] = [
     label: "Crime & Punishment",
     description: "Increases the risks of misbehaving with new Alliance Alert cards and severe penalties.",
     themeColor: 'cordovan',
-    icon: { type: 'sprite', value: '25% 25%' }
+    icon: { type: 'sprite', value: '25% 25%' },
+    page_10th: 49
   },
   // 3. Still Flying
   {
@@ -80,7 +86,8 @@ export const EXPANSIONS_METADATA: ExpansionDef[] = [
     label: "Still Flying",
     description: "Adds the R-Class ship, new story cards, and new contacts.",
     themeColor: 'darkOliveGreen',
-    icon: { type: 'sprite', value: '50% 25%' }
+    icon: { type: 'sprite', value: '50% 25%' },
+    page_10th: 50
   },
   // 4. 10th Anniversary
   {
@@ -88,7 +95,8 @@ export const EXPANSIONS_METADATA: ExpansionDef[] = [
     label: "10th Anniversary",
     description: "Adds 50 extra cards, Drifters, and 'Big Money' mechanics.",
     themeColor: 'saddleBrown',
-    icon: { type: 'sprite', value: '75% 25%' }
+    icon: { type: 'sprite', value: '75% 25%' },
+    page_10th: 53
   },
   // 5. Black Market
   {

@@ -1,18 +1,21 @@
 import React from 'react';
 import { useTheme } from '../ThemeContext';
+import { PageReference } from '../PageReference';
 
 interface CampaignConfigSectionProps {
     isCampaign: boolean;
     storiesCompleted: number;
     onToggle: () => void;
     onStoriesChange: (count: number) => void;
+    has10th: boolean;
 }
 
 export const CampaignConfigSection: React.FC<CampaignConfigSectionProps> = ({
     isCampaign,
     storiesCompleted,
     onToggle,
-    onStoriesChange
+    onStoriesChange,
+    has10th
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -26,7 +29,10 @@ export const CampaignConfigSection: React.FC<CampaignConfigSectionProps> = ({
 
     return (
         <div className="mb-8 relative z-10">
-            <label className={`block font-bold mb-2 uppercase tracking-wide text-xs ${labelColor}`}>Campaign Mode</label>
+            <div className="flex justify-between items-baseline mb-2">
+                <label className={`block font-bold uppercase tracking-wide text-xs ${labelColor}`}>Campaign Mode</label>
+                {has10th && <PageReference page={56} manual="10th AE" />}
+            </div>
             <div className={`${isDark ? 'bg-black/30' : 'bg-white/50'} p-4 rounded-lg border ${containerBorder} shadow-inner`}>
                 <div 
                     onClick={onToggle}
