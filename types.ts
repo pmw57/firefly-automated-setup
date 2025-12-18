@@ -269,7 +269,7 @@ export interface ResourceDetails {
   totalCredits: number;
   bonusCredits: number;
   noFuelParts?: boolean;
-  customFuel?: number;
+  customStartingFuel?: number;
   conflict?: ResourceConflict;
 }
 

@@ -93,7 +93,7 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
         </div>
         
         <div className="flex-1 mr-4">
-          <div className="flex items-baseline gap-2">
+          <div className="flex flex-wrap items-baseline gap-x-2">
             <h3 className={cls("font-bold text-lg leading-tight transition-colors duration-300", titleColor)}>
               {label}
             </h3>
