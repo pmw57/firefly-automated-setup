@@ -139,18 +139,15 @@
     </div>
     
     <script>
-      // Failsafe for stuck PWA cache
-      const fallbackTimeout = setTimeout(() => {
+      // Failsafe for stuck PWA cache.
+      // The timeout is stored on the window object so it can be cleared by the main
+      // application script (index.tsx) once React has successfully mounted.
+      window.fallbackTimeout = setTimeout(() => {
         const fallback = document.getElementById('loader-fallback');
         if (fallback) {
           fallback.style.display = 'block';
         }
       }, 5000);
-
-      // Main app will clear this timeout if it loads
-      window.addEventListener('load', () => {
-        clearTimeout(fallbackTimeout);
-      });
 
       const resetButton = document.getElementById('reset-button');
       if (resetButton) {
