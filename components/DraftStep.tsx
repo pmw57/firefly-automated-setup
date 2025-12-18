@@ -158,7 +158,8 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
 
   const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
-  const { optionalShipUpgrades } = gameState.optionalRules || {};
+  const { optionalRules } = gameState;
+  const { optionalShipUpgrades, resolveConflictsManually } = optionalRules;
 
   useEffect(() => {
     if (isSolo && !draftState) {
@@ -190,7 +191,7 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
   const isHavenDraft = step.id.includes(STEP_IDS.D_HAVEN_DRAFT);
   const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
   const isHeroesAndMisfits = activeStoryCard.title === STORY_TITLES.HEROES_AND_MISFITS;
-  const isRacingPaleHorse = activeStoryCard.title === STORY_TITLES.RACING_A_PALE_HORSE;
+  const isRacingAPaleHorse = activeStoryCard.title === STORY_TITLES.RACING_A_PALE_HORSE;
   const isPersephoneStart = activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' && !isHeroesCustomSetup;
   const isLondiniumStart = hasFlag(activeStoryCard.setupConfig, 'startAtLondinium');
   const startOutsideAllianceSpace = hasFlag(activeStoryCard.setupConfig, 'startOutsideAllianceSpace');
@@ -199,21 +200,48 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
   const addBorderHavens = hasFlag(activeStoryCard.setupConfig, 'addBorderSpaceHavens');
   const isBrowncoatDraft = !!overrides.browncoatDraftMode;
   const isWantedLeaderMode = !!overrides.wantedLeaderMode;
+  
+  // Conditionally show warning for Browncoat + Heroes & Misfits interaction
+  // based on the final starting credits calculated in the previous step.
+  // The Serenity costs $4800; if starting capitol is less than that, you end up with $0.
+  const showBrowncoatHeroesWarning = isBrowncoatDraft && isHeroesAndMisfits && gameState.finalStartingCredits != null && gameState.finalStartingCredits < 4800;
 
   let specialStartSector: string | null = null;
   if (startAtSector) specialStartSector = startAtSector;
   else if (isPersephoneStart) specialStartSector = 'Persephone';
   else if (isLondiniumStart) specialStartSector = 'Londinium';
 
+  let resolvedHavenDraft = isHavenDraft;
+  let conflictMessage: React.ReactNode = null;
+  
+  if (isHavenDraft && specialStartSector) {
+    if (resolveConflictsManually) {
+      // Manual selection is not stored globally yet, need to implement that.
+      // For now, assume a default or let's just create a placeholder UI.
+      // THIS NEEDS A REAL FIX
+      conflictMessage = "Conflict: Haven placement vs. Fixed start. Manual selection needed.";
+    } else {
+      // Default to story priority
+      resolvedHavenDraft = false;
+      conflictMessage = <><strong>Story Priority:</strong> Ships start at <strong>{specialStartSector}</strong>, overriding Haven placement rules.</>;
+    }
+  }
+
+
   const introText = isDark ? 'text-gray-400' : 'text-gray-600';
   const stepBadgeBlueBg = isDark ? 'bg-blue-900/50 text-blue-200' : 'bg-blue-100 text-blue-800';
   const stepBadgeAmberBg = isDark ? 'bg-amber-900/50 text-amber-200' : 'bg-amber-100 text-amber-800';
-  const warningConflictBg = isDark ? 'bg-red-900/30 border-red-800 text-red-200' : 'bg-red-50 border-red-200 text-red-800';
 
   return (
     <>
       {!isSolo && <p className={cls("mb-4 italic", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>}
       
+      {conflictMessage && (
+        <SpecialRuleBlock source="info" title="Conflict Resolved">
+          {conflictMessage}
+        </SpecialRuleBlock>
+      )}
+
       {isWantedLeaderMode && (
         <SpecialRuleBlock source="setupCard" title="The Heat Is On">
           Choose Ships & Leaders normally, but <strong>each Leader begins play with a Wanted token</strong>.
@@ -235,7 +263,7 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
             />
           )}
           
-          {isBrowncoatDraft && isHeroesAndMisfits && (
+          {showBrowncoatHeroesWarning && (
             <SpecialRuleBlock source="warning" title="Story & Setup Card Interaction">
               <p className="mb-2">
                 The <strong>"{activeStoryCard.title}"</strong> story provides a specific starting Ship & Crew, which overrides the standard "buy" phase of <strong>"The Browncoat Way"</strong>.
@@ -276,7 +304,7 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
              </SpecialRuleBlock>
           )}
 
-          {isRacingPaleHorse && (
+          {isRacingAPaleHorse && (
              <SpecialRuleBlock source="story" title="Story Setup: Haven">
                 <strong>Place your Haven at Deadwood (Blue Sun).</strong>
                 <br/>If you end your turn at your Haven, remove Disgruntled from all Crew.
@@ -305,7 +333,7 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
             <DraftOrderPanel 
                 draftOrder={draftState.draftOrder}
                 isSolo={isSolo}
-                isHavenDraft={isHavenDraft}
+                isHavenDraft={resolvedHavenDraft}
                 isBrowncoatDraft={isBrowncoatDraft}
                 stepBadgeClass={stepBadgeBlueBg}
             />
@@ -313,7 +341,7 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
             <PlacementOrderPanel 
                 placementOrder={draftState.placementOrder}
                 isSolo={isSolo}
-                isHavenDraft={isHavenDraft}
+                isHavenDraft={resolvedHavenDraft}
                 isBrowncoatDraft={isBrowncoatDraft}
                 specialStartSector={specialStartSector}
                 stepBadgeClass={stepBadgeAmberBg}
@@ -335,11 +363,6 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
                      <li>Remaining players place their Havens in <strong>reverse order</strong>.</li>
                      <li><strong>Players' ships start at their Havens.</strong></li>
                  </ul>
-                 {activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' && (
-                     <div className={cls("mt-3 p-2 rounded font-bold border text-sm", warningConflictBg)}>
-                         ⚠️ CONFLICT: Story Card override active. Ships must start at Persephone despite Haven rules!
-                     </div>
-                 )}
             </SpecialRuleBlock>
           )}
 

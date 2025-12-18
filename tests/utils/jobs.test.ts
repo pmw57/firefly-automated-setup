@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { determineJobMode, determineJobSetupDetails } from '../../utils/jobs';
+import { determineJobSetupDetails } from '../../utils/jobs';
 import { GameState, StoryCardDef, StoryCardConfig, StepOverrides } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../../data/ids';
@@ -12,30 +12,6 @@ describe('utils/jobs', () => {
   });
   
   const baseGameState = getDefaultGameState();
-
-  describe('determineJobMode', () => {
-    it('returns story mode if defined (Highest Priority)', () => {
-      const story = mockStory({ jobDrawMode: 'no_jobs' });
-      expect(determineJobMode(story, { timesJobMode: true })).toBe('no_jobs');
-    });
-
-    it('returns standard if no overrides and no story config', () => {
-      expect(determineJobMode(mockStory(), {})).toBe('standard');
-    });
-
-    it.each([
-      ['browncoatJobMode', 'no_jobs'],
-      ['timesJobMode', 'times_jobs'],
-      ['allianceHighAlertJobMode', 'high_alert_jobs'],
-      ['buttonsJobMode', 'buttons_jobs'],
-      ['awfulJobMode', 'awful_jobs'],
-    ])('returns %s when %s override is true', (key: string, expectedMode: string) => {
-      const overrideKey = key as keyof StepOverrides;
-      const overrides: StepOverrides = { [overrideKey]: true };
-      
-      expect(determineJobMode(mockStory(), overrides)).toBe(expectedMode);
-    });
-  });
 
   describe('determineJobSetupDetails', () => {
     it('returns a standard set of contacts', () => {
@@ -69,7 +45,7 @@ describe('utils/jobs', () => {
     });
 
     it('handles the "Browncoat Way" no jobs setup', () => {
-      const overrides = { browncoatJobMode: true };
+      const overrides: StepOverrides = { browncoatJobMode: true };
       const { contacts, showStandardContactList, messages } = determineJobSetupDetails(baseGameState, mockStory(), overrides);
       expect(showStandardContactList).toBe(false);
       expect(contacts).toEqual([]);

@@ -39,10 +39,12 @@ export const getDefaultGameState = (): GameState => {
         optionalRules: {
             disgruntledDie: 'standard',
             optionalShipUpgrades: false,
+            resolveConflictsManually: false,
         },
         expansions: allExpansions,
         isCampaign: false,
         campaignStoriesCompleted: 0,
+        finalStartingCredits: null,
     };
 };
 
@@ -226,6 +228,12 @@ export function gameReducer(state: GameState, action: Action): GameState {
       
     case ActionType.TOGGLE_SHIP_UPGRADES:
       return { ...state, optionalRules: { ...state.optionalRules, optionalShipUpgrades: !state.optionalRules.optionalShipUpgrades } };
+    
+    case ActionType.TOGGLE_CONFLICT_RESOLUTION:
+      return { ...state, optionalRules: { ...state.optionalRules, resolveConflictsManually: !state.optionalRules.resolveConflictsManually } };
+
+    case ActionType.SET_FINAL_STARTING_CREDITS:
+      return { ...state, finalStartingCredits: action.payload };
       
     case ActionType.TOGGLE_SOLO_OPTION:
       return { ...state, soloOptions: { ...state.soloOptions, [action.payload]: !state.soloOptions[action.payload] } };

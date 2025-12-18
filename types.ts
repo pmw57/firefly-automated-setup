@@ -187,6 +187,7 @@ export type DisgruntledDieOption = 'standard' | 'disgruntle' | 'auto_fail' | 'su
 export interface OptionalRules {
     disgruntledDie: DisgruntledDieOption;
     optionalShipUpgrades: boolean;
+    resolveConflictsManually: boolean;
 }
 
 export interface GameState {
@@ -206,6 +207,7 @@ export interface GameState {
   expansions: Expansions;
   isCampaign: boolean;
   campaignStoriesCompleted: number;
+  finalStartingCredits: number | null;
 }
 
 export interface Step {
@@ -236,6 +238,11 @@ export interface JobSetupMessage {
   content: React.ReactNode;
 }
 
+export interface JobConflict {
+  story: { value: string; label: string };
+  setupCard: { value: string; label: string };
+}
+
 export interface JobSetupDetails {
   contacts: string[];
   cardsToDraw?: number;
@@ -243,6 +250,7 @@ export interface JobSetupDetails {
   messages: JobSetupMessage[];
   showStandardContactList: boolean;
   totalJobCards: number;
+  conflict?: JobConflict;
 }
 
 export interface NavDeckSetupDetails {
@@ -253,11 +261,17 @@ export interface NavDeckSetupDetails {
   isHighPlayerCount: boolean;
 }
 
+export interface ResourceConflict {
+  story: { value: number; label: string };
+  setupCard: { value: number; label: string };
+}
+
 export interface ResourceDetails {
   totalCredits: number;
   bonusCredits: number;
   noFuelParts?: boolean;
   customFuel?: number;
+  conflict?: ResourceConflict;
 }
 
 export interface PrimeDetails {
