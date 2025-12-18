@@ -1,4 +1,3 @@
-
 export const SETUP_CARD_IDS = {
   STANDARD: 'Standard',
   FLYING_SOLO: 'FlyingSolo',

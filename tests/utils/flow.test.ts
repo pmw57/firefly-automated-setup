@@ -54,6 +54,7 @@ describe('utils/flow', () => {
       expect(flowIds).toEqual([
         STEP_IDS.SETUP_CAPTAIN_EXPANSIONS,
         STEP_IDS.SETUP_CARD_SELECTION,
+        STEP_IDS.SETUP_OPTIONAL_RULES,
         STEP_IDS.CORE_MISSION,
         STEP_IDS.CORE_NAV_DECKS,
         STEP_IDS.CORE_ALLIANCE_REAVER,
