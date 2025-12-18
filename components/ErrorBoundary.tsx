@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { ErrorInfo, ReactNode } from 'react';
 import { ErrorFallback } from './ErrorFallback';
 
 interface ErrorBoundaryProps {
@@ -12,10 +12,10 @@ interface ErrorBoundaryState {
 
 /**
  * ErrorBoundary class component to catch rendering errors in its children.
- * Directly extending Component and using class fields for state helps resolve TypeScript resolution issues
+ * Directly extending React.Component and using class fields for state helps resolve TypeScript resolution issues
  * that can occur with class-based components in some configurations.
  */
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   // Fix for Error on line 21: Property 'state' does not exist on type 'ErrorBoundary'.
   // Using a class field for state initialization ensures the property is recognized by the compiler on the instance.
   public state: ErrorBoundaryState = {
