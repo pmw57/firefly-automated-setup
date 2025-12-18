@@ -29,13 +29,11 @@ import { OptionalRulesSelection } from './OptionalRulesSelection';
 
 interface StepContentProps {
   step: Step;
-  stepIndex: number;
   onNext: () => void;
   onPrev: () => void;
 }
 
 // Registry for Core Step Components
-// Excludes MissionDossierStep because it has a different prop signature
 const CORE_STEP_COMPONENTS: Record<string, React.FC<{ step: Step }>> = {
   [STEP_IDS.CORE_NAV_DECKS]: NavDeckStep,
   [STEP_IDS.CORE_ALLIANCE_REAVER]: AllianceReaverStep,
@@ -45,7 +43,7 @@ const CORE_STEP_COMPONENTS: Record<string, React.FC<{ step: Step }>> = {
   [STEP_IDS.CORE_PRIME_PUMP]: PrimePumpStep,
 };
 
-export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProps): React.ReactElement => {
+export const StepContent = ({ step, onNext, onPrev }: StepContentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const stepId = step.id;
@@ -163,7 +161,9 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
   // Core and Dynamic steps use the standard StepContent wrapper.
   const isMissionDossier = step.id === STEP_IDS.CORE_MISSION || step.id === STEP_IDS.D_FIRST_GOAL;
   const showNav = !isMissionDossier;
-
+  
+  const displayTitle = step.data?.title || step.id;
+  
   const borderTop = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
   
   const headerBg = isSpecial
@@ -171,7 +171,6 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
     : 'bg-firefly-saddleBrown';
 
   const headerColor = 'text-white';
-  const indexColor = 'text-white/70';
   const tagColor = isSpecial
     ? (isDark ? 'text-green-300' : 'text-green-200')
     : (isDark ? 'text-amber-300' : 'text-amber-200');
@@ -180,12 +179,9 @@ export const StepContent = ({ step, stepIndex, onNext, onPrev }: StepContentProp
     <div className="animate-fade-in-up">
       <div className="flex flex-wrap items-start justify-between mb-6 gap-4">
         <h2 className={cls("text-2xl font-bold font-western flex-1 min-w-[200px] transition-colors duration-300 flex justify-between items-center p-3 rounded-lg shadow-md", headerBg, headerColor)}>
-          <div className="flex items-center">
-            <span className={cls("mr-2", indexColor)}>{stepIndex + 1}.</span>
-            <span>{step.data?.title || step.id}</span>
-          </div>
+          <span>{displayTitle}</span>
           <span className={cls("text-xs font-bold uppercase tracking-wider", tagColor)}>
-              {isSpecial ? 'Special' : 'Current'}
+              {isSpecial ? 'Special' : 'Standard'}
           </span>
         </h2>
         <div className="w-full lg:w-1/3 shrink-0 flex">

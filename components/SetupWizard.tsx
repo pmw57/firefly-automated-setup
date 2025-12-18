@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useGameState } from '../hooks/useGameState';
 import { useSetupFlow } from '../hooks/useSetupFlow';
 import { StepContent } from './StepContent';
@@ -22,8 +22,6 @@ const SetupWizard = (): React.ReactElement | null => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const setupStepCount = useMemo(() => flow.filter(s => s.type === 'setup').length, [flow]);
-  
   // Load wizard-specific state (step index) from local storage on mount
   useEffect(() => {
     const savedStep = localStorage.getItem(WIZARD_STEP_STORAGE_KEY);
@@ -102,10 +100,6 @@ const SetupWizard = (): React.ReactElement | null => {
   
   const isFinal = currentStep.type === 'final';
 
-  // 0-based indexing for internal state logic
-  // but for UI, the StepContent will handle display incrementing
-  const displayStepIndex = currentStep.type === 'setup' ? 0 : currentStepIndex - setupStepCount;
-
   return (
     <div className="max-w-2xl mx-auto" key={resetKey}>
       <WizardHeader gameState={gameState} onReset={performReset} flow={flow} currentStepIndex={currentStepIndex} />
@@ -128,7 +122,6 @@ const SetupWizard = (): React.ReactElement | null => {
       ) : (
         <StepContent 
           step={currentStep} 
-          stepIndex={displayStepIndex}
           onNext={handleNext} 
           onPrev={handlePrev}
         />

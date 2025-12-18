@@ -54,19 +54,28 @@ export interface StepOverrides {
   flyingSoloNavMode?: boolean;
 }
 
+// The final data object for a step in the flow.
 export interface SetupContentData {
   type: 'core' | 'dynamic' | 'setup';
-  id?: string;        // For core steps
-  elementId?: string; // For dynamic steps
+  id?: string;
+  elementId?: string;
   title: string;
 }
 
+// A template for step data stored in `data/steps.ts`.
+export interface SetupContentTemplate {
+  type: 'core' | 'dynamic' | 'setup';
+  id?: string;
+  elementId?: string;
+}
+
 export interface ContentMap {
-  [key: string]: SetupContentData;
+  [key: string]: SetupContentTemplate;
 }
 
 export interface SetupCardStep {
   id: string;
+  title: string;
   overrides?: StepOverrides;
 }
 
