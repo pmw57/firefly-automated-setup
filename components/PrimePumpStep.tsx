@@ -21,7 +21,6 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
   const soloCrewDraft = hasFlag(activeStoryCard?.setupConfig, 'soloCrewDraft');
   
   const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
-  const isSlayingTheDragon = activeStoryCard?.title === STORY_TITLES.SLAYING_THE_DRAGON;
   const { isCampaign } = gameState;
   
   const {
@@ -30,6 +29,7 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
     finalCount,
     isHighSupplyVolume,
     isBlitz,
+    isSlayingTheDragon
   } = React.useMemo(() => 
     getPrimeDetails(gameState, overrides),
     [gameState, overrides]
