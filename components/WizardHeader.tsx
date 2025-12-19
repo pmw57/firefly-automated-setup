@@ -50,7 +50,7 @@ export const WizardHeader = ({ gameState, onReset, flow, currentStepIndex }: Wiz
     const stickyHeaderBg = isDark ? 'bg-zinc-900/90 border-zinc-800' : 'bg-[#faf8ef]/95 border-[#d6cbb0]';
 
     return (
-        <div className={`${stickyHeaderBg} backdrop-blur-sm p-4 rounded-lg mb-6 shadow-sm border flex justify-between items-center transition-all duration-300 sticky top-0 z-30`}>
+        <div className={`${stickyHeaderBg} backdrop-blur-sm p-4 rounded-lg mb-6 shadow-sm border flex justify-between items-center transition-all duration-300 sticky top-0 z-30 min-h-[88px]`}>
             {/* UX Improvement: Redesigned header for clarity and better responsiveness */}
             <div className="flex-1 min-w-0"> {/* Use min-w-0 to allow truncation in flexbox */}
                 <div className="flex items-baseline gap-x-2 truncate">
@@ -64,7 +64,7 @@ export const WizardHeader = ({ gameState, onReset, flow, currentStepIndex }: Wiz
 
                 {showStoryCard && gameState.selectedStoryCard && (
                     <div className="flex items-baseline gap-x-2 truncate mt-1">
-                        <span className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-gray-400' : 'text-[#78350f]'}`}>
+                        <span className={`text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-[#78350f]'}`}>
                             Story:
                         </span>
                         <span className={`font-bold text-sm md:text-base leading-tight truncate ${isDark ? 'text-amber-200' : 'text-[#b45309]'}`}>

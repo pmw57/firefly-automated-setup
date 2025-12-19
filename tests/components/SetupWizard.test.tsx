@@ -86,28 +86,19 @@ describe('components/SetupWizard', () => {
     render(<SetupWizard />);
     
     // Go to Solo mode to enable all options.
-    // We must re-query for the button after each click because the component re-renders
-    // and the old button reference becomes stale. We also wait for the text to update.
-    fireEvent.click(await screen.findByRole('button', { name: /Decrease player count/i }));
-    await screen.findByText('3'); // Wait for re-render
+    fireEvent.click(screen.getByRole('button', { name: /Decrease player count/i }));
+    await screen.findByText('3');
+    fireEvent.click(screen.getByRole('button', { name: /Decrease player count/i }));
+    await screen.findByText('2');
+    fireEvent.click(screen.getByRole('button', { name: /Decrease player count/i }));
     
-    fireEvent.click(await screen.findByRole('button', { name: /Decrease player count/i }));
-    await screen.findByText('2'); // Wait for re-render
-    
-    fireEvent.click(await screen.findByRole('button', { name: /Decrease player count/i }));
-    await screen.findByText('1'); // Wait for re-render
-
-    // Use a robust regex matcher to wait for the final state update to render.
     expect(await screen.findByText(/\(Solo Mode\)/)).toBeInTheDocument();
 
     // Navigate to Optional Rules step
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: /Next: Choose Setup Card/i }));
-    });
-    await act(async () => {
-      // It's flying solo by default in solo mode with 10th
-      fireEvent.click(await screen.findByRole('button', { name: /Next: Optional Rules/i }));
-    });
+    fireEvent.click(screen.getByRole('button', { name: /Next: Choose Setup Card/i }));
+
+    const nextButton = await screen.findByRole('button', { name: /Next: Optional Rules/i });
+    fireEvent.click(nextButton);
     
     expect(await screen.findByRole('heading', { name: /Optional Rules/i })).toBeInTheDocument();
     
@@ -120,7 +111,9 @@ describe('components/SetupWizard', () => {
     const shipUpgradesContainer = screen.getByText('Optional Ship Upgrades').closest('div[role="checkbox"]');
     expect(shipUpgradesContainer?.querySelector('svg')).toBeNull(); // Not checked
     fireEvent.click(shipUpgradesContainer!);
-    await screen.findByText('Optional Ship Upgrades'); // wait for re-render
+    // After clicking, the component re-renders. We need to wait for the change.
+    // A simple way is to re-find the element or text that is constant.
+    await screen.findByText('Optional Ship Upgrades');
     expect(shipUpgradesContainer?.querySelector('svg')).toBeInTheDocument(); // Checked
 
     // Interact with a solo checkbox

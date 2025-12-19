@@ -7,17 +7,26 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   fullWidth?: boolean;
 };
 
+const LoadingSpinner = () => (
+  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+  </svg>
+);
+
 export const Button = ({ 
   children, 
   variant = 'primary', 
   fullWidth = false, 
   className = '',
+  disabled,
   ...props 
 }: ButtonProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  const baseStyle = "px-6 py-3 rounded-lg font-bold transition duration-300 ease-in-out transform active:scale-95 shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-50 border-b-4 active:border-b-0 active:translate-y-1";
+  const baseStyle = "px-6 py-3 rounded-lg font-bold transition duration-300 ease-in-out transform shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-50 border-b-4 flex items-center justify-center gap-2";
+  const activeStyle = "active:scale-95 active:border-b-0 active:translate-y-1";
   
   let variantStyle = "";
   
@@ -49,11 +58,22 @@ export const Button = ({
     }
   }
 
+  const disabledStyle = "opacity-60 cursor-not-allowed";
+
   return (
     <button 
-      className={cls(baseStyle, variantStyle, fullWidth && "w-full", className)}
+      className={cls(
+        baseStyle, 
+        variantStyle, 
+        fullWidth && "w-full", 
+        !disabled && activeStyle,
+        disabled && disabledStyle,
+        className
+      )}
+      disabled={disabled}
       {...props}
     >
+      {disabled && <LoadingSpinner />}
       {children}
     </button>
   );

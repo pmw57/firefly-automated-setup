@@ -18,6 +18,7 @@ const SetupWizard = (): React.ReactElement | null => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isWizardInitialized, setIsWizardInitialized] = useState(false);
   const [resetKey, setResetKey] = useState(0);
+  const [isNavigating, setIsNavigating] = useState(false); // UX: Loading state for navigation
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -50,25 +51,26 @@ const SetupWizard = (): React.ReactElement | null => {
     }
   }, [flow, currentStepIndex]);
 
-  const handleNext = useCallback(() => {
-    setCurrentStepIndex(prev => {
-        const nextIndex = Math.min(prev + 1, flow.length - 1);
-        if (nextIndex !== prev) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        return nextIndex;
-    });
+  const handleNavigation = useCallback((direction: 'next' | 'prev') => {
+    setIsNavigating(true);
+    // Use a short timeout to allow the loading state to render before the (potentially slow) step change.
+    setTimeout(() => {
+        setCurrentStepIndex(prev => {
+            const nextIndex = direction === 'next'
+                ? Math.min(prev + 1, flow.length - 1)
+                : Math.max(prev - 1, 0);
+            
+            if (nextIndex !== prev) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            return nextIndex;
+        });
+        setIsNavigating(false);
+    }, 50); // A small delay is sufficient
   }, [flow.length]);
 
-  const handlePrev = useCallback(() => {
-    setCurrentStepIndex(prev => {
-        const nextIndex = Math.max(prev - 1, 0);
-        if (nextIndex !== prev) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        return nextIndex;
-    });
-  }, []);
+  const handleNext = useCallback(() => handleNavigation('next'), [handleNavigation]);
+  const handlePrev = useCallback(() => handleNavigation('prev'), [handleNavigation]);
 
   const performReset = useCallback(() => {
     // 1. Reset core game state in reducer
@@ -124,6 +126,7 @@ const SetupWizard = (): React.ReactElement | null => {
           step={currentStep} 
           onNext={handleNext} 
           onPrev={handlePrev}
+          isNavigating={isNavigating}
         />
       )}
     </div>
