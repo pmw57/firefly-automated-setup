@@ -22,7 +22,7 @@ const ActionText: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) => {
   const { state: gameState } = useGameState();
-  const overrides = step.overrides || {};
+  const { allianceMode } = step.overrides || {};
 
   const activeStoryCard = React.useMemo(() => 
     STORY_CARDS.find(c => c.title === gameState.selectedStoryCard),
@@ -59,11 +59,13 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) 
 
   return (
     <div className="space-y-4">
-      {overrides.noAlertTokens ? (
+      {allianceMode === 'no_alerts' && (
         <SpecialRuleBlock source="setupCard" title="Setup Card Override">
           <strong>Safe Skies:</strong> Do not use Reaver or Alliance Alert Tokens for this setup card.
         </SpecialRuleBlock>
-      ) : overrides.awfulCrowdedAllianceMode && (
+      )}
+      
+      {allianceMode === 'awful_crowded' && (
         <SpecialRuleBlock source="setupCard" title="Setup Card Override">
           <strong>Awful Crowded:</strong>
           <ul className="list-disc ml-4 space-y-1 mt-1">
@@ -128,7 +130,7 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) 
           <div className={`p-3 rounded border ${allianceBoxBg}`}>
             <strong className={`block text-sm uppercase mb-1 ${allianceTitle}`}>Alliance Cruiser</strong>
             <p className={`text-sm ${allianceText}`}>
-              {overrides.extraCruisers
+              {allianceMode === 'extra_cruisers'
                 ? <span>Place a Cruiser at <strong>Regulus</strong> AND <strong>Persephone</strong>.</span>
                 : <span>Place the Cruiser at <strong>Londinium</strong>.</span>}
             </p>

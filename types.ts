@@ -48,18 +48,19 @@ export type JobMode =
 
 export type NavMode = 'standard' | 'browncoat' | 'rim' | 'flying_solo' | 'clearer_skies';
 export type PrimeMode = 'standard' | 'blitz';
+export type DraftMode = 'standard' | 'browncoat';
+export type LeaderSetupMode = 'standard' | 'wanted';
+export type AllianceSetupMode = 'standard' | 'awful_crowded' | 'no_alerts' | 'extra_cruisers';
 
 export interface StepOverrides {
   startingCredits?: number;
-  browncoatDraftMode?: boolean;
   forceReshuffle?: boolean;
-  extraCruisers?: boolean;
-  wantedLeaderMode?: boolean;
-  awfulCrowdedAllianceMode?: boolean;
-  noAlertTokens?: boolean;
   jobMode?: JobMode;
   navMode?: NavMode;
   primeMode?: PrimeMode;
+  draftMode?: DraftMode;
+  leaderSetup?: LeaderSetupMode;
+  allianceMode?: AllianceSetupMode;
 }
 
 // --- New Effect System Types ---

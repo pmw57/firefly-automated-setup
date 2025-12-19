@@ -197,9 +197,10 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
   const startOutsideAllianceSpace = hasFlag(activeStoryCard.setupConfig, 'startOutsideAllianceSpace');
   const startAtSector = activeStoryCard.setupConfig?.startAtSector;
   const allianceSpaceOffLimits = hasFlag(activeStoryCard.setupConfig, 'allianceSpaceOffLimits');
+  // FIX: Corrected typo in StoryFlag from 'addBorderHavens' to 'addBorderSpaceHavens'.
   const addBorderHavens = hasFlag(activeStoryCard.setupConfig, 'addBorderSpaceHavens');
-  const isBrowncoatDraft = !!overrides.browncoatDraftMode;
-  const isWantedLeaderMode = !!overrides.wantedLeaderMode;
+  const isBrowncoatDraft = overrides.draftMode === 'browncoat';
+  const isWantedLeaderMode = overrides.leaderSetup === 'wanted';
   
   // Conditionally show warning for Browncoat + Heroes & Misfits interaction
   // based on the final starting credits calculated in the previous step.

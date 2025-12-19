@@ -54,7 +54,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     steps: [
       { id: 'C1', title: `1. ${BASE_TITLES.C1}`, overrides: { forceReshuffle: true } },
       { id: 'C3', title: `2. ${BASE_TITLES.C3}` },
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}`, overrides: { awfulCrowdedAllianceMode: true } },
+      { id: 'C2', title: `3. ${BASE_TITLES.C2}`, overrides: { allianceMode: 'awful_crowded' } },
       { id: 'C4', title: `4. ${BASE_TITLES.C4}` },
       { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
       { id: 'C6', title: `6. ${BASE_TITLES.C6}`, overrides: { jobMode: 'awful_jobs' } },
@@ -112,7 +112,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'browncoat' }, page: 22, manual: 'Core' },
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'D_BC_CAPITOL', title: `4. ${BASE_TITLES.D_BC_CAPITOL}` },
-      { id: 'C3', title: `5. ${BASE_TITLES.C3}`, overrides: { browncoatDraftMode: true } },
+      { id: 'C3', title: `5. ${BASE_TITLES.C3}`, overrides: { draftMode: 'browncoat' } },
       { id: 'C6', title: `6. ${BASE_TITLES.C6}`, overrides: { jobMode: 'no_jobs' } },
       { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
@@ -157,7 +157,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'crime',
     steps: [
       { id: 'C1', title: '1. Nav Decks & Navigation', overrides: { navMode: 'clearer_skies', forceReshuffle: true } },
-      { id: 'C2', title: `2. ${BASE_TITLES.C2}`, overrides: { noAlertTokens: true } },
+      { id: 'C2', title: `2. ${BASE_TITLES.C2}`, overrides: { allianceMode: 'no_alerts' } },
       { id: 'C3', title: `3. ${BASE_TITLES.C3}` },
       { id: 'C4', title: `4. ${BASE_TITLES.C4}` },
       { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
@@ -224,8 +224,8 @@ export const SETUP_CARDS: SetupCardDef[] = [
     steps: [
       { id: 'D_PRESSURES_HIGH', title: `1. ${BASE_TITLES.D_PRESSURES_HIGH}` },
       { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}`, overrides: { extraCruisers: true } },
-      { id: 'C3', title: `4. ${BASE_TITLES.C3}`, overrides: { wantedLeaderMode: true } },
+      { id: 'C2', title: `3. ${BASE_TITLES.C2}`, overrides: { allianceMode: 'extra_cruisers' } },
+      { id: 'C3', title: `4. ${BASE_TITLES.C3}`, overrides: { leaderSetup: 'wanted' } },
       { id: 'C4', title: `5. ${BASE_TITLES.C4}` },
       { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
       { id: 'C6', title: `7. ${BASE_TITLES.C6}` },
