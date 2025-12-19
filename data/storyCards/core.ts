@@ -5,8 +5,10 @@ export const CORE_STORIES: StoryCardDef[] = [
     title: "Desperadoes",
     intro: "Your checkered past is catching up with you and the Alliance is hot on your tail! It's time to make a final cash grab and head out to the Rim to retire before the Alliance makes other arrangements.",
     setupDescription: "Start with 1 Warrant. Harken jobs unavailable.",
+    effects: [
+      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, source: { source: 'story', name: "Desperadoes" }, description: "Start with 1 Warrant." }
+    ],
     setupConfig: {
-      flags: ['startWithWarrant'],
       forbiddenStartingContact: "Harken"
     }
   },

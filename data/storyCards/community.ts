@@ -45,10 +45,13 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "You're low on funds, and need to get a job. Badger's hired you to scavenge a derelict ship dangerously close to an Alliance cruiser. Get the cargo, evade the Alliance, and sell it.",
     setupDescription: "Start with $500, 2 Fuel, 2 Parts. Nandi discounts.",
     requiredExpansion: "community",
+    effects: [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, source: { source: 'story', name: "How It All Started" }, description: "Story Override" },
+      { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, source: { source: 'story', name: "How It All Started" }, description: "Story Override" },
+      { type: 'modifyResource', resource: 'parts', method: 'set', value: 2, source: { source: 'story', name: "How It All Started" }, description: "Story Override" }
+    ],
     setupConfig: {
-      flags: ['nandiCrewDiscount'],
-      startingCreditsOverride: 500,
-      customStartingFuel: 2
+      flags: ['nandiCrewDiscount']
     },
     sourceUrl: "https://boardgamegeek.com/filepage/186593/where-it-all-started-story-card"
   },
@@ -57,9 +60,11 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "Your last run in with Harken turned South and you've got a boatload of warrants trailin' ya. Time to clean your ledger and get dirt on Harken instead.",
     setupDescription: "Start with 2 Warrants. Alliance Space off limits. No Harken.",
     requiredExpansion: "community",
+    effects: [
+        { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, source: { source: 'story', name: "It Ain't Easy Goin' Legit" }, description: "Start with 2 Warrants." }
+    ],
     setupConfig: {
       flags: ['allianceSpaceOffLimits'],
-      startingWarrantCount: 2,
       forbiddenStartingContact: "Harken"
     }
   },

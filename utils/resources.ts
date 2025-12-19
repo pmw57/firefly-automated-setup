@@ -1,75 +1,108 @@
-import { GameState, StoryCardDef, StepOverrides, ResourceDetails, ResourceConflict } from '../types';
-import { hasFlag } from './data';
+import { GameState, StoryCardDef, StepOverrides, ResourceDetails, ResourceConflict, ModifyResourceEffect } from '../types';
+import { SETUP_CARDS } from '../data/setupCards';
+import { STORY_CARDS } from '../data/storyCards';
 
 export const calculateStartingResources = (
   gameState: GameState,
-  activeStoryCard: StoryCardDef | undefined,
-  overrides: StepOverrides,
-  manualSelection?: 'story' | 'setupCard'
+  manualSelection?: 'story' | 'setupCard',
+  activeStoryCardOverride?: StoryCardDef | undefined
 ): ResourceDetails => {
-    const storyConfig = activeStoryCard?.setupConfig;
-    const storyBonus = storyConfig?.startingCreditsBonus || 0;
-    
-    const baseSetupCredits = overrides.startingCredits || 3000;
-    const setupCardValue = baseSetupCredits + storyBonus;
+  // 1. Get active cards
+  const activeSetupCard = SETUP_CARDS.find(c => c.id === gameState.setupCardId);
+  const activeStoryCard = activeStoryCardOverride || STORY_CARDS.find(c => c.title === gameState.selectedStoryCard);
 
-    const storyValue = storyConfig?.startingCreditsOverride;
+  // 2. Collect resource modification effects from all sources
+  const setupEffects = (activeSetupCard?.effects?.filter(e => e.type === 'modifyResource') as ModifyResourceEffect[] | undefined) || [];
+  const storyEffects = (activeStoryCard?.effects?.filter(e => e.type === 'modifyResource') as ModifyResourceEffect[] | undefined) || [];
+  const allEffects = [...setupEffects, ...storyEffects];
 
-    let totalCredits = setupCardValue;
-    let conflict: ResourceConflict | undefined;
+  // 3. Initialize resources with defaults
+  const resources = { credits: 3000, fuel: 6, parts: 2, warrants: 0, goalTokens: 0 };
+  let creditModifications: { description: string; value: string }[] = [{ description: "Standard Allocation", value: "$3,000" }];
 
-    if (storyValue !== undefined) {
-        const storyLabel = `Override from "${activeStoryCard?.title}"`;
-        const setupLabel = overrides.startingCredits ? `From Setup Card (+ Story Bonus)` : `Standard Credits (+ Story Bonus)`;
-        
-        conflict = {
-            story: { value: storyValue, label: storyLabel },
-            setupCard: { value: setupCardValue, label: setupLabel },
-        };
+  // 4. Process SET effects (these form the new base values)
+  const setupSetCredits = setupEffects.find(e => e.resource === 'credits' && e.method === 'set');
+  if (setupSetCredits?.value !== undefined) {
+    resources.credits = setupSetCredits.value;
+    creditModifications = [{ description: setupSetCredits.description, value: `$${setupSetCredits.value.toLocaleString()}` }];
+  }
 
-        if (manualSelection === 'setupCard' && gameState.optionalRules.resolveConflictsManually) {
-            totalCredits = setupCardValue;
-        } else {
-            totalCredits = storyValue; // Story has priority by default or when selected
+  const storySetCredits = storyEffects.find(e => e.resource === 'credits' && e.method === 'set');
+
+  // Conflict detection and resolution for 'set' credits
+  let conflict: ResourceConflict | undefined;
+  if (setupSetCredits?.value !== undefined && storySetCredits?.value !== undefined) {
+    conflict = {
+        story: { value: storySetCredits.value, source: storySetCredits.source },
+        setupCard: { value: setupSetCredits.value, source: setupSetCredits.source },
+    };
+
+    if (gameState.optionalRules.resolveConflictsManually && manualSelection === 'setupCard') {
+      // User chose setup card, do nothing as it's already the base
+    } else {
+      // Default to story priority
+      resources.credits = storySetCredits.value;
+      creditModifications = [{ description: storySetCredits.description, value: `$${storySetCredits.value.toLocaleString()}` }];
+    }
+  } else if (storySetCredits?.value !== undefined) {
+    // Only story card has a 'set' effect
+    resources.credits = storySetCredits.value;
+    creditModifications = [{ description: storySetCredits.description, value: `$${storySetCredits.value.toLocaleString()}` }];
+  }
+
+  // Process other 'set' effects
+  allEffects.filter(e => e.method === 'set' && e.resource !== 'credits').forEach(effect => {
+    if (effect.value !== undefined) {
+        resources[effect.resource as keyof typeof resources] = effect.value;
+    }
+  });
+
+  // 5. Process ADD effects
+  allEffects.filter(e => e.method === 'add').forEach(effect => {
+    if (effect.value !== undefined) {
+        resources[effect.resource as keyof typeof resources] += effect.value;
+        if (effect.resource === 'credits') {
+            creditModifications.push({ description: effect.description, value: `+$${effect.value.toLocaleString()}` });
         }
     }
+  });
 
-    return {
-        totalCredits,
-        bonusCredits: storyBonus,
-        noFuelParts: hasFlag(storyConfig, 'noStartingFuelParts') || !!overrides.browncoatJobMode,
-        customStartingFuel: storyConfig?.customStartingFuel,
-        conflict,
-    };
+  // 6. Process DISABLE effects
+  const isFuelDisabled = allEffects.some(e => e.resource === 'fuel' && e.method === 'disable');
+  if (isFuelDisabled) {
+    resources.fuel = 0;
+  }
+  const isPartsDisabled = allEffects.some(e => e.resource === 'parts' && e.method === 'disable');
+  if (isPartsDisabled) {
+    resources.parts = 0;
+  }
+
+  return {
+    credits: resources.credits,
+    fuel: resources.fuel,
+    parts: resources.parts,
+    warrants: resources.warrants,
+    goalTokens: resources.goalTokens,
+    isFuelDisabled,
+    isPartsDisabled,
+    conflict,
+    creditModifications,
+  };
 };
 
+// This function is now deprecated in favor of the more detailed `creditModifications` array.
+// It is kept for compatibility with StartingCapitolStep but should be removed in a future refactor.
 export const getCreditsLabel = (
-    details: ResourceDetails,
-    overrides: StepOverrides,
-    activeStoryCard: StoryCardDef | undefined,
+    details: Pick<ResourceDetails, 'conflict' | 'creditModifications'>,
+    _overrides: StepOverrides, // No longer used
+    _activeStoryCard: StoryCardDef | undefined, // No longer used
     manualSelection?: 'story' | 'setupCard'
 ): string => {
     if (details.conflict) {
-        if (manualSelection === 'setupCard' && details.conflict.setupCard) {
-            return details.conflict.setupCard.label;
+        if (manualSelection === 'setupCard') {
+            return details.conflict.setupCard.source.name;
         }
-        // Default to story or if story is selected
-        if (details.conflict.story) {
-            return details.conflict.story.label;
-        }
+        return details.conflict.story.source.name;
     }
-
-    if (activeStoryCard?.setupConfig?.startingCreditsOverride !== undefined) {
-        return `Story Override (${activeStoryCard?.title})`;
-    }
-    
-    if (details.bonusCredits > 0) {
-        return `Base $${(overrides.startingCredits || 3000).toLocaleString()} + Bonus $${details.bonusCredits.toLocaleString()}`;
-    }
-
-    if (overrides.startingCredits) {
-        return "Setup Card Allocation";
-    }
-    
-    return "Standard Allocation";
+    return details.creditModifications[0]?.description || "Allocation";
 };

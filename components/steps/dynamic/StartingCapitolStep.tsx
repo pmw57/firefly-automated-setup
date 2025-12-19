@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Step } from '../../../types';
-// Fix: Corrected import path for module resolution from `../../../` to `../../`.
 import { calculateStartingResources, getCreditsLabel } from '../../../utils/resources';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
@@ -16,19 +15,18 @@ export const StartingCapitolStep = ({ step }: StartingCapitolStepProps): React.R
   const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const overrides = step.overrides || {};
   const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
 
   const [manualSelection, setManualSelection] = useState<'story' | 'setupCard'>('story');
 
-  const resourceDetails = calculateStartingResources(gameState, activeStoryCard, overrides, manualSelection);
-  const { totalCredits, conflict } = resourceDetails;
+  const resourceDetails = calculateStartingResources(gameState, manualSelection);
+  const { credits, conflict } = resourceDetails;
 
   useEffect(() => {
-    if (totalCredits !== gameState.finalStartingCredits) {
-        dispatch({ type: ActionType.SET_FINAL_STARTING_CREDITS, payload: totalCredits });
+    if (credits !== gameState.finalStartingCredits) {
+        dispatch({ type: ActionType.SET_FINAL_STARTING_CREDITS, payload: credits });
     }
-  }, [totalCredits, dispatch, gameState.finalStartingCredits]);
+  }, [credits, dispatch, gameState.finalStartingCredits]);
   
   const showConflictUI = conflict && gameState.optionalRules.resolveConflictsManually;
 
@@ -44,8 +42,8 @@ export const StartingCapitolStep = ({ step }: StartingCapitolStepProps): React.R
         <ConflictResolver
           title="Starting Capitol Conflict"
           conflict={{
-            story: { value: `$${conflict.story.value.toLocaleString()}`, label: conflict.story.label },
-            setupCard: { value: `$${conflict.setupCard.value.toLocaleString()}`, label: conflict.setupCard.label }
+            story: { value: `$${conflict.story.value.toLocaleString()}`, label: conflict.story.source.name },
+            setupCard: { value: `$${conflict.setupCard.value.toLocaleString()}`, label: conflict.setupCard.source.name }
           }}
           selection={manualSelection}
           onSelect={setManualSelection}
@@ -54,8 +52,8 @@ export const StartingCapitolStep = ({ step }: StartingCapitolStepProps): React.R
 
       <div className={`text-center p-8 rounded-lg border shadow-sm transition-colors duration-300 ${panelBg} ${panelBorder}`}>
         <p className={`text-lg font-bold mb-2 ${textColor}`}>Each Player's Starting Capitol</p>
-        <div className={`text-5xl font-bold font-western my-4 ${numberColor}`}>${totalCredits.toLocaleString()}</div>
-        <p className={`text-sm ${subText}`}>{getCreditsLabel(resourceDetails, overrides, activeStoryCard, showConflictUI ? manualSelection : undefined)}</p>
+        <div className={`text-5xl font-bold font-western my-4 ${numberColor}`}>${credits.toLocaleString()}</div>
+        <p className={`text-sm ${subText}`}>{getCreditsLabel(resourceDetails, step.overrides || {}, activeStoryCard, showConflictUI ? manualSelection : undefined)}</p>
       </div>
     </div>
   );

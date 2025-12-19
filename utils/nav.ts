@@ -1,14 +1,19 @@
 import { GameState, StepOverrides } from '../types';
 
 export const determineNavDeckDetails = (gameState: GameState, overrides: StepOverrides) => {
-    const { browncoatNavMode, rimNavMode, forceReshuffle: forceReshuffleOverride, clearerSkiesNavMode, flyingSoloNavMode } = overrides;
+    const { navMode, forceReshuffle: forceReshuffleOverride } = overrides;
 
-    const forceReshuffle = !!browncoatNavMode || !!rimNavMode || !!forceReshuffleOverride || !!flyingSoloNavMode;
+    const forceReshuffle = !!forceReshuffleOverride || 
+        navMode === 'browncoat' || 
+        navMode === 'rim' || 
+        navMode === 'flying_solo' ||
+        navMode === 'clearer_skies';
+        
     const showStandardRules = !forceReshuffle;
 
     return {
         forceReshuffle,
-        clearerSkies: !!clearerSkiesNavMode,
+        clearerSkies: navMode === 'clearer_skies',
         showStandardRules,
         isSolo: gameState.playerCount === 1,
         isHighPlayerCount: gameState.playerCount >= 3,

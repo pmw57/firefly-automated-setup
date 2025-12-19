@@ -34,26 +34,56 @@ export interface ExpansionDef {
   page_10th?: number;
 }
 
+export type JobMode = 
+  | 'standard' 
+  | 'no_jobs' 
+  | 'times_jobs' 
+  | 'high_alert_jobs' 
+  | 'buttons_jobs' 
+  | 'awful_jobs' 
+  | 'rim_jobs' 
+  | 'draft_choice' 
+  | 'caper_start' 
+  | 'wind_takes_us';
+
+export type NavMode = 'standard' | 'browncoat' | 'rim' | 'flying_solo' | 'clearer_skies';
+export type PrimeMode = 'standard' | 'blitz';
+
 export interface StepOverrides {
   startingCredits?: number;
-  rimNavMode?: boolean;
-  rimJobMode?: boolean;
-  browncoatNavMode?: boolean;
-  browncoatJobMode?: boolean;
   browncoatDraftMode?: boolean;
-  timesJobMode?: boolean;
   forceReshuffle?: boolean;
-  allianceHighAlertJobMode?: boolean;
-  buttonsJobMode?: boolean;
   extraCruisers?: boolean;
   wantedLeaderMode?: boolean;
   awfulCrowdedAllianceMode?: boolean;
-  awfulJobMode?: boolean;
-  blitzPrimeMode?: boolean;
-  clearerSkiesNavMode?: boolean;
   noAlertTokens?: boolean;
-  flyingSoloNavMode?: boolean;
+  jobMode?: JobMode;
+  navMode?: NavMode;
+  primeMode?: PrimeMode;
 }
+
+// --- New Effect System Types ---
+export type ResourceType = 'credits' | 'fuel' | 'parts' | 'warrants' | 'goalTokens';
+export type EffectMethod = 'set' | 'add' | 'disable';
+
+export interface EffectSource {
+  source: 'story' | 'setupCard' | 'expansion' | 'optionalRule' | 'challenge';
+  name: string;
+}
+
+export interface Effect {
+  type: string;
+  source: EffectSource;
+  description: string;
+}
+
+export interface ModifyResourceEffect extends Effect {
+  type: 'modifyResource';
+  resource: ResourceType;
+  method: EffectMethod;
+  value?: number; // Not needed for 'disable'
+}
+// --- End New Effect System Types ---
 
 // The final data object for a step in the flow.
 export interface SetupContentData {
@@ -94,11 +124,11 @@ export interface SetupCardDef {
   steps: SetupCardStep[];
   mode?: GameMode;
   overrides?: StepOverrides;
+  // FIX: Changed type from Effect[] to ModifyResourceEffect[] to allow for 'resource' property.
+  effects?: ModifyResourceEffect[];
 }
 
 export type StoryFlag = 
-  | 'noStartingFuelParts'
-  | 'startWithWarrant'
   | 'placeAllianceAlertsInAllianceSpace'
   | 'addBorderSpaceHavens'
   | 'removePiracyJobs'
@@ -107,7 +137,6 @@ export type StoryFlag =
   | 'lonelySmugglerSetup'
   | 'startAtLondinium'
   | 'startWithAlertCard'
-  | 'startWithGoalToken'
   | 'startOutsideAllianceSpace'
   | 'sharedHandSetup'
   | 'primeContactDecks'
@@ -121,15 +150,12 @@ export type StoryFlag =
   | 'disableSoloTimer';
 
 export interface StoryCardConfig {
-  jobDrawMode?: 'standard' | 'draft_choice' | 'caper_start' | 'wind_takes_us' | 'no_jobs';
+  jobDrawMode?: JobMode;
   primingMultiplier?: number;
   primeModifier?: { add: number };
-  startingCreditsBonus?: number;
-  startingCreditsOverride?: number;
-
-  customStartingFuel?: number;
-  startingWarrantCount?: number;
+  // FIX: Added missing property 'createAlertTokenStackMultiplier'.
   createAlertTokenStackMultiplier?: number;
+
   shipPlacementMode?: 'persephone';
   startAtSector?: string;
   
@@ -162,6 +188,8 @@ export interface StoryCardDef {
   requiredExpansion?: keyof Expansions;
   additionalRequirements?: (keyof Expansions)[];
   setupConfig?: StoryCardConfig;
+  // FIX: Changed type from Effect[] to ModifyResourceEffect[] to allow for 'resource' property.
+  effects?: ModifyResourceEffect[];
   sourceUrl?: string;
   goals?: StoryCardGoal[];
   isSolo?: boolean;
@@ -264,17 +292,24 @@ export interface NavDeckSetupDetails {
 }
 
 export interface ResourceConflict {
-  story: { value: number; label: string };
-  setupCard: { value: number; label: string };
+  story: { value: number, source: EffectSource };
+  setupCard: { value: number, source: EffectSource };
 }
 
 export interface ResourceDetails {
-  totalCredits: number;
-  bonusCredits: number;
-  noFuelParts?: boolean;
-  customStartingFuel?: number;
+  credits: number;
+  fuel: number;
+  parts: number;
+  warrants: number;
+  goalTokens: number;
+  
+  isFuelDisabled: boolean;
+  isPartsDisabled: boolean;
+
   conflict?: ResourceConflict;
+  creditModifications: { description: string; value: string }[];
 }
+
 
 export interface PrimeDetails {
   baseDiscard: number;

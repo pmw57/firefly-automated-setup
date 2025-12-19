@@ -14,13 +14,15 @@ describe('utils/nav', () => {
     });
 
     it('identifies browncoatNavMode as a forced reshuffle mode', () => {
-      const details = determineNavDeckDetails(baseGameState, { browncoatNavMode: true });
+      // FIX: Replaced non-existent `browncoatNavMode` with `navMode: 'browncoat'`.
+      const details = determineNavDeckDetails(baseGameState, { navMode: 'browncoat' });
       expect(details.forceReshuffle).toBe(true);
       expect(details.showStandardRules).toBe(false);
     });
 
     it('identifies rimNavMode as a forced reshuffle mode', () => {
-      const details = determineNavDeckDetails(baseGameState, { rimNavMode: true });
+      // FIX: Replaced non-existent `rimNavMode` with `navMode: 'rim'`.
+      const details = determineNavDeckDetails(baseGameState, { navMode: 'rim' });
       expect(details.forceReshuffle).toBe(true);
       expect(details.showStandardRules).toBe(false);
     });
@@ -32,13 +34,15 @@ describe('utils/nav', () => {
     });
 
     it('identifies flyingSoloNavMode as a forced reshuffle mode', () => {
-      const details = determineNavDeckDetails(baseGameState, { flyingSoloNavMode: true });
+      // FIX: Replaced non-existent `flyingSoloNavMode` with `navMode: 'flying_solo'`.
+      const details = determineNavDeckDetails(baseGameState, { navMode: 'flying_solo' });
       expect(details.forceReshuffle).toBe(true);
       expect(details.showStandardRules).toBe(false);
     });
 
     it('identifies clearerSkies mode', () => {
-      const details = determineNavDeckDetails(baseGameState, { clearerSkiesNavMode: true });
+      // FIX: Replaced non-existent `clearerSkiesNavMode` with `navMode: 'clearer_skies'`.
+      const details = determineNavDeckDetails(baseGameState, { navMode: 'clearer_skies' });
       expect(details.clearerSkies).toBe(true);
     });
 

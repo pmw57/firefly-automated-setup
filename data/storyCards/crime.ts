@@ -16,8 +16,11 @@ export const CRIME_STORIES: StoryCardDef[] = [
     intro: "Infamy's a funny thing. Bucking the law, while a might stressful day-to-day, leads to being known. The more you're known, the more your name's worth. Trick of it is, you got to sock away a lifetime of credits before you find yourself retiring early, in an Alliance lockup...",
     setupDescription: "Start with 1 Warrant. Start Outside Alliance Space. Start with Alert Card. Limited Starting Job Contacts.",
     requiredExpansion: "crime",
+    effects: [
+      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, source: { source: 'story', name: "Wanted Men" }, description: "Start with 1 Warrant." }
+    ],
     setupConfig: {
-      flags: ['startWithWarrant', 'startOutsideAllianceSpace', 'startWithAlertCard'],
+      flags: ['startOutsideAllianceSpace', 'startWithAlertCard'],
       allowedStartingContacts: ["Patience", "Badger", "Niska", "Mr. Universe", "Fanty & Mingo"]
     }
   },

@@ -57,7 +57,8 @@ describe('utils/prime', () => {
     });
 
     it('applies blitz mode multiplier (2x)', () => {
-      const details = calculatePrimeDetails(stateForStandardPriming, { blitzPrimeMode: true }, mockStory);
+      // FIX: Replaced non-existent `blitzPrimeMode` with `primeMode: 'blitz'`.
+      const details = calculatePrimeDetails(stateForStandardPriming, { primeMode: 'blitz' }, mockStory);
       expect(details.isBlitz).toBe(true);
       expect(details.effectiveMultiplier).toBe(2);
       expect(details.finalCount).toBe(6); // 3 * 2
@@ -72,7 +73,8 @@ describe('utils/prime', () => {
     
     it('prioritizes blitz multiplier over story multiplier', () => {
       const story: StoryCardDef = { ...mockStory, setupConfig: { primingMultiplier: 3 } };
-      const details = calculatePrimeDetails(stateForStandardPriming, { blitzPrimeMode: true }, story);
+      // FIX: Replaced non-existent `blitzPrimeMode` with `primeMode: 'blitz'`.
+      const details = calculatePrimeDetails(stateForStandardPriming, { primeMode: 'blitz' }, story);
       expect(details.effectiveMultiplier).toBe(2); // Blitz is 2x
       expect(details.finalCount).toBe(6); // 3 * 2
     });
@@ -85,7 +87,8 @@ describe('utils/prime', () => {
 
     it('combines blitz and Slaying the Dragon', () => {
         const story: StoryCardDef = { title: STORY_TITLES.SLAYING_THE_DRAGON, intro: '', setupConfig: { primeModifier: { add: 2 } } };
-        const details = calculatePrimeDetails(stateForStandardPriming, { blitzPrimeMode: true }, story);
+        // FIX: Replaced non-existent `blitzPrimeMode` with `primeMode: 'blitz'`.
+        const details = calculatePrimeDetails(stateForStandardPriming, { primeMode: 'blitz' }, story);
         expect(details.finalCount).toBe(8); // (3 * 2) + 2
     });
   });

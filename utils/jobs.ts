@@ -1,18 +1,9 @@
 import React from 'react';
-import { GameState, StoryCardDef, StepOverrides, JobSetupDetails, JobSetupMessage } from '../types';
+import { GameState, StoryCardDef, StepOverrides, JobSetupDetails, JobSetupMessage, JobMode } from '../types';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { hasFlag } from './data';
 
 const STANDARD_CONTACTS = [CONTACT_NAMES.HARKEN, 'Badger', 'Amnon Duul', 'Patience', CONTACT_NAMES.NISKA];
-
-const OVERRIDE_JOB_MODES: [keyof StepOverrides, string][] = [
-    ['browncoatJobMode', 'no_jobs'],
-    ['timesJobMode', 'times_jobs'],
-    ['allianceHighAlertJobMode', 'high_alert_jobs'],
-    ['buttonsJobMode', 'buttons_jobs'],
-    ['awfulJobMode', 'awful_jobs'],
-    ['rimJobMode', 'rim_jobs'],
-];
 
 const JOB_MODE_DETAILS: Record<string, { getContacts?: () => string[], getMessage?: (forbidden: string | undefined) => JobSetupMessage | null }> = {
     buttons_jobs: {
@@ -52,15 +43,17 @@ const JOB_MODE_DETAILS: Record<string, { getContacts?: () => string[], getMessag
     }
 };
 
-const getJobDrawMode = (storyCard: StoryCardDef | undefined, overrides: StepOverrides): string => {
+const getJobDrawMode = (storyCard: StoryCardDef | undefined, overrides: StepOverrides): { mode: JobMode, source: 'story' | 'setupCard' } => {
     if (storyCard?.setupConfig?.jobDrawMode) {
-        return storyCard.setupConfig.jobDrawMode;
+        return { mode: storyCard.setupConfig.jobDrawMode, source: 'story' };
     }
-    const override = OVERRIDE_JOB_MODES.find(([key]) => overrides[key]);
-    return override ? override[1] : 'standard';
+    if (overrides.jobMode) {
+        return { mode: overrides.jobMode, source: 'setupCard' };
+    }
+    return { mode: 'standard', source: 'setupCard' }; // Standard is default
 };
 
-const getNoJobsMessage = (mode: string, overrides: StepOverrides, prime: boolean, noPrimeChallenge: boolean): JobSetupMessage => {
+const getNoJobsMessage = (source: 'story' | 'setupCard', prime: boolean, noPrimeChallenge: boolean): JobSetupMessage => {
     if (noPrimeChallenge) {
         return {
             source: 'warning',
@@ -85,7 +78,7 @@ const getNoJobsMessage = (mode: string, overrides: StepOverrides, prime: boolean
             )
         };
     }
-    return overrides.browncoatJobMode
+    return source === 'setupCard'
         ? { source: 'setupCard', title: 'Setup Card Override', content: React.createElement(React.Fragment, null, React.createElement('p', null, React.createElement('strong', null, 'No Starting Jobs.')), React.createElement('p', null, "Crews must find work on their own out in the black.")) }
         : { source: 'story', title: 'Story Override', content: React.createElement('p', null, React.createElement('strong', null, 'Do not take Starting Jobs.')) };
 };
@@ -96,7 +89,7 @@ export const determineJobSetupDetails = (
     activeStoryCard: StoryCardDef | undefined,
     overrides: StepOverrides,
 ): JobSetupDetails => {
-    const jobDrawMode = getJobDrawMode(activeStoryCard, overrides);
+    const { mode: jobDrawMode, source: jobModeSource } = getJobDrawMode(activeStoryCard, overrides);
     const storyConfig = activeStoryCard?.setupConfig;
     const { forbiddenStartingContact, allowedStartingContacts } = storyConfig || {};
     const messages: JobSetupMessage[] = [];
@@ -105,7 +98,7 @@ export const determineJobSetupDetails = (
     const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
 
     if (jobDrawMode === 'no_jobs') {
-        messages.push(getNoJobsMessage(jobDrawMode, overrides, hasFlag(storyConfig, 'primeContactDecks'), dontPrimeContactsChallenge));
+        messages.push(getNoJobsMessage(jobModeSource, hasFlag(storyConfig, 'primeContactDecks'), dontPrimeContactsChallenge));
         return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
     }
     

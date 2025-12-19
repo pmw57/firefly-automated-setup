@@ -6,8 +6,11 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
     intro: "Once your reputation's been blemished, it's hard to get right with the right people. Compete with the other riffraff for what scraps your employers are willing to risk on the likes of you. Nothing to do but suck it up and try to prove yourself worthy.",
     setupDescription: "Create shared hand of Inactive Jobs. Start with Warrant Token.",
     requiredExpansion: "coachworks",
+    effects: [
+      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, source: { source: 'story', name: "Down And Out" }, description: "Start with 1 Warrant." }
+    ],
     setupConfig: {
-      flags: ['sharedHandSetup', 'startWithWarrant']
+      flags: ['sharedHandSetup']
     }
   },
   {

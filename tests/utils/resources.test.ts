@@ -1,102 +1,128 @@
 import { describe, it, expect } from 'vitest';
-import { calculateStartingResources, getCreditsLabel } from '../../utils/resources';
-import { StoryCardDef, StoryCardConfig, GameState } from '../../types';
+import { calculateStartingResources } from '../../utils/resources';
+// FIX: Changed Effect to ModifyResourceEffect as the test cases use the extended type with 'resource' and 'method' properties.
+import { StoryCardDef, GameState, ModifyResourceEffect } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
 
 describe('utils/resources', () => {
-  const baseGameState: GameState = getDefaultGameState();
-  const mockStory = (config: Partial<StoryCardConfig> = {}): StoryCardDef => ({
+  const baseGameState = getDefaultGameState();
+
+  // FIX: The effects array should be of type ModifyResourceEffect[] to match the StoryCardDef interface and the test data.
+  const mockStory = (effects: ModifyResourceEffect[] = []): StoryCardDef => ({
     title: 'Mock Story',
     intro: 'Intro',
-    setupConfig: config,
+    effects,
   });
 
-  describe('calculateStartingResources', () => {
-    it('returns default 3000 credits and empty flags', () => {
-      // Fix: Renamed `customFuel` to `customStartingFuel` to match the `ResourceDetails` type.
-      const { totalCredits, bonusCredits, noFuelParts, customStartingFuel, conflict } = calculateStartingResources(baseGameState, mockStory(), {});
-      expect(totalCredits).toBe(3000);
-      expect(bonusCredits).toBe(0);
-      expect(noFuelParts).toBe(false);
-      expect(customStartingFuel).toBeUndefined();
-      expect(conflict).toBeUndefined();
-    });
-
-    it('applies bonus credits', () => {
-      const story = mockStory({ startingCreditsBonus: 1000 });
-      const { totalCredits, bonusCredits } = calculateStartingResources(baseGameState, story, {});
-      expect(totalCredits).toBe(4000);
-      expect(bonusCredits).toBe(1000);
-    });
-
-    it('respects startingCreditsOverride from story card', () => {
-      const story = mockStory({ startingCreditsOverride: 500 });
-      const { totalCredits } = calculateStartingResources(baseGameState, story, {});
-      expect(totalCredits).toBe(500);
-    });
-
-    it('respects overrides from setup card', () => {
-      const { totalCredits } = calculateStartingResources(baseGameState, mockStory(), { startingCredits: 5000 });
-      expect(totalCredits).toBe(5000);
-    });
-
-    it('identifies and returns conflict data, defaulting to story priority', () => {
-      const story = mockStory({ startingCreditsOverride: 500, startingCreditsBonus: 100 }); // Bonus is ignored on story override
-      const state: GameState = { ...baseGameState, optionalRules: { ...baseGameState.optionalRules, resolveConflictsManually: false }};
-      const { totalCredits, conflict } = calculateStartingResources(state, story, { startingCredits: 12000 });
-      
-      expect(totalCredits).toBe(500); // Default resolution is story priority
-      
-      expect(conflict).toBeDefined();
-      expect(conflict?.story.value).toBe(500);
-      expect(conflict?.setupCard.value).toBe(12100); // 12000 + 100 bonus
-    });
-    
-    it('handles manual selection for story priority', () => {
-        const story = mockStory({ startingCreditsOverride: 500 });
-        const state: GameState = { ...baseGameState, optionalRules: { ...baseGameState.optionalRules, resolveConflictsManually: true }};
-        const { totalCredits } = calculateStartingResources(state, story, { startingCredits: 12000 }, 'story');
-        expect(totalCredits).toBe(500);
-    });
-
-    it('handles manual selection for setup card priority', () => {
-        const story = mockStory({ startingCreditsOverride: 500, startingCreditsBonus: 100 });
-        const state: GameState = { ...baseGameState, optionalRules: { ...baseGameState.optionalRules, resolveConflictsManually: true }};
-        const { totalCredits } = calculateStartingResources(state, story, { startingCredits: 12000 }, 'setupCard');
-        expect(totalCredits).toBe(12100);
-    });
-
-    it('passes through custom fuel and noFuelParts flags', () => {
-      const story = mockStory({ 
-        flags: ['noStartingFuelParts'],
-        customStartingFuel: 4
-      });
-      // Fix: Renamed `customFuel` to `customStartingFuel` to match the `ResourceDetails` type.
-      const { noFuelParts, customStartingFuel } = calculateStartingResources(baseGameState, story, {});
-      expect(noFuelParts).toBe(true);
-      expect(customStartingFuel).toBe(4);
-    });
+  const getGameStateWithCards = (
+    setupCardId: string,
+    storyCard?: StoryCardDef,
+    optionalRules: Partial<GameState['optionalRules']> = {}
+  ): GameState => ({
+    ...baseGameState,
+    setupCardId,
+    selectedStoryCard: storyCard?.title || '',
+    optionalRules: { ...baseGameState.optionalRules, ...optionalRules },
   });
 
-  describe('getCreditsLabel', () => {
-    it('returns "Standard Allocation" by default', () => {
-      const details = { totalCredits: 3000, bonusCredits: 0 };
-      const label = getCreditsLabel(details, {}, mockStory());
-      expect(label).toBe("Standard Allocation");
-    });
-    
-    it('shows bonus credit calculation', () => {
-      const details = { totalCredits: 4000, bonusCredits: 1000 };
-      const overrides = { startingCredits: 3000 };
-      const label = getCreditsLabel(details, overrides, mockStory());
-      expect(label).toBe("Base $3,000 + Bonus $1,000");
+  describe('calculateStartingResources with Effect System', () => {
+    it('returns default resources for a standard game', () => {
+      const state = getGameStateWithCards('Standard');
+      const details = calculateStartingResources(state);
+      expect(details.credits).toBe(3000);
+      expect(details.fuel).toBe(6);
+      expect(details.parts).toBe(2);
+      expect(details.warrants).toBe(0);
+      expect(details.isFuelDisabled).toBe(false);
+      expect(details.creditModifications[0].description).toBe('Standard Allocation');
     });
 
-    it('shows story override text when applicable', () => {
-      const story = mockStory({ startingCreditsOverride: 500 });
-      const details = { totalCredits: 500, bonusCredits: 0 };
-      const label = getCreditsLabel(details, {}, story);
-      expect(label).toBe("Story Override (Mock Story)");
+    it('applies a "set" credits effect from a setup card', () => {
+      const state = getGameStateWithCards('TheBrowncoatWay'); // Has a set $12000 effect
+      const details = calculateStartingResources(state);
+      expect(details.credits).toBe(12000);
+      expect(details.creditModifications[0].description).toBe('Setup Card Allocation');
+    });
+
+    it('applies an "add" credits effect from a story card', () => {
+      const story = mockStory([
+        { type: 'modifyResource', resource: 'credits', method: 'add', value: 1200, source: { source: 'story', name: 'Bonus' }, description: 'Story Bonus' }
+      ]);
+      const state = getGameStateWithCards('Standard', story);
+      const details = calculateStartingResources(state, undefined, story);
+      expect(details.credits).toBe(4200); // 3000 + 1200
+      expect(details.creditModifications.length).toBe(2);
+      expect(details.creditModifications[1].description).toBe('Story Bonus');
+    });
+    
+    it('applies a "set" credits effect from a story card, overriding the base', () => {
+      const story = mockStory([
+        { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, source: { source: 'story', name: 'Override' }, description: 'Story Override' }
+      ]);
+      const state = getGameStateWithCards('Standard', story);
+      const details = calculateStartingResources(state, undefined, story);
+      expect(details.credits).toBe(500);
+      expect(details.creditModifications[0].description).toBe('Story Override');
+    });
+
+    it('identifies a conflict between "set" credit effects and defaults to story priority', () => {
+      const story = mockStory([
+        { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, source: { source: 'story', name: 'Story Override' }, description: 'Story Override' }
+      ]);
+      const state = getGameStateWithCards('TheBrowncoatWay', story); // Browncoat sets to 12000
+      const details = calculateStartingResources(state, undefined, story);
+      
+      expect(details.conflict).toBeDefined();
+      expect(details.conflict?.story.value).toBe(500);
+      expect(details.conflict?.setupCard.value).toBe(12000);
+      expect(details.credits).toBe(500); // Story wins
+    });
+    
+    it('respects manual selection for setup card priority in a conflict', () => {
+      const story = mockStory([
+        { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, source: { source: 'story', name: 'Story Override' }, description: 'Story Override' }
+      ]);
+      const state = getGameStateWithCards('TheBrowncoatWay', story, { resolveConflictsManually: true });
+      const details = calculateStartingResources(state, 'setupCard', story); // User selects setup card
+      
+      expect(details.conflict).toBeDefined();
+      expect(details.credits).toBe(12000); // Setup card wins
+    });
+
+    it('applies "disable" effects for fuel and parts', () => {
+      const story = mockStory([
+        { type: 'modifyResource', resource: 'fuel', method: 'disable', source: { source: 'story', name: 'No Fuel' }, description: 'No Fuel' }
+      ]);
+      const state = getGameStateWithCards('Standard', story);
+      const details = calculateStartingResources(state, undefined, story);
+
+      expect(details.fuel).toBe(0);
+      expect(details.isFuelDisabled).toBe(true);
+      expect(details.parts).toBe(2);
+      expect(details.isPartsDisabled).toBe(false);
+    });
+    
+    it('correctly applies effects from TheBrowncoatWay setup card', () => {
+      const state = getGameStateWithCards('TheBrowncoatWay');
+      const details = calculateStartingResources(state);
+
+      expect(details.credits).toBe(12000);
+      expect(details.fuel).toBe(0);
+      expect(details.isFuelDisabled).toBe(true);
+      expect(details.parts).toBe(0);
+      expect(details.isPartsDisabled).toBe(true);
+    });
+
+    it('handles adding warrants and other resources', () => {
+      const story = mockStory([
+        { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, source: { source: 'story', name: 'Wanted' }, description: 'Wanted' },
+        { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, source: { source: 'story', name: 'Goals' }, description: 'Goals' },
+      ]);
+      const state = getGameStateWithCards('Standard', story);
+      const details = calculateStartingResources(state, undefined, story);
+
+      expect(details.warrants).toBe(2);
+      expect(details.goalTokens).toBe(1);
     });
   });
 });
