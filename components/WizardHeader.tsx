@@ -1,8 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { GameState, Step } from '../types';
-import { getDisplaySetupName } from '../utils/ui';
 import { useTheme } from './ThemeContext';
-import { SETUP_CARD_IDS } from '../data/ids';
+import { calculateHeaderDetails } from '../utils/header';
 
 interface WizardHeaderProps {
     gameState: GameState;
@@ -16,24 +15,10 @@ export const WizardHeader = ({ gameState, onReset, flow, currentStepIndex }: Wiz
     const { theme } = useTheme();
     const isDark = theme === 'dark';
 
-    const displaySetupName = getDisplaySetupName(gameState);
-    
-    // Decoupled Logic: The header's display is now a direct function of the game state,
-    // not the wizard's step index or flow structure. This is far more robust.
-    const { showSetupCard, showStoryCard, isPastFirstStep } = useMemo(() => {
-        const firstCoreStepIndex = flow.findIndex(step => step.type === 'core');
-
-        return { 
-            // Show setup card as soon as it's been selected (i.e., not the default)
-            showSetupCard: gameState.setupCardId !== SETUP_CARD_IDS.STANDARD || gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO,
-            // Show story card as soon as one is selected
-            showStoryCard: !!gameState.selectedStoryCard,
-            // We are past the initial configuration steps
-            isPastFirstStep: currentStepIndex >= firstCoreStepIndex && firstCoreStepIndex !== -1
-        };
-    }, [flow, currentStepIndex, gameState.setupCardId, gameState.selectedStoryCard]);
-
-    const showSoloModeIndicator = gameState.gameMode === 'solo' && isPastFirstStep;
+    const { setupName, storyName, soloMode } = useMemo(() => 
+        calculateHeaderDetails(gameState, flow, currentStepIndex),
+        [gameState, flow, currentStepIndex]
+    );
 
     const handleResetClick = () => {
         if (showConfirmReset) {
@@ -48,31 +33,30 @@ export const WizardHeader = ({ gameState, onReset, flow, currentStepIndex }: Wiz
 
     return (
         <div className={`${stickyHeaderBg} backdrop-blur-sm p-4 rounded-lg mb-6 shadow-sm border flex justify-between items-center transition-all duration-300 sticky top-0 z-30 min-h-[88px]`}>
-            {/* UX Improvement: Redesigned header for clarity and better responsiveness */}
-            <div className="flex-1 min-w-0"> {/* Use min-w-0 to allow truncation in flexbox */}
+            <div className="flex-1 min-w-0">
                 <div className="flex items-baseline gap-x-2 truncate">
                     <span className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-gray-400' : 'text-[#78350f]'}`}>
                         Setup:
                     </span>
                     <span className={`font-bold text-sm md:text-base leading-tight truncate ${isDark ? 'text-blue-300' : 'text-[#451a03]'}`}>
-                        {showSetupCard && gameState.setupCardName ? displaySetupName : 'Configuring...'}
+                        {setupName}
                     </span>
                 </div>
 
-                {showStoryCard && gameState.selectedStoryCard && (
+                {storyName && (
                     <div className="flex items-baseline gap-x-2 truncate mt-1">
                         <span className={`text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-[#78350f]'}`}>
                             Story:
                         </span>
                         <span className={`font-bold text-sm md:text-base leading-tight truncate ${isDark ? 'text-amber-200' : 'text-[#b45309]'}`}>
-                            {gameState.selectedStoryCard}
+                            {storyName}
                         </span>
                     </div>
                 )}
 
-                {showSoloModeIndicator && (
+                {soloMode && (
                     <span className={`block text-[10px] uppercase font-bold mt-1 ${isDark ? 'text-purple-400' : 'text-purple-800'}`}>
-                        {gameState.setupCardId === 'FlyingSolo' ? 'Solo (Expanded)' : 'Solo (Classic)'}
+                        Solo ({soloMode})
                     </span>
                 )}
             </div>

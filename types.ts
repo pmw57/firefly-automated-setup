@@ -338,3 +338,9 @@ export interface DraftRuleDetails {
   specialStartSector: string | null;
   conflictMessage: React.ReactNode | null;
 }
+
+export interface HeaderDetails {
+  setupName: string;
+  storyName: string | null;
+  soloMode: 'Expanded' | 'Classic' | null;
+}
