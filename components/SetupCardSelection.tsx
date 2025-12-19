@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useCallback } from 'react';
-import { SETUP_CARDS } from '../data/setupCards';
 import { SETUP_CARD_IDS } from '../data/ids';
-import { EXPANSIONS_METADATA } from '../data/expansions';
 import { Button } from './Button';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { ActionType } from '../state/actions';
+import { getAvailableSetupCards } from '../utils/selectors';
 import { FlyingSoloBanner } from './setup/FlyingSoloBanner';
 import { SetupCardList } from './setup/SetupCardList';
+import { SETUP_CARDS } from '../data/setupCards'; // Keep for flyingSoloCard def
 
 // Fix: Add props interface to accept onNext and onBack handlers.
 interface SetupCardSelectionProps {
@@ -29,40 +29,10 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
   // Retrieve the Flying Solo card definition
   const flyingSoloCard = useMemo(() => SETUP_CARDS.find(c => c.id === SETUP_CARD_IDS.FLYING_SOLO), []);
 
-  // Filter and Sort available setup cards based on current state and expansion metadata order
-  const availableSetups = useMemo(() => {
-    // Map expansion IDs to their index in the metadata for consistent sorting
-    const expansionIndices = EXPANSIONS_METADATA.reduce((acc, exp, idx) => {
-        (acc as Record<string, number>)[exp.id] = idx;
-        return acc;
-    }, {} as Record<string, number>);
-
-    const stripThe = (str: string) => str.replace(/^The\s+/i, '');
-
-    return SETUP_CARDS
-        .filter(setup => {
-            // 1. Expansion Check
-            if (setup.requiredExpansion && !gameState.expansions[setup.requiredExpansion]) return false;
-            // 2. Hide "Flying Solo" from main list (handled by banner toggle)
-            if (setup.id === SETUP_CARD_IDS.FLYING_SOLO) return false;
-            // 3. Mode Check (Multiplayer hides solo-only cards)
-            if (!isSolo && setup.mode === 'solo') return false;
-            
-            return true;
-        })
-        .sort((a, b) => {
-            // Base game cards (no requiredExpansion) get index -1 to stay at the very top
-            const idxA = a.requiredExpansion ? (expansionIndices[a.requiredExpansion] ?? 999) : -1;
-            const idxB = b.requiredExpansion ? (expansionIndices[b.requiredExpansion] ?? 999) : -1;
-            
-            if (idxA !== idxB) {
-                return idxA - idxB;
-            }
-            
-            // If both cards belong to the same expansion, sort alphabetically by label
-            return stripThe(a.label).localeCompare(stripThe(b.label));
-        });
-  }, [gameState.expansions, isSolo]);
+  // Use the new selector to get the list of available setup cards
+  const availableSetups = useMemo(() => 
+    getAvailableSetupCards(gameState), 
+  [gameState]);
 
   const handleSetupCardSelect = useCallback((id: string, label: string) => {
     dispatch({ type: ActionType.SET_SETUP_CARD, payload: { id, name: label } });
