@@ -1,24 +1,14 @@
 import React, { useMemo } from 'react';
-import { Step } from '../types';
+import { Step, StructuredContent } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { determineNavDeckDetails } from '../utils/nav';
+import { getNavDeckDetails } from '../utils/selectors';
 import { cls } from '../utils/style';
 
 interface NavDeckStepProps {
   step: Step;
 }
-
-const ActionText = ({ children }: { children?: React.ReactNode }): React.ReactElement => {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  return (
-    <span className={cls("font-bold border-b border-dotted", isDark ? 'border-zinc-500' : 'border-gray-400')}>
-      {children}
-    </span>
-  );
-};
 
 // Sub-component for Reshuffle Rules display
 const ReshuffleRulesDisplay = ({ isSolo, isHighPlayerCount, playerCount }: { isSolo: boolean, isHighPlayerCount: boolean, playerCount: number }) => {
@@ -88,7 +78,7 @@ export const NavDeckStep = ({ step }: NavDeckStepProps): React.ReactElement => {
     showStandardRules, 
     isSolo, 
     isHighPlayerCount 
-  } = useMemo(() => determineNavDeckDetails(gameState, overrides), [gameState, overrides]);
+  } = useMemo(() => getNavDeckDetails(gameState, overrides), [gameState, overrides]);
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -98,29 +88,30 @@ export const NavDeckStep = ({ step }: NavDeckStepProps): React.ReactElement => {
   const panelText = isDark ? 'text-gray-300' : 'text-gray-800';
   const hasRimDecks = gameState.expansions.blue || gameState.expansions.kalidasa;
 
+  const forcedReshuffleContent: StructuredContent = [
+    { type: 'paragraph', content: ['Place the ', { type: 'action', content: '"RESHUFFLE"' }, ' cards in the Nav Decks at the start of the game, regardless of the number of players.'] }
+  ];
+  if (hasRimDecks) {
+    forcedReshuffleContent.push({ type: 'paragraph', content: ["This applies to all active decks (including Rim Space)."] });
+  }
+
   return (
     <>
       <div className={cls(panelBg, "p-6 rounded-lg border shadow-sm mb-6 overflow-hidden transition-colors duration-300 space-y-4", panelBorder)}>
         {showStandardRules && (
-          <p className={cls(panelText)}><ActionText>Shuffle Alliance & Border Nav Cards</ActionText> according to standard player count rules.</p>
+          <p className={cls(panelText)}><span className={cls("font-bold border-b border-dotted", isDark ? 'border-zinc-500' : 'border-gray-400')}>Shuffle Alliance & Border Nav Cards</span> according to standard player count rules.</p>
         )}
         
         {forceReshuffle && (
-          <SpecialRuleBlock source="setupCard" title="Forced Reshuffle">
-             <p>
-                Place the <ActionText>"RESHUFFLE"</ActionText> cards in the Nav Decks at the start of the game, regardless of the number of players.
-            </p>
-            {hasRimDecks && (
-                <p className="text-xs italic opacity-80 mt-2">This applies to all active decks (including Rim Space).</p>
-            )}
-          </SpecialRuleBlock>
+          <SpecialRuleBlock source="setupCard" title="Forced Reshuffle" content={forcedReshuffleContent} />
         )}
 
         {clearerSkies && (
-          <SpecialRuleBlock source="setupCard" title="Clearer Skies" page={6} manual="C&P">
-            <strong>Clearer Skies Rule:</strong> When initiating a Full Burn, roll a die. The result is how many sectors you may move before you start drawing Nav Cards.
-            <br /><span className="text-xs italic opacity-75">Note: You may not move farther than your Drive Core's range, regardless of the die roll.</span>
-          </SpecialRuleBlock>
+          <SpecialRuleBlock source="setupCard" title="Clearer Skies" page={6} manual="C&P" content={[
+            { type: 'strong', content: 'Clearer Skies Rule:' }, ' When initiating a Full Burn, roll a die. The result is how many sectors you may move before you start drawing Nav Cards.',
+            { type: 'br' },
+            "Note: You may not move farther than your Drive Core's range, regardless of the die roll."
+          ]} />
         )}
       </div>
 

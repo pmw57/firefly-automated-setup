@@ -104,29 +104,21 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
 
       {/* Detailed Setup Description Block */}
       {activeStoryCard.setupDescription && (
-        <SpecialRuleBlock source="story" title="Story Override">
-          {activeStoryCard.setupDescription}
-        </SpecialRuleBlock>
+        <SpecialRuleBlock source="story" title="Story Override" content={[activeStoryCard.setupDescription]} />
       )}
 
       {/* Solo Adjustments */}
       {gameState.gameMode === 'solo' && SOLO_TIMER_ADJUSTMENTS[activeStoryCard.title] && (
-        <SpecialRuleBlock source="expansion" title="Solo Adjustment">
-          {SOLO_TIMER_ADJUSTMENTS[activeStoryCard.title]}
-        </SpecialRuleBlock>
+        <SpecialRuleBlock source="expansion" title="Solo Adjustment" content={[SOLO_TIMER_ADJUSTMENTS[activeStoryCard.title]]} />
       )}
 
       {/* Solo Mode Information Block */}
       {gameState.setupCardId === 'FlyingSolo' && (
-        <SpecialRuleBlock source="expansion" title="10th AE Solo Rules">
-          <p>You may play any Story Card in Expanded Solo Mode. Automated NPC movement and Variable Timer rules apply.</p>
-        </SpecialRuleBlock>
+        <SpecialRuleBlock source="expansion" title="10th AE Solo Rules" content={["You may play any Story Card in Expanded Solo Mode. Automated NPC movement and Variable Timer rules apply."]} />
       )}
 
       {setupNote && !activeStoryCard.setupDescription && (
-        <SpecialRuleBlock source="warning" title="Location Override">
-          {setupNote}
-        </SpecialRuleBlock>
+        <SpecialRuleBlock source="warning" title="Location Override" content={[setupNote]} />
       )}
 
       {activeStoryCard.sourceUrl && (

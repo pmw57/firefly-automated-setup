@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Step } from '../types';
-import { calculateStartingResources } from '../utils/resources';
+import { getResourceDetails, getActiveStoryCard } from '../utils/selectors';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { STORY_CARDS } from '../data/storyCards';
 import { hasFlag } from '../utils/data';
 import { ConflictResolver } from './ConflictResolver';
 import { ActionType } from '../state/actions';
@@ -16,14 +15,14 @@ interface ResourcesStepProps {
 
 export const ResourcesStep: React.FC<ResourcesStepProps> = () => {
   const { state: gameState, dispatch } = useGameState();
-  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard);
+  const activeStoryCard = getActiveStoryCard(gameState);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   const [manualSelection, setManualSelection] = useState<'story' | 'setupCard'>('story');
   
   const resourceDetails = React.useMemo(() => 
-    calculateStartingResources(gameState, manualSelection),
+    getResourceDetails(gameState, manualSelection),
     [gameState, manualSelection]
   );
   
@@ -104,27 +103,19 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = () => {
       </div>
       
       {warrants > 0 && (
-        <SpecialRuleBlock source="story" title="Warrant Issued">
-          Each player begins the game with <strong>{warrants} Warrant Token{warrants > 1 ? 's' : ''}</strong>.
-        </SpecialRuleBlock>
+        <SpecialRuleBlock source="story" title="Warrant Issued" content={["Each player begins the game with ", { type: 'strong', content: `${warrants} Warrant Token${warrants > 1 ? 's' : ''}` }, "."]} />
       )}
 
       {goalTokens > 0 && (
-        <SpecialRuleBlock source="story" title="Story Override">
-          Begin play with <strong>{goalTokens} Goal Token{goalTokens > 1 ? 's' : ''}</strong>.
-        </SpecialRuleBlock>
+        <SpecialRuleBlock source="story" title="Story Override" content={["Begin play with ", { type: 'strong', content: `${goalTokens} Goal Token${goalTokens > 1 ? 's' : ''}` }, "."]} />
       )}
 
       {removeRiver && (
-        <SpecialRuleBlock source="story" title="Missing Person">
-          Remove <strong>River Tam</strong> from play.
-        </SpecialRuleBlock>
+        <SpecialRuleBlock source="story" title="Missing Person" content={["Remove ", { type: 'strong', content: "River Tam" }, " from play."]} />
       )}
 
       {nandiCrewDiscount && (
-        <SpecialRuleBlock source="story" title="Hiring Bonus">
-          Nandi pays half price (rounded up) when hiring crew.
-        </SpecialRuleBlock>
+        <SpecialRuleBlock source="story" title="Hiring Bonus" content={["Nandi pays half price (rounded up) when hiring crew."]} />
       )}
     </div>
   );

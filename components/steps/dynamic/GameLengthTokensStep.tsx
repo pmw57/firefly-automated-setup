@@ -22,9 +22,7 @@ export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = () => {
     // Handle Disable Flag
     if (hasFlag(activeStoryCard.setupConfig, 'disableSoloTimer')) {
         return (
-            <SpecialRuleBlock source="story" title="Story Override">
-                <strong>No Timer:</strong> Do not use a Game Timer for this game.
-            </SpecialRuleBlock>
+            <SpecialRuleBlock source="story" title="Story Override" content={[{ type: 'strong', content: "No Timer:" }, " Do not use a Game Timer for this game."]} />
         );
     }
     
@@ -60,9 +58,7 @@ export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = () => {
     return (
         <div className="space-y-6">
             {tokensToRemove > 0 && (
-                <SpecialRuleBlock source="story" title="Campaign Rule: Time Catches Up">
-                    Removing <strong>{tokensToRemove} tokens</strong> from the timer for your <strong>{gameState.campaignStoriesCompleted}</strong> completed stories.
-                </SpecialRuleBlock>
+                <SpecialRuleBlock source="story" title="Campaign Rule: Time Catches Up" content={["Removing ", { type: 'strong', content: `${tokensToRemove} tokens` }, " from the timer for your ", { type: 'strong', content: `${gameState.campaignStoriesCompleted}` }, " completed stories."]} />
             )}
 
             {(shesTrouble || recipeForUnpleasantness) && (
@@ -103,10 +99,10 @@ export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = () => {
 
             {mode === 'unpredictable' && (
                 <div className={`animate-fade-in space-y-4`}>
-                    <SpecialRuleBlock source="expansion" title="Pirates & Bounty Hunters Rule">
-                         <p>Replace the bottom Game Length Tokens with numbered Destination Tokens.</p>
-                         <p className="mt-2 text-sm"><strong>The Mechanic:</strong> Whenever you discard a numbered Game Length Token, <strong>roll a die</strong>. If you roll <strong>equal to or lower</strong> than the number, discard all remaining Game Length Tokens. Take one final turn.</p>
-                    </SpecialRuleBlock>
+                    <SpecialRuleBlock source="expansion" title="Pirates & Bounty Hunters Rule" content={[
+                        { type: 'paragraph', content: ["Replace the bottom Game Length Tokens with numbered Destination Tokens."] },
+                        { type: 'paragraph', content: [{ type: 'strong', content: 'The Mechanic:' }, " Whenever you discard a numbered Game Length Token, ", { type: 'strong', content: 'roll a die' }, ". If you roll ", { type: 'strong', content: 'equal to or lower' }, " than the number, discard all remaining Game Length Tokens. Take one final turn."] }
+                    ]}/>
 
                     <div className={`${panelBg} p-4 rounded-lg border ${panelBorder}`}>
                         <h5 className={`font-bold text-sm uppercase tracking-wide mb-3 ${textColor}`}>Configure Stack</h5>

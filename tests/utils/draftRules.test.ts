@@ -1,15 +1,35 @@
-import React from 'react';
 import { describe, it, expect } from 'vitest';
 import { calculateDraftDetails } from '../../utils/draftRules';
-import { GameState, Step } from '../../types';
+import { GameState, Step, StructuredContent, StructuredContentPart } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
 import { STEP_IDS, STORY_TITLES, CHALLENGE_IDS } from '../../data/ids';
 
-// Helper to recursively flatten React children to a searchable string
-const getTextContent = (content: React.ReactNode): string => {
-    return React.Children.toArray(content)
-      .map(child => (React.isValidElement(child) ? getTextContent(child.props.children) : child))
-      .join('');
+// Helper to recursively flatten structured content to a searchable string
+const getTextContent = (content: StructuredContent | StructuredContentPart | undefined): string => {
+    if (typeof content === 'string') {
+        return content;
+    }
+    if (Array.isArray(content)) {
+        return content.map(part => getTextContent(part)).join('');
+    }
+    if (!content) return '';
+
+    switch(content.type) {
+        case 'strong':
+        case 'action':
+        case 'paragraph':
+        case 'warning-box':
+            return getTextContent(content.content);
+        case 'list':
+        case 'numbered-list':
+            return content.items.map(item => getTextContent(item)).join(' ');
+        case 'sub-list':
+            return content.items.map(item => item.ship).join(' ');
+        case 'br':
+            return ' ';
+        default:
+            return '';
+    }
 };
 
 describe('utils/draftRules', () => {

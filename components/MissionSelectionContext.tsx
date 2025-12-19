@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types';
 import { useGameState } from '../hooks/useGameState';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
-import { getAvailableStoryCards } from '../utils/selectors';
+import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard } from '../utils/selectors';
 import { STORY_CARDS } from '../data/storyCards';
 import { SETUP_CARD_IDS } from '../data/ids';
 import { ActionType } from '../state/actions';
@@ -18,42 +18,18 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   const [sortMode, setSortMode] = useState<'expansion' | 'name'>('expansion');
 
   // Memoized derived data
-  const activeStoryCard = useMemo(() => 
-    STORY_CARDS.find(c => c.title === gameState.selectedStoryCard),
-    [gameState.selectedStoryCard]
-  );
+  const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
 
   const isClassicSolo = useMemo(() => 
     gameState.gameMode === 'solo' && gameState.setupCardId !== SETUP_CARD_IDS.FLYING_SOLO,
     [gameState.gameMode, gameState.setupCardId]
   );
 
-  const validStories = useMemo(() => 
-    getAvailableStoryCards(gameState),
-    [gameState]
-  );
+  const validStories = useMemo(() => getAvailableStoryCards(gameState), [gameState]);
 
   const filteredStories = useMemo(() => {
-    // 1. Filter by search term and expansion dropdown
-    const stories = validStories.filter(card => {
-        const matchesSearch = searchTerm === '' || 
-           card.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-           card.intro.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesExpansion = filterExpansion === 'all' || card.requiredExpansion === filterExpansion || (!card.requiredExpansion && filterExpansion === 'base');
-        return matchesSearch && matchesExpansion;
-    });
-    
-    // 2. Sort the filtered results
-    if (sortMode === 'name') {
-      const getSortableTitle = (str: string) => {
-        return str.replace(/^[^a-zA-Z0-9]+/, '').replace(/^The\s+/i, '');
-      };
-      stories.sort((a, b) => getSortableTitle(a.title).localeCompare(getSortableTitle(b.title)));
-    } 
-    // Default 'expansion' sort is handled by the initial `STORY_CARDS` array sort order.
-    
-    return stories;
-  }, [validStories, searchTerm, filterExpansion, sortMode]);
+    return getFilteredStoryCards(gameState, { searchTerm, filterExpansion, sortMode });
+  }, [gameState, searchTerm, filterExpansion, sortMode]);
 
   const availableAdvancedRules: AdvancedRuleDef[] = useMemo(() => {
     const rules: AdvancedRuleDef[] = [];

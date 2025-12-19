@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { GameState, Step } from '../types';
 import { useTheme } from './ThemeContext';
-import { calculateHeaderDetails } from '../utils/header';
+import { getHeaderDetails } from '../utils/selectors';
 
 interface WizardHeaderProps {
     gameState: GameState;
@@ -16,7 +16,7 @@ export const WizardHeader = ({ gameState, onReset, flow, currentStepIndex }: Wiz
     const isDark = theme === 'dark';
 
     const { setupName, storyName, soloMode } = useMemo(() => 
-        calculateHeaderDetails(gameState, flow, currentStepIndex),
+        getHeaderDetails(gameState, flow, currentStepIndex),
         [gameState, flow, currentStepIndex]
     );
 
