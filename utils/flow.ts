@@ -48,27 +48,7 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
 
     const setupCard = SETUP_CARDS.find(s => s.id === primarySequenceCardId) || SETUP_CARDS.find(s => s.id === SETUP_CARD_IDS.STANDARD)!;
 
-    let stepDefs = setupCard.steps;
-    
-    const secondaryIsStandard = !state.secondarySetupId || state.secondarySetupId === SETUP_CARD_IDS.STANDARD;
-    const isStandardBasedSetup = (setupCard.id === SETUP_CARD_IDS.STANDARD) || (isFlyingSolo && secondaryIsStandard);
-
-    if (isStandardBasedSetup) {
-        const hasTenth = state.expansions.tenth;
-        const page1 = hasTenth ? 12 : 3;
-        const page2 = hasTenth ? 13 : 4;
-        const manual = hasTenth ? '10th AE' : 'Core';
-        
-        stepDefs = stepDefs.map(stepDef => {
-            if (['C1', 'C2', 'C3'].includes(stepDef.id)) {
-                return { ...stepDef, page: page1, manual };
-            }
-            if (['C4', 'C5', 'C6', 'C_PRIME'].includes(stepDef.id)) {
-                return { ...stepDef, page: page2, manual };
-            }
-            return stepDef;
-        });
-    }
+    const stepDefs = setupCard.steps;
 
     let steps = stepDefs
         .map(stepDef => createStep(stepDef))

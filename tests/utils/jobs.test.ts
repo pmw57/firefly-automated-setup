@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-// Fix: Correct import path.
 import { determineJobSetupDetails } from '../../utils/jobs';
 import { GameState, StoryCardDef, StoryCardConfig, StepOverrides } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';

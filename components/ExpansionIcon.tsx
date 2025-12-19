@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { ExpansionDef, ThemeColor } from '../types';
 import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../data/expansions';
@@ -24,16 +25,16 @@ const ABBREVIATIONS: Record<string, string> = {
 };
 
 const THEME_COLOR_CLASSES: Record<ThemeColor, string> = {
-    orangeRed: 'bg-[#FF4500] border-orange-600',
-    steelBlue: 'bg-[#4682B4] border-sky-600',
+    orangeRed: 'bg-expansion-orangeRed border-orange-600',
+    steelBlue: 'bg-expansion-steelBlue border-sky-600',
     black: 'bg-black border-zinc-700',
-    darkSlateBlue: 'bg-[#483D8B] border-indigo-700',
-    deepBrown: 'bg-[#231709] border-[#3E2910]',
-    rebeccaPurple: 'bg-[#663399] border-purple-700',
-    cordovan: 'bg-[#893f45] border-red-800',
-    darkOliveGreen: 'bg-[#556b2f] border-lime-800',
-    saddleBrown: 'bg-[#8b4513] border-orange-800',
-    teal: 'bg-teal-600 border-teal-700',
+    darkSlateBlue: 'bg-expansion-darkSlateBlue border-indigo-700',
+    deepBrown: 'bg-expansion-deepBrown border-stone-800',
+    rebeccaPurple: 'bg-expansion-rebeccaPurple border-purple-700',
+    cordovan: 'bg-expansion-cordovan border-red-800',
+    darkOliveGreen: 'bg-expansion-darkOliveGreen border-lime-800',
+    saddleBrown: 'bg-firefly-saddleBrown border-orange-800',
+    teal: 'bg-expansion-teal border-teal-700',
     dark: 'bg-gray-800 border-gray-600',
 };
 

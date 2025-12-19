@@ -73,7 +73,8 @@ const enforceMultiplayerConstraints = (state: GameState): GameState => {
         newState.secondarySetupId = undefined;
     }
 
-    // Reset Story Card if it was Solo-only and we are now Multiplayer
+    // SIDE EFFECT: Reset Story Card if it was Solo-only and we are now Multiplayer.
+    // This prevents an invalid game state where a solo story is selected in a multiplayer game.
     const currentStoryDef = STORY_CARDS.find(c => c.title === state.selectedStoryCard);
     if (currentStoryDef?.isSolo) {
         const defaultMulti = STORY_CARDS.find(c => !c.isSolo && c.requiredExpansion !== 'community') || STORY_CARDS[0];
@@ -115,7 +116,9 @@ const handleExpansionToggle = (state: GameState, expansionId: keyof GameState['e
         newState.gameEdition = nextExpansions.tenth ? 'tenth' : 'original';
     }
 
-    // Validate Setup Card against new expansion state
+    // SIDE EFFECT: Validate Setup Card against new expansion state.
+    // If an expansion required by the current setup card is disabled,
+    // we must reset to the standard setup to prevent an invalid state.
     const currentSetup = SETUP_CARDS.find(s => s.id === state.setupCardId);
     let shouldResetSetup = false;
 

@@ -1,9 +1,7 @@
-import { GameState, AllianceReaverDetails } from '../types';
+import { GameState, AllianceReaverDetails, StoryCardDef } from '../types';
 import { hasFlag } from './data';
-import { STORY_CARDS } from '../data/storyCards';
 
-export const calculateAllianceReaverDetails = (gameState: GameState): AllianceReaverDetails => {
-  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard);
+export const calculateAllianceReaverDetails = (gameState: GameState, activeStoryCard: StoryCardDef | undefined): AllianceReaverDetails => {
   const storyConfig = activeStoryCard?.setupConfig;
 
   const smugglersBluesSetup = hasFlag(storyConfig, 'smugglersBluesSetup');

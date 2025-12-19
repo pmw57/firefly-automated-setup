@@ -24,13 +24,13 @@ const BASE_TITLES = {
 
 // Standard Flow Template
 const STANDARD_STEPS: SetupCardStep[] = [
-  { id: 'C1', title: `1. ${BASE_TITLES.C1}` }, 
-  { id: 'C2', title: `2. ${BASE_TITLES.C2}` }, 
-  { id: 'C3', title: `3. ${BASE_TITLES.C3}` }, 
-  { id: 'C4', title: `4. ${BASE_TITLES.C4}` }, 
-  { id: 'C5', title: `5. ${BASE_TITLES.C5}` }, 
-  { id: 'C6', title: `6. ${BASE_TITLES.C6}` }, 
-  { id: 'C_PRIME', title: `7. ${BASE_TITLES.C_PRIME}` }
+  { id: 'C1', title: `1. ${BASE_TITLES.C1}`, page: 3, manual: 'Core' }, 
+  { id: 'C2', title: `2. ${BASE_TITLES.C2}`, page: 3, manual: 'Core' }, 
+  { id: 'C3', title: `3. ${BASE_TITLES.C3}`, page: 3, manual: 'Core' }, 
+  { id: 'C4', title: `4. ${BASE_TITLES.C4}`, page: 4, manual: 'Core' }, 
+  { id: 'C5', title: `5. ${BASE_TITLES.C5}`, page: 4, manual: 'Core' }, 
+  { id: 'C6', title: `6. ${BASE_TITLES.C6}`, page: 4, manual: 'Core' }, 
+  { id: 'C_PRIME', title: `7. ${BASE_TITLES.C_PRIME}`, page: 4, manual: 'Core' }
 ];
 
 export const SETUP_CARDS: SetupCardDef[] = [
