@@ -10,16 +10,6 @@ interface AllianceReaverStepProps {
   step: Step;
 }
 
-const ActionText: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  return (
-    <span className={`font-bold border-b border-dotted ${isDark ? 'border-zinc-500' : 'border-gray-400'}`}>
-      {children}
-    </span>
-  );
-};
-
 export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) => {
   const { state: gameState } = useGameState();
   const { allianceMode } = step.overrides || {};
@@ -30,14 +20,13 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) 
   );
 
   const {
-    useSmugglersRimRule,
-    alertStackCount,
-    placeAllianceAlertsInAllianceSpace,
-    placeMixedAlertTokens,
-    smugglersBluesSetup,
-    lonelySmugglerSetup,
-    startWithAlertCard
-  } = React.useMemo(() => calculateAllianceReaverDetails(gameState, activeStoryCard), [gameState, activeStoryCard]);
+    specialRules,
+    alliancePlacement,
+    reaverPlacement
+  } = React.useMemo(() => 
+    calculateAllianceReaverDetails(gameState, activeStoryCard, allianceMode), 
+    [gameState, activeStoryCard, allianceMode]
+  );
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -55,93 +44,24 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) 
   const reaverTitle = isDark ? 'text-red-300' : 'text-red-900';
   const reaverText = isDark ? 'text-red-200' : 'text-red-800';
 
-  const warningText = isDark ? 'text-red-400' : 'text-red-700';
-
   return (
     <div className="space-y-4">
-      {allianceMode === 'no_alerts' && (
-        <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-          <strong>Safe Skies:</strong> Do not use Reaver or Alliance Alert Tokens for this setup card.
+      {specialRules.map((rule, index) => (
+        <SpecialRuleBlock key={index} source={rule.source} title={rule.title}>
+          {rule.content}
         </SpecialRuleBlock>
-      )}
-      
-      {allianceMode === 'awful_crowded' && (
-        <SpecialRuleBlock source="setupCard" title="Setup Card Override">
-          <strong>Awful Crowded:</strong>
-          <ul className="list-disc ml-4 space-y-1 mt-1">
-            <li>Place an <ActionText>Alert Token</ActionText> in <strong>every planetary sector</strong>.</li>
-            <li><strong>Alliance Space:</strong> Place Alliance Alert Tokens.</li>
-            <li><strong>Border & Rim Space:</strong> Place Reaver Alert Tokens.</li>
-            <li className={`${warningText} italic font-bold`}>Do not place Alert Tokens on players' starting locations.</li>
-            <li><strong>Alliance Ship movement</strong> does not generate new Alert Tokens.</li>
-            <li><strong>Reaver Ship movement</strong> generates new Alert Tokens.</li>
-          </ul>
-        </SpecialRuleBlock>
-      )}
-
-      {placeAllianceAlertsInAllianceSpace && (
-        <SpecialRuleBlock source="story" title="Story Override">
-          Place an <ActionText>Alliance Alert Token</ActionText> on <strong>every planetary sector in Alliance Space</strong>.
-        </SpecialRuleBlock>
-      )}
-
-      {placeMixedAlertTokens && (
-        <SpecialRuleBlock source="story" title="Story Override">
-          Place <strong>3 Alliance Alert Tokens</strong> in the 'Verse:
-          <ul className="list-disc ml-4 mt-1">
-            <li>1 in <strong>Alliance Space</strong></li>
-            <li>1 in <strong>Border Space</strong></li>
-            <li>1 in <strong>Rim Space</strong></li>
-          </ul>
-        </SpecialRuleBlock>
-      )}
-
-      {alertStackCount > 0 && (
-        <SpecialRuleBlock source="story" title="Story Override">
-          Create a stack of <strong>{alertStackCount} Alliance Alert Tokens</strong> (3 per player).
-        </SpecialRuleBlock>
-      )}
-
-      {smugglersBluesSetup && (
-        <SpecialRuleBlock source="story" title="Story Override">
-          {useSmugglersRimRule ? (
-            <span>Place <strong>2 Contraband</strong> on each Planetary Sector in <strong>Rim Space</strong>.</span>
-          ) : (
-            <span>Place <strong>3 Contraband</strong> on each Planetary Sector in <strong>Alliance Space</strong>.</span>
-          )}
-        </SpecialRuleBlock>
-      )}
-
-      {lonelySmugglerSetup && (
-         <SpecialRuleBlock source="story" title="Story Override">
-            Place <strong>3 Contraband</strong> on each Supply Planet <strong>except Persephone and Space Bazaar</strong>.
-         </SpecialRuleBlock>
-      )}
-
-      {startWithAlertCard && (
-        <SpecialRuleBlock source="story" title="Story Override">
-          Begin the game with one random Alliance Alert Card in play.
-        </SpecialRuleBlock>
-      )}
+      ))}
 
       <div className={`${standardContainerBg} p-4 rounded-lg border ${standardContainerBorder} shadow-sm mt-4 transition-colors duration-300`}>
         <h3 className={`text-lg font-bold ${headerColor} mb-3 font-western tracking-wide border-b-2 ${headerBorder} pb-1`}>Standard Ship Placement</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className={`p-3 rounded border ${allianceBoxBg}`}>
             <strong className={`block text-sm uppercase mb-1 ${allianceTitle}`}>Alliance Cruiser</strong>
-            <p className={`text-sm ${allianceText}`}>
-              {allianceMode === 'extra_cruisers'
-                ? <span>Place a Cruiser at <strong>Regulus</strong> AND <strong>Persephone</strong>.</span>
-                : <span>Place the Cruiser at <strong>Londinium</strong>.</span>}
-            </p>
+            <p className={`text-sm ${allianceText}`}>{alliancePlacement}</p>
           </div>
           <div className={`p-3 rounded border ${reaverBoxBg}`}>
             <strong className={`block text-sm uppercase mb-1 ${reaverTitle}`}>Reaver Cutter</strong>
-            <p className={`text-sm ${reaverText}`}>
-              {gameState.expansions.blue
-                ? <span>Place <strong>3 Cutters</strong> in the border sectors closest to <strong>Miranda</strong>.</span>
-                : <span>Place <strong>1 Cutter</strong> at the <strong>Firefly logo</strong> (Regina/Osiris).</span>}
-            </p>
+            <p className={`text-sm ${reaverText}`}>{reaverPlacement}</p>
           </div>
         </div>
       </div>

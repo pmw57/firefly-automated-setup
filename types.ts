@@ -319,12 +319,14 @@ export interface PrimeDetails {
   isBlitz: boolean;
 }
 
+export interface SpecialRule {
+    source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
+    title: string;
+    content: React.ReactNode;
+}
+
 export interface AllianceReaverDetails {
-  useSmugglersRimRule: boolean;
-  alertStackCount: number;
-  placeAllianceAlertsInAllianceSpace: boolean;
-  placeMixedAlertTokens: boolean;
-  smugglersBluesSetup: boolean;
-  lonelySmugglerSetup: boolean;
-  startWithAlertCard: boolean;
+  specialRules: SpecialRule[];
+  alliancePlacement: string;
+  reaverPlacement: string;
 }
