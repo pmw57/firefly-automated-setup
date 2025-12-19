@@ -93,7 +93,7 @@ export const StepContent = ({ step, onNext, onPrev }: StepContentProps): React.R
             return config.startingCreditsBonus !== undefined ||
                    config.startingCreditsOverride !== undefined ||
                    hasFlag(config, 'noStartingFuelParts') ||
-                   config.customStartingFuel !== undefined ||
+                   config.customFuel !== undefined ||
                    hasFlag(config, 'startWithWarrant') ||
                    hasFlag(config, 'removeRiver') ||
                    hasFlag(config, 'nandiCrewDiscount') ||
@@ -180,7 +180,7 @@ export const StepContent = ({ step, onNext, onPrev }: StepContentProps): React.R
     <div className="animate-fade-in-up">
       <div className="flex flex-wrap items-start justify-between mb-6 gap-4">
         <h2 className={cls("text-2xl font-bold font-western flex-1 min-w-[200px] transition-colors duration-300 flex justify-between items-center p-3 rounded-lg shadow-md", headerBg, headerColor)}>
-          <div className="flex items-baseline gap-2">
+          <div className="flex flex-wrap items-baseline gap-x-2">
             <span>{displayTitle}</span>
             {step.page && <PageReference page={step.page} manual={step.manual} />}
           </div>
