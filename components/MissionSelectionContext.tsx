@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types';
 import { useGameState } from '../hooks/useGameState';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
-import { isStoryCompatible } from '../utils/filters';
+import { getAvailableStoryCards } from '../utils/selectors';
 import { STORY_CARDS } from '../data/storyCards';
 import { SETUP_CARD_IDS } from '../data/ids';
 import { ActionType } from '../state/actions';
@@ -29,7 +29,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   );
 
   const validStories = useMemo(() => 
-    STORY_CARDS.filter(card => isStoryCompatible(card, gameState)),
+    getAvailableStoryCards(gameState),
     [gameState]
   );
 
