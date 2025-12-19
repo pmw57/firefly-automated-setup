@@ -1,9 +1,10 @@
 import { GameState, StepOverrides } from '../types';
 
 export const determineNavDeckDetails = (gameState: GameState, overrides: StepOverrides) => {
-    const { navMode, forceReshuffle: forceReshuffleOverride } = overrides;
+    const { navMode } = overrides;
 
-    const forceReshuffle = !!forceReshuffleOverride || 
+    const forceReshuffle = 
+        navMode === 'standard_reshuffle' ||
         navMode === 'browncoat' || 
         navMode === 'rim' || 
         navMode === 'flying_solo' ||

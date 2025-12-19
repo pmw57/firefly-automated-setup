@@ -27,8 +27,8 @@ describe('utils/nav', () => {
       expect(details.showStandardRules).toBe(false);
     });
     
-    it('identifies forceReshuffle override', () => {
-      const details = determineNavDeckDetails(baseGameState, { forceReshuffle: true });
+    it('identifies standard_reshuffle navMode', () => {
+      const details = determineNavDeckDetails(baseGameState, { navMode: 'standard_reshuffle' });
       expect(details.forceReshuffle).toBe(true);
       expect(details.showStandardRules).toBe(false);
     });
@@ -44,6 +44,7 @@ describe('utils/nav', () => {
       // FIX: Replaced non-existent `clearerSkiesNavMode` with `navMode: 'clearer_skies'`.
       const details = determineNavDeckDetails(baseGameState, { navMode: 'clearer_skies' });
       expect(details.clearerSkies).toBe(true);
+      expect(details.forceReshuffle).toBe(true);
     });
 
     it('correctly identifies solo vs multiplayer', () => {
