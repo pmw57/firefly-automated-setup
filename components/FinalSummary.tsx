@@ -2,8 +2,7 @@ import React from 'react';
 import { GameState } from '../types';
 import { getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../utils/ui';
 import { useTheme } from './ThemeContext';
-import { STORY_CARDS } from '../data/storyCards';
-import { EXPANSIONS_METADATA } from '../data/expansions';
+import { getActiveStoryCard, getActiveExpansions, getActiveAdvancedRules } from '../utils/selectors';
 
 interface FinalSummaryProps {
   gameState: GameState;
@@ -13,8 +12,8 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     
-    const activeStory = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard);
-    const activeExpansions = EXPANSIONS_METADATA.filter(e => gameState.expansions[e.id as keyof typeof gameState.expansions] && e.id !== 'base').map(e => e.label);
+    const activeStory = getActiveStoryCard(gameState);
+    const activeExpansions = getActiveExpansions(gameState);
     
     const displaySetupName = getDisplaySetupName(gameState);
     const timerSummary = getTimerSummaryText(gameState, activeStory);
@@ -31,9 +30,7 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
 
     // Calculate Active Challenges & Advanced Rules
     const activeStoryChallenges = activeStory?.challengeOptions?.filter(o => gameState.challengeOptions[o.id]) || [];
-    const activeAdvancedRules = STORY_CARDS
-        .filter(c => c.advancedRule && gameState.challengeOptions[c.advancedRule.id])
-        .map(c => c.advancedRule!);
+    const activeAdvancedRules = getActiveAdvancedRules(gameState);
 
     // Styles
     const summaryBg = isDark ? 'bg-black/20' : 'bg-amber-50/50';

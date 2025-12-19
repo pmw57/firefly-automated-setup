@@ -2,8 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types';
 import { useGameState } from '../hooks/useGameState';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
-import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard } from '../utils/selectors';
-import { STORY_CARDS } from '../data/storyCards';
+import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getStoryCardByTitle, getAvailableAdvancedRules } from '../utils/selectors';
 import { SETUP_CARD_IDS } from '../data/ids';
 import { ActionType } from '../state/actions';
 
@@ -31,19 +30,10 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     return getFilteredStoryCards(gameState, { searchTerm, filterExpansion, sortMode });
   }, [gameState, searchTerm, filterExpansion, sortMode]);
 
-  const availableAdvancedRules: AdvancedRuleDef[] = useMemo(() => {
-    const rules: AdvancedRuleDef[] = [];
-    if (gameState.gameMode === 'solo' && gameState.expansions.tenth && activeStoryCard) {
-      STORY_CARDS.forEach(card => {
-        if (card.advancedRule && card.title !== activeStoryCard.title) {
-          const hasReq = !card.requiredExpansion || gameState.expansions[card.requiredExpansion];
-          if (hasReq) rules.push(card.advancedRule);
-        }
-      });
-      rules.sort((a, b) => a.title.localeCompare(b.title));
-    }
-    return rules;
-  }, [gameState.gameMode, gameState.expansions, activeStoryCard]);
+  const availableAdvancedRules: AdvancedRuleDef[] = useMemo(() => 
+    getAvailableAdvancedRules(gameState, activeStoryCard),
+    [gameState, activeStoryCard]
+  );
 
   const enablePart2 = useMemo(() => 
     gameState.gameMode === 'solo' && gameState.expansions.tenth,
@@ -52,7 +42,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
 
   // Actions wrapped in useCallback for performance
   const handleStoryCardSelect = useCallback((title: string) => {
-    const card = STORY_CARDS.find(c => c.title === title);
+    const card = getStoryCardByTitle(title);
     dispatch({ 
       type: ActionType.SET_STORY_CARD, 
       payload: { 

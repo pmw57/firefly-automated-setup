@@ -123,7 +123,6 @@ export interface SetupCardDef {
   steps: SetupCardStep[];
   mode?: GameMode;
   overrides?: StepOverrides;
-  // FIX: Changed type from Effect[] to ModifyResourceEffect[] to allow for 'resource' property.
   effects?: ModifyResourceEffect[];
 }
 
@@ -152,7 +151,6 @@ export interface StoryCardConfig {
   jobDrawMode?: JobMode;
   primingMultiplier?: number;
   primeModifier?: { add: number };
-  // FIX: Added missing property 'createAlertTokenStackMultiplier'.
   createAlertTokenStackMultiplier?: number;
 
   shipPlacementMode?: 'persephone';
@@ -187,7 +185,6 @@ export interface StoryCardDef {
   requiredExpansion?: keyof Expansions;
   additionalRequirements?: (keyof Expansions)[];
   setupConfig?: StoryCardConfig;
-  // FIX: Changed type from Effect[] to ModifyResourceEffect[] to allow for 'resource' property.
   effects?: ModifyResourceEffect[];
   sourceUrl?: string;
   goals?: StoryCardGoal[];
@@ -329,6 +326,7 @@ export interface PrimeDetails {
   finalCount: number;
   isHighSupplyVolume: boolean;
   isBlitz: boolean;
+  isSlayingTheDragon: boolean;
 }
 
 export interface SpecialRule {

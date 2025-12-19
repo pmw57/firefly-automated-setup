@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react';
 import { Step } from '../types';
-import { getJobSetupDetails } from '../utils/selectors';
+import { getJobSetupDetails, getActiveStoryCard } from '../utils/selectors';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { STORY_CARDS } from '../data/storyCards';
 import { STEP_IDS } from '../data/ids';
 import { hasFlag } from '../utils/data';
 
@@ -15,7 +14,7 @@ interface JobStepProps {
 export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
   const { state: gameState } = useGameState();
   const { overrides = {} } = step;
-  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard);
+  const activeStoryCard = getActiveStoryCard(gameState);
   const stepId = step.data?.id || step.id;
   const { theme } = useTheme();
   const isDark = theme === 'dark';
