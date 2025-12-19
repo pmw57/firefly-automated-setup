@@ -57,7 +57,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: 'C2', title: `3. ${BASE_TITLES.C2}`, overrides: { awfulCrowdedAllianceMode: true } },
       { id: 'C4', title: `4. ${BASE_TITLES.C4}` },
       { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `6. ${BASE_TITLES.C6}`, overrides: { awfulJobMode: true } },
+      { id: 'C6', title: `6. ${BASE_TITLES.C6}`, overrides: { jobMode: 'awful_jobs' } },
       { id: 'C_PRIME', title: `7. ${BASE_TITLES.C_PRIME}` }
     ]
   },
@@ -70,12 +70,12 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'kalidasa',
     steps: [
       { id: 'D_RIM_JOBS', title: `1. ${BASE_TITLES.D_RIM_JOBS}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { rimNavMode: true } },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'rim' } },
       { id: 'C3', title: `3. ${BASE_TITLES.C3}` }, 
       { id: 'C2', title: `4. ${BASE_TITLES.C2}` },
       { id: 'C4', title: `5. ${BASE_TITLES.C4}` }, 
       { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}`, overrides: { rimJobMode: true } },
+      { id: 'C6', title: `7. ${BASE_TITLES.C6}`, overrides: { jobMode: 'rim_jobs' } },
       { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
@@ -91,7 +91,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: 'C2', title: `4. ${BASE_TITLES.C2}` },
       { id: 'C4', title: `5. ${BASE_TITLES.C4}` }, 
       { id: 'C5', title: `6. ${BASE_TITLES.C5}` }, 
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}`, overrides: { timesJobMode: true } }, 
+      { id: 'C6', title: `7. ${BASE_TITLES.C6}`, overrides: { jobMode: 'times_jobs' } }, 
       { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
@@ -102,13 +102,18 @@ export const SETUP_CARDS: SetupCardDef[] = [
     label: "The Browncoat Way",
     description: "A harder economy. Ships must be purchased with starting cash. No free fuel/parts. No starting jobs.",
     requiredExpansion: 'coachworks',
+    effects: [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 12000, source: { source: 'setupCard', name: "The Browncoat Way" }, description: "Setup Card Allocation" },
+      { type: 'modifyResource', resource: 'fuel', method: 'disable', source: { source: 'setupCard', name: "The Browncoat Way" }, description: "No free starting fuel." },
+      { type: 'modifyResource', resource: 'parts', method: 'disable', source: { source: 'setupCard', name: "The Browncoat Way" }, description: "No free starting parts." },
+    ],
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { browncoatNavMode: true }, page: 22, manual: 'Core' },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'browncoat' }, page: 22, manual: 'Core' },
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
-      { id: 'D_BC_CAPITOL', title: `4. ${BASE_TITLES.D_BC_CAPITOL}`, overrides: { startingCredits: 12000 } },
+      { id: 'D_BC_CAPITOL', title: `4. ${BASE_TITLES.D_BC_CAPITOL}` },
       { id: 'C3', title: `5. ${BASE_TITLES.C3}`, overrides: { browncoatDraftMode: true } },
-      { id: 'C6', title: `6. ${BASE_TITLES.C6}`, overrides: { browncoatJobMode: true } },
+      { id: 'C6', title: `6. ${BASE_TITLES.C6}`, overrides: { jobMode: 'no_jobs' } },
       { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
@@ -119,12 +124,12 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'coachworks',
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. Nav Setup`, overrides: { browncoatNavMode: true } },
+      { id: 'C1', title: `2. Nav Setup`, overrides: { navMode: 'browncoat' } },
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
       { id: 'D_STRIP_MINING', title: `5. ${BASE_TITLES.D_STRIP_MINING}` },
       { id: 'C6', title: `6. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `7. Priming the Pump: Double Dip`, overrides: { blitzPrimeMode: true } }
+      { id: 'C_PRIME', title: `7. Priming the Pump: Double Dip`, overrides: { primeMode: 'blitz' } }
     ]
   },
 
@@ -141,7 +146,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
       { id: 'C4', title: `5. ${BASE_TITLES.C4}` },
       { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}`, overrides: { allianceHighAlertJobMode: true } },
+      { id: 'C6', title: `7. ${BASE_TITLES.C6}`, overrides: { jobMode: 'high_alert_jobs' } },
       { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
@@ -151,7 +156,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     description: "Features 'Full Burn' mechanic for risky travel. No Alert Tokens are used.",
     requiredExpansion: 'crime',
     steps: [
-      { id: 'C1', title: '1. Nav Decks & Navigation', overrides: { forceReshuffle: true, clearerSkiesNavMode: true } },
+      { id: 'C1', title: '1. Nav Decks & Navigation', overrides: { navMode: 'clearer_skies', forceReshuffle: true } },
       { id: 'C2', title: `2. ${BASE_TITLES.C2}`, overrides: { noAlertTokens: true } },
       { id: 'C3', title: `3. ${BASE_TITLES.C3}` },
       { id: 'C4', title: `4. ${BASE_TITLES.C4}` },
@@ -170,7 +175,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     mode: 'solo',
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { flyingSoloNavMode: true } },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'flying_solo' } },
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
       { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
@@ -186,12 +191,12 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'tenth',
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { browncoatNavMode: true } },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'browncoat' } },
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
       { id: 'D_SHUTTLE', title: `5. ${BASE_TITLES.D_SHUTTLE}` },
       { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}`, overrides: { buttonsJobMode: true } },
+      { id: 'C6', title: `7. ${BASE_TITLES.C6}`, overrides: { jobMode: 'buttons_jobs' } },
       { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
@@ -202,7 +207,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'tenth',
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { browncoatNavMode: true }, page: 54, manual: '10th AE'},
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'browncoat' }, page: 54, manual: '10th AE'},
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'D_HAVEN_DRAFT', title: `4. ${BASE_TITLES.D_HAVEN_DRAFT}` },
       { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
@@ -211,22 +216,20 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: 'D_LOCAL_HEROES', title: `8. ${BASE_TITLES.D_LOCAL_HEROES}` }
     ]
   },
-
-  // 8. Black Market
-  { 
-    id: "TheHeatIsOn", 
-    label: "The Heat Is On", 
-    description: "Starts with an Alliance Alert card. Leaders begin play with a Wanted Token. Wanted tokens accumulate on leaders.",
-    requiredExpansion: 'black_market',
+  {
+    id: "TheHeatIsOn",
+    label: "The Heat Is On",
+    description: "Leaders begin with Wanted tokens. Cruisers start at Regulus and Persephone. Pressure's High rules active.",
+    requiredExpansion: 'tenth',
     steps: [
       { id: 'D_PRESSURES_HIGH', title: `1. ${BASE_TITLES.D_PRESSURES_HIGH}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { browncoatNavMode: true } },
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
+      { id: 'C2', title: `3. ${BASE_TITLES.C2}`, overrides: { extraCruisers: true } },
       { id: 'C3', title: `4. ${BASE_TITLES.C3}`, overrides: { wantedLeaderMode: true } },
       { id: 'C4', title: `5. ${BASE_TITLES.C4}` },
       { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
       { id: 'C6', title: `7. ${BASE_TITLES.C6}` },
       { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
-    ] 
+    ]
   }
 ];

@@ -45,7 +45,8 @@ describe('utils/jobs', () => {
     });
 
     it('handles the "Browncoat Way" no jobs setup', () => {
-      const overrides: StepOverrides = { browncoatJobMode: true };
+      // FIX: Changed `browncoatJobMode: true` to `jobMode: 'no_jobs'` to match the StepOverrides type.
+      const overrides: StepOverrides = { jobMode: 'no_jobs' };
       const { contacts, showStandardContactList, messages } = determineJobSetupDetails(baseGameState, mockStory(), overrides);
       expect(showStandardContactList).toBe(false);
       expect(contacts).toEqual([]);

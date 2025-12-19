@@ -12,7 +12,7 @@ export const calculatePrimeDetails = (
   const baseDiscard = isHighSupplyVolume && gameState.optionalRules.highVolumeSupply ? 4 : 3;
   const storyMultiplier = activeStoryCard?.setupConfig?.primingMultiplier || 1;
   const primeModifier = activeStoryCard?.setupConfig?.primeModifier;
-  const isBlitz = !!overrides.blitzPrimeMode;
+  const isBlitz = overrides.primeMode === 'blitz';
 
   let effectiveMultiplier = storyMultiplier;
   if (isBlitz) {

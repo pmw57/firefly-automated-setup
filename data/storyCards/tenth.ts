@@ -54,10 +54,12 @@ export const TENTH_STORIES: StoryCardDef[] = [
     setupDescription: "Receive +$1200 Starting Credits. No Starting Fuel/Parts. Requires Blue Sun & Kalidasa.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
-    setupConfig: {
-      flags: ['noStartingFuelParts'],
-      startingCreditsBonus: 1200
-    }
+    effects: [
+      { type: 'modifyResource', resource: 'credits', method: 'add', value: 1200, source: { source: 'story', name: "Running On Empty" }, description: "Story Bonus" },
+      { type: 'modifyResource', resource: 'fuel', method: 'disable', source: { source: 'story', name: "Running On Empty" }, description: "No Starting Fuel/Parts" },
+      { type: 'modifyResource', resource: 'parts', method: 'disable', source: { source: 'story', name: "Running On Empty" }, description: "No Starting Fuel/Parts" }
+    ],
+    setupConfig: {}
   },
   {
     title: "The Wobbly Headed Doll Caper",

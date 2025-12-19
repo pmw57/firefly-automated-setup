@@ -80,10 +80,12 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupDescription: "Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000. Alliance Alerts: Start with one random Alliance Alert in play. Adventure Deck: Shuffle all 3-Goal story cards into a single deck.",
     requiredExpansion: "tenth",
     isSolo: true,
+    effects: [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, source: { source: 'story', name: "Heroes & Misfits" }, description: "Story Override" },
+    ],
     setupConfig: {
         flags: ['soloGameTimer', 'startWithAlertCard'],
         shipPlacementMode: "persephone",
-        startingCreditsOverride: 2000
     },
     challengeOptions: [
       { id: 'heroes_custom_setup', label: "Why should Mal have all the fun? Pick the Leader, Ship, and Supply Planet of your choice. Begin the game with $2000 and a full compliment of your favourite Crew from the show or game." }
@@ -167,8 +169,11 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["crime"],
     isSolo: true,
+    effects: [
+      { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, source: { source: 'story', name: "The Raggedy Edge" }, description: "Begin play with 1 Goal Token." }
+    ],
     setupConfig: {
-        flags: ['disableSoloTimer', 'startWithAlertCard', 'startWithGoalToken']
+        flags: ['disableSoloTimer', 'startWithAlertCard']
     },
     advancedRule: {
         id: "adv_contact_quirks_deal",
