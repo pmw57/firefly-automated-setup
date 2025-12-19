@@ -1,5 +1,4 @@
-import { GameState, StoryCardDef } from '../types';
-import { SETUP_CARDS } from '../data/setupCards';
+import { GameState, StoryCardDef, SetupCardDef } from '../types';
 import { SETUP_CARD_IDS } from '../data/ids';
 import { hasFlag } from './data';
 
@@ -11,10 +10,9 @@ export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     return null;
 };
 
-export const getDisplaySetupName = (state: GameState): string => {
-    if (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO && state.secondarySetupId) {
-        const secondary = SETUP_CARDS.find(s => s.id === state.secondarySetupId);
-        if (secondary) return `Flying Solo + ${secondary.label}`;
+export const getDisplaySetupName = (state: GameState, secondarySetupCard?: SetupCardDef): string => {
+    if (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO && secondarySetupCard) {
+        return `Flying Solo + ${secondarySetupCard.label}`;
     }
     return state.setupCardName;
 };

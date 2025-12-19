@@ -1,34 +1,22 @@
 import { describe, it, expect } from 'vitest';
-import { calculateStartingResources } from '../../utils/resources';
-// FIX: Changed Effect to ModifyResourceEffect as the test cases use the extended type with 'resource' and 'method' properties.
-import { StoryCardDef, GameState, ModifyResourceEffect } from '../../types';
+import { getResourceDetails } from '../../utils/selectors';
+import { GameState } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
 
 describe('utils/resources', () => {
   const baseGameState = getDefaultGameState();
 
-  // FIX: The effects array should be of type ModifyResourceEffect[] to match the StoryCardDef interface and the test data.
-  const mockStory = (effects: ModifyResourceEffect[] = []): StoryCardDef => ({
-    title: 'Mock Story',
-    intro: 'Intro',
-    effects,
-  });
-
-  const getGameStateWithCards = (
-    setupCardId: string,
-    storyCard?: StoryCardDef,
-    optionalRules: Partial<GameState['optionalRules']> = {}
+  const getGameStateWithConfig = (
+    config: Partial<GameState>
   ): GameState => ({
     ...baseGameState,
-    setupCardId,
-    selectedStoryCard: storyCard?.title || '',
-    optionalRules: { ...baseGameState.optionalRules, ...optionalRules },
+    ...config,
   });
 
-  describe('calculateStartingResources with Effect System', () => {
+  describe('getResourceDetails with Effect System', () => {
     it('returns default resources for a standard game', () => {
-      const state = getGameStateWithCards('Standard');
-      const details = calculateStartingResources(state);
+      const state = getGameStateWithConfig({ setupCardId: 'Standard' });
+      const details = getResourceDetails(state);
       expect(details.credits).toBe(3000);
       expect(details.fuel).toBe(6);
       expect(details.parts).toBe(2);
@@ -38,73 +26,74 @@ describe('utils/resources', () => {
     });
 
     it('applies a "set" credits effect from a setup card', () => {
-      const state = getGameStateWithCards('TheBrowncoatWay'); // Has a set $12000 effect
-      const details = calculateStartingResources(state);
+      const state = getGameStateWithConfig({ setupCardId: 'TheBrowncoatWay' }); // Sets to $12000
+      const details = getResourceDetails(state);
       expect(details.credits).toBe(12000);
       expect(details.creditModifications[0].description).toBe('Setup Card Allocation');
     });
 
     it('applies an "add" credits effect from a story card', () => {
-      const story = mockStory([
-        { type: 'modifyResource', resource: 'credits', method: 'add', value: 1200, source: { source: 'story', name: 'Bonus' }, description: 'Story Bonus' }
-      ]);
-      const state = getGameStateWithCards('Standard', story);
-      const details = calculateStartingResources(state, undefined, story);
+      const state = getGameStateWithConfig({ 
+        setupCardId: 'Standard', 
+        selectedStoryCard: 'Running On Empty' // Adds $1200
+      });
+      const details = getResourceDetails(state);
       expect(details.credits).toBe(4200); // 3000 + 1200
       expect(details.creditModifications.length).toBe(2);
       expect(details.creditModifications[1].description).toBe('Story Bonus');
     });
     
     it('applies a "set" credits effect from a story card, overriding the base', () => {
-      const story = mockStory([
-        { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, source: { source: 'story', name: 'Override' }, description: 'Story Override' }
-      ]);
-      const state = getGameStateWithCards('Standard', story);
-      const details = calculateStartingResources(state, undefined, story);
+      const state = getGameStateWithConfig({ 
+        setupCardId: 'Standard', 
+        selectedStoryCard: 'How It All Started' // Sets to $500
+      });
+      const details = getResourceDetails(state);
       expect(details.credits).toBe(500);
       expect(details.creditModifications[0].description).toBe('Story Override');
     });
 
     it('identifies a conflict between "set" credit effects and defaults to story priority', () => {
-      const story = mockStory([
-        { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, source: { source: 'story', name: 'Story Override' }, description: 'Story Override' }
-      ]);
-      const state = getGameStateWithCards('TheBrowncoatWay', story); // Browncoat sets to 12000
-      const details = calculateStartingResources(state, undefined, story);
+      const state = getGameStateWithConfig({
+        setupCardId: 'TheBrowncoatWay', // Sets to $12000
+        selectedStoryCard: 'How It All Started' // Sets to $500
+      });
+      const details = getResourceDetails(state);
       
       expect(details.conflict).toBeDefined();
       expect(details.conflict?.story.value).toBe(500);
       expect(details.conflict?.setupCard.value).toBe(12000);
-      expect(details.credits).toBe(500); // Story wins
+      expect(details.credits).toBe(500); // Story wins by default
     });
     
     it('respects manual selection for setup card priority in a conflict', () => {
-      const story = mockStory([
-        { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, source: { source: 'story', name: 'Story Override' }, description: 'Story Override' }
-      ]);
-      const state = getGameStateWithCards('TheBrowncoatWay', story, { resolveConflictsManually: true });
-      const details = calculateStartingResources(state, 'setupCard', story); // User selects setup card
+      const state = getGameStateWithConfig({
+        setupCardId: 'TheBrowncoatWay', // Sets to $12000
+        selectedStoryCard: 'How It All Started', // Sets to $500
+        optionalRules: { ...baseGameState.optionalRules, resolveConflictsManually: true },
+      });
+      const details = getResourceDetails(state, 'setupCard'); // User selects setup card
       
       expect(details.conflict).toBeDefined();
       expect(details.credits).toBe(12000); // Setup card wins
     });
 
-    it('applies "disable" effects for fuel and parts', () => {
-      const story = mockStory([
-        { type: 'modifyResource', resource: 'fuel', method: 'disable', source: { source: 'story', name: 'No Fuel' }, description: 'No Fuel' }
-      ]);
-      const state = getGameStateWithCards('Standard', story);
-      const details = calculateStartingResources(state, undefined, story);
+    it('applies "disable" effects for fuel and parts from a story', () => {
+      const state = getGameStateWithConfig({ 
+        setupCardId: 'Standard',
+        selectedStoryCard: 'Running On Empty' // Disables fuel and parts
+      });
+      const details = getResourceDetails(state);
 
       expect(details.fuel).toBe(0);
       expect(details.isFuelDisabled).toBe(true);
-      expect(details.parts).toBe(2);
-      expect(details.isPartsDisabled).toBe(false);
+      expect(details.parts).toBe(0);
+      expect(details.isPartsDisabled).toBe(true);
     });
     
     it('correctly applies effects from TheBrowncoatWay setup card', () => {
-      const state = getGameStateWithCards('TheBrowncoatWay');
-      const details = calculateStartingResources(state);
+      const state = getGameStateWithConfig({ setupCardId: 'TheBrowncoatWay' });
+      const details = getResourceDetails(state);
 
       expect(details.credits).toBe(12000);
       expect(details.fuel).toBe(0);
@@ -114,15 +103,15 @@ describe('utils/resources', () => {
     });
 
     it('handles adding warrants and other resources', () => {
-      const story = mockStory([
-        { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, source: { source: 'story', name: 'Wanted' }, description: 'Wanted' },
-        { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, source: { source: 'story', name: 'Goals' }, description: 'Goals' },
-      ]);
-      const state = getGameStateWithCards('Standard', story);
-      const details = calculateStartingResources(state, undefined, story);
+      const state = getGameStateWithConfig({
+        setupCardId: 'Standard',
+        selectedStoryCard: "It Ain't Easy Goin' Legit" // Adds 2 warrants
+      });
+      const details = getResourceDetails(state);
 
       expect(details.warrants).toBe(2);
-      expect(details.goalTokens).toBe(1);
+      // This story doesn't add goal tokens, so it should be the default
+      expect(details.goalTokens).toBe(0);
     });
   });
 });

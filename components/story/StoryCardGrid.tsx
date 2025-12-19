@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StoryCardGridItem } from '../StoryCardGridItem';
 import { Button } from '../Button';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
-import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { useTheme } from '../ThemeContext';
+import { getFilterableExpansions } from '../../utils/selectors';
 
 interface StoryCardGridProps {
   onSelect: (title: string) => void;
@@ -26,11 +26,10 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
     toggleSortMode,
   } = useMissionSelection();
 
-  const availableExpansionsForFilter = EXPANSIONS_METADATA.filter(e => {
-    if (e.id === 'base') return false;
-    if (isClassicSolo && e.id === 'community') return false;
-    return true;
-  });
+  const availableExpansionsForFilter = useMemo(() => 
+    getFilterableExpansions(isClassicSolo), 
+    [isClassicSolo]
+  );
 
   const inputBorder = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
   const inputBg = isDark ? 'bg-zinc-900/50' : 'bg-[#faf8ef]';

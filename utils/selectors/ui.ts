@@ -1,6 +1,7 @@
 import { GameState, Step, HeaderDetails } from '../../types';
 import { getDisplaySetupName } from '../ui';
 import { SETUP_CARD_IDS } from '../../data/ids';
+import { getSetupCardById } from './story';
 
 /**
  * Consolidates all presentation logic for the main wizard header.
@@ -23,7 +24,9 @@ export const getHeaderDetails = (
 
     // Determine the main setup name to display
     const showSetupCard = gameState.setupCardId !== SETUP_CARD_IDS.STANDARD || gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
-    const setupName = showSetupCard && gameState.setupCardName ? getDisplaySetupName(gameState) : 'Configuring...';
+    
+    const secondaryCard = gameState.secondarySetupId ? getSetupCardById(gameState.secondarySetupId) : undefined;
+    const setupName = showSetupCard && gameState.setupCardName ? getDisplaySetupName(gameState, secondaryCard) : 'Configuring...';
     
     // Determine if the story card name should be displayed
     const storyName = gameState.selectedStoryCard ? gameState.selectedStoryCard : null;

@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { getStoryCardSetupSummary, getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../../utils/ui';
-import { GameState, StoryCardDef } from '../../types';
+import { GameState, StoryCardDef, SetupCardDef } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
 import { SETUP_CARD_IDS } from '../../data/ids';
+import { SETUP_CARDS } from '../../data/setupCards';
 
 describe('utils/ui', () => {
     const baseGameState = getDefaultGameState();
@@ -38,7 +39,8 @@ describe('utils/ui', () => {
 
         it('combines Flying Solo with its secondary setup card name', () => {
             const state: GameState = { ...baseGameState, setupCardId: SETUP_CARD_IDS.FLYING_SOLO, secondarySetupId: 'TheBrowncoatWay', setupCardName: 'Flying Solo' };
-            expect(getDisplaySetupName(state)).toBe('Flying Solo + The Browncoat Way');
+            const browncoatCard = SETUP_CARDS.find(c => c.id === 'TheBrowncoatWay') as SetupCardDef;
+            expect(getDisplaySetupName(state, browncoatCard)).toBe('Flying Solo + The Browncoat Way');
         });
     });
 

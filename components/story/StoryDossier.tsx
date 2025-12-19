@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StoryCardDef } from '../../types';
 import { SpecialRuleBlock } from '../SpecialRuleBlock';
 import { useTheme } from '../ThemeContext';
@@ -7,17 +7,11 @@ import { ExpansionIcon } from '../ExpansionIcon';
 import { useGameState } from '../../hooks/useGameState';
 import { ActionType } from '../../state/actions';
 import { hasFlag } from '../../utils/data';
-import { STORY_TITLES } from '../../data/ids';
+import { getSoloTimerAdjustmentText } from '../../utils/selectors';
 
 interface StoryDossierProps {
   activeStoryCard: StoryCardDef;
 }
-
-const SOLO_TIMER_ADJUSTMENTS: Record<string, string> = {
-  [STORY_TITLES.DESPERADOES]: "Declare Last Call before discarding your last token to win the game.",
-  [STORY_TITLES.RESPECTABLE_PERSONS]: "Declare Last Call before discarding your last token to win the game.",
-  [STORY_TITLES.RARE_SPECIMEN]: "Send Out Invites before discarding your last token to win the game."
-};
 
 export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) => {
   const { state: gameState, dispatch } = useGameState();
@@ -27,6 +21,11 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
   const handleGoalSelect = (goalTitle: string) => {
     dispatch({ type: ActionType.SET_GOAL, payload: goalTitle });
   };
+
+  const soloTimerAdjustment = useMemo(() => 
+    getSoloTimerAdjustmentText(activeStoryCard), 
+    [activeStoryCard]
+  );
 
   const setupNote = activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' 
       ? "⚠️ Change of setup: Players now begin at Persephone." 
@@ -108,8 +107,8 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
       )}
 
       {/* Solo Adjustments */}
-      {gameState.gameMode === 'solo' && SOLO_TIMER_ADJUSTMENTS[activeStoryCard.title] && (
-        <SpecialRuleBlock source="expansion" title="Solo Adjustment" content={[SOLO_TIMER_ADJUSTMENTS[activeStoryCard.title]]} />
+      {gameState.gameMode === 'solo' && soloTimerAdjustment && (
+        <SpecialRuleBlock source="expansion" title="Solo Adjustment" content={[soloTimerAdjustment]} />
       )}
 
       {/* Solo Mode Information Block */}

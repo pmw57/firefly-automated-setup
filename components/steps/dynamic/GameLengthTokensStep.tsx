@@ -1,11 +1,11 @@
 import React from 'react';
 import { Step } from '../../../types';
-import { STORY_CARDS } from '../../../data/storyCards';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
 import { ActionType } from '../../../state/actions';
 import { hasFlag } from '../../../utils/data';
+import { getActiveStoryCard } from '../../../utils/selectors';
 
 interface GameLengthTokensStepProps {
   step: Step;
@@ -13,11 +13,11 @@ interface GameLengthTokensStepProps {
 
 export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = () => {
     const { state: gameState, dispatch } = useGameState();
-    const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
+    const activeStoryCard = getActiveStoryCard(gameState);
     const { theme } = useTheme();
     const isDark = theme === 'dark';
 
-    if (!dispatch) return null;
+    if (!dispatch || !activeStoryCard) return null;
 
     // Handle Disable Flag
     if (hasFlag(activeStoryCard.setupConfig, 'disableSoloTimer')) {
