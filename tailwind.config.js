@@ -13,6 +13,16 @@ export default {
   theme: {
     extend: {
       colors: {
+        'expansion': {
+          'orangeRed': '#FF4500',
+          'steelBlue': '#4682B4',
+          'darkSlateBlue': '#483D8B',
+          'deepBrown': '#231709',
+          'rebeccaPurple': '#663399',
+          'cordovan': '#893f45',
+          'darkOliveGreen': '#556b2f',
+          'teal': '#0d9488',
+        },
         'firefly': {
           'red': '#7f1d1d',
           'red-light': '#991b1b',

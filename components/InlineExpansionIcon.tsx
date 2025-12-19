@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { ExpansionId } from '../types';
 import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../data/expansions';
@@ -34,20 +35,21 @@ export const InlineExpansionIcon = ({ type, className = "mx-1 align-bottom" }: I
 
   const borderClass = isDark ? 'border-zinc-700' : 'border-gray-300';
 
-  // Helper for text colors
   const getBgColor = () => {
-    if (meta.themeColor === 'orangeRed') return 'bg-[#FF4500]';
-    if (meta.themeColor === 'steelBlue') return 'bg-[#4682B4]';
-    if (meta.themeColor === 'black') return 'bg-black';
-    if (meta.themeColor === 'darkSlateBlue') return 'bg-[#483D8B]';
-    if (meta.themeColor === 'deepBrown') return 'bg-[#231709]';
-    if (meta.themeColor === 'rebeccaPurple') return 'bg-[#663399]';
-    if (meta.themeColor === 'cordovan') return 'bg-[#893f45]';
-    if (meta.themeColor === 'darkOliveGreen') return 'bg-[#556b2f]';
-    if (meta.themeColor === 'saddleBrown') return 'bg-[#8b4513]';
-    if (meta.themeColor === 'teal') return 'bg-teal-600';
-    if (meta.themeColor === 'dark') return 'bg-gray-800';
-    return 'bg-gray-700';
+    switch (meta.themeColor) {
+      case 'orangeRed': return 'bg-expansion-orangeRed';
+      case 'steelBlue': return 'bg-expansion-steelBlue';
+      case 'black': return 'bg-black';
+      case 'darkSlateBlue': return 'bg-expansion-darkSlateBlue';
+      case 'deepBrown': return 'bg-expansion-deepBrown';
+      case 'rebeccaPurple': return 'bg-expansion-rebeccaPurple';
+      case 'cordovan': return 'bg-expansion-cordovan';
+      case 'darkOliveGreen': return 'bg-expansion-darkOliveGreen';
+      case 'saddleBrown': return 'bg-firefly-saddleBrown';
+      case 'teal': return 'bg-expansion-teal';
+      case 'dark': return 'bg-gray-800';
+      default: return 'bg-gray-700';
+    }
   };
 
   if (type === 'base') {

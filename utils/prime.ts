@@ -1,5 +1,4 @@
 import { GameState, StoryCardDef, StepOverrides } from '../types';
-import { STORY_TITLES } from '../data/ids';
 
 export const calculatePrimeDetails = (
   gameState: GameState,
@@ -12,8 +11,8 @@ export const calculatePrimeDetails = (
 
   const baseDiscard = isHighSupplyVolume && gameState.optionalRules.highVolumeSupply ? 4 : 3;
   const storyMultiplier = activeStoryCard?.setupConfig?.primingMultiplier || 1;
+  const primeModifier = activeStoryCard?.setupConfig?.primeModifier;
   const isBlitz = !!overrides.blitzPrimeMode;
-  const isSlayingTheDragon = activeStoryCard?.title === STORY_TITLES.SLAYING_THE_DRAGON;
 
   let effectiveMultiplier = storyMultiplier;
   if (isBlitz) {
@@ -21,8 +20,8 @@ export const calculatePrimeDetails = (
   }
   
   let finalCount = baseDiscard * effectiveMultiplier;
-  if (isSlayingTheDragon) {
-    finalCount += 2;
+  if (primeModifier?.add) {
+    finalCount += primeModifier.add;
   }
 
   return {

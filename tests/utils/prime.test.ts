@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-// Fix: Correct import path.
 import { calculatePrimeDetails } from '../../utils/prime';
 import { GameState, StoryCardDef } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
@@ -79,13 +78,13 @@ describe('utils/prime', () => {
     });
 
     it('applies Slaying the Dragon modifier (+2 cards)', () => {
-        const story: StoryCardDef = { title: STORY_TITLES.SLAYING_THE_DRAGON, intro: '' };
+        const story: StoryCardDef = { title: STORY_TITLES.SLAYING_THE_DRAGON, intro: '', setupConfig: { primeModifier: { add: 2 } } };
         const details = calculatePrimeDetails(stateForStandardPriming, {}, story);
         expect(details.finalCount).toBe(5); // 3 + 2
     });
 
     it('combines blitz and Slaying the Dragon', () => {
-        const story: StoryCardDef = { title: STORY_TITLES.SLAYING_THE_DRAGON, intro: '' };
+        const story: StoryCardDef = { title: STORY_TITLES.SLAYING_THE_DRAGON, intro: '', setupConfig: { primeModifier: { add: 2 } } };
         const details = calculatePrimeDetails(stateForStandardPriming, { blitzPrimeMode: true }, story);
         expect(details.finalCount).toBe(8); // (3 * 2) + 2
     });

@@ -3,11 +3,8 @@ import { Step } from '../types';
 import { Button } from './Button';
 import { QuotePanel } from './QuotePanel';
 import { useTheme } from './ThemeContext';
-import { STEP_IDS, STORY_TITLES } from '../data/ids';
+import { STEP_IDS } from '../data/ids';
 import { cls } from '../utils/style';
-import { useGameState } from '../hooks/useGameState';
-import { STORY_CARDS } from '../data/storyCards';
-import { hasFlag } from '../utils/data';
 import { PageReference } from './PageReference';
 
 // Core Steps
@@ -49,7 +46,6 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepContentP
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const stepId = step.id;
-  const { state: gameState } = useGameState();
   const titleRef = useRef<HTMLHeadingElement>(null);
 
   // Accessibility: Focus the heading when the step changes.
@@ -60,73 +56,10 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepContentP
     }, 100);
     return () => clearTimeout(timer);
   }, [step.id]);
-
-  const activeStoryCard = useMemo(() => 
-    STORY_CARDS.find(c => c.title === gameState.selectedStoryCard),
-    [gameState.selectedStoryCard]
-  );
   
   const isSpecial = useMemo(() => {
-    // Dynamic steps are special by definition.
-    if (step.type === 'dynamic') {
-        return true;
-    }
-
-    // A step is special if the setup card provides any rule overrides for it.
-    const hasSetupOverrides = Object.keys(step.overrides || {}).length > 0;
-    if (hasSetupOverrides) {
-        return true;
-    }
-
-    if (!activeStoryCard?.setupConfig) {
-        return false;
-    }
-
-    const config = activeStoryCard.setupConfig;
-
-    switch (step.id) {
-        case STEP_IDS.CORE_NAV_DECKS:
-            // No story cards directly affect this step's core rules, only setup cards.
-            return false;
-        
-        case STEP_IDS.CORE_ALLIANCE_REAVER:
-            return hasFlag(config, 'placeAllianceAlertsInAllianceSpace') ||
-                   hasFlag(config, 'placeMixedAlertTokens') ||
-                   hasFlag(config, 'smugglersBluesSetup') ||
-                   hasFlag(config, 'lonelySmugglerSetup') ||
-                   hasFlag(config, 'startWithAlertCard') ||
-                   !!config.createAlertTokenStackMultiplier;
-
-        case STEP_IDS.CORE_DRAFT:
-            return !!config.shipPlacementMode || !!config.startAtSector;
-        
-        case STEP_IDS.CORE_RESOURCES:
-            return config.startingCreditsBonus !== undefined ||
-                   config.startingCreditsOverride !== undefined ||
-                   hasFlag(config, 'noStartingFuelParts') ||
-                   config.customStartingFuel !== undefined ||
-                   hasFlag(config, 'startWithWarrant') ||
-                   hasFlag(config, 'removeRiver') ||
-                   hasFlag(config, 'nandiCrewDiscount') ||
-                   hasFlag(config, 'startWithGoalToken');
-
-        case STEP_IDS.CORE_JOBS:
-             return (config.jobDrawMode !== undefined && config.jobDrawMode !== 'standard') ||
-                    !!config.forbiddenStartingContact ||
-                    (!!config.allowedStartingContacts && config.allowedStartingContacts.length > 0) ||
-                    hasFlag(config, 'removeJobDecks') ||
-                    hasFlag(config, 'sharedHandSetup');
-
-        case STEP_IDS.CORE_PRIME_PUMP:
-            return (config.primingMultiplier !== undefined && config.primingMultiplier > 1) ||
-                   (activeStoryCard?.title === STORY_TITLES.SLAYING_THE_DRAGON);
-
-        // Mission Dossier is conceptually core.
-        case STEP_IDS.CORE_MISSION:
-        default:
-            return false;
-    }
-  }, [step, activeStoryCard]);
+    return step.type !== 'core';
+  }, [step.type]);
 
   // Render logic based on Step Type and ID
   const renderStepBody = () => {

@@ -4,6 +4,7 @@ import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { calculateAllianceReaverDetails } from '../utils/alliance';
+import { STORY_CARDS } from '../data/storyCards';
 
 interface AllianceReaverStepProps {
   step: Step;
@@ -23,6 +24,11 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) 
   const { state: gameState } = useGameState();
   const overrides = step.overrides || {};
 
+  const activeStoryCard = React.useMemo(() => 
+    STORY_CARDS.find(c => c.title === gameState.selectedStoryCard),
+    [gameState.selectedStoryCard]
+  );
+
   const {
     useSmugglersRimRule,
     alertStackCount,
@@ -31,7 +37,7 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) 
     smugglersBluesSetup,
     lonelySmugglerSetup,
     startWithAlertCard
-  } = React.useMemo(() => calculateAllianceReaverDetails(gameState), [gameState]);
+  } = React.useMemo(() => calculateAllianceReaverDetails(gameState, activeStoryCard), [gameState, activeStoryCard]);
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';

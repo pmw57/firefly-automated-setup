@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { GameState, Step } from '../types';
 import { getDisplaySetupName } from '../utils/ui';
 import { useTheme } from './ThemeContext';
-import { STEP_IDS } from '../data/ids';
+import { SETUP_CARD_IDS } from '../data/ids';
 
 interface WizardHeaderProps {
     gameState: GameState;
@@ -18,25 +18,22 @@ export const WizardHeader = ({ gameState, onReset, flow, currentStepIndex }: Wiz
 
     const displaySetupName = getDisplaySetupName(gameState);
     
-    const { showSetupCard, showStoryCard, setupCardStepIndex } = useMemo(() => {
-        const setupCardIdx = flow.findIndex(step => step.id === STEP_IDS.SETUP_CARD_SELECTION);
-        // Fix: Include D_FIRST_GOAL to correctly detect when a story has been selected in all setup flows.
-        const storyCardIdx = flow.findIndex(step => 
-            step.id === STEP_IDS.CORE_MISSION || step.id === STEP_IDS.D_FIRST_GOAL
-        );
-    
-        // UX Change: Show info on the step *after* selection for a cleaner flow.
-        const shouldShowSetup = setupCardIdx !== -1 && currentStepIndex > setupCardIdx;
-        const shouldShowStory = storyCardIdx !== -1 && currentStepIndex > storyCardIdx;
-    
-        return { 
-            showSetupCard: shouldShowSetup, 
-            showStoryCard: shouldShowStory,
-            setupCardStepIndex: setupCardIdx
-        };
-    }, [flow, currentStepIndex]);
+    // Decoupled Logic: The header's display is now a direct function of the game state,
+    // not the wizard's step index or flow structure. This is far more robust.
+    const { showSetupCard, showStoryCard, isPastFirstStep } = useMemo(() => {
+        const firstCoreStepIndex = flow.findIndex(step => step.type === 'core');
 
-    const showSoloModeIndicator = gameState.gameMode !== 'multiplayer' && setupCardStepIndex !== -1 && currentStepIndex > setupCardStepIndex;
+        return { 
+            // Show setup card as soon as it's been selected (i.e., not the default)
+            showSetupCard: gameState.setupCardId !== SETUP_CARD_IDS.STANDARD || gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO,
+            // Show story card as soon as one is selected
+            showStoryCard: !!gameState.selectedStoryCard,
+            // We are past the initial configuration steps
+            isPastFirstStep: currentStepIndex >= firstCoreStepIndex && firstCoreStepIndex !== -1
+        };
+    }, [flow, currentStepIndex, gameState.setupCardId, gameState.selectedStoryCard]);
+
+    const showSoloModeIndicator = gameState.gameMode === 'solo' && isPastFirstStep;
 
     const handleResetClick = () => {
         if (showConfirmReset) {

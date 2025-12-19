@@ -123,8 +123,10 @@ export type StoryFlag =
 export interface StoryCardConfig {
   jobDrawMode?: 'standard' | 'draft_choice' | 'caper_start' | 'wind_takes_us' | 'no_jobs';
   primingMultiplier?: number;
+  primeModifier?: { add: number };
   startingCreditsBonus?: number;
   startingCreditsOverride?: number;
+
   customStartingFuel?: number;
   startingWarrantCount?: number;
   createAlertTokenStackMultiplier?: number;

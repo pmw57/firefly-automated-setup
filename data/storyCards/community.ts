@@ -97,7 +97,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "2-Player Co-Op. Niska jobs forbidden. Remove Niska Deck. Prime +2 cards/deck. Stack 16 Disgruntled Tokens (Countdown).",
     requiredExpansion: "community",
     setupConfig: {
-      forbiddenStartingContact: "Niska"
+      forbiddenStartingContact: "Niska",
+      primeModifier: { add: 2 }
     },
     sourceUrl: "https://boardgamegeek.com/thread/1049020/article/13686225#13686225"
   },
