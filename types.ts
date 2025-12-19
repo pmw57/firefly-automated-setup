@@ -188,6 +188,7 @@ export interface OptionalRules {
     disgruntledDie: DisgruntledDieOption;
     optionalShipUpgrades: boolean;
     resolveConflictsManually: boolean;
+    highVolumeSupply: boolean;
 }
 
 export interface GameState {

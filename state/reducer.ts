@@ -40,6 +40,7 @@ export const getDefaultGameState = (): GameState => {
             disgruntledDie: 'standard',
             optionalShipUpgrades: false,
             resolveConflictsManually: false,
+            highVolumeSupply: true,
         },
         expansions: allExpansions,
         isCampaign: false,
@@ -231,6 +232,9 @@ export function gameReducer(state: GameState, action: Action): GameState {
     
     case ActionType.TOGGLE_CONFLICT_RESOLUTION:
       return { ...state, optionalRules: { ...state.optionalRules, resolveConflictsManually: !state.optionalRules.resolveConflictsManually } };
+
+    case ActionType.TOGGLE_HIGH_VOLUME_SUPPLY:
+      return { ...state, optionalRules: { ...state.optionalRules, highVolumeSupply: !state.optionalRules.highVolumeSupply } };
 
     case ActionType.SET_FINAL_STARTING_CREDITS:
       return { ...state, finalStartingCredits: action.payload };

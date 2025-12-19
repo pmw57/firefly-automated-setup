@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Step } from '../types';
 import { STORY_CARDS } from '../data/storyCards';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
@@ -25,16 +25,6 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
   const isSlayingTheDragon = activeStoryCard?.title === STORY_TITLES.SLAYING_THE_DRAGON;
   const { isCampaign } = gameState;
   
-  // House Rule State
-  const [useHouseRule, setUseHouseRule] = useState(() => {
-    const saved = localStorage.getItem('firefly_setup_house_rule_prime4');
-    return saved !== null ? JSON.parse(saved) : true;
-  });
-
-  useEffect(() => {
-    localStorage.setItem('firefly_setup_house_rule_prime4', JSON.stringify(useHouseRule));
-  }, [useHouseRule]);
-  
   const {
     baseDiscard,
     effectiveMultiplier,
@@ -42,8 +32,8 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
     isHighSupplyVolume,
     isBlitz,
   } = React.useMemo(() => 
-    calculatePrimeDetails(gameState, overrides, activeStoryCard, useHouseRule),
-    [gameState, overrides, activeStoryCard, useHouseRule]
+    calculatePrimeDetails(gameState, overrides, activeStoryCard),
+    [gameState, overrides, activeStoryCard]
   );
   
   // Theming
@@ -58,46 +48,13 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
   const labelColor = isDark ? 'text-green-300' : 'text-[#78350f]';
   const subTextColor = isDark ? 'text-gray-400' : 'text-[#a8a29e]';
 
-  // Toggle Theme
-  const toggleBgOff = isDark ? 'bg-zinc-700' : 'bg-[#d6cbb0]';
-  const toggleBgOn = isDark ? 'bg-green-700' : 'bg-[#7f1d1d]';
-  const hrBorder = isDark ? 'border-amber-700/50' : 'border-[#d6cbb0]';
-  const hrBg = isDark ? 'bg-amber-900/10' : 'bg-[#fffbeb]';
-
   return (
     <div className="space-y-4">
       
-      {isHighSupplyVolume && (
-         <div className={`p-4 rounded-lg border border-dashed ${hrBorder} ${hrBg} mb-4 transition-colors`}>
-            <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center">
-                    <span className="text-xl mr-2">🏠</span>
-                    <span className={`font-bold text-sm uppercase tracking-wide ${isDark ? 'text-amber-500' : 'text-[#92400e]'}`}>
-                        House Rule: High Volume Supply
-                    </span>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    className="sr-only peer" 
-                    checked={useHouseRule} 
-                    onChange={(e) => setUseHouseRule(e.target.checked)} 
-                  />
-                  <div className={`w-11 h-6 rounded-full peer peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-amber-500 dark:peer-focus:ring-amber-800 ${useHouseRule ? toggleBgOn : toggleBgOff} after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white`}></div>
-                </label>
-            </div>
-            <p className={`text-xs leading-relaxed ${isDark ? 'text-gray-400' : 'text-[#78350f]'}`}>
-               {useHouseRule ? (
-                   <>
-                     Due to the number of large Supply expansions active, the base priming count is increased to 4 cards to ensure deck turnover.
-                   </>
-               ) : (
-                   <>
-                     House rule disabled. Priming remains at the standard 3 cards despite large supply decks.
-                   </>
-               )}
-            </p>
-         </div>
+      {isHighSupplyVolume && gameState.optionalRules.highVolumeSupply && (
+        <SpecialRuleBlock source="info" title="House Rule Active: High Volume Supply">
+          Due to the number of large supply expansions, the base discard count for Priming the Pump is increased to <strong>4 cards</strong>.
+        </SpecialRuleBlock>
       )}
 
       {isBlitz && (
