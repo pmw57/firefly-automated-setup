@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useEffect } from 'react';
 import { Step } from '../types';
 import { Button } from './Button';
 import { QuotePanel } from './QuotePanel';
@@ -32,6 +32,7 @@ interface StepContentProps {
   step: Step;
   onNext: () => void;
   onPrev: () => void;
+  isNavigating: boolean;
 }
 
 // Registry for Core Step Components
@@ -44,11 +45,21 @@ const CORE_STEP_COMPONENTS: Record<string, React.FC<{ step: Step }>> = {
   [STEP_IDS.CORE_PRIME_PUMP]: PrimePumpStep,
 };
 
-export const StepContent = ({ step, onNext, onPrev }: StepContentProps): React.ReactElement => {
+export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepContentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const stepId = step.id;
   const { state: gameState } = useGameState();
+  const titleRef = useRef<HTMLHeadingElement>(null);
+
+  // Accessibility: Focus the heading when the step changes.
+  useEffect(() => {
+    // Timeout gives the browser a moment to render and avoids race conditions.
+    const timer = setTimeout(() => {
+      titleRef.current?.focus();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [step.id]);
 
   const activeStoryCard = useMemo(() => 
     STORY_CARDS.find(c => c.title === gameState.selectedStoryCard),
@@ -129,7 +140,7 @@ export const StepContent = ({ step, onNext, onPrev }: StepContentProps): React.R
       case 'core': {
         // Handle Mission Dossier separately due to different props
         if (step.id === STEP_IDS.CORE_MISSION) {
-             return <MissionDossierStep onNext={onNext} onPrev={onPrev} />;
+             return <MissionDossierStep onNext={onNext} onPrev={onPrev} isNavigating={isNavigating} />;
         }
 
         const Component = CORE_STEP_COMPONENTS[step.id];
@@ -141,7 +152,7 @@ export const StepContent = ({ step, onNext, onPrev }: StepContentProps): React.R
 
       case 'dynamic':
         if (step.id === STEP_IDS.D_FIRST_GOAL) {
-            return <MissionDossierStep onNext={onNext} onPrev={onPrev} titleOverride="First, Choose a Story Card" />;
+            return <MissionDossierStep onNext={onNext} onPrev={onPrev} titleOverride="First, Choose a Story Card" isNavigating={isNavigating} />;
         }
         return <DynamicStepHandler step={step} />;
 
@@ -179,7 +190,11 @@ export const StepContent = ({ step, onNext, onPrev }: StepContentProps): React.R
   return (
     <div className="animate-fade-in-up">
       <div className="flex flex-wrap items-start justify-between mb-6 gap-4">
-        <h2 className={cls("text-2xl font-bold font-western flex-1 min-w-[200px] transition-colors duration-300 flex justify-between items-center p-3 rounded-lg shadow-md", headerBg, headerColor)}>
+        <h2 
+            ref={titleRef}
+            tabIndex={-1}
+            className={cls("text-2xl font-bold font-western flex-1 min-w-[200px] transition-colors duration-300 flex justify-between items-center p-3 rounded-lg shadow-md focus:outline-none", headerBg, headerColor)}
+        >
           <div className="flex flex-wrap items-baseline gap-x-2">
             <span>{displayTitle}</span>
             {step.page && <PageReference page={step.page} manual={step.manual} />}
@@ -199,12 +214,13 @@ export const StepContent = ({ step, onNext, onPrev }: StepContentProps): React.R
 
       {showNav && (
         <div className={cls("mt-8 flex justify-between clear-both pt-6 border-t", borderTop)}>
-          <Button onClick={onPrev} variant="secondary" className="shadow-sm">
+          <Button onClick={onPrev} variant="secondary" className="shadow-sm" disabled={isNavigating}>
             ← Previous
           </Button>
           <Button 
               onClick={onNext}
               className="shadow-lg hover:translate-y-[-2px] transition-transform"
+              disabled={isNavigating}
           >
             Next Step →
           </Button>

@@ -17,9 +17,10 @@ interface MissionDossierStepProps {
   onNext: () => void;
   onPrev: () => void;
   titleOverride?: string;
+  isNavigating: boolean;
 }
 
-const MissionDossierStepContent = ({ onNext, onPrev, titleOverride }: { onNext: () => void; onPrev: () => void; titleOverride?: string }): React.ReactElement => {
+const MissionDossierStepContent = ({ onNext, onPrev, titleOverride, isNavigating }: MissionDossierStepProps): React.ReactElement => {
   const { state: gameState, dispatch } = useGameState();
   const {
     subStep,
@@ -136,13 +137,13 @@ const MissionDossierStepContent = ({ onNext, onPrev, titleOverride }: { onNext: 
       )}
 
       <div className={`mt-8 flex justify-between clear-both pt-6 border-t ${navBorderTop}`}>
-        <Button onClick={handlePrevStep} variant="secondary" className="shadow-sm">
+        <Button onClick={handlePrevStep} variant="secondary" className="shadow-sm" disabled={isNavigating}>
           {subStep === 1 ? '← Previous' : '← Back to Story'}
         </Button>
         <Button 
           onClick={handleNextStep} 
           className="shadow-lg hover:translate-y-[-2px] transition-transform"
-          disabled={!activeStoryCard}
+          disabled={!activeStoryCard || isNavigating}
         >
           {subStep === 1 && enablePart2 ? 'Next: Options →' : 'Next Step →'}
         </Button>
@@ -151,10 +152,10 @@ const MissionDossierStepContent = ({ onNext, onPrev, titleOverride }: { onNext: 
   );
 }
 
-export const MissionDossierStep = ({ onNext, onPrev, titleOverride }: MissionDossierStepProps): React.ReactElement => {
+export const MissionDossierStep = (props: Omit<MissionDossierStepProps, 'isNavigating'> & { isNavigating: boolean }): React.ReactElement => {
   return (
     <MissionSelectionProvider>
-      <MissionDossierStepContent onNext={onNext} onPrev={onPrev} titleOverride={titleOverride} />
+      <MissionDossierStepContent {...props} />
     </MissionSelectionProvider>
   );
 };

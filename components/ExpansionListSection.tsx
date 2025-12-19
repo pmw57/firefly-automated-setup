@@ -1,9 +1,9 @@
 import React from 'react';
-import { Expansions } from '../../types';
-import { EXPANSIONS_METADATA } from '../../data/expansions';
-import { ExpansionToggle } from '../ExpansionToggle';
-import { useTheme } from '../ThemeContext';
-import { cls } from '../../utils/style';
+import { Expansions } from '../types';
+import { EXPANSIONS_METADATA } from '../data/expansions';
+import { ExpansionToggle } from './ExpansionToggle';
+import { useTheme } from './ThemeContext';
+import { cls } from '../utils/style';
 
 interface ExpansionListSectionProps {
     expansions: Expansions;
