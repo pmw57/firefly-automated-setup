@@ -1,7 +1,7 @@
 import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef } from '../../types';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
-import { SETUP_CARD_IDS } from '../../data/ids';
+import { SETUP_CARD_IDS, STORY_TITLES } from '../../data/ids';
 import { STORY_CARDS } from '../../data/storyCards';
 import { isStoryCompatible } from '../filters';
 
@@ -80,6 +80,35 @@ export const getFilteredStoryCards = (
 // =================================================================
 // Rule & Expansion Selectors
 // =================================================================
+
+const SOLO_TIMER_ADJUSTMENTS: Record<string, string> = {
+  [STORY_TITLES.DESPERADOES]: "Declare Last Call before discarding your last token to win the game.",
+  [STORY_TITLES.RESPECTABLE_PERSONS]: "Declare Last Call before discarding your last token to win the game.",
+  [STORY_TITLES.RARE_SPECIMEN]: "Send Out Invites before discarding your last token to win the game."
+};
+
+export const getSoloTimerAdjustmentText = (storyCard: StoryCardDef | undefined): string | null => {
+    if (!storyCard) return null;
+    return SOLO_TIMER_ADJUSTMENTS[storyCard.title] || null;
+}
+
+export const getCategorizedExpansions = () => {
+  const group = (category: string) => EXPANSIONS_METADATA.filter(e => e.id !== 'base' && e.category === category);
+  return {
+    core_mechanics: group('core_mechanics'),
+    map: group('map'),
+    variants: group('variants'),
+    promo: group('promo'),
+  };
+};
+
+export const getFilterableExpansions = (isClassicSolo: boolean) => {
+    return EXPANSIONS_METADATA.filter(e => {
+        if (e.id === 'base') return false;
+        if (isClassicSolo && e.id === 'community') return false;
+        return true;
+    });
+};
 
 export const getAvailableAdvancedRules = (gameState: GameState, activeStoryCard: StoryCardDef | undefined): AdvancedRuleDef[] => {
     const rules: AdvancedRuleDef[] = [];

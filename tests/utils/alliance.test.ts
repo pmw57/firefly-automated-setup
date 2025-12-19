@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { calculateAllianceReaverDetails } from '../../utils/alliance';
-import { StoryCardDef, StructuredContent, StructuredContentPart } from '../../types';
+import { getAllianceReaverDetails } from '../../utils/selectors';
+import { StructuredContent, StructuredContentPart } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
 
 // Helper to recursively flatten structured content to a searchable string
@@ -32,66 +32,68 @@ const getTextContent = (content: StructuredContent | StructuredContentPart): str
 };
 
 describe('utils/alliance', () => {
-  describe('calculateAllianceReaverDetails', () => {
+  describe('getAllianceReaverDetails', () => {
     const baseGameState = getDefaultGameState();
-    const mockStory: StoryCardDef = { title: 'Mock Story', intro: '' };
 
     it('returns default values for a standard game', () => {
-      const details = calculateAllianceReaverDetails(baseGameState, undefined, 'standard');
+      const details = getAllianceReaverDetails(baseGameState, {});
       expect(details.specialRules).toEqual([]);
       expect(details.alliancePlacement).toContain('Londinium');
       expect(details.reaverPlacement).toContain('3 Cutters'); // Default state has Blue Sun
     });
 
     it('generates a rule for alertStackCount based on player count and multiplier', () => {
-      const storyWithMultiplier: StoryCardDef = {
-        ...mockStory,
-        setupConfig: { createAlertTokenStackMultiplier: 3 },
+      const state = { 
+        ...baseGameState, 
+        playerCount: 4, 
+        selectedStoryCard: "It's All In Who You Know" // This story has a multiplier of 3
       };
-      const state = { ...baseGameState, playerCount: 4, selectedStoryCard: storyWithMultiplier.title };
       
-      const details = calculateAllianceReaverDetails(state, storyWithMultiplier, 'standard');
+      const details = getAllianceReaverDetails(state, {});
       expect(details.specialRules.some(rule => 
         rule.source === 'story' && 
-        getTextContent(rule.content).includes('12')
+        getTextContent(rule.content).includes('12') // 4 players * 3 = 12
       )).toBe(true);
     });
 
     it('generates the correct smugglersBluesSetup content based on expansions', () => {
-      const storyWithSmugglers: StoryCardDef = {
-        ...mockStory,
-        setupConfig: { flags: ['smugglersBluesSetup'] },
-      };
-
       // Case 1: Both expansions active
-      const stateWithBoth = { ...baseGameState, expansions: { ...baseGameState.expansions, blue: true, kalidasa: true }, selectedStoryCard: storyWithSmugglers.title };
-      const detailsBoth = calculateAllianceReaverDetails(stateWithBoth, storyWithSmugglers, 'standard');
+      const stateWithBoth = { 
+        ...baseGameState, 
+        expansions: { ...baseGameState.expansions, blue: true, kalidasa: true }, 
+        selectedStoryCard: "Smuggler's Blues" 
+      };
+      const detailsBoth = getAllianceReaverDetails(stateWithBoth, {});
       expect(detailsBoth.specialRules.some(rule => getTextContent(rule.content).includes('Rim Space'))).toBe(true);
 
       // Case 2: Only one expansion active
-      const stateWithOne = { ...baseGameState, expansions: { ...baseGameState.expansions, blue: true, kalidasa: false }, selectedStoryCard: storyWithSmugglers.title };
-      const detailsOne = calculateAllianceReaverDetails(stateWithOne, storyWithSmugglers, 'standard');
+      const stateWithOne = { 
+        ...baseGameState, 
+        expansions: { ...baseGameState.expansions, blue: true, kalidasa: false }, 
+        selectedStoryCard: "Smuggler's Blues" 
+      };
+      const detailsOne = getAllianceReaverDetails(stateWithOne, {});
       expect(detailsOne.specialRules.some(rule => getTextContent(rule.content).includes('Alliance Space'))).toBe(true);
     });
 
     it('correctly sets reaver placement based on blue sun expansion', () => {
         // With Blue Sun
-        const detailsWith = calculateAllianceReaverDetails(baseGameState, mockStory, 'standard');
+        const detailsWith = getAllianceReaverDetails(baseGameState, {});
         expect(detailsWith.reaverPlacement).toContain('3 Cutters');
         
         // Without Blue Sun
         const stateWithoutBlue = { ...baseGameState, expansions: { ...baseGameState.expansions, blue: false } };
-        const detailsWithout = calculateAllianceReaverDetails(stateWithoutBlue, mockStory, 'standard');
+        const detailsWithout = getAllianceReaverDetails(stateWithoutBlue, {});
         expect(detailsWithout.reaverPlacement).toContain('1 Cutter');
     });
 
     it('correctly sets alliance placement based on allianceMode', () => {
         // Standard
-        const detailsStandard = calculateAllianceReaverDetails(baseGameState, mockStory, 'standard');
+        const detailsStandard = getAllianceReaverDetails(baseGameState, {});
         expect(detailsStandard.alliancePlacement).toContain('Londinium');
         
         // Extra Cruisers
-        const detailsExtra = calculateAllianceReaverDetails(baseGameState, mockStory, 'extra_cruisers');
+        const detailsExtra = getAllianceReaverDetails(baseGameState, { allianceMode: 'extra_cruisers' });
         expect(detailsExtra.alliancePlacement).toContain('Regulus AND Persephone');
     });
   });

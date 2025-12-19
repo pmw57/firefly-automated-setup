@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Expansions } from '../../types';
-import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { ExpansionToggle } from '../ExpansionToggle';
 import { useTheme } from '../ThemeContext';
 import { cls } from '../../utils/style';
+import { getCategorizedExpansions } from '../../utils/selectors';
 
 interface ExpansionListSectionProps {
     expansions: Expansions;
@@ -16,12 +16,14 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
     const isDark = theme === 'dark';
     const labelColor = isDark ? 'text-zinc-400' : 'text-[#78350f]';
 
-    const group1_core = EXPANSIONS_METADATA.filter(e => e.id !== 'base' && e.category === 'core_mechanics');
-    const group2_map = EXPANSIONS_METADATA.filter(e => e.id !== 'base' && e.category === 'map');
-    const group3_variants = EXPANSIONS_METADATA.filter(e => e.id !== 'base' && e.category === 'variants');
-    const group4_promo = EXPANSIONS_METADATA.filter(e => e.id !== 'base' && e.category === 'promo');
+    const {
+        core_mechanics,
+        map,
+        variants,
+        promo
+    } = useMemo(() => getCategorizedExpansions(), []);
 
-    const handleToggleGroup = (group: typeof group1_core, enable: boolean) => {
+    const handleToggleGroup = (group: typeof core_mechanics, enable: boolean) => {
         group.forEach(exp => {
             const id = exp.id as keyof Expansions;
             // Only toggle if the state is different from the target state
@@ -31,7 +33,7 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
         });
     };
 
-    const GroupHeader: React.FC<{ title: string, expansions: typeof group1_core }> = ({ title, expansions: group }) => {
+    const GroupHeader: React.FC<{ title: string, expansions: typeof core_mechanics }> = ({ title, expansions: group }) => {
         const areAllSelected = group.every(exp => expansions[exp.id as keyof Expansions]);
         
         const buttonLabel = areAllSelected ? "Deselect All" : "Select All";
@@ -60,7 +62,7 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
         ? 'bg-black/30 border-zinc-800' 
         : 'bg-black/5 border-gray-200';
 
-    const renderGroup = (title: string, group: typeof group1_core) => (
+    const renderGroup = (title: string, group: typeof core_mechanics) => (
         <div className={cls('p-4 rounded-lg border shadow-inner', groupContainerClasses)}>
             <GroupHeader title={title} expansions={group} />
             <div className="grid grid-cols-1 gap-4">
@@ -83,10 +85,10 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
 
     return (
         <div className="mb-8 relative z-10 space-y-6">
-            {renderGroup("Core Content & Mechanics", group1_core)}
-            {renderGroup("Map Expansions", group2_map)}
-            {renderGroup("Game Variants & Anniversary", group3_variants)}
-            {renderGroup("Promo & Community Content", group4_promo)}
+            {renderGroup("Core Content & Mechanics", core_mechanics)}
+            {renderGroup("Map Expansions", map)}
+            {renderGroup("Game Variants & Anniversary", variants)}
+            {renderGroup("Promo & Community Content", promo)}
         </div>
     );
 };
