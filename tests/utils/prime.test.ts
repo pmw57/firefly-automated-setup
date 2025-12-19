@@ -10,10 +10,10 @@ describe('utils/prime', () => {
     const baseGameState = getDefaultGameState();
     const mockStory: StoryCardDef = { title: 'Mock Story', intro: '' };
 
-    it('calculates standard priming (3 cards)', () => {
-      // The default game state enables all expansions. To test the "standard" priming
-      // without high supply volume, we must explicitly disable supply-heavy expansions.
-      const stateForStandardTest: GameState = {
+    // This state is for testing standard priming (base discard of 3)
+    // The default game state enables all expansions. To test the "standard" priming
+    // without high supply volume, we must explicitly disable supply-heavy expansions.
+    const stateForStandardPriming: GameState = {
         ...baseGameState,
         expansions: {
             ...baseGameState.expansions,
@@ -22,9 +22,10 @@ describe('utils/prime', () => {
             breakin_atmo: false,
             still_flying: false,
         }
-      };
-      
-      const details = calculatePrimeDetails(stateForStandardTest, {}, mockStory, false);
+    };
+
+    it('calculates standard priming (3 cards)', () => {
+      const details = calculatePrimeDetails(stateForStandardPriming, {}, mockStory);
       
       expect(details.finalCount).toBe(3);
       expect(details.baseDiscard).toBe(3);
@@ -35,9 +36,10 @@ describe('utils/prime', () => {
     it('identifies high supply volume with 3+ relevant expansions', () => {
       const state: GameState = {
         ...baseGameState,
-        expansions: { ...baseGameState.expansions, kalidasa: true, pirates: true, breakin_atmo: true, still_flying: false }
+        expansions: { ...baseGameState.expansions, kalidasa: true, pirates: true, breakin_atmo: true, still_flying: false },
+        optionalRules: { ...baseGameState.optionalRules, highVolumeSupply: false },
       };
-      const details = calculatePrimeDetails(state, {}, mockStory, false);
+      const details = calculatePrimeDetails(state, {}, mockStory);
       expect(details.isHighSupplyVolume).toBe(true);
       expect(details.baseDiscard).toBe(3); // House rule disabled
       expect(details.finalCount).toBe(3);
@@ -46,16 +48,17 @@ describe('utils/prime', () => {
     it('applies house rule for high supply volume, increasing base discard to 4', () => {
       const state: GameState = {
         ...baseGameState,
-        expansions: { ...baseGameState.expansions, kalidasa: true, pirates: true, breakin_atmo: true }
+        expansions: { ...baseGameState.expansions, kalidasa: true, pirates: true, breakin_atmo: true },
+        optionalRules: { ...baseGameState.optionalRules, highVolumeSupply: true },
       };
-      const details = calculatePrimeDetails(state, {}, mockStory, true);
+      const details = calculatePrimeDetails(state, {}, mockStory);
       expect(details.isHighSupplyVolume).toBe(true);
       expect(details.baseDiscard).toBe(4); // House rule enabled
       expect(details.finalCount).toBe(4);
     });
 
     it('applies blitz mode multiplier (2x)', () => {
-      const details = calculatePrimeDetails(baseGameState, { blitzPrimeMode: true }, mockStory, false);
+      const details = calculatePrimeDetails(stateForStandardPriming, { blitzPrimeMode: true }, mockStory);
       expect(details.isBlitz).toBe(true);
       expect(details.effectiveMultiplier).toBe(2);
       expect(details.finalCount).toBe(6); // 3 * 2
@@ -63,27 +66,27 @@ describe('utils/prime', () => {
 
     it('applies story multiplier', () => {
       const story: StoryCardDef = { ...mockStory, setupConfig: { primingMultiplier: 3 } };
-      const details = calculatePrimeDetails(baseGameState, {}, story, false);
+      const details = calculatePrimeDetails(stateForStandardPriming, {}, story);
       expect(details.effectiveMultiplier).toBe(3);
       expect(details.finalCount).toBe(9); // 3 * 3
     });
     
     it('prioritizes blitz multiplier over story multiplier', () => {
       const story: StoryCardDef = { ...mockStory, setupConfig: { primingMultiplier: 3 } };
-      const details = calculatePrimeDetails(baseGameState, { blitzPrimeMode: true }, story, false);
+      const details = calculatePrimeDetails(stateForStandardPriming, { blitzPrimeMode: true }, story);
       expect(details.effectiveMultiplier).toBe(2); // Blitz is 2x
       expect(details.finalCount).toBe(6); // 3 * 2
     });
 
     it('applies Slaying the Dragon modifier (+2 cards)', () => {
         const story: StoryCardDef = { title: STORY_TITLES.SLAYING_THE_DRAGON, intro: '' };
-        const details = calculatePrimeDetails(baseGameState, {}, story, false);
+        const details = calculatePrimeDetails(stateForStandardPriming, {}, story);
         expect(details.finalCount).toBe(5); // 3 + 2
     });
 
     it('combines blitz and Slaying the Dragon', () => {
         const story: StoryCardDef = { title: STORY_TITLES.SLAYING_THE_DRAGON, intro: '' };
-        const details = calculatePrimeDetails(baseGameState, { blitzPrimeMode: true }, story, false);
+        const details = calculatePrimeDetails(stateForStandardPriming, { blitzPrimeMode: true }, story);
         expect(details.finalCount).toBe(8); // (3 * 2) + 2
     });
   });

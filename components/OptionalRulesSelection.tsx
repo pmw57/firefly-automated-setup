@@ -48,6 +48,10 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
   const toggleConflictResolution = () => {
     dispatch({ type: ActionType.TOGGLE_CONFLICT_RESOLUTION });
   };
+
+  const toggleHighVolumeSupply = () => {
+    dispatch({ type: ActionType.TOGGLE_HIGH_VOLUME_SUPPLY });
+  };
   
   const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -105,21 +109,39 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
               <h4 className={`font-bold uppercase tracking-wide text-xs mb-4 pb-1 border-b ${houseRuleHeaderBorder} ${houseRuleHeaderText}`}>
                 House Rules
               </h4>
-               <div 
-                  role="checkbox"
-                  aria-checked={gameState.optionalRules.resolveConflictsManually}
-                  tabIndex={0}
-                  onClick={toggleConflictResolution} 
-                  onKeyDown={(e) => handleKeyDown(e, toggleConflictResolution)}
-                  className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
-              >
-                  <div className="mt-1 mr-4 shrink-0"><Checkbox checked={gameState.optionalRules.resolveConflictsManually} /></div>
-                  <div>
-                      <h3 className={`font-bold text-base ${textMain}`}>Manual Conflict Resolution</h3>
-                      <p className={`text-xs italic ${isDark ? 'text-amber-500/80' : 'text-firefly-brown'} opacity-90 -mt-0.5 mb-2`}>"The Darkerspire Maneouver"</p>
-                      <p className={`text-xs ${textSub}`}>When Setup and Story Cards conflict, choose which rule to follow. If disabled, Story Cards always have priority.</p>
-                  </div>
-              </div>
+               <div className="space-y-4">
+                 <div 
+                    role="checkbox"
+                    aria-checked={gameState.optionalRules.highVolumeSupply}
+                    tabIndex={0}
+                    onClick={toggleHighVolumeSupply} 
+                    onKeyDown={(e) => handleKeyDown(e, toggleHighVolumeSupply)}
+                    className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
+                >
+                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={gameState.optionalRules.highVolumeSupply} /></div>
+                    <div>
+                        <h3 className={`font-bold text-base ${textMain}`}>High Volume Supply</h3>
+                        <p className={`text-xs italic ${isDark ? 'text-amber-500/80' : 'text-firefly-brown'} opacity-90 -mt-0.5 mb-2`}>"The 'Verse Is A Big Place"</p>
+                        <p className={`text-xs ${textSub}`}>When 3+ large supply expansions are active, increase the base "Priming the Pump" discard count from 3 to 4 to ensure better deck turnover.</p>
+                    </div>
+                </div>
+
+                 <div 
+                    role="checkbox"
+                    aria-checked={gameState.optionalRules.resolveConflictsManually}
+                    tabIndex={0}
+                    onClick={toggleConflictResolution} 
+                    onKeyDown={(e) => handleKeyDown(e, toggleConflictResolution)}
+                    className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
+                >
+                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={gameState.optionalRules.resolveConflictsManually} /></div>
+                    <div>
+                        <h3 className={`font-bold text-base ${textMain}`}>Manual Conflict Resolution</h3>
+                        <p className={`text-xs italic ${isDark ? 'text-amber-500/80' : 'text-firefly-brown'} opacity-90 -mt-0.5 mb-2`}>"The Darkerspire Maneouver"</p>
+                        <p className={`text-xs ${textSub}`}>When Setup and Story Cards conflict, choose which rule to follow. If disabled, Story Cards always have priority.</p>
+                    </div>
+                </div>
+               </div>
             </section>
         </div>
 
