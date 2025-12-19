@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Step, DraftState } from '../types';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/draft';
+import { calculateDraftDetails } from '../utils/draftRules';
 import { Button } from './Button';
 import { DiceControls } from './DiceControls';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { STORY_CARDS } from '../data/storyCards';
-import { STEP_IDS, CHALLENGE_IDS, STORY_TITLES } from '../data/ids';
-import { hasFlag } from '../utils/data';
 import { cls } from '../utils/style';
 
 interface DraftStepProps {
@@ -155,11 +153,13 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const isSolo = gameState.playerCount === 1;
-
-  const overrides = step.overrides || {};
-  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
-  const { optionalRules } = gameState;
-  const { optionalShipUpgrades, resolveConflictsManually } = optionalRules;
+  
+  const {
+      specialRules,
+      isHavenDraft,
+      isBrowncoatDraft,
+      specialStartSector,
+  } = React.useMemo(() => calculateDraftDetails(gameState, step), [gameState, step]);
 
   useEffect(() => {
     if (isSolo && !draftState) {
@@ -188,47 +188,6 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
     setDraftState(newState);
   };
 
-  const isHavenDraft = step.id.includes(STEP_IDS.D_HAVEN_DRAFT);
-  const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
-  const isHeroesAndMisfits = activeStoryCard.title === STORY_TITLES.HEROES_AND_MISFITS;
-  const isRacingAPaleHorse = activeStoryCard.title === STORY_TITLES.RACING_A_PALE_HORSE;
-  const isPersephoneStart = activeStoryCard.setupConfig?.shipPlacementMode === 'persephone' && !isHeroesCustomSetup;
-  const isLondiniumStart = hasFlag(activeStoryCard.setupConfig, 'startAtLondinium');
-  const startOutsideAllianceSpace = hasFlag(activeStoryCard.setupConfig, 'startOutsideAllianceSpace');
-  const startAtSector = activeStoryCard.setupConfig?.startAtSector;
-  const allianceSpaceOffLimits = hasFlag(activeStoryCard.setupConfig, 'allianceSpaceOffLimits');
-  // FIX: Corrected typo in StoryFlag from 'addBorderHavens' to 'addBorderSpaceHavens'.
-  const addBorderHavens = hasFlag(activeStoryCard.setupConfig, 'addBorderSpaceHavens');
-  const isBrowncoatDraft = overrides.draftMode === 'browncoat';
-  const isWantedLeaderMode = overrides.leaderSetup === 'wanted';
-  
-  // Conditionally show warning for Browncoat + Heroes & Misfits interaction
-  // based on the final starting credits calculated in the previous step.
-  // The Serenity costs $4800; if starting capitol is less than that, you end up with $0.
-  const showBrowncoatHeroesWarning = isBrowncoatDraft && isHeroesAndMisfits && gameState.finalStartingCredits != null && gameState.finalStartingCredits < 4800;
-
-  let specialStartSector: string | null = null;
-  if (startAtSector) specialStartSector = startAtSector;
-  else if (isPersephoneStart) specialStartSector = 'Persephone';
-  else if (isLondiniumStart) specialStartSector = 'Londinium';
-
-  let resolvedHavenDraft = isHavenDraft;
-  let conflictMessage: React.ReactNode = null;
-  
-  if (isHavenDraft && specialStartSector) {
-    if (resolveConflictsManually) {
-      // Manual selection is not stored globally yet, need to implement that.
-      // For now, assume a default or let's just create a placeholder UI.
-      // THIS NEEDS A REAL FIX
-      conflictMessage = "Conflict: Haven placement vs. Fixed start. Manual selection needed.";
-    } else {
-      // Default to story priority
-      resolvedHavenDraft = false;
-      conflictMessage = <><strong>Story Priority:</strong> Ships start at <strong>{specialStartSector}</strong>, overriding Haven placement rules.</>;
-    }
-  }
-
-
   const introText = isDark ? 'text-gray-400' : 'text-gray-600';
   const stepBadgeBlueBg = isDark ? 'bg-blue-900/50 text-blue-200' : 'bg-blue-100 text-blue-800';
   const stepBadgeAmberBg = isDark ? 'bg-amber-900/50 text-amber-200' : 'bg-amber-100 text-amber-800';
@@ -237,17 +196,11 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
     <>
       {!isSolo && <p className={cls("mb-4 italic", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>}
       
-      {conflictMessage && (
-        <SpecialRuleBlock source="info" title="Conflict Resolved">
-          {conflictMessage}
+      {specialRules.map((rule, index) => (
+        <SpecialRuleBlock key={index} source={rule.source} title={rule.title}>
+          {rule.content}
         </SpecialRuleBlock>
-      )}
-
-      {isWantedLeaderMode && (
-        <SpecialRuleBlock source="setupCard" title="The Heat Is On">
-          Choose Ships & Leaders normally, but <strong>each Leader begins play with a Wanted token</strong>.
-        </SpecialRuleBlock>
-      )}
+      ))}
 
       {!draftState ? (
         <Button onClick={handleDetermineOrder} variant="secondary" fullWidth className="mb-4">
@@ -264,77 +217,11 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
             />
           )}
           
-          {showBrowncoatHeroesWarning && (
-            <SpecialRuleBlock source="warning" title="Story & Setup Card Interaction">
-              <p className="mb-2">
-                The <strong>"{activeStoryCard.title}"</strong> story provides a specific starting Ship & Crew, which overrides the standard "buy" phase of <strong>"The Browncoat Way"</strong>.
-              </p>
-              <div className={cls("text-sm p-3 rounded border", isDark ? 'bg-red-950/40 border-red-900/50' : 'bg-red-100 border-red-200')}>
-                <p className="mb-2">
-                  Your starting Capitol is reduced by the cost of your assigned ship (e.g., Serenity costs $4,800), but not below $0.
-                </p>
-                <p className="font-bold">
-                  This will likely leave you with $0, unable to purchase Fuel or Parts during the Browncoat Market phase.
-                </p>
-              </div>
-            </SpecialRuleBlock>
-          )}
-
-          {isHeroesCustomSetup && (
-             <SpecialRuleBlock source="warning" title="Heroes & Misfits: Further Adventures">
-                <strong>Custom Setup Active:</strong> Ignore standard crew/ship/location requirements.
-                <br/>
-                Pick your Leader, Ship, and Supply Planet. Start with $2000 and a full compliment of your favourite crew.
-             </SpecialRuleBlock>
-          )}
-
-          {optionalShipUpgrades && (
-             <SpecialRuleBlock source="expansion" title="Optional Ship Upgrades">
-                 <p className="mb-2">The following ships have <strong>Optional Ship Upgrade</strong> cards available. If you choose one of these ships, take its corresponding upgrade card.</p>
-                 <ul className="list-disc ml-5 grid grid-cols-2 gap-x-4 text-sm font-medium mb-3">
-                     <li><strong style={{ color: 'OliveDrab' }}>Bonanza</strong></li>
-                     <li><strong style={{ color: 'RoyalBlue' }}>Bonnie Mae</strong></li>
-                     <li><strong style={{ color: 'DimGrey' }}>Interceptor</strong></li>
-                     <li><strong style={{ color: 'DarkOrange' }}>Serenity</strong></li>
-                     <li><strong style={{ color: 'DarkRed' }}>Walden</strong></li>
-                     <li><strong style={{ color: 'DarkGoldenrod' }}>Yun Qi</strong></li>
-                 </ul>
-                 <div className={cls("text-xs p-2 rounded border", isDark ? 'bg-amber-900/30 border-amber-800 text-amber-200' : 'bg-amber-50 border-amber-200 text-amber-800')}>
-                    <strong>Walden & Interceptor:</strong> These upgrades are double-sided. Choose your side during setup—you cannot switch later.
-                 </div>
-             </SpecialRuleBlock>
-          )}
-
-          {isRacingAPaleHorse && (
-             <SpecialRuleBlock source="story" title="Story Setup: Haven">
-                <strong>Place your Haven at Deadwood (Blue Sun).</strong>
-                <br/>If you end your turn at your Haven, remove Disgruntled from all Crew.
-             </SpecialRuleBlock>
-          )}
-          
-          {addBorderHavens && (
-            <SpecialRuleBlock source="story" title={activeStoryCard.title}>
-              <strong>Choose Havens:</strong> Each player chooses a Haven token. Havens <strong>must be in Border Space</strong>.
-            </SpecialRuleBlock>
-          )}
-
-          {startOutsideAllianceSpace && (
-            <SpecialRuleBlock source="warning" title="Placement Restriction">
-               Players' starting locations <strong>may not be within Alliance Space</strong>.
-            </SpecialRuleBlock>
-          )}
-          
-          {allianceSpaceOffLimits && (
-            <SpecialRuleBlock source="warning" title="Restricted Airspace">
-               <strong>Alliance Space is Off Limits</strong> until Goal 3.
-            </SpecialRuleBlock>
-          )}
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <DraftOrderPanel 
                 draftOrder={draftState.draftOrder}
                 isSolo={isSolo}
-                isHavenDraft={resolvedHavenDraft}
+                isHavenDraft={isHavenDraft}
                 isBrowncoatDraft={isBrowncoatDraft}
                 stepBadgeClass={stepBadgeBlueBg}
             />
@@ -342,31 +229,12 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
             <PlacementOrderPanel 
                 placementOrder={draftState.placementOrder}
                 isSolo={isSolo}
-                isHavenDraft={resolvedHavenDraft}
+                isHavenDraft={isHavenDraft}
                 isBrowncoatDraft={isBrowncoatDraft}
                 specialStartSector={specialStartSector}
                 stepBadgeClass={stepBadgeAmberBg}
             />
           </div>
-          
-          {isBrowncoatDraft && (
-             <SpecialRuleBlock source="setupCard" title="Browncoat Market">
-                <strong>Market Phase:</strong> Once all players have purchased a ship and chosen a leader, everyone may buy fuel ($100) and parts ($300).
-                <br/><span className="text-xs italic opacity-75">Reminder: Free starting fuel/parts are disabled in this mode.</span>
-             </SpecialRuleBlock>
-          )}
-
-          {isHavenDraft && (
-            <SpecialRuleBlock source="setupCard" title="Home Sweet Haven: Placement Rules">
-                 <ul className="list-disc ml-5 mt-1 space-y-1 text-sm">
-                     <li>Each Haven must be placed in an unoccupied <strong>Planetary Sector adjacent to a Supply Planet</strong>.</li>
-                     <li>Havens may not be placed in a Sector with a <strong>Contact</strong>.</li>
-                     <li>Remaining players place their Havens in <strong>reverse order</strong>.</li>
-                     <li><strong>Players' ships start at their Havens.</strong></li>
-                 </ul>
-            </SpecialRuleBlock>
-          )}
-
         </div>
       )}
     </>

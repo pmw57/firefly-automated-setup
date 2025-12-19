@@ -330,3 +330,11 @@ export interface AllianceReaverDetails {
   alliancePlacement: string;
   reaverPlacement: string;
 }
+
+export interface DraftRuleDetails {
+  specialRules: SpecialRule[];
+  isHavenDraft: boolean;
+  isBrowncoatDraft: boolean;
+  specialStartSector: string | null;
+  conflictMessage: React.ReactNode | null;
+}
