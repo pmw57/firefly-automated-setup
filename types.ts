@@ -46,7 +46,7 @@ export type JobMode =
   | 'caper_start' 
   | 'wind_takes_us';
 
-export type NavMode = 'standard' | 'browncoat' | 'rim' | 'flying_solo' | 'clearer_skies';
+export type NavMode = 'standard' | 'browncoat' | 'rim' | 'flying_solo' | 'clearer_skies' | 'standard_reshuffle';
 export type PrimeMode = 'standard' | 'blitz';
 export type DraftMode = 'standard' | 'browncoat';
 export type LeaderSetupMode = 'standard' | 'wanted';
@@ -54,7 +54,6 @@ export type AllianceSetupMode = 'standard' | 'awful_crowded' | 'no_alerts' | 'ex
 
 export interface StepOverrides {
   startingCredits?: number;
-  forceReshuffle?: boolean;
   jobMode?: JobMode;
   navMode?: NavMode;
   primeMode?: PrimeMode;

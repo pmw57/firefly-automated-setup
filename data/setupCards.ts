@@ -52,7 +52,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     description: "Alert Tokens are placed in every sector. Reshuffle cards are active. Specific starting jobs.",
     requiredExpansion: 'blue',
     steps: [
-      { id: 'C1', title: `1. ${BASE_TITLES.C1}`, overrides: { forceReshuffle: true } },
+      { id: 'C1', title: `1. ${BASE_TITLES.C1}`, overrides: { navMode: 'standard_reshuffle' } },
       { id: 'C3', title: `2. ${BASE_TITLES.C3}` },
       { id: 'C2', title: `3. ${BASE_TITLES.C2}`, overrides: { allianceMode: 'awful_crowded' } },
       { id: 'C4', title: `4. ${BASE_TITLES.C4}` },
@@ -86,7 +86,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'kalidasa',
     steps: [
       { id: 'D_TIME_LIMIT', title: `1. ${BASE_TITLES.D_TIME_LIMIT}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { forceReshuffle: true } },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'standard_reshuffle' } },
       { id: 'C3', title: `3. ${BASE_TITLES.C3}` },
       { id: 'C2', title: `4. ${BASE_TITLES.C2}` },
       { id: 'C4', title: `5. ${BASE_TITLES.C4}` }, 
@@ -156,7 +156,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     description: "Features 'Full Burn' mechanic for risky travel. No Alert Tokens are used.",
     requiredExpansion: 'crime',
     steps: [
-      { id: 'C1', title: '1. Nav Decks & Navigation', overrides: { navMode: 'clearer_skies', forceReshuffle: true } },
+      { id: 'C1', title: '1. Nav Decks & Navigation', overrides: { navMode: 'clearer_skies' } },
       { id: 'C2', title: `2. ${BASE_TITLES.C2}`, overrides: { allianceMode: 'no_alerts' } },
       { id: 'C3', title: `3. ${BASE_TITLES.C3}` },
       { id: 'C4', title: `4. ${BASE_TITLES.C4}` },
