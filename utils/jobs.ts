@@ -1,4 +1,3 @@
-import React from 'react';
 import { GameState, StoryCardDef, StepOverrides, JobSetupDetails, JobSetupMessage, JobMode } from '../types';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { hasFlag } from './data';
@@ -11,11 +10,7 @@ const JOB_MODE_DETAILS: Record<string, { getContacts?: () => string[], getMessag
         getMessage: () => ({
             source: 'setupCard',
             title: 'Setup Card Override',
-            content: React.createElement(React.Fragment, null, 
-                React.createElement('strong', null, 'Specific Contacts:'), ' Draw from Amnon Duul, Lord Harrow, and Magistrate Higgins.', 
-                React.createElement('br'), 
-                React.createElement('strong', null, 'Caper Bonus:'), ' Draw 1 Caper Card.'
-            )
+            content: [{ type: 'strong', content: 'Specific Contacts:' }, ' Draw from Amnon Duul, Lord Harrow, and Magistrate Higgins.', { type: 'br' }, { type: 'strong', content: 'Caper Bonus:' }, ' Draw 1 Caper Card.']
         })
     },
     awful_jobs: {
@@ -24,13 +19,8 @@ const JOB_MODE_DETAILS: Record<string, { getContacts?: () => string[], getMessag
             source: 'setupCard',
             title: 'Setup Card Override',
             content: forbidden === CONTACT_NAMES.HARKEN
-                ? React.createElement(React.Fragment, null,
-                    React.createElement('strong', null, 'Limited Contacts.'), ' This setup card normally draws from Harken, Amnon Duul, and Patience.',
-                    React.createElement('div', { className: 'mt-1 text-amber-800 dark:text-amber-400 font-bold text-xs' }, '⚠️ Story Card Conflict: Harken is unavailable. Draw from Amnon Duul and Patience only.')
-                  )
-                : React.createElement(React.Fragment, null, 
-                    React.createElement('strong', null, 'Limited Contacts.'), ' Starting Jobs are drawn only from Harken, Amnon Duul, and Patience.'
-                  )
+                ? [{ type: 'strong', content: 'Limited Contacts.' }, ' This setup card normally draws from Harken, Amnon Duul, and Patience.', { type: 'warning-box', content: ['Story Card Conflict: Harken is unavailable. Draw from Amnon Duul and Patience only.'] }]
+                : [{ type: 'strong', content: 'Limited Contacts.' }, ' Starting Jobs are drawn only from Harken, Amnon Duul, and Patience.']
         })
     },
     rim_jobs: {
@@ -58,29 +48,29 @@ const getNoJobsMessage = (source: 'story' | 'setupCard', prime: boolean, noPrime
         return {
             source: 'warning',
             title: 'Challenge Active',
-            content: React.createElement(React.Fragment, null,
-                React.createElement('p', null, React.createElement('strong', null, 'No Starting Jobs.')),
-                React.createElement('p', { className: 'mt-1' }, React.createElement('strong', null, 'Do not prime the Contact Decks.'), ' (Challenge Override)')
-            )
+            content: [
+                { type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] },
+                { type: 'paragraph', content: [{ type: 'strong', content: 'Do not prime the Contact Decks.' }, ' (Challenge Override)'] }
+            ]
         };
     }
     if (prime) {
         return {
             source: 'story',
             title: 'Story Override',
-            content: React.createElement(React.Fragment, null,
-                React.createElement('p', null, React.createElement('strong', null, 'No Starting Jobs are dealt.')),
-                React.createElement('p', { className: 'mt-2' }, 'Instead, ', React.createElement('strong', null, 'prime the Contact Decks'), ':'),
-                React.createElement('ul', { className: 'list-disc ml-5 mt-1 text-sm' },
-                    React.createElement('li', null, 'Reveal the top ', React.createElement('strong', null, '3 cards'), ' of each Contact Deck.'),
-                    React.createElement('li', null, 'Place the revealed Job Cards in their discard piles.')
-                )
-            )
+            content: [
+                { type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs are dealt.' }] },
+                { type: 'paragraph', content: ['Instead, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
+                { type: 'list', items: [
+                    ['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'],
+                    ['Place the revealed Job Cards in their discard piles.']
+                ]}
+            ]
         };
     }
     return source === 'setupCard'
-        ? { source: 'setupCard', title: 'Setup Card Override', content: React.createElement(React.Fragment, null, React.createElement('p', null, React.createElement('strong', null, 'No Starting Jobs.')), React.createElement('p', null, "Crews must find work on their own out in the black.")) }
-        : { source: 'story', title: 'Story Override', content: React.createElement('p', null, React.createElement('strong', null, 'Do not take Starting Jobs.')) };
+        ? { source: 'setupCard', title: 'Setup Card Override', content: [{ type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] }, { type: 'paragraph', content: ["Crews must find work on their own out in the black."] }] }
+        : { source: 'story', title: 'Story Override', content: [{ type: 'paragraph', content: [{ type: 'strong', content: 'Do not take Starting Jobs.' }] }] };
 };
 
 
@@ -121,12 +111,12 @@ export const determineJobSetupDetails = (
     
     if (storyConfig?.forbiddenStartingContact || (storyConfig?.allowedStartingContacts && storyConfig.allowedStartingContacts.length > 0)) {
         if (activeStoryCard?.setupDescription) {
-            messages.push({ source: 'story', title: 'Story Override', content: activeStoryCard.setupDescription });
+            messages.push({ source: 'story', title: 'Story Override', content: [activeStoryCard.setupDescription] });
         }
     }
 
     if (isSingleContactChallenge) {
-        messages.push({ source: 'warning', title: 'Challenge Active', content: React.createElement('p', null, React.createElement('strong', null, 'Single Contact Only:'), ' You may only work for one contact.') });
+        messages.push({ source: 'warning', title: 'Challenge Active', content: [{ type: 'paragraph', content: [{ type: 'strong', content: 'Single Contact Only:' }, ' You may only work for one contact.'] }] });
     }
 
     return {

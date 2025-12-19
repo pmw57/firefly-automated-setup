@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Step, DraftState } from '../types';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/draft';
-import { calculateDraftDetails } from '../utils/draftRules';
+import { getDraftDetails } from '../utils/selectors';
 import { Button } from './Button';
 import { DiceControls } from './DiceControls';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
@@ -159,7 +159,7 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
       isHavenDraft,
       isBrowncoatDraft,
       specialStartSector,
-  } = React.useMemo(() => calculateDraftDetails(gameState, step), [gameState, step]);
+  } = React.useMemo(() => getDraftDetails(gameState, step), [gameState, step]);
 
   useEffect(() => {
     if (isSolo && !draftState) {
@@ -197,9 +197,7 @@ export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
       {!isSolo && <p className={cls("mb-4 italic", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>}
       
       {specialRules.map((rule, index) => (
-        <SpecialRuleBlock key={index} source={rule.source} title={rule.title}>
-          {rule.content}
-        </SpecialRuleBlock>
+        <SpecialRuleBlock key={index} source={rule.source} title={rule.title} content={rule.content} />
       ))}
 
       {!draftState ? (

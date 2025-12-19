@@ -3,8 +3,7 @@ import { Step } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { calculateAllianceReaverDetails } from '../utils/alliance';
-import { STORY_CARDS } from '../data/storyCards';
+import { getAllianceReaverDetails } from '../utils/selectors';
 
 interface AllianceReaverStepProps {
   step: Step;
@@ -12,20 +11,15 @@ interface AllianceReaverStepProps {
 
 export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) => {
   const { state: gameState } = useGameState();
-  const { allianceMode } = step.overrides || {};
-
-  const activeStoryCard = React.useMemo(() => 
-    STORY_CARDS.find(c => c.title === gameState.selectedStoryCard),
-    [gameState.selectedStoryCard]
-  );
+  const { overrides = {} } = step;
 
   const {
     specialRules,
     alliancePlacement,
     reaverPlacement
   } = React.useMemo(() => 
-    calculateAllianceReaverDetails(gameState, activeStoryCard, allianceMode), 
-    [gameState, activeStoryCard, allianceMode]
+    getAllianceReaverDetails(gameState, overrides), 
+    [gameState, overrides]
   );
 
   const { theme } = useTheme();
@@ -47,9 +41,7 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) 
   return (
     <div className="space-y-4">
       {specialRules.map((rule, index) => (
-        <SpecialRuleBlock key={index} source={rule.source} title={rule.title}>
-          {rule.content}
-        </SpecialRuleBlock>
+        <SpecialRuleBlock key={index} source={rule.source} title={rule.title} content={rule.content} />
       ))}
 
       <div className={`${standardContainerBg} p-4 rounded-lg border ${standardContainerBorder} shadow-sm mt-4 transition-colors duration-300`}>

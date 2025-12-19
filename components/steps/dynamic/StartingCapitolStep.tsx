@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Step } from '../../../types';
-import { calculateStartingResources, getCreditsLabel } from '../../../utils/resources';
+import { getResourceDetails } from '../../../utils/selectors';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
-import { STORY_CARDS } from '../../../data/storyCards';
 import { ConflictResolver } from '../../ConflictResolver';
 import { ActionType } from '../../../state/actions';
 
@@ -11,16 +10,15 @@ interface StartingCapitolStepProps {
   step: Step;
 }
 
-export const StartingCapitolStep = ({ step }: StartingCapitolStepProps): React.ReactElement => {
+export const StartingCapitolStep: React.FC<StartingCapitolStepProps> = () => {
   const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const activeStoryCard = STORY_CARDS.find(c => c.title === gameState.selectedStoryCard) || STORY_CARDS[0];
 
   const [manualSelection, setManualSelection] = useState<'story' | 'setupCard'>('story');
 
-  const resourceDetails = calculateStartingResources(gameState, manualSelection);
-  const { credits, conflict } = resourceDetails;
+  const resourceDetails = getResourceDetails(gameState, manualSelection);
+  const { credits, conflict, creditModifications } = resourceDetails;
 
   useEffect(() => {
     if (credits !== gameState.finalStartingCredits) {
@@ -29,6 +27,16 @@ export const StartingCapitolStep = ({ step }: StartingCapitolStepProps): React.R
   }, [credits, dispatch, gameState.finalStartingCredits]);
   
   const showConflictUI = conflict && gameState.optionalRules.resolveConflictsManually;
+  
+  const getCreditsLabel = (): string => {
+    if (showConflictUI && conflict) {
+        return manualSelection === 'setupCard'
+            ? conflict.setupCard.source.name
+            : conflict.story.source.name;
+    }
+    return creditModifications[0]?.description || "Allocation";
+  };
+
 
   const panelBg = isDark ? 'bg-black/60' : 'bg-white';
   const panelBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -53,7 +61,7 @@ export const StartingCapitolStep = ({ step }: StartingCapitolStepProps): React.R
       <div className={`text-center p-8 rounded-lg border shadow-sm transition-colors duration-300 ${panelBg} ${panelBorder}`}>
         <p className={`text-lg font-bold mb-2 ${textColor}`}>Each Player's Starting Capitol</p>
         <div className={`text-5xl font-bold font-western my-4 ${numberColor}`}>${credits.toLocaleString()}</div>
-        <p className={`text-sm ${subText}`}>{getCreditsLabel(resourceDetails, step.overrides || {}, activeStoryCard, showConflictUI ? manualSelection : undefined)}</p>
+        <p className={`text-sm ${subText}`}>{getCreditsLabel()}</p>
       </div>
     </div>
   );

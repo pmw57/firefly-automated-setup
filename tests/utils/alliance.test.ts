@@ -1,15 +1,34 @@
-// FIX: Added import for React to resolve 'React' is not defined errors when asserting on React elements.
-import React from 'react';
 import { describe, it, expect } from 'vitest';
 import { calculateAllianceReaverDetails } from '../../utils/alliance';
-import { StoryCardDef } from '../../types';
+import { StoryCardDef, StructuredContent, StructuredContentPart } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
 
-// Helper to recursively flatten React children to a searchable string
-const getTextContent = (content: React.ReactNode): string => {
-    return React.Children.toArray(content)
-      .map(child => (React.isValidElement(child) ? getTextContent(child.props.children) : child))
-      .join('');
+// Helper to recursively flatten structured content to a searchable string
+const getTextContent = (content: StructuredContent | StructuredContentPart): string => {
+    if (typeof content === 'string') {
+        return content;
+    }
+    if (Array.isArray(content)) {
+        return content.map(part => getTextContent(part)).join('');
+    }
+    if (!content) return '';
+
+    switch(content.type) {
+        case 'strong':
+        case 'action':
+        case 'paragraph':
+        case 'warning-box':
+            return getTextContent(content.content);
+        case 'list':
+        case 'numbered-list':
+            return content.items.map(item => getTextContent(item)).join(' ');
+        case 'sub-list':
+            return content.items.map(item => item.ship).join(' ');
+        case 'br':
+            return ' ';
+        default:
+            return '';
+    }
 };
 
 describe('utils/alliance', () => {
@@ -34,7 +53,7 @@ describe('utils/alliance', () => {
       const details = calculateAllianceReaverDetails(state, storyWithMultiplier, 'standard');
       expect(details.specialRules.some(rule => 
         rule.source === 'story' && 
-        getTextContent(rule.content).includes('12') // Use helper to search text content
+        getTextContent(rule.content).includes('12')
       )).toBe(true);
     });
 

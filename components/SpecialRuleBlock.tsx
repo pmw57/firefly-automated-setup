@@ -2,16 +2,52 @@ import React from 'react';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';
 import { PageReference } from './PageReference';
+import { StructuredContent, StructuredContentPart } from '../types';
 
 interface SpecialRuleBlockProps {
   source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
   title?: string;
-  children?: React.ReactNode;
+  content: StructuredContent;
   page?: string | number;
   manual?: string;
 }
 
-export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, title, children, page, manual }) => {
+const ActionText: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  return <span className={cls("font-bold border-b border-dotted", isDark ? 'border-zinc-500' : 'border-gray-400')}>{children}</span>;
+};
+
+const renderContent = (content: StructuredContent): React.ReactNode => {
+  return content.map((part: StructuredContentPart, index: number) => {
+    if (typeof part === 'string') {
+      return <React.Fragment key={index}>{part}</React.Fragment>;
+    }
+
+    switch (part.type) {
+      case 'strong':
+        return <strong key={index}>{part.content}</strong>;
+      case 'action':
+        return <ActionText key={index}>{part.content}</ActionText>;
+      case 'br':
+        return <br key={index} />;
+      case 'paragraph':
+        return <p key={index} className="my-1">{renderContent(part.content)}</p>;
+      case 'list':
+        return <ul key={index} className="list-disc ml-5 space-y-1 mt-1">{part.items.map((item, i) => <li key={i}>{renderContent(item)}</li>)}</ul>;
+      case 'numbered-list':
+        return <ol key={index} className="list-decimal ml-5 space-y-1 mt-1">{part.items.map((item, i) => <li key={i}>{renderContent(item)}</li>)}</ol>;
+      case 'warning-box':
+        return <div key={index} className="text-red-700 dark:text-red-400 italic font-bold text-xs mt-1">{renderContent(part.content)}</div>;
+      case 'sub-list':
+        return <ul key={index} className="list-disc ml-5 grid grid-cols-2 gap-x-4 text-sm font-medium my-2">{part.items.map(item => <li key={item.ship}><strong>{item.ship}</strong></li>)}</ul>
+      default:
+        return null;
+    }
+  });
+};
+
+export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, title, content, page, manual }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -25,39 +61,19 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
         case 'info': return { border: 'border-zinc-600', bg: 'bg-zinc-800/40', text: 'text-gray-300' };
       }
     } else {
-      // Firefly Light Theme
       switch(source) {
-        // Story: Amber/Brown
         case 'story': return { border: 'border-[#b45309]', bg: 'bg-[#fffbeb]', text: 'text-[#92400e]' };
-        // Setup Card: Deep Blue (Alliance)
         case 'setupCard': return { border: 'border-[#1e40af]', bg: 'bg-[#eff6ff]', text: 'text-[#1e3a8a]' };
-        // Expansion: Purple
         case 'expansion': return { border: 'border-[#7e22ce]', bg: 'bg-[#faf5ff]', text: 'text-[#6b21a8]' };
-        // Warning: Red
         case 'warning': return { border: 'border-[#b91c1c]', bg: 'bg-[#fef2f2]', text: 'text-[#991b1b]' };
-        // Info: Gray
         case 'info': return { border: 'border-[#78716c]', bg: 'bg-[#f5f5f4]', text: 'text-[#44403c]' };
       }
     }
     return { border: 'border-gray-500', bg: 'bg-gray-100', text: 'text-gray-800' };
   };
 
-  const icons = {
-    story: '📜',
-    setupCard: '⚙️',
-    expansion: '🧩',
-    warning: '⚠️',
-    info: 'ℹ️'
-  };
-
-  const labels = {
-    story: 'Story Override',
-    setupCard: 'Setup Card Override',
-    expansion: 'Expansion Rule',
-    warning: 'Restriction',
-    info: 'Information'
-  };
-
+  const icons = { story: '📜', setupCard: '⚙️', expansion: '🧩', warning: '⚠️', info: 'ℹ️' };
+  const labels = { story: 'Story Override', setupCard: 'Setup Card Override', expansion: 'Expansion Rule', warning: 'Restriction', info: 'Information' };
   const s = getStyles();
 
   return (
@@ -79,7 +95,7 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
         </div>
       </div>
       <div className={cls("text-sm leading-relaxed pl-1 opacity-90", s.text)}>
-        {children}
+        {renderContent(content)}
       </div>
     </div>
   );

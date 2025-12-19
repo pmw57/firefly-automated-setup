@@ -1,4 +1,3 @@
-import React from 'react';
 import { SETUP_CARD_IDS } from './data/ids';
 
 export type ExpansionId = 'base' | 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'black_market' | 'still_flying' | 'community';
@@ -262,11 +261,24 @@ export interface DraftState {
   placementOrder: string[];
 }
 
-// --- New Types for Refactored Logic ---
+// --- New Types for Refactored Logic & Structured Content ---
+export type StructuredContentPart =
+  | string
+  | { type: 'strong'; content: string }
+  | { type: 'action'; content: string }
+  | { type: 'br' }
+  | { type: 'list'; items: StructuredContent[] }
+  | { type: 'numbered-list'; items: StructuredContent[] }
+  | { type: 'paragraph'; content: StructuredContent }
+  | { type: 'warning-box'; content: StructuredContent }
+  | { type: 'sub-list'; items: { ship: string }[] };
+
+export type StructuredContent = StructuredContentPart[];
+
 export interface JobSetupMessage {
   source: 'story' | 'setupCard' | 'warning' | 'info' | 'expansion';
   title: string;
-  content: React.ReactNode;
+  content: StructuredContent;
 }
 
 export interface JobConflict {
@@ -322,7 +334,7 @@ export interface PrimeDetails {
 export interface SpecialRule {
     source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
     title: string;
-    content: React.ReactNode;
+    content: StructuredContent;
 }
 
 export interface AllianceReaverDetails {
@@ -336,7 +348,7 @@ export interface DraftRuleDetails {
   isHavenDraft: boolean;
   isBrowncoatDraft: boolean;
   specialStartSector: string | null;
-  conflictMessage: React.ReactNode | null;
+  conflictMessage: StructuredContent | null;
 }
 
 export interface HeaderDetails {

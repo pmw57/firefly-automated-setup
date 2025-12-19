@@ -57,7 +57,46 @@ describe('utils/jobs', () => {
       const story = mockStory({ jobDrawMode: 'no_jobs', flags: ['primeContactDecks'] });
       const { showStandardContactList, messages } = determineJobSetupDetails(baseGameState, story, {});
       expect(showStandardContactList).toBe(false);
-      expect(messages[0].content).toMatchSnapshot(); // snapshot the React element
+      expect(messages[0].content).toMatchInlineSnapshot(`
+        [
+          {
+            "content": [
+              {
+                "content": "No Starting Jobs are dealt.",
+                "type": "strong",
+              },
+            ],
+            "type": "paragraph",
+          },
+          {
+            "content": [
+              "Instead, ",
+              {
+                "content": "prime the Contact Decks",
+                "type": "strong",
+              },
+              ":",
+            ],
+            "type": "paragraph",
+          },
+          {
+            "items": [
+              [
+                "Reveal the top ",
+                {
+                  "content": "3 cards",
+                  "type": "strong",
+                },
+                " of each Contact Deck.",
+              ],
+              [
+                "Place the revealed Job Cards in their discard piles.",
+              ],
+            ],
+            "type": "list",
+          },
+        ]
+      `);
     });
 
     it('handles "no_jobs" with "Don\'t Prime Contacts" challenge override', () => {
