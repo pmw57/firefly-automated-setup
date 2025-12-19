@@ -20,10 +20,14 @@ export const WizardHeader = ({ gameState, onReset, flow, currentStepIndex }: Wiz
     
     const { showSetupCard, showStoryCard, setupCardStepIndex } = useMemo(() => {
         const setupCardIdx = flow.findIndex(step => step.id === STEP_IDS.SETUP_CARD_SELECTION);
-        const storyCardIdx = flow.findIndex(step => step.id === STEP_IDS.CORE_MISSION);
+        // Fix: Include D_FIRST_GOAL to correctly detect when a story has been selected in all setup flows.
+        const storyCardIdx = flow.findIndex(step => 
+            step.id === STEP_IDS.CORE_MISSION || step.id === STEP_IDS.D_FIRST_GOAL
+        );
     
-        const shouldShowSetup = setupCardIdx !== -1 && currentStepIndex >= setupCardIdx;
-        const shouldShowStory = storyCardIdx !== -1 && currentStepIndex >= storyCardIdx;
+        // UX Change: Show info on the step *after* selection for a cleaner flow.
+        const shouldShowSetup = setupCardIdx !== -1 && currentStepIndex > setupCardIdx;
+        const shouldShowStory = storyCardIdx !== -1 && currentStepIndex > storyCardIdx;
     
         return { 
             showSetupCard: shouldShowSetup, 
@@ -32,7 +36,7 @@ export const WizardHeader = ({ gameState, onReset, flow, currentStepIndex }: Wiz
         };
     }, [flow, currentStepIndex]);
 
-    const showSoloModeIndicator = gameState.gameMode !== 'multiplayer' && setupCardStepIndex !== -1 && currentStepIndex >= setupCardStepIndex;
+    const showSoloModeIndicator = gameState.gameMode !== 'multiplayer' && setupCardStepIndex !== -1 && currentStepIndex > setupCardStepIndex;
 
     const handleResetClick = () => {
         if (showConfirmReset) {
@@ -47,21 +51,30 @@ export const WizardHeader = ({ gameState, onReset, flow, currentStepIndex }: Wiz
 
     return (
         <div className={`${stickyHeaderBg} backdrop-blur-sm p-4 rounded-lg mb-6 shadow-sm border flex justify-between items-center transition-all duration-300 sticky top-0 z-30`}>
-            <div className="flex flex-col">
-                <span className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-gray-400' : 'text-[#78350f]'}`}>Active Game</span>
-                <div className={`flex flex-wrap items-center gap-x-2 font-bold text-sm md:text-base leading-tight ${isDark ? 'text-green-400' : 'text-[#7f1d1d]'}`}>
-                    <span className={isDark ? 'text-blue-300' : 'text-[#451a03]'}>
-                        {showSetupCard ? displaySetupName : 'Game Setup'}
+            {/* UX Improvement: Redesigned header for clarity and better responsiveness */}
+            <div className="flex-1 min-w-0"> {/* Use min-w-0 to allow truncation in flexbox */}
+                <div className="flex items-baseline gap-x-2 truncate">
+                    <span className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-gray-400' : 'text-[#78350f]'}`}>
+                        Setup:
                     </span>
-                    {showStoryCard && gameState.selectedStoryCard && (
-                        <>
-                            <span className={`${isDark ? 'text-gray-600' : 'text-[#a8a29e]'} hidden sm:inline`}>•</span>
-                            <span className={`${isDark ? 'text-amber-200' : 'text-[#b45309]'} block sm:inline`}>{gameState.selectedStoryCard}</span>
-                        </>
-                    )}
+                    <span className={`font-bold text-sm md:text-base leading-tight truncate ${isDark ? 'text-blue-300' : 'text-[#451a03]'}`}>
+                        {showSetupCard && gameState.setupCardName ? displaySetupName : 'Configuring...'}
+                    </span>
                 </div>
+
+                {showStoryCard && gameState.selectedStoryCard && (
+                    <div className="flex items-baseline gap-x-2 truncate mt-1">
+                        <span className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-gray-400' : 'text-[#78350f]'}`}>
+                            Story:
+                        </span>
+                        <span className={`font-bold text-sm md:text-base leading-tight truncate ${isDark ? 'text-amber-200' : 'text-[#b45309]'}`}>
+                            {gameState.selectedStoryCard}
+                        </span>
+                    </div>
+                )}
+
                 {showSoloModeIndicator && (
-                    <span className={`text-[10px] uppercase font-bold mt-1 ${isDark ? 'text-purple-400' : 'text-purple-800'}`}>
+                    <span className={`block text-[10px] uppercase font-bold mt-1 ${isDark ? 'text-purple-400' : 'text-purple-800'}`}>
                         {gameState.setupCardId === 'FlyingSolo' ? 'Solo (Expanded)' : 'Solo (Classic)'}
                     </span>
                 )}
