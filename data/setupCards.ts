@@ -1,4 +1,7 @@
-import { SetupCardDef, SetupCardStep } from '../types';
+import { SetupCardDef, SetupCardStep, SetupRule } from '../types';
+
+// FIX: Add a distributive Omit to handle union types correctly, resolving issues with TypeScript's inference on object literals in arrays.
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 
 // Base titles for reuse, to avoid typos
 const BASE_TITLES = {
@@ -33,6 +36,14 @@ const STANDARD_STEPS: SetupCardStep[] = [
   { id: 'C_PRIME', title: `7. ${BASE_TITLES.C_PRIME}`, page: 4, manual: 'Core' }
 ];
 
+const createRules = (id: string, rules: DistributiveOmit<SetupRule, 'source' | 'sourceName'>[]): SetupRule[] => {
+    return rules.map(rule => ({
+        ...rule,
+        source: 'setupCard',
+        sourceName: id,
+    })) as SetupRule[];
+};
+
 export const SETUP_CARDS: SetupCardDef[] = [
   // 1. Base Game
   {
@@ -51,13 +62,18 @@ export const SETUP_CARDS: SetupCardDef[] = [
     label: "Awful Crowded In My Sky", 
     description: "Alert Tokens are placed in every sector. Reshuffle cards are active. Specific starting jobs.",
     requiredExpansion: 'blue',
+    rules: createRules("Awful Crowded In My Sky", [
+      { type: 'setNavMode', mode: 'standard_reshuffle' },
+      { type: 'setAllianceMode', mode: 'awful_crowded' },
+      { type: 'setJobMode', mode: 'awful_jobs' },
+    ]),
     steps: [
-      { id: 'C1', title: `1. ${BASE_TITLES.C1}`, overrides: { navMode: 'standard_reshuffle' } },
+      { id: 'C1', title: `1. ${BASE_TITLES.C1}` },
       { id: 'C3', title: `2. ${BASE_TITLES.C3}` },
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}`, overrides: { allianceMode: 'awful_crowded' } },
+      { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'C4', title: `4. ${BASE_TITLES.C4}` },
       { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `6. ${BASE_TITLES.C6}`, overrides: { jobMode: 'awful_jobs' } },
+      { id: 'C6', title: `6. ${BASE_TITLES.C6}` },
       { id: 'C_PRIME', title: `7. ${BASE_TITLES.C_PRIME}` }
     ]
   },
@@ -68,14 +84,18 @@ export const SETUP_CARDS: SetupCardDef[] = [
     label: "The Rim's The Thing",
     description: "Focuses on the outer planets. Uses only Border Nav cards. Contact Decks contain only Blue Sun and Kalidasa cards.",
     requiredExpansion: 'kalidasa',
+    rules: createRules("The Rim's The Thing", [
+      { type: 'setNavMode', mode: 'rim' },
+      { type: 'setJobMode', mode: 'rim_jobs' },
+    ]),
     steps: [
       { id: 'D_RIM_JOBS', title: `1. ${BASE_TITLES.D_RIM_JOBS}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'rim' } },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
       { id: 'C3', title: `3. ${BASE_TITLES.C3}` }, 
       { id: 'C2', title: `4. ${BASE_TITLES.C2}` },
       { id: 'C4', title: `5. ${BASE_TITLES.C4}` }, 
       { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}`, overrides: { jobMode: 'rim_jobs' } },
+      { id: 'C6', title: `7. ${BASE_TITLES.C6}` },
       { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
@@ -84,14 +104,18 @@ export const SETUP_CARDS: SetupCardDef[] = [
     label: "Time's Not On Our Side",
     description: "A race against time. Uses Disgruntled tokens as a game timer. Nav decks are harder (Reshuffle included).",
     requiredExpansion: 'kalidasa',
+    rules: createRules("Time's Not On Our Side", [
+      { type: 'setNavMode', mode: 'standard_reshuffle' },
+      { type: 'setJobMode', mode: 'times_jobs' },
+    ]),
     steps: [
       { id: 'D_TIME_LIMIT', title: `1. ${BASE_TITLES.D_TIME_LIMIT}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'standard_reshuffle' } },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
       { id: 'C3', title: `3. ${BASE_TITLES.C3}` },
       { id: 'C2', title: `4. ${BASE_TITLES.C2}` },
       { id: 'C4', title: `5. ${BASE_TITLES.C4}` }, 
       { id: 'C5', title: `6. ${BASE_TITLES.C5}` }, 
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}`, overrides: { jobMode: 'times_jobs' } }, 
+      { id: 'C6', title: `7. ${BASE_TITLES.C6}` }, 
       { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
@@ -102,18 +126,21 @@ export const SETUP_CARDS: SetupCardDef[] = [
     label: "The Browncoat Way",
     description: "A harder economy. Ships must be purchased with starting cash. No free fuel/parts. No starting jobs.",
     requiredExpansion: 'coachworks',
-    effects: [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 12000, source: { source: 'setupCard', name: "The Browncoat Way" }, description: "Setup Card Allocation" },
-      { type: 'modifyResource', resource: 'fuel', method: 'disable', source: { source: 'setupCard', name: "The Browncoat Way" }, description: "No free starting fuel." },
-      { type: 'modifyResource', resource: 'parts', method: 'disable', source: { source: 'setupCard', name: "The Browncoat Way" }, description: "No free starting parts." },
-    ],
+    rules: createRules("The Browncoat Way", [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 12000, description: "Setup Card Allocation" },
+      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No free starting fuel." },
+      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No free starting parts." },
+      { type: 'setNavMode', mode: 'browncoat' },
+      { type: 'setDraftMode', mode: 'browncoat' },
+      { type: 'setJobMode', mode: 'no_jobs' },
+    ]),
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'browncoat' }, page: 22, manual: 'Core' },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, page: 22, manual: 'Core' },
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'D_BC_CAPITOL', title: `4. ${BASE_TITLES.D_BC_CAPITOL}` },
-      { id: 'C3', title: `5. ${BASE_TITLES.C3}`, overrides: { draftMode: 'browncoat' } },
-      { id: 'C6', title: `6. ${BASE_TITLES.C6}`, overrides: { jobMode: 'no_jobs' } },
+      { id: 'C3', title: `5. ${BASE_TITLES.C3}` },
+      { id: 'C6', title: `6. ${BASE_TITLES.C6}` },
       { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
@@ -122,14 +149,18 @@ export const SETUP_CARDS: SetupCardDef[] = [
     label: "The Blitz",
     description: "Draft starting cards via 'Strip Mining' in addition to standard supplies. Priming the Pump discards double the cards.",
     requiredExpansion: 'coachworks',
+    rules: createRules("The Blitz", [
+      { type: 'setNavMode', mode: 'browncoat' },
+      { type: 'setPrimeMode', mode: 'blitz' },
+    ]),
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. Nav Setup`, overrides: { navMode: 'browncoat' } },
+      { id: 'C1', title: `2. Nav Setup` },
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
       { id: 'D_STRIP_MINING', title: `5. ${BASE_TITLES.D_STRIP_MINING}` },
       { id: 'C6', title: `6. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `7. Priming the Pump: Double Dip`, overrides: { primeMode: 'blitz' } }
+      { id: 'C_PRIME', title: `7. Priming the Pump: Double Dip` }
     ]
   },
 
@@ -139,6 +170,9 @@ export const SETUP_CARDS: SetupCardDef[] = [
     label: "Alliance High Alert",
     description: "Starts with an Alliance Alert card in play. Harken is unavailable for starting jobs.",
     requiredExpansion: 'crime',
+    rules: createRules("Alliance High Alert", [
+      { type: 'setJobMode', mode: 'high_alert_jobs' },
+    ]),
     steps: [
       { id: 'D_ALLIANCE_ALERT', title: `1. ${BASE_TITLES.D_ALLIANCE_ALERT}` },
       { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
@@ -146,7 +180,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
       { id: 'C4', title: `5. ${BASE_TITLES.C4}` },
       { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}`, overrides: { jobMode: 'high_alert_jobs' } },
+      { id: 'C6', title: `7. ${BASE_TITLES.C6}` },
       { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
@@ -155,9 +189,13 @@ export const SETUP_CARDS: SetupCardDef[] = [
     label: "Clearer Skies, Better Days", 
     description: "Features 'Full Burn' mechanic for risky travel. No Alert Tokens are used.",
     requiredExpansion: 'crime',
+    rules: createRules("Clearer Skies, Better Days", [
+      { type: 'setNavMode', mode: 'clearer_skies' },
+      { type: 'setAllianceMode', mode: 'no_alerts' },
+    ]),
     steps: [
-      { id: 'C1', title: '1. Nav Decks & Navigation', overrides: { navMode: 'clearer_skies' } },
-      { id: 'C2', title: `2. ${BASE_TITLES.C2}`, overrides: { allianceMode: 'no_alerts' } },
+      { id: 'C1', title: '1. Nav Decks & Navigation' },
+      { id: 'C2', title: `2. ${BASE_TITLES.C2}` },
       { id: 'C3', title: `3. ${BASE_TITLES.C3}` },
       { id: 'C4', title: `4. ${BASE_TITLES.C4}` },
       { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
@@ -173,9 +211,12 @@ export const SETUP_CARDS: SetupCardDef[] = [
     description: "10th Anniversary Expanded Solo Mode. Pair this with another Setup Card to determine the board state.",
     requiredExpansion: 'tenth',
     mode: 'solo',
+    rules: createRules("Flying Solo", [
+      { type: 'setNavMode', mode: 'flying_solo' },
+    ]),
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'flying_solo' } },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
       { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
@@ -189,14 +230,18 @@ export const SETUP_CARDS: SetupCardDef[] = [
     label: "Ain't All Buttons & Charts",
     description: "Players draft Shuttles from the supply deck. Specific starting jobs from Amnon Duul, Lord Harrow, and Magistrate Higgins.",
     requiredExpansion: 'tenth',
+    rules: createRules("Ain't All Buttons & Charts", [
+      { type: 'setNavMode', mode: 'browncoat' },
+      { type: 'setJobMode', mode: 'buttons_jobs' },
+    ]),
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'browncoat' } },
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
       { id: 'D_SHUTTLE', title: `5. ${BASE_TITLES.D_SHUTTLE}` },
       { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}`, overrides: { jobMode: 'buttons_jobs' } },
+      { id: 'C6', title: `7. ${BASE_TITLES.C6}` },
       { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
@@ -205,9 +250,12 @@ export const SETUP_CARDS: SetupCardDef[] = [
     label: "Home Sweet Haven",
     description: "Draft Haven tokens to establish a home base. Ships start at Havens. Includes 'Local Heroes' bonuses.",
     requiredExpansion: 'tenth',
+    rules: createRules("Home Sweet Haven", [
+      { type: 'setNavMode', mode: 'browncoat' },
+    ]),
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, overrides: { navMode: 'browncoat' }, page: 54, manual: '10th AE'},
+      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, page: 54, manual: '10th AE'},
       { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
       { id: 'D_HAVEN_DRAFT', title: `4. ${BASE_TITLES.D_HAVEN_DRAFT}` },
       { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
@@ -221,11 +269,15 @@ export const SETUP_CARDS: SetupCardDef[] = [
     label: "The Heat Is On",
     description: "Leaders begin with Wanted tokens. Cruisers start at Regulus and Persephone. Pressure's High rules active.",
     requiredExpansion: 'tenth',
+    rules: createRules("The Heat Is On", [
+      { type: 'setAllianceMode', mode: 'extra_cruisers' },
+      { type: 'setLeaderSetup', mode: 'wanted' },
+    ]),
     steps: [
       { id: 'D_PRESSURES_HIGH', title: `1. ${BASE_TITLES.D_PRESSURES_HIGH}` },
       { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}`, overrides: { allianceMode: 'extra_cruisers' } },
-      { id: 'C3', title: `4. ${BASE_TITLES.C3}`, overrides: { leaderSetup: 'wanted' } },
+      { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
+      { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
       { id: 'C4', title: `5. ${BASE_TITLES.C4}` },
       { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
       { id: 'C6', title: `7. ${BASE_TITLES.C6}` },

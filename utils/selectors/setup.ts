@@ -12,7 +12,9 @@ import {
     JobSetupMessage,
     SpecialRule,
     StructuredContent,
-    ModifyResourceEffect
+    ModifyResourceEffect,
+    ResourceType,
+    ModifyResourceRule
 } from '../../types';
 import { hasFlag } from '../data';
 import { CONTACT_NAMES, CHALLENGE_IDS, STORY_TITLES, STEP_IDS } from '../../data/ids';
@@ -33,6 +35,8 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
         showStandardRules,
         isSolo: gameState.playerCount === 1,
         isHighPlayerCount: gameState.playerCount >= 3,
+        // FIX: Add missing specialRules property to satisfy the NavDeckSetupDetails interface.
+        specialRules: [],
     };
 };
 
@@ -55,18 +59,24 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
 
   const isSlayingTheDragon = activeStoryCard?.title === STORY_TITLES.SLAYING_THE_DRAGON;
 
-  return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, isSlayingTheDragon };
+  // FIX: Add isSlayingTheDragon to the return object to satisfy the PrimeDetails interface.
+  return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, isSlayingTheDragon, specialRules: [] };
 };
 
 export const getResourceDetails = (gameState: GameState, manualSelection?: 'story' | 'setupCard'): ResourceDetails => {
   const activeSetupCard = getSetupCardById(gameState.setupCardId);
   const activeStoryCard = getActiveStoryCard(gameState);
 
-  const setupEffects = (activeSetupCard?.effects?.filter(e => e.type === 'modifyResource') as ModifyResourceEffect[] | undefined) || [];
+  const setupRules = (activeSetupCard?.rules?.filter(r => r.type === 'modifyResource') as ModifyResourceRule[] | undefined) || [];
+  const setupEffects: ModifyResourceEffect[] = setupRules.map(r => ({
+    ...r,
+    source: { source: r.source, name: r.sourceName },
+  }));
+
   const storyEffects = (activeStoryCard?.effects?.filter(e => e.type === 'modifyResource') as ModifyResourceEffect[] | undefined) || [];
   const allEffects = [...setupEffects, ...storyEffects];
 
-  const resources = { credits: 3000, fuel: 6, parts: 2, warrants: 0, goalTokens: 0 };
+  const resources: Record<ResourceType, number> = { credits: 3000, fuel: 6, parts: 2, warrants: 0, goalTokens: 0 };
   let creditModifications: { description: string; value: string }[] = [{ description: "Standard Allocation", value: "$3,000" }];
 
   const setupSetCredits = setupEffects.find(e => e.resource === 'credits' && e.method === 'set');
@@ -96,12 +106,12 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
   }
 
   allEffects.filter(e => e.method === 'set' && e.resource !== 'credits').forEach(effect => {
-    if (effect.value !== undefined) resources[effect.resource as keyof typeof resources] = effect.value;
+    if (effect.value !== undefined) resources[effect.resource] = effect.value;
   });
 
   allEffects.filter(e => e.method === 'add').forEach(effect => {
     if (effect.value !== undefined) {
-        resources[effect.resource as keyof typeof resources] += effect.value;
+        resources[effect.resource] += effect.value;
         if (effect.resource === 'credits') {
             creditModifications.push({ description: effect.description, value: `+$${effect.value.toLocaleString()}` });
         }
@@ -193,7 +203,7 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
 
   switch (allianceMode) {
     case 'no_alerts':
-      specialRules.push({ source: 'setupCard', title: 'Setup Card Override', content: [{ type: 'strong', content: 'Safe Skies:' }] });
+      specialRules.push({ source: 'setupCard', title: 'Setup Card Override', content: [{ type: 'strong', content: 'Safe Skies:' }, ' Do not place any Alert Tokens at the start of the game.'] });
       break;
     case 'awful_crowded':
       specialRules.push({
