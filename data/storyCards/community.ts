@@ -1,4 +1,14 @@
-import { StoryCardDef } from '../../types';
+import { StoryCardDef, SetupRule } from '../../types';
+
+// Helper to avoid repeating source info
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
+const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule, 'source' | 'sourceName'>[]): SetupRule[] => {
+    return rules.map(rule => ({
+        ...rule,
+        source: 'story',
+        sourceName,
+    })) as SetupRule[];
+};
 
 export const COMMUNITY_STORIES: StoryCardDef[] = [
   {
@@ -36,23 +46,21 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "River is prisoner in a secure hospital at Londinium, and needs rescuing.",
     setupDescription: "Remove River Tam from play.",
     requiredExpansion: "community",
-    setupConfig: {
-      flags: ['removeRiver']
-    }
+    rules: createStoryRules("Hospital Rescue", [
+      { type: 'addFlag', flag: 'removeRiver' }
+    ])
   },
   {
     title: "How It All Started",
     intro: "You're low on funds, and need to get a job. Badger's hired you to scavenge a derelict ship dangerously close to an Alliance cruiser. Get the cargo, evade the Alliance, and sell it.",
     setupDescription: "Start with $500, 2 Fuel, 2 Parts. Nandi discounts.",
     requiredExpansion: "community",
-    effects: [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, source: { source: 'story', name: "How It All Started" }, description: "Story Override" },
-      { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, source: { source: 'story', name: "How It All Started" }, description: "Story Override" },
-      { type: 'modifyResource', resource: 'parts', method: 'set', value: 2, source: { source: 'story', name: "How It All Started" }, description: "Story Override" }
-    ],
-    setupConfig: {
-      flags: ['nandiCrewDiscount']
-    },
+    rules: createStoryRules("How It All Started", [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Story Override" },
+      { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, description: "Story Override" },
+      { type: 'modifyResource', resource: 'parts', method: 'set', value: 2, description: "Story Override" },
+      { type: 'addFlag', flag: 'nandiCrewDiscount' }
+    ]),
     sourceUrl: "https://boardgamegeek.com/filepage/186593/where-it-all-started-story-card"
   },
   {
@@ -60,13 +68,11 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "Your last run in with Harken turned South and you've got a boatload of warrants trailin' ya. Time to clean your ledger and get dirt on Harken instead.",
     setupDescription: "Start with 2 Warrants. Alliance Space off limits. No Harken.",
     requiredExpansion: "community",
-    effects: [
-        { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, source: { source: 'story', name: "It Ain't Easy Goin' Legit" }, description: "Start with 2 Warrants." }
-    ],
-    setupConfig: {
-      flags: ['allianceSpaceOffLimits'],
-      forbiddenStartingContact: "Harken"
-    }
+    rules: createStoryRules("It Ain't Easy Goin' Legit", [
+      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, description: "Start with 2 Warrants." },
+      { type: 'addFlag', flag: 'allianceSpaceOffLimits' },
+      { type: 'forbidContact', contact: "Harken" }
+    ])
   },
   {
     title: "Miranda",
@@ -91,20 +97,20 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "The Silverhold-Hera route is usually a harmless uneventful run. Unless, of course, someone installs a beacon on the cargo which attracts a Reaver party.",
     setupDescription: "Remove Amnon Duul Jobs. Start in border of Murphy.",
     requiredExpansion: "community",
-    setupConfig: {
-      forbiddenStartingContact: "Amnon Duul",
-      startAtSector: "Border of Murphy"
-    }
+    rules: createStoryRules("Shadows Over Duul", [
+      { type: 'forbidContact', contact: "Amnon Duul" },
+      { type: 'setShipPlacement', location: 'border_of_murphy' }
+    ])
   },
   {
     title: "Slaying The Dragon",
     intro: "Adelai Niska has been lord of the underworld for as long as anyone can remember. Shu-ki, the tong boss of Gonghe, has long suffered under Niska's yoke. After being publicly shamed by Niska at a meeting of crime-bosses, an enraged Shu-ki has decided to bring Niska down. He has a plan - Operation Dragon - but the job is so daunting that it requires two crews to have any hope of success. Can two Firefly captains bring down the most feared criminal boss in the 'Verse?",
     setupDescription: "2-Player Co-Op. Niska jobs forbidden. Remove Niska Deck. Prime +2 cards/deck. Stack 16 Disgruntled Tokens (Countdown).",
     requiredExpansion: "community",
-    rules: [
-      { type: 'forbidContact', contact: 'Niska', source: 'story', sourceName: "Slaying The Dragon" },
-      { type: 'modifyPrime', modifier: { add: 2 }, source: 'story', sourceName: "Slaying The Dragon" },
-    ],
+    rules: createStoryRules("Slaying The Dragon", [
+      { type: 'forbidContact', contact: 'Niska' },
+      { type: 'modifyPrime', modifier: { add: 2 } },
+    ]),
     sourceUrl: "https://boardgamegeek.com/thread/1049020/article/13686225#13686225"
   },
   {
@@ -117,10 +123,10 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "On a backwater planet, an old friend sends out a plea. Marauders are bleeding their town dry. Suss out the trouble, assemble a crew, and eliminate the pesky varmints.",
     setupDescription: "Remove all Job Decks. High-value cargo sales.",
     requiredExpansion: "community",
-    setupConfig: {
-      flags: ['removeJobDecks'],
-      jobDrawMode: "no_jobs"
-    }
+    rules: createStoryRules("The Magnificent Crew", [
+      { type: 'addFlag', flag: 'removeJobDecks' },
+      { type: 'setJobMode', mode: 'no_jobs' }
+    ])
   },
   {
     title: "The Truth Will Out",

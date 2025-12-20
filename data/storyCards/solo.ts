@@ -1,13 +1,25 @@
-import { StoryCardDef } from '../../types';
+import { StoryCardDef, SetupRule } from '../../types';
+
+// Helper to avoid repeating source info
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
+const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule, 'source' | 'sourceName'>[]): SetupRule[] => {
+    return rules.map(rule => ({
+        ...rule,
+        source: 'story',
+        sourceName,
+    })) as SetupRule[];
+};
 
 export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Awful Lonely In The Big Black",
     intro: "It takes a brave soul to sail the Big Black alone... Pick your goal and test your skills.",
     setupDescription: "Solo Play. Draft Crew ($1000 limit). Stack 20 Disgruntled Tokens (Timer). Remove Piracy Jobs.",
-    setupConfig: {
-      flags: ['removePiracyJobs', 'soloCrewDraft', 'soloGameTimer']
-    },
+    rules: createStoryRules("Awful Lonely In The Big Black", [
+      { type: 'addFlag', flag: 'removePiracyJobs' },
+      { type: 'addFlag', flag: 'soloCrewDraft' },
+      { type: 'addFlag', flag: 'soloGameTimer' }
+    ]),
     goals: [
       { title: "Goal 1: The Good", description: "Making Connections: End the game Solid with 5 different Contacts." },
       { title: "Goal 2: The Bad", description: "Crime Does Pay: End the game with $15,000 or more." },
@@ -22,10 +34,11 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
-    setupConfig: {
-        flags: ['soloGameTimer', 'primeContactDecks'],
-        jobDrawMode: "no_jobs",
-    },
+    rules: createStoryRules("A Fistful Of Scoundrels", [
+      { type: 'addFlag', flag: 'soloGameTimer' },
+      { type: 'primeContacts' },
+      { type: 'setJobMode', mode: 'no_jobs' }
+    ]),
     challengeOptions: [
       { id: 'dont_prime_contacts', label: "Don't prime the Contact decks." },
       { id: 'illegal_jobs_only', label: "Work only Illegal Jobs." },
@@ -44,10 +57,12 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["crime"],
     isSolo: true,
-    setupConfig: {
-        flags: ['soloGameTimer', 'startWithAlertCard', 'primeContactDecks'],
-        jobDrawMode: "no_jobs",
-    },
+    rules: createStoryRules("For A Few Credits More", [
+      { type: 'addFlag', flag: 'soloGameTimer' },
+      { type: 'addFlag', flag: 'startWithAlertCard' },
+      { type: 'primeContacts' },
+      { type: 'setJobMode', mode: 'no_jobs' }
+    ]),
     challengeOptions: [
         { id: 'one_job_per_contact', label: "Work no more than one Job per Contact." },
         { id: 'legal_jobs_only', label: "Work only Legal Jobs, including Bounties." },
@@ -66,9 +81,10 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
-    setupConfig: {
-        flags: ['placeReaverAlertsInMotherlodeAndUroboros', 'soloGameTimer']
-    },
+    rules: createStoryRules("Goin' Reaver", [
+      { type: 'addFlag', flag: 'placeReaverAlertsInMotherlodeAndUroboros' },
+      { type: 'addFlag', flag: 'soloGameTimer' }
+    ]),
     advancedRule: {
         id: "adv_wolf_at_your_door",
         title: "Wolf At Your Door"
@@ -80,13 +96,12 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupDescription: "Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000. Alliance Alerts: Start with one random Alliance Alert in play. Adventure Deck: Shuffle all 3-Goal story cards into a single deck.",
     requiredExpansion: "tenth",
     isSolo: true,
-    effects: [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, source: { source: 'story', name: "Heroes & Misfits" }, description: "Story Override" },
-    ],
-    setupConfig: {
-        flags: ['soloGameTimer', 'startWithAlertCard'],
-        shipPlacementMode: "persephone",
-    },
+    rules: createStoryRules("Heroes & Misfits", [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Override" },
+      { type: 'addFlag', flag: 'soloGameTimer' },
+      { type: 'addFlag', flag: 'startWithAlertCard' },
+      { type: 'setShipPlacement', location: 'persephone' }
+    ]),
     challengeOptions: [
       { id: 'heroes_custom_setup', label: "Why should Mal have all the fun? Pick the Leader, Ship, and Supply Planet of your choice. Begin the game with $2000 and a full compliment of your favourite Crew from the show or game." }
     ],
@@ -101,9 +116,9 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupDescription: "Special Rules: Collect Misbehave cards from completed Jobs (sideboard). 'Alliance Operatives' cannot be collected. Action: Spend $6000 to recover 1 Game Length Token (once/turn).",
     requiredExpansion: "tenth",
     isSolo: true,
-    setupConfig: {
-        flags: ['soloGameTimer']
-    },
+    rules: createStoryRules("Once Upon A Time In The Big Black", [
+      { type: 'addFlag', flag: 'soloGameTimer' }
+    ]),
     challengeOptions: [
       { id: 'no_immoral', label: "Don't work Immoral Jobs." },
       { id: 'no_capers', label: "No Capers allowed!" },
@@ -122,9 +137,9 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
-    setupConfig: {
-        flags: ['disableSoloTimer']
-    },
+    rules: createStoryRules("Racing A Pale Horse", [
+      { type: 'addFlag', flag: 'disableSoloTimer' }
+    ]),
     advancedRule: {
         id: "adv_automated_movement",
         title: "Automated Movement"
@@ -137,10 +152,10 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
-    setupConfig: {
-        flags: ['soloGameTimer'],
-        forbiddenStartingContact: "Harken"
-    },
+    rules: createStoryRules("Seeds Of Rebellion", [
+      { type: 'addFlag', flag: 'soloGameTimer' },
+      { type: 'forbidContact', contact: "Harken" }
+    ]),
     advancedRule: {
         id: "adv_lost_little_lambs",
         title: "Lost Little Lambs"
@@ -153,10 +168,13 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["crime"],
     isSolo: true,
-    setupConfig: {
-        flags: ['soloGameTimer', 'lonelySmugglerSetup', 'startAtLondinium', 'startWithAlertCard'],
-        jobDrawMode: "no_jobs",
-    },
+    rules: createStoryRules("The Lonely Smuggler's Blues", [
+      { type: 'addFlag', flag: 'soloGameTimer' },
+      { type: 'addFlag', flag: 'lonelySmugglerSetup' },
+      { type: 'setShipPlacement', location: 'londinium' },
+      { type: 'addFlag', flag: 'startWithAlertCard' },
+      { type: 'setJobMode', mode: 'no_jobs' }
+    ]),
     advancedRule: {
         id: "adv_lone_targets",
         title: "Lone Targets"
@@ -169,12 +187,11 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["crime"],
     isSolo: true,
-    effects: [
-      { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, source: { source: 'story', name: "The Raggedy Edge" }, description: "Begin play with 1 Goal Token." }
-    ],
-    setupConfig: {
-        flags: ['disableSoloTimer', 'startWithAlertCard']
-    },
+    rules: createStoryRules("The Raggedy Edge", [
+      { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, description: "Begin play with 1 Goal Token." },
+      { type: 'addFlag', flag: 'disableSoloTimer' },
+      { type: 'addFlag', flag: 'startWithAlertCard' }
+    ]),
     advancedRule: {
         id: "adv_contact_quirks_deal",
         title: "Contact Quirks - Deal"

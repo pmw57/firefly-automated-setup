@@ -1,24 +1,32 @@
-import { StoryCardDef } from '../../types';
+import { StoryCardDef, SetupRule } from '../../types';
+
+// Helper to avoid repeating source info
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
+const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule, 'source' | 'sourceName'>[]): SetupRule[] => {
+    return rules.map(rule => ({
+        ...rule,
+        source: 'story',
+        sourceName,
+    })) as SetupRule[];
+};
 
 export const CORE_STORIES: StoryCardDef[] = [
   {
     title: "Desperadoes",
     intro: "Your checkered past is catching up with you and the Alliance is hot on your tail! It's time to make a final cash grab and head out to the Rim to retire before the Alliance makes other arrangements.",
     setupDescription: "Start with 1 Warrant. Harken jobs unavailable.",
-    effects: [
-      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, source: { source: 'story', name: "Desperadoes" }, description: "Start with 1 Warrant." }
-    ],
-    setupConfig: {
-      forbiddenStartingContact: "Harken"
-    }
+    rules: createStoryRules("Desperadoes", [
+      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
+      { type: 'forbidContact', contact: "Harken" }
+    ])
   },
   {
     title: "First Time in the Captain's Chair",
     intro: "So you finally took the plunge and borrowed enough credits for a ship to call your own. You're in debt up to your eyeballs with a creditor that's not the sort of man to be trifled with.",
     setupDescription: "Starting Jobs drawn only from Harken and Amnon Duul.",
-    setupConfig: {
-      allowedStartingContacts: ["Harken", "Amnon Duul"]
-    }
+    rules: createStoryRules("First Time in the Captain's Chair", [
+      { type: 'allowContacts', contacts: ["Harken", "Amnon Duul"] }
+    ])
   },
   {
     title: "Harken's Folly",

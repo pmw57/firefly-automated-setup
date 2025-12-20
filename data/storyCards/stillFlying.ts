@@ -1,4 +1,14 @@
-import { StoryCardDef } from '../../types';
+import { StoryCardDef, SetupRule } from '../../types';
+
+// Helper to avoid repeating source info
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
+const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule, 'source' | 'sourceName'>[]): SetupRule[] => {
+    return rules.map(rule => ({
+        ...rule,
+        source: 'story',
+        sourceName,
+    })) as SetupRule[];
+};
 
 export const STILL_FLYING_STORIES: StoryCardDef[] = [
   {
@@ -6,9 +16,9 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     intro: "Saffron's at it again. This time, she's convinced Badger that she's from a respectable family, and now the sad little king has his eye on a psychotic blushing bride. Whoever collects the most presents gets to give the toast... before it turns into a shotgun wedding.",
     setupDescription: "Players start with a Caper Card. No Starting Jobs dealt.",
     requiredExpansion: "still_flying",
-    setupConfig: {
-      jobDrawMode: "caper_start"
-    }
+    rules: createStoryRules("A Rare Specimen Indeed", [
+      { type: 'setJobMode', mode: 'caper_start' }
+    ])
   },
   {
     title: "The Rumrunner's Seasonal",
@@ -22,8 +32,8 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     setupDescription: "Place an Alliance Alert Token in every planetary Sector in Alliance Space. Requires Blue Sun & Kalidasa.",
     requiredExpansion: "still_flying",
     additionalRequirements: ["blue", "kalidasa"],
-    setupConfig: {
-      flags: ['placeAllianceAlertsInAllianceSpace']
-    }
+    rules: createStoryRules("The Smuggly Bustle", [
+      { type: 'addFlag', flag: 'placeAllianceAlertsInAllianceSpace' }
+    ])
   },
 ];

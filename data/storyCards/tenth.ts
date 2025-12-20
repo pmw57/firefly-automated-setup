@@ -1,4 +1,14 @@
-import { StoryCardDef } from '../../types';
+import { StoryCardDef, SetupRule } from '../../types';
+
+// Helper to avoid repeating source info
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
+const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule, 'source' | 'sourceName'>[]): SetupRule[] => {
+    return rules.map(rule => ({
+        ...rule,
+        source: 'story',
+        sourceName,
+    })) as SetupRule[];
+};
 
 export const TENTH_STORIES: StoryCardDef[] = [
   {
@@ -29,18 +39,18 @@ export const TENTH_STORIES: StoryCardDef[] = [
     setupDescription: "All ships start at Persephone. Requires Kalidasa.",
     requiredExpansion: "tenth",
     additionalRequirements: ["kalidasa"],
-    setupConfig: {
-      shipPlacementMode: "persephone"
-    }
+    rules: createStoryRules("It's a Mad, Mad, Mad, Mad 'Verse!", [
+      { type: 'setShipPlacement', location: 'persephone' }
+    ])
   },
   {
     title: "Let's Be Bad Guys",
     intro: "It takes a particular kind of sinner to build lasting bridges with Adelai Niska. Are you that brand of renegade?",
     setupDescription: "Niska is forbidden for Starting Jobs.",
     requiredExpansion: "tenth",
-    setupConfig: {
-      forbiddenStartingContact: "Niska"
-    }
+    rules: createStoryRules("Let's Be Bad Guys", [
+      { type: 'forbidContact', contact: 'Niska' }
+    ])
   },
   {
     title: "Red Skies Over Ransom",
@@ -54,12 +64,11 @@ export const TENTH_STORIES: StoryCardDef[] = [
     setupDescription: "Receive +$1200 Starting Credits. No Starting Fuel/Parts. Requires Blue Sun & Kalidasa.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
-    effects: [
-      { type: 'modifyResource', resource: 'credits', method: 'add', value: 1200, source: { source: 'story', name: "Running On Empty" }, description: "Story Bonus" },
-      { type: 'modifyResource', resource: 'fuel', method: 'disable', source: { source: 'story', name: "Running On Empty" }, description: "No Starting Fuel/Parts" },
-      { type: 'modifyResource', resource: 'parts', method: 'disable', source: { source: 'story', name: "Running On Empty" }, description: "No Starting Fuel/Parts" }
-    ],
-    setupConfig: {}
+    rules: createStoryRules("Running On Empty", [
+      { type: 'modifyResource', resource: 'credits', method: 'add', value: 1200, description: "Story Bonus" },
+      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No Starting Fuel/Parts" },
+      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No Starting Fuel/Parts" }
+    ])
   },
   {
     title: "The Wobbly Headed Doll Caper",
