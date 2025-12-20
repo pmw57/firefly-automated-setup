@@ -203,19 +203,6 @@ export interface AdvancedRuleDef {
   description?: string;
 }
 
-// FIX: Add StorySetupConfig interface for legacy story card properties.
-export interface StorySetupConfig {
-  flags?: string[];
-  jobDrawMode?: JobMode;
-  forbiddenStartingContact?: string;
-  allowedStartingContacts?: string[];
-  primeModifier?: { add: number };
-  primingMultiplier?: number;
-  shipPlacementMode?: 'persephone' | 'londinium';
-  startAtSector?: string;
-  createAlertTokenStackMultiplier?: number;
-}
-
 export interface StoryCardDef {
   title: string;
   intro: string;
@@ -228,9 +215,6 @@ export interface StoryCardDef {
   challengeOptions?: ChallengeOption[];
   advancedRule?: AdvancedRuleDef;
   rules?: SetupRule[];
-  // FIX: Add missing 'effects' and 'setupConfig' properties to allow them on story card data.
-  effects?: ModifyResourceEffect[];
-  setupConfig?: StorySetupConfig;
 }
 
 export type GameEdition = 'original' | 'tenth';

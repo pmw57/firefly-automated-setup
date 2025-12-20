@@ -1,7 +1,6 @@
 import { GameState, StoryCardDef, SetupCardDef, SetupRule, SetJobModeRule, SetShipPlacementRule } from '../types';
 import { SETUP_CARD_IDS } from '../data/ids';
-// FIX: Import hasFlag to resolve reference error.
-import { getResolvedRules, hasRuleFlag, getActiveStoryCard, hasFlag } from './selectors';
+import { getResolvedRules, hasRuleFlag } from './selectors';
 
 export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     const rules = card.rules || [];
@@ -28,11 +27,9 @@ export const getDisplaySetupName = (state: GameState, secondarySetupCard?: Setup
 
 export const getTimerSummaryText = (state: GameState): string | null => {
     const rules: SetupRule[] = getResolvedRules(state);
-    const activeStory = getActiveStoryCard(state);
     
-    // FIX: Correctly check both the modern `rules` array (via getResolvedRules) and the legacy `setupConfig.flags` for story cards.
-    const disableSoloTimer = hasRuleFlag(rules, 'disableSoloTimer') || hasFlag(activeStory?.setupConfig, 'disableSoloTimer');
-    const soloGameTimer = hasRuleFlag(rules, 'soloGameTimer') || hasFlag(activeStory?.setupConfig, 'soloGameTimer');
+    const disableSoloTimer = hasRuleFlag(rules, 'disableSoloTimer');
+    const soloGameTimer = hasRuleFlag(rules, 'soloGameTimer');
 
     const isSoloTimerActive = state.gameMode === 'solo' && !disableSoloTimer && soloGameTimer;
 
