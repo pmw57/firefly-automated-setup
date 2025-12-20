@@ -34,8 +34,8 @@
     <!-- Preload Sprite Sheet to prevent flicker -->
     <link rel="preload" href="expansion_sprites.png" as="image">
 
-    <!-- Tailwind CDN for previewing index.html directly. -->
-    <!-- Vite's build process uses tailwind.config.js, so this configuration must be kept in sync. -->
+    <!-- TAILWIND_CDN_START -->
+    <!-- This block is for static previewing of index.html and is removed by Vite. -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -98,6 +98,8 @@
         },
       }
     </script>
+    <!-- TAILWIND_CDN_END -->
+
 <script type="importmap">
 {
   "imports": {
@@ -110,7 +112,8 @@
     "@testing-library/jest-dom": "https://esm.sh/@testing-library/jest-dom@^6.9.1",
     "vitest": "https://esm.sh/vitest@^4.0.16",
     "@testing-library/react": "https://esm.sh/@testing-library/react@^16.3.1",
-    "react-dom": "https://esm.sh/react-dom@^19.2.3"
+    "react-dom": "https://esm.sh/react-dom@^19.2.3",
+    "vite": "https://esm.sh/vite@^7.3.0"
   }
 }
 </script>
