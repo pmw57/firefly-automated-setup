@@ -51,17 +51,8 @@ export type DraftMode = 'standard' | 'browncoat';
 export type LeaderSetupMode = 'standard' | 'wanted';
 export type AllianceSetupMode = 'standard' | 'awful_crowded' | 'no_alerts' | 'extra_cruisers';
 
-export interface StepOverrides {
-  startingCredits?: number;
-  jobMode?: JobMode;
-  navMode?: NavMode;
-  primeMode?: PrimeMode;
-  draftMode?: DraftMode;
-  leaderSetup?: LeaderSetupMode;
-  allianceMode?: AllianceSetupMode;
-}
 
-// --- New Effect System Types ---
+// --- New Rule & Effect System Types ---
 export type ResourceType = 'credits' | 'fuel' | 'parts' | 'warrants' | 'goalTokens';
 export type EffectMethod = 'set' | 'add' | 'disable';
 
@@ -82,7 +73,103 @@ export interface ModifyResourceEffect extends Effect {
   method: EffectMethod;
   value?: number; // Not needed for 'disable'
 }
-// --- End New Effect System Types ---
+
+export type RuleSourceType = 'story' | 'setupCard' | 'expansion' | 'optionalRule' | 'challenge';
+
+export interface BaseRule {
+  type: string;
+  source: RuleSourceType;
+  sourceName: string;
+  condition?: (state: GameState) => boolean; // For complex conditional rules
+}
+
+// Rule types
+export interface SetJobModeRule extends BaseRule { type: 'setJobMode'; mode: JobMode; }
+export interface ForbidContactRule extends BaseRule { type: 'forbidContact'; contact: string; }
+export interface AllowContactsRule extends BaseRule { type: 'allowContacts'; contacts: string[]; }
+export interface PrimeContactsRule extends BaseRule { type: 'primeContacts'; }
+export interface CreateAlertTokenStackRule extends BaseRule { type: 'createAlertTokenStack'; multiplier: number; }
+export interface SetAllianceModeRule extends BaseRule { type: 'setAllianceMode'; mode: AllianceSetupMode; }
+export interface SetNavModeRule extends BaseRule { type: 'setNavMode'; mode: NavMode; }
+export interface SetPrimeModeRule extends BaseRule { type: 'setPrimeMode'; mode: PrimeMode; }
+export interface SetDraftModeRule extends BaseRule { type: 'setDraftMode'; mode: DraftMode; }
+export interface SetLeaderSetupRule extends BaseRule { type: 'setLeaderSetup'; mode: LeaderSetupMode; }
+export interface SetShipPlacementRule extends BaseRule { type: 'setShipPlacement'; location: 'persephone' | 'londinium' | 'border_of_murphy' | 'outside_alliance'; }
+export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer'; rule: Omit<SpecialRule, 'source'>; }
+
+// A generic flag rule to handle specific one-off logic inside the rules engine.
+// This is a bridge between the old flag system and a fully declarative system.
+export interface AddFlagRule extends BaseRule { type: 'addFlag'; flag: string; }
+
+// Use the existing ModifyResourceEffect as a rule type.
+export interface ModifyResourceRule extends BaseRule {
+  type: 'modifyResource';
+  resource: ResourceType;
+  method: EffectMethod;
+  value?: number;
+  description: string;
+}
+
+export type SetupRule = 
+  | SetJobModeRule
+  | ForbidContactRule
+  | AllowContactsRule
+  | PrimeContactsRule
+  | CreateAlertTokenStackRule
+  | SetAllianceModeRule
+  | SetNavModeRule
+  | SetPrimeModeRule
+  | SetDraftModeRule
+  | SetLeaderSetupRule
+  | SetShipPlacementRule
+  | AddSpecialRule
+  | AddFlagRule
+  | ModifyResourceRule;
+// --- End New Rule System Types ---
+
+// FIX: Add StepOverrides type for dynamic rule modifications on a step-by-step basis.
+export interface StepOverrides {
+    jobMode?: JobMode;
+    navMode?: NavMode;
+    allianceMode?: AllianceSetupMode;
+    primeMode?: PrimeMode;
+    draftMode?: DraftMode;
+    leaderSetup?: LeaderSetupMode;
+}
+
+// FIX: Define StoryFlag and StoryCardConfig for story-specific setup rules.
+export type StoryFlag =
+  | 'sharedHandSetup'
+  | 'removePiracyJobs'
+  | 'soloCrewDraft'
+  | 'soloGameTimer'
+  | 'startWithAlertCard'
+  | 'startAtLondinium'
+  | 'startOutsideAllianceSpace'
+  | 'allianceSpaceOffLimits'
+  | 'removeRiver'
+  | 'nandiCrewDiscount'
+  | 'placeReaverAlertsInMotherlodeAndUroboros'
+  | 'disableSoloTimer'
+  | 'primeContactDecks'
+  | 'placeAllianceAlertsInAllianceSpace'
+  | 'placeMixedAlertTokens'
+  | 'addBorderSpaceHavens'
+  | 'smugglersBluesSetup'
+  | 'lonelySmugglerSetup'
+  | 'removeJobDecks';
+
+export interface StoryCardConfig {
+  flags?: StoryFlag[];
+  jobDrawMode?: JobMode;
+  shipPlacementMode?: 'persephone' | 'londinium' | 'border_of_murphy' | 'outside_alliance';
+  forbiddenStartingContact?: string;
+  allowedStartingContacts?: string[];
+  createAlertTokenStackMultiplier?: number;
+  primingMultiplier?: number;
+  primeModifier?: { add: number };
+  startAtSector?: string;
+}
 
 // The final data object for a step in the flow.
 export interface SetupContentData {
@@ -106,9 +193,10 @@ export interface ContentMap {
 export interface SetupCardStep {
   id: string;
   title: string;
-  overrides?: StepOverrides;
   page?: number | string;
   manual?: string;
+  // FIX: Add overrides to SetupCardStep for dynamic rule modifications.
+  overrides?: StepOverrides;
 }
 
 // Stricter type for SetupCard IDs derived from constants
@@ -122,44 +210,9 @@ export interface SetupCardDef {
   iconOverride?: string;
   steps: SetupCardStep[];
   mode?: GameMode;
-  overrides?: StepOverrides;
+  rules?: SetupRule[];
+  // FIX: Add effects property to SetupCardDef.
   effects?: ModifyResourceEffect[];
-}
-
-export type StoryFlag = 
-  | 'placeAllianceAlertsInAllianceSpace'
-  | 'addBorderSpaceHavens'
-  | 'removePiracyJobs'
-  | 'placeMixedAlertTokens'
-  | 'smugglersBluesSetup'
-  | 'lonelySmugglerSetup'
-  | 'startAtLondinium'
-  | 'startWithAlertCard'
-  | 'startOutsideAllianceSpace'
-  | 'sharedHandSetup'
-  | 'primeContactDecks'
-  | 'placeReaverAlertsInMotherlodeAndUroboros'
-  | 'removeRiver'
-  | 'allianceSpaceOffLimits'
-  | 'removeJobDecks'
-  | 'nandiCrewDiscount'
-  | 'soloCrewDraft'
-  | 'soloGameTimer'
-  | 'disableSoloTimer';
-
-export interface StoryCardConfig {
-  jobDrawMode?: JobMode;
-  primingMultiplier?: number;
-  primeModifier?: { add: number };
-  createAlertTokenStackMultiplier?: number;
-
-  shipPlacementMode?: 'persephone';
-  startAtSector?: string;
-  
-  forbiddenStartingContact?: string;
-  allowedStartingContacts?: string[];
-  
-  flags?: StoryFlag[];
 }
 
 export interface StoryCardGoal {
@@ -184,13 +237,15 @@ export interface StoryCardDef {
   setupDescription?: string;
   requiredExpansion?: keyof Expansions;
   additionalRequirements?: (keyof Expansions)[];
-  setupConfig?: StoryCardConfig;
-  effects?: ModifyResourceEffect[];
   sourceUrl?: string;
   goals?: StoryCardGoal[];
   isSolo?: boolean;
   challengeOptions?: ChallengeOption[];
   advancedRule?: AdvancedRuleDef;
+  rules?: SetupRule[];
+  // FIX: Add setupConfig and effects properties for story-specific rules.
+  setupConfig?: StoryCardConfig;
+  effects?: ModifyResourceEffect[];
 }
 
 export type GameEdition = 'original' | 'tenth';
@@ -241,9 +296,10 @@ export interface Step {
   type: 'core' | 'dynamic' | 'final' | 'setup';
   id: string;
   data?: SetupContentData;
-  overrides?: StepOverrides;
   page?: number | string;
   manual?: string;
+  // FIX: Add overrides to Step type.
+  overrides?: StepOverrides;
 }
 
 export interface DiceResult {
@@ -298,6 +354,7 @@ export interface NavDeckSetupDetails {
   showStandardRules: boolean;
   isSolo: boolean;
   isHighPlayerCount: boolean;
+  specialRules: SpecialRule[];
 }
 
 export interface ResourceConflict {
@@ -326,6 +383,8 @@ export interface PrimeDetails {
   finalCount: number;
   isHighSupplyVolume: boolean;
   isBlitz: boolean;
+  specialRules: SpecialRule[];
+  // FIX: Add missing property isSlayingTheDragon.
   isSlayingTheDragon: boolean;
 }
 
