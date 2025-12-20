@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Step } from '../types';
-import { getResourceDetails, getActiveStoryCard } from '../utils/selectors';
+import { getResourceDetails, getResolvedRules, hasRuleFlag } from '../utils/selectors';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { hasFlag } from '../utils/selectors';
 import { ConflictResolver } from './ConflictResolver';
 import { ActionType } from '../state/actions';
 import { cls } from '../utils/style';
@@ -15,7 +14,7 @@ interface ResourcesStepProps {
 
 export const ResourcesStep: React.FC<ResourcesStepProps> = () => {
   const { state: gameState, dispatch } = useGameState();
-  const activeStoryCard = getActiveStoryCard(gameState);
+  const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -36,9 +35,8 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = () => {
   
   const showConflictUI = conflict && gameState.optionalRules.resolveConflictsManually;
   
-  // FIX: Correctly check both the modern `rules` array and the legacy `setupConfig.flags` for story cards.
-  const removeRiver = hasFlag(activeStoryCard?.rules, 'removeRiver') || hasFlag(activeStoryCard?.setupConfig, 'removeRiver');
-  const nandiCrewDiscount = hasFlag(activeStoryCard?.rules, 'nandiCrewDiscount') || hasFlag(activeStoryCard?.setupConfig, 'nandiCrewDiscount');
+  const removeRiver = hasRuleFlag(allRules, 'removeRiver');
+  const nandiCrewDiscount = hasRuleFlag(allRules, 'nandiCrewDiscount');
   
   const cardBg = isDark ? 'bg-black/60' : 'bg-white';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
