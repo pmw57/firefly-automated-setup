@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { Plugin } from 'vite';
 
 // Generate a version string based on the current date and time (YYYY.MM.DD.HHMMSS)
 const getVersion = () => {
@@ -14,11 +15,27 @@ const getVersion = () => {
   return `${year}.${month}.${day}.${hours}${minutes}${seconds}`;
 };
 
+/**
+ * A custom Vite plugin to remove the Tailwind CDN fallback script during dev/build.
+ * This allows index.html to be statically previewed, while Vite handles Tailwind processing.
+ */
+const tailwindCdnFallbackPlugin = (): Plugin => ({
+  name: 'vite-plugin-tailwind-cdn-fallback',
+  transformIndexHtml(html) {
+    // This hook runs for both 'serve' and 'build' commands.
+    // We remove the block identified by our special comments.
+    const regex = /<!--\s*TAILWIND_CDN_START\s*-->[\s\S]*?<!--\s*TAILWIND_CDN_END\s*-->/g;
+    return html.replace(regex, '');
+  }
+});
+
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/firefly-automated-setup/',
   plugins: [
     react(),
+    tailwindCdnFallbackPlugin(), // Add our custom plugin
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['expansion_sprites.png', 'logo.svg'],
