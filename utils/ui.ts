@@ -1,12 +1,21 @@
-import { GameState, StoryCardDef, SetupCardDef } from '../types';
+import { GameState, StoryCardDef, SetupCardDef, SetupRule, SetJobModeRule, SetShipPlacementRule } from '../types';
 import { SETUP_CARD_IDS } from '../data/ids';
-import { hasFlag } from './data';
+// FIX: Import hasFlag to resolve reference error.
+import { getResolvedRules, hasRuleFlag, getActiveStoryCard, hasFlag } from './selectors';
 
 export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
+    const rules = card.rules || [];
     if (card.setupDescription) return "Setup Changes";
-    if (card.setupConfig?.jobDrawMode === 'no_jobs') return "No Starting Jobs";
-    if (card.setupConfig?.jobDrawMode === 'caper_start') return "Starts with Caper";
-    if (card.setupConfig?.shipPlacementMode === 'persephone') return "Starts at Persephone";
+
+    // FIX: Cast the result of .find() to the specific rule type to allow TypeScript to correctly infer the available properties.
+    const jobModeRule = rules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
+    if (jobModeRule?.mode === 'no_jobs') return "No Starting Jobs";
+    if (jobModeRule?.mode === 'caper_start') return "Starts with Caper";
+
+    // FIX: Cast the result of .find() to the specific rule type.
+    const placementRule = rules.find(r => r.type === 'setShipPlacement') as SetShipPlacementRule | undefined;
+    if (placementRule?.location === 'persephone') return "Starts at Persephone";
+    
     return null;
 };
 
@@ -17,13 +26,15 @@ export const getDisplaySetupName = (state: GameState, secondarySetupCard?: Setup
     return state.setupCardName;
 };
 
-export const getTimerSummaryText = (state: GameState, activeStory?: StoryCardDef): string | null => {
-    const disableSoloTimer = hasFlag(activeStory?.setupConfig, 'disableSoloTimer');
-    const soloGameTimer = hasFlag(activeStory?.setupConfig, 'soloGameTimer');
+export const getTimerSummaryText = (state: GameState): string | null => {
+    const rules: SetupRule[] = getResolvedRules(state);
+    const activeStory = getActiveStoryCard(state);
+    
+    // FIX: Correctly check both the modern `rules` array (via getResolvedRules) and the legacy `setupConfig.flags` for story cards.
+    const disableSoloTimer = hasRuleFlag(rules, 'disableSoloTimer') || hasFlag(activeStory?.setupConfig, 'disableSoloTimer');
+    const soloGameTimer = hasRuleFlag(rules, 'soloGameTimer') || hasFlag(activeStory?.setupConfig, 'soloGameTimer');
 
-    const isSoloTimerActive = state.gameMode === 'solo' &&
-                              !disableSoloTimer &&
-                              (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO || soloGameTimer);
+    const isSoloTimerActive = state.gameMode === 'solo' && !disableSoloTimer && soloGameTimer;
 
     if (!isSoloTimerActive) {
         return state.gameMode === 'solo' && disableSoloTimer

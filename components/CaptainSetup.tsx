@@ -46,12 +46,6 @@ export const CaptainSetup = ({ onNext }: CaptainSetupProps): React.ReactElement 
     dispatch({ type: ActionType.SET_CAMPAIGN_STORIES, payload: newCount });
   };
 
-  const handleNextStep = () => {
-    // This state update pre-configures the next step if conditions are met.
-    dispatch({ type: ActionType.AUTO_SELECT_FLYING_SOLO });
-    onNext();
-  };
-
   // Styles
   const containerBorder = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
   const textColor = isDark ? 'text-amber-500' : 'text-[#292524]';
@@ -92,7 +86,7 @@ export const CaptainSetup = ({ onNext }: CaptainSetupProps): React.ReactElement 
       />
 
       <div className="flex gap-4 relative z-10">
-        <Button onClick={handleNextStep} fullWidth className={'w-full text-lg py-4 border-b-4 border-[#450a0a]'}>
+        <Button onClick={onNext} fullWidth className={'w-full text-lg py-4 border-b-4 border-[#450a0a]'}>
           Next: Choose Setup Card →
         </Button>
       </div>
