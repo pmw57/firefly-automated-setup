@@ -12,13 +12,19 @@ import {
     JobSetupMessage,
     SpecialRule,
     StructuredContent,
-    ModifyResourceEffect,
     ResourceType,
-    ModifyResourceRule
+    ModifyResourceRule,
+    ModifyPrimeRule,
+    CreateAlertTokenStackRule,
+    SetShipPlacementRule,
+    ForbidContactRule,
+    AllowContactsRule,
+    SetJobModeRule,
+    RuleSourceType
 } from '../../types';
-import { hasFlag } from '../data';
+import { getResolvedRules, hasRuleFlag } from './rules';
 import { CONTACT_NAMES, CHALLENGE_IDS, STORY_TITLES, STEP_IDS } from '../../data/ids';
-import { getActiveStoryCard, getSetupCardById } from './story';
+import { getActiveStoryCard } from './story';
 
 // =================================================================
 // Step-Specific Detail Selectors
@@ -35,7 +41,6 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
         showStandardRules,
         isSolo: gameState.playerCount === 1,
         isHighPlayerCount: gameState.playerCount >= 3,
-        // FIX: Add missing specialRules property to satisfy the NavDeckSetupDetails interface.
         specialRules: [],
     };
 };
@@ -47,8 +52,15 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   const isHighSupplyVolume = activeSupplyHeavyCount >= 3;
 
   const baseDiscard = isHighSupplyVolume && gameState.optionalRules.highVolumeSupply ? 4 : 3;
-  const storyMultiplier = activeStoryCard?.setupConfig?.primingMultiplier || 1;
-  const primeModifier = activeStoryCard?.setupConfig?.primeModifier;
+  
+  const rules = getResolvedRules(gameState);
+  
+  const primeMultiplierRule = rules.find(r => r.type === 'modifyPrime' && r.multiplier !== undefined) as ModifyPrimeRule | undefined;
+  const storyMultiplier = primeMultiplierRule?.multiplier ?? 1;
+  
+  const primeModifierRule = rules.find(r => r.type === 'modifyPrime' && r.modifier !== undefined) as ModifyPrimeRule | undefined;
+  const primeModifier = primeModifierRule?.modifier;
+
   const isBlitz = overrides.primeMode === 'blitz';
 
   let effectiveMultiplier = storyMultiplier;
@@ -59,35 +71,28 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
 
   const isSlayingTheDragon = activeStoryCard?.title === STORY_TITLES.SLAYING_THE_DRAGON;
 
-  // FIX: Add isSlayingTheDragon to the return object to satisfy the PrimeDetails interface.
   return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, isSlayingTheDragon, specialRules: [] };
 };
 
 export const getResourceDetails = (gameState: GameState, manualSelection?: 'story' | 'setupCard'): ResourceDetails => {
-  const activeSetupCard = getSetupCardById(gameState.setupCardId);
-  const activeStoryCard = getActiveStoryCard(gameState);
-
-  const setupRules = (activeSetupCard?.rules?.filter(r => r.type === 'modifyResource') as ModifyResourceRule[] | undefined) || [];
-  const setupEffects: ModifyResourceEffect[] = setupRules.map(r => ({
-    ...r,
-    source: { source: r.source, name: r.sourceName },
-  }));
-
-  const storyEffects = (activeStoryCard?.effects?.filter(e => e.type === 'modifyResource') as ModifyResourceEffect[] | undefined) || [];
-  const allEffects = [...setupEffects, ...storyEffects];
+  const allRules = getResolvedRules(gameState);
+  const resourceRules = allRules.filter(r => r.type === 'modifyResource') as ModifyResourceRule[];
+  
+  const setupRules = resourceRules.filter(r => r.source === 'setupCard');
+  const storyRules = resourceRules.filter(r => r.source === 'story');
 
   const resources: Record<ResourceType, number> = { credits: 3000, fuel: 6, parts: 2, warrants: 0, goalTokens: 0 };
   let creditModifications: { description: string; value: string }[] = [{ description: "Standard Allocation", value: "$3,000" }];
 
-  const setupSetCredits = setupEffects.find(e => e.resource === 'credits' && e.method === 'set');
+  const setupSetCredits = setupRules.find(e => e.resource === 'credits' && e.method === 'set');
   if (setupSetCredits?.value !== undefined) {
     resources.credits = setupSetCredits.value;
     creditModifications = [{ description: setupSetCredits.description, value: `$${setupSetCredits.value.toLocaleString()}` }];
   }
 
-  const storySetCredits = storyEffects.find(e => e.resource === 'credits' && e.method === 'set');
+  const storySetCredits = storyRules.find(e => e.resource === 'credits' && e.method === 'set');
   const conflict = (setupSetCredits?.value !== undefined && storySetCredits?.value !== undefined)
-    ? { story: { value: storySetCredits.value, source: storySetCredits.source }, setupCard: { value: setupSetCredits.value, source: setupSetCredits.source } }
+    ? { story: { value: storySetCredits.value, source: { source: storySetCredits.source, name: storySetCredits.sourceName } }, setupCard: { value: setupSetCredits.value, source: { source: setupSetCredits.source, name: setupSetCredits.sourceName } } }
     : undefined;
 
   if (conflict) {
@@ -104,36 +109,37 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     resources.credits = storySetCredits.value;
     creditModifications = [{ description: storySetCredits.description, value: `$${storySetCredits.value.toLocaleString()}` }];
   }
+  
+  const allNonSetCreditRules = resourceRules.filter(r => !(r.resource === 'credits' && r.method === 'set'));
 
-  allEffects.filter(e => e.method === 'set' && e.resource !== 'credits').forEach(effect => {
-    if (effect.value !== undefined) resources[effect.resource] = effect.value;
-  });
-
-  allEffects.filter(e => e.method === 'add').forEach(effect => {
+  allNonSetCreditRules.forEach(effect => {
     if (effect.value !== undefined) {
+      if (effect.method === 'set') {
+        resources[effect.resource] = effect.value;
+      } else if (effect.method === 'add') {
         resources[effect.resource] += effect.value;
         if (effect.resource === 'credits') {
-            creditModifications.push({ description: effect.description, value: `+$${effect.value.toLocaleString()}` });
+          creditModifications.push({ description: effect.description, value: `+$${effect.value.toLocaleString()}` });
         }
+      }
     }
   });
 
-  const isFuelDisabled = allEffects.some(e => e.resource === 'fuel' && e.method === 'disable');
+  const isFuelDisabled = resourceRules.some(e => e.resource === 'fuel' && e.method === 'disable');
   if (isFuelDisabled) resources.fuel = 0;
-  const isPartsDisabled = allEffects.some(e => e.resource === 'parts' && e.method === 'disable');
+  const isPartsDisabled = resourceRules.some(e => e.resource === 'parts' && e.method === 'disable');
   if (isPartsDisabled) resources.parts = 0;
 
   return { ...resources, isFuelDisabled, isPartsDisabled, conflict, creditModifications };
 };
 
 export const getJobSetupDetails = (gameState: GameState, overrides: StepOverrides): JobSetupDetails => {
-    const activeStoryCard = getActiveStoryCard(gameState);
-    const storyConfig = activeStoryCard?.setupConfig;
-    const { forbiddenStartingContact, allowedStartingContacts } = storyConfig || {};
+    const allRules = getResolvedRules(gameState);
     const messages: JobSetupMessage[] = [];
 
-    const jobDrawMode: JobMode = storyConfig?.jobDrawMode || overrides.jobMode || 'standard';
-    const jobModeSource = storyConfig?.jobDrawMode ? 'story' : 'setupCard';
+    const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
+    const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
+    const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
     
     const isSingleContactChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
     const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
@@ -143,7 +149,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         if (dontPrimeContactsChallenge) {
             content = [{ type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.'}] }, { type: 'paragraph', content: [{ type: 'strong', content: 'Do not prime the Contact Decks.'}, ' (Challenge Override)'] }];
             messages.push({ source: 'warning', title: 'Challenge Active', content });
-        } else if (hasFlag(storyConfig, 'primeContactDecks')) {
+        } else if (allRules.some(r => r.type === 'primeContacts')) {
             content = [
               { type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs are dealt.' }] },
               { type: 'paragraph', content: ['Instead, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
@@ -157,7 +163,39 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             content = (jobModeSource === 'setupCard')
               ? [{ type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] }, { type: 'paragraph', content: ["Crews must find work on their own out in the black."] }]
               : [{ type: 'paragraph', content: [{ type: 'strong', content: 'Do not take Starting Jobs.' }] }];
-            messages.push({ source: jobModeSource, title: `${jobModeSource === 'story' ? 'Story' : 'Setup Card'} Override`, content });
+            
+            // FIX: Map RuleSourceType to the narrower JobSetupMessage['source'] and provide a better title.
+            let messageSource: JobSetupMessage['source'];
+            let messageTitle: string;
+
+            switch (jobModeSource) {
+                case 'story':
+                    messageSource = 'story';
+                    messageTitle = 'Story Override';
+                    break;
+                case 'setupCard':
+                    messageSource = 'setupCard';
+                    messageTitle = 'Setup Card Override';
+                    break;
+                case 'expansion':
+                    messageSource = 'expansion';
+                    messageTitle = 'Expansion Rule';
+                    break;
+                case 'challenge':
+                    messageSource = 'warning';
+                    messageTitle = 'Challenge Restriction';
+                    break;
+                case 'optionalRule':
+                    messageSource = 'info';
+                    messageTitle = 'Optional Rule';
+                    break;
+                default:
+                    messageSource = 'info';
+                    messageTitle = 'Information';
+                    break;
+            }
+
+            messages.push({ source: messageSource, title: messageTitle, content });
         }
         return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
     }
@@ -170,7 +208,13 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     };
     
     let contacts = JOB_MODE_CONTACTS[jobDrawMode] || STANDARD_CONTACTS;
-    
+
+    const forbiddenContactRule = allRules.find(r => r.type === 'forbidContact') as ForbidContactRule | undefined;
+    const forbiddenStartingContact = forbiddenContactRule?.contact;
+
+    const allowedContactsRule = allRules.find(r => r.type === 'allowContacts') as AllowContactsRule | undefined;
+    const allowedStartingContacts = allowedContactsRule?.contacts;
+
     if (jobDrawMode === 'buttons_jobs') {
         messages.push({ source: 'setupCard', title: 'Setup Card Override', content: [{ type: 'strong', content: 'Specific Contacts:' }, ' Draw from Amnon Duul, Lord Harrow, and Magistrate Higgins.', { type: 'br' }, { type: 'strong', content: 'Caper Bonus:' }, ' Draw 1 Caper Card.'] });
     }
@@ -182,8 +226,9 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     }
     
     if (forbiddenStartingContact) contacts = contacts.filter(c => c !== forbiddenStartingContact);
-    if (allowedStartingContacts?.length) contacts = contacts.filter(c => allowedStartingContacts.includes(c));
+    if (allowedStartingContacts?.length) contacts = allowedStartingContacts;
     
+    const activeStoryCard = getActiveStoryCard(gameState);
     if ((forbiddenStartingContact || allowedStartingContacts) && activeStoryCard?.setupDescription) {
         messages.push({ source: 'story', title: 'Story Override', content: [activeStoryCard.setupDescription] });
     }
@@ -196,8 +241,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
 };
 
 export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: StepOverrides): AllianceReaverDetails => {
-  const activeStoryCard = getActiveStoryCard(gameState);
-  const storyConfig = activeStoryCard?.setupConfig;
+  const allRules = getResolvedRules(gameState);
   const specialRules: SpecialRule[] = [];
   const allianceMode = stepOverrides.allianceMode;
 
@@ -223,20 +267,21 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
       break;
   }
   
-  if (hasFlag(storyConfig, 'placeAllianceAlertsInAllianceSpace')) {
+  if (hasRuleFlag(allRules, 'placeAllianceAlertsInAllianceSpace')) {
     specialRules.push({ source: 'story', title: 'Story Override', content: ['Place an ', { type: 'action', content: 'Alliance Alert Token' }, ' on ', { type: 'strong', content: 'every planetary sector in Alliance Space' }, '.'] });
   }
   
-  if (hasFlag(storyConfig, 'placeMixedAlertTokens')) {
+  if (hasRuleFlag(allRules, 'placeMixedAlertTokens')) {
     specialRules.push({ source: 'story', title: 'Story Override', content: ['Place ', { type: 'strong', content: '3 Alliance Alert Tokens' }, " in the 'Verse:", { type: 'list', items: [['1 in ', { type: 'strong', content: 'Alliance Space' }], ['1 in ', { type: 'strong', content: 'Border Space' }], ['1 in ', { type: 'strong', content: 'Rim Space' }]] }] });
   }
 
-  if (storyConfig?.createAlertTokenStackMultiplier) {
-    const alertStackCount = storyConfig.createAlertTokenStackMultiplier * gameState.playerCount;
-    specialRules.push({ source: 'story', title: 'Story Override', content: ['Create a stack of ', { type: 'strong', content: `${alertStackCount} Alliance Alert Tokens` }, ` (${storyConfig.createAlertTokenStackMultiplier} per player).`] });
+  const createAlertTokenStackRule = allRules.find(r => r.type === 'createAlertTokenStack') as CreateAlertTokenStackRule | undefined;
+  if (createAlertTokenStackRule) {
+    const alertStackCount = createAlertTokenStackRule.multiplier * gameState.playerCount;
+    specialRules.push({ source: 'story', title: 'Story Override', content: ['Create a stack of ', { type: 'strong', content: `${alertStackCount} Alliance Alert Tokens` }, ` (${createAlertTokenStackRule.multiplier} per player).`] });
   }
 
-  const smugglersBluesSetup = hasFlag(storyConfig, 'smugglersBluesSetup');
+  const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
   if (smugglersBluesSetup) {
     const useSmugglersRimRule = smugglersBluesSetup && gameState.expansions.blue && gameState.expansions.kalidasa;
     specialRules.push({ source: 'story', title: 'Story Override', content: useSmugglersRimRule 
@@ -244,11 +289,11 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
       : ['Place ', { type: 'strong', content: '3 Contraband' }, ' on each Planetary Sector in ', { type: 'strong', content: 'Alliance Space' }, '.'] });
   }
   
-  if (hasFlag(storyConfig, 'lonelySmugglerSetup')) {
+  if (hasRuleFlag(allRules, 'lonelySmugglerSetup')) {
     specialRules.push({ source: 'story', title: 'Story Override', content: ['Place ', { type: 'strong', content: '3 Contraband' }, ' on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.'] });
   }
 
-  if (hasFlag(storyConfig, 'startWithAlertCard')) {
+  if (hasRuleFlag(allRules, 'startWithAlertCard')) {
     specialRules.push({ source: 'story', title: 'Story Override', content: ['Begin the game with one random Alliance Alert Card in play.'] });
   }
 
@@ -261,23 +306,30 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
 export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDetails => {
     const specialRules: SpecialRule[] = [];
     const { overrides = {} } = step;
+    const allRules = getResolvedRules(gameState);
     const activeStoryCard = getActiveStoryCard(gameState);
 
     const isHavenDraft = step.id.includes(STEP_IDS.D_HAVEN_DRAFT);
     const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
     const isHeroesAndMisfits = activeStoryCard?.title === STORY_TITLES.HEROES_AND_MISFITS;
     const isRacingAPaleHorse = activeStoryCard?.title === STORY_TITLES.RACING_A_PALE_HORSE;
-    const isPersephoneStart = activeStoryCard?.setupConfig?.shipPlacementMode === 'persephone' && !isHeroesCustomSetup;
-    const isLondiniumStart = hasFlag(activeStoryCard?.setupConfig, 'startAtLondinium');
-    const startOutsideAllianceSpace = hasFlag(activeStoryCard?.setupConfig, 'startOutsideAllianceSpace');
-    const startAtSector = activeStoryCard?.setupConfig?.startAtSector;
-    const allianceSpaceOffLimits = hasFlag(activeStoryCard?.setupConfig, 'allianceSpaceOffLimits');
-    const addBorderHavens = hasFlag(activeStoryCard?.setupConfig, 'addBorderSpaceHavens');
+
+    const shipPlacementRule = allRules.find(r => r.type === 'setShipPlacement') as (SetShipPlacementRule | undefined);
+    
+    let specialStartSector: string | null = null;
+    if (shipPlacementRule) {
+      if (shipPlacementRule.location === 'persephone' && !isHeroesCustomSetup) specialStartSector = 'Persephone';
+      if (shipPlacementRule.location === 'londinium') specialStartSector = 'Londinium';
+      if (shipPlacementRule.location === 'border_of_murphy') specialStartSector = 'Border of Murphy';
+    }
+
+    const startOutsideAllianceSpace = shipPlacementRule?.location === 'outside_alliance';
+
+    const allianceSpaceOffLimits = hasRuleFlag(allRules, 'allianceSpaceOffLimits');
+    const addBorderHavens = hasRuleFlag(allRules, 'addBorderHavens');
     const isBrowncoatDraft = overrides.draftMode === 'browncoat';
     const isWantedLeaderMode = overrides.leaderSetup === 'wanted';
     const showBrowncoatHeroesWarning = isBrowncoatDraft && isHeroesAndMisfits && gameState.finalStartingCredits != null && gameState.finalStartingCredits < 4800;
-    
-    const specialStartSector: string | null = startAtSector || (isPersephoneStart ? 'Persephone' : null) || (isLondiniumStart ? 'Londinium' : null);
     
     let resolvedHavenDraft = isHavenDraft;
     let conflictMessage: StructuredContent | null = null;

@@ -5,7 +5,6 @@ import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { STEP_IDS } from '../data/ids';
-import { hasFlag } from '../utils/data';
 
 interface JobStepProps {
   step: Step;
@@ -34,11 +33,6 @@ export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
   
   const isSelectedStory = !!gameState.selectedStoryCard;
   const isRimDeckBuild = stepId.includes(STEP_IDS.D_RIM_JOBS);
-  
-  const smugglersBluesSetup = hasFlag(activeStoryCard?.setupConfig, 'smugglersBluesSetup');
-  const lonelySmugglerSetup = hasFlag(activeStoryCard?.setupConfig, 'lonelySmugglerSetup');
-  const sharedHandSetup = hasFlag(activeStoryCard?.setupConfig, 'sharedHandSetup');
-  const removePiracyJobs = hasFlag(activeStoryCard?.setupConfig, 'removePiracyJobs');
 
   const activeChallenges = useMemo(() => 
     activeStoryCard?.challengeOptions?.filter(
@@ -68,12 +62,6 @@ export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
         <SpecialRuleBlock source="setupCard" title="Rim Space Jobs" content={[
           { type: 'paragraph', content: [{ type: 'strong', content: "Rebuild the Contact Decks" }, " using ", { type: 'strong', content: "only" }, " cards from the Blue Sun and Kalidasa expansions."] }
         ]} />
-      )}
-
-      {isSelectedStory && sharedHandSetup && (
-          <SpecialRuleBlock source="story" title="Story Override" content={[
-            "Place ", { type: 'strong', content: "one Job from each Contact" }, " face up on top of its deck. These face up Jobs form a shared hand of Inactive Jobs that everyone may use."
-          ]} />
       )}
 
       {messages.map((msg, idx) => {
@@ -120,18 +108,6 @@ export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
           { type: 'list', items: activeChallenges.map(opt => [opt.label]) },
           { type: 'paragraph', content: ["These restrictions apply throughout the game."] }
         ]} />
-      )}
-
-      {isSelectedStory && smugglersBluesSetup && (
-        <SpecialRuleBlock source="story" title="Story Override" content={["Place a $2000 bill under Amnon Duul, Patience, Badger, and Niska's Contact Decks."]} />
-      )}
-
-      {isSelectedStory && lonelySmugglerSetup && (
-        <SpecialRuleBlock source="story" title="Story Override" content={["Place a ", { type: 'strong', content: "Goal Token" }, " on the Contact Decks for ", { type: 'strong', content: "Amnon Duul, Patience, Badger, and Niska" }, "."]} />
-      )}
-
-      {isSelectedStory && removePiracyJobs && (
-        <SpecialRuleBlock source="story" title="Story Override" content={["Pull all remaining Piracy Jobs from the Contact Decks and discard them. Reshuffle."]} />
       )}
     </div>
   );

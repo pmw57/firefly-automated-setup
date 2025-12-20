@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { getStoryCardSetupSummary, getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../../utils/ui';
-import { GameState, StoryCardDef, SetupCardDef } from '../../types';
+import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
-import { SETUP_CARD_IDS } from '../../data/ids';
+import { SETUP_CARD_IDS, STORY_TITLES } from '../../data/ids';
 import { SETUP_CARDS } from '../../data/setupCards';
 
 describe('utils/ui', () => {
@@ -15,14 +15,19 @@ describe('utils/ui', () => {
         });
 
         it('returns specific summaries for jobDrawMode', () => {
-            const noJobs: StoryCardDef = { title: 'T', intro: 'I', setupConfig: { jobDrawMode: 'no_jobs' } };
-            const caper: StoryCardDef = { title: 'T', intro: 'I', setupConfig: { jobDrawMode: 'caper_start' } };
+            // FIX: Updated mock objects to use the 'rules' array instead of the legacy 'setupConfig' to match the function's logic.
+            const noJobsRule: SetJobModeRule = { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: 'T' };
+            const caperRule: SetJobModeRule = { type: 'setJobMode', mode: 'caper_start', source: 'story', sourceName: 'T' };
+            const noJobs: StoryCardDef = { title: 'T', intro: 'I', rules: [noJobsRule] };
+            const caper: StoryCardDef = { title: 'T', intro: 'I', rules: [caperRule] };
             expect(getStoryCardSetupSummary(noJobs)).toBe("No Starting Jobs");
             expect(getStoryCardSetupSummary(caper)).toBe("Starts with Caper");
         });
 
         it('returns "Starts at Persephone" for shipPlacementMode', () => {
-            const card: StoryCardDef = { title: 'T', intro: 'I', setupConfig: { shipPlacementMode: 'persephone' } };
+            // FIX: Updated mock object to use the 'rules' array instead of 'setupConfig'.
+            const placementRule: SetShipPlacementRule = { type: 'setShipPlacement', location: 'persephone', source: 'story', sourceName: 'T' };
+            const card: StoryCardDef = { title: 'T', intro: 'I', rules: [placementRule] };
             expect(getStoryCardSetupSummary(card)).toBe("Starts at Persephone");
         });
         
@@ -50,9 +55,9 @@ describe('utils/ui', () => {
         });
 
         it('returns "Disabled" if story card disables solo timer', () => {
-            const state: GameState = { ...baseGameState, gameMode: 'solo' };
-            const story: StoryCardDef = { title: 'T', intro: 'I', setupConfig: { flags: ['disableSoloTimer'] } };
-            expect(getTimerSummaryText(state, story)).toBe("Disabled (Story Override)");
+            // FIX: The function now infers the story from the state. The test is updated to set the selectedStoryCard in the state and call the function with only one argument.
+            const state: GameState = { ...baseGameState, gameMode: 'solo', selectedStoryCard: STORY_TITLES.RACING_A_PALE_HORSE };
+            expect(getTimerSummaryText(state)).toBe("Disabled (Story Override)");
         });
 
         it('returns "Standard (20 Turns)" for Flying Solo with standard timer', () => {

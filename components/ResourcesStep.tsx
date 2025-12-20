@@ -4,7 +4,7 @@ import { getResourceDetails, getActiveStoryCard } from '../utils/selectors';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { hasFlag } from '../utils/data';
+import { hasFlag } from '../utils/selectors';
 import { ConflictResolver } from './ConflictResolver';
 import { ActionType } from '../state/actions';
 import { cls } from '../utils/style';
@@ -36,8 +36,9 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = () => {
   
   const showConflictUI = conflict && gameState.optionalRules.resolveConflictsManually;
   
-  const removeRiver = hasFlag(activeStoryCard?.setupConfig, 'removeRiver');
-  const nandiCrewDiscount = hasFlag(activeStoryCard?.setupConfig, 'nandiCrewDiscount');
+  // FIX: Correctly check both the modern `rules` array and the legacy `setupConfig.flags` for story cards.
+  const removeRiver = hasFlag(activeStoryCard?.rules, 'removeRiver') || hasFlag(activeStoryCard?.setupConfig, 'removeRiver');
+  const nandiCrewDiscount = hasFlag(activeStoryCard?.rules, 'nandiCrewDiscount') || hasFlag(activeStoryCard?.setupConfig, 'nandiCrewDiscount');
   
   const cardBg = isDark ? 'bg-black/60' : 'bg-white';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';

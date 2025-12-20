@@ -101,6 +101,13 @@ export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; categ
 // This is a bridge between the old flag system and a fully declarative system.
 export interface AddFlagRule extends BaseRule { type: 'addFlag'; flag: string; }
 
+// A rule to modify priming the pump values
+export interface ModifyPrimeRule extends BaseRule {
+  type: 'modifyPrime';
+  multiplier?: number;
+  modifier?: { add: number };
+}
+
 // Use the existing ModifyResourceEffect as a rule type.
 export interface ModifyResourceRule extends BaseRule {
   type: 'modifyResource';
@@ -124,6 +131,7 @@ export type SetupRule =
   | SetShipPlacementRule
   | AddSpecialRule
   | AddFlagRule
+  | ModifyPrimeRule
   | ModifyResourceRule;
 // --- End New Rule System Types ---
 
@@ -135,40 +143,6 @@ export interface StepOverrides {
     primeMode?: PrimeMode;
     draftMode?: DraftMode;
     leaderSetup?: LeaderSetupMode;
-}
-
-// FIX: Define StoryFlag and StoryCardConfig for story-specific setup rules.
-export type StoryFlag =
-  | 'sharedHandSetup'
-  | 'removePiracyJobs'
-  | 'soloCrewDraft'
-  | 'soloGameTimer'
-  | 'startWithAlertCard'
-  | 'startAtLondinium'
-  | 'startOutsideAllianceSpace'
-  | 'allianceSpaceOffLimits'
-  | 'removeRiver'
-  | 'nandiCrewDiscount'
-  | 'placeReaverAlertsInMotherlodeAndUroboros'
-  | 'disableSoloTimer'
-  | 'primeContactDecks'
-  | 'placeAllianceAlertsInAllianceSpace'
-  | 'placeMixedAlertTokens'
-  | 'addBorderSpaceHavens'
-  | 'smugglersBluesSetup'
-  | 'lonelySmugglerSetup'
-  | 'removeJobDecks';
-
-export interface StoryCardConfig {
-  flags?: StoryFlag[];
-  jobDrawMode?: JobMode;
-  shipPlacementMode?: 'persephone' | 'londinium' | 'border_of_murphy' | 'outside_alliance';
-  forbiddenStartingContact?: string;
-  allowedStartingContacts?: string[];
-  createAlertTokenStackMultiplier?: number;
-  primingMultiplier?: number;
-  primeModifier?: { add: number };
-  startAtSector?: string;
 }
 
 // The final data object for a step in the flow.
@@ -211,8 +185,6 @@ export interface SetupCardDef {
   steps: SetupCardStep[];
   mode?: GameMode;
   rules?: SetupRule[];
-  // FIX: Add effects property to SetupCardDef.
-  effects?: ModifyResourceEffect[];
 }
 
 export interface StoryCardGoal {
@@ -231,6 +203,19 @@ export interface AdvancedRuleDef {
   description?: string;
 }
 
+// FIX: Add StorySetupConfig interface for legacy story card properties.
+export interface StorySetupConfig {
+  flags?: string[];
+  jobDrawMode?: JobMode;
+  forbiddenStartingContact?: string;
+  allowedStartingContacts?: string[];
+  primeModifier?: { add: number };
+  primingMultiplier?: number;
+  shipPlacementMode?: 'persephone' | 'londinium';
+  startAtSector?: string;
+  createAlertTokenStackMultiplier?: number;
+}
+
 export interface StoryCardDef {
   title: string;
   intro: string;
@@ -243,9 +228,9 @@ export interface StoryCardDef {
   challengeOptions?: ChallengeOption[];
   advancedRule?: AdvancedRuleDef;
   rules?: SetupRule[];
-  // FIX: Add setupConfig and effects properties for story-specific rules.
-  setupConfig?: StoryCardConfig;
+  // FIX: Add missing 'effects' and 'setupConfig' properties to allow them on story card data.
   effects?: ModifyResourceEffect[];
+  setupConfig?: StorySetupConfig;
 }
 
 export type GameEdition = 'original' | 'tenth';

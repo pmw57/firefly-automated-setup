@@ -91,7 +91,7 @@ const handlePlayerCountChange = (state: GameState, count: number): GameState => 
     const newMode = safeCount === 1 ? 'solo' : 'multiplayer';
     
     // Create base new state with updated count and mode
-    const baseNewState: GameState = {
+    let finalState: GameState = {
         ...state,
         playerCount: safeCount,
         gameMode: newMode,
@@ -99,10 +99,21 @@ const handlePlayerCountChange = (state: GameState, count: number): GameState => 
         isCampaign: newMode === 'multiplayer' ? false : state.isCampaign,
     };
 
+    // Auto-select Flying Solo if conditions are met
+    const isDefaultSetup = !finalState.setupCardId || finalState.setupCardId === SETUP_CARD_IDS.STANDARD;
+    if (finalState.gameMode === 'solo' && finalState.expansions.tenth && isDefaultSetup) {
+        finalState = {
+            ...finalState,
+            setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
+            setupCardName: 'Flying Solo',
+            secondarySetupId: SETUP_CARD_IDS.STANDARD,
+        };
+    }
+
     // Apply specific constraints if switching to multiplayer, otherwise return as is
-    const finalState = newMode === 'multiplayer' 
-        ? enforceMultiplayerConstraints(baseNewState) 
-        : baseNewState;
+    finalState = newMode === 'multiplayer' 
+        ? enforceMultiplayerConstraints(finalState) 
+        : finalState;
     
     return finalState;
 };
@@ -136,21 +147,6 @@ const handleExpansionToggle = (state: GameState, expansionId: keyof GameState['e
         newState.secondarySetupId = undefined;
     }
     return newState;
-};
-
-const handleAutoSelectFlyingSolo = (state: GameState): GameState => {
-    const { gameMode, expansions, setupCardId } = state;
-    const isDefaultSetup = !setupCardId || setupCardId === SETUP_CARD_IDS.STANDARD;
-    
-    if (gameMode === 'solo' && expansions.tenth && isDefaultSetup) {
-        return {
-            ...state,
-            setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
-            setupCardName: 'Flying Solo',
-            secondarySetupId: SETUP_CARD_IDS.STANDARD,
-        };
-    }
-    return state;
 };
 
 const handleToggleFlyingSolo = (state: GameState): GameState => {
@@ -197,9 +193,6 @@ export function gameReducer(state: GameState, action: Action): GameState {
 
     case ActionType.SET_CAMPAIGN_STORIES:
         return { ...state, campaignStoriesCompleted: Math.max(0, action.payload) };
-
-    case ActionType.AUTO_SELECT_FLYING_SOLO:
-        return handleAutoSelectFlyingSolo(state);
     
     case ActionType.SET_SETUP_CARD: {
       const { id, name } = action.payload;

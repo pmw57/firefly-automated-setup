@@ -6,7 +6,6 @@ export enum ActionType {
   TOGGLE_EXPANSION = 'TOGGLE_EXPANSION',
   SET_CAMPAIGN_MODE = 'SET_CAMPAIGN_MODE',
   SET_CAMPAIGN_STORIES = 'SET_CAMPAIGN_STORIES',
-  AUTO_SELECT_FLYING_SOLO = 'AUTO_SELECT_FLYING_SOLO',
   SET_SETUP_CARD = 'SET_SETUP_CARD',
   TOGGLE_FLYING_SOLO = 'TOGGLE_FLYING_SOLO',
   SET_STORY_CARD = 'SET_STORY_CARD',
@@ -30,7 +29,6 @@ export type Action =
   | { type: ActionType.TOGGLE_EXPANSION; payload: keyof GameState['expansions'] }
   | { type: ActionType.SET_CAMPAIGN_MODE; payload: boolean }
   | { type: ActionType.SET_CAMPAIGN_STORIES; payload: number }
-  | { type: ActionType.AUTO_SELECT_FLYING_SOLO }
   | { type: ActionType.SET_SETUP_CARD; payload: { id: string; name: string } }
   | { type: ActionType.TOGGLE_FLYING_SOLO }
   | { type: ActionType.SET_STORY_CARD; payload: { title: string; goal?: string } }

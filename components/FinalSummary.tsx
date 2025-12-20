@@ -16,7 +16,8 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
     const activeExpansions = getActiveExpansions(gameState);
     
     const displaySetupName = getDisplaySetupName(gameState);
-    const timerSummary = getTimerSummaryText(gameState, activeStory);
+    // FIX: The function getTimerSummaryText now infers the active story card from the game state and only requires one argument.
+    const timerSummary = getTimerSummaryText(gameState);
     const activeOptionalRules = getActiveOptionalRulesText(gameState);
     
     // Disgruntled Die

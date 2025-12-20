@@ -7,10 +7,10 @@ export const TENTH_STORIES: StoryCardDef[] = [
     setupDescription: "Draft 3 specific contact decks for starting jobs. Priming the Pump discards 2x cards. Requires Blue Sun & Kalidasa.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
-    setupConfig: {
-      jobDrawMode: "draft_choice",
-      primingMultiplier: 2
-    }
+    rules: [
+      { type: 'setJobMode', mode: 'draft_choice', source: 'story', sourceName: "A Friend In Every Port" },
+      { type: 'modifyPrime', multiplier: 2, source: 'story', sourceName: "A Friend In Every Port" },
+    ],
   },
   {
     title: "Aces Up Your Sleeve",

@@ -213,6 +213,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     mode: 'solo',
     rules: createRules("Flying Solo", [
       { type: 'setNavMode', mode: 'flying_solo' },
+      { type: 'addFlag', flag: 'soloGameTimer' },
     ]),
     steps: [
       { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },

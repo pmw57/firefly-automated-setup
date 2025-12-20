@@ -68,25 +68,4 @@ describe('state/reducer', () => {
         expect(newState.setupCardId).toBe(SETUP_CARD_IDS.STANDARD);
     });
   });
-
-  describe('AUTO_SELECT_FLYING_SOLO', () => {
-    it('auto-selects Flying Solo if conditions are met', () => {
-      const state: GameState = { ...baseGameState, gameMode: 'solo', expansions: { ...baseGameState.expansions, tenth: true }};
-      const newState = gameReducer(state, { type: ActionType.AUTO_SELECT_FLYING_SOLO });
-      expect(newState.setupCardId).toBe(SETUP_CARD_IDS.FLYING_SOLO);
-      expect(newState.secondarySetupId).toBe(SETUP_CARD_IDS.STANDARD);
-    });
-    
-    it('does not auto-select if not in solo mode', () => {
-      const state: GameState = { ...baseGameState, gameMode: 'multiplayer', expansions: { ...baseGameState.expansions, tenth: true }};
-      const newState = gameReducer(state, { type: ActionType.AUTO_SELECT_FLYING_SOLO });
-      expect(newState.setupCardId).toBe(SETUP_CARD_IDS.STANDARD);
-    });
-    
-    it('does not auto-select if 10th Anniversary expansion is not active', () => {
-      const state: GameState = { ...baseGameState, gameMode: 'solo', expansions: { ...baseGameState.expansions, tenth: false }};
-      const newState = gameReducer(state, { type: ActionType.AUTO_SELECT_FLYING_SOLO });
-      expect(newState.setupCardId).toBe(SETUP_CARD_IDS.STANDARD);
-    });
-  });
 });

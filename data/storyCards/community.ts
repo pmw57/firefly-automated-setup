@@ -101,10 +101,10 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "Adelai Niska has been lord of the underworld for as long as anyone can remember. Shu-ki, the tong boss of Gonghe, has long suffered under Niska's yoke. After being publicly shamed by Niska at a meeting of crime-bosses, an enraged Shu-ki has decided to bring Niska down. He has a plan - Operation Dragon - but the job is so daunting that it requires two crews to have any hope of success. Can two Firefly captains bring down the most feared criminal boss in the 'Verse?",
     setupDescription: "2-Player Co-Op. Niska jobs forbidden. Remove Niska Deck. Prime +2 cards/deck. Stack 16 Disgruntled Tokens (Countdown).",
     requiredExpansion: "community",
-    setupConfig: {
-      forbiddenStartingContact: "Niska",
-      primeModifier: { add: 2 }
-    },
+    rules: [
+      { type: 'forbidContact', contact: 'Niska', source: 'story', sourceName: "Slaying The Dragon" },
+      { type: 'modifyPrime', modifier: { add: 2 }, source: 'story', sourceName: "Slaying The Dragon" },
+    ],
     sourceUrl: "https://boardgamegeek.com/thread/1049020/article/13686225#13686225"
   },
   {

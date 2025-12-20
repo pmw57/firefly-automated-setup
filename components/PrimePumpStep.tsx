@@ -3,8 +3,7 @@ import { Step } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { hasFlag } from '../utils/data';
-import { getPrimeDetails, getActiveStoryCard } from '../utils/selectors';
+import { getPrimeDetails } from '../utils/selectors';
 import { STORY_TITLES } from '../data/ids';
 
 interface PrimePumpStepProps {
@@ -14,11 +13,8 @@ interface PrimePumpStepProps {
 export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
   const { state: gameState } = useGameState();
   const overrides = React.useMemo(() => step.overrides || {}, [step.overrides]);
-  const activeStoryCard = getActiveStoryCard(gameState);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  
-  const soloCrewDraft = hasFlag(activeStoryCard?.setupConfig, 'soloCrewDraft');
   
   const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
   const { isCampaign } = gameState;
@@ -29,7 +25,8 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
     finalCount,
     isHighSupplyVolume,
     isBlitz,
-    isSlayingTheDragon
+    isSlayingTheDragon,
+    specialRules,
   } = React.useMemo(() => 
     getPrimeDetails(gameState, overrides),
     [gameState, overrides]
@@ -58,8 +55,8 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
         <SpecialRuleBlock source="setupCard" title="The Blitz: Double Dip" page={22} manual="Core" content={['"Double Dip" rules are in effect. Discard the top ', { type: 'strong', content: `${baseDiscard * 2} cards` }, ' (2x Base) from each deck.']} />
       )}
 
-      {effectiveMultiplier > 1 && !isBlitz && activeStoryCard && (
-        <SpecialRuleBlock source="story" title="Story Override" content={[{ type: 'strong', content: `${activeStoryCard.title}:` }, ` Prime counts are increased by ${effectiveMultiplier}x.`]} />
+      {effectiveMultiplier > 1 && !isBlitz && (
+        <SpecialRuleBlock source="story" title="Story Override" content={[{ type: 'strong', content: `Prime counts are increased by ${effectiveMultiplier}x.` }]} />
       )}
 
       {isSlayingTheDragon && (
@@ -81,6 +78,10 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
         </p>
       </div>
       
+      {specialRules.map((rule, i) => (
+        <SpecialRuleBlock key={i} {...rule} />
+      ))}
+      
       {isCampaign ? (
         <SpecialRuleBlock source="story" title="Campaign Rules: Supplies" content={[
           { type: 'paragraph', content: ['You receive your standard starting credits. ', { type: 'strong', content: 'Remember to add any money you saved from the last game.' }] },
@@ -93,14 +94,6 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
           { type: 'paragraph', content: ['Discounts from special abilities apply. ', { type: 'strong', content: 'Replace any purchased cards.' }] }
         ]} />
       ) : null}
-
-
-      {!isFlyingSolo && !isCampaign && soloCrewDraft && (
-        <SpecialRuleBlock source="story" title="Solo Crew Recruitment" content={[
-            { type: 'paragraph', content: ['After priming, you may purchase ', { type: 'strong', content: 'up to 4 Crew or Gear cards' }, ' from the ', { type: 'strong', content: 'discard piles' }, ' of any ', { type: 'strong', content: 'single Supply Deck' }, '.'] },
-            { type: 'paragraph', content: ['The total cost of these items must not exceed ', { type: 'strong', content: '$1000' }, '.'] }
-        ]} />
-      )}
     </div>
   );
 };
