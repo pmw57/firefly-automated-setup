@@ -3,7 +3,7 @@ import { Step } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { getPrimeDetails } from '../utils/selectors';
+import { getPrimeDetails } from '../utils/selectors/setup';
 import { STORY_TITLES } from '../data/ids';
 
 interface PrimePumpStepProps {

@@ -2,7 +2,7 @@ import React from 'react';
 import { GameState } from '../types';
 import { getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../utils/ui';
 import { useTheme } from './ThemeContext';
-import { getActiveStoryCard, getActiveExpansions, getActiveAdvancedRules } from '../utils/selectors';
+import { getActiveStoryCard, getActiveExpansions, getActiveAdvancedRules } from '../utils/selectors/story';
 
 interface FinalSummaryProps {
   gameState: GameState;

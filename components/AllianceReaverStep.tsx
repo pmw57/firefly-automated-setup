@@ -3,7 +3,7 @@ import { Step } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { getAllianceReaverDetails } from '../utils/selectors';
+import { getAllianceReaverDetails } from '../utils/selectors/setup';
 
 interface AllianceReaverStepProps {
   step: Step;

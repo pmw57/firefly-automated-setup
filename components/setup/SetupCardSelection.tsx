@@ -4,7 +4,8 @@ import { Button } from '../Button';
 import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
 import { ActionType } from '../../state/actions';
-import { getAvailableSetupCards, getSetupCardById } from '../../utils/selectors';
+// FIX: 'getAvailableSetupCards' is exported from the 'story' selector module, not 'setup'.
+import { getAvailableSetupCards, getSetupCardById } from '../../utils/selectors/story';
 import { FlyingSoloBanner } from './FlyingSoloBanner';
 import { SetupCardList } from './SetupCardList';
 

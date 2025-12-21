@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Step, DraftState } from '../types';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/draft';
-import { getDraftDetails } from '../utils/selectors';
+import { getDraftDetails } from '../utils/selectors/setup';
 import { Button } from './Button';
 import { DiceControls } from './DiceControls';
 import { SpecialRuleBlock } from './SpecialRuleBlock';

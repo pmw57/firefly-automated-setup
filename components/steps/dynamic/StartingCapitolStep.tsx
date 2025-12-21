@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Step } from '../../../types';
-import { getResourceDetails } from '../../../utils/selectors';
+import { getResourceDetails } from '../../../utils/selectors/setup';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
 import { ConflictResolver } from '../../ConflictResolver';

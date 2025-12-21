@@ -6,8 +6,8 @@ import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionIcon } from '../ExpansionIcon';
 import { useGameState } from '../../hooks/useGameState';
 import { ActionType } from '../../state/actions';
-import { hasRuleFlag } from '../../utils/selectors';
-import { getSoloTimerAdjustmentText } from '../../utils/selectors';
+import { hasRuleFlag } from '../../utils/selectors/rules';
+import { getSoloTimerAdjustmentText } from '../../utils/selectors/story';
 
 interface StoryDossierProps {
   activeStoryCard: StoryCardDef;

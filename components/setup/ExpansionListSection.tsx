@@ -3,7 +3,7 @@ import { Expansions } from '../../types';
 import { ExpansionToggle } from '../ExpansionToggle';
 import { useTheme } from '../ThemeContext';
 import { cls } from '../../utils/style';
-import { getCategorizedExpansions } from '../../utils/selectors';
+import { getCategorizedExpansions } from '../../utils/selectors/story';
 
 interface ExpansionListSectionProps {
     expansions: Expansions;

@@ -1,6 +1,6 @@
 import { GameState, StoryCardDef, SetupCardDef, SetupRule, SetJobModeRule, SetShipPlacementRule } from '../types';
 import { SETUP_CARD_IDS } from '../data/ids';
-import { getResolvedRules, hasRuleFlag } from './selectors';
+import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
 export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     const rules = card.rules || [];

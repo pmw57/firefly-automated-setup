@@ -29,12 +29,29 @@ const tailwindCdnFallbackPlugin = (): Plugin => ({
   }
 });
 
+/**
+ * A custom Vite plugin to remove the importmap during Vitest runs.
+ * The importmap is for browser-based previews, but it forces Vitest to fetch
+ * dependencies from CDNs, which drastically slows down the 'transform' and 'import'
+ * test phases. This plugin removes it only when `process.env.VITEST` is true.
+ */
+const removeImportmapForTestPlugin = (): Plugin => ({
+  name: 'vite-plugin-remove-importmap-for-test',
+  transformIndexHtml(html) {
+    if (process.env.VITEST) {
+      return html.replace(/<script type="importmap">[\s\S]*?<\/script>/, '');
+    }
+    return html;
+  }
+});
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/firefly-automated-setup/',
   plugins: [
     react(),
+    removeImportmapForTestPlugin(), // Add the new plugin to fix test speed
     tailwindCdnFallbackPlugin(), // Add our custom plugin
     VitePWA({
       registerType: 'autoUpdate',
@@ -79,7 +96,14 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    environment: 'jsdom',
+    environment: 'node',
     setupFiles: './tests/setup.ts',
+    deps: {
+      optimizer: {
+        ssr: {
+          enabled: true,
+        },
+      },
+    },
   },
 });

@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import { Step } from '../types';
 // FIX: Import getResolvedRules to use in the component.
-import { getResourceDetails, hasRuleFlag, getResolvedRules } from '../utils/selectors';
+import { getResourceDetails } from '../utils/selectors/setup';
+import { hasRuleFlag, getResolvedRules } from '../utils/selectors/rules';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
