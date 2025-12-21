@@ -1,5 +1,6 @@
 {
   "name": "firefly-automated-setup",
+  "description": "A dynamic, offline-first PWA to automate the complex setup process for the board game Firefly: The Game, supporting all expansions and story cards.",
   "private": true,
   "version": "1.0.0",
   "type": "module",
