@@ -3,7 +3,7 @@ import { StoryCardGridItem } from './StoryCardGridItem';
 import { Button } from '../Button';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useTheme } from '../ThemeContext';
-import { getFilterableExpansions } from '../../utils/selectors';
+import { getFilterableExpansions } from '../../utils/selectors/story';
 
 interface StoryCardGridProps {
   onSelect: (title: string) => void;

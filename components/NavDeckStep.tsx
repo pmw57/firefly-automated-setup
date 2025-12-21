@@ -3,7 +3,7 @@ import { Step, StructuredContent } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { getNavDeckDetails } from '../utils/selectors';
+import { getNavDeckDetails } from '../utils/selectors/setup';
 import { cls } from '../utils/style';
 
 interface NavDeckStepProps {

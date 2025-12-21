@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getDraftDetails } from '../../utils/selectors';
+import { getDraftDetails } from '../../utils/selectors/setup';
 import { GameState, Step, StructuredContent, StructuredContentPart } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
 import { STEP_IDS, STORY_TITLES, CHALLENGE_IDS } from '../../data/ids';

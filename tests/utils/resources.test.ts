@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getResourceDetails } from '../../utils/selectors';
+import { getResourceDetails } from '../../utils/selectors/setup';
 import { GameState } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
 

@@ -1,3 +1,4 @@
+/** @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { LocalStorageService } from '../../utils/storage';
 import { getDefaultGameState } from '../../state/reducer';

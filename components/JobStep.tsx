@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Step } from '../types';
-import { getJobSetupDetails, getActiveStoryCard } from '../utils/selectors';
+import { getJobSetupDetails } from '../utils/selectors/setup';
+import { getActiveStoryCard } from '../utils/selectors/story';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';

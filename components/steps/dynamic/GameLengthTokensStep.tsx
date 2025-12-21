@@ -4,8 +4,8 @@ import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
 import { ActionType } from '../../../state/actions';
-import { hasRuleFlag } from '../../../utils/selectors';
-import { getActiveStoryCard } from '../../../utils/selectors';
+import { hasRuleFlag } from '../../../utils/selectors/rules';
+import { getActiveStoryCard } from '../../../utils/selectors/story';
 
 interface GameLengthTokensStepProps {
   step: Step;
