@@ -55,7 +55,7 @@ export default defineConfig({
     tailwindCdnFallbackPlugin(), // Add our custom plugin
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['expansion_sprites.png', 'logo.svg'],
+      includeAssets: ['expansion_sprites.png', 'logo.svg', 'robots.txt', 'sitemap.xml', 'google45bc800396599bee.html'],
       manifest: {
         name: 'Firefly Automated Setup Guide',
         short_name: 'Firefly Setup',
