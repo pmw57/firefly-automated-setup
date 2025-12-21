@@ -20,7 +20,11 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
   const isSolo = gameState.gameMode === 'solo';
   const has10th = gameState.expansions.tenth;
   
-  const isFlyingSoloActive = gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
+  const isFlyingSoloActive = useMemo(() => {
+    const cardDef = getSetupCardById(gameState.setupCardId);
+    return !!cardDef?.isCombinable;
+  }, [gameState.setupCardId]);
+
   const totalParts = (isFlyingSoloActive || has10th) ? 3 : 2;
   const isFlyingSoloEligible = isSolo && has10th;
 

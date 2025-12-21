@@ -13,16 +13,7 @@ export const STEP_IDS = {
   SETUP_CARD_SELECTION: 'setup-2',
   SETUP_OPTIONAL_RULES: 'setup-3',
 
-  // Core Steps (mapped IDs)
-  CORE_NAV_DECKS: 'core-1',
-  CORE_ALLIANCE_REAVER: 'core-2',
-  CORE_DRAFT: 'core-3',
-  CORE_MISSION: 'core-4',
-  CORE_RESOURCES: 'core-5',
-  CORE_JOBS: 'core-6',
-  CORE_PRIME_PUMP: 'core-prime',
-  
-  // Core Steps (raw IDs)
+  // Core Steps (raw IDs are now the primary identifier)
   C1: 'C1',
   C2: 'C2',
   C3: 'C3',

@@ -20,7 +20,8 @@ import {
     ForbidContactRule,
     AllowContactsRule,
     SetJobModeRule,
-    RuleSourceType
+    RuleSourceType,
+    ResourceConflict
 } from '../../types';
 import { getResolvedRules, hasRuleFlag } from './rules';
 import { CONTACT_NAMES, CHALLENGE_IDS, STORY_TITLES, STEP_IDS } from '../../data/ids';
@@ -74,64 +75,79 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, isSlayingTheDragon, specialRules: [] };
 };
 
+const PRIORITY_ORDER: RuleSourceType[] = ['story', 'challenge', 'setupCard', 'optionalRule', 'expansion'];
+
 export const getResourceDetails = (gameState: GameState, manualSelection?: 'story' | 'setupCard'): ResourceDetails => {
   const allRules = getResolvedRules(gameState);
   const resourceRules = allRules.filter(r => r.type === 'modifyResource') as ModifyResourceRule[];
   
-  const setupRules = resourceRules.filter(r => r.source === 'setupCard');
-  const storyRules = resourceRules.filter(r => r.source === 'story');
-
   const resources: Record<ResourceType, number> = { credits: 3000, fuel: 6, parts: 2, warrants: 0, goalTokens: 0 };
   let creditModifications: { description: string; value: string }[] = [{ description: "Standard Allocation", value: "$3,000" }];
+  let conflict: ResourceConflict | undefined = undefined;
 
-  const setupSetCredits = setupRules.find(e => e.resource === 'credits' && e.method === 'set');
-  if (setupSetCredits?.value !== undefined) {
-    resources.credits = setupSetCredits.value;
-    creditModifications = [{ description: setupSetCredits.description, value: `$${setupSetCredits.value.toLocaleString()}` }];
+  const creditSetRules = resourceRules.filter(r => r.resource === 'credits' && r.method === 'set');
+  const storyCreditSetRule = creditSetRules.find(r => r.source === 'story');
+  const setupCardCreditSetRule = creditSetRules.find(r => r.source === 'setupCard');
+
+  if (gameState.optionalRules.resolveConflictsManually && storyCreditSetRule && setupCardCreditSetRule && storyCreditSetRule.value !== undefined && setupCardCreditSetRule.value !== undefined) {
+      conflict = {
+          story: { value: storyCreditSetRule.value, label: storyCreditSetRule.sourceName },
+          setupCard: { value: setupCardCreditSetRule.value, label: setupCardCreditSetRule.sourceName },
+      };
   }
 
-  const storySetCredits = storyRules.find(e => e.resource === 'credits' && e.method === 'set');
-  const conflict = (setupSetCredits?.value !== undefined && storySetCredits?.value !== undefined)
-    ? { story: { value: storySetCredits.value, source: { source: storySetCredits.source, name: storySetCredits.sourceName } }, setupCard: { value: setupSetCredits.value, source: { source: setupSetCredits.source, name: setupSetCredits.sourceName } } }
-    : undefined;
+  (Object.keys(resources) as ResourceType[]).forEach(resource => {
+    const rulesForResource = resourceRules.filter(r => r.resource === resource);
 
-  if (conflict) {
-    if (gameState.optionalRules.resolveConflictsManually && manualSelection === 'setupCard') {
-      // User chose setup card, do nothing as it's already the base
-    } else {
-      // Default to story priority
-      if(storySetCredits?.value !== undefined) {
-        resources.credits = storySetCredits.value;
-        creditModifications = [{ description: storySetCredits.description, value: `$${storySetCredits.value.toLocaleString()}` }];
-      }
+    // 1. Check for 'disable' rule - this has top priority
+    if (rulesForResource.some(r => r.method === 'disable')) {
+      resources[resource] = 0;
+      return; // Stop processing for this resource
     }
-  } else if (storySetCredits?.value !== undefined) {
-    resources.credits = storySetCredits.value;
-    creditModifications = [{ description: storySetCredits.description, value: `$${storySetCredits.value.toLocaleString()}` }];
-  }
-  
-  const allNonSetCreditRules = resourceRules.filter(r => !(r.resource === 'credits' && r.method === 'set'));
 
-  allNonSetCreditRules.forEach(effect => {
-    if (effect.value !== undefined) {
-      if (effect.method === 'set') {
-        resources[effect.resource] = effect.value;
-      } else if (effect.method === 'add') {
-        resources[effect.resource] += effect.value;
-        if (effect.resource === 'credits') {
-          creditModifications.push({ description: effect.description, value: `+$${effect.value.toLocaleString()}` });
+    // 2. Find the highest priority 'set' rule
+    // Special handling for credits with manual conflict resolution
+    if (resource === 'credits' && conflict && manualSelection) {
+        const selectedRule = manualSelection === 'story' ? storyCreditSetRule : setupCardCreditSetRule;
+        if (selectedRule!.value !== undefined) {
+            resources.credits = selectedRule!.value;
+            creditModifications = [{ description: selectedRule!.description, value: `$${resources.credits.toLocaleString()}` }];
+        }
+    } else {
+        const setRules = rulesForResource.filter(r => r.method === 'set');
+        if (setRules.length > 0) {
+          // Sort by defined priority order (lower index = higher priority)
+          setRules.sort((a, b) => PRIORITY_ORDER.indexOf(a.source) - PRIORITY_ORDER.indexOf(b.source));
+          const topPrioritySetRule = setRules[0];
+          
+          if (topPrioritySetRule.value !== undefined) {
+            resources[resource] = topPrioritySetRule.value;
+            if (resource === 'credits') {
+              creditModifications = [{ description: topPrioritySetRule.description, value: `$${resources.credits.toLocaleString()}` }];
+            }
+          }
+        }
+    }
+
+
+    // 3. Apply all 'add' rules cumulatively
+    const addRules = rulesForResource.filter(r => r.method === 'add');
+    addRules.forEach(rule => {
+      if (rule.value !== undefined) {
+        resources[resource] += rule.value;
+        if (resource === 'credits') {
+          creditModifications.push({ description: rule.description, value: `+$${rule.value.toLocaleString()}` });
         }
       }
-    }
+    });
   });
 
   const isFuelDisabled = resourceRules.some(e => e.resource === 'fuel' && e.method === 'disable');
-  if (isFuelDisabled) resources.fuel = 0;
   const isPartsDisabled = resourceRules.some(e => e.resource === 'parts' && e.method === 'disable');
-  if (isPartsDisabled) resources.parts = 0;
 
-  return { ...resources, isFuelDisabled, isPartsDisabled, conflict, creditModifications };
+  return { ...resources, isFuelDisabled, isPartsDisabled, creditModifications, conflict };
 };
+
 
 export const getJobSetupDetails = (gameState: GameState, overrides: StepOverrides): JobSetupDetails => {
     const allRules = getResolvedRules(gameState);

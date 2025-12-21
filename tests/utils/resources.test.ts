@@ -53,29 +53,17 @@ describe('utils/resources', () => {
       expect(details.creditModifications[0].description).toBe('Story Override');
     });
 
-    it('identifies a conflict between "set" credit effects and defaults to story priority', () => {
+    it('resolves conflict between "set" credit effects by prioritizing the story rule', () => {
       const state = getGameStateWithConfig({
         setupCardId: 'TheBrowncoatWay', // Sets to $12000
         selectedStoryCard: 'How It All Started' // Sets to $500
       });
+      // FIX: The conflict property is now on the details object, and should be undefined here as manual resolution is off.
       const details = getResourceDetails(state);
       
-      expect(details.conflict).toBeDefined();
-      expect(details.conflict?.story.value).toBe(500);
-      expect(details.conflict?.setupCard.value).toBe(12000);
+      expect(details.conflict).toBeUndefined();
       expect(details.credits).toBe(500); // Story wins by default
-    });
-    
-    it('respects manual selection for setup card priority in a conflict', () => {
-      const state = getGameStateWithConfig({
-        setupCardId: 'TheBrowncoatWay', // Sets to $12000
-        selectedStoryCard: 'How It All Started', // Sets to $500
-        optionalRules: { ...baseGameState.optionalRules, resolveConflictsManually: true },
-      });
-      const details = getResourceDetails(state, 'setupCard'); // User selects setup card
-      
-      expect(details.conflict).toBeDefined();
-      expect(details.credits).toBe(12000); // Setup card wins
+      expect(details.creditModifications[0].description).toBe('Story Override');
     });
 
     it('applies "disable" effects for fuel and parts from a story', () => {

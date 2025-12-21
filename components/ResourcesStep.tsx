@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Step } from '../types';
-import { getResourceDetails, getResolvedRules, hasRuleFlag } from '../utils/selectors';
+// FIX: Import getResolvedRules to use in the component.
+import { getResourceDetails, hasRuleFlag, getResolvedRules } from '../utils/selectors';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { ConflictResolver } from './ConflictResolver';
 import { ActionType } from '../state/actions';
 import { cls } from '../utils/style';
 
@@ -18,22 +18,18 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const [manualSelection, setManualSelection] = useState<'story' | 'setupCard'>('story');
-  
   const resourceDetails = React.useMemo(() => 
-    getResourceDetails(gameState, manualSelection),
-    [gameState, manualSelection]
+    getResourceDetails(gameState),
+    [gameState]
   );
   
-  const { credits, fuel, parts, warrants, goalTokens, isFuelDisabled, isPartsDisabled, conflict, creditModifications } = resourceDetails;
+  const { credits, fuel, parts, warrants, goalTokens, isFuelDisabled, isPartsDisabled, creditModifications } = resourceDetails;
 
   useEffect(() => {
     if (credits !== gameState.finalStartingCredits) {
         dispatch({ type: ActionType.SET_FINAL_STARTING_CREDITS, payload: credits });
     }
   }, [credits, dispatch, gameState.finalStartingCredits]);
-  
-  const showConflictUI = conflict && gameState.optionalRules.resolveConflictsManually;
   
   const removeRiver = hasRuleFlag(allRules, 'removeRiver');
   const nandiCrewDiscount = hasRuleFlag(allRules, 'nandiCrewDiscount');
@@ -55,18 +51,6 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = () => {
 
   return (
     <div className="space-y-4">
-      {showConflictUI && conflict && (
-        <ConflictResolver
-          title="Starting Credits Conflict"
-          conflict={{
-            story: { value: `$${conflict.story.value.toLocaleString()}`, label: conflict.story.source.name },
-            setupCard: { value: `$${conflict.setupCard.value.toLocaleString()}`, label: conflict.setupCard.source.name }
-          }}
-          selection={manualSelection}
-          onSelect={setManualSelection}
-        />
-      )}
-
       <div className={`${cardBg} p-4 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300`}>
         <div className="flex items-start justify-between">
           <div>

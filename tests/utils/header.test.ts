@@ -6,12 +6,11 @@ import { STEP_IDS, SETUP_CARD_IDS } from '../../data/ids';
 
 describe('utils/header', () => {
     const baseGameState = getDefaultGameState();
-    // FIX: Added missing 'rawId' properties to all mock Step objects to conform to the type definition.
     const mockFlow: Step[] = [
-        { type: 'setup', id: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS, rawId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS },
-        { type: 'setup', id: STEP_IDS.SETUP_CARD_SELECTION, rawId: STEP_IDS.SETUP_CARD_SELECTION },
-        { type: 'core', id: STEP_IDS.CORE_NAV_DECKS, rawId: STEP_IDS.C1 },
-        { type: 'core', id: STEP_IDS.CORE_ALLIANCE_REAVER, rawId: STEP_IDS.C2 },
+        { type: 'setup', id: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS },
+        { type: 'setup', id: STEP_IDS.SETUP_CARD_SELECTION },
+        { type: 'core', id: STEP_IDS.C1 },
+        { type: 'core', id: STEP_IDS.C2 },
     ];
 
     it('shows "Configuring..." before a non-standard setup card is selected', () => {
