@@ -38,13 +38,14 @@ export const FlyingSoloBanner: React.FC<FlyingSoloBannerProps> = ({
             <div className="flex-1">
                 <div className="flex justify-between items-start">
                     <div className="flex items-baseline gap-2">
-                        <h3 className={`font-bold text-lg ${titleColor}`}>Flying Solo (10th)</h3>
+                        <h3 id="flying-solo-label" className={`font-bold text-lg ${titleColor}`}>Flying Solo (10th)</h3>
                         <PageReference page={50} manual="10th AE" />
                     </div>
                     
                     <div 
                         role="switch"
                         aria-checked={isActive}
+                        aria-labelledby="flying-solo-label"
                         tabIndex={0}
                         onClick={onToggle}
                         className={`w-12 h-6 rounded-full p-1 transition-colors duration-300 ease-in-out flex items-center cursor-pointer ${isActive ? 'bg-indigo-600' : 'bg-gray-300 dark:bg-zinc-600'}`}

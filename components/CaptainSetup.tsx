@@ -9,7 +9,6 @@ import { CampaignConfigSection } from './setup/CampaignConfigSection';
 import { ExpansionListSection } from './setup/ExpansionListSection';
 import { SETUP_CARD_IDS } from '../data/ids';
 
-// Fix: Add props interface to accept onNext handler from parent.
 interface CaptainSetupProps {
   onNext: () => void;
 }

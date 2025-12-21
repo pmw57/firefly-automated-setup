@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-// FIX: Update import to point to the refactored selector function.
 import { getDraftDetails } from '../../utils/selectors';
 import { GameState, Step, StructuredContent, StructuredContentPart } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
@@ -38,7 +37,6 @@ describe('utils/draftRules', () => {
     const baseGameState = getDefaultGameState();
 
     it('returns empty special rules for a standard game', () => {
-        // FIX: Update function name to match new selector.
         const details = getDraftDetails(baseGameState, baseStep);
         expect(details.specialRules).toEqual([]);
         expect(details.isHavenDraft).toBe(false);
@@ -47,7 +45,6 @@ describe('utils/draftRules', () => {
 
     it('identifies Haven Draft mode', () => {
         const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT };
-        // FIX: Update function name to match new selector.
         const details = getDraftDetails(baseGameState, step);
         expect(details.isHavenDraft).toBe(true);
         expect(details.specialRules.some(r => getTextContent(r.title).includes('Placement Rules'))).toBe(true);
@@ -55,7 +52,6 @@ describe('utils/draftRules', () => {
     
     it('generates a rule for Wanted Leader mode', () => {
         const step: Step = { ...baseStep, overrides: { leaderSetup: 'wanted' } };
-        // FIX: Update function name to match new selector.
         const details = getDraftDetails(baseGameState, step);
         const rule = details.specialRules.find(r => r.title === 'The Heat Is On');
         expect(rule).toBeDefined();
@@ -64,7 +60,6 @@ describe('utils/draftRules', () => {
 
     it('generates a rule for Optional Ship Upgrades', () => {
         const state: GameState = { ...baseGameState, optionalRules: { ...baseGameState.optionalRules, optionalShipUpgrades: true } };
-        // FIX: Update function name to match new selector.
         const details = getDraftDetails(state, baseStep);
         const rule = details.specialRules.find(r => r.title === 'Optional Ship Upgrades');
         expect(rule).toBeDefined();
@@ -73,7 +68,6 @@ describe('utils/draftRules', () => {
     
     it('generates a rule for Racing a Pale Horse', () => {
         const state: GameState = { ...baseGameState, selectedStoryCard: STORY_TITLES.RACING_A_PALE_HORSE };
-        // FIX: Update function name to match new selector.
         const details = getDraftDetails(state, baseStep);
         const rule = details.specialRules.find(r => r.title === 'Story Setup: Haven');
         expect(rule).toBeDefined();
@@ -86,7 +80,6 @@ describe('utils/draftRules', () => {
             selectedStoryCard: STORY_TITLES.HEROES_AND_MISFITS,
             challengeOptions: { [CHALLENGE_IDS.HEROES_CUSTOM_SETUP]: true }
         };
-        // FIX: Update function name to match new selector.
         const details = getDraftDetails(state, baseStep);
         const rule = details.specialRules.find(r => r.title === 'Heroes & Misfits: Further Adventures');
         expect(rule).toBeDefined();
@@ -96,7 +89,6 @@ describe('utils/draftRules', () => {
     it('resolves conflict between Haven Draft and special start sector (Story Priority)', () => {
         const state: GameState = { ...baseGameState, selectedStoryCard: 'It\'s a Mad, Mad, Mad, Mad \'Verse!' }; // This story forces Persephone start
         const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT }; // This is Haven Draft
-        // FIX: Update function name to match new selector.
         const details = getDraftDetails(state, step);
         
         expect(details.isHavenDraft).toBe(false); // Overridden

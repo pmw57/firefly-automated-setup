@@ -15,7 +15,6 @@ describe('utils/ui', () => {
         });
 
         it('returns specific summaries for jobDrawMode', () => {
-            // FIX: Updated mock objects to use the 'rules' array instead of the legacy 'setupConfig' to match the function's logic.
             const noJobsRule: SetJobModeRule = { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: 'T' };
             const caperRule: SetJobModeRule = { type: 'setJobMode', mode: 'caper_start', source: 'story', sourceName: 'T' };
             const noJobs: StoryCardDef = { title: 'T', intro: 'I', rules: [noJobsRule] };
@@ -25,7 +24,6 @@ describe('utils/ui', () => {
         });
 
         it('returns "Starts at Persephone" for shipPlacementMode', () => {
-            // FIX: Updated mock object to use the 'rules' array instead of 'setupConfig'.
             const placementRule: SetShipPlacementRule = { type: 'setShipPlacement', location: 'persephone', source: 'story', sourceName: 'T' };
             const card: StoryCardDef = { title: 'T', intro: 'I', rules: [placementRule] };
             expect(getStoryCardSetupSummary(card)).toBe("Starts at Persephone");
@@ -55,7 +53,6 @@ describe('utils/ui', () => {
         });
 
         it('returns "Disabled" if story card disables solo timer', () => {
-            // FIX: The function now infers the story from the state. The test is updated to set the selectedStoryCard in the state and call the function with only one argument.
             const state: GameState = { ...baseGameState, gameMode: 'solo', selectedStoryCard: STORY_TITLES.RACING_A_PALE_HORSE };
             expect(getTimerSummaryText(state)).toBe("Disabled (Story Override)");
         });

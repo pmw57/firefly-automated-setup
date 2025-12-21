@@ -151,7 +151,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             messages.push({ source: 'warning', title: 'Challenge Active', content });
         } else if (allRules.some(r => r.type === 'primeContacts')) {
             content = [
-              { type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs are dealt.' }] },
+              { type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] },
               { type: 'paragraph', content: ['Instead, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
               { type: 'list', items: [
                   ['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'],
@@ -164,7 +164,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
               ? [{ type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] }, { type: 'paragraph', content: ["Crews must find work on their own out in the black."] }]
               : [{ type: 'paragraph', content: [{ type: 'strong', content: 'Do not take Starting Jobs.' }] }];
             
-            // FIX: Map RuleSourceType to the narrower JobSetupMessage['source'] and provide a better title.
             let messageSource: JobSetupMessage['source'];
             let messageTitle: string;
 

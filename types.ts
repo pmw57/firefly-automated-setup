@@ -135,7 +135,6 @@ export type SetupRule =
   | ModifyResourceRule;
 // --- End New Rule System Types ---
 
-// FIX: Add StepOverrides type for dynamic rule modifications on a step-by-step basis.
 export interface StepOverrides {
     jobMode?: JobMode;
     navMode?: NavMode;
@@ -169,7 +168,6 @@ export interface SetupCardStep {
   title: string;
   page?: number | string;
   manual?: string;
-  // FIX: Add overrides to SetupCardStep for dynamic rule modifications.
   overrides?: StepOverrides;
 }
 
@@ -267,7 +265,6 @@ export interface Step {
   data?: SetupContentData;
   page?: number | string;
   manual?: string;
-  // FIX: Add overrides to Step type.
   overrides?: StepOverrides;
 }
 
@@ -353,7 +350,6 @@ export interface PrimeDetails {
   isHighSupplyVolume: boolean;
   isBlitz: boolean;
   specialRules: SpecialRule[];
-  // FIX: Add missing property isSlayingTheDragon.
   isSlayingTheDragon: boolean;
 }
 

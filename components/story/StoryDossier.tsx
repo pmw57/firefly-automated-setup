@@ -6,7 +6,6 @@ import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionIcon } from '../ExpansionIcon';
 import { useGameState } from '../../hooks/useGameState';
 import { ActionType } from '../../state/actions';
-// FIX: Replace deprecated 'hasFlag' with 'hasRuleFlag'.
 import { hasRuleFlag } from '../../utils/selectors';
 import { getSoloTimerAdjustmentText } from '../../utils/selectors';
 
@@ -30,7 +29,6 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
 
   const setupNote = activeStoryCard.rules?.find(r => r.type === 'setShipPlacement' && r.location === 'persephone') 
       ? "⚠️ Change of setup: Players now begin at Persephone." 
-      // FIX: Provide a default empty array to handle optional 'rules' property.
       : hasRuleFlag(activeStoryCard.rules || [], 'startAtLondinium')
       ? "⚠️ Change of setup: Players now begin at Londinium."
       : null;

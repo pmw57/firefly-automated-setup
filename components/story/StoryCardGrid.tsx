@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { StoryCardGridItem } from '../StoryCardGridItem';
+import { StoryCardGridItem } from './StoryCardGridItem';
 import { Button } from '../Button';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useTheme } from '../ThemeContext';

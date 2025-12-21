@@ -15,7 +15,6 @@ interface ErrorBoundaryState {
  * Directly extending React.Component and using class fields for state helps resolve TypeScript resolution issues
  * that can occur with class-based components in some configurations.
  */
-// Fix: The ErrorBoundary class must extend React.Component to gain access to React component features like `this.props` and `this.setState`.
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   // Initialize state as a class field.
   state: ErrorBoundaryState = {

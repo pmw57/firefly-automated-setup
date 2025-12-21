@@ -4,7 +4,6 @@ import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
 import { ActionType } from '../../../state/actions';
-// FIX: Replace deprecated 'hasFlag' with 'hasRuleFlag'.
 import { hasRuleFlag } from '../../../utils/selectors';
 import { getActiveStoryCard } from '../../../utils/selectors';
 
@@ -21,7 +20,6 @@ export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = () => {
     if (!dispatch || !activeStoryCard) return null;
 
     // Handle Disable Flag
-    // FIX: Add a check for undefined 'rules' property.
     if (activeStoryCard.rules && hasRuleFlag(activeStoryCard.rules, 'disableSoloTimer')) {
         return (
             <SpecialRuleBlock source="story" title="Story Override" content={[{ type: 'strong', content: "No Timer:" }, " Do not use a Game Timer for this game."]} />

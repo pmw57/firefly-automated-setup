@@ -7,7 +7,6 @@ import { ActionType } from '../state/actions';
 import { TenthRulesSection } from './setup/TenthRulesSection';
 import { SoloRulesSection } from './setup/SoloRulesSection';
 
-// Fix: Add props interface to accept onStart and onBack handlers.
 interface OptionalRulesSelectionProps {
   onStart: () => void;
   onBack: () => void;
