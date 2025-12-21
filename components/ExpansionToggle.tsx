@@ -78,50 +78,57 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
       onClick={() => onToggle(id)}
       onKeyDown={handleKeyDown}
       className={cls(
-        "relative cursor-pointer rounded-xl border-2 p-5 transition-all duration-300 ease-in-out flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 backdrop-blur-sm",
+        "relative cursor-pointer rounded-xl border-2 p-5 transition-all duration-300 ease-in-out group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 backdrop-blur-sm",
         active 
           ? cls(currentTheme.border, currentTheme.bg, "shadow-md")
           : cls(inactiveBorder, inactiveBg, inactiveHover)
       )}
     >
-      <div className="flex items-center flex-1">
-        <div className={cls(
-          "w-12 h-12 rounded-lg mr-4 flex items-center justify-center font-bold text-xl shadow-sm transition-colors duration-300 overflow-hidden shrink-0",
-          !active && "bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-gray-500"
-        )}>
-          <ExpansionIcon id={id} />
-        </div>
-        
-        <div className="flex-1 mr-4">
-          <div className="flex flex-wrap items-baseline gap-x-2">
-            <h3 className={cls("font-bold text-lg leading-tight transition-colors duration-300", titleColor)}>
-              {label}
-            </h3>
-            {has10th && page_10th && (
-              <PageReference page={page_10th} manual="10th AE" />
-            )}
-          </div>
-          <p className={cls("text-xs mt-1 leading-snug", descColor)}>
-             {description}
-          </p>
-          <span className={cls(
-            "inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded mt-2 transition-colors duration-300",
-            active ? currentTheme.badge : inactiveBadge
+      <div className="flex items-center">
+        <div className="flex items-center flex-1 min-w-0">
+          <div className={cls(
+            "w-12 h-12 rounded-lg mr-4 flex items-center justify-center font-bold text-xl shadow-sm transition-colors duration-300 overflow-hidden shrink-0",
+            !active && "bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-gray-500"
           )}>
-            {active ? 'Active' : 'Inactive'}
-          </span>
+            <ExpansionIcon id={id} />
+          </div>
+          
+          <div className="flex-1 min-w-0 mr-4">
+            <div className="flex flex-wrap items-baseline gap-x-2">
+              <h3 className={cls("font-bold text-lg leading-tight transition-colors duration-300 truncate", titleColor)}>
+                {label}
+              </h3>
+              {has10th && page_10th && (
+                <PageReference page={page_10th} manual="10th AE" />
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className={cls(
-        "w-14 h-8 rounded-full p-1 transition-colors duration-300 ease-in-out flex items-center shrink-0 ml-2",
-        active ? currentTheme.toggle : inactiveToggle
-      )}>
+      <div className="mt-3">
+        <p className={cls("text-xs leading-snug", descColor)}>
+           {description}
+        </p>
+      </div>
+      
+      <div className="flex items-center justify-between mt-3">
+        <span className={cls(
+          "inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded transition-colors duration-300",
+          active ? currentTheme.badge : inactiveBadge
+        )}>
+          {active ? 'Active' : 'Inactive'}
+        </span>
         <div className={cls(
-          toggleKnob, 
-          "w-6 h-6 rounded-full shadow-sm transform transition-transform duration-300 ease-in-out",
-          active ? 'translate-x-6' : 'translate-x-0'
-        )}></div>
+          "w-14 h-8 rounded-full p-1 transition-colors duration-300 ease-in-out flex items-center shrink-0",
+          active ? currentTheme.toggle : inactiveToggle
+        )}>
+          <div className={cls(
+            toggleKnob, 
+            "w-6 h-6 rounded-full shadow-sm transform transition-transform duration-300 ease-in-out",
+            active ? 'translate-x-6' : 'translate-x-0'
+          )}></div>
+        </div>
       </div>
     </div>
   );
