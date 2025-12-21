@@ -141,4 +141,66 @@ describe('components/SetupWizard', () => {
     expect(await screen.findByText('You are ready to fly!')).toBeInTheDocument();
     expect(screen.getByText('Flight Manifest')).toBeInTheDocument();
   });
+
+  describe('Complex Flow: Flying Solo + The Browncoat Way', () => {
+    it('navigates the flow and shows correct steps', async () => {
+        render(<SetupWizard />);
+
+        // --- Step 1: Captain Setup ---
+        // Switch to solo mode
+        const decreaseButton = await screen.findByRole('button', { name: /Decrease player count/i });
+        fireEvent.click(decreaseButton); // 3
+        fireEvent.click(decreaseButton); // 2
+        fireEvent.click(decreaseButton); // 1
+        expect(await screen.findByText('(Solo Mode)')).toBeInTheDocument();
+
+        // Click next
+        fireEvent.click(screen.getByRole('button', { name: /Next: Choose Setup Card/i }));
+
+        // --- Step 2: Setup Card Selection ---
+        // Verify Flying Solo is auto-selected, as this is now the default for Solo + 10th AE.
+        const flyingSoloToggle = await screen.findByRole('switch', { name: /Flying Solo/i });
+        expect(flyingSoloToggle).toBeChecked();
+
+        // Select The Browncoat Way to pair with it
+        const browncoatWayButton = await screen.findByRole('button', { name: /The Browncoat Way/i });
+        fireEvent.click(browncoatWayButton);
+        
+        // Click next
+        fireEvent.click(screen.getByRole('button', { name: /Next: Optional Rules/i }));
+
+        // --- Step 3: Optional Rules ---
+        // Just click through
+        const beginButton = await screen.findByRole('button', { name: /Begin Setup Sequence/i });
+        fireEvent.click(beginButton);
+        
+        // --- Core Steps ---
+        // The combined flow for FS+BCW should include the unique "Starting Capitol" step
+        
+        // The first core step is choosing a story. We must select one to proceed.
+        await screen.findByRole('heading', { name: /First, Choose a Story Card/i });
+        // Select a non-solo story to make sure filtering works; "Harken's Folly" is a good base game option.
+        fireEvent.click(await screen.findByRole('button', { name: /Harken's Folly/i }));
+        
+        // In this solo mode, the next button takes us to solo options within the same step.
+        fireEvent.click(screen.getByRole('button', { name: /Next: Options/i }));
+
+        // Now we are on the solo options sub-step. The heading should change.
+        expect(await screen.findByRole('heading', { name: /Story Options/i })).toBeInTheDocument();
+
+        // The button to proceed to the next main step is now available.
+        fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
+
+        // Click through the next steps to get to the one we want to test.
+        await screen.findByRole('heading', { name: /2\.\s*Nav Decks/i });
+        fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
+        await screen.findByRole('heading', { name: /3\.\s*Alliance & Reaver Ships/i });
+        fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
+        
+        // Now, assert that we have arrived at the "Starting Capitol" step.
+        const startingCapitolStep = await screen.findByRole('heading', { name: /4\.\s*Starting Capitol/i });
+        expect(startingCapitolStep).toBeInTheDocument();
+        expect(screen.getByText(/Each Player's Starting Capitol/i)).toBeInTheDocument();
+    });
+  });
 });

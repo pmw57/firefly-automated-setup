@@ -64,7 +64,7 @@ describe('utils/jobs', () => {
           {
             "content": [
               {
-                "content": "No Starting Jobs are dealt.",
+                "content": "No Starting Jobs.",
                 "type": "strong",
               },
             ],

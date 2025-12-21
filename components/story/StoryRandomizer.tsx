@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '../Button';
-import { StoryCardGridItem } from '../StoryCardGridItem';
+import { StoryCardGridItem } from './StoryCardGridItem';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useTheme } from '../ThemeContext';
 

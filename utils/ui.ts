@@ -6,12 +6,10 @@ export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     const rules = card.rules || [];
     if (card.setupDescription) return "Setup Changes";
 
-    // FIX: Cast the result of .find() to the specific rule type to allow TypeScript to correctly infer the available properties.
     const jobModeRule = rules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
     if (jobModeRule?.mode === 'no_jobs') return "No Starting Jobs";
     if (jobModeRule?.mode === 'caper_start') return "Starts with Caper";
 
-    // FIX: Cast the result of .find() to the specific rule type.
     const placementRule = rules.find(r => r.type === 'setShipPlacement') as SetShipPlacementRule | undefined;
     if (placementRule?.location === 'persephone') return "Starts at Persephone";
     

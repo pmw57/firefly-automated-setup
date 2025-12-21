@@ -58,15 +58,22 @@ export const PlayerConfigSection: React.FC<PlayerConfigSectionProps> = ({
             <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 ${isDark ? 'bg-black/30' : 'bg-[#e7e5e4]/30'} p-4 rounded-lg border ${isDark ? 'border-zinc-800' : 'border-[#d6cbb0]'} shadow-inner`}>
                 {playerNames.map((name, index) => (
                     <div key={index} className="flex items-center">
-                    <label htmlFor={`player-${index}`} className={`text-xs font-bold w-6 mr-1 font-mono ${isDark ? 'text-zinc-500' : 'text-[#a8a29e]'}`}>{index + 1}.</label>
-                    <input
-                        id={`player-${index}`}
-                        type="text"
-                        value={name}
-                        onChange={(e) => onNameChange(index, e.target.value)}
-                        placeholder={`Captain ${index + 1}`}
-                        className={`w-full p-2 border ${inputBorder} rounded text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 focus:outline-none ${inputBg} shadow-sm font-medium ${inputText} ${isDark ? 'placeholder-zinc-600' : 'placeholder-[#a8a29e]'} transition-colors`}
-                    />
+                        <label htmlFor={`player-${index}`} className={`text-xs font-bold w-6 mr-1 font-mono ${isDark ? 'text-zinc-500' : 'text-[#a8a29e]'}`}>{index + 1}.</label>
+                        <div className="relative flex-1">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg className={`h-5 w-5 ${isDark ? 'text-zinc-500' : 'text-stone-400'}`} viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <input
+                                id={`player-${index}`}
+                                type="text"
+                                value={name}
+                                onChange={(e) => onNameChange(index, e.target.value)}
+                                placeholder={`Captain ${index + 1}`}
+                                className={`w-full p-2 pl-10 border ${inputBorder} rounded text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 focus:outline-none ${inputBg} shadow-sm font-medium ${inputText} ${isDark ? 'placeholder-zinc-600' : 'placeholder-[#a8a29e]'} transition-colors`}
+                            />
+                        </div>
                     </div>
                 ))}
             </div>

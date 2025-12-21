@@ -1,6 +1,5 @@
 import { SetupCardDef, SetupCardStep, SetupRule } from '../types';
 
-// FIX: Add a distributive Omit to handle union types correctly, resolving issues with TypeScript's inference on object literals in arrays.
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 
 // Base titles for reuse, to avoid typos
@@ -92,7 +91,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: 'D_RIM_JOBS', title: `1. ${BASE_TITLES.D_RIM_JOBS}` },
       { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
       { id: 'C3', title: `3. ${BASE_TITLES.C3}` }, 
-      { id: 'C2', title: `4. ${BASE_TITLES.C2}` },
+      { id: 'C2', title: `4. ${BASE_TITLES.C2}` }, 
       { id: 'C4', title: `5. ${BASE_TITLES.C4}` }, 
       { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
       { id: 'C6', title: `7. ${BASE_TITLES.C6}` },
@@ -141,7 +140,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: 'D_BC_CAPITOL', title: `4. ${BASE_TITLES.D_BC_CAPITOL}` },
       { id: 'C3', title: `5. ${BASE_TITLES.C3}` },
       { id: 'C6', title: `6. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
+      { id: 'C_PRIME', title: `7. ${BASE_TITLES.C_PRIME}` }
     ]
   },
   {

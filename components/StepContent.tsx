@@ -21,7 +21,7 @@ import { DynamicStepHandler } from './DynamicStepHandler';
 
 // Setup Steps
 import { CaptainSetup } from './CaptainSetup';
-import { SetupCardSelection } from './SetupCardSelection';
+import { SetupCardSelection } from './setup/SetupCardSelection';
 import { OptionalRulesSelection } from './OptionalRulesSelection';
 
 
