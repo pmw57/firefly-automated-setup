@@ -83,6 +83,14 @@ html.dark::after {
   transform: rotate(-25deg);
 }
 
+/* Performance: Disable starfield animation on smaller screens and for users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce), (max-width: 768px) {
+  html.dark::before,
+  html.dark::after {
+    animation: none;
+  }
+}
+
 /* NOTE: The `.dark body` selector is correct because `body` is a child of `html.dark` */
 .dark body {
   /* Body is now transparent to see the html background and pseudos.
