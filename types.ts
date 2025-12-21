@@ -147,20 +147,13 @@ export interface StepOverrides {
 // The final data object for a step in the flow.
 export interface SetupContentData {
   type: 'core' | 'dynamic' | 'setup';
-  id?: string;
-  elementId?: string;
   title: string;
+  id?: string;
 }
 
 // A template for step data stored in `data/steps.ts`.
 export interface SetupContentTemplate {
-  type: 'core' | 'dynamic' | 'setup';
-  id?: string;
-  elementId?: string;
-}
-
-export interface ContentMap {
-  [key: string]: SetupContentTemplate;
+  type: 'core' | 'dynamic';
 }
 
 export interface SetupCardStep {
@@ -183,6 +176,7 @@ export interface SetupCardDef {
   steps: SetupCardStep[];
   mode?: GameMode;
   rules?: SetupRule[];
+  isCombinable?: boolean; // For meta cards like Flying Solo
 }
 
 export interface StoryCardGoal {
@@ -262,7 +256,6 @@ export interface GameState {
 export interface Step {
   type: 'core' | 'dynamic' | 'final' | 'setup';
   id: string;
-  rawId: string;
   data?: SetupContentData;
   page?: number | string;
   manual?: string;
@@ -324,9 +317,14 @@ export interface NavDeckSetupDetails {
   specialRules: SpecialRule[];
 }
 
+// Types for manual conflict resolution
+export interface ConflictOptionDetails {
+  value: number | string;
+  label: string;
+}
 export interface ResourceConflict {
-  story: { value: number, source: EffectSource };
-  setupCard: { value: number, source: EffectSource };
+  story: ConflictOptionDetails;
+  setupCard: ConflictOptionDetails;
 }
 
 export interface ResourceDetails {
@@ -339,8 +337,8 @@ export interface ResourceDetails {
   isFuelDisabled: boolean;
   isPartsDisabled: boolean;
 
-  conflict?: ResourceConflict;
   creditModifications: { description: string; value: string }[];
+  conflict?: ResourceConflict;
 }
 
 

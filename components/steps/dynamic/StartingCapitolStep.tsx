@@ -17,7 +17,9 @@ export const StartingCapitolStep: React.FC<StartingCapitolStepProps> = () => {
 
   const [manualSelection, setManualSelection] = useState<'story' | 'setupCard'>('story');
 
+  // FIX: getResourceDetails now takes an optional second argument for manual selection.
   const resourceDetails = getResourceDetails(gameState, manualSelection);
+  // FIX: The conflict property is now available on resourceDetails.
   const { credits, conflict, creditModifications } = resourceDetails;
 
   useEffect(() => {
@@ -31,8 +33,8 @@ export const StartingCapitolStep: React.FC<StartingCapitolStepProps> = () => {
   const getCreditsLabel = (): string => {
     if (showConflictUI && conflict) {
         return manualSelection === 'setupCard'
-            ? conflict.setupCard.source.name
-            : conflict.story.source.name;
+            ? conflict.setupCard.label
+            : conflict.story.label;
     }
     return creditModifications[0]?.description || "Allocation";
   };
@@ -49,10 +51,7 @@ export const StartingCapitolStep: React.FC<StartingCapitolStepProps> = () => {
       {showConflictUI && conflict && (
         <ConflictResolver
           title="Starting Capitol Conflict"
-          conflict={{
-            story: { value: `$${conflict.story.value.toLocaleString()}`, label: conflict.story.source.name },
-            setupCard: { value: `$${conflict.setupCard.value.toLocaleString()}`, label: conflict.setupCard.source.name }
-          }}
+          conflict={conflict}
           selection={manualSelection}
           onSelect={setManualSelection}
         />

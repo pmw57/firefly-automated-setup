@@ -1,41 +1,37 @@
-import { ContentMap } from '../types';
+import { SetupContentTemplate } from '../types';
 
-export const SETUP_CONTENT: ContentMap = {
+export const SETUP_CONTENT: Record<string, SetupContentTemplate> = {
   // Core Steps
-  C1: { type: 'core', id: 'core-1' },
-  C2: { type: 'core', id: 'core-2' },
-  C3: { type: 'core', id: 'core-3' },
-  C4: { type: 'core', id: 'core-4' },
-  C5: { type: 'core', id: 'core-5' },
-  C6: { type: 'core', id: 'core-6' },
-  C_PRIME: { type: 'core', id: 'core-prime' },
+  C1: { type: 'core' },
+  C2: { type: 'core' },
+  C3: { type: 'core' },
+  C4: { type: 'core' },
+  C5: { type: 'core' },
+  C6: { type: 'core' },
+  C_PRIME: { type: 'core' },
 
-  // Distinct Dynamic Steps (Cannot be merged easily)
-  D_FIRST_GOAL: { type: 'dynamic', elementId: 'D_FIRST_GOAL' },
-  D_RIM_JOBS: { type: 'dynamic', elementId: 'D_RIM_JOBS' },
-  D_TIME_LIMIT: { type: 'dynamic', elementId: 'D_TIME_LIMIT' },
-  D_SHUTTLE: { type: 'dynamic', elementId: 'D_SHUTTLE' },
-  D_HAVEN_DRAFT: { type: 'dynamic', elementId: 'D_HAVEN_DRAFT' },
-  D_BC_CAPITOL: { type: 'dynamic', elementId: 'D_BC_CAPITOL' },
-  D_LOCAL_HEROES: { type: 'dynamic', elementId: 'D_LOCAL_HEROES' },
-  D_ALLIANCE_ALERT: { type: 'dynamic', elementId: 'D_ALLIANCE_ALERT' },
-  D_PRESSURES_HIGH: { type: 'dynamic', elementId: 'D_PRESSURES_HIGH' },
-  D_STRIP_MINING: { type: 'dynamic', elementId: 'D_STRIP_MINING' },
-  
-  // Flying Solo Specifics
-  D_SOLO_OPTIONAL_RULES: { type: 'dynamic', elementId: 'D_SOLO_OPTIONAL_RULES' },
-  D_NO_SURE_THINGS: { type: 'dynamic', elementId: 'D_NO_SURE_THINGS' },
-  D_GAME_LENGTH_TOKENS: { type: 'dynamic', elementId: 'D_GAME_LENGTH_TOKENS' },
+  // Distinct Dynamic Steps
+  D_FIRST_GOAL: { type: 'dynamic' },
+  D_RIM_JOBS: { type: 'dynamic' },
+  D_TIME_LIMIT: { type: 'dynamic' },
+  D_SHUTTLE: { type: 'dynamic' },
+  D_HAVEN_DRAFT: { type: 'dynamic' },
+  D_BC_CAPITOL: { type: 'dynamic' },
+  D_LOCAL_HEROES: { type: 'dynamic' },
+  D_ALLIANCE_ALERT: { type: 'dynamic' },
+  D_PRESSURES_HIGH: { type: 'dynamic' },
+  D_STRIP_MINING: { type: 'dynamic' },
+  D_GAME_LENGTH_TOKENS: { type: 'dynamic' },
 };
 
 export const STEP_QUOTES: { [key: string]: { text: string; author: string } } = {
-  'core-1': { text: "Burn the land and boil the sea, you can't take the sky from me.", author: "Ballad of Serenity" },
-  'core-2': { text: "If they take the ship, they'll rape us to death, eat our flesh, and sew our skins into their clothing. And if we're very, very lucky, they'll do it in that order.", author: "Zoë Washburne" },
-  'core-3': { text: "Love. You can learn all the math in the 'Verse, but you take a boat in the air that you don't love, she'll shake you off just as sure as the turn of the worlds.", author: "Mal Reynolds" },
-  'core-4': { text: "We have done the impossible, and that makes us mighty.", author: "Mal Reynolds" },
-  'core-5': { text: "Ten percent of nothin' is... let me do the math here... nothin' into nothin', carry the nothin'...", author: "Jayne Cobb" },
-  'core-6': { text: "I do the job, and then I get paid.", author: "Mal Reynolds" },
-  'core-prime': { text: "Everything's shiny, Cap'n. Not to fret.", author: "Kaylee Frye" },
+  'C1': { text: "Burn the land and boil the sea, you can't take the sky from me.", author: "Ballad of Serenity" },
+  'C2': { text: "If they take the ship, they'll rape us to death, eat our flesh, and sew our skins into their clothing. And if we're very, very lucky, they'll do it in that order.", author: "Zoë Washburne" },
+  'C3': { text: "Love. You can learn all the math in the 'Verse, but you take a boat in the air that you don't love, she'll shake you off just as sure as the turn of the worlds.", author: "Mal Reynolds" },
+  'C4': { text: "We have done the impossible, and that makes us mighty.", author: "Mal Reynolds" },
+  'C5': { text: "Ten percent of nothin' is... let me do the math here... nothin' into nothin', carry the nothin'...", author: "Jayne Cobb" },
+  'C6': { text: "I do the job, and then I get paid.", author: "Mal Reynolds" },
+  'C_PRIME': { text: "Everything's shiny, Cap'n. Not to fret.", author: "Kaylee Frye" },
   'D_FIRST_GOAL': { text: "We have done the impossible, and that makes us mighty.", author: "Mal Reynolds" },
   'D_RIM_JOBS': { text: "We're in the raggedy edge. Don't push me, and I won't push you.", author: "Mal Reynolds" },
   'D_TIME_LIMIT': { text: "Time for some thrilling heroics.", author: "Jayne Cobb" },
@@ -46,7 +42,5 @@ export const STEP_QUOTES: { [key: string]: { text: string; author: string } } = 
   'D_ALLIANCE_ALERT': { text: "Surely there must be some Alliance rule.", author: "Simon Tam" },
   'D_PRESSURES_HIGH': { text: "Things go wrong.", author: "Mal Reynolds" },
   'D_STRIP_MINING': { text: "You want a slanging match, we can have a slanging match.", author: "Badger" },
-  'D_SOLO_OPTIONAL_RULES': { text: "Half of writing history is hiding the truth.", author: "Mal Reynolds" },
-  'D_NO_SURE_THINGS': { text: "Sometimes a thing gets broke, can't be fixed.", author: "Mal Reynolds"},
   'D_GAME_LENGTH_TOKENS': { text: "Here's to the sunny side of the truth.", author: "Mal Reynolds" },
 };

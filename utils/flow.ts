@@ -1,21 +1,21 @@
 import { StepOverrides, GameState, Step, SetupCardStep, SetupContentData } from '../types';
-import { SETUP_CARDS } from '../data/setupCards';
 import { SETUP_CONTENT } from '../data/steps';
+// FIX: Import SETUP_CARD_IDS to get the correct 'Standard' card ID
 import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
+import { getSetupCardById } from './selectors';
 
 const createStep = (stepDef: SetupCardStep): Step | null => {
   const template = SETUP_CONTENT[stepDef.id];
   if (!template) return null;
 
   const stepData: SetupContentData = {
-    ...template,
+    type: template.type,
     title: stepDef.title,
   };
 
   return {
-    type: stepData.type,
-    id: stepData.id || stepData.elementId || stepDef.id,
-    rawId: stepDef.id,
+    type: template.type,
+    id: stepDef.id,
     data: stepData,
     overrides: stepDef.overrides,
     page: stepDef.page,
@@ -24,78 +24,69 @@ const createStep = (stepDef: SetupCardStep): Step | null => {
 };
 
 const getInitialSetupSteps = (): Step[] => [
-    { type: 'setup', id: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS, rawId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS },
-    { type: 'setup', id: STEP_IDS.SETUP_CARD_SELECTION, rawId: STEP_IDS.SETUP_CARD_SELECTION },
+    { type: 'setup', id: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS },
+    { type: 'setup', id: STEP_IDS.SETUP_CARD_SELECTION },
 ];
 
 const getOptionalRulesStep = (state: GameState): Step[] => {
     // Optional rules are part of the 10th Anniversary Expansion content.
     // They should show if the expansion is enabled.
     if (state.expansions.tenth) {
-        return [{ type: 'setup', id: STEP_IDS.SETUP_OPTIONAL_RULES, rawId: STEP_IDS.SETUP_OPTIONAL_RULES }];
+        return [{ type: 'setup', id: STEP_IDS.SETUP_OPTIONAL_RULES }];
     }
-
     return [];
 };
 
 const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
-    const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
-    
-    // If Flying Solo is active and paired with a specific setup card, that card's sequence should be prioritized.
-    // If it's just "Flying Solo" (paired with Standard), then Flying Solo's own sequence is correct.
-    const primarySequenceCardId = isFlyingSolo && (state.secondarySetupId && state.secondarySetupId !== SETUP_CARD_IDS.STANDARD)
+    const primaryCardDef = getSetupCardById(state.setupCardId);
+    const isCombinable = !!primaryCardDef?.isCombinable;
+
+    const primarySequenceCardId = isCombinable && state.secondarySetupId
         ? state.secondarySetupId
-        : (isFlyingSolo ? SETUP_CARD_IDS.FLYING_SOLO : state.setupCardId);
+        : state.setupCardId;
 
-    const setupCard = SETUP_CARDS.find(s => s.id === primarySequenceCardId) || SETUP_CARDS.find(s => s.id === SETUP_CARD_IDS.STANDARD)!;
-
+    // FIX: Use SETUP_CARD_IDS.STANDARD instead of STEP_IDS.STANDARD
+    const setupCard = getSetupCardById(primarySequenceCardId) || getSetupCardById(SETUP_CARD_IDS.STANDARD)!;
     const stepDefs = setupCard.steps;
 
     let steps = stepDefs
-        .map(stepDef => createStep(stepDef))
+        .map(createStep)
         .filter((step): step is Step => step !== null);
 
-    // If Flying Solo is active, we merge its specific overrides and add any unique steps.
-    if (isFlyingSolo) {
-        const flyingSoloCard = SETUP_CARDS.find(s => s.id === SETUP_CARD_IDS.FLYING_SOLO)!;
+    // If a combinable card (like Flying Solo) is active, merge its specific overrides.
+    if (isCombinable) {
+        const combinableCard = getSetupCardById(state.setupCardId)!;
         
-        // Create a map of overrides from the Flying Solo card for easy lookup.
-        const flyingSoloOverrides = flyingSoloCard.steps.reduce((acc, step) => {
+        const combinableOverrides = combinableCard.steps.reduce((acc, step) => {
             if (step.overrides) {
-                // Use the raw ID for matching (C1, C2 etc.)
                 acc[step.id] = step.overrides;
             }
             return acc;
         }, {} as Record<string, StepOverrides>);
         
-        // Merge the Flying Solo overrides into the base steps from the secondary card.
         steps = steps.map(step => {
-            if (flyingSoloOverrides[step.rawId]) {
+            if (combinableOverrides[step.id]) {
                 return {
                     ...step,
-                    overrides: { ...step.overrides, ...flyingSoloOverrides[step.rawId] },
+                    overrides: { ...step.overrides, ...combinableOverrides[step.id] },
                 };
             }
             return step;
         });
 
-        // Ensure the unique "Game Length Tokens" step from Flying Solo is always added at the end.
-        const hasGameLengthStep = steps.some(s => s.id === STEP_IDS.D_GAME_LENGTH_TOKENS);
-        if (!hasGameLengthStep) {
-            const gameLengthStepDef = flyingSoloCard.steps.find(s => s.id === STEP_IDS.D_GAME_LENGTH_TOKENS);
-            if (gameLengthStepDef) {
-                const gameLengthStep = createStep(gameLengthStepDef);
-                if (gameLengthStep) {
-                    steps.push(gameLengthStep);
-                }
+        // Add any unique steps from the combinable card that don't exist in the base card's flow.
+        combinableCard.steps.forEach(combinableStepDef => {
+            if (!steps.some(s => s.id === combinableStepDef.id)) {
+                const newStep = createStep(combinableStepDef);
+                if (newStep) steps.push(newStep);
             }
-        }
+        });
     }
     
     return steps;
 };
 
-const getFinalStep = (): Step => ({ type: 'final', id: STEP_IDS.FINAL, rawId: STEP_IDS.FINAL });
+const getFinalStep = (): Step => ({ type: 'final', id: STEP_IDS.FINAL });
 
 export const calculateSetupFlow = (state: GameState): Step[] => {
     return [

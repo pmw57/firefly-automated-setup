@@ -1,7 +1,6 @@
 import { GameState, SetupRule } from '../../types';
 import { getSetupCardById } from './story';
 import { getActiveStoryCard } from './story';
-import { SETUP_CARD_IDS } from '../../data/ids';
 
 /**
  * The core of the "rules engine". This function gathers all active `SetupRule` arrays
@@ -15,22 +14,24 @@ export const getResolvedRules = (gameState: GameState): SetupRule[] => {
     const rules: SetupRule[] = [];
     const { setupCardId, secondarySetupId, selectedStoryCard } = gameState;
 
+    const primaryCardDef = getSetupCardById(setupCardId);
+    const isCombinable = !!primaryCardDef?.isCombinable;
+
     // Determine the primary setup card to use for rules.
-    // If Flying Solo is active, the secondary card's rules are the base.
-    const primarySetupId = setupCardId === SETUP_CARD_IDS.FLYING_SOLO ? secondarySetupId : setupCardId;
+    // If a combinable card is active, the secondary card's rules are the base.
+    const baseSetupId = isCombinable ? secondarySetupId : setupCardId;
     
-    if (primarySetupId) {
-        const setupCard = getSetupCardById(primarySetupId);
+    if (baseSetupId) {
+        const setupCard = getSetupCardById(baseSetupId);
         if (setupCard?.rules) {
             rules.push(...setupCard.rules);
         }
     }
     
-    // If Flying Solo is active, its own rules are layered on top.
-    if (setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
-        const flyingSoloCard = getSetupCardById(SETUP_CARD_IDS.FLYING_SOLO);
-        if (flyingSoloCard?.rules) {
-            rules.push(...flyingSoloCard.rules);
+    // If a combinable card is active, its own rules are layered on top.
+    if (isCombinable) {
+        if (primaryCardDef.rules) {
+            rules.push(...primaryCardDef.rules);
         }
     }
 

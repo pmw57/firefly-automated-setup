@@ -211,6 +211,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     description: "10th Anniversary Expanded Solo Mode. Pair this with another Setup Card to determine the board state.",
     requiredExpansion: 'tenth',
     mode: 'solo',
+    isCombinable: true,
     rules: createRules("Flying Solo", [
       { type: 'setNavMode', mode: 'flying_solo' },
       { type: 'addFlag', flag: 'soloGameTimer' },

@@ -33,8 +33,7 @@ const getTextContent = (content: StructuredContent | StructuredContentPart | und
 };
 
 describe('utils/draftRules', () => {
-    // FIX: Added missing 'rawId' property to conform to the 'Step' type definition.
-    const baseStep: Step = { type: 'core', id: STEP_IDS.CORE_DRAFT, rawId: STEP_IDS.C3 };
+    const baseStep: Step = { type: 'core', id: STEP_IDS.C3 };
     const baseGameState = getDefaultGameState();
 
     it('returns empty special rules for a standard game', () => {
@@ -45,8 +44,7 @@ describe('utils/draftRules', () => {
     });
 
     it('identifies Haven Draft mode', () => {
-        // FIX: Added/corrected 'rawId' property to conform to the 'Step' type definition for this test case.
-        const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT, rawId: STEP_IDS.D_HAVEN_DRAFT };
+        const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT };
         const details = getDraftDetails(baseGameState, step);
         expect(details.isHavenDraft).toBe(true);
         expect(details.specialRules.some(r => getTextContent(r.title).includes('Placement Rules'))).toBe(true);
@@ -90,8 +88,7 @@ describe('utils/draftRules', () => {
 
     it('resolves conflict between Haven Draft and special start sector (Story Priority)', () => {
         const state: GameState = { ...baseGameState, selectedStoryCard: 'It\'s a Mad, Mad, Mad, Mad \'Verse!' }; // This story forces Persephone start
-        // FIX: Added/corrected 'rawId' property to conform to the 'Step' type definition for this test case.
-        const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT, rawId: STEP_IDS.D_HAVEN_DRAFT }; // This is Haven Draft
+        const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT }; // This is Haven Draft
         const details = getDraftDetails(state, step);
         
         expect(details.isHavenDraft).toBe(false); // Overridden
