@@ -1,4 +1,5 @@
 import { SetupCardDef, SetupCardStep, SetupRule } from '../types';
+import { STEP_IDS } from './ids';
 
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 
@@ -26,13 +27,13 @@ const BASE_TITLES = {
 
 // Standard Flow Template
 const STANDARD_STEPS: SetupCardStep[] = [
-  { id: 'C1', title: `1. ${BASE_TITLES.C1}`, page: 3, manual: 'Core' }, 
-  { id: 'C2', title: `2. ${BASE_TITLES.C2}`, page: 3, manual: 'Core' }, 
-  { id: 'C3', title: `3. ${BASE_TITLES.C3}`, page: 3, manual: 'Core' }, 
-  { id: 'C4', title: `4. ${BASE_TITLES.C4}`, page: 4, manual: 'Core' }, 
-  { id: 'C5', title: `5. ${BASE_TITLES.C5}`, page: 4, manual: 'Core' }, 
-  { id: 'C6', title: `6. ${BASE_TITLES.C6}`, page: 4, manual: 'Core' }, 
-  { id: 'C_PRIME', title: `7. ${BASE_TITLES.C_PRIME}`, page: 4, manual: 'Core' }
+  { id: STEP_IDS.C1, title: `1. ${BASE_TITLES.C1}`, page: 3, manual: 'Core' }, 
+  { id: STEP_IDS.C2, title: `2. ${BASE_TITLES.C2}`, page: 3, manual: 'Core' }, 
+  { id: STEP_IDS.C3, title: `3. ${BASE_TITLES.C3}`, page: 3, manual: 'Core' }, 
+  { id: STEP_IDS.C4, title: `4. ${BASE_TITLES.C4}`, page: 4, manual: 'Core' }, 
+  { id: STEP_IDS.C5, title: `5. ${BASE_TITLES.C5}`, page: 4, manual: 'Core' }, 
+  { id: STEP_IDS.C6, title: `6. ${BASE_TITLES.C6}`, page: 4, manual: 'Core' }, 
+  { id: STEP_IDS.C_PRIME, title: `7. ${BASE_TITLES.C_PRIME}`, page: 4, manual: 'Core' }
 ];
 
 const createRules = (id: string, rules: DistributiveOmit<SetupRule, 'source' | 'sourceName'>[]): SetupRule[] => {
@@ -67,13 +68,13 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setJobMode', mode: 'awful_jobs' },
     ]),
     steps: [
-      { id: 'C1', title: `1. ${BASE_TITLES.C1}` },
-      { id: 'C3', title: `2. ${BASE_TITLES.C3}` },
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
-      { id: 'C4', title: `4. ${BASE_TITLES.C4}` },
-      { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `6. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `7. ${BASE_TITLES.C_PRIME}` }
+      { id: STEP_IDS.C1, title: `1. ${BASE_TITLES.C1}` },
+      { id: STEP_IDS.C3, title: `2. ${BASE_TITLES.C3}` },
+      { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
+      { id: STEP_IDS.C4, title: `4. ${BASE_TITLES.C4}` },
+      { id: STEP_IDS.C5, title: `5. ${BASE_TITLES.C5}` },
+      { id: STEP_IDS.C6, title: `6. ${BASE_TITLES.C6}` },
+      { id: STEP_IDS.C_PRIME, title: `7. ${BASE_TITLES.C_PRIME}` }
     ]
   },
 
@@ -88,14 +89,14 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setJobMode', mode: 'rim_jobs' },
     ]),
     steps: [
-      { id: 'D_RIM_JOBS', title: `1. ${BASE_TITLES.D_RIM_JOBS}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
-      { id: 'C3', title: `3. ${BASE_TITLES.C3}` }, 
-      { id: 'C2', title: `4. ${BASE_TITLES.C2}` }, 
-      { id: 'C4', title: `5. ${BASE_TITLES.C4}` }, 
-      { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
+      { id: STEP_IDS.D_RIM_JOBS, title: `1. ${BASE_TITLES.D_RIM_JOBS}` },
+      { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}` },
+      { id: STEP_IDS.C3, title: `3. ${BASE_TITLES.C3}` }, 
+      { id: STEP_IDS.C2, title: `4. ${BASE_TITLES.C2}` }, 
+      { id: STEP_IDS.C4, title: `5. ${BASE_TITLES.C4}` }, 
+      { id: STEP_IDS.C5, title: `6. ${BASE_TITLES.C5}` },
+      { id: STEP_IDS.C6, title: `7. ${BASE_TITLES.C6}` },
+      { id: STEP_IDS.C_PRIME, title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
   {
@@ -108,14 +109,14 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setJobMode', mode: 'times_jobs' },
     ]),
     steps: [
-      { id: 'D_TIME_LIMIT', title: `1. ${BASE_TITLES.D_TIME_LIMIT}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
-      { id: 'C3', title: `3. ${BASE_TITLES.C3}` },
-      { id: 'C2', title: `4. ${BASE_TITLES.C2}` },
-      { id: 'C4', title: `5. ${BASE_TITLES.C4}` }, 
-      { id: 'C5', title: `6. ${BASE_TITLES.C5}` }, 
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}` }, 
-      { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
+      { id: STEP_IDS.D_TIME_LIMIT, title: `1. ${BASE_TITLES.D_TIME_LIMIT}` },
+      { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}` },
+      { id: STEP_IDS.C3, title: `3. ${BASE_TITLES.C3}` },
+      { id: STEP_IDS.C2, title: `4. ${BASE_TITLES.C2}` },
+      { id: STEP_IDS.C4, title: `5. ${BASE_TITLES.C4}` }, 
+      { id: STEP_IDS.C5, title: `6. ${BASE_TITLES.C5}` }, 
+      { id: STEP_IDS.C6, title: `7. ${BASE_TITLES.C6}` }, 
+      { id: STEP_IDS.C_PRIME, title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
 
@@ -134,13 +135,13 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setJobMode', mode: 'no_jobs' },
     ]),
     steps: [
-      { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, page: 22, manual: 'Core' },
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
-      { id: 'D_BC_CAPITOL', title: `4. ${BASE_TITLES.D_BC_CAPITOL}` },
-      { id: 'C3', title: `5. ${BASE_TITLES.C3}` },
-      { id: 'C6', title: `6. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `7. ${BASE_TITLES.C_PRIME}` }
+      { id: STEP_IDS.D_FIRST_GOAL, title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
+      { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}`, page: 22, manual: 'Core' },
+      { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
+      { id: STEP_IDS.D_BC_CAPITOL, title: `4. ${BASE_TITLES.D_BC_CAPITOL}` },
+      { id: STEP_IDS.C3, title: `5. ${BASE_TITLES.C3}` },
+      { id: STEP_IDS.C6, title: `6. ${BASE_TITLES.C6}` },
+      { id: STEP_IDS.C_PRIME, title: `7. ${BASE_TITLES.C_PRIME}` }
     ]
   },
   {
@@ -153,13 +154,13 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setPrimeMode', mode: 'blitz' },
     ]),
     steps: [
-      { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. Nav Setup` },
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
-      { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
-      { id: 'D_STRIP_MINING', title: `5. ${BASE_TITLES.D_STRIP_MINING}` },
-      { id: 'C6', title: `6. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `7. Priming the Pump: Double Dip` }
+      { id: STEP_IDS.D_FIRST_GOAL, title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
+      { id: STEP_IDS.C1, title: `2. Nav Setup` },
+      { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
+      { id: STEP_IDS.C3, title: `4. ${BASE_TITLES.C3}` },
+      { id: STEP_IDS.D_STRIP_MINING, title: `5. ${BASE_TITLES.D_STRIP_MINING}` },
+      { id: STEP_IDS.C6, title: `6. ${BASE_TITLES.C6}` },
+      { id: STEP_IDS.C_PRIME, title: `7. Priming the Pump: Double Dip` }
     ]
   },
 
@@ -173,14 +174,14 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setJobMode', mode: 'high_alert_jobs' },
     ]),
     steps: [
-      { id: 'D_ALLIANCE_ALERT', title: `1. ${BASE_TITLES.D_ALLIANCE_ALERT}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
-      { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
-      { id: 'C4', title: `5. ${BASE_TITLES.C4}` },
-      { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
+      { id: STEP_IDS.D_ALLIANCE_ALERT, title: `1. ${BASE_TITLES.D_ALLIANCE_ALERT}` },
+      { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}` },
+      { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
+      { id: STEP_IDS.C3, title: `4. ${BASE_TITLES.C3}` },
+      { id: STEP_IDS.C4, title: `5. ${BASE_TITLES.C4}` },
+      { id: STEP_IDS.C5, title: `6. ${BASE_TITLES.C5}` },
+      { id: STEP_IDS.C6, title: `7. ${BASE_TITLES.C6}` },
+      { id: STEP_IDS.C_PRIME, title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
   { 
@@ -193,13 +194,13 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setAllianceMode', mode: 'no_alerts' },
     ]),
     steps: [
-      { id: 'C1', title: '1. Nav Decks & Navigation' },
-      { id: 'C2', title: `2. ${BASE_TITLES.C2}` },
-      { id: 'C3', title: `3. ${BASE_TITLES.C3}` },
-      { id: 'C4', title: `4. ${BASE_TITLES.C4}` },
-      { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `6. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `7. ${BASE_TITLES.C_PRIME}` }
+      { id: STEP_IDS.C1, title: '1. Nav Decks & Navigation' },
+      { id: STEP_IDS.C2, title: `2. ${BASE_TITLES.C2}` },
+      { id: STEP_IDS.C3, title: `3. ${BASE_TITLES.C3}` },
+      { id: STEP_IDS.C4, title: `4. ${BASE_TITLES.C4}` },
+      { id: STEP_IDS.C5, title: `5. ${BASE_TITLES.C5}` },
+      { id: STEP_IDS.C6, title: `6. ${BASE_TITLES.C6}` },
+      { id: STEP_IDS.C_PRIME, title: `7. ${BASE_TITLES.C_PRIME}` }
     ]
   },
 
@@ -215,14 +216,14 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'addFlag', flag: 'soloGameTimer' },
     ]),
     steps: [
-      { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
-      { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
-      { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `6. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `7. ${BASE_TITLES.C_PRIME}` },
-      { id: 'D_GAME_LENGTH_TOKENS', title: `8. ${BASE_TITLES.D_GAME_LENGTH_TOKENS}` }
+      { id: STEP_IDS.D_FIRST_GOAL, title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
+      { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}` },
+      { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
+      { id: STEP_IDS.C3, title: `4. ${BASE_TITLES.C3}` },
+      { id: STEP_IDS.C5, title: `5. ${BASE_TITLES.C5}` },
+      { id: STEP_IDS.C6, title: `6. ${BASE_TITLES.C6}` },
+      { id: STEP_IDS.C_PRIME, title: `7. ${BASE_TITLES.C_PRIME}` },
+      { id: STEP_IDS.D_GAME_LENGTH_TOKENS, title: `8. ${BASE_TITLES.D_GAME_LENGTH_TOKENS}` }
     ]
   },
   {
@@ -235,14 +236,14 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setJobMode', mode: 'buttons_jobs' },
     ]),
     steps: [
-      { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
-      { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
-      { id: 'D_SHUTTLE', title: `5. ${BASE_TITLES.D_SHUTTLE}` },
-      { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
+      { id: STEP_IDS.D_FIRST_GOAL, title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
+      { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}` },
+      { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
+      { id: STEP_IDS.C3, title: `4. ${BASE_TITLES.C3}` },
+      { id: STEP_IDS.D_SHUTTLE, title: `5. ${BASE_TITLES.D_SHUTTLE}` },
+      { id: STEP_IDS.C5, title: `6. ${BASE_TITLES.C5}` },
+      { id: STEP_IDS.C6, title: `7. ${BASE_TITLES.C6}` },
+      { id: STEP_IDS.C_PRIME, title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
   {
@@ -254,14 +255,14 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setNavMode', mode: 'browncoat' },
     ]),
     steps: [
-      { id: 'D_FIRST_GOAL', title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}`, page: 54, manual: '10th AE'},
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
-      { id: 'D_HAVEN_DRAFT', title: `4. ${BASE_TITLES.D_HAVEN_DRAFT}` },
-      { id: 'C5', title: `5. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `6. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `7. ${BASE_TITLES.C_PRIME}` },
-      { id: 'D_LOCAL_HEROES', title: `8. ${BASE_TITLES.D_LOCAL_HEROES}` }
+      { id: STEP_IDS.D_FIRST_GOAL, title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
+      { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}`, page: 54, manual: '10th AE'},
+      { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
+      { id: STEP_IDS.D_HAVEN_DRAFT, title: `4. ${BASE_TITLES.D_HAVEN_DRAFT}` },
+      { id: STEP_IDS.C5, title: `5. ${BASE_TITLES.C5}` },
+      { id: STEP_IDS.C6, title: `6. ${BASE_TITLES.C6}` },
+      { id: STEP_IDS.C_PRIME, title: `7. ${BASE_TITLES.C_PRIME}` },
+      { id: STEP_IDS.D_LOCAL_HEROES, title: `8. ${BASE_TITLES.D_LOCAL_HEROES}` }
     ]
   },
   {
@@ -274,14 +275,14 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setLeaderSetup', mode: 'wanted' },
     ]),
     steps: [
-      { id: 'D_PRESSURES_HIGH', title: `1. ${BASE_TITLES.D_PRESSURES_HIGH}` },
-      { id: 'C1', title: `2. ${BASE_TITLES.C1}` },
-      { id: 'C2', title: `3. ${BASE_TITLES.C2}` },
-      { id: 'C3', title: `4. ${BASE_TITLES.C3}` },
-      { id: 'C4', title: `5. ${BASE_TITLES.C4}` },
-      { id: 'C5', title: `6. ${BASE_TITLES.C5}` },
-      { id: 'C6', title: `7. ${BASE_TITLES.C6}` },
-      { id: 'C_PRIME', title: `8. ${BASE_TITLES.C_PRIME}` }
+      { id: STEP_IDS.D_PRESSURES_HIGH, title: `1. ${BASE_TITLES.D_PRESSURES_HIGH}` },
+      { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}` },
+      { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
+      { id: STEP_IDS.C3, title: `4. ${BASE_TITLES.C3}` },
+      { id: STEP_IDS.C4, title: `5. ${BASE_TITLES.C4}` },
+      { id: STEP_IDS.C5, title: `6. ${BASE_TITLES.C5}` },
+      { id: STEP_IDS.C6, title: `7. ${BASE_TITLES.C6}` },
+      { id: STEP_IDS.C_PRIME, title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   }
 ];

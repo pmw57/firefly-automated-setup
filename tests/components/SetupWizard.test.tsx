@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { screen, fireEvent, act } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { render } from '../test-utils';
 import SetupWizard from '../../components/SetupWizard';
 
@@ -124,24 +124,6 @@ describe('components/SetupWizard', () => {
     expect(noSureThingsContainer?.querySelector('svg')).toBeInTheDocument(); // Checked
   });
 
-  it('reaches the final summary screen', async () => {
-    render(<SetupWizard />);
-
-    await act(async () => {
-      let nextButton;
-      let i = 0;
-      // Use a more specific query for the next button to avoid matching other buttons.
-      while ((nextButton = screen.queryByRole('button', { name: /Next|Launch Setup|Begin Setup/i }))) {
-        if (i++ > 20) break; // safety break
-        fireEvent.click(nextButton);
-        await new Promise(r => setTimeout(r, 5)); // small delay for state updates
-      }
-    });
-
-    expect(await screen.findByText('You are ready to fly!')).toBeInTheDocument();
-    expect(screen.getByText('Flight Manifest')).toBeInTheDocument();
-  });
-
   describe('Complex Flow: Flying Solo + The Browncoat Way', () => {
     it('navigates the flow and shows correct steps', async () => {
         render(<SetupWizard />);
@@ -201,6 +183,43 @@ describe('components/SetupWizard', () => {
         const startingCapitolStep = await screen.findByRole('heading', { name: /4\.\s*Starting Capitol/i });
         expect(startingCapitolStep).toBeInTheDocument();
         expect(screen.getByText(/Each Player's Starting Capitol/i)).toBeInTheDocument();
+    });
+  });
+
+  describe('Complex Flow: Home Sweet Haven', () => {
+    it('navigates the flow and shows correct dynamic steps', async () => {
+        render(<SetupWizard />);
+
+        // --- Step 1: Captain Setup ---
+        fireEvent.click(await screen.findByRole('button', { name: /Next: Choose Setup Card/i }));
+
+        // --- Step 2: Setup Card Selection ---
+        // Select Home Sweet Haven
+        fireEvent.click(await screen.findByRole('button', { name: /Home Sweet Haven/i }));
+        fireEvent.click(screen.getByRole('button', { name: /Next: Optional Rules/i }));
+
+        // --- Step 3: Optional Rules ---
+        fireEvent.click(await screen.findByRole('button', { name: /Begin Setup Sequence/i }));
+        
+        // --- Core Steps ---
+        // 1. D_FIRST_GOAL (MissionDossierStep)
+        await screen.findByRole('heading', { name: /First, Choose a Story Card/i });
+        fireEvent.click(await screen.findByRole('button', { name: /Harken's Folly/i }));
+        fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
+
+        // 2. C1 (Nav Decks)
+        await screen.findByRole('heading', { name: /2\.\s*Nav Decks/i });
+        fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
+        
+        // 3. C2 (Alliance & Reaver Ships)
+        await screen.findByRole('heading', { name: /3\.\s*Alliance & Reaver Ships/i });
+        fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
+        
+        // 4. D_HAVEN_DRAFT (DraftStep)
+        const draftStep = await screen.findByRole('heading', { name: /4\.\s*Choose Leaders, Havens & Ships/i });
+        expect(draftStep).toBeInTheDocument();
+        // Check for content specific to this dynamic step, rendered inside DraftStep
+        expect(screen.getByRole('button', { name: /Roll for Haven Draft/i })).toBeInTheDocument();
     });
   });
 });

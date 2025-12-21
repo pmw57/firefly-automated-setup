@@ -1,20 +1,21 @@
 import { describe, it, expect } from 'vitest';
 import { SETUP_CARDS } from '../data/setupCards';
+import { STEP_IDS } from '../data/ids';
 
 describe('Setup Cards Step Regression', () => {
   const expectedSteps: Record<string, string[]> = {
-    Standard: ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C_PRIME'],
-    AllianceHighAlert: ['D_ALLIANCE_ALERT', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C_PRIME'],
-    AwfulCrowdedInMySky: ['C1', 'C3', 'C2', 'C4', 'C5', 'C6', 'C_PRIME'],
-    TheRimsTheThing: ['D_RIM_JOBS', 'C1', 'C3', 'C2', 'C4', 'C5', 'C6', 'C_PRIME'],
-    TimesNotOnOurSide: ['D_TIME_LIMIT', 'C1', 'C3', 'C2', 'C4', 'C5', 'C6', 'C_PRIME'],
-    TheBrowncoatWay: ['D_FIRST_GOAL', 'C1', 'C2', 'D_BC_CAPITOL', 'C3', 'C6', 'C_PRIME'],
-    TheBlitz: ['D_FIRST_GOAL', 'C1', 'C2', 'C3', 'D_STRIP_MINING', 'C6', 'C_PRIME'],
-    ClearerSkiesBetterDays: ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C_PRIME'],
-    FlyingSolo: ['D_FIRST_GOAL', 'C1', 'C2', 'C3', 'C5', 'C6', 'C_PRIME', 'D_GAME_LENGTH_TOKENS'],
-    AintAllButtonsAndCharts: ['D_FIRST_GOAL', 'C1', 'C2', 'C3', 'D_SHUTTLE', 'C5', 'C6', 'C_PRIME'],
-    HomeSweetHaven: ['D_FIRST_GOAL', 'C1', 'C2', 'D_HAVEN_DRAFT', 'C5', 'C6', 'C_PRIME', 'D_LOCAL_HEROES'],
-    TheHeatIsOn: ['D_PRESSURES_HIGH', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C_PRIME'],
+    Standard: [STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.C3, STEP_IDS.C4, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME],
+    AllianceHighAlert: [STEP_IDS.D_ALLIANCE_ALERT, STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.C3, STEP_IDS.C4, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME],
+    AwfulCrowdedInMySky: [STEP_IDS.C1, STEP_IDS.C3, STEP_IDS.C2, STEP_IDS.C4, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME],
+    TheRimsTheThing: [STEP_IDS.D_RIM_JOBS, STEP_IDS.C1, STEP_IDS.C3, STEP_IDS.C2, STEP_IDS.C4, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME],
+    TimesNotOnOurSide: [STEP_IDS.D_TIME_LIMIT, STEP_IDS.C1, STEP_IDS.C3, STEP_IDS.C2, STEP_IDS.C4, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME],
+    TheBrowncoatWay: [STEP_IDS.D_FIRST_GOAL, STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.D_BC_CAPITOL, STEP_IDS.C3, STEP_IDS.C6, STEP_IDS.C_PRIME],
+    TheBlitz: [STEP_IDS.D_FIRST_GOAL, STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.C3, STEP_IDS.D_STRIP_MINING, STEP_IDS.C6, STEP_IDS.C_PRIME],
+    ClearerSkiesBetterDays: [STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.C3, STEP_IDS.C4, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME],
+    FlyingSolo: [STEP_IDS.D_FIRST_GOAL, STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.C3, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME, STEP_IDS.D_GAME_LENGTH_TOKENS],
+    AintAllButtonsAndCharts: [STEP_IDS.D_FIRST_GOAL, STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.C3, STEP_IDS.D_SHUTTLE, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME],
+    HomeSweetHaven: [STEP_IDS.D_FIRST_GOAL, STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.D_HAVEN_DRAFT, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME, STEP_IDS.D_LOCAL_HEROES],
+    TheHeatIsOn: [STEP_IDS.D_PRESSURES_HIGH, STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.C3, STEP_IDS.C4, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME],
   };
 
   it('all defined setup cards should have regression expectations', () => {

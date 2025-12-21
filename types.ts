@@ -262,6 +262,7 @@ export interface GameState {
 export interface Step {
   type: 'core' | 'dynamic' | 'final' | 'setup';
   id: string;
+  rawId: string;
   data?: SetupContentData;
   page?: number | string;
   manual?: string;

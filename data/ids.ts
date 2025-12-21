@@ -13,7 +13,7 @@ export const STEP_IDS = {
   SETUP_CARD_SELECTION: 'setup-2',
   SETUP_OPTIONAL_RULES: 'setup-3',
 
-  // Core Steps
+  // Core Steps (mapped IDs)
   CORE_NAV_DECKS: 'core-1',
   CORE_ALLIANCE_REAVER: 'core-2',
   CORE_DRAFT: 'core-3',
@@ -21,15 +21,22 @@ export const STEP_IDS = {
   CORE_RESOURCES: 'core-5',
   CORE_JOBS: 'core-6',
   CORE_PRIME_PUMP: 'core-prime',
+  
+  // Core Steps (raw IDs)
+  C1: 'C1',
+  C2: 'C2',
+  C3: 'C3',
+  C4: 'C4',
+  C5: 'C5',
+  C6: 'C6',
+  C_PRIME: 'C_PRIME',
 
-  // Distinct Dynamic Steps (Cannot be merged easily)
+  // Distinct Dynamic Steps
   D_FIRST_GOAL: 'D_FIRST_GOAL',
   D_RIM_JOBS: 'D_RIM_JOBS',
-  D_HAVEN_DRAFT: 'D_HAVEN_DRAFT',
-  D_NO_SURE_THINGS: 'D_NO_SURE_THINGS',
-  D_GAME_LENGTH_TOKENS: 'D_GAME_LENGTH_TOKENS',
   D_TIME_LIMIT: 'D_TIME_LIMIT',
   D_SHUTTLE: 'D_SHUTTLE',
+  D_HAVEN_DRAFT: 'D_HAVEN_DRAFT',
   D_BC_CAPITOL: 'D_BC_CAPITOL',
   D_LOCAL_HEROES: 'D_LOCAL_HEROES',
   D_ALLIANCE_ALERT: 'D_ALLIANCE_ALERT',
@@ -38,20 +45,11 @@ export const STEP_IDS = {
   
   // Flying Solo Specifics
   D_SOLO_OPTIONAL_RULES: 'D_SOLO_OPTIONAL_RULES',
+  D_NO_SURE_THINGS: 'D_NO_SURE_THINGS',
+  D_GAME_LENGTH_TOKENS: 'D_GAME_LENGTH_TOKENS',
 
   // Final Step
   FINAL: 'final',
-};
-
-// Raw step IDs from setup cards, as they are used in loops
-export const RAW_STEP_IDS = {
-  C1: 'C1',
-  C2: 'C2',
-  C3: 'C3',
-  C4: 'C4',
-  C5: 'C5',
-  C6: 'C6',
-  C_PRIME: 'C_PRIME',
 };
 
 export const CHALLENGE_IDS = {

@@ -15,6 +15,7 @@ const createStep = (stepDef: SetupCardStep): Step | null => {
   return {
     type: stepData.type,
     id: stepData.id || stepData.elementId || stepDef.id,
+    rawId: stepDef.id,
     data: stepData,
     overrides: stepDef.overrides,
     page: stepDef.page,
@@ -23,15 +24,15 @@ const createStep = (stepDef: SetupCardStep): Step | null => {
 };
 
 const getInitialSetupSteps = (): Step[] => [
-    { type: 'setup', id: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS },
-    { type: 'setup', id: STEP_IDS.SETUP_CARD_SELECTION },
+    { type: 'setup', id: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS, rawId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS },
+    { type: 'setup', id: STEP_IDS.SETUP_CARD_SELECTION, rawId: STEP_IDS.SETUP_CARD_SELECTION },
 ];
 
 const getOptionalRulesStep = (state: GameState): Step[] => {
     // Optional rules are part of the 10th Anniversary Expansion content.
     // They should show if the expansion is enabled.
     if (state.expansions.tenth) {
-        return [{ type: 'setup', id: STEP_IDS.SETUP_OPTIONAL_RULES }];
+        return [{ type: 'setup', id: STEP_IDS.SETUP_OPTIONAL_RULES, rawId: STEP_IDS.SETUP_OPTIONAL_RULES }];
     }
 
     return [];
@@ -69,11 +70,10 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
         
         // Merge the Flying Solo overrides into the base steps from the secondary card.
         steps = steps.map(step => {
-            const rawId = Object.keys(SETUP_CONTENT).find(key => SETUP_CONTENT[key].id === step.id || SETUP_CONTENT[key].elementId === step.id);
-            if (rawId && flyingSoloOverrides[rawId]) {
+            if (flyingSoloOverrides[step.rawId]) {
                 return {
                     ...step,
-                    overrides: { ...step.overrides, ...flyingSoloOverrides[rawId] },
+                    overrides: { ...step.overrides, ...flyingSoloOverrides[step.rawId] },
                 };
             }
             return step;
@@ -95,7 +95,7 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
     return steps;
 };
 
-const getFinalStep = (): Step => ({ type: 'final', id: STEP_IDS.FINAL });
+const getFinalStep = (): Step => ({ type: 'final', id: STEP_IDS.FINAL, rawId: STEP_IDS.FINAL });
 
 export const calculateSetupFlow = (state: GameState): Step[] => {
     return [
