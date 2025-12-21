@@ -42,7 +42,7 @@ export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
     ) || [], 
   [activeStoryCard?.challengeOptions, gameState.challengeOptions]);
 
-  const cardBg = isDark ? 'bg-black/60' : 'bg-white';
+  const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const textColor = isDark ? 'text-gray-200' : 'text-gray-800';
   const pillBg = isDark ? 'bg-zinc-800' : 'bg-gray-100';

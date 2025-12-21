@@ -29,7 +29,7 @@ const DraftOrderPanel = ({
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
-    const panelBg = isDark ? 'bg-zinc-900/80' : 'bg-white';
+    const panelBg = isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm';
     const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
     const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
     const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
@@ -80,7 +80,7 @@ const PlacementOrderPanel = ({
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
-    const panelBg = isDark ? 'bg-zinc-900/80' : 'bg-white';
+    const panelBg = isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm';
     const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
     const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
     const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';

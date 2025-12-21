@@ -33,7 +33,7 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
   );
   
   // Theming
-  const cardBg = isDark ? 'bg-black/60' : 'bg-[#faf8ef]';
+  const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-[#faf8ef]/70 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
   const titleColor = isDark ? 'text-white' : 'text-[#292524]';
   const iconColor = isDark ? 'text-gray-600' : 'text-[#a8a29e]';

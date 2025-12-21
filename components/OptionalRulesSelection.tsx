@@ -59,7 +59,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
     }
   };
 
-  const containerBg = isDark ? 'bg-black/60' : 'bg-[#faf8ef]/95';
+  const containerBg = isDark ? 'bg-black/60 backdrop-blur-sm' : 'bg-[#faf8ef]/80 backdrop-blur-sm';
   const containerBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
   const headerColor = isDark ? 'text-amber-500' : 'text-[#292524]';
   const badgeClass = isDark ? 'bg-indigo-900/40 text-indigo-300 border-indigo-800' : 'bg-[#e6ddc5] text-[#7f1d1d] border-[#d6cbb0]';
@@ -78,7 +78,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
   );
 
   return (
-    <div className={`${containerBg} backdrop-blur-md rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in transition-all duration-300`}>
+    <div className={`${containerBg} rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in transition-all duration-300`}>
        <div className={`flex justify-between items-center mb-6 border-b ${containerBorder} pb-2`}>
            <h2 className={`text-2xl font-bold font-western ${headerColor}`}>Optional Rules</h2>
            <span className={`text-xs font-bold ${badgeClass} border px-2 py-1 rounded`}>Part 3 of 3</span>
