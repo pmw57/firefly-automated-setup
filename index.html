@@ -7,13 +7,13 @@
     <!-- Primary Meta Tags -->
     <title>Firefly: The Game - Automated Setup Guide</title>
     <meta name="title" content="Firefly: The Game - Automated Setup Guide">
-    <meta name="description" content="A dynamic, step-by-step setup guide for Firefly: The Game board game, with support for all expansions and story cards.">
+    <meta name="description" content="A dynamic, offline-first PWA to automate the complex setup process for the board game Firefly: The Game, supporting all expansions and story cards.">
 
     <!-- Open Graph / Facebook / Discord -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://pmw57.github.io/firefly-automated-setup/">
     <meta property="og:title" content="Firefly: The Game - Automated Setup Guide">
-    <meta property="og:description" content="A dynamic, step-by-step setup guide for Firefly: The Game board game, with support for all expansions and story cards.">
+    <meta property="og:description" content="A dynamic, offline-first PWA to automate the complex setup process for the board game Firefly: The Game, supporting all expansions and story cards.">
     <meta property="og:image" content="https://cf.geekdo-images.com/Dskyq7T2nAeLSEPqF8FtIw__original/img/iIP5ebitvrm4XfAqdomztVuvxag=/0x0/filters:format(jpeg)/pic6421209.jpg">
 
     <!-- Mobile Web App Settings -->
@@ -171,7 +171,7 @@
         resetButton.addEventListener('click', async () => {
           try {
             if ('serviceWorker' in navigator) {
-              const registrations = await navigator.serviceWorker.getRegistrations();
+              const registrations = await navigator.service-worker.getRegistrations();
               for (const registration of registrations) {
                 await registration.unregister();
               }
