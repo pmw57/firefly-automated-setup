@@ -1,0 +1,6 @@
+# Allow all web crawlers full access to the site.
+User-agent: *
+Allow: /
+
+# Provide the location of the sitemap to help crawlers find all pages.
+Sitemap: https://pmw57.github.io/firefly-automated-setup/sitemap.xml
