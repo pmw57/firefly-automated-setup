@@ -35,7 +35,7 @@ export const ResourcesStep: React.FC<ResourcesStepProps> = () => {
   const removeRiver = hasRuleFlag(allRules, 'removeRiver');
   const nandiCrewDiscount = hasRuleFlag(allRules, 'nandiCrewDiscount');
   
-  const cardBg = isDark ? 'bg-black/60' : 'bg-white';
+  const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const textColor = isDark ? 'text-gray-200' : 'text-gray-700';
   const creditColor = isDark ? 'text-green-400' : 'text-green-700';

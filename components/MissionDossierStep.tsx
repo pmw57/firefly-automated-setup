@@ -72,7 +72,7 @@ const MissionDossierStepContent = ({ onNext, onPrev, titleOverride, isNavigating
   const storyPage = hasTenth ? 25 : 16;
   const storyManual = hasTenth ? '10th AE' : 'Core';
 
-  const containerBg = 'bg-[#faf8ef] dark:bg-zinc-900';
+  const containerBg = 'bg-[#faf8ef]/80 dark:bg-zinc-900/70 backdrop-blur-md';
   const containerBorder = 'border-[#d6cbb0] dark:border-zinc-800';
   const headerBarBg = 'bg-[#5e1916] dark:bg-black/40';
   const headerBarBorder = 'border-[#450a0a] dark:border-zinc-800';
@@ -92,7 +92,7 @@ const MissionDossierStepContent = ({ onNext, onPrev, titleOverride, isNavigating
       
       <div 
         ref={dossierTopRef}
-        className={`${containerBg} backdrop-blur-md rounded-lg shadow-md border ${containerBorder} overflow-hidden transition-colors duration-300 scroll-mt-24`}
+        className={`${containerBg} rounded-lg shadow-md border ${containerBorder} overflow-hidden transition-colors duration-300 scroll-mt-24`}
       >
         <div className={`${headerBarBg} p-4 flex justify-between items-center border-b ${headerBarBorder} transition-colors duration-300`}>
           <div className="flex items-baseline gap-2">

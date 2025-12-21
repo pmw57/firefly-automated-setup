@@ -25,7 +25,7 @@ export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const standardContainerBg = isDark ? 'bg-black/60' : 'bg-white';
+  const standardContainerBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const standardContainerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const headerColor = isDark ? 'text-gray-200' : 'text-gray-800';
   const headerBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
