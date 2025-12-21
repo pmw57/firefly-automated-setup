@@ -10,9 +10,15 @@
   font-display: swap;
 }
 
-@keyframes star-pan {
-  from { background-position: 0 0, 40px 60px, 0 0, 0 0, 0 0; }
-  to   { background-position: -200px -200px, -160px 140px, -100px -100px, 0 0, 0 0; }
+/* Keyframes for the two animated, rotated star layers */
+@keyframes pan-layer-1 {
+  from { background-position: 0 0, 40px 60px; }
+  to   { background-position: -200px -200px, -160px 140px; }
+}
+
+@keyframes pan-layer-2 {
+  from { background-position: 0 0, 20px 10px; }
+  to   { background-position: -100px -100px, -30px -40px; }
 }
 
 /* Custom font utility for the 'Firefly' feel */
@@ -29,22 +35,61 @@
 }
 
 /* Starfield Background (Applied in Dark Mode) */
-.dark body {
+/* FIX: The selector must be `html.dark` to target the <html> element when it has the `dark` class. */
+html.dark {
   background-color: #0c0c0c; /* Deep Space Black */
-  /* Layered background: noise, small stars, medium stars, nebula clouds */
+  color: #e4e4e7; /* Zinc-200 */
+  /* Static layers: nebulas */
+  background-image:
+    radial-gradient(at 15% 85%, hsla(280, 50%, 30%, 0.25), transparent 50%),
+    radial-gradient(at 85% 15%, hsla(200, 50%, 40%, 0.2), transparent 50%);
+  background-size: 100% 100%, 100% 100%;
+}
+
+html.dark::before,
+html.dark::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  z-index: -1;
+  will-change: background-position;
+}
+
+/* First rotated layer: noise + tiny stars */
+html.dark::before {
   background-image:
     /* 1. Subtle noise texture */
     url("/starfield-noise-texture.svg"),
-    /* 2. Small, dense stars */
-    radial-gradient(rgba(255,255,255,0.4), rgba(255,255,255,0.1) 1px, transparent 2px),
-    /* 3. Larger, sparser stars */
-    radial-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.1) 2px, transparent 3px),
-    /* 4. Very faint, large nebula clouds */
-    radial-gradient(at 15% 85%, hsla(280, 50%, 30%, 0.25), transparent 50%),
-    radial-gradient(at 85% 15%, hsla(200, 50%, 40%, 0.2), transparent 50%);
-  background-size: 100px 100px, 350px 350px, 550px 550px, 100% 100%, 100% 100%;
-  color: #e4e4e7; /* Zinc-200 */
-  animation: star-pan 60s linear infinite;
+    /* 2. Tiny, dense stars */
+    radial-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.05) 0.5px, transparent 1px);
+  background-size: 
+    100px 100px,  /* noise */
+    37px 41px;   /* tiny stars */
+  animation: pan-layer-1 60s linear infinite;
+  transform: rotate(15deg);
+}
+
+/* Second rotated layer: medium + large stars */
+html.dark::after {
+  background-image:
+    /* 3. Medium, sparser stars */
+    radial-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.05) 1px, transparent 1.5px),
+    /* 4. Large, very sparse stars */
+    radial-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0.05) 1.5px, transparent 2px);
+  background-size: 
+    61px 67px,   /* medium stars */
+    89px 97px;   /* large stars */
+  animation: pan-layer-2 60s linear infinite;
+  transform: rotate(-25deg);
+}
+
+/* NOTE: The `.dark body` selector is correct because `body` is a child of `html.dark` */
+.dark body {
+  /* Body is now transparent to see the html background and pseudos.
+     Use the 'background' shorthand to reset ALL background properties,
+     not just background-color, to prevent light-theme textures from appearing. */
+  background: transparent;
+  color: inherit; /* Inherit color from html */
 }
 
 /* Parchment/Map Background (Applied in Light Mode) */
