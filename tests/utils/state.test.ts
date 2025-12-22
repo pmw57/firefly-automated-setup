@@ -26,11 +26,12 @@ describe('state/reducer', () => {
     it('adds player names when increasing count', () => {
       const state: GameState = { ...baseGameState, playerCount: 2, playerNames: ['A', 'B'] };
       const newState = gameReducer(state, { type: ActionType.SET_PLAYER_COUNT, payload: 4 });
-      expect(newState.playerNames).toEqual(['A', 'B', 'Captain 3', 'Captain 4']);
+      expect(newState.playerNames).toEqual(['A', 'B', '', '']);
     });
 
     it('removes player names when decreasing count', () => {
-      const newState = gameReducer(baseGameState, { type: ActionType.SET_PLAYER_COUNT, payload: 2 });
+      const stateWithNames: GameState = { ...baseGameState, playerNames: ['Captain 1', 'Captain 2', 'Captain 3', 'Captain 4'] };
+      const newState = gameReducer(stateWithNames, { type: ActionType.SET_PLAYER_COUNT, payload: 2 });
       expect(newState.playerNames).toEqual(['Captain 1', 'Captain 2']);
     });
 

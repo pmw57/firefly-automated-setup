@@ -13,7 +13,7 @@ describe('components/CaptainSetup', () => {
     
     expect(screen.getByText('4')).toBeInTheDocument();
     expect(screen.getAllByRole('textbox').length).toBe(4);
-    expect(screen.getByDisplayValue('Captain 1')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Captain 1')).toBeInTheDocument();
   });
 
   it('updates player count and inputs when buttons are clicked', () => {
@@ -41,7 +41,7 @@ describe('components/CaptainSetup', () => {
   it('updates player name on input change', () => {
     render(<CaptainSetup onNext={mockOnNext} />);
     
-    const player1Input = screen.getByDisplayValue('Captain 1');
+    const player1Input = screen.getByPlaceholderText('Captain 1');
     fireEvent.change(player1Input, { target: { value: 'Mal Reynolds' } });
     
     expect(screen.getByDisplayValue('Mal Reynolds')).toBeInTheDocument();

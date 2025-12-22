@@ -1,4 +1,3 @@
-
 import { DiceResult, DraftState } from '../types';
 
 const findWinnerIndex = (rolls: DiceResult[], overrideWinnerIndex?: number): number => {
@@ -40,8 +39,8 @@ export const calculateDraftOutcome = (
 };
 
 export const runAutomatedDraft = (playerNames: string[]): DraftState => {
-  const initialRolls: DiceResult[] = playerNames.map(name => ({
-    player: name,
+  const initialRolls: DiceResult[] = playerNames.map((name, i) => ({
+    player: name || `Captain ${i + 1}`,
     roll: Math.floor(Math.random() * 6) + 1,
   }));
 
@@ -71,14 +70,15 @@ export const runAutomatedDraft = (playerNames: string[]): DraftState => {
 };
 
 export const getInitialSoloDraftState = (playerName: string): DraftState => {
+    const finalPlayerName = playerName || 'Captain 1';
     const soloRoll: DiceResult[] = [{
-        player: playerName,
+        player: finalPlayerName,
         roll: 6,
         isWinner: true
     }];
     return {
         rolls: soloRoll,
-        draftOrder: [playerName],
-        placementOrder: [playerName]
+        draftOrder: [finalPlayerName],
+        placementOrder: [finalPlayerName]
     };
 };
