@@ -38,6 +38,10 @@ describe('components/SetupWizard', () => {
     // Step 2: SetupCardSelection
     expect(await screen.findByText('Select Setup Card')).toBeInTheDocument();
     
+    // FIX: A setup card must be selected to enable the next button.
+    const standardSetupButton = screen.getByRole('button', { name: /Standard Game Setup/i });
+    fireEvent.click(standardSetupButton);
+    
     // Because 10th anniversary is on by default, we go to optional rules
     const nextButton2 = await screen.findByRole('button', { name: /Next: Optional Rules/i });
     fireEvent.click(nextButton2);
@@ -97,6 +101,9 @@ describe('components/SetupWizard', () => {
 
     // Navigate to Optional Rules step
     fireEvent.click(screen.getByRole('button', { name: /Next: Choose Setup Card/i }));
+    
+    // Select a card to enable the next button
+    fireEvent.click(await screen.findByRole('button', { name: /Standard Game Setup/i }));
 
     const nextButton = await screen.findByRole('button', { name: /Next: Optional Rules/i });
     fireEvent.click(nextButton);

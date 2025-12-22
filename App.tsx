@@ -1,5 +1,11 @@
-// FIX: Added a triple-slash directive to include Vite's client-side types. This resolves TypeScript errors for Vite-specific features like `import.meta.env`.
-/// <reference types="vite/client" />
+// FIX: The triple-slash directive for Vite's client types was causing a build error. To resolve the type error for `import.meta.env` in a way that is self-contained to this file, we'll use a global declaration to augment the `ImportMeta` interface.
+declare global {
+  interface ImportMeta {
+    readonly env: {
+      readonly DEV: boolean;
+    };
+  }
+}
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';

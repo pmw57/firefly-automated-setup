@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { SETUP_CARD_IDS } from '../../data/ids';
 import { Button } from '../Button';
 import { useTheme } from '../ThemeContext';
@@ -45,19 +45,13 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
     dispatch({ type: ActionType.TOGGLE_FLYING_SOLO });
   };
 
-  // Initial Selection Guard: Ensure a valid selection exists when mounting
-  useEffect(() => {
-      if (!isFlyingSoloActive && (!gameState.setupCardId || gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO)) {
-           const defaultCard = availableSetups[0];
-           if (defaultCard) handleSetupCardSelect(defaultCard.id, defaultCard.label);
-      }
-  }, [isFlyingSoloActive, gameState.setupCardId, availableSetups, handleSetupCardSelect]);
-
   const containerBg = isDark ? 'bg-black/60 backdrop-blur-sm' : 'bg-[#faf8ef]/80 backdrop-blur-sm';
   const containerBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
   const headerColor = isDark ? 'text-amber-500' : 'text-[#292524]';
   const badgeClass = isDark ? 'bg-emerald-900/40 text-emerald-300 border-emerald-800' : 'bg-[#e6ddc5] text-[#7f1d1d] border-[#d6cbb0]';
   const showOptionalRules = isFlyingSoloActive || has10th;
+
+  const isNextDisabled = isFlyingSoloActive ? !gameState.secondarySetupId : !gameState.setupCardId;
 
   return (
     <div className={`${containerBg} rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in transition-all duration-300`}>
@@ -86,7 +80,12 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
         <Button onClick={onBack} variant="secondary" className="w-1/3">
           ← Back
         </Button>
-        <Button onClick={onNext} fullWidth className="w-2/3 text-xl py-4 border-b-4 border-[#450a0a]">
+        <Button 
+          onClick={onNext} 
+          fullWidth 
+          className="w-2/3 text-xl py-4 border-b-4 border-[#450a0a]"
+          disabled={isNextDisabled}
+        >
           {showOptionalRules ? "Next: Optional Rules →" : "Launch Setup Sequence"}
         </Button>
       </div>

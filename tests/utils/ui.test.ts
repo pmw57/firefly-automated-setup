@@ -36,8 +36,9 @@ describe('utils/ui', () => {
     });
 
     describe('getDisplaySetupName', () => {
-        it('returns the standard setup name', () => {
-            expect(getDisplaySetupName(baseGameState)).toBe('Standard Game Setup');
+        it('returns the setup name from the state', () => {
+            const state: GameState = { ...baseGameState, setupCardName: 'The Browncoat Way' };
+            expect(getDisplaySetupName(state)).toBe('The Browncoat Way');
         });
 
         it('combines Flying Solo with its secondary setup card name', () => {

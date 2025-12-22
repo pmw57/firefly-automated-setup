@@ -20,8 +20,8 @@ export const getDefaultGameState = (): GameState => {
         gameMode: 'multiplayer',
         playerCount: 4,
         playerNames: ['Captain 1', 'Captain 2', 'Captain 3', 'Captain 4'],
-        setupCardId: SETUP_CARD_IDS.STANDARD,
-        setupCardName: 'Standard Game Setup',
+        setupCardId: '',
+        setupCardName: '',
         secondarySetupId: undefined,
         selectedStoryCard: '',
         selectedGoal: undefined,
@@ -77,9 +77,8 @@ const enforceMultiplayerConstraints = (state: GameState): GameState => {
     // This prevents an invalid game state where a solo story is selected in a multiplayer game.
     const currentStoryDef = STORY_CARDS.find(c => c.title === state.selectedStoryCard);
     if (currentStoryDef?.isSolo) {
-        const defaultMulti = STORY_CARDS.find(c => !c.isSolo && c.requiredExpansion !== 'community') || STORY_CARDS[0];
-        newState.selectedStoryCard = defaultMulti.title;
-        newState.selectedGoal = defaultMulti.goals?.[0]?.title;
+        newState.selectedStoryCard = '';
+        newState.selectedGoal = undefined;
         newState.challengeOptions = {};
     }
 
@@ -106,7 +105,7 @@ const handlePlayerCountChange = (state: GameState, count: number): GameState => 
             ...finalState,
             setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
             setupCardName: 'Flying Solo',
-            secondarySetupId: SETUP_CARD_IDS.STANDARD,
+            secondarySetupId: finalState.setupCardId || SETUP_CARD_IDS.STANDARD,
         };
     }
 
@@ -152,13 +151,13 @@ const handleExpansionToggle = (state: GameState, expansionId: keyof GameState['e
 const handleToggleFlyingSolo = (state: GameState): GameState => {
     const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
     if (isFlyingSolo) {
-        // Turning OFF -> Revert to secondary or default
-        const newId = state.secondarySetupId || SETUP_CARD_IDS.STANDARD;
+        // Turning OFF -> Revert to secondary or an empty selection
+        const newId = state.secondarySetupId || '';
         const newDef = SETUP_CARDS.find(c => c.id === newId);
         return {
             ...state,
             setupCardId: newId,
-            setupCardName: newDef?.label || 'Standard Game Setup',
+            setupCardName: newDef?.label || '',
             secondarySetupId: undefined
         };
     } else {
