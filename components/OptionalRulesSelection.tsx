@@ -120,7 +120,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
                     <div className="mt-1 mr-4 shrink-0"><Checkbox checked={gameState.optionalRules.highVolumeSupply} /></div>
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>High Volume Supply</h3>
-                        <p className={`text-xs italic ${isDark ? 'text-amber-500/80' : 'text-firefly-brown'} opacity-90 -mt-0.5 mb-2`}>"The 'Verse Is A Big Place"</p>
+                        <p className={`text-xs italic ${isDark ? 'text-amber-500/80' : 'text-firefly-brown'} opacity-90 -mt-0.5 mb-2`}>"Every port's got a surplus."</p>
                         <p className={`text-sm leading-relaxed ${textSub}`}>When 3+ large supply expansions are active, increase the base "Priming the Pump" discard count from 3 to 4 to ensure better deck turnover.</p>
                     </div>
                 </div>
