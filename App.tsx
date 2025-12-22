@@ -1,3 +1,6 @@
+// FIX: Added a triple-slash directive to include Vite's client-side types. This resolves TypeScript errors for Vite-specific features like `import.meta.env`.
+/// <reference types="vite/client" />
+
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
@@ -7,6 +10,7 @@ import { GameStateProvider } from './components/GameStateContext';
 import { UpdatePrompt } from './components/UpdatePrompt';
 import { HelpButton } from './components/HelpButton';
 import { HelpModal } from './components/HelpModal';
+import { DevPanel } from './components/DevPanel';
 
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
@@ -77,6 +81,9 @@ const App = (): React.ReactElement => {
     window.location.reload();
   };
 
+  // FIX: Added a runtime check for `import.meta.env`. This prevents errors when the application is run in an environment where Vite's environment variables are not injected, such as opening the HTML file directly.
+  const isDevMode = typeof import.meta.env !== 'undefined' && import.meta.env.DEV;
+
   return (
     <div className="min-h-screen font-sans pb-12 transition-colors duration-500 relative">
       {/* Thematic Header */}
@@ -115,6 +122,9 @@ const App = (): React.ReactElement => {
           <SetupWizard />
         </GameStateProvider>
       </main>
+
+      {/* Dev Panel (only in dev mode) */}
+      {isDevMode && <DevPanel />}
 
       {/* Install Prompt */}
       <InstallPWA />

@@ -189,7 +189,7 @@
         resetButton.addEventListener('click', async () => {
           try {
             if ('serviceWorker' in navigator) {
-              const registrations = await navigator.service-worker.getRegistrations();
+              const registrations = await navigator.serviceWorker.getRegistrations();
               for (const registration of registrations) {
                 await registration.unregister();
               }
