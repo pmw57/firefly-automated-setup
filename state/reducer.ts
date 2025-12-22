@@ -19,7 +19,7 @@ export const getDefaultGameState = (): GameState => {
         gameEdition: 'tenth',
         gameMode: 'multiplayer',
         playerCount: 4,
-        playerNames: ['Captain 1', 'Captain 2', 'Captain 3', 'Captain 4'],
+        playerNames: ['', '', '', ''],
         setupCardId: '',
         setupCardName: '',
         secondarySetupId: undefined,
@@ -55,7 +55,7 @@ const adjustPlayerNames = (currentNames: string[], targetCount: number): string[
     const newNames = [...currentNames];
     if (targetCount > newNames.length) {
         for (let i = newNames.length; i < targetCount; i++) {
-            newNames.push(`Captain ${i + 1}`);
+            newNames.push('');
         }
     } else {
         newNames.length = targetCount;

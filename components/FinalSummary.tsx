@@ -92,7 +92,7 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
                     <div className={labelClass}>Captain(s)</div>
                     <div className={valueClass}>{gameState.playerCount}</div>
                     <div className={`text-sm leading-relaxed ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
-                        {gameState.playerNames.join(', ')}
+                        {gameState.playerNames.map((name, i) => name || `Captain ${i + 1}`).join(', ')}
                     </div>
                  </div>
 
