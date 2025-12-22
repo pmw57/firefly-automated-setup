@@ -58,11 +58,16 @@ export default {
         fadeInUp: {
           '0%': { opacity: '0', transform: 'translateY(10px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
-        }
+        },
+        kenBurns: {
+          '0%': { transform: 'scale(1.05) translate(1%, -1%)' },
+          '100%': { transform: 'scale(1) translate(0, 0)' },
+        },
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',
         'fade-in-up': 'fadeInUp 0.5s ease-out',
+        'ken-burns': 'kenBurns 60s ease-out infinite alternate',
       }
     },
   },

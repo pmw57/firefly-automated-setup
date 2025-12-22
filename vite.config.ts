@@ -64,7 +64,8 @@ export default defineConfig({
         'starfield-noise-texture.svg',
         'parchment-body-texture.svg',
         'parchment-dossier-texture.svg',
-        'metal-noise-texture.svg'
+        'metal-noise-texture.svg',
+        'firefly-cover.png'
       ],
       manifest: {
         name: 'Firefly Automated Setup Guide',

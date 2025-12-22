@@ -3,6 +3,7 @@ declare global {
   interface ImportMeta {
     readonly env: {
       readonly DEV: boolean;
+      readonly BASE_URL: string;
     };
   }
 }
@@ -89,36 +90,30 @@ const App = (): React.ReactElement => {
 
   // FIX: Added a runtime check for `import.meta.env`. This prevents errors when the application is run in an environment where Vite's environment variables are not injected, such as opening the HTML file directly.
   const isDevMode = typeof import.meta.env !== 'undefined' && import.meta.env.DEV;
+  const baseUrl = (typeof import.meta.env !== 'undefined') ? import.meta.env.BASE_URL : '/';
 
   return (
     <div className="min-h-screen font-sans pb-12 transition-colors duration-500 relative">
       {/* Thematic Header */}
-      <header className="relative bg-black dark:bg-[#1a1a1a] text-white shadow-2xl mb-8 overflow-hidden border-b-4 border-yellow-600 dark:border-yellow-700/50 transition-colors">
-        {/* Background Image Layer */}
+      <header className="relative bg-black text-white shadow-2xl mb-8 overflow-hidden border-b-4 border-yellow-600 dark:border-yellow-700/50">
+        {/* Background Image Layer with Ken Burns effect */}
         <div 
-          className="absolute inset-0 z-0 opacity-60 bg-cover bg-center pointer-events-none"
+          className="absolute inset-0 z-0 bg-center pointer-events-none bg-cover"
           style={{ 
-            backgroundImage: `url('https://cf.geekdo-images.com/Dskyq7T2nAeLSEPqF8FtIw__original/img/iIP5ebitvrm4XfAqdomztVuvxag=/0x0/filters:format(jpeg)/pic6421209.jpg')`,
-            filter: 'blur(2px) brightness(0.6)'
+            backgroundImage: `url('${baseUrl}firefly-cover.png')`,
           }}
         ></div>
         
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent dark:from-[#1a1a1a]/95 pointer-events-none"></div>
+        {/* Vignette/Gradient Overlay for readability */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/60 to-black/30 opacity-80 dark:opacity-100 dark:from-zinc-950/90 dark:via-zinc-950/60 dark:to-zinc-950/20 pointer-events-none"></div>
 
         {/* Content */}
-        {/* Added pt-16 to push text down on mobile, clearing the top-right button area */}
-        <div className="container mx-auto px-4 pt-16 pb-8 md:py-12 relative z-20">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-2 font-western tracking-wider drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] text-yellow-500 dark:text-amber-500">
-              Firefly: The Game
-            </h1>
-            <div className="inline-block border-t-2 border-yellow-700/50 pt-2 px-8">
-              <p className="text-yellow-100/90 dark:text-gray-300 font-medium tracking-[0.3em] uppercase text-sm md:text-base">
+        <div className="container mx-auto px-4 pt-24 pb-4 relative z-20 flex flex-col justify-end items-center">
+            {/* Accessible heading, as the visual "Firefly: The Game" is in the background image */}
+            <h1 className="sr-only">Firefly: The Game</h1>
+            <p className="text-yellow-100/90 dark:text-gray-300 font-medium tracking-[0.3em] uppercase text-sm md:text-base drop-shadow-[0_3px_5px_rgba(0,0,0,1)]">
                 Automated Setup Guide
-              </p>
-            </div>
-          </div>
+            </p>
         </div>
       </header>
 
