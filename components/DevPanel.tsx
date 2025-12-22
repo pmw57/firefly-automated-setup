@@ -3,7 +3,7 @@ import { useTheme } from './ThemeContext';
 
 const DEFAULT_OPACITIES = {
   // Light Theme
-  gridLines: 0.05,
+  gridLines: 0.02,
   waterStain: 0.2,
   vignette: 0.1,
   // Dark Theme

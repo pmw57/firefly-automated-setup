@@ -36,7 +36,7 @@
 
 /* Define CSS variables for theme opacities in the root */
 html {
-  --grid-line-opacity: 0.05;
+  --grid-line-opacity: 0.02;
   --water-stain-opacity: 0.03125;
   --vignette-opacity: 0.03125;
   --nebula-1-opacity: 0.25;
