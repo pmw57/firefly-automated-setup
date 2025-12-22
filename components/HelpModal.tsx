@@ -63,36 +63,69 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        <div className="p-6 space-y-4 text-sm leading-relaxed">
+        <div className="p-6 space-y-6 text-base leading-loose tracking-wide">
           <p>
-            Welcome, Captain! This tool is a dynamic, offline-first setup guide for the board game{' '}
-            <strong className={isDark ? 'text-white' : 'text-black'}>Firefly: The Game</strong>. Its goal is to automate the complex setup process, ensuring you never miss a rule, no matter which combination of expansions, setup cards, or story cards you use.
+            Hello Captain!
+          </p>
+          <p>
+            This is a setup guide for the board game{' '}
+            <strong className={isDark ? 'text-white' : 'text-black'}>Firefly: The Game</strong>.
+          </p>
+          <p>
+            It helps you set up any game, with any expansion. The guide makes sure you follow all the rules correctly.
           </p>
 
           <div>
-            <h3 className={`font-bold text-base font-western mt-4 mb-2 ${isDark ? 'text-amber-500' : 'text-firefly-saddleBrown'}`}>How It Works</h3>
-            <p>
-              The guide works like a step-by-step wizard. Simply follow the prompts:
-            </p>
-            <ol className="list-decimal list-inside space-y-2 mt-2 pl-2">
-              <li><strong>Configure Your Game:</strong> Select your player count and the expansions you're playing with.</li>
-              <li><strong>Choose Your Setup:</strong> Pick a Setup Card (e.g., "The Browncoat Way") to define the overall rules.</li>
-              <li><strong>Follow the Steps:</strong> The guide will generate a precise sequence of setup steps. It automatically applies all rules from your chosen cards and expansions, resolving any conflicts.</li>
+            <h3 className={`font-bold text-lg font-western mt-6 mb-3 ${isDark ? 'text-amber-500' : 'text-firefly-saddleBrown'}`}>How to Use It</h3>
+            <ol className="list-decimal list-inside space-y-4 mt-2 pl-2">
+              <li>
+                <strong>Set Up Your Game</strong>
+                <br />
+                Choose your player count and expansions.
+              </li>
+              <li>
+                <strong>Choose Your Rules</strong>
+                <br />
+                Pick a Setup Card to set the rules for your game.
+              </li>
+              <li>
+                <strong>Follow the Guide</strong>
+                <br />
+                The tool gives you simple steps to follow.
+              </li>
             </ol>
           </div>
 
           <div>
-            <h3 className={`font-bold text-base font-western mt-4 mb-2 ${isDark ? 'text-amber-500' : 'text-firefly-saddleBrown'}`}>Key Features</h3>
-            <ul className="list-disc list-inside space-y-2 mt-2 pl-2">
-              <li><strong>Comprehensive Rule Engine:</strong> Automatically calculates starting resources, determines active mechanics (like "The Blitz"), and resolves conflicting rules.</li>
-              <li><strong>Full Content Support:</strong> Includes all official expansions, setup cards, and story cards (including popular community content).</li>
-              <li><strong>Advanced Solo & Campaign Modes:</strong> Full support for both "Classic Solo" and the 10th Anniversary "Flying Solo" variant.</li>
-              <li><strong>Offline First (PWA):</strong> Can be installed on your device's home screen and works perfectly without an internet connection.</li>
+            <h3 className={`font-bold text-lg font-western mt-6 mb-3 ${isDark ? 'text-amber-500' : 'text-firefly-saddleBrown'}`}>Main Features</h3>
+            <ul className="list-disc list-inside space-y-4 mt-2 pl-2">
+              <li>
+                <strong>Smart Rules</strong>
+                <br />
+                The guide knows all the rules and tells you what to do. It handles starting money, game rules, and conflicts.
+              </li>
+              <li>
+                <strong>All Content Included</strong>
+                <br />
+                Works with all official expansions and story cards.
+              </li>
+              <li>
+                <strong>Solo and Campaign</strong>
+                <br />
+                Has full support for solo modes and campaigns.
+              </li>
+              <li>
+                <strong>Works Offline</strong>
+                <br />
+                You can save this app to your device. It will work even without an internet connection.
+              </li>
             </ul>
           </div>
 
-          <p className="pt-4 border-t border-dashed border-gray-300 dark:border-zinc-700">
-            This guide is designed to get you into the 'Verse and flying as quickly as possible. Stay shiny!
+          <p className="pt-6 border-t border-dashed border-gray-300 dark:border-zinc-700">
+            This guide helps you start playing faster.
+            <br />
+            Stay shiny!
           </p>
         </div>
 
