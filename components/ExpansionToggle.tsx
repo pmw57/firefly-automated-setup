@@ -107,7 +107,7 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
       </div>
 
       <div className="mt-3">
-        <p className={cls("text-xs leading-snug", descColor)}>
+        <p className={cls("text-sm leading-relaxed", descColor)}>
            {description}
         </p>
       </div>

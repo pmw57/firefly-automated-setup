@@ -61,7 +61,7 @@ export const TenthRulesSection: React.FC<TenthRulesSectionProps> = ({
                 <div className="mt-1 mr-4 shrink-0"><Checkbox checked={isGorrammitActive} /></div>
                 <div>
                     <h3 className={`font-bold text-base ${textMain}`}>Gorrammit! (Disgruntled Die)</h3>
-                    <p className={`text-xs mt-1 ${textSub}`}>
+                    <p className={`text-sm leading-relaxed ${textSub}`}>
                         Rolling a 1 on the die has severe consequences.
                     </p>
                 </div>
@@ -87,7 +87,7 @@ export const TenthRulesSection: React.FC<TenthRulesSectionProps> = ({
                                         />
                                         <div>
                                             <span className={`block font-bold text-sm ${textMain}`}>{opt.label}</span>
-                                            <span className={`block text-xs ${textSub}`}>{opt.desc}</span>
+                                            <span className={`block text-sm leading-relaxed ${textSub}`}>{opt.desc}</span>
                                         </div>
                                     </label>
                                 ))}
@@ -107,7 +107,7 @@ export const TenthRulesSection: React.FC<TenthRulesSectionProps> = ({
                 <div className="mt-1 mr-4 shrink-0"><Checkbox checked={optionalRules.optionalShipUpgrades} /></div>
                 <div>
                     <h3 className={`font-bold text-base ${textMain}`}>Optional Ship Upgrades</h3>
-                    <p className={`text-xs mt-1 ${textSub}`}>
+                    <p className={`text-sm leading-relaxed ${textSub}`}>
                         Include the deck of Ship Upgrades (from 10th Anniversary Edition).
                     </p>
                 </div>

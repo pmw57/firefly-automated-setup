@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { ErrorInfo, ReactNode } from 'react';
 import { ErrorFallback } from './ErrorFallback';
 
 interface ErrorBoundaryProps {
@@ -16,7 +16,8 @@ interface ErrorBoundaryState {
  * ensuring that `this.state` and `this.props` are correctly set up from the base `React.Component`.
  */
 // FIX: To resolve errors related to missing 'state', 'props', and 'setState', the ErrorBoundary class must extend React.Component.
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+// By explicitly using React.Component, we ensure the correct base class is extended, resolving TypeScript errors.
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
