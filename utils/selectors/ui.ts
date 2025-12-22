@@ -22,11 +22,8 @@ export const getHeaderDetails = (
     const firstCoreStepIndex = flow.findIndex(step => step.type === 'core');
     const isPastFirstStep = firstCoreStepIndex !== -1 && currentStepIndex >= firstCoreStepIndex;
 
-    // Determine the main setup name to display
-    const showSetupCard = gameState.setupCardId !== SETUP_CARD_IDS.STANDARD || gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
-    
     const secondaryCard = gameState.secondarySetupId ? getSetupCardById(gameState.secondarySetupId) : undefined;
-    const setupName = showSetupCard && gameState.setupCardName ? getDisplaySetupName(gameState, secondaryCard) : 'Configuring...';
+    const setupName = gameState.setupCardName ? getDisplaySetupName(gameState, secondaryCard) : 'Configuring...';
     
     // Determine if the story card name should be displayed
     const storyName = gameState.selectedStoryCard ? gameState.selectedStoryCard : null;
