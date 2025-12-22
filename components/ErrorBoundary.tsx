@@ -1,4 +1,4 @@
-import React, { ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { ErrorFallback } from './ErrorFallback';
 
 interface ErrorBoundaryProps {
@@ -15,15 +15,16 @@ interface ErrorBoundaryState {
  * Using a constructor is the standard and most robust way to initialize state,
  * ensuring that `this.state` and `this.props` are correctly set up from the base `React.Component`.
  */
-// FIX: Switched to extending `Component` directly and updated the import.
-// This resolves an issue where TypeScript was not correctly identifying inherited
-// properties like 'props' and 'setState', likely due to a module resolution ambiguity.
-// FIX: Changed to extend React.Component directly and removed the named 'Component' import to resolve type errors where 'setState' and 'props' were not found.
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  state: ErrorBoundaryState = {
-    hasError: false,
-    error: null,
-  };
+// FIX: To resolve errors related to missing 'state', 'props', and 'setState', the ErrorBoundary class must extend React.Component.
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null,
+    };
+    this.handleReset = this.handleReset.bind(this);
+  }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
@@ -33,10 +34,10 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     console.error("Uncaught error:", error, errorInfo);
   }
 
-  handleReset = () => {
+  handleReset() {
     this.setState({ hasError: false, error: null });
     window.location.reload();
-  };
+  }
 
   render(): ReactNode {
     if (this.state.hasError && this.state.error) {
