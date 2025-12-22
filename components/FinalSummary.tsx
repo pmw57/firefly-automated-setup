@@ -35,7 +35,7 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
     // Styles
     const summaryBg = isDark ? 'bg-black/20' : 'bg-amber-50/50';
     const summaryBorder = isDark ? 'border-white/10' : 'border-amber-900/10';
-    const labelClass = `text-[10px] font-bold uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-amber-800/60'} mb-1`;
+    const labelClass = `text-xs font-bold uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-amber-800/60'} mb-1`;
     const valueClass = `font-bold text-sm ${isDark ? 'text-gray-200' : 'text-gray-900'}`;
 
     return (
@@ -44,7 +44,7 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
                 Flight Manifest
             </h3>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-6">
                  <div>
                     <div className={labelClass}>Setup Scenario</div>
                     <div className={valueClass}>{displaySetupName}</div>
@@ -66,7 +66,7 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
                  {activeStoryChallenges.length > 0 && (
                      <div className="sm:col-span-2">
                         <div className={labelClass}>Story Directives & Challenges</div>
-                        <ul className={`list-disc ml-4 text-xs ${isDark ? 'text-gray-300' : 'text-gray-800'}`}>
+                        <ul className={`list-disc ml-4 text-sm leading-relaxed space-y-1 ${isDark ? 'text-gray-300' : 'text-gray-800'}`}>
                             {activeStoryChallenges.map(o => (
                                 <li key={o.id}>{o.label}</li>
                             ))}
@@ -78,7 +78,7 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
                  {activeAdvancedRules.length > 0 && (
                      <div className="sm:col-span-2">
                         <div className={labelClass}>Advanced Rules</div>
-                        <ul className={`list-disc ml-4 text-xs ${isDark ? 'text-gray-300' : 'text-gray-800'}`}>
+                        <ul className={`list-disc ml-4 text-sm leading-relaxed space-y-1 ${isDark ? 'text-gray-300' : 'text-gray-800'}`}>
                             {activeAdvancedRules.map(o => (
                                 <li key={o.id}>
                                     <strong>{o.title}</strong>
@@ -91,7 +91,7 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
                  <div>
                     <div className={labelClass}>Captain(s)</div>
                     <div className={valueClass}>{gameState.playerCount}</div>
-                    <div className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                    <div className={`text-sm leading-relaxed ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
                         {gameState.playerNames.join(', ')}
                     </div>
                  </div>
@@ -119,7 +119,7 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
                  
                  <div className="sm:col-span-2">
                     <div className={labelClass}>Active Expansions</div>
-                    <div className={`text-xs leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>
+                    <div className={`text-sm leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>
                         {activeExpansions.length > 0 ? activeExpansions.join(', ') : 'None'}
                     </div>
                  </div>

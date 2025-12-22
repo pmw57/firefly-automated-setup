@@ -121,7 +121,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>High Volume Supply</h3>
                         <p className={`text-xs italic ${isDark ? 'text-amber-500/80' : 'text-firefly-brown'} opacity-90 -mt-0.5 mb-2`}>"The 'Verse Is A Big Place"</p>
-                        <p className={`text-xs ${textSub}`}>When 3+ large supply expansions are active, increase the base "Priming the Pump" discard count from 3 to 4 to ensure better deck turnover.</p>
+                        <p className={`text-sm leading-relaxed ${textSub}`}>When 3+ large supply expansions are active, increase the base "Priming the Pump" discard count from 3 to 4 to ensure better deck turnover.</p>
                     </div>
                 </div>
 
@@ -137,7 +137,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>Manual Conflict Resolution</h3>
                         <p className={`text-xs italic ${isDark ? 'text-amber-500/80' : 'text-firefly-brown'} opacity-90 -mt-0.5 mb-2`}>"The Darkerspire Maneouver"</p>
-                        <p className={`text-xs ${textSub}`}>When Setup and Story Cards conflict, choose which rule to follow. If disabled, Story Cards always have priority.</p>
+                        <p className={`text-sm leading-relaxed ${textSub}`}>When Setup and Story Cards conflict, choose which rule to follow. If disabled, Story Cards always have priority.</p>
                     </div>
                 </div>
                </div>

@@ -141,21 +141,21 @@ const App = (): React.ReactElement => {
       />
 
       {/* Footer */}
-      <footer className="mt-16 text-center text-gray-500 dark:text-gray-500 text-xs py-8 px-4 border-t border-gray-300 dark:border-zinc-800 bg-white/50 dark:bg-black/20 backdrop-blur-sm transition-colors duration-300">
+      <footer className="mt-16 text-center text-gray-500 dark:text-gray-500 text-sm py-8 px-4 border-t border-gray-300 dark:border-zinc-800 bg-white/50 dark:bg-black/20 backdrop-blur-sm transition-colors duration-300">
         <p className="mb-2 font-western text-firefly-brown dark:text-amber-700/80 text-lg">Keep flying. Stay shiny.</p>
-        <p className="max-w-2xl mx-auto opacity-80 dark:opacity-60">
+        <p className="max-w-2xl mx-auto opacity-80 dark:opacity-60 leading-relaxed">
           This is an unofficial fan-made application. 
           Firefly: The Game, its expansions, artwork, and associated trademarks are copyright © Gale Force Nine and 20th Century Fox.
           Authorized use of assets for fan utility.
         </p>
         
-        <div className="mt-4 flex justify-center gap-4 opacity-80 dark:opacity-60">
+        <div className="mt-4 flex justify-center gap-4 opacity-80 dark:opacity-60 text-xs">
            <a href="https://github.com/pmw57/firefly-automated-setup" target="_blank" rel="noreferrer" className="hover:text-firefly-brown dark:hover:text-amber-500 transition-colors underline">GitHub Project</a>
            <span>•</span>
            <a href="https://boardgamegeek.com/thread/3627152/firefly-automated-setup" target="_blank" rel="noreferrer" className="hover:text-firefly-brown dark:hover:text-amber-500 transition-colors underline">BGG Thread</a>
         </div>
 
-        <div className="mt-4 flex justify-center items-center gap-3 opacity-80 dark:opacity-60">
+        <div className="mt-4 flex justify-center items-center gap-3 opacity-80 dark:opacity-60 text-xs">
             <span className="font-mono">v{typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'DEV'}</span>
             <span className="opacity-40">•</span>
             <button 

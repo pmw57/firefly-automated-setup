@@ -59,7 +59,7 @@ export const SoloRulesSection: React.FC<SoloRulesSectionProps> = ({
                     <div className="mt-1 mr-4 shrink-0"><Checkbox checked={timerConfig.mode === 'unpredictable'} /></div>
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>Unpredictable Timer</h3>
-                        <p className={`text-xs mt-1 ${textSub}`}>Use numbered tokens in the discard stack. The game might end suddenly when a token matches a die roll.</p>
+                        <p className={`text-sm leading-relaxed ${textSub}`}>Use numbered tokens in the discard stack. The game might end suddenly when a token matches a die roll.</p>
                     </div>
                 </div>
                 <div 
@@ -73,7 +73,7 @@ export const SoloRulesSection: React.FC<SoloRulesSectionProps> = ({
                     <div className="mt-1 mr-4 shrink-0"><Checkbox checked={soloOptions.noSureThings} /></div>
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>No Sure Things In Life</h3>
-                        <p className={`text-xs mt-1 ${textSub}`}>Remove 5 cards from every Supply/Contact deck during setup to simulate a lived-in 'Verse.</p>
+                        <p className={`text-sm leading-relaxed ${textSub}`}>Remove 5 cards from every Supply/Contact deck during setup to simulate a lived-in 'Verse.</p>
                     </div>
                 </div>
                 <div 
@@ -87,7 +87,7 @@ export const SoloRulesSection: React.FC<SoloRulesSectionProps> = ({
                     <div className="mt-1 mr-4 shrink-0"><Checkbox checked={soloOptions.shesTrouble} /></div>
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>She's Trouble</h3>
-                        <p className={`text-xs mt-1 ${textSub}`}>Whenever you begin a turn with a <strong>Deceptive Crew</strong> on your ship and deceptive crew cards in a discard pile, roll a die. On a 1, they become Disgruntled.</p>
+                        <p className={`text-sm leading-relaxed ${textSub}`}>Whenever you begin a turn with a <strong>Deceptive Crew</strong> on your ship and deceptive crew cards in a discard pile, roll a die. On a 1, they become Disgruntled.</p>
                     </div>
                 </div>
                 <div 
@@ -101,7 +101,7 @@ export const SoloRulesSection: React.FC<SoloRulesSectionProps> = ({
                     <div className="mt-1 mr-4 shrink-0"><Checkbox checked={soloOptions.recipeForUnpleasantness} /></div>
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>Recipe For Unpleasantness</h3>
-                        <p className={`text-xs mt-1 ${textSub}`}>Start of turn: Roll a die against the number of Disgruntled crew. If equal/lower, add a Disgruntled token to a crew member.</p>
+                        <p className={`text-sm leading-relaxed ${textSub}`}>Start of turn: Roll a die against the number of Disgruntled crew. If equal/lower, add a Disgruntled token to a crew member.</p>
                     </div>
                 </div>
             </div>

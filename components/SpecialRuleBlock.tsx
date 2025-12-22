@@ -34,9 +34,9 @@ const renderContent = (content: StructuredContent): React.ReactNode => {
       case 'paragraph':
         return <p key={index} className="my-1">{renderContent(part.content)}</p>;
       case 'list':
-        return <ul key={index} className="list-disc ml-5 space-y-1 mt-1">{part.items.map((item, i) => <li key={i}>{renderContent(item)}</li>)}</ul>;
+        return <ul key={index} className="list-disc ml-5 space-y-2 mt-1">{part.items.map((item, i) => <li key={i}>{renderContent(item)}</li>)}</ul>;
       case 'numbered-list':
-        return <ol key={index} className="list-decimal ml-5 space-y-1 mt-1">{part.items.map((item, i) => <li key={i}>{renderContent(item)}</li>)}</ol>;
+        return <ol key={index} className="list-decimal ml-5 space-y-2 mt-1">{part.items.map((item, i) => <li key={i}>{renderContent(item)}</li>)}</ol>;
       case 'warning-box':
         return <div key={index} className="text-red-700 dark:text-red-400 italic font-bold text-xs mt-1">{renderContent(part.content)}</div>;
       case 'sub-list':
@@ -94,7 +94,7 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
           </div>
         </div>
       </div>
-      <div className={cls("text-sm leading-relaxed pl-1 opacity-90", s.text)}>
+      <div className={cls("text-sm leading-loose tracking-wide pl-1 opacity-90", s.text)}>
         {renderContent(content)}
       </div>
     </div>

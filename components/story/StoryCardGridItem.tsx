@@ -94,7 +94,7 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
                 </div>
             </div>
 
-            <p className={`text-xs italic line-clamp-3 pl-11 ${introColor} ${isShortList ? 'hidden sm:block' : ''}`}>
+            <p className={`text-xs italic leading-relaxed line-clamp-3 pl-11 ${introColor} ${isShortList ? 'hidden sm:block' : ''}`}>
                 "{card.intro}"
             </p>
 
