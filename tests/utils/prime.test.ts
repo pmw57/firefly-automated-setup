@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getPrimeDetails } from '../../utils/selectors/setup';
+import { getPrimeDetails } from '../../utils/prime';
 import { GameState } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
 import { STORY_TITLES } from '../../data/ids';

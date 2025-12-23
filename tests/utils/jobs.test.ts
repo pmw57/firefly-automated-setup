@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getJobSetupDetails } from '../../utils/selectors/setup';
+import { getJobSetupDetails } from '../../utils/jobs';
 import { GameState, StepOverrides } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../../data/ids';

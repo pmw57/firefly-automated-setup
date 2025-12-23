@@ -2,7 +2,7 @@ import React from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { getPrimeDetails } from '../utils/selectors/setup';
+import { getPrimeDetails } from '../utils/prime';
 import { STORY_TITLES } from '../data/ids';
 import { StepComponentProps } from './StepContent';
 

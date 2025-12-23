@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { GameState, Step } from '../types';
 import { useTheme } from './ThemeContext';
-import { getHeaderDetails } from '../utils/selectors/ui';
+import { getHeaderDetails } from '../utils/header';
 
 interface WizardHeaderProps {
     gameState: GameState;

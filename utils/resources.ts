@@ -1,0 +1,127 @@
+import { 
+    GameState, 
+    ResourceDetails,
+    ResourceType,
+    ModifyResourceRule,
+    RuleSourceType,
+    ResourceConflict
+} from '../types';
+import { getResolvedRules } from './selectors/rules';
+
+const PRIORITY_ORDER: RuleSourceType[] = ['story', 'challenge', 'setupCard', 'optionalRule', 'expansion'];
+
+const _findCreditConflict = (resourceRules: ModifyResourceRule[], manualResolutionEnabled: boolean): {
+    conflict?: ResourceConflict;
+    storyRule?: ModifyResourceRule;
+    setupRule?: ModifyResourceRule;
+} => {
+    const creditSetRules = resourceRules.filter(r => r.resource === 'credits' && r.method === 'set');
+    const storyRule = creditSetRules.find(r => r.source === 'story');
+    const setupRule = creditSetRules.find(r => r.source === 'setupCard');
+
+    if (manualResolutionEnabled && storyRule && setupRule && storyRule.value !== undefined && setupRule.value !== undefined) {
+        return {
+            conflict: {
+                story: { value: storyRule.value, label: storyRule.sourceName },
+                setupCard: { value: setupRule.value, label: setupRule.sourceName },
+            },
+            storyRule,
+            setupRule,
+        };
+    }
+    return { storyRule, setupRule };
+};
+
+const _applyResourceRules = (
+    resourceType: ResourceType,
+    baseValue: number,
+    rulesForResource: ModifyResourceRule[],
+    creditConflictInfo: ReturnType<typeof _findCreditConflict>,
+    manualSelection?: 'story' | 'setupCard'
+): { value: number; modifications: { description: string; value: string }[] } => {
+    let finalValue = baseValue;
+    let modifications: { description: string; value: string }[] = [];
+
+    if (rulesForResource.some(r => r.method === 'disable')) {
+        return { value: 0, modifications: [] };
+    }
+
+    // Handle 'set' rules
+    if (resourceType === 'credits' && creditConflictInfo.conflict && manualSelection) {
+        const selectedRule = manualSelection === 'story' ? creditConflictInfo.storyRule : creditConflictInfo.setupRule;
+        if (selectedRule?.value !== undefined) {
+            finalValue = selectedRule.value;
+            modifications = [{ description: selectedRule.description, value: `$${finalValue.toLocaleString()}` }];
+        }
+    } else {
+        const setRules = rulesForResource.filter(r => r.method === 'set');
+        if (setRules.length > 0) {
+            setRules.sort((a, b) => PRIORITY_ORDER.indexOf(a.source) - PRIORITY_ORDER.indexOf(b.source));
+            const topRule = setRules[0];
+            if (topRule.value !== undefined) {
+                finalValue = topRule.value;
+                if (resourceType === 'credits') {
+                    modifications = [{ description: topRule.description, value: `$${finalValue.toLocaleString()}` }];
+                }
+            }
+        }
+    }
+
+    // Handle 'add' rules
+    const addRules = rulesForResource.filter(r => r.method === 'add');
+    addRules.forEach(rule => {
+        if (rule.value !== undefined) {
+            finalValue += rule.value;
+            if (resourceType === 'credits') {
+                if (modifications.length === 0) {
+                     modifications.push({ description: "Base Allocation", value: `$${baseValue.toLocaleString()}` });
+                }
+                modifications.push({ description: rule.description, value: `+$${rule.value.toLocaleString()}` });
+            }
+        }
+    });
+    
+    // Default modification for credits if no other rules applied
+    if (resourceType === 'credits' && modifications.length === 0) {
+        modifications.push({ description: "Standard Allocation", value: `$${finalValue.toLocaleString()}` });
+    }
+
+    return { value: finalValue, modifications };
+};
+
+export const getResourceDetails = (gameState: GameState, manualSelection?: 'story' | 'setupCard'): ResourceDetails => {
+  const allRules = getResolvedRules(gameState);
+  const resourceRules = allRules.filter(r => r.type === 'modifyResource') as ModifyResourceRule[];
+  
+  const baseResources: Record<ResourceType, number> = { credits: 3000, fuel: 6, parts: 2, warrants: 0, goalTokens: 0 };
+  const finalResources: Partial<Record<ResourceType, number>> = {};
+  let finalCreditModifications: { description: string; value: string }[] = [];
+
+  const creditConflictInfo = _findCreditConflict(resourceRules, gameState.optionalRules.resolveConflictsManually);
+  
+  (Object.keys(baseResources) as ResourceType[]).forEach(resource => {
+    const { value, modifications } = _applyResourceRules(
+      resource,
+      baseResources[resource],
+      resourceRules.filter(r => r.resource === resource),
+      creditConflictInfo,
+      manualSelection
+    );
+    finalResources[resource] = value;
+    if (resource === 'credits') {
+      finalCreditModifications = modifications;
+    }
+  });
+
+  return {
+    credits: finalResources.credits!,
+    fuel: finalResources.fuel!,
+    parts: finalResources.parts!,
+    warrants: finalResources.warrants!,
+    goalTokens: finalResources.goalTokens!,
+    isFuelDisabled: resourceRules.some(e => e.resource === 'fuel' && e.method === 'disable'),
+    isPartsDisabled: resourceRules.some(e => e.resource === 'parts' && e.method === 'disable'),
+    creditModifications: finalCreditModifications,
+    conflict: creditConflictInfo.conflict
+  };
+};

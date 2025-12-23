@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getResourceDetails } from '../../../utils/selectors/setup';
+import { getResourceDetails } from '../../../utils/resources';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
 import { ConflictResolver } from '../../ConflictResolver';

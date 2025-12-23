@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getAllianceReaverDetails } from '../../utils/selectors/setup';
+import { getAllianceReaverDetails } from '../../utils/alliance';
 import { StructuredContent, StructuredContentPart } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
 
