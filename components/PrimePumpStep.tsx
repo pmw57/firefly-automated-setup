@@ -32,7 +32,6 @@ export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
     [gameState, overrides]
   );
   
-  // Theming
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-[#faf8ef]/70 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
   const titleColor = isDark ? 'text-white' : 'text-[#292524]';

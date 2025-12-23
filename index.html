@@ -4,19 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Primary Meta Tags -->
     <title>Firefly: The Game - Automated Setup Guide</title>
     <meta name="title" content="Firefly: The Game - Automated Setup Guide">
     <meta name="description" content="A dynamic, offline-first PWA to automate the complex setup process for the board game Firefly: The Game, supporting all expansions and story cards.">
 
-    <!-- Open Graph / Facebook / Discord -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://pmw57.github.io/firefly-automated-setup/">
     <meta property="og:title" content="Firefly: The Game - Automated Setup Guide">
     <meta property="og:description" content="A dynamic, offline-first PWA to automate the complex setup process for the board game Firefly: The Game, supporting all expansions and story cards.">
     <meta property="og:image" content="https://cf.geekdo-images.com/Dskyq7T2nAeLSEPqF8FtIw__original/img/iIP5ebitvrm4XfAqdomztVuvxag=/0x0/filters:format(jpeg)/pic6421209.jpg">
 
-    <!-- Mobile Web App Settings -->
     <meta name="apple-mobile-web-app-title" content="Firefly Setup">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -26,13 +23,11 @@
 
     <!-- PWA Manifest is now injected by vite-plugin-pwa -->
 
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
 
     <!-- Preload Sprite Sheet to prevent flicker -->
     <link rel="preload" href="expansion_sprites.png" as="image">
     
-    <!-- Structured Data for SEO -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -198,7 +193,6 @@
           } catch (error) {
             console.error('Error unregistering service workers:', error);
           } finally {
-            // Hard reload, bypassing all caches.
             window.location.reload(true);
           }
         });

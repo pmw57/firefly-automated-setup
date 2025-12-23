@@ -12,6 +12,9 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      screens: {
+        'xs': '350px',
+      },
       colors: {
         'expansion': {
           'orangeRed': '#FF4500',
@@ -68,7 +71,11 @@ export default {
         'fade-in': 'fadeIn 0.5s ease-out',
         'fade-in-up': 'fadeInUp 0.5s ease-out',
         'ken-burns': 'kenBurns 60s ease-out infinite alternate',
-      }
+      },
+      backgroundSize: {
+        'zoom-slice': '257.14% auto', // 900px image / 350px slice
+        'full-width': '100% auto',
+      },
     },
   },
   plugins: [],

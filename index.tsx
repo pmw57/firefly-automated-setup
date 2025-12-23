@@ -5,7 +5,6 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { ThemeProvider } from './components/ThemeProvider';
 import './index.css';
 
-// TypeScript declaration to extend the window object for the failsafe timeout
 declare global {
   interface Window {
     fallbackTimeout?: number;

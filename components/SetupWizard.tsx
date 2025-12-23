@@ -18,12 +18,11 @@ const SetupWizard = (): React.ReactElement | null => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isWizardInitialized, setIsWizardInitialized] = useState(false);
   const [resetKey, setResetKey] = useState(0);
-  const [isNavigating, setIsNavigating] = useState(false); // UX: Loading state for navigation
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  // Load wizard-specific state (step index) from local storage on mount
   useEffect(() => {
     const savedStep = localStorage.getItem(WIZARD_STEP_STORAGE_KEY);
     if (savedStep) {
@@ -38,7 +37,6 @@ const SetupWizard = (): React.ReactElement | null => {
     setIsWizardInitialized(true);
   }, []);
 
-  // Save wizard-specific state (step index) to local storage
   useEffect(() => {
     if (!isWizardInitialized) return;
     localStorage.setItem(WIZARD_STEP_STORAGE_KEY, JSON.stringify(currentStepIndex));
@@ -66,20 +64,15 @@ const SetupWizard = (): React.ReactElement | null => {
             return nextIndex;
         });
         setIsNavigating(false);
-    }, 50); // A small delay is sufficient
+    }, 50);
   }, [flow.length]);
 
   const handleNext = useCallback(() => handleNavigation('next'), [handleNavigation]);
   const handlePrev = useCallback(() => handleNavigation('prev'), [handleNavigation]);
 
   const performReset = useCallback(() => {
-    // 1. Reset core game state in reducer
     resetGameState();
-    
-    // 2. Reset wizard-specific persistence
     localStorage.removeItem(WIZARD_STEP_STORAGE_KEY);
-    
-    // 3. Reset local component state
     setCurrentStepIndex(0);
     setResetKey(prev => prev + 1);
     window.scrollTo(0, 0);

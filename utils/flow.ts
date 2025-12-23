@@ -1,6 +1,5 @@
 import { StepOverrides, GameState, Step, SetupCardStep, SetupContentData } from '../types';
 import { SETUP_CONTENT } from '../data/steps';
-// FIX: Import SETUP_CARD_IDS to get the correct 'Standard' card ID
 import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
 import { getSetupCardById } from './selectors/story';
 
@@ -45,7 +44,6 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
         ? state.secondarySetupId
         : state.setupCardId;
 
-    // FIX: Use SETUP_CARD_IDS.STANDARD instead of STEP_IDS.STANDARD
     const setupCard = getSetupCardById(primarySequenceCardId) || getSetupCardById(SETUP_CARD_IDS.STANDARD)!;
     const stepDefs = setupCard.steps;
 

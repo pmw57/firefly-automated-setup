@@ -5,8 +5,6 @@ import { SETUP_CARDS } from '../data/setupCards';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { SETUP_CARD_IDS } from '../data/ids';
 
-// --- Default State ---
-
 export const getDefaultGameState = (): GameState => {
     const allExpansions = EXPANSIONS_METADATA.reduce((acc, exp) => {
         if (exp.id !== 'base') {
@@ -49,8 +47,6 @@ export const getDefaultGameState = (): GameState => {
     };
 };
 
-// --- Logic Helpers (Pure Functions) ---
-
 const adjustPlayerNames = (currentNames: string[], targetCount: number): string[] => {
     const newNames = [...currentNames];
     if (targetCount > newNames.length) {
@@ -66,7 +62,6 @@ const adjustPlayerNames = (currentNames: string[], targetCount: number): string[
 const enforceMultiplayerConstraints = (state: GameState): GameState => {
     const newState = { ...state };
 
-    // Reset setup card if switching modes makes current selection invalid
     if (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
         newState.setupCardId = SETUP_CARD_IDS.STANDARD;
         newState.setupCardName = 'Standard Game Setup';
@@ -89,7 +84,6 @@ const handlePlayerCountChange = (state: GameState, count: number): GameState => 
     const safeCount = Math.max(1, Math.min(9, count));
     const newMode = safeCount === 1 ? 'solo' : 'multiplayer';
     
-    // Create base new state with updated count and mode
     let finalState: GameState = {
         ...state,
         playerCount: safeCount,
@@ -109,7 +103,6 @@ const handlePlayerCountChange = (state: GameState, count: number): GameState => 
         };
     }
 
-    // Apply specific constraints if switching to multiplayer, otherwise return as is
     finalState = newMode === 'multiplayer' 
         ? enforceMultiplayerConstraints(finalState) 
         : finalState;
@@ -121,7 +114,6 @@ const handleExpansionToggle = (state: GameState, expansionId: keyof GameState['e
     const nextExpansions = { ...state.expansions, [expansionId]: !state.expansions[expansionId] };
     const newState: GameState = { ...state, expansions: nextExpansions };
     
-    // Auto-switch edition based on Tenth expansion presence
     if (expansionId === 'tenth') {
         newState.gameEdition = nextExpansions.tenth ? 'tenth' : 'original';
     }
@@ -151,7 +143,6 @@ const handleExpansionToggle = (state: GameState, expansionId: keyof GameState['e
 const handleToggleFlyingSolo = (state: GameState): GameState => {
     const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
     if (isFlyingSolo) {
-        // Turning OFF -> Revert to secondary or an empty selection
         const newId = state.secondarySetupId || '';
         const newDef = SETUP_CARDS.find(c => c.id === newId);
         return {
@@ -161,7 +152,6 @@ const handleToggleFlyingSolo = (state: GameState): GameState => {
             secondarySetupId: undefined
         };
     } else {
-        // Turning ON -> Set main to FlyingSolo, keep current as secondary if valid
         return {
             ...state,
             setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
@@ -170,8 +160,6 @@ const handleToggleFlyingSolo = (state: GameState): GameState => {
         };
     }
 };
-
-// --- Main Reducer ---
 
 export function gameReducer(state: GameState, action: Action): GameState {
   switch (action.type) {

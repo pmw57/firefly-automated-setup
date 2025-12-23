@@ -79,9 +79,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepContentP
   
   const isSpecial = step.id.startsWith('D_');
 
-  // Render logic based on Step Type and ID
   const renderStepBody = () => {
-    // 1. Handle Setup Steps
     if (step.type === 'setup') {
       if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) return <CaptainSetup onNext={onNext} />;
       if (step.id === STEP_IDS.SETUP_CARD_SELECTION) return <SetupCardSelection onNext={onNext} onBack={onPrev} />;
@@ -89,24 +87,20 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepContentP
       return <div className="text-red-500">Unknown Setup Step: {step.id}</div>;
     }
 
-    // 2. Handle Special Cases that don't fit the main registry
     // FIX: MissionDossierStep is now handled as a special case for C4 and D_FIRST_GOAL
     if (step.id === STEP_IDS.D_FIRST_GOAL || step.id === STEP_IDS.C4) {
       const titleOverride = step.id === STEP_IDS.D_FIRST_GOAL ? "First, Choose a Story Card" : undefined;
       return <MissionDossierStep onNext={onNext} onPrev={onPrev} titleOverride={titleOverride} isNavigating={isNavigating} />;
     }
 
-    // 3. Use the main registry for all other Core and Dynamic steps
     const Component = STEP_COMPONENT_REGISTRY[step.id];
     if (Component) {
       return <Component step={step} />;
     }
 
-    // 4. Fallback for unknown steps
     return <div className="text-red-500">Content for step '{step.id}' not found.</div>;
   };
 
-  // Setup steps are self-contained components with their own layout, header, and nav.
   if (step.type === 'setup') {
       return (
           <div className="animate-fade-in-up">
@@ -115,7 +109,6 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepContentP
       );
   }
 
-  // Core and Dynamic steps use the standard StepContent wrapper.
   const isMissionDossier = step.id === STEP_IDS.C4 || step.id === STEP_IDS.D_FIRST_GOAL;
   const showNav = !isMissionDossier;
   

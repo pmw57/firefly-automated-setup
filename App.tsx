@@ -35,10 +35,10 @@ const App = (): React.ReactElement => {
       import('virtual:pwa-register')
         .then(mod => {
           if (mod && mod.registerSW) {
+            const ONE_HOUR_IN_MS = 60 * 60 * 1000;
             const updateSW = mod.registerSW({
               onRegisteredSW(swUrl, r) {
                 console.log(`Service Worker at: ${swUrl}`);
-                // check for new version every hour
                 r && setInterval(async() => {
                   if (!(!r.installing && navigator))
                     return;
@@ -56,7 +56,7 @@ const App = (): React.ReactElement => {
           
                   if (resp?.status === 200)
                     await r.update();
-                }, 60 * 60 * 1000 /* 1 hour */)
+                }, ONE_HOUR_IN_MS)
               },
               onNeedRefresh() {
                 setNeedRefresh(true);
@@ -88,26 +88,26 @@ const App = (): React.ReactElement => {
     window.location.reload();
   };
 
-  // FIX: Added a runtime check for `import.meta.env`. This prevents errors when the application is run in an environment where Vite's environment variables are not injected, such as opening the HTML file directly.
   const isDevMode = typeof import.meta.env !== 'undefined' && import.meta.env.DEV;
   const baseUrl = (typeof import.meta.env !== 'undefined') ? import.meta.env.BASE_URL : '/';
+  
+  const isPreview = typeof import.meta.env === 'undefined';
+  const headerImageUrl = isPreview
+    ? 'https://cf.geekdo-images.com/FtTleN6TrwDz378_TQ2NFw__imagepage/img/kytwle1zmoWYFCYtr1cq6EPnRHc=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7565930.jpg'
+    : `${baseUrl}firefly-cover.png`;
 
   return (
     <div className="min-h-screen font-sans pb-12 transition-colors duration-500 relative">
-      {/* Thematic Header */}
       <header className="relative bg-black text-white shadow-2xl mb-8 overflow-hidden border-b-4 border-yellow-600 dark:border-yellow-700/50">
-        {/* Background Image Layer with Ken Burns effect */}
         <div 
-          className="absolute inset-0 z-0 bg-center pointer-events-none bg-cover"
+          className="absolute inset-0 z-0 bg-center pointer-events-none bg-no-repeat bg-zoom-slice xs:bg-full-width xs:animate-ken-burns"
           style={{ 
-            backgroundImage: `url('${baseUrl}firefly-cover.png')`,
+            backgroundImage: `url('${headerImageUrl}')`,
           }}
         ></div>
         
-        {/* Vignette/Gradient Overlay for readability */}
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/60 to-black/30 opacity-80 dark:opacity-100 dark:from-zinc-950/90 dark:via-zinc-950/60 dark:to-zinc-950/20 pointer-events-none"></div>
 
-        {/* Content */}
         <div className="container mx-auto px-4 pt-24 pb-4 relative z-20 flex flex-col justify-end items-center">
             {/* Accessible heading, as the visual "Firefly: The Game" is in the background image */}
             <h1 className="sr-only">Firefly: The Game</h1>
@@ -117,20 +117,16 @@ const App = (): React.ReactElement => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 relative z-10">
         <GameStateProvider>
           <SetupWizard />
         </GameStateProvider>
       </main>
 
-      {/* Dev Panel (only in dev mode) */}
       {isDevMode && <DevPanel />}
 
-      {/* Install Prompt */}
       <InstallPWA />
 
-      {/* PWA Updater Prompt */}
       <UpdatePrompt
         offlineReady={offlineReady}
         needRefresh={needRefresh}
@@ -141,7 +137,6 @@ const App = (): React.ReactElement => {
         }}
       />
 
-      {/* Footer */}
       <footer className="mt-16 text-center text-gray-500 dark:text-gray-500 text-sm py-8 px-4 border-t border-gray-300 dark:border-zinc-800 bg-white/50 dark:bg-black/20 backdrop-blur-sm transition-colors duration-300">
         <p className="mb-2 font-western text-firefly-brown dark:text-amber-700/80 text-lg">Keep flying. Stay shiny.</p>
         <p className="max-w-2xl mx-auto opacity-80 dark:opacity-60 leading-relaxed">
@@ -169,7 +164,6 @@ const App = (): React.ReactElement => {
         </div>
       </footer>
 
-      {/* Portaled UI Elements */}
       {createPortal(
         <div className="fixed top-2 right-2 z-[9999] pointer-events-none flex items-center gap-2">
            <HelpButton onClick={() => setIsHelpModalOpen(true)} />
@@ -185,7 +179,6 @@ const App = (): React.ReactElement => {
         document.body
       )}
 
-      {/* Help Modal */}
       <HelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
     </div>
   );

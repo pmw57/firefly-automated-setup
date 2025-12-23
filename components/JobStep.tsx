@@ -15,7 +15,6 @@ export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
   const { state: gameState } = useGameState();
   const { overrides = {} } = step;
   const activeStoryCard = getActiveStoryCard(gameState);
-  // FIX: step.data does not have an 'id' property. The step's ID is on the step object itself.
   const stepId = step.id;
   const { theme } = useTheme();
   const isDark = theme === 'dark';
