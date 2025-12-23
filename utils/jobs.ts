@@ -81,12 +81,37 @@ const _generateJobMessages = (
     if (jobDrawMode === 'buttons_jobs') {
         messages.push({ source: 'setupCard', title: 'Setup Card Override', content: [{ type: 'strong', content: 'Specific Contacts:' }, ` Draw from ${CONTACT_NAMES.AMNON_DUUL}, ${CONTACT_NAMES.LORD_HARROW}, and ${CONTACT_NAMES.MAGISTRATE_HIGGINS}.`, { type: 'br' }, { type: 'strong', content: 'Caper Bonus:' }, ' Draw 1 Caper Card.'] });
     }
+
     if (jobDrawMode === 'awful_jobs') {
-        const content: StructuredContent = forbiddenContact === CONTACT_NAMES.HARKEN
-            ? [{ type: 'strong', content: 'Limited Contacts.' }, ` This setup card normally draws from Harken, ${CONTACT_NAMES.AMNON_DUUL}, and ${CONTACT_NAMES.PATIENCE}.`, { type: 'warning-box', content: [`Story Card Conflict: ${CONTACT_NAMES.HARKEN} is unavailable. Draw from ${CONTACT_NAMES.AMNON_DUUL} and ${CONTACT_NAMES.PATIENCE} only.`] }]
-            : [{ type: 'strong', content: 'Limited Contacts.' }, ` Starting Jobs are drawn only from ${CONTACT_NAMES.HARKEN}, ${CONTACT_NAMES.AMNON_DUUL}, and ${CONTACT_NAMES.PATIENCE}.`];
-        messages.push({ source: 'setupCard', title: 'Setup Card Override', content });
+        const originalContacts = _getInitialContacts(jobDrawMode);
+        const isConflict = forbiddenContact && originalContacts.includes(forbiddenContact);
+        
+        if (isConflict) {
+            const remainingContacts = originalContacts.filter(c => c !== forbiddenContact);
+            const content: StructuredContent = [
+                { type: 'strong', content: 'Limited Contacts.' },
+                ` This setup card normally draws from ${originalContacts.join(', ')}.`, 
+                { 
+                    type: 'warning-box', 
+                    content: [
+                        `Story Card Conflict: `, 
+                        { type: 'strong', content: forbiddenContact }, 
+                        ` is unavailable. Draw from `,
+                        { type: 'strong', content: remainingContacts.join(' and ') },
+                        ` only.`
+                    ] 
+                }
+            ];
+            messages.push({ source: 'setupCard', title: 'Setup Card Override', content });
+        } else {
+            const content: StructuredContent = [
+                { type: 'strong', content: 'Limited Contacts.' },
+                ` Starting Jobs are drawn only from ${originalContacts.join(', ')}.`
+            ];
+            messages.push({ source: 'setupCard', title: 'Setup Card Override', content });
+        }
     }
+    
     if (isSingleContactChallenge) {
         messages.push({ source: 'warning', title: 'Challenge Active', content: [{ type: 'strong', content: 'Single Contact Only:' }, ' You may only work for one contact.'] });
     }
