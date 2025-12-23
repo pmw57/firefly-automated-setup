@@ -17,7 +17,7 @@ export const CRIME_STORIES: StoryCardDef[] = [
     intro: "Bringin' goods to folk who want 'em is an old-fashioned way to make a living... 'cept, sometimes, a law or two gets in the way.",
     setupDescription: "Place 3 Contraband in Alliance sectors. Place $2000 under specified decks. No Starting Jobs. Start at Londinium. Start with Alert Card.",
     requiredExpansion: "crime",
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/3464668/firefly-the-game-crime-and-punishment",
     rules: createStoryRules("Smuggler's Blues", [
       { type: 'addFlag', flag: 'smugglersBluesSetup' },
       { type: 'addFlag', flag: 'startWithAlertCard' },
