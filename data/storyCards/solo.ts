@@ -16,7 +16,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     title: "Awful Lonely In The Big Black",
     intro: "It takes a brave soul to sail the Big Black alone... Pick your goal and test your skills.",
     setupDescription: "Solo Play. Draft Crew ($1000 limit). Stack 20 Disgruntled Tokens (Timer). Remove Piracy Jobs.",
-    sourceUrl: "",
+    sourceUrl: "https://web.archive.org/web/20220226163627/https://www.flamesofwar.com/Portals/0/all_images/GF9/Firefly/Rulebooks/StoryCards/AwfulLonelyStoryCard.png",
     rules: createStoryRules("Awful Lonely In The Big Black", [
       { type: 'addFlag', flag: 'removePiracyJobs' },
       { type: 'addFlag', flag: 'soloCrewDraft' },
@@ -36,7 +36,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8860502/sjliver",
     rules: createStoryRules("A Fistful Of Scoundrels", [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'primeContacts' },
@@ -60,7 +60,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["crime"],
     isSolo: true,
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8860501/sjliver",
     rules: createStoryRules("For A Few Credits More", [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'addFlag', flag: 'startWithAlertCard' },
@@ -85,7 +85,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8860508/sjliver",
     rules: createStoryRules("Goin' Reaver", [
       { type: 'addFlag', flag: 'placeReaverAlertsInMotherlodeAndUroboros' },
       { type: 'addFlag', flag: 'soloGameTimer' }
@@ -101,7 +101,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupDescription: "Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000. Alliance Alerts: Start with one random Alliance Alert in play. Adventure Deck: Shuffle all 3-Goal story cards into a single deck.",
     requiredExpansion: "tenth",
     isSolo: true,
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8860504/sjliver",
     rules: createStoryRules("Heroes & Misfits", [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Override" },
       { type: 'addFlag', flag: 'soloGameTimer' },
@@ -123,7 +123,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupDescription: "Special Rules: Collect Misbehave cards from completed Jobs (sideboard). 'Alliance Operatives' cannot be collected. Action: Spend $6000 to recover 1 Game Length Token (once/turn).",
     requiredExpansion: "tenth",
     isSolo: true,
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8860506/sjliver",
     rules: createStoryRules("Once Upon A Time In The Big Black", [
       { type: 'addFlag', flag: 'soloGameTimer' }
     ]),
@@ -145,7 +145,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8860500/sjliver",
     rules: createStoryRules("Racing A Pale Horse", [
       { type: 'addFlag', flag: 'disableSoloTimer' },
       { 
@@ -169,7 +169,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8860507/sjliver",
     rules: createStoryRules("Seeds Of Rebellion", [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'forbidContact', contact: CONTACT_NAMES.HARKEN }
@@ -186,7 +186,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["crime"],
     isSolo: true,
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8860503/sjliver",
     rules: createStoryRules("The Lonely Smuggler's Blues", [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'addFlag', flag: 'lonelySmugglerSetup' },
@@ -206,7 +206,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["crime"],
     isSolo: true,
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8860505/sjliver",
     rules: createStoryRules("The Raggedy Edge", [
       { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, description: "Begin play with 1 Goal Token." },
       { type: 'addFlag', flag: 'disableSoloTimer' },

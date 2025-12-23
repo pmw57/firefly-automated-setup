@@ -16,7 +16,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "Bank Job",
     intro: "There's wages belonging to no-one (Alliance don't count). Find out where, and get the tools you'll need, then pull off the heist.",
     requiredExpansion: "community",
-    sourceUrl: ""
+    sourceUrl: "https://boardgamegeek.com/image/4452357"
   },
   {
     title: "Black Market Beagles",
@@ -35,7 +35,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "Double Duty",
     intro: "Sometimes, It's best to work under the radar and quiet-like. Fanty and Mingo have goods and folks in need of moving throughout the 'Verse. Use your connections with others to keep the twins' names out of the picture. Do a good enough job, and you might become their new favorite captain.",
     requiredExpansion: "community",
-    sourceUrl: ""
+    sourceUrl: "https://boardgamegeek.com/image/6067255"
   },
   {
     title: "Fruity Oat Bar",
@@ -49,7 +49,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "River is prisoner in a secure hospital at Londinium, and needs rescuing.",
     setupDescription: "Remove River Tam from play.",
     requiredExpansion: "community",
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/4434520",
     rules: createStoryRules("Hospital Rescue", [
       { type: 'addFlag', flag: 'removeRiver' }
     ])
@@ -72,7 +72,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "Your last run in with Harken turned South and you've got a boatload of warrants trailin' ya. Time to clean your ledger and get dirt on Harken instead.",
     setupDescription: "Start with 2 Warrants. Alliance Space off limits. No Harken.",
     requiredExpansion: "community",
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/4434522",
     rules: createStoryRules("It Ain't Easy Goin' Legit", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, description: "Start with 2 Warrants." },
       { type: 'addFlag', flag: 'allianceSpaceOffLimits' },
@@ -96,14 +96,14 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "Reap The Whirlwind",
     intro: "Word is, the Alliance has been hiding all manner of dirty secrets out Himinbjorg way. Convince the Dust Devils you're dangerous -- or desperate -- enough for them to come out of hiding and join forces. But hurry: the upcoming Unification Day Summit seems like the perfect time to let the truth out.",
     requiredExpansion: "community",
-    sourceUrl: ""
+    sourceUrl: "https://boardgamegeek.com/image/7072594/gwek"
   },
   {
     title: "Shadows Over Duul",
     intro: "The Silverhold-Hera route is usually a harmless uneventful run. Unless, of course, someone installs a beacon on the cargo which attracts a Reaver party.",
     setupDescription: "Remove Amnon Duul Jobs. Start in border of Murphy.",
     requiredExpansion: "community",
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/4437772",
     rules: createStoryRules("Shadows Over Duul", [
       { type: 'forbidContact', contact: CONTACT_NAMES.AMNON_DUUL },
       { type: 'setShipPlacement', location: 'border_of_murphy' }
@@ -132,14 +132,14 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "The Ghost Rock Run",
     intro: "On Anson's World the Sweetrock Mining Co. has discovered a rare mineral called \"Ghost Rock\". Will you handle the run, or sell it to the highest bidder?",
     requiredExpansion: "community",
-    sourceUrl: ""
+    sourceUrl: "https://boardgamegeek.com/image/2072290"
   },
   {
     title: "The Magnificent Crew",
     intro: "On a backwater planet, an old friend sends out a plea. Marauders are bleeding their town dry. Suss out the trouble, assemble a crew, and eliminate the pesky varmints.",
     setupDescription: "Remove all Job Decks. High-value cargo sales.",
     requiredExpansion: "community",
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/2277037/upstarter",
     rules: createStoryRules("The Magnificent Crew", [
       { type: 'addFlag', flag: 'removeJobDecks' },
       { type: 'setJobMode', mode: 'no_jobs' }
@@ -150,13 +150,13 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "For too long the tragic fate of the Miranda colony has been covered up by the Alliance, and Mr. Universe would like to correct that, but lacks the manpower to do so on his own. Helping him is bound to be dangerous, but who wouldn't enjoy giving the Alliance a black eye?",
     setupDescription: "Requires Blue Sun Expansion.",
     requiredExpansion: "community",
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/4894306/pmw57",
     additionalRequirements: ["blue"]
   },
   {
     title: "Trash Part Deux",
     intro: "Have MRP (Mrs Reynolds persona) steal and sell the latest Firefly story.",
     requiredExpansion: "community",
-    sourceUrl: ""
+    sourceUrl: "https://boardgamegeek.com/filepage/164355/story-card-trash-part-deux"
   }
 ];

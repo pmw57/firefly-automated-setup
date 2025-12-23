@@ -30,7 +30,7 @@ export const CRIME_STORIES: StoryCardDef[] = [
     intro: "Infamy's a funny thing. Bucking the law, while a might stressful day-to-day, leads to being known. The more you're known, the more your name's worth. Trick of it is, you got to sock away a lifetime of credits before you find yourself retiring early, in an Alliance lockup...",
     setupDescription: "Start with 1 Warrant. Start Outside Alliance Space. Start with Alert Card. Limited Starting Job Contacts.",
     requiredExpansion: "crime",
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/3524452",
     rules: createStoryRules("Wanted Men", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
       { type: 'addFlag', flag: 'startOutsideAllianceSpace' },
