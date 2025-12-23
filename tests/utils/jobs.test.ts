@@ -1,8 +1,37 @@
 import { describe, it, expect } from 'vitest';
 import { getJobSetupDetails } from '../../utils/jobs';
-import { GameState, StepOverrides } from '../../types';
+import { GameState, StepOverrides, StructuredContent, StructuredContentPart } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
-import { CONTACT_NAMES, CHALLENGE_IDS, STORY_TITLES } from '../../data/ids';
+import { CONTACT_NAMES, CHALLENGE_IDS, STORY_TITLES, SETUP_CARD_IDS } from '../../data/ids';
+
+// Helper to recursively flatten structured content to a searchable string
+const getTextContent = (content: StructuredContent | StructuredContentPart): string => {
+    if (typeof content === 'string') {
+        return content;
+    }
+    if (Array.isArray(content)) {
+        return content.map(part => getTextContent(part)).join('');
+    }
+    if (!content) return '';
+
+    switch(content.type) {
+        case 'strong':
+        case 'action':
+        case 'paragraph':
+        case 'warning-box':
+            return getTextContent(content.content);
+        case 'list':
+        case 'numbered-list':
+            return content.items.map(item => getTextContent(item)).join(' ');
+        case 'sub-list':
+             // Not used in jobs, but good for completeness
+            return '';
+        case 'br':
+            return ' ';
+        default:
+            return '';
+    }
+};
 
 describe('utils/jobs', () => {
   const baseGameState = getDefaultGameState();
@@ -45,6 +74,7 @@ describe('utils/jobs', () => {
     });
 
     it('handles the "Browncoat Way" no jobs setup', () => {
+      // FIX: Explicitly type `overrides` as `StepOverrides` to ensure `jobMode` is correctly typed as a literal member of `JobMode`, not a generic `string`.
       const overrides: StepOverrides = { jobMode: 'no_jobs' };
       const { contacts, showStandardContactList, messages } = getJobSetupDetails(baseGameState, overrides);
       expect(showStandardContactList).toBe(false);
@@ -110,6 +140,27 @@ describe('utils/jobs', () => {
         const { messages } = getJobSetupDetails(state, {});
         expect(messages[0].source).toBe('warning');
         expect(messages[0].title).toBe('Challenge Active');
+    });
+
+    it('should correctly filter contacts and generate a warning for a jobMode/forbidContact conflict', () => {
+      const state: GameState = {
+        ...baseGameState,
+        setupCardId: SETUP_CARD_IDS.AWFUL_CROWDED, // Sets jobMode: 'awful_jobs'
+        selectedStoryCard: STORY_TITLES.DESPERADOES, // Forbids 'Harken'
+      };
+      const overrides: StepOverrides = { jobMode: 'awful_jobs' }; // From the setup card
+      const { contacts, messages } = getJobSetupDetails(state, overrides);
+
+      // 1. Verify Harken is removed from the contact list
+      expect(contacts).not.toContain('Harken');
+      expect(contacts).toEqual(['Amnon Duul', 'Patience']);
+
+      // 2. Verify the specific conflict warning message is generated
+      const hasConflictWarning = messages.some(m => 
+        m.source === 'setupCard' && 
+        getTextContent(m.content).includes('Story Card Conflict: Harken is unavailable')
+      );
+      expect(hasConflictWarning).toBe(true);
     });
   });
 });

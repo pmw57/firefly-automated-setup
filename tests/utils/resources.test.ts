@@ -102,5 +102,27 @@ describe('utils/resources', () => {
       // This story doesn't add goal tokens, so it should be the default
       expect(details.goalTokens).toBe(0);
     });
+
+    it('should return a conflict object and respect manual selection when manual resolution is enabled', () => {
+      const state: GameState = getGameStateWithConfig({
+        setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY, // Sets to $12000
+        selectedStoryCard: STORY_TITLES.HOW_IT_ALL_STARTED, // Sets to $500
+        optionalRules: { ...baseGameState.optionalRules, resolveConflictsManually: true },
+      });
+
+      // 1. Check if the conflict object is correctly generated
+      const initialDetails = getResourceDetails(state);
+      expect(initialDetails.conflict).toBeDefined();
+      expect(initialDetails.conflict?.story.value).toBe(500);
+      expect(initialDetails.conflict?.setupCard.value).toBe(12000);
+
+      // 2. Test the outcome when user selects the 'setupCard' option
+      const setupCardSelectionDetails = getResourceDetails(state, 'setupCard');
+      expect(setupCardSelectionDetails.credits).toBe(12000);
+
+      // 3. Test the outcome when user selects the 'story' option
+      const storySelectionDetails = getResourceDetails(state, 'story');
+      expect(storySelectionDetails.credits).toBe(500);
+    });
   });
 });
