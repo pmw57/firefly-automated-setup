@@ -42,7 +42,6 @@ html {
   --stars-large-opacity: 0.15;
 }
 
-/* FIX: The selector must be `html.dark` to target the <html> element when it has the `dark` class. */
 html.dark {
   background-color: #0c0c0c; /* Deep Space Black */
   color: #e4e4e7; /* Zinc-200 */

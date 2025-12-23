@@ -1,11 +1,11 @@
-
+/** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../../utils/draft';
 import { DiceResult } from '../../types';
 
 describe('utils/draft', () => {
   describe('calculateDraftOutcome', () => {
-    it('correctly identifies the winner and sets draft order', () => {
+    it.concurrent('correctly identifies the winner and sets draft order', () => {
       const rolls: DiceResult[] = [
         { player: 'P1', roll: 5 },
         { player: 'P2', roll: 6 },
@@ -25,7 +25,7 @@ describe('utils/draft', () => {
       expect(result.placementOrder).toEqual(['P1', 'P4', 'P3', 'P2']);
     });
 
-    it('handles ties by picking the first player with the max roll', () => {
+    it.concurrent('handles ties by picking the first player with the max roll', () => {
       const rolls: DiceResult[] = [
         { player: 'P1', roll: 6 },
         { player: 'P2', roll: 2 },
@@ -37,7 +37,7 @@ describe('utils/draft', () => {
       expect(result.draftOrder).toEqual(['P1', 'P2', 'P3']);
     });
 
-    it('respects overrideWinnerIndex for forced tie breaking', () => {
+    it.concurrent('respects overrideWinnerIndex for forced tie breaking', () => {
       const rolls: DiceResult[] = [
         { player: 'P1', roll: 6 }, 
         { player: 'P2', roll: 2 }, 
@@ -54,7 +54,7 @@ describe('utils/draft', () => {
   });
 
   describe('runAutomatedDraft', () => {
-    it('produces a valid draft state for multiple players', () => {
+    it.concurrent('produces a valid draft state for multiple players', () => {
       const playerNames = ['Captain A', 'Captain B', 'Captain C'];
       const result = runAutomatedDraft(playerNames);
       
@@ -67,7 +67,7 @@ describe('utils/draft', () => {
   });
   
   describe('getInitialSoloDraftState', () => {
-    it('produces a valid draft state for a solo player', () => {
+    it.concurrent('produces a valid draft state for a solo player', () => {
       const result = getInitialSoloDraftState('Solo Captain');
       expect(result.rolls).toEqual([{ player: 'Solo Captain', roll: 6, isWinner: true }]);
       expect(result.draftOrder).toEqual(['Solo Captain']);

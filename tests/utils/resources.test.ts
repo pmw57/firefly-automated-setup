@@ -1,3 +1,4 @@
+/** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getResourceDetails } from '../../utils/resources';
 import { GameState } from '../../types';
@@ -15,7 +16,7 @@ describe('utils/resources', () => {
   });
 
   describe('getResourceDetails with Effect System', () => {
-    it('returns default resources for a standard game', () => {
+    it.concurrent('returns default resources for a standard game', () => {
       const state = getGameStateWithConfig({ setupCardId: SETUP_CARD_IDS.STANDARD });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(3000);
@@ -26,14 +27,14 @@ describe('utils/resources', () => {
       expect(details.creditModifications[0].description).toBe('Standard Allocation');
     });
 
-    it('applies a "set" credits effect from a setup card', () => {
+    it.concurrent('applies a "set" credits effect from a setup card', () => {
       const state = getGameStateWithConfig({ setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY }); // Sets to $12000
       const details = getResourceDetails(state);
       expect(details.credits).toBe(12000);
       expect(details.creditModifications[0].description).toBe('Setup Card Allocation');
     });
 
-    it('applies an "add" credits effect from a story card', () => {
+    it.concurrent('applies an "add" credits effect from a story card', () => {
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
         selectedStoryCard: STORY_TITLES.RUNNING_ON_EMPTY // Adds $1200
@@ -44,7 +45,7 @@ describe('utils/resources', () => {
       expect(details.creditModifications[1].description).toBe('Story Bonus');
     });
     
-    it('applies a "set" credits effect from a story card, overriding the base', () => {
+    it.concurrent('applies a "set" credits effect from a story card, overriding the base', () => {
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
         selectedStoryCard: STORY_TITLES.HOW_IT_ALL_STARTED // Sets to $500
@@ -54,7 +55,7 @@ describe('utils/resources', () => {
       expect(details.creditModifications[0].description).toBe('Story Override');
     });
 
-    it('resolves conflict between "set" credit effects by prioritizing the story rule', () => {
+    it.concurrent('resolves conflict between "set" credit effects by prioritizing the story rule', () => {
       const state = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY, // Sets to $12000
         selectedStoryCard: STORY_TITLES.HOW_IT_ALL_STARTED // Sets to $500
@@ -67,7 +68,7 @@ describe('utils/resources', () => {
       expect(details.creditModifications[0].description).toBe('Story Override');
     });
 
-    it('applies "disable" effects for fuel and parts from a story', () => {
+    it.concurrent('applies "disable" effects for fuel and parts from a story', () => {
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD,
         selectedStoryCard: STORY_TITLES.RUNNING_ON_EMPTY // Disables fuel and parts
@@ -80,7 +81,7 @@ describe('utils/resources', () => {
       expect(details.isPartsDisabled).toBe(true);
     });
     
-    it('correctly applies effects from TheBrowncoatWay setup card', () => {
+    it.concurrent('correctly applies effects from TheBrowncoatWay setup card', () => {
       const state = getGameStateWithConfig({ setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY });
       const details = getResourceDetails(state);
 
@@ -91,7 +92,7 @@ describe('utils/resources', () => {
       expect(details.isPartsDisabled).toBe(true);
     });
 
-    it('handles adding warrants and other resources', () => {
+    it.concurrent('handles adding warrants and other resources', () => {
       const state = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.STANDARD,
         selectedStoryCard: STORY_TITLES.IT_AINT_EASY_GOIN_LEGIT // Adds 2 warrants
@@ -103,7 +104,7 @@ describe('utils/resources', () => {
       expect(details.goalTokens).toBe(0);
     });
 
-    it('should return a conflict object and respect manual selection when manual resolution is enabled', () => {
+    it.concurrent('should return a conflict object and respect manual selection when manual resolution is enabled', () => {
       const state: GameState = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY, // Sets to $12000
         selectedStoryCard: STORY_TITLES.HOW_IT_ALL_STARTED, // Sets to $500

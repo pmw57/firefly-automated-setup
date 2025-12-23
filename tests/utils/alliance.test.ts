@@ -1,3 +1,4 @@
+/** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getAllianceReaverDetails } from '../../utils/alliance';
 import { StructuredContent, StructuredContentPart } from '../../types';
@@ -36,14 +37,14 @@ describe('utils/alliance', () => {
   describe('getAllianceReaverDetails', () => {
     const baseGameState = getDefaultGameState();
 
-    it('returns default values for a standard game', () => {
+    it.concurrent('returns default values for a standard game', () => {
       const details = getAllianceReaverDetails(baseGameState, {});
       expect(details.specialRules).toEqual([]);
       expect(details.alliancePlacement).toContain('Londinium');
       expect(details.reaverPlacement).toContain('3 Cutters'); // Default state has Blue Sun
     });
 
-    it('generates a rule for alertStackCount based on player count and multiplier', () => {
+    it.concurrent('generates a rule for alertStackCount based on player count and multiplier', () => {
       const state = { 
         ...baseGameState, 
         playerCount: 4, 
@@ -57,7 +58,7 @@ describe('utils/alliance', () => {
       )).toBe(true);
     });
 
-    it('generates the correct smugglersBluesSetup content based on expansions', () => {
+    it.concurrent('generates the correct smugglersBluesSetup content based on expansions', () => {
       // Case 1: Both expansions active
       const stateWithBoth = { 
         ...baseGameState, 
@@ -77,7 +78,7 @@ describe('utils/alliance', () => {
       expect(detailsOne.specialRules.some(rule => getTextContent(rule.content).includes('Alliance Space'))).toBe(true);
     });
 
-    it('correctly sets reaver placement based on blue sun expansion', () => {
+    it.concurrent('correctly sets reaver placement based on blue sun expansion', () => {
         // With Blue Sun
         const detailsWith = getAllianceReaverDetails(baseGameState, {});
         expect(detailsWith.reaverPlacement).toContain('3 Cutters');
@@ -88,7 +89,7 @@ describe('utils/alliance', () => {
         expect(detailsWithout.reaverPlacement).toContain('1 Cutter');
     });
 
-    it('correctly sets alliance placement based on allianceMode', () => {
+    it.concurrent('correctly sets alliance placement based on allianceMode', () => {
         // Standard
         const detailsStandard = getAllianceReaverDetails(baseGameState, {});
         expect(detailsStandard.alliancePlacement).toContain('Londinium');

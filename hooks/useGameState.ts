@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { useContext, createContext } from 'react';
 import { GameState } from '../types';
 import { Action } from '../state/actions';
 

@@ -1,3 +1,4 @@
+/** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getJobSetupDetails } from '../../utils/jobs';
 import { GameState, StepOverrides, StructuredContent, StructuredContentPart } from '../../types';
@@ -37,14 +38,14 @@ describe('utils/jobs', () => {
   const baseGameState = getDefaultGameState();
 
   describe('getJobSetupDetails', () => {
-    it('returns a standard set of contacts', () => {
+    it.concurrent('returns a standard set of contacts', () => {
       const { contacts, showStandardContactList, totalJobCards } = getJobSetupDetails(baseGameState, {});
       expect(contacts).toEqual(['Harken', 'Badger', 'Amnon Duul', 'Patience', 'Niska']);
       expect(showStandardContactList).toBe(true);
       expect(totalJobCards).toBe(5);
     });
 
-    it('removes a forbidden contact from the list', () => {
+    it.concurrent('removes a forbidden contact from the list', () => {
       const state: GameState = {
         ...baseGameState,
         selectedStoryCard: STORY_TITLES.LETS_BE_BAD_GUYS // This story forbids Niska
@@ -53,7 +54,7 @@ describe('utils/jobs', () => {
       expect(contacts).not.toContain(CONTACT_NAMES.NISKA);
     });
 
-    it('filters contacts to only those allowed by the story', () => {
+    it.concurrent('filters contacts to only those allowed by the story', () => {
       const state: GameState = {
         ...baseGameState,
         selectedStoryCard: STORY_TITLES.FIRST_TIME_IN_CAPTAINS_CHAIR // Allows Harken & Amnon Duul
@@ -62,7 +63,7 @@ describe('utils/jobs', () => {
       expect(contacts).toEqual(['Harken', 'Amnon Duul']);
     });
     
-    it('handles the "Single Contact" challenge', () => {
+    it.concurrent('handles the "Single Contact" challenge', () => {
       const state: GameState = {
         ...baseGameState,
         challengeOptions: { [CHALLENGE_IDS.SINGLE_CONTACT]: true }
@@ -73,8 +74,7 @@ describe('utils/jobs', () => {
       expect(messages.some(m => m.source === 'warning')).toBe(true);
     });
 
-    it('handles the "Browncoat Way" no jobs setup', () => {
-      // FIX: Explicitly type `overrides` as `StepOverrides` to ensure `jobMode` is correctly typed as a literal member of `JobMode`, not a generic `string`.
+    it.concurrent('handles the "Browncoat Way" no jobs setup', () => {
       const overrides: StepOverrides = { jobMode: 'no_jobs' };
       const { contacts, showStandardContactList, messages } = getJobSetupDetails(baseGameState, overrides);
       expect(showStandardContactList).toBe(false);
@@ -82,7 +82,7 @@ describe('utils/jobs', () => {
       expect(messages.some(m => m.source === 'setupCard')).toBe(true);
     });
     
-    it('handles story card "no_jobs" mode with priming', () => {
+    it.concurrent('handles story card "no_jobs" mode with priming', () => {
       const state: GameState = {
         ...baseGameState,
         selectedStoryCard: STORY_TITLES.A_FISTFUL_OF_SCOUNDRELS // Has primeContactDecks flag
@@ -131,7 +131,7 @@ describe('utils/jobs', () => {
       `);
     });
 
-    it('handles "no_jobs" with "Don\'t Prime Contacts" challenge override', () => {
+    it.concurrent('handles "no_jobs" with "Don\'t Prime Contacts" challenge override', () => {
         const state: GameState = {
             ...baseGameState,
             selectedStoryCard: STORY_TITLES.A_FISTFUL_OF_SCOUNDRELS, // Has primeContactDecks flag
@@ -142,7 +142,7 @@ describe('utils/jobs', () => {
         expect(messages[0].title).toBe('Challenge Active');
     });
 
-    it('should correctly filter contacts and generate a warning for a jobMode/forbidContact conflict', () => {
+    it.concurrent('should correctly filter contacts and generate a warning for a jobMode/forbidContact conflict', () => {
       const state: GameState = {
         ...baseGameState,
         setupCardId: SETUP_CARD_IDS.AWFUL_CROWDED, // Sets jobMode: 'awful_jobs'

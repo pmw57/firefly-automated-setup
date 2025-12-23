@@ -1,5 +1,14 @@
 import '@testing-library/jest-dom';
-import { vi, beforeEach } from 'vitest';
+import { vi, beforeEach, afterEach } from 'vitest';
+import { cleanup } from '@testing-library/react';
+
+// Explicitly call cleanup after each test to prevent DOM leakage between tests,
+// especially since the test runner is configured with `isolate: false`.
+afterEach(() => {
+  cleanup();
+  // Restore all mocks to ensure test isolation
+  vi.restoreAllMocks();
+});
 
 // By using `beforeEach` in the global setup file, we ensure that all mocks
 // are reset before every single test runs. This makes tests more isolated
