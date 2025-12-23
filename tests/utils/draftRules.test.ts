@@ -87,7 +87,7 @@ describe('utils/draftRules', () => {
     });
 
     it('resolves conflict between Haven Draft and special start sector (Story Priority)', () => {
-        const state: GameState = { ...baseGameState, selectedStoryCard: 'It\'s a Mad, Mad, Mad, Mad \'Verse!' }; // This story forces Persephone start
+        const state: GameState = { ...baseGameState, selectedStoryCard: STORY_TITLES.ITS_A_MAD_MAD_VERSE }; // This story forces Persephone start
         const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT }; // This is Haven Draft
         const details = getDraftDetails(state, step);
         

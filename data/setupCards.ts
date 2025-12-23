@@ -1,5 +1,5 @@
 import { SetupCardDef, SetupCardStep, SetupRule } from '../types';
-import { STEP_IDS } from './ids';
+import { STEP_IDS, SETUP_CARD_IDS } from './ids';
 
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 
@@ -45,13 +45,13 @@ const createRules = (id: string, rules: DistributiveOmit<SetupRule, 'source' | '
 
 export const SETUP_CARDS: SetupCardDef[] = [
   {
-    id: "Standard",
+    id: SETUP_CARD_IDS.STANDARD,
     label: "Standard Game Setup",
     description: "The classic Firefly experience. Standard deck building, starting resources, and job allocation.",
     steps: STANDARD_STEPS
   },
   { 
-    id: "AwfulCrowdedInMySky", 
+    id: SETUP_CARD_IDS.AWFUL_CROWDED, 
     label: "Awful Crowded In My Sky", 
     description: "Alert Tokens are placed in every sector. Reshuffle cards are active. Specific starting jobs.",
     requiredExpansion: 'blue',
@@ -71,7 +71,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     ]
   },
   {
-    id: "TheRimsTheThing",
+    id: SETUP_CARD_IDS.RIMS_THE_THING,
     label: "The Rim's The Thing",
     description: "Focuses on the outer planets. Uses only Border Nav cards. Contact Decks contain only Blue Sun and Kalidasa cards.",
     requiredExpansion: 'kalidasa',
@@ -91,7 +91,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     ]
   },
   {
-    id: "TimesNotOnOurSide",
+    id: SETUP_CARD_IDS.TIMES_NOT_ON_OUR_SIDE,
     label: "Time's Not On Our Side",
     description: "A race against time. Uses Disgruntled tokens as a game timer. Nav decks are harder (Reshuffle included).",
     requiredExpansion: 'kalidasa',
@@ -111,7 +111,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     ]
   },
   {
-    id: "TheBrowncoatWay",
+    id: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
     label: "The Browncoat Way",
     description: "A harder economy. Ships must be purchased with starting cash. No free fuel/parts. No starting jobs.",
     requiredExpansion: 'coachworks',
@@ -134,7 +134,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     ]
   },
   {
-    id: "TheBlitz",
+    id: SETUP_CARD_IDS.THE_BLITZ,
     label: "The Blitz",
     description: "Draft starting cards via 'Strip Mining' in addition to standard supplies. Priming the Pump discards double the cards.",
     requiredExpansion: 'coachworks',
@@ -153,7 +153,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     ]
   },
   {
-    id: "AllianceHighAlert",
+    id: SETUP_CARD_IDS.ALLIANCE_HIGH_ALERT,
     label: "Alliance High Alert",
     description: "Starts with an Alliance Alert card in play. Harken is unavailable for starting jobs.",
     requiredExpansion: 'crime',
@@ -172,7 +172,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     ]
   },
   { 
-    id: "ClearerSkiesBetterDays", 
+    id: SETUP_CARD_IDS.CLEARER_SKIES_BETTER_DAYS, 
     label: "Clearer Skies, Better Days", 
     description: "Features 'Full Burn' mechanic for risky travel. No Alert Tokens are used.",
     requiredExpansion: 'crime',
@@ -191,7 +191,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     ]
   },
   {
-    id: "FlyingSolo",
+    id: SETUP_CARD_IDS.FLYING_SOLO,
     label: "Flying Solo",
     description: "10th Anniversary Expanded Solo Mode. Pair this with another Setup Card to determine the board state.",
     requiredExpansion: 'tenth',
@@ -213,7 +213,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     ]
   },
   {
-    id: "AintAllButtonsAndCharts",
+    id: SETUP_CARD_IDS.AINT_ALL_BUTTONS_AND_CHARTS,
     label: "Ain't All Buttons & Charts",
     description: "Players draft Shuttles from the supply deck. Specific starting jobs from Amnon Duul, Lord Harrow, and Magistrate Higgins.",
     requiredExpansion: 'tenth',
@@ -233,7 +233,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     ]
   },
   {
-    id: "HomeSweetHaven",
+    id: SETUP_CARD_IDS.HOME_SWEET_HAVEN,
     label: "Home Sweet Haven",
     description: "Draft Haven tokens to establish a home base. Ships start at Havens. Includes 'Local Heroes' bonuses.",
     requiredExpansion: 'tenth',
@@ -252,7 +252,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     ]
   },
   {
-    id: "TheHeatIsOn",
+    id: SETUP_CARD_IDS.THE_HEAT_IS_ON,
     label: "The Heat Is On",
     description: "Leaders begin with Wanted tokens. Cruisers start at Regulus and Persephone. Pressure's High rules active.",
     requiredExpansion: 'tenth',

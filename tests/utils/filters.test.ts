@@ -57,7 +57,7 @@ describe('utils/filters', () => {
     
     // Solo Modes
     it('in Classic Solo mode, only allows "Awful Lonely in the Big Black"', () => {
-      const state: GameState = { ...baseGameState, gameMode: 'solo', setupCardId: 'AwfulLonely' };
+      const state: GameState = { ...baseGameState, gameMode: 'solo', setupCardId: SETUP_CARD_IDS.STANDARD };
       const awfulLonelyStory: StoryCardDef = { title: STORY_TITLES.AWFUL_LONELY, intro: '' };
       
       expect(isStoryCompatible(awfulLonelyStory, state)).toBe(true);

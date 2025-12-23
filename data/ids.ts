@@ -3,8 +3,14 @@ export const SETUP_CARD_IDS = {
   FLYING_SOLO: 'FlyingSolo',
   AWFUL_CROWDED: 'AwfulCrowdedInMySky',
   RIMS_THE_THING: 'TheRimsTheThing',
-  ALLIANCE_HIGH_ALERT: 'AllianceHighAlert',
+  TIMES_NOT_ON_OUR_SIDE: 'TimesNotOnOurSide',
   THE_BROWNCOAT_WAY: 'TheBrowncoatWay',
+  THE_BLITZ: 'TheBlitz',
+  ALLIANCE_HIGH_ALERT: 'AllianceHighAlert',
+  CLEARER_SKIES_BETTER_DAYS: 'ClearerSkiesBetterDays',
+  AINT_ALL_BUTTONS_AND_CHARTS: 'AintAllButtonsAndCharts',
+  HOME_SWEET_HAVEN: 'HomeSweetHaven',
+  THE_HEAT_IS_ON: 'TheHeatIsOn',
 };
 
 export const STEP_IDS = {
@@ -50,16 +56,51 @@ export const CHALLENGE_IDS = {
 };
 
 export const STORY_TITLES = {
-  RACING_A_PALE_HORSE: "Racing A Pale Horse",
-  HEROES_AND_MISFITS: "Heroes & Misfits",
-  AWFUL_LONELY: "Awful Lonely In The Big Black",
-  SLAYING_THE_DRAGON: "Slaying The Dragon",
+  // Core
   DESPERADOES: "Desperadoes",
+  FIRST_TIME_IN_CAPTAINS_CHAIR: "First Time in the Captain's Chair",
   RESPECTABLE_PERSONS: '"Respectable" Persons Of Business',
+  // Crime & Punishment
+  SMUGGLERS_BLUES: "Smuggler's Blues",
+  WANTED_MEN: "Wanted Men",
+  // Kalidasa
+  ITS_ALL_IN_WHO_YOU_KNOW: "It's All In Who You Know",
+  // Pirates & Bounty Hunters
+  ANOTHER_MANS_TREASURE: "...Another Man's Treasure",
+  // Coachworks
+  DOWN_AND_OUT: "Down And Out",
+  WHERE_THE_WIND_TAKES_US: "Where The Wind Takes Us",
+  // Still Flying
   RARE_SPECIMEN: "A Rare Specimen Indeed",
+  // 10th Anniversary
+  A_FRIEND_IN_EVERY_PORT: "A Friend In Every Port",
+  ITS_A_MAD_MAD_VERSE: "It's a Mad, Mad, Mad, Mad 'Verse!",
+  LETS_BE_BAD_GUYS: "Let's Be Bad Guys",
+  RUNNING_ON_EMPTY: "Running On Empty",
+  // Solo
+  AWFUL_LONELY: "Awful Lonely In The Big Black",
+  A_FISTFUL_OF_SCOUNDRELS: "A Fistful Of Scoundrels",
+  FOR_A_FEW_CREDITS_MORE: "For A Few Credits More",
+  HEROES_AND_MISFITS: "Heroes & Misfits",
+  RACING_A_PALE_HORSE: "Racing A Pale Horse",
+  SEEDS_OF_REBELLION: "Seeds Of Rebellion",
+  THE_LONELY_SMUGGLERS_BLUES: "The Lonely Smuggler's Blues",
+  // Community
+  HOSPITAL_RESCUE: "Hospital Rescue",
+  HOW_IT_ALL_STARTED: "How It All Started",
+  IT_AINT_EASY_GOIN_LEGIT: "It Ain't Easy Goin' Legit",
+  SHADOWS_OVER_DUUL: "Shadows Over Duul",
+  SLAYING_THE_DRAGON: "Slaying The Dragon",
 };
 
 export const CONTACT_NAMES = {
   NISKA: 'Niska',
   HARKEN: 'Harken',
+  BADGER: 'Badger',
+  AMNON_DUUL: 'Amnon Duul',
+  PATIENCE: 'Patience',
+  LORD_HARROW: 'Lord Harrow',
+  MR_UNIVERSE: 'Mr. Universe',
+  FANTY_MINGO: 'Fanty & Mingo',
+  MAGISTRATE_HIGGINS: 'Magistrate Higgins',
 };

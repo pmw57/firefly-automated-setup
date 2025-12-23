@@ -65,7 +65,7 @@ describe('utils/prime', () => {
     it('applies story multiplier', () => {
       const state: GameState = {
         ...stateForStandardPriming,
-        selectedStoryCard: "A Friend In Every Port" // This has primingMultiplier: 2
+        selectedStoryCard: STORY_TITLES.A_FRIEND_IN_EVERY_PORT // This has primingMultiplier: 2
       };
       const details = getPrimeDetails(state, {});
       expect(details.effectiveMultiplier).toBe(2);
@@ -75,7 +75,7 @@ describe('utils/prime', () => {
     it('prioritizes blitz multiplier over story multiplier', () => {
       const state: GameState = {
         ...stateForStandardPriming,
-        selectedStoryCard: "A Friend In Every Port" // This has primingMultiplier: 2
+        selectedStoryCard: STORY_TITLES.A_FRIEND_IN_EVERY_PORT // This has primingMultiplier: 2
       };
       const details = getPrimeDetails(state, { primeMode: 'blitz' });
       expect(details.effectiveMultiplier).toBe(2); // Blitz is 2x

@@ -1,4 +1,5 @@
 import { StoryCardDef, SetupRule } from '../../types';
+import { STORY_TITLES } from '../ids';
 
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
@@ -12,11 +13,11 @@ const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule,
 
 export const PIRATES_STORIES: StoryCardDef[] = [
   {
-    title: "...Another Man's Treasure",
+    title: STORY_TITLES.ANOTHER_MANS_TREASURE,
     intro: "Wealth can be measured in many ways. In some parts of the 'Verse Alliance credits ain't worth the paper they're printed on. For those regions, a more practical measure of wealth is required. Hoard a mountain of trade goods and spare parts, through any means necessary. Break contracts, steal from your rivals or just pick the bones. Anything goes!",
     setupDescription: "Choose Havens in Border Space. Remove all Piracy Jobs from decks after setup.",
     requiredExpansion: "pirates",
-    rules: createStoryRules("...Another Man's Treasure", [
+    rules: createStoryRules(STORY_TITLES.ANOTHER_MANS_TREASURE, [
       { type: 'addFlag', flag: 'addBorderHavens' },
       { type: 'addFlag', flag: 'removePiracyJobs' }
     ])

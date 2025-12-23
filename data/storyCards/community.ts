@@ -1,4 +1,5 @@
 import { StoryCardDef, SetupRule } from '../../types';
+import { STORY_TITLES, CONTACT_NAMES } from '../ids';
 
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
@@ -42,20 +43,20 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1045716/article/13603393#13603393"
   },
   {
-    title: "Hospital Rescue",
+    title: STORY_TITLES.HOSPITAL_RESCUE,
     intro: "River is prisoner in a secure hospital at Londinium, and needs rescuing.",
     setupDescription: "Remove River Tam from play.",
     requiredExpansion: "community",
-    rules: createStoryRules("Hospital Rescue", [
+    rules: createStoryRules(STORY_TITLES.HOSPITAL_RESCUE, [
       { type: 'addFlag', flag: 'removeRiver' }
     ])
   },
   {
-    title: "How It All Started",
+    title: STORY_TITLES.HOW_IT_ALL_STARTED,
     intro: "You're low on funds, and need to get a job. Badger's hired you to scavenge a derelict ship dangerously close to an Alliance cruiser. Get the cargo, evade the Alliance, and sell it.",
     setupDescription: "Start with $500, 2 Fuel, 2 Parts. Nandi discounts.",
     requiredExpansion: "community",
-    rules: createStoryRules("How It All Started", [
+    rules: createStoryRules(STORY_TITLES.HOW_IT_ALL_STARTED, [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Story Override" },
       { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, description: "Story Override" },
       { type: 'modifyResource', resource: 'parts', method: 'set', value: 2, description: "Story Override" },
@@ -64,14 +65,14 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/186593/where-it-all-started-story-card"
   },
   {
-    title: "It Ain't Easy Goin' Legit",
+    title: STORY_TITLES.IT_AINT_EASY_GOIN_LEGIT,
     intro: "Your last run in with Harken turned South and you've got a boatload of warrants trailin' ya. Time to clean your ledger and get dirt on Harken instead.",
     setupDescription: "Start with 2 Warrants. Alliance Space off limits. No Harken.",
     requiredExpansion: "community",
-    rules: createStoryRules("It Ain't Easy Goin' Legit", [
+    rules: createStoryRules(STORY_TITLES.IT_AINT_EASY_GOIN_LEGIT, [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, description: "Start with 2 Warrants." },
       { type: 'addFlag', flag: 'allianceSpaceOffLimits' },
-      { type: 'forbidContact', contact: "Harken" }
+      { type: 'forbidContact', contact: CONTACT_NAMES.HARKEN }
     ])
   },
   {
@@ -93,22 +94,22 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     requiredExpansion: "community"
   },
   {
-    title: "Shadows Over Duul",
+    title: STORY_TITLES.SHADOWS_OVER_DUUL,
     intro: "The Silverhold-Hera route is usually a harmless uneventful run. Unless, of course, someone installs a beacon on the cargo which attracts a Reaver party.",
     setupDescription: "Remove Amnon Duul Jobs. Start in border of Murphy.",
     requiredExpansion: "community",
-    rules: createStoryRules("Shadows Over Duul", [
-      { type: 'forbidContact', contact: "Amnon Duul" },
+    rules: createStoryRules(STORY_TITLES.SHADOWS_OVER_DUUL, [
+      { type: 'forbidContact', contact: CONTACT_NAMES.AMNON_DUUL },
       { type: 'setShipPlacement', location: 'border_of_murphy' }
     ])
   },
   {
-    title: "Slaying The Dragon",
+    title: STORY_TITLES.SLAYING_THE_DRAGON,
     intro: "Adelai Niska has been lord of the underworld for as long as anyone can remember. Shu-ki, the tong boss of Gonghe, has long suffered under Niska's yoke. After being publicly shamed by Niska at a meeting of crime-bosses, an enraged Shu-ki has decided to bring Niska down. He has a plan - Operation Dragon - but the job is so daunting that it requires two crews to have any hope of success. Can two Firefly captains bring down the most feared criminal boss in the 'Verse?",
     setupDescription: "2-Player Co-Op. Niska jobs forbidden. Remove Niska Deck. Prime +2 cards/deck. Stack 16 Disgruntled Tokens (Countdown).",
     requiredExpansion: "community",
-    rules: createStoryRules("Slaying The Dragon", [
-      { type: 'forbidContact', contact: 'Niska' },
+    rules: createStoryRules(STORY_TITLES.SLAYING_THE_DRAGON, [
+      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
       { type: 'modifyPrime', modifier: { add: 2 } },
     ]),
     sourceUrl: "https://boardgamegeek.com/thread/1049020/article/13686225#13686225"

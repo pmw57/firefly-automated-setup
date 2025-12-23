@@ -1,4 +1,5 @@
 import { StoryCardDef, SetupRule } from '../../types';
+import { STORY_TITLES, CONTACT_NAMES } from '../ids';
 
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
@@ -12,10 +13,10 @@ const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule,
 
 export const SOLO_STORIES: StoryCardDef[] = [
   {
-    title: "Awful Lonely In The Big Black",
+    title: STORY_TITLES.AWFUL_LONELY,
     intro: "It takes a brave soul to sail the Big Black alone... Pick your goal and test your skills.",
     setupDescription: "Solo Play. Draft Crew ($1000 limit). Stack 20 Disgruntled Tokens (Timer). Remove Piracy Jobs.",
-    rules: createStoryRules("Awful Lonely In The Big Black", [
+    rules: createStoryRules(STORY_TITLES.AWFUL_LONELY, [
       { type: 'addFlag', flag: 'removePiracyJobs' },
       { type: 'addFlag', flag: 'soloCrewDraft' },
       { type: 'addFlag', flag: 'soloGameTimer' }
@@ -28,13 +29,13 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true
   },
   {
-    title: "A Fistful Of Scoundrels",
+    title: STORY_TITLES.A_FISTFUL_OF_SCOUNDRELS,
     intro: "A captain is only as good as his reputation. And you never know when the winds might change, so best to be on terms with as many folks as possible.",
     setupDescription: "Roots In The Community: Each time you gain Solid with a Contact, recover 2 Game Length Tokens.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
-    rules: createStoryRules("A Fistful Of Scoundrels", [
+    rules: createStoryRules(STORY_TITLES.A_FISTFUL_OF_SCOUNDRELS, [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'primeContacts' },
       { type: 'setJobMode', mode: 'no_jobs' }
@@ -51,13 +52,13 @@ export const SOLO_STORIES: StoryCardDef[] = [
     }
   },
   {
-    title: "For A Few Credits More",
+    title: STORY_TITLES.FOR_A_FEW_CREDITS_MORE,
     intro: "Money can't buy happiness, but empty pockets can't buy nothin'.",
     setupDescription: "No Starting Jobs (Prime Contact Decks). Start with 1 random Alliance Alert.",
     requiredExpansion: "tenth",
     additionalRequirements: ["crime"],
     isSolo: true,
-    rules: createStoryRules("For A Few Credits More", [
+    rules: createStoryRules(STORY_TITLES.FOR_A_FEW_CREDITS_MORE, [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'addFlag', flag: 'startWithAlertCard' },
       { type: 'primeContacts' },
@@ -91,12 +92,12 @@ export const SOLO_STORIES: StoryCardDef[] = [
     }
   },
   {
-    title: "Heroes & Misfits",
+    title: STORY_TITLES.HEROES_AND_MISFITS,
     intro: "Legends whisper the tales of the ship that could outrun Alliance Cruisers and Reavers alike. A ship that carried a rag-tag crew, each a misfit, each a hero. Now, it's time for you to make your own legacy.",
     setupDescription: "Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000. Alliance Alerts: Start with one random Alliance Alert in play. Adventure Deck: Shuffle all 3-Goal story cards into a single deck.",
     requiredExpansion: "tenth",
     isSolo: true,
-    rules: createStoryRules("Heroes & Misfits", [
+    rules: createStoryRules(STORY_TITLES.HEROES_AND_MISFITS, [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Override" },
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'addFlag', flag: 'startWithAlertCard' },
@@ -131,13 +132,13 @@ export const SOLO_STORIES: StoryCardDef[] = [
     }
   },
   {
-    title: "Racing A Pale Horse",
+    title: STORY_TITLES.RACING_A_PALE_HORSE,
     intro: "The Operative has your scent. He's closing in on your home, and nothing can stop him. Well, maybe nothing except Glücklich Jiã's prototype next-gen artillery cannon...",
     setupDescription: "Place your Haven at Deadwood, Blue Sun. If you end your turn at your Haven, remove Disgruntled from all Crew. Do not use a Timer for this game.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
-    rules: createStoryRules("Racing A Pale Horse", [
+    rules: createStoryRules(STORY_TITLES.RACING_A_PALE_HORSE, [
       { type: 'addFlag', flag: 'disableSoloTimer' }
     ]),
     advancedRule: {
@@ -146,15 +147,15 @@ export const SOLO_STORIES: StoryCardDef[] = [
     }
   },
   {
-    title: "Seeds Of Rebellion",
+    title: STORY_TITLES.SEEDS_OF_REBELLION,
     intro: "The New Resistance is ready to open up some eyes and change a few hearts. They need a savvy captain to deliver key personnel to the heart of Alliance space.",
     setupDescription: "Harken Forbidden: You may not deal with, or be Solid with Harken. Resistance Missions: Place Harken's 7 Immoral Transport Jobs in a separate discard pile to represent New Resistance Missions.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
-    rules: createStoryRules("Seeds Of Rebellion", [
+    rules: createStoryRules(STORY_TITLES.SEEDS_OF_REBELLION, [
       { type: 'addFlag', flag: 'soloGameTimer' },
-      { type: 'forbidContact', contact: "Harken" }
+      { type: 'forbidContact', contact: CONTACT_NAMES.HARKEN }
     ]),
     advancedRule: {
         id: "adv_lost_little_lambs",
@@ -162,13 +163,13 @@ export const SOLO_STORIES: StoryCardDef[] = [
     }
   },
   {
-    title: "The Lonely Smuggler's Blues",
+    title: STORY_TITLES.THE_LONELY_SMUGGLERS_BLUES,
     intro: "Sometimes, it gets lonely in the Black, but it's a good way to dodge the law when you're haulin' goods that might draw the wrong kind of attention.",
     setupDescription: "Place 3 Contraband on each Supply Planet except Persephone and Space bazaar. Place a Goal Token on the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Do not deal Starting Jobs. Begin play at Londinium. Start with one random Alliance Alert Card in play.",
     requiredExpansion: "tenth",
     additionalRequirements: ["crime"],
     isSolo: true,
-    rules: createStoryRules("The Lonely Smuggler's Blues", [
+    rules: createStoryRules(STORY_TITLES.THE_LONELY_SMUGGLERS_BLUES, [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'addFlag', flag: 'lonelySmugglerSetup' },
       { type: 'setShipPlacement', location: 'londinium' },

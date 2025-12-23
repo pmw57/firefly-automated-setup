@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { getJobSetupDetails } from '../../utils/jobs';
 import { GameState, StepOverrides } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
-import { CONTACT_NAMES, CHALLENGE_IDS } from '../../data/ids';
+import { CONTACT_NAMES, CHALLENGE_IDS, STORY_TITLES } from '../../data/ids';
 
 describe('utils/jobs', () => {
   const baseGameState = getDefaultGameState();
@@ -18,7 +18,7 @@ describe('utils/jobs', () => {
     it('removes a forbidden contact from the list', () => {
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: "Let's Be Bad Guys" // This story forbids Niska
+        selectedStoryCard: STORY_TITLES.LETS_BE_BAD_GUYS // This story forbids Niska
       };
       const { contacts } = getJobSetupDetails(state, {});
       expect(contacts).not.toContain(CONTACT_NAMES.NISKA);
@@ -27,7 +27,7 @@ describe('utils/jobs', () => {
     it('filters contacts to only those allowed by the story', () => {
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: "First Time in the Captain's Chair" // Allows Harken & Amnon Duul
+        selectedStoryCard: STORY_TITLES.FIRST_TIME_IN_CAPTAINS_CHAIR // Allows Harken & Amnon Duul
       };
       const { contacts } = getJobSetupDetails(state, {});
       expect(contacts).toEqual(['Harken', 'Amnon Duul']);
@@ -55,7 +55,7 @@ describe('utils/jobs', () => {
     it('handles story card "no_jobs" mode with priming', () => {
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: "A Fistful Of Scoundrels" // Has primeContactDecks flag
+        selectedStoryCard: STORY_TITLES.A_FISTFUL_OF_SCOUNDRELS // Has primeContactDecks flag
       };
       const { showStandardContactList, messages } = getJobSetupDetails(state, {});
       expect(showStandardContactList).toBe(false);
@@ -104,7 +104,7 @@ describe('utils/jobs', () => {
     it('handles "no_jobs" with "Don\'t Prime Contacts" challenge override', () => {
         const state: GameState = {
             ...baseGameState,
-            selectedStoryCard: "A Fistful Of Scoundrels", // Has primeContactDecks flag
+            selectedStoryCard: STORY_TITLES.A_FISTFUL_OF_SCOUNDRELS, // Has primeContactDecks flag
             challengeOptions: { [CHALLENGE_IDS.DONT_PRIME_CONTACTS]: true }
         };
         const { messages } = getJobSetupDetails(state, {});
