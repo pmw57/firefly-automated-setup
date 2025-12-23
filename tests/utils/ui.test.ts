@@ -76,6 +76,19 @@ describe('utils/ui', () => {
             };
             expect(getTimerSummaryText(state)).toBe("Unpredictable (Extra Tokens) (Randomized)");
         });
+
+        it('should correctly show the timer as disabled when "Racing a Pale Horse" overrides "Flying Solo"', () => {
+            const state: GameState = {
+              ...baseGameState,
+              gameMode: 'solo',
+              setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
+              secondarySetupId: SETUP_CARD_IDS.STANDARD,
+              selectedStoryCard: STORY_TITLES.RACING_A_PALE_HORSE, // This story disables the timer
+            };
+            
+            const timerSummary = getTimerSummaryText(state);
+            expect(timerSummary).toBe("Disabled (Story Override)");
+        });
     });
 
     describe('getActiveOptionalRulesText', () => {

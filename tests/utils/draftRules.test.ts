@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { getDraftDetails } from '../../utils/draftRules';
 import { GameState, Step, StructuredContent, StructuredContentPart } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
-import { STEP_IDS, STORY_TITLES, CHALLENGE_IDS } from '../../data/ids';
+import { STEP_IDS, STORY_TITLES, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../data/ids';
 
 // Helper to recursively flatten structured content to a searchable string
 const getTextContent = (content: StructuredContent | StructuredContentPart | undefined): string => {
@@ -94,5 +94,22 @@ describe('utils/draftRules', () => {
         expect(details.isHavenDraft).toBe(false); // Overridden
         expect(details.specialStartSector).toBe('Persephone');
         expect(details.specialRules.some(r => r.title === 'Conflict Resolved')).toBe(true);
+    });
+
+    it('should generate a warning when "The Browncoat Way" is combined with the "Heroes & Misfits" custom setup challenge', () => {
+      const state: GameState = {
+        ...baseGameState,
+        setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
+        selectedStoryCard: STORY_TITLES.HEROES_AND_MISFITS,
+        challengeOptions: { [CHALLENGE_IDS.HEROES_CUSTOM_SETUP]: true },
+        finalStartingCredits: 12000, // From Browncoat Way
+      };
+      const step: Step = { type: 'core', id: STEP_IDS.C3, overrides: { draftMode: 'browncoat' } };
+      
+      const details = getDraftDetails(state, step);
+      
+      const warningRule = details.specialRules.find(r => r.source === 'warning');
+      expect(warningRule).toBeDefined();
+      expect(getTextContent(warningRule?.content)).toContain('Your starting Capitol is reduced by the cost of your assigned ship');
     });
 });

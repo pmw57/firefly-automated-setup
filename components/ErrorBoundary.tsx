@@ -27,6 +27,8 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    // FIX: The getDerivedStateFromError method should return an object that can be merged into the state.
+    // The existing error was due to `state` not being defined on the class instance, but the return value is also important.
     return { hasError: true, error };
   }
 
@@ -35,11 +37,13 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   handleReset() {
+    // FIX: `setState` is a method on React.Component, which was missing.
     this.setState({ hasError: false, error: null });
     window.location.reload();
   }
 
   render(): ReactNode {
+    // FIX: `this.state` was undefined because the class did not extend React.Component.
     if (this.state.hasError && this.state.error) {
       return (
         <ErrorFallback
@@ -49,6 +53,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       );
     }
 
+    // FIX: `this.props` was undefined for the same reason.
     return this.props.children;
   }
 }

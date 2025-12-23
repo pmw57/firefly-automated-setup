@@ -36,7 +36,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
     const addBorderHavens = hasRuleFlag(allRules, 'addBorderHavens');
     const isBrowncoatDraft = overrides.draftMode === 'browncoat';
     const isWantedLeaderMode = overrides.leaderSetup === 'wanted';
-    const showBrowncoatHeroesWarning = isBrowncoatDraft && isHeroesAndMisfits && gameState.finalStartingCredits != null && gameState.finalStartingCredits < 4800;
+    const showBrowncoatHeroesWarning = isBrowncoatDraft && isHeroesAndMisfits && isHeroesCustomSetup;
     
     let resolvedHavenDraft = isHavenDraft;
     let conflictMessage: StructuredContent | null = null;
