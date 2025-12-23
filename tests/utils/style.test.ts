@@ -21,8 +21,9 @@ describe('utils/style', () => {
       expect(cls()).toBe('');
     });
 
-    it('returns an empty string if only falsy arguments are provided', () => {
-      expect(cls(null, undefined, false)).toBe('');
-    });
-  });
-});
+            it('returns an empty string if only falsy arguments are provided', () => {
+              expect(cls(null, undefined, false)).toBe('');
+            });
+          });
+        });
+            
