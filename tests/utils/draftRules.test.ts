@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { getDraftDetails } from '../../utils/draftRules';
 import { GameState, Step, StructuredContent, StructuredContentPart } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
-import { STEP_IDS, STORY_TITLES, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../data/ids';
+import { STEP_IDS, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../data/ids';
 
 // Helper to recursively flatten structured content to a searchable string
 const getTextContent = (content: StructuredContent | StructuredContentPart | undefined): string => {
@@ -68,7 +68,7 @@ describe('utils/draftRules', () => {
     });
     
     it.concurrent('generates a rule for Racing a Pale Horse', () => {
-        const state: GameState = { ...baseGameState, selectedStoryCard: STORY_TITLES.RACING_A_PALE_HORSE };
+        const state: GameState = { ...baseGameState, selectedStoryCard: "Racing A Pale Horse" };
         const details = getDraftDetails(state, baseStep);
         const rule = details.specialRules.find(r => r.title === 'Story Setup: Haven');
         expect(rule).toBeDefined();
@@ -78,7 +78,7 @@ describe('utils/draftRules', () => {
     it.concurrent('generates a rule for Heroes & Misfits custom setup', () => {
         const state: GameState = { 
             ...baseGameState, 
-            selectedStoryCard: STORY_TITLES.HEROES_AND_MISFITS,
+            selectedStoryCard: "Heroes & Misfits",
             challengeOptions: { [CHALLENGE_IDS.HEROES_CUSTOM_SETUP]: true }
         };
         const details = getDraftDetails(state, baseStep);
@@ -88,7 +88,7 @@ describe('utils/draftRules', () => {
     });
 
     it.concurrent('resolves conflict between Haven Draft and special start sector (Story Priority)', () => {
-        const state: GameState = { ...baseGameState, selectedStoryCard: STORY_TITLES.ITS_A_MAD_MAD_VERSE }; // This story forces Persephone start
+        const state: GameState = { ...baseGameState, selectedStoryCard: "It's a Mad, Mad, Mad, Mad 'Verse!" }; // This story forces Persephone start
         const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT }; // This is Haven Draft
         const details = getDraftDetails(state, step);
         
@@ -101,7 +101,7 @@ describe('utils/draftRules', () => {
       const state: GameState = {
         ...baseGameState,
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
-        selectedStoryCard: STORY_TITLES.HEROES_AND_MISFITS,
+        selectedStoryCard: "Heroes & Misfits",
         challengeOptions: { [CHALLENGE_IDS.HEROES_CUSTOM_SETUP]: true },
         finalStartingCredits: 12000, // From Browncoat Way
       };

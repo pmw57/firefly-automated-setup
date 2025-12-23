@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { getStoryCardSetupSummary, getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../../utils/ui';
 import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
-import { SETUP_CARD_IDS, STORY_TITLES } from '../../data/ids';
+import { SETUP_CARD_IDS } from '../../data/ids';
 import { SETUP_CARDS } from '../../data/setupCards';
 
 describe('utils/ui', () => {
@@ -55,7 +55,7 @@ describe('utils/ui', () => {
         });
 
         it.concurrent('returns "Disabled" if story card disables solo timer', () => {
-            const state: GameState = { ...baseGameState, gameMode: 'solo', selectedStoryCard: STORY_TITLES.RACING_A_PALE_HORSE };
+            const state: GameState = { ...baseGameState, gameMode: 'solo', selectedStoryCard: "Racing A Pale Horse" };
             expect(getTimerSummaryText(state)).toBe("Disabled (Story Override)");
         });
 
@@ -84,7 +84,7 @@ describe('utils/ui', () => {
               gameMode: 'solo',
               setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
               secondarySetupId: SETUP_CARD_IDS.STANDARD,
-              selectedStoryCard: STORY_TITLES.RACING_A_PALE_HORSE, // This story disables the timer
+              selectedStoryCard: "Racing A Pale Horse", // This story disables the timer
             };
             
             const timerSummary = getTimerSummaryText(state);

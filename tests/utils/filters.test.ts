@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { isStoryCompatible } from '../../utils/filters';
 import { GameState, StoryCardDef } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
-import { SETUP_CARD_IDS, STORY_TITLES } from '../../data/ids';
+import { SETUP_CARD_IDS } from '../../data/ids';
 
 describe('utils/filters', () => {
   describe('isStoryCompatible', () => {
@@ -12,7 +12,7 @@ describe('utils/filters', () => {
     const multiStory: StoryCardDef = { title: 'Multi Story', intro: '' };
     const expansionStory: StoryCardDef = { title: 'Blue Sun Story', intro: '', requiredExpansion: 'blue' };
     const multiReqStory: StoryCardDef = { title: 'Multi Req Story', intro: '', requiredExpansion: 'blue', additionalRequirements: ['kalidasa'] };
-    const slayStory: StoryCardDef = { title: STORY_TITLES.SLAYING_THE_DRAGON, intro: '' };
+    const slayStory: StoryCardDef = { title: "Slaying The Dragon", intro: '' };
 
     it.concurrent('returns true for a standard story in a standard multiplayer game', () => {
       expect(isStoryCompatible(multiStory, baseGameState)).toBe(true);
@@ -59,7 +59,7 @@ describe('utils/filters', () => {
     // Solo Modes
     it.concurrent('in Classic Solo mode, only allows "Awful Lonely in the Big Black"', () => {
       const state: GameState = { ...baseGameState, gameMode: 'solo', setupCardId: SETUP_CARD_IDS.STANDARD };
-      const awfulLonelyStory: StoryCardDef = { title: STORY_TITLES.AWFUL_LONELY, intro: '' };
+      const awfulLonelyStory: StoryCardDef = { title: "Awful Lonely In The Big Black", intro: '' };
       
       expect(isStoryCompatible(awfulLonelyStory, state)).toBe(true);
       expect(isStoryCompatible(multiStory, state)).toBe(false);

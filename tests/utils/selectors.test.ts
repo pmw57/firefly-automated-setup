@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { getAvailableStoryCards, getAvailableSetupCards } from '../../utils/selectors/story';
 import { GameState } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
-import { SETUP_CARD_IDS, STORY_TITLES } from '../../data/ids';
+import { SETUP_CARD_IDS } from '../../data/ids';
 import { SETUP_CARDS } from '../../data/setupCards';
 
 describe('utils/selectors', () => {
@@ -57,7 +57,7 @@ describe('utils/selectors', () => {
             const classicSoloState: GameState = { ...baseGameState, gameMode: 'solo', setupCardId: SETUP_CARD_IDS.STANDARD };
             const cards = getAvailableStoryCards(classicSoloState);
             expect(cards.length).toBe(1);
-            expect(cards[0].title).toBe(STORY_TITLES.AWFUL_LONELY);
+            expect(cards[0].title).toBe("Awful Lonely In The Big Black");
         });
 
         it.concurrent('should filter based on expansion requirements', () => {
@@ -72,7 +72,7 @@ describe('utils/selectors', () => {
              const cards = getAvailableStoryCards(flyingSoloState);
              expect(cards.length).toBeGreaterThan(1);
              // Should not contain the classic solo story, as that's in the excluded list
-             expect(cards.find(c => c.title === STORY_TITLES.AWFUL_LONELY)).toBeUndefined();
+             expect(cards.find(c => c.title === "Awful Lonely In The Big Black")).toBeUndefined();
         });
     });
 });
