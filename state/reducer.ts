@@ -5,6 +5,98 @@ import { SETUP_CARDS } from '../data/setupCards';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { SETUP_CARD_IDS } from '../data/ids';
 
+// --- Pure Validation Functions ---
+
+/**
+ * Validates that the selected Setup Card is compatible with the enabled expansions.
+ * Resets to Standard if a required expansion is disabled.
+ */
+const validateSetupCard = (state: GameState): GameState => {
+    const currentSetup = SETUP_CARDS.find(s => s.id === state.setupCardId);
+    let shouldResetSetup = false;
+
+    if (currentSetup?.requiredExpansion && !state.expansions[currentSetup.requiredExpansion]) {
+        shouldResetSetup = true;
+    }
+    // Specific case: Flying Solo requires the Tenth Anniversary expansion.
+    if (!state.expansions.tenth && state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
+        shouldResetSetup = true;
+    }
+    
+    if (shouldResetSetup) {
+        return {
+            ...state,
+            setupCardId: SETUP_CARD_IDS.STANDARD,
+            setupCardName: 'Standard Game Setup',
+            secondarySetupId: undefined,
+        };
+    }
+    return state;
+};
+
+/**
+ * Validates that a solo-only Story Card is not selected in a multiplayer game.
+ */
+const validateStoryCard = (state: GameState): GameState => {
+    const currentStoryDef = STORY_CARDS.find(c => c.title === state.selectedStoryCard);
+    if (state.gameMode === 'multiplayer' && currentStoryDef?.isSolo) {
+        return {
+            ...state,
+            selectedStoryCard: '',
+            selectedGoal: undefined,
+            challengeOptions: {},
+        };
+    }
+    return state;
+}
+
+/**
+ * Validates game mode specific rules, like 'Flying Solo' only being available in solo.
+ */
+const validateGameMode = (state: GameState): GameState => {
+    let newState = { ...state };
+
+    // 'Flying Solo' is not a valid setup for multiplayer.
+    if (newState.gameMode === 'multiplayer' && newState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
+        newState = {
+            ...newState,
+            setupCardId: SETUP_CARD_IDS.STANDARD,
+            setupCardName: 'Standard Game Setup',
+            secondarySetupId: undefined,
+        };
+    }
+
+    // Auto-select 'Flying Solo' if player count is 1, 10th expansion is on, and setup is standard.
+    const isDefaultSetup = !newState.setupCardId || newState.setupCardId === SETUP_CARD_IDS.STANDARD;
+    if (newState.gameMode === 'solo' && newState.expansions.tenth && isDefaultSetup) {
+        newState = {
+            ...newState,
+            setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
+            setupCardName: 'Flying Solo',
+            secondarySetupId: newState.setupCardId || SETUP_CARD_IDS.STANDARD,
+        };
+    }
+
+    return newState;
+}
+
+
+/**
+ * A master validation function that runs after every state change to ensure consistency.
+ * It composes smaller, single-purpose validation functions.
+ */
+const validateState = (state: GameState): GameState => {
+    let validatedState = state;
+    validatedState = validateSetupCard(validatedState);
+    validatedState = validateStoryCard(validatedState);
+    validatedState = validateGameMode(validatedState);
+    // Add other validation functions here as needed
+    return validatedState;
+};
+
+
+// --- Reducer and Action Handlers ---
+
 export const getDefaultGameState = (): GameState => {
     const allExpansions = EXPANSIONS_METADATA.reduce((acc, exp) => {
         if (exp.id !== 'base') {
@@ -59,55 +151,17 @@ const adjustPlayerNames = (currentNames: string[], targetCount: number): string[
     return newNames;
 };
 
-const enforceMultiplayerConstraints = (state: GameState): GameState => {
-    const newState = { ...state };
-
-    if (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
-        newState.setupCardId = SETUP_CARD_IDS.STANDARD;
-        newState.setupCardName = 'Standard Game Setup';
-        newState.secondarySetupId = undefined;
-    }
-
-    // SIDE EFFECT: Reset Story Card if it was Solo-only and we are now Multiplayer.
-    // This prevents an invalid game state where a solo story is selected in a multiplayer game.
-    const currentStoryDef = STORY_CARDS.find(c => c.title === state.selectedStoryCard);
-    if (currentStoryDef?.isSolo) {
-        newState.selectedStoryCard = '';
-        newState.selectedGoal = undefined;
-        newState.challengeOptions = {};
-    }
-
-    return newState;
-};
-
 const handlePlayerCountChange = (state: GameState, count: number): GameState => {
     const safeCount = Math.max(1, Math.min(9, count));
     const newMode = safeCount === 1 ? 'solo' : 'multiplayer';
     
-    let finalState: GameState = {
+    return {
         ...state,
         playerCount: safeCount,
         gameMode: newMode,
         playerNames: adjustPlayerNames(state.playerNames, safeCount),
         isCampaign: newMode === 'multiplayer' ? false : state.isCampaign,
     };
-
-    // Auto-select Flying Solo if conditions are met
-    const isDefaultSetup = !finalState.setupCardId || finalState.setupCardId === SETUP_CARD_IDS.STANDARD;
-    if (finalState.gameMode === 'solo' && finalState.expansions.tenth && isDefaultSetup) {
-        finalState = {
-            ...finalState,
-            setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
-            setupCardName: 'Flying Solo',
-            secondarySetupId: finalState.setupCardId || SETUP_CARD_IDS.STANDARD,
-        };
-    }
-
-    finalState = newMode === 'multiplayer' 
-        ? enforceMultiplayerConstraints(finalState) 
-        : finalState;
-    
-    return finalState;
 };
 
 const handleExpansionToggle = (state: GameState, expansionId: keyof GameState['expansions']): GameState => {
@@ -117,26 +171,7 @@ const handleExpansionToggle = (state: GameState, expansionId: keyof GameState['e
     if (expansionId === 'tenth') {
         newState.gameEdition = nextExpansions.tenth ? 'tenth' : 'original';
     }
-
-    // SIDE EFFECT: Validate Setup Card against new expansion state.
-    // If an expansion required by the current setup card is disabled,
-    // we must reset to the standard setup to prevent an invalid state.
-    const currentSetup = SETUP_CARDS.find(s => s.id === state.setupCardId);
-    let shouldResetSetup = false;
-
-    if (currentSetup?.requiredExpansion && !nextExpansions[currentSetup.requiredExpansion]) {
-        shouldResetSetup = true;
-    }
-    // Specific case: Flying Solo requires Tenth
-    if (expansionId === 'tenth' && !nextExpansions.tenth && state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
-        shouldResetSetup = true;
-    }
     
-    if (shouldResetSetup) {
-        newState.setupCardId = SETUP_CARD_IDS.STANDARD;
-        newState.setupCardName = 'Standard Game Setup';
-        newState.secondarySetupId = undefined;
-    }
     return newState;
 };
 
@@ -162,76 +197,101 @@ const handleToggleFlyingSolo = (state: GameState): GameState => {
 };
 
 export function gameReducer(state: GameState, action: Action): GameState {
+  let nextState: GameState;
+
   switch (action.type) {
     case ActionType.SET_PLAYER_COUNT:
-      return handlePlayerCountChange(state, action.payload);
+      nextState = handlePlayerCountChange(state, action.payload);
+      break;
     
     case ActionType.SET_PLAYER_NAME: {
       const newNames = [...state.playerNames];
       newNames[action.payload.index] = action.payload.name;
-      return { ...state, playerNames: newNames };
+      nextState = { ...state, playerNames: newNames };
+      break;
     }
     
     case ActionType.TOGGLE_EXPANSION:
-      return handleExpansionToggle(state, action.payload);
+      nextState = handleExpansionToggle(state, action.payload);
+      break;
 
     case ActionType.SET_CAMPAIGN_MODE:
-        return { ...state, isCampaign: action.payload };
+      nextState = { ...state, isCampaign: action.payload };
+      break;
 
     case ActionType.SET_CAMPAIGN_STORIES:
-        return { ...state, campaignStoriesCompleted: Math.max(0, action.payload) };
+      nextState = { ...state, campaignStoriesCompleted: Math.max(0, action.payload) };
+      break;
     
     case ActionType.SET_SETUP_CARD: {
       const { id, name } = action.payload;
       if (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
-        return { ...state, secondarySetupId: id };
+        nextState = { ...state, secondarySetupId: id };
+      } else {
+        nextState = { ...state, setupCardId: id, setupCardName: name, secondarySetupId: undefined };
       }
-      return { ...state, setupCardId: id, setupCardName: name, secondarySetupId: undefined };
+      break;
     }
 
     case ActionType.TOGGLE_FLYING_SOLO:
-        return handleToggleFlyingSolo(state);
+      nextState = handleToggleFlyingSolo(state);
+      break;
 
     case ActionType.SET_STORY_CARD:
-      return { ...state, selectedStoryCard: action.payload.title, selectedGoal: action.payload.goal, challengeOptions: {} };
+      nextState = { ...state, selectedStoryCard: action.payload.title, selectedGoal: action.payload.goal, challengeOptions: {} };
+      break;
       
     case ActionType.SET_GOAL:
-      return { ...state, selectedGoal: action.payload };
+      nextState = { ...state, selectedGoal: action.payload };
+      break;
 
     case ActionType.RESET_CHALLENGES:
-      return { ...state, challengeOptions: {} };
+      nextState = { ...state, challengeOptions: {} };
+      break;
 
     case ActionType.TOGGLE_CHALLENGE_OPTION:
-      return {
+      nextState = {
         ...state,
         challengeOptions: { ...state.challengeOptions, [action.payload]: !state.challengeOptions[action.payload] }
       };
+      break;
       
     case ActionType.SET_DISGRUNTLED_DIE:
-      return { ...state, optionalRules: { ...state.optionalRules, disgruntledDie: action.payload } };
+      nextState = { ...state, optionalRules: { ...state.optionalRules, disgruntledDie: action.payload } };
+      break;
       
     case ActionType.TOGGLE_SHIP_UPGRADES:
-      return { ...state, optionalRules: { ...state.optionalRules, optionalShipUpgrades: !state.optionalRules.optionalShipUpgrades } };
+      nextState = { ...state, optionalRules: { ...state.optionalRules, optionalShipUpgrades: !state.optionalRules.optionalShipUpgrades } };
+      break;
     
     case ActionType.TOGGLE_CONFLICT_RESOLUTION:
-      return { ...state, optionalRules: { ...state.optionalRules, resolveConflictsManually: !state.optionalRules.resolveConflictsManually } };
+      nextState = { ...state, optionalRules: { ...state.optionalRules, resolveConflictsManually: !state.optionalRules.resolveConflictsManually } };
+      break;
 
     case ActionType.TOGGLE_HIGH_VOLUME_SUPPLY:
-      return { ...state, optionalRules: { ...state.optionalRules, highVolumeSupply: !state.optionalRules.highVolumeSupply } };
+      nextState = { ...state, optionalRules: { ...state.optionalRules, highVolumeSupply: !state.optionalRules.highVolumeSupply } };
+      break;
 
     case ActionType.SET_FINAL_STARTING_CREDITS:
-      return { ...state, finalStartingCredits: action.payload };
+      nextState = { ...state, finalStartingCredits: action.payload };
+      break;
       
     case ActionType.TOGGLE_SOLO_OPTION:
-      return { ...state, soloOptions: { ...state.soloOptions, [action.payload]: !state.soloOptions[action.payload] } };
+      nextState = { ...state, soloOptions: { ...state.soloOptions, [action.payload]: !state.soloOptions[action.payload] } };
+      break;
       
     case ActionType.TOGGLE_TIMER_MODE:
-      return { ...state, timerConfig: { ...state.timerConfig, mode: state.timerConfig.mode === 'standard' ? 'unpredictable' : 'standard' } };
+      nextState = { ...state, timerConfig: { ...state.timerConfig, mode: state.timerConfig.mode === 'standard' ? 'unpredictable' : 'standard' } };
+      break;
 
     case ActionType.RESET_GAME:
-      return getDefaultGameState();
+      nextState = getDefaultGameState();
+      break;
 
     default:
-      return state;
+      nextState = state;
   }
+  
+  // After every action, run the validation logic to ensure a consistent state.
+  return validateState(nextState);
 }
