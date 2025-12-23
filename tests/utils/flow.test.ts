@@ -48,7 +48,7 @@ describe('utils/flow', () => {
     });
 
     it('generates a different flow for "The Browncoat Way"', () => {
-      const state: GameState = { ...baseGameState, setupCardId: 'TheBrowncoatWay' };
+      const state: GameState = { ...baseGameState, setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY };
       const flow = calculateSetupFlow(state);
       const flowIds = flow.map(f => f.id);
       

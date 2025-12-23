@@ -48,11 +48,11 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
 };
 
 const _getInitialContacts = (jobDrawMode: JobMode): string[] => {
-    const STANDARD_CONTACTS = [CONTACT_NAMES.HARKEN, 'Badger', 'Amnon Duul', 'Patience', CONTACT_NAMES.NISKA];
+    const STANDARD_CONTACTS = [CONTACT_NAMES.HARKEN, CONTACT_NAMES.BADGER, CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.PATIENCE, CONTACT_NAMES.NISKA];
     const JOB_MODE_CONTACTS: Record<string, string[]> = {
-        buttons_jobs: ['Amnon Duul', 'Lord Harrow', 'Magistrate Higgins'],
-        awful_jobs: [CONTACT_NAMES.HARKEN, 'Amnon Duul', 'Patience'],
-        rim_jobs: ['Lord Harrow', 'Mr. Universe', 'Fanty & Mingo', 'Magistrate Higgins'],
+        buttons_jobs: [CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.LORD_HARROW, CONTACT_NAMES.MAGISTRATE_HIGGINS],
+        awful_jobs: [CONTACT_NAMES.HARKEN, CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.PATIENCE],
+        rim_jobs: [CONTACT_NAMES.LORD_HARROW, CONTACT_NAMES.MR_UNIVERSE, CONTACT_NAMES.FANTY_MINGO, CONTACT_NAMES.MAGISTRATE_HIGGINS],
     };
     return JOB_MODE_CONTACTS[jobDrawMode] || STANDARD_CONTACTS;
 };
@@ -79,12 +79,12 @@ const _generateJobMessages = (
 ): JobSetupMessage[] => {
     const messages: JobSetupMessage[] = [];
     if (jobDrawMode === 'buttons_jobs') {
-        messages.push({ source: 'setupCard', title: 'Setup Card Override', content: [{ type: 'strong', content: 'Specific Contacts:' }, ' Draw from Amnon Duul, Lord Harrow, and Magistrate Higgins.', { type: 'br' }, { type: 'strong', content: 'Caper Bonus:' }, ' Draw 1 Caper Card.'] });
+        messages.push({ source: 'setupCard', title: 'Setup Card Override', content: [{ type: 'strong', content: 'Specific Contacts:' }, ` Draw from ${CONTACT_NAMES.AMNON_DUUL}, ${CONTACT_NAMES.LORD_HARROW}, and ${CONTACT_NAMES.MAGISTRATE_HIGGINS}.`, { type: 'br' }, { type: 'strong', content: 'Caper Bonus:' }, ' Draw 1 Caper Card.'] });
     }
     if (jobDrawMode === 'awful_jobs') {
         const content: StructuredContent = forbiddenContact === CONTACT_NAMES.HARKEN
-            ? [{ type: 'strong', content: 'Limited Contacts.' }, " This setup card normally draws from Harken, Amnon Duul, and Patience.", { type: 'warning-box', content: ['Story Card Conflict: Harken is unavailable. Draw from Amnon Duul and Patience only.'] }]
-            : [{ type: 'strong', content: 'Limited Contacts.' }, ' Starting Jobs are drawn only from Harken, Amnon Duul, and Patience.'];
+            ? [{ type: 'strong', content: 'Limited Contacts.' }, ` This setup card normally draws from Harken, ${CONTACT_NAMES.AMNON_DUUL}, and ${CONTACT_NAMES.PATIENCE}.`, { type: 'warning-box', content: [`Story Card Conflict: ${CONTACT_NAMES.HARKEN} is unavailable. Draw from ${CONTACT_NAMES.AMNON_DUUL} and ${CONTACT_NAMES.PATIENCE} only.`] }]
+            : [{ type: 'strong', content: 'Limited Contacts.' }, ` Starting Jobs are drawn only from ${CONTACT_NAMES.HARKEN}, ${CONTACT_NAMES.AMNON_DUUL}, and ${CONTACT_NAMES.PATIENCE}.`];
         messages.push({ source: 'setupCard', title: 'Setup Card Override', content });
     }
     if (isSingleContactChallenge) {

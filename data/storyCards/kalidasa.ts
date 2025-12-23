@@ -1,4 +1,5 @@
 import { StoryCardDef, SetupRule } from '../../types';
+import { STORY_TITLES } from '../ids';
 
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
@@ -12,11 +13,11 @@ const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule,
 
 export const KALIDASA_STORIES: StoryCardDef[] = [
   {
-    title: "It's All In Who You Know",
+    title: STORY_TITLES.ITS_ALL_IN_WHO_YOU_KNOW,
     intro: "Credits are all well and good, but a strong network of contacts will pay greater dividends in the future. That's a lesson every captain gets to learn early, or they're likely not to be around long enough to learn it at all.",
     setupDescription: "Create a stack of Alliance Alert Tokens (3x Players). No Starting Jobs.",
     requiredExpansion: "kalidasa",
-    rules: createStoryRules("It's All In Who You Know", [
+    rules: createStoryRules(STORY_TITLES.ITS_ALL_IN_WHO_YOU_KNOW, [
       { type: 'createAlertTokenStack', multiplier: 3 },
       { type: 'setJobMode', mode: 'no_jobs' }
     ])

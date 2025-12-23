@@ -22,7 +22,7 @@ describe('utils/selectors', () => {
                 expansions: { ...baseGameState.expansions, crime: false }
             };
             const cards = getAvailableSetupCards(state);
-            expect(cards.find(c => c.id === 'AllianceHighAlert')).toBeUndefined();
+            expect(cards.find(c => c.id === SETUP_CARD_IDS.ALLIANCE_HIGH_ALERT)).toBeUndefined();
         });
 
         it('should not filter out cards that have no required expansion', () => {
@@ -39,8 +39,8 @@ describe('utils/selectors', () => {
             // Standard is first (no expansion)
             expect(cards[0].id).toBe(SETUP_CARD_IDS.STANDARD);
             // Blue Sun card comes before Kalidasa card
-            const blueSunIndex = cards.findIndex(c => c.id === 'AwfulCrowdedInMySky');
-            const kalidasaIndex = cards.findIndex(c => c.id === 'TheRimsTheThing');
+            const blueSunIndex = cards.findIndex(c => c.id === SETUP_CARD_IDS.AWFUL_CROWDED);
+            const kalidasaIndex = cards.findIndex(c => c.id === SETUP_CARD_IDS.RIMS_THE_THING);
             expect(blueSunIndex).toBeLessThan(kalidasaIndex);
         });
     });
@@ -53,7 +53,7 @@ describe('utils/selectors', () => {
         });
 
         it('should only return "Awful Lonely" in classic solo mode', () => {
-            const classicSoloState: GameState = { ...baseGameState, gameMode: 'solo', setupCardId: 'Standard' };
+            const classicSoloState: GameState = { ...baseGameState, gameMode: 'solo', setupCardId: SETUP_CARD_IDS.STANDARD };
             const cards = getAvailableStoryCards(classicSoloState);
             expect(cards.length).toBe(1);
             expect(cards[0].title).toBe(STORY_TITLES.AWFUL_LONELY);

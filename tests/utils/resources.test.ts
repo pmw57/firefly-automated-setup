@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { getResourceDetails } from '../../utils/resources';
 import { GameState } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
+import { SETUP_CARD_IDS, STORY_TITLES } from '../../data/ids';
 
 describe('utils/resources', () => {
   const baseGameState = getDefaultGameState();
@@ -15,7 +16,7 @@ describe('utils/resources', () => {
 
   describe('getResourceDetails with Effect System', () => {
     it('returns default resources for a standard game', () => {
-      const state = getGameStateWithConfig({ setupCardId: 'Standard' });
+      const state = getGameStateWithConfig({ setupCardId: SETUP_CARD_IDS.STANDARD });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(3000);
       expect(details.fuel).toBe(6);
@@ -26,7 +27,7 @@ describe('utils/resources', () => {
     });
 
     it('applies a "set" credits effect from a setup card', () => {
-      const state = getGameStateWithConfig({ setupCardId: 'TheBrowncoatWay' }); // Sets to $12000
+      const state = getGameStateWithConfig({ setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY }); // Sets to $12000
       const details = getResourceDetails(state);
       expect(details.credits).toBe(12000);
       expect(details.creditModifications[0].description).toBe('Setup Card Allocation');
@@ -34,8 +35,8 @@ describe('utils/resources', () => {
 
     it('applies an "add" credits effect from a story card', () => {
       const state = getGameStateWithConfig({ 
-        setupCardId: 'Standard', 
-        selectedStoryCard: 'Running On Empty' // Adds $1200
+        setupCardId: SETUP_CARD_IDS.STANDARD, 
+        selectedStoryCard: STORY_TITLES.RUNNING_ON_EMPTY // Adds $1200
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(4200); // 3000 + 1200
@@ -45,8 +46,8 @@ describe('utils/resources', () => {
     
     it('applies a "set" credits effect from a story card, overriding the base', () => {
       const state = getGameStateWithConfig({ 
-        setupCardId: 'Standard', 
-        selectedStoryCard: 'How It All Started' // Sets to $500
+        setupCardId: SETUP_CARD_IDS.STANDARD, 
+        selectedStoryCard: STORY_TITLES.HOW_IT_ALL_STARTED // Sets to $500
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(500);
@@ -55,8 +56,8 @@ describe('utils/resources', () => {
 
     it('resolves conflict between "set" credit effects by prioritizing the story rule', () => {
       const state = getGameStateWithConfig({
-        setupCardId: 'TheBrowncoatWay', // Sets to $12000
-        selectedStoryCard: 'How It All Started' // Sets to $500
+        setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY, // Sets to $12000
+        selectedStoryCard: STORY_TITLES.HOW_IT_ALL_STARTED // Sets to $500
       });
       // FIX: The conflict property is now on the details object, and should be undefined here as manual resolution is off.
       const details = getResourceDetails(state);
@@ -68,8 +69,8 @@ describe('utils/resources', () => {
 
     it('applies "disable" effects for fuel and parts from a story', () => {
       const state = getGameStateWithConfig({ 
-        setupCardId: 'Standard',
-        selectedStoryCard: 'Running On Empty' // Disables fuel and parts
+        setupCardId: SETUP_CARD_IDS.STANDARD,
+        selectedStoryCard: STORY_TITLES.RUNNING_ON_EMPTY // Disables fuel and parts
       });
       const details = getResourceDetails(state);
 
@@ -80,7 +81,7 @@ describe('utils/resources', () => {
     });
     
     it('correctly applies effects from TheBrowncoatWay setup card', () => {
-      const state = getGameStateWithConfig({ setupCardId: 'TheBrowncoatWay' });
+      const state = getGameStateWithConfig({ setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY });
       const details = getResourceDetails(state);
 
       expect(details.credits).toBe(12000);
@@ -92,8 +93,8 @@ describe('utils/resources', () => {
 
     it('handles adding warrants and other resources', () => {
       const state = getGameStateWithConfig({
-        setupCardId: 'Standard',
-        selectedStoryCard: "It Ain't Easy Goin' Legit" // Adds 2 warrants
+        setupCardId: SETUP_CARD_IDS.STANDARD,
+        selectedStoryCard: STORY_TITLES.IT_AINT_EASY_GOIN_LEGIT // Adds 2 warrants
       });
       const details = getResourceDetails(state);
 
