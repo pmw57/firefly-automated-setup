@@ -1,3 +1,4 @@
+/*
 import React from 'react';
 import { Step } from '../types';
 import { JobStep } from './JobStep';
@@ -52,3 +53,4 @@ export const DynamicStepHandler = ({ step }: DynamicStepHandlerProps): React.Rea
   // Fallback
   return <div className="p-4 text-red-500">Content for dynamic step '{id}' not found.</div>;
 };
+*/

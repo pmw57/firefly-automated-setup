@@ -1,17 +1,13 @@
 import React, { useMemo } from 'react';
-import { Step } from '../types';
-import { getJobSetupDetails } from '../utils/selectors/setup';
-import { getActiveStoryCard } from '../utils/selectors/story';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
+import { getJobSetupDetails } from '../utils/selectors/setup';
+import { getActiveStoryCard } from '../utils/selectors/story';
 import { STEP_IDS } from '../data/ids';
+import { StepComponentProps } from './StepContent';
 
-interface JobStepProps {
-  step: Step;
-}
-
-export const JobStep = ({ step }: JobStepProps): React.ReactElement => {
+export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
   const { overrides = {} } = step;
   const activeStoryCard = getActiveStoryCard(gameState);

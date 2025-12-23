@@ -1,16 +1,12 @@
 import React from 'react';
-import { Step } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { getPrimeDetails } from '../utils/selectors/setup';
 import { STORY_TITLES } from '../data/ids';
+import { StepComponentProps } from './StepContent';
 
-interface PrimePumpStepProps {
-  step: Step;
-}
-
-export const PrimePumpStep: React.FC<PrimePumpStepProps> = ({ step }) => {
+export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState } = useGameState();
   const overrides = React.useMemo(() => step.overrides || {}, [step.overrides]);
   const { theme } = useTheme();

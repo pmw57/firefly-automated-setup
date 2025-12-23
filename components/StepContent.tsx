@@ -31,7 +31,7 @@ import { SetupCardSelection } from './setup/SetupCardSelection';
 import { OptionalRulesSelection } from './OptionalRulesSelection';
 
 
-interface StepContentProps {
+export interface StepComponentProps {
   step: Step;
   onNext: () => void;
   onPrev: () => void;
@@ -39,17 +39,19 @@ interface StepContentProps {
 }
 
 // A single, unified registry that maps raw step IDs directly to components.
-// FIX: MissionDossierStep was removed as it requires more props than the registry provides. It's handled as a special case.
-const STEP_COMPONENT_REGISTRY: Record<string, React.FC<{ step: Step }>> = {
+// All components now adhere to the StepComponentProps interface for consistency.
+const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
   // Core Steps
   [STEP_IDS.C1]: NavDeckStep,
   [STEP_IDS.C2]: AllianceReaverStep,
   [STEP_IDS.C3]: DraftStep,
+  [STEP_IDS.C4]: MissionDossierStep,
   [STEP_IDS.C5]: ResourcesStep,
   [STEP_IDS.C6]: JobStep,
   [STEP_IDS.C_PRIME]: PrimePumpStep,
 
   // Dynamic Steps
+  [STEP_IDS.D_FIRST_GOAL]: MissionDossierStep,
   [STEP_IDS.D_RIM_JOBS]: JobStep, // Reuses JobStep
   [STEP_IDS.D_HAVEN_DRAFT]: DraftStep, // Reuses DraftStep
   [STEP_IDS.D_GAME_LENGTH_TOKENS]: GameLengthTokensStep,
@@ -63,7 +65,7 @@ const STEP_COMPONENT_REGISTRY: Record<string, React.FC<{ step: Step }>> = {
 };
 
 
-export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepContentProps): React.ReactElement => {
+export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -87,15 +89,9 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepContentP
       return <div className="text-red-500">Unknown Setup Step: {step.id}</div>;
     }
 
-    // FIX: MissionDossierStep is now handled as a special case for C4 and D_FIRST_GOAL
-    if (step.id === STEP_IDS.D_FIRST_GOAL || step.id === STEP_IDS.C4) {
-      const titleOverride = step.id === STEP_IDS.D_FIRST_GOAL ? "First, Choose a Story Card" : undefined;
-      return <MissionDossierStep onNext={onNext} onPrev={onPrev} titleOverride={titleOverride} isNavigating={isNavigating} />;
-    }
-
     const Component = STEP_COMPONENT_REGISTRY[step.id];
     if (Component) {
-      return <Component step={step} />;
+      return <Component step={step} onNext={onNext} onPrev={onPrev} isNavigating={isNavigating} />;
     }
 
     return <div className="text-red-500">Content for step '{step.id}' not found.</div>;
