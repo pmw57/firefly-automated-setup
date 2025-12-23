@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-// FIX: 'getAvailableSetupCards' is exported from the 'story' selector module, not 'setup'.
 import { getAvailableStoryCards, getAvailableSetupCards } from '../../utils/selectors/story';
 import { GameState } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';

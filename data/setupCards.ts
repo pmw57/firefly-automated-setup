@@ -25,7 +25,6 @@ const BASE_TITLES = {
     D_GAME_LENGTH_TOKENS: "Game Length Tokens",
 };
 
-// Standard Flow Template
 const STANDARD_STEPS: SetupCardStep[] = [
   { id: STEP_IDS.C1, title: `1. ${BASE_TITLES.C1}`, page: 3, manual: 'Core' }, 
   { id: STEP_IDS.C2, title: `2. ${BASE_TITLES.C2}`, page: 3, manual: 'Core' }, 
@@ -45,18 +44,12 @@ const createRules = (id: string, rules: DistributiveOmit<SetupRule, 'source' | '
 };
 
 export const SETUP_CARDS: SetupCardDef[] = [
-  // 1. Base Game
   {
     id: "Standard",
     label: "Standard Game Setup",
     description: "The classic Firefly experience. Standard deck building, starting resources, and job allocation.",
     steps: STANDARD_STEPS
   },
-
-  // 2. Pirates & Bounty Hunters
-  // No standalone setup cards currently defined for Pirates that aren't grouped elsewhere.
-
-  // 3. Blue Sun
   { 
     id: "AwfulCrowdedInMySky", 
     label: "Awful Crowded In My Sky", 
@@ -77,8 +70,6 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: STEP_IDS.C_PRIME, title: `7. ${BASE_TITLES.C_PRIME}` }
     ]
   },
-
-  // 4. Kalidasa
   {
     id: "TheRimsTheThing",
     label: "The Rim's The Thing",
@@ -119,8 +110,6 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: STEP_IDS.C_PRIME, title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
   },
-
-  // 5. Coachworks
   {
     id: "TheBrowncoatWay",
     label: "The Browncoat Way",
@@ -163,8 +152,6 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: STEP_IDS.C_PRIME, title: `7. Priming the Pump: Double Dip` }
     ]
   },
-
-  // 6. Crime & Punishment
   {
     id: "AllianceHighAlert",
     label: "Alliance High Alert",
@@ -203,8 +190,6 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: STEP_IDS.C_PRIME, title: `7. ${BASE_TITLES.C_PRIME}` }
     ]
   },
-
-  // 7. 10th Anniversary
   {
     id: "FlyingSolo",
     label: "Flying Solo",

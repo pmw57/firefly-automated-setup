@@ -4,7 +4,6 @@ import { Button } from '../Button';
 import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
 import { ActionType } from '../../state/actions';
-// FIX: 'getAvailableSetupCards' is exported from the 'story' selector module, not 'setup'.
 import { getAvailableSetupCards, getSetupCardById } from '../../utils/selectors/story';
 import { FlyingSoloBanner } from './FlyingSoloBanner';
 import { SetupCardList } from './SetupCardList';
@@ -29,10 +28,8 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
   const totalParts = (isFlyingSoloActive || has10th) ? 3 : 2;
   const isFlyingSoloEligible = isSolo && has10th;
 
-  // Retrieve the Flying Solo card definition via selector
   const flyingSoloCard = useMemo(() => getSetupCardById(SETUP_CARD_IDS.FLYING_SOLO), []);
 
-  // Use selector to get the list of available setup cards
   const availableSetups = useMemo(() => 
     getAvailableSetupCards(gameState), 
   [gameState]);

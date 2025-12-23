@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { Plugin } from 'vite';
 
-// Generate a version string based on the current date and time (YYYY.MM.DD.HHMMSS)
 const getVersion = () => {
   const date = new Date();
   const year = date.getFullYear();
@@ -22,8 +21,6 @@ const getVersion = () => {
 const tailwindCdnFallbackPlugin = (): Plugin => ({
   name: 'vite-plugin-tailwind-cdn-fallback',
   transformIndexHtml(html) {
-    // This hook runs for both 'serve' and 'build' commands.
-    // We remove the block identified by our special comments.
     const regex = /<!--\s*TAILWIND_CDN_START\s*-->[\s\S]*?<!--\s*TAILWIND_CDN_END\s*-->/g;
     return html.replace(regex, '');
   }
@@ -46,13 +43,12 @@ const removeImportmapForTestPlugin = (): Plugin => ({
 });
 
 
-// https://vitejs.dev/config/
 export default defineConfig({
   base: '/firefly-automated-setup/',
   plugins: [
     react(),
-    removeImportmapForTestPlugin(), // Add the new plugin to fix test speed
-    tailwindCdnFallbackPlugin(), // Add our custom plugin
+    removeImportmapForTestPlugin(),
+    tailwindCdnFallbackPlugin(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: [

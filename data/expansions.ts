@@ -4,7 +4,6 @@ export const SPRITE_SHEET_URL = "./expansion_sprites.png";
 
 export type ExpansionCategory = 'core_mechanics' | 'map' | 'variants' | 'promo';
 
-// Add a 'category' property to group expansions in the UI
 interface CategorizedExpansionDef extends ExpansionDef {
   category: ExpansionCategory;
 }
@@ -22,7 +21,6 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     },
     category: 'core_mechanics'
   },
-  // --- Core Content & Mechanics ---
   {
     id: 'breakin_atmo',
     label: "Breakin' Atmo",
@@ -50,7 +48,6 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     page_10th: 29,
     category: 'core_mechanics'
   },
-  // --- Map Expansions ---
   {
     id: 'blue',
     label: "Blue Sun",
@@ -69,7 +66,6 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     page_10th: 42,
     category: 'map'
   },
-  // --- Game Variants & Anniversary ---
   {
     id: 'coachworks',
     label: "Coachworks",
@@ -106,7 +102,6 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     page_10th: 53,
     category: 'variants'
   },
-  // --- Promo & Community Content ---
   {
     id: 'black_market',
     label: "Black Market",

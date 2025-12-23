@@ -38,7 +38,6 @@ describe('components/SetupWizard', () => {
     // Step 2: SetupCardSelection
     expect(await screen.findByText('Select Setup Card')).toBeInTheDocument();
     
-    // FIX: A setup card must be selected to enable the next button.
     const standardSetupButton = screen.getByRole('button', { name: /Standard Game Setup/i });
     fireEvent.click(standardSetupButton);
     

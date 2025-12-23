@@ -18,17 +18,14 @@ export const getHeaderDetails = (
     flow: Step[],
     currentStepIndex: number
 ): HeaderDetails => {
-    // Determine if the user is past the initial configuration steps (Captain, Setup Card, Optional Rules)
     const firstCoreStepIndex = flow.findIndex(step => step.type === 'core');
     const isPastFirstStep = firstCoreStepIndex !== -1 && currentStepIndex >= firstCoreStepIndex;
 
     const secondaryCard = gameState.secondarySetupId ? getSetupCardById(gameState.secondarySetupId) : undefined;
     const setupName = gameState.setupCardName ? getDisplaySetupName(gameState, secondaryCard) : 'Configuring...';
     
-    // Determine if the story card name should be displayed
     const storyName = gameState.selectedStoryCard ? gameState.selectedStoryCard : null;
 
-    // Determine if a solo mode indicator should be shown, and which type
     let soloMode: 'Expanded' | 'Classic' | null = null;
     if (gameState.gameMode === 'solo' && isPastFirstStep) {
         soloMode = gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO ? 'Expanded' : 'Classic';
