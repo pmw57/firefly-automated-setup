@@ -121,15 +121,24 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
       )}
 
       {activeStoryCard.sourceUrl && (
-        <div className={`mt-4 pt-2 border-t border-dashed ${isDark ? 'border-zinc-700' : 'border-gray-300'}`}>
+        <div className={`mt-4 pt-2 border-t border-dashed ${isDark ? 'border-zinc-700' : 'border-gray-300'} flex items-center justify-between gap-4`}>
           <a 
             href={activeStoryCard.sourceUrl} 
             target="_blank" 
             rel="noopener noreferrer"
             className={`inline-flex items-center text-xs font-bold uppercase tracking-wider underline hover:opacity-80 transition-opacity ${isDark ? 'text-blue-400' : 'text-blue-800'}`}
           >
-            <span>View Community Source</span>
+            <span>View Source</span>
             <svg className="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+          </a>
+          <a
+            href="https://github.com/pmw57/firefly-automated-setup/issues/48"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`text-[10px] font-semibold underline hover:opacity-80 transition-opacity ${isDark ? 'text-red-400' : 'text-red-700'}`}
+            title="Report a broken or incorrect link"
+          >
+            Update Link
           </a>
         </div>
       )}
