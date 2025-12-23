@@ -98,7 +98,7 @@ const App = (): React.ReactElement => {
 
   return (
     <div className="min-h-screen font-sans pb-12 transition-colors duration-500 relative">
-      <header className="relative bg-black text-white shadow-2xl mb-8 overflow-hidden border-b-4 border-yellow-600 dark:border-yellow-700/50">
+      <header className="relative bg-black text-white shadow-2xl mb-8 overflow-hidden border-b-4 border-yellow-600 dark:border-yellow-700/50 w-full max-w-screen-lg mx-auto">
         <div 
           className="absolute inset-0 z-0 bg-center pointer-events-none bg-no-repeat bg-zoom-slice xs:bg-full-width xs:animate-ken-burns"
           style={{ 
