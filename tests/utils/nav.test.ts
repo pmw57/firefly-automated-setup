@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getNavDeckDetails } from '../../utils/selectors/setup';
+import { getNavDeckDetails } from '../../utils/nav';
 import { getDefaultGameState } from '../../state/reducer';
 
 describe('utils/nav', () => {

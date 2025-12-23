@@ -2,7 +2,7 @@ import React from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { getAllianceReaverDetails } from '../utils/selectors/setup';
+import { getAllianceReaverDetails } from '../utils/alliance';
 import { StepComponentProps } from './StepContent';
 
 export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {

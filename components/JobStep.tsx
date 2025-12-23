@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { getJobSetupDetails } from '../utils/selectors/setup';
+import { getJobSetupDetails } from '../utils/jobs';
 import { getActiveStoryCard } from '../utils/selectors/story';
 import { STEP_IDS } from '../data/ids';
 import { StepComponentProps } from './StepContent';

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { getResourceDetails } from '../utils/selectors/setup';
+import { getResourceDetails } from '../utils/resources';
 import { hasRuleFlag, getResolvedRules } from '../utils/selectors/rules';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
