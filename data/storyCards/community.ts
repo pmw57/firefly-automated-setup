@@ -111,6 +111,14 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     rules: createStoryRules(STORY_TITLES.SLAYING_THE_DRAGON, [
       { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
       { type: 'modifyPrime', modifier: { add: 2 } },
+      { 
+        type: 'addSpecialRule', 
+        category: 'prime',
+        rule: {
+          title: 'Slaying The Dragon',
+          content: [{ type: 'strong', content: 'Shu-ki is greasing the rails:' }, ' Turn up ', { type: 'strong', content: '2 additional cards' }, ' from each deck when Priming the Pump.']
+        }
+      }
     ]),
     sourceUrl: "https://boardgamegeek.com/thread/1049020/article/13686225#13686225"
   },

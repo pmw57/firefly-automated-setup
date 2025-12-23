@@ -1,5 +1,5 @@
 import { SetupCardDef, SetupCardStep, SetupRule } from '../types';
-import { STEP_IDS, SETUP_CARD_IDS } from './ids';
+import { STEP_IDS, SETUP_CARD_IDS, CONTACT_NAMES } from './ids';
 
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 
@@ -58,7 +58,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     rules: createRules("Awful Crowded In My Sky", [
       { type: 'setNavMode', mode: 'standard_reshuffle' },
       { type: 'setAllianceMode', mode: 'awful_crowded' },
-      { type: 'setJobMode', mode: 'awful_jobs' },
+      { type: 'setJobContacts', contacts: [CONTACT_NAMES.HARKEN, CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.PATIENCE] },
     ]),
     steps: [
       { id: STEP_IDS.C1, title: `1. ${BASE_TITLES.C1}` },
@@ -77,7 +77,8 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'kalidasa',
     rules: createRules("The Rim's The Thing", [
       { type: 'setNavMode', mode: 'rim' },
-      { type: 'setJobMode', mode: 'rim_jobs' },
+      { type: 'setJobContacts', contacts: [CONTACT_NAMES.LORD_HARROW, CONTACT_NAMES.MR_UNIVERSE, CONTACT_NAMES.FANTY_MINGO, CONTACT_NAMES.MAGISTRATE_HIGGINS] },
+      { type: 'setJobMode', mode: 'rim_jobs' }, // Still needed for the rebuild step
     ]),
     steps: [
       { id: STEP_IDS.D_RIM_JOBS, title: `1. ${BASE_TITLES.D_RIM_JOBS}` },
@@ -219,7 +220,12 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'tenth',
     rules: createRules("Ain't All Buttons & Charts", [
       { type: 'setNavMode', mode: 'browncoat' },
-      { type: 'setJobMode', mode: 'buttons_jobs' },
+      { type: 'setJobContacts', contacts: [CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.LORD_HARROW, CONTACT_NAMES.MAGISTRATE_HIGGINS] },
+      { 
+        type: 'addSpecialRule', 
+        category: 'jobs',
+        rule: { title: 'Setup Card Override', content: [{ type: 'strong', content: 'Caper Bonus:' }, ' Draw 1 Caper Card.'] }
+      }
     ]),
     steps: [
       { id: STEP_IDS.D_FIRST_GOAL, title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },

@@ -101,7 +101,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Override" },
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'addFlag', flag: 'startWithAlertCard' },
-      { type: 'setShipPlacement', location: 'persephone' }
+      { type: 'setShipPlacement', location: 'persephone' },
+      { type: 'addFlag', flag: 'isHeroesAndMisfits' }
     ]),
     challengeOptions: [
       { id: 'heroes_custom_setup', label: "Why should Mal have all the fun? Pick the Leader, Ship, and Supply Planet of your choice. Begin the game with $2000 and a full compliment of your favourite Crew from the show or game." }
@@ -139,7 +140,15 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
     rules: createStoryRules(STORY_TITLES.RACING_A_PALE_HORSE, [
-      { type: 'addFlag', flag: 'disableSoloTimer' }
+      { type: 'addFlag', flag: 'disableSoloTimer' },
+      { 
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Setup: Haven',
+          content: [{ type: 'strong', content: `Place your Haven at Deadwood (Blue Sun).` }, { type: 'br' }, `If you end your turn at your Haven, remove Disgruntled from all Crew.`]
+        }
+      }
     ]),
     advancedRule: {
         id: "adv_automated_movement",
