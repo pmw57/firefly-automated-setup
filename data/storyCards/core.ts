@@ -26,7 +26,7 @@ export const CORE_STORIES: StoryCardDef[] = [
     title: "First Time in the Captain's Chair",
     intro: "So you finally took the plunge and borrowed enough credits for a ship to call your own. You're in debt up to your eyeballs with a creditor that's not the sort of man to be trifled with.",
     setupDescription: "Starting Jobs drawn only from Harken and Amnon Duul.",
-    sourceUrl: "https://boardgamegeek.com/filepage/95101/first-time-in-the-captains-chair-official-story-ca",
+    sourceUrl: "https://boardgamegeek.com/image/2785053/gerryrailbaron",
     rules: createStoryRules("First Time in the Captain's Chair", [
       { type: 'allowContacts', contacts: [CONTACT_NAMES.HARKEN, CONTACT_NAMES.AMNON_DUUL] }
     ])
