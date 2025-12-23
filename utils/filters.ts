@@ -1,6 +1,6 @@
 import { GameState, StoryCardDef } from '../types';
 import { SOLO_EXCLUDED_STORIES } from '../data/collections';
-import { SETUP_CARD_IDS, STORY_TITLES } from '../data/ids';
+import { SETUP_CARD_IDS } from '../data/ids';
 
 export const isStoryCompatible = (card: StoryCardDef, state: GameState): boolean => {
     // Rule 1: Game Mode compatibility
@@ -19,7 +19,7 @@ export const isStoryCompatible = (card: StoryCardDef, state: GameState): boolean
     }
 
     // Rule 3: Specific story card rules
-    if (card.title === STORY_TITLES.SLAYING_THE_DRAGON && state.playerCount !== 2) {
+    if (card.title === "Slaying The Dragon" && state.playerCount !== 2) {
         return false;
     }
 
@@ -29,7 +29,7 @@ export const isStoryCompatible = (card: StoryCardDef, state: GameState): boolean
     
     if (isClassicSolo) {
         // Classic solo only allows one story card.
-        return card.title === STORY_TITLES.AWFUL_LONELY;
+        return card.title === "Awful Lonely In The Big Black";
     }
     
     if (isFlyingSolo) {

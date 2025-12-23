@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeContext';
+import { DevStoryAudit } from './DevStoryAudit';
 
 const DEFAULT_OPACITIES = {
   // Light Theme
@@ -45,6 +46,7 @@ const Slider = ({ label, value, onChange, min = 0, max = 1, step = 0.01 }: { lab
 
 export const DevPanel = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [showStoryAudit, setShowStoryAudit] = useState(false);
     const [opacities, setOpacities] = useState(DEFAULT_OPACITIES);
     const { theme } = useTheme();
 
@@ -63,6 +65,10 @@ export const DevPanel = () => {
         setOpacities(DEFAULT_OPACITIES);
     };
 
+    if (showStoryAudit) {
+        return <DevStoryAudit onClose={() => setShowStoryAudit(false)} />;
+    }
+
     if (!isOpen) {
         return (
             <button
@@ -78,9 +84,16 @@ export const DevPanel = () => {
     return (
         <div className="fixed bottom-4 right-4 z-[9999] bg-gray-800/90 backdrop-blur-md text-white p-4 rounded-lg shadow-2xl w-80 border border-gray-600">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-lg">Theme Dev Panel</h3>
+                <h3 className="font-bold text-lg">Dev Panel</h3>
                 <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
             </div>
+            
+            <button
+                onClick={() => setShowStoryAudit(true)}
+                className="w-full mb-4 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 rounded"
+            >
+                Audit Story Links
+            </button>
 
             <div className="space-y-4">
                 <div className={`p-2 rounded transition-colors ${theme === 'light' ? 'bg-gray-700' : 'bg-transparent opacity-50'}`}>
@@ -104,7 +117,7 @@ export const DevPanel = () => {
                 onClick={handleReset}
                 className="w-full mt-4 bg-red-600 hover:bg-red-500 text-white text-sm font-bold py-2 rounded"
             >
-                Reset to Defaults
+                Reset Theme Defaults
             </button>
         </div>
     );

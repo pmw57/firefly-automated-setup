@@ -1,5 +1,4 @@
 import { StoryCardDef, SetupRule } from '../../types';
-import { STORY_TITLES } from '../ids';
 
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
@@ -13,11 +12,12 @@ const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule,
 
 export const STILL_FLYING_STORIES: StoryCardDef[] = [
   {
-    title: STORY_TITLES.RARE_SPECIMEN,
+    title: "A Rare Specimen Indeed",
     intro: "Saffron's at it again. This time, she's convinced Badger that she's from a respectable family, and now the sad little king has his eye on a psychotic blushing bride. Whoever collects the most presents gets to give the toast... before it turns into a shotgun wedding.",
     setupDescription: "Players start with a Caper Card. No Starting Jobs dealt.",
     requiredExpansion: "still_flying",
-    rules: createStoryRules(STORY_TITLES.RARE_SPECIMEN, [
+    sourceUrl: "",
+    rules: createStoryRules("A Rare Specimen Indeed", [
       { type: 'setJobMode', mode: 'caper_start' }
     ])
   },
@@ -25,7 +25,8 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     title: "The Rumrunner's Seasonal",
     intro: "An eccentric billionaire arranges a very special race every year to pick his most favorite captain. Win and you're set for life... or at least until someone breaks your record next time around.",
     requiredExpansion: "still_flying",
-    additionalRequirements: ["blue", "kalidasa"]
+    additionalRequirements: ["blue", "kalidasa"],
+    sourceUrl: ""
   },
   {
     title: "The Smuggly Bustle",
@@ -33,6 +34,7 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     setupDescription: "Place an Alliance Alert Token in every planetary Sector in Alliance Space. Requires Blue Sun & Kalidasa.",
     requiredExpansion: "still_flying",
     additionalRequirements: ["blue", "kalidasa"],
+    sourceUrl: "",
     rules: createStoryRules("The Smuggly Bustle", [
       { type: 'addFlag', flag: 'placeAllianceAlertsInAllianceSpace' }
     ])

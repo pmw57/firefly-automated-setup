@@ -3,7 +3,6 @@ import { describe, it, expect } from 'vitest';
 import { getPrimeDetails } from '../../utils/prime';
 import { GameState } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
-import { STORY_TITLES } from '../../data/ids';
 
 describe('utils/prime', () => {
   describe('getPrimeDetails', () => {
@@ -66,7 +65,7 @@ describe('utils/prime', () => {
     it.concurrent('applies story multiplier', () => {
       const state: GameState = {
         ...stateForStandardPriming,
-        selectedStoryCard: STORY_TITLES.A_FRIEND_IN_EVERY_PORT // This has primingMultiplier: 2
+        selectedStoryCard: "A Friend In Every Port" // This has primingMultiplier: 2
       };
       const details = getPrimeDetails(state, {});
       expect(details.effectiveMultiplier).toBe(2);
@@ -76,7 +75,7 @@ describe('utils/prime', () => {
     it.concurrent('prioritizes blitz multiplier over story multiplier', () => {
       const state: GameState = {
         ...stateForStandardPriming,
-        selectedStoryCard: STORY_TITLES.A_FRIEND_IN_EVERY_PORT // This has primingMultiplier: 2
+        selectedStoryCard: "A Friend In Every Port" // This has primingMultiplier: 2
       };
       const details = getPrimeDetails(state, { primeMode: 'blitz' });
       expect(details.effectiveMultiplier).toBe(2); // Blitz is 2x
@@ -86,7 +85,7 @@ describe('utils/prime', () => {
     it.concurrent('applies Slaying the Dragon modifier (+2 cards)', () => {
         const state: GameState = {
             ...stateForStandardPriming,
-            selectedStoryCard: STORY_TITLES.SLAYING_THE_DRAGON,
+            selectedStoryCard: "Slaying The Dragon",
         };
         const details = getPrimeDetails(state, {});
         expect(details.finalCount).toBe(5); // 3 + 2
@@ -95,7 +94,7 @@ describe('utils/prime', () => {
     it.concurrent('combines blitz and Slaying the Dragon', () => {
         const state: GameState = {
             ...stateForStandardPriming,
-            selectedStoryCard: STORY_TITLES.SLAYING_THE_DRAGON,
+            selectedStoryCard: "Slaying The Dragon",
         };
         const details = getPrimeDetails(state, { primeMode: 'blitz' });
         expect(details.finalCount).toBe(8); // (3 * 2) + 2

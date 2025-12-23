@@ -1,4 +1,6 @@
-import { defineConfig } from 'vitest/config'
+// FIX: Resolve plugin type conflicts by importing `defineConfig` from `vite` and adding a vitest reference.
+/// <reference types="vitest" />
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from 'vite-plugin-pwa'
 import { Plugin } from 'vite';

@@ -3,7 +3,6 @@ import { describe, it, expect } from 'vitest';
 import { getAllianceReaverDetails } from '../../utils/alliance';
 import { StructuredContent, StructuredContentPart } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
-import { STORY_TITLES } from '../../data/ids';
 
 // Helper to recursively flatten structured content to a searchable string
 const getTextContent = (content: StructuredContent | StructuredContentPart): string => {
@@ -48,7 +47,7 @@ describe('utils/alliance', () => {
       const state = { 
         ...baseGameState, 
         playerCount: 4, 
-        selectedStoryCard: STORY_TITLES.ITS_ALL_IN_WHO_YOU_KNOW // This story has a multiplier of 3
+        selectedStoryCard: "It's All In Who You Know" // This story has a multiplier of 3
       };
       
       const details = getAllianceReaverDetails(state, {});
@@ -63,7 +62,7 @@ describe('utils/alliance', () => {
       const stateWithBoth = { 
         ...baseGameState, 
         expansions: { ...baseGameState.expansions, blue: true, kalidasa: true }, 
-        selectedStoryCard: STORY_TITLES.SMUGGLERS_BLUES
+        selectedStoryCard: "Smuggler's Blues"
       };
       const detailsBoth = getAllianceReaverDetails(stateWithBoth, {});
       expect(detailsBoth.specialRules.some(rule => getTextContent(rule.content).includes('Rim Space'))).toBe(true);
@@ -72,7 +71,7 @@ describe('utils/alliance', () => {
       const stateWithOne = { 
         ...baseGameState, 
         expansions: { ...baseGameState.expansions, blue: true, kalidasa: false }, 
-        selectedStoryCard: STORY_TITLES.SMUGGLERS_BLUES 
+        selectedStoryCard: "Smuggler's Blues" 
       };
       const detailsOne = getAllianceReaverDetails(stateWithOne, {});
       expect(detailsOne.specialRules.some(rule => getTextContent(rule.content).includes('Alliance Space'))).toBe(true);

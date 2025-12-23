@@ -1,7 +1,7 @@
 import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef } from '../../types';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
-import { SETUP_CARD_IDS, STORY_TITLES } from '../../data/ids';
+import { SETUP_CARD_IDS } from '../../data/ids';
 import { STORY_CARDS } from '../../data/storyCards';
 import { isStoryCompatible } from '../filters';
 
@@ -82,9 +82,9 @@ export const getFilteredStoryCards = (
 // =================================================================
 
 const SOLO_TIMER_ADJUSTMENTS: Record<string, string> = {
-  [STORY_TITLES.DESPERADOES]: "Declare Last Call before discarding your last token to win the game.",
-  [STORY_TITLES.RESPECTABLE_PERSONS]: "Declare Last Call before discarding your last token to win the game.",
-  [STORY_TITLES.RARE_SPECIMEN]: "Send Out Invites before discarding your last token to win the game."
+  "Desperadoes": "Declare Last Call before discarding your last token to win the game.",
+  '"Respectable" Persons Of Business': "Declare Last Call before discarding your last token to win the game.",
+  "A Rare Specimen Indeed": "Send Out Invites before discarding your last token to win the game."
 };
 
 export const getSoloTimerAdjustmentText = (storyCard: StoryCardDef | undefined): string | null => {

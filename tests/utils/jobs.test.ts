@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { getJobSetupDetails } from '../../utils/jobs';
 import { GameState, StepOverrides, StructuredContent, StructuredContentPart } from '../../types';
 import { getDefaultGameState } from '../../state/reducer';
-import { CONTACT_NAMES, CHALLENGE_IDS, STORY_TITLES, SETUP_CARD_IDS } from '../../data/ids';
+import { CONTACT_NAMES, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../data/ids';
 
 // Helper to recursively flatten structured content to a searchable string
 const getTextContent = (content: StructuredContent | StructuredContentPart): string => {
@@ -48,7 +48,7 @@ describe('utils/jobs', () => {
     it.concurrent('removes a forbidden contact from the list', () => {
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: STORY_TITLES.LETS_BE_BAD_GUYS // This story forbids Niska
+        selectedStoryCard: "Let's Be Bad Guys" // This story forbids Niska
       };
       const { contacts } = getJobSetupDetails(state, {});
       expect(contacts).not.toContain(CONTACT_NAMES.NISKA);
@@ -57,7 +57,7 @@ describe('utils/jobs', () => {
     it.concurrent('filters contacts to only those allowed by the story', () => {
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: STORY_TITLES.FIRST_TIME_IN_CAPTAINS_CHAIR // Allows Harken & Amnon Duul
+        selectedStoryCard: "First Time in the Captain's Chair" // Allows Harken & Amnon Duul
       };
       const { contacts } = getJobSetupDetails(state, {});
       expect(contacts).toEqual(['Harken', 'Amnon Duul']);
@@ -85,7 +85,7 @@ describe('utils/jobs', () => {
     it.concurrent('handles story card "no_jobs" mode with priming', () => {
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: STORY_TITLES.A_FISTFUL_OF_SCOUNDRELS // Has primeContactDecks flag
+        selectedStoryCard: "A Fistful Of Scoundrels" // Has primeContactDecks flag
       };
       const { showStandardContactList, messages } = getJobSetupDetails(state, {});
       expect(showStandardContactList).toBe(false);
@@ -134,7 +134,7 @@ describe('utils/jobs', () => {
     it.concurrent('handles "no_jobs" with "Don\'t Prime Contacts" challenge override', () => {
         const state: GameState = {
             ...baseGameState,
-            selectedStoryCard: STORY_TITLES.A_FISTFUL_OF_SCOUNDRELS, // Has primeContactDecks flag
+            selectedStoryCard: "A Fistful Of Scoundrels", // Has primeContactDecks flag
             challengeOptions: { [CHALLENGE_IDS.DONT_PRIME_CONTACTS]: true }
         };
         const { messages } = getJobSetupDetails(state, {});
@@ -146,7 +146,7 @@ describe('utils/jobs', () => {
       const state: GameState = {
         ...baseGameState,
         setupCardId: SETUP_CARD_IDS.AWFUL_CROWDED, // Sets jobMode: 'awful_jobs'
-        selectedStoryCard: STORY_TITLES.DESPERADOES, // Forbids 'Harken'
+        selectedStoryCard: "Desperadoes", // Forbids 'Harken'
       };
       const overrides: StepOverrides = { jobMode: 'awful_jobs' }; // From the setup card
       const { contacts, messages } = getJobSetupDetails(state, overrides);
