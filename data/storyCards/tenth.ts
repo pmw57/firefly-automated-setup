@@ -18,7 +18,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     setupDescription: "Draft 3 specific contact decks for starting jobs. Priming the Pump discards 2x cards. Requires Blue Sun & Kalidasa.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8103874/sjliver",
     rules: [
       { type: 'setJobMode', mode: 'draft_choice', source: 'story', sourceName: "A Friend In Every Port" },
       { type: 'modifyPrime', multiplier: 2, source: 'story', sourceName: "A Friend In Every Port" },
@@ -28,14 +28,14 @@ export const TENTH_STORIES: StoryCardDef[] = [
     title: "Aces Up Your Sleeve",
     intro: "Prove you're the best - or luckiest - crew around by collecting tales of your exploits.",
     requiredExpansion: "tenth",
-    sourceUrl: ""
+    sourceUrl: "https://boardgamegeek.com/image/8103873/sjliver"
   },
   {
     title: "Dead Man's Hand",
     intro: "The tale of the Dead Man's Hand followed mankind from Earth-That-Was out to the Black. Honor the legends of the outlaws of old with a series of adventures across the 'Verse.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue"],
-    sourceUrl: ""
+    sourceUrl: "https://boardgamegeek.com/image/8103876/sjliver"
   },
   {
     title: "It's a Mad, Mad, Mad, Mad 'Verse!",
@@ -43,7 +43,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     setupDescription: "All ships start at Persephone. Requires Kalidasa.",
     requiredExpansion: "tenth",
     additionalRequirements: ["kalidasa"],
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8103877",
     rules: createStoryRules("It's a Mad, Mad, Mad, Mad 'Verse!", [
       { type: 'setShipPlacement', location: 'persephone' }
     ])
@@ -53,7 +53,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     intro: "It takes a particular kind of sinner to build lasting bridges with Adelai Niska. Are you that brand of renegade?",
     setupDescription: "Niska is forbidden for Starting Jobs.",
     requiredExpansion: "tenth",
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8103878/sjliver",
     rules: createStoryRules("Let's Be Bad Guys", [
       { type: 'forbidContact', contact: CONTACT_NAMES.NISKA }
     ])
@@ -63,7 +63,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     intro: "Reavers are pushing out more and more, making delivery runs almost impossible. Keelhauler Transport & Trading Co. is hiring skilled pilots, madcap mercs, and crafty smugglers to haul needed goods to their Rim distributors.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue"],
-    sourceUrl: ""
+    sourceUrl: "https://boardgamegeek.com/image/8103879/sjliver"
   },
   {
     title: "Running On Empty",
@@ -71,7 +71,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     setupDescription: "Receive +$1200 Starting Credits. No Starting Fuel/Parts. Requires Blue Sun & Kalidasa.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8103880/sjliver",
     rules: createStoryRules("Running On Empty", [
       { type: 'modifyResource', resource: 'credits', method: 'add', value: 1200, description: "Story Bonus" },
       { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No Starting Fuel/Parts" },
@@ -83,6 +83,6 @@ export const TENTH_STORIES: StoryCardDef[] = [
     intro: "Dolls with big heads that wobble! What could go wrong!",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
-    sourceUrl: ""
+    sourceUrl: "https://boardgamegeek.com/image/8103883/sjliver"
   },
 ];

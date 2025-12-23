@@ -16,7 +16,7 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     intro: "Saffron's at it again. This time, she's convinced Badger that she's from a respectable family, and now the sad little king has his eye on a psychotic blushing bride. Whoever collects the most presents gets to give the toast... before it turns into a shotgun wedding.",
     setupDescription: "Players start with a Caper Card. No Starting Jobs dealt.",
     requiredExpansion: "still_flying",
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8103875/sjliver",
     rules: createStoryRules("A Rare Specimen Indeed", [
       { type: 'setJobMode', mode: 'caper_start' }
     ])
@@ -26,7 +26,7 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     intro: "An eccentric billionaire arranges a very special race every year to pick his most favorite captain. Win and you're set for life... or at least until someone breaks your record next time around.",
     requiredExpansion: "still_flying",
     additionalRequirements: ["blue", "kalidasa"],
-    sourceUrl: ""
+    sourceUrl: "https://boardgamegeek.com/image/8103881/sjliver"
   },
   {
     title: "The Smuggly Bustle",
@@ -34,7 +34,7 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     setupDescription: "Place an Alliance Alert Token in every planetary Sector in Alliance Space. Requires Blue Sun & Kalidasa.",
     requiredExpansion: "still_flying",
     additionalRequirements: ["blue", "kalidasa"],
-    sourceUrl: "",
+    sourceUrl: "https://boardgamegeek.com/image/8103882/sjliver",
     rules: createStoryRules("The Smuggly Bustle", [
       { type: 'addFlag', flag: 'placeAllianceAlertsInAllianceSpace' }
     ])
