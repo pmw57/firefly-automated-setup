@@ -1,15 +1,11 @@
 import React from 'react';
-import { Step } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { getAllianceReaverDetails } from '../utils/selectors/setup';
+import { StepComponentProps } from './StepContent';
 
-interface AllianceReaverStepProps {
-  step: Step;
-}
-
-export const AllianceReaverStep: React.FC<AllianceReaverStepProps> = ({ step }) => {
+export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState } = useGameState();
   const { overrides = {} } = step;
 

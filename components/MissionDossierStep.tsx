@@ -6,6 +6,8 @@ import { useMissionSelection } from '../hooks/useMissionSelection';
 import { useTheme } from './ThemeContext';
 import { ActionType } from '../state/actions';
 import { PageReference } from './PageReference';
+import { StepComponentProps } from './StepContent';
+import { STEP_IDS } from '../data/ids';
 
 // Child Components
 import { StoryDossier } from './story/StoryDossier';
@@ -13,14 +15,11 @@ import { StoryRandomizer } from './story/StoryRandomizer';
 import { StoryCardGrid } from './story/StoryCardGrid';
 import { SoloOptionsPart } from './story/SoloOptionsPart';
 
-interface MissionDossierStepProps {
-  onNext: () => void;
-  onPrev: () => void;
+interface MissionDossierStepContentProps extends StepComponentProps {
   titleOverride?: string;
-  isNavigating: boolean;
 }
 
-const MissionDossierStepContent = ({ onNext, onPrev, titleOverride, isNavigating }: MissionDossierStepProps): React.ReactElement => {
+const MissionDossierStepContent = ({ onNext, onPrev, titleOverride, isNavigating }: MissionDossierStepContentProps): React.ReactElement => {
   const { state: gameState, dispatch } = useGameState();
   const {
     subStep,
@@ -152,10 +151,12 @@ const MissionDossierStepContent = ({ onNext, onPrev, titleOverride, isNavigating
   );
 }
 
-export const MissionDossierStep = (props: Omit<MissionDossierStepProps, 'isNavigating'> & { isNavigating: boolean }): React.ReactElement => {
+export const MissionDossierStep = (props: StepComponentProps): React.ReactElement => {
+  const titleOverride = props.step.id === STEP_IDS.D_FIRST_GOAL ? "First, Choose a Story Card" : undefined;
+  
   return (
     <MissionSelectionProvider>
-      <MissionDossierStepContent {...props} />
+      <MissionDossierStepContent {...props} titleOverride={titleOverride} />
     </MissionSelectionProvider>
   );
 };

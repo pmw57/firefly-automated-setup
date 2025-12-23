@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Step, DraftState } from '../types';
+import { DraftState } from '../types';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/draft';
 import { getDraftDetails } from '../utils/selectors/setup';
 import { Button } from './Button';
@@ -8,10 +8,7 @@ import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { cls } from '../utils/style';
-
-interface DraftStepProps {
-  step: Step;
-}
+import { StepComponentProps } from './StepContent';
 
 // Sub-component for Draft Order
 const DraftOrderPanel = ({ 
@@ -146,7 +143,7 @@ const PlacementOrderPanel = ({
     );
 };
 
-export const DraftStep = ({ step }: DraftStepProps): React.ReactElement => {
+export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
   const [draftState, setDraftState] = useState<DraftState | null>(null);
   const [isManualEntry, setIsManualEntry] = useState(false);

@@ -21,7 +21,9 @@ import {
     AllowContactsRule,
     SetJobModeRule,
     RuleSourceType,
-    ResourceConflict
+    ResourceConflict,
+    SetupRule,
+    StoryCardDef
 } from '../../types';
 import { getResolvedRules, hasRuleFlag } from './rules';
 import { CONTACT_NAMES, CHALLENGE_IDS, STORY_TITLES, STEP_IDS } from '../../data/ids';
@@ -75,183 +77,228 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, isSlayingTheDragon, specialRules: [] };
 };
 
+// --- Refactored getResourceDetails ---
 const PRIORITY_ORDER: RuleSourceType[] = ['story', 'challenge', 'setupCard', 'optionalRule', 'expansion'];
+
+const _findCreditConflict = (resourceRules: ModifyResourceRule[], manualResolutionEnabled: boolean): {
+    conflict?: ResourceConflict;
+    storyRule?: ModifyResourceRule;
+    setupRule?: ModifyResourceRule;
+} => {
+    const creditSetRules = resourceRules.filter(r => r.resource === 'credits' && r.method === 'set');
+    const storyRule = creditSetRules.find(r => r.source === 'story');
+    const setupRule = creditSetRules.find(r => r.source === 'setupCard');
+
+    if (manualResolutionEnabled && storyRule && setupRule && storyRule.value !== undefined && setupRule.value !== undefined) {
+        return {
+            conflict: {
+                story: { value: storyRule.value, label: storyRule.sourceName },
+                setupCard: { value: setupRule.value, label: setupRule.sourceName },
+            },
+            storyRule,
+            setupRule,
+        };
+    }
+    return { storyRule, setupRule };
+};
+
+const _applyResourceRules = (
+    resourceType: ResourceType,
+    baseValue: number,
+    rulesForResource: ModifyResourceRule[],
+    creditConflictInfo: ReturnType<typeof _findCreditConflict>,
+    manualSelection?: 'story' | 'setupCard'
+): { value: number; modifications: { description: string; value: string }[] } => {
+    let finalValue = baseValue;
+    let modifications: { description: string; value: string }[] = [];
+
+    if (rulesForResource.some(r => r.method === 'disable')) {
+        return { value: 0, modifications: [] };
+    }
+
+    // Handle 'set' rules
+    if (resourceType === 'credits' && creditConflictInfo.conflict && manualSelection) {
+        const selectedRule = manualSelection === 'story' ? creditConflictInfo.storyRule : creditConflictInfo.setupRule;
+        if (selectedRule?.value !== undefined) {
+            finalValue = selectedRule.value;
+            modifications = [{ description: selectedRule.description, value: `$${finalValue.toLocaleString()}` }];
+        }
+    } else {
+        const setRules = rulesForResource.filter(r => r.method === 'set');
+        if (setRules.length > 0) {
+            setRules.sort((a, b) => PRIORITY_ORDER.indexOf(a.source) - PRIORITY_ORDER.indexOf(b.source));
+            const topRule = setRules[0];
+            if (topRule.value !== undefined) {
+                finalValue = topRule.value;
+                if (resourceType === 'credits') {
+                    modifications = [{ description: topRule.description, value: `$${finalValue.toLocaleString()}` }];
+                }
+            }
+        }
+    }
+
+    // Handle 'add' rules
+    const addRules = rulesForResource.filter(r => r.method === 'add');
+    addRules.forEach(rule => {
+        if (rule.value !== undefined) {
+            finalValue += rule.value;
+            if (resourceType === 'credits') {
+                if (modifications.length === 0) {
+                     modifications.push({ description: "Base Allocation", value: `$${baseValue.toLocaleString()}` });
+                }
+                modifications.push({ description: rule.description, value: `+$${rule.value.toLocaleString()}` });
+            }
+        }
+    });
+    
+    // Default modification for credits if no other rules applied
+    if (resourceType === 'credits' && modifications.length === 0) {
+        modifications.push({ description: "Standard Allocation", value: `$${finalValue.toLocaleString()}` });
+    }
+
+    return { value: finalValue, modifications };
+};
 
 export const getResourceDetails = (gameState: GameState, manualSelection?: 'story' | 'setupCard'): ResourceDetails => {
   const allRules = getResolvedRules(gameState);
   const resourceRules = allRules.filter(r => r.type === 'modifyResource') as ModifyResourceRule[];
   
-  const resources: Record<ResourceType, number> = { credits: 3000, fuel: 6, parts: 2, warrants: 0, goalTokens: 0 };
-  let creditModifications: { description: string; value: string }[] = [{ description: "Standard Allocation", value: "$3,000" }];
-  let conflict: ResourceConflict | undefined = undefined;
+  const baseResources: Record<ResourceType, number> = { credits: 3000, fuel: 6, parts: 2, warrants: 0, goalTokens: 0 };
+  const finalResources: Partial<Record<ResourceType, number>> = {};
+  let finalCreditModifications: { description: string; value: string }[] = [];
 
-  const creditSetRules = resourceRules.filter(r => r.resource === 'credits' && r.method === 'set');
-  const storyCreditSetRule = creditSetRules.find(r => r.source === 'story');
-  const setupCardCreditSetRule = creditSetRules.find(r => r.source === 'setupCard');
-
-  if (gameState.optionalRules.resolveConflictsManually && storyCreditSetRule && setupCardCreditSetRule && storyCreditSetRule.value !== undefined && setupCardCreditSetRule.value !== undefined) {
-      conflict = {
-          story: { value: storyCreditSetRule.value, label: storyCreditSetRule.sourceName },
-          setupCard: { value: setupCardCreditSetRule.value, label: setupCardCreditSetRule.sourceName },
-      };
-  }
-
-  (Object.keys(resources) as ResourceType[]).forEach(resource => {
-    const rulesForResource = resourceRules.filter(r => r.resource === resource);
-
-    // 1. Check for 'disable' rule - this has top priority
-    if (rulesForResource.some(r => r.method === 'disable')) {
-      resources[resource] = 0;
-      return; // Stop processing for this resource
+  const creditConflictInfo = _findCreditConflict(resourceRules, gameState.optionalRules.resolveConflictsManually);
+  
+  (Object.keys(baseResources) as ResourceType[]).forEach(resource => {
+    const { value, modifications } = _applyResourceRules(
+      resource,
+      baseResources[resource],
+      resourceRules.filter(r => r.resource === resource),
+      creditConflictInfo,
+      manualSelection
+    );
+    finalResources[resource] = value;
+    if (resource === 'credits') {
+      finalCreditModifications = modifications;
     }
-
-    // 2. Find the highest priority 'set' rule
-    // Special handling for credits with manual conflict resolution
-    if (resource === 'credits' && conflict && manualSelection) {
-        const selectedRule = manualSelection === 'story' ? storyCreditSetRule : setupCardCreditSetRule;
-        if (selectedRule!.value !== undefined) {
-            resources.credits = selectedRule!.value;
-            creditModifications = [{ description: selectedRule!.description, value: `$${resources.credits.toLocaleString()}` }];
-        }
-    } else {
-        const setRules = rulesForResource.filter(r => r.method === 'set');
-        if (setRules.length > 0) {
-          // Sort by defined priority order (lower index = higher priority)
-          setRules.sort((a, b) => PRIORITY_ORDER.indexOf(a.source) - PRIORITY_ORDER.indexOf(b.source));
-          const topPrioritySetRule = setRules[0];
-          
-          if (topPrioritySetRule.value !== undefined) {
-            resources[resource] = topPrioritySetRule.value;
-            if (resource === 'credits') {
-              creditModifications = [{ description: topPrioritySetRule.description, value: `$${resources.credits.toLocaleString()}` }];
-            }
-          }
-        }
-    }
-
-
-    // 3. Apply all 'add' rules cumulatively
-    const addRules = rulesForResource.filter(r => r.method === 'add');
-    addRules.forEach(rule => {
-      if (rule.value !== undefined) {
-        resources[resource] += rule.value;
-        if (resource === 'credits') {
-          creditModifications.push({ description: rule.description, value: `+$${rule.value.toLocaleString()}` });
-        }
-      }
-    });
   });
 
-  const isFuelDisabled = resourceRules.some(e => e.resource === 'fuel' && e.method === 'disable');
-  const isPartsDisabled = resourceRules.some(e => e.resource === 'parts' && e.method === 'disable');
-
-  return { ...resources, isFuelDisabled, isPartsDisabled, creditModifications, conflict };
+  return {
+    credits: finalResources.credits!,
+    fuel: finalResources.fuel!,
+    parts: finalResources.parts!,
+    warrants: finalResources.warrants!,
+    goalTokens: finalResources.goalTokens!,
+    isFuelDisabled: resourceRules.some(e => e.resource === 'fuel' && e.method === 'disable'),
+    isPartsDisabled: resourceRules.some(e => e.resource === 'parts' && e.method === 'disable'),
+    creditModifications: finalCreditModifications,
+    conflict: creditConflictInfo.conflict
+  };
 };
 
-
-export const getJobSetupDetails = (gameState: GameState, overrides: StepOverrides): JobSetupDetails => {
-    const allRules = getResolvedRules(gameState);
-    const messages: JobSetupMessage[] = [];
-
-    const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
-    const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
-    const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
+// --- Refactored getJobSetupDetails ---
+const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): JobSetupDetails | null => {
+    let content: StructuredContent;
+    let messageSource: JobSetupMessage['source'] = 'info';
+    let messageTitle = 'Information';
     
-    const isSingleContactChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
-    const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
-
-    if (jobDrawMode === 'no_jobs') {
-        let content: StructuredContent;
-        if (dontPrimeContactsChallenge) {
-            content = [{ type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.'}] }, { type: 'paragraph', content: [{ type: 'strong', content: 'Do not prime the Contact Decks.'}, ' (Challenge Override)'] }];
-            messages.push({ source: 'warning', title: 'Challenge Active', content });
-        } else if (allRules.some(r => r.type === 'primeContacts')) {
-            content = [
-              { type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] },
-              { type: 'paragraph', content: ['Instead, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
-              { type: 'list', items: [
-                  ['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'],
-                  ['Place the revealed Job Cards in their discard piles.']
-              ]}
-            ];
-            messages.push({ source: 'story', title: 'Story Override', content });
-        } else {
-            content = (jobModeSource === 'setupCard')
-              ? [{ type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] }, { type: 'paragraph', content: ["Crews must find work on their own out in the black."] }]
-              : [{ type: 'paragraph', content: [{ type: 'strong', content: 'Do not take Starting Jobs.' }] }];
-            
-            let messageSource: JobSetupMessage['source'];
-            let messageTitle: string;
-
-            switch (jobModeSource) {
-                case 'story':
-                    messageSource = 'story';
-                    messageTitle = 'Story Override';
-                    break;
-                case 'setupCard':
-                    messageSource = 'setupCard';
-                    messageTitle = 'Setup Card Override';
-                    break;
-                case 'expansion':
-                    messageSource = 'expansion';
-                    messageTitle = 'Expansion Rule';
-                    break;
-                case 'challenge':
-                    messageSource = 'warning';
-                    messageTitle = 'Challenge Restriction';
-                    break;
-                case 'optionalRule':
-                    messageSource = 'info';
-                    messageTitle = 'Optional Rule';
-                    break;
-                default:
-                    messageSource = 'info';
-                    messageTitle = 'Information';
-                    break;
-            }
-
-            messages.push({ source: messageSource, title: messageTitle, content });
+    if (dontPrimeContactsChallenge) {
+        content = [{ type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] }, { type: 'paragraph', content: [{ type: 'strong', content: 'Do not prime the Contact Decks.' }, ' (Challenge Override)'] }];
+        messageSource = 'warning';
+        messageTitle = 'Challenge Active';
+    } else if (allRules.some(r => r.type === 'primeContacts')) {
+        content = [
+          { type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] },
+          { type: 'paragraph', content: ['Instead, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
+          { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
+        ];
+        messageSource = 'story';
+        messageTitle = 'Story Override';
+    } else {
+        content = (jobModeSource === 'setupCard')
+          ? [{ type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] }, { type: 'paragraph', content: ["Crews must find work on their own out in the black."] }]
+          : [{ type: 'paragraph', content: [{ type: 'strong', content: 'Do not take Starting Jobs.' }] }];
+        
+        switch (jobModeSource) {
+            case 'story': messageSource = 'story'; messageTitle = 'Story Override'; break;
+            case 'setupCard': messageSource = 'setupCard'; messageTitle = 'Setup Card Override'; break;
+            case 'challenge': messageSource = 'warning'; messageTitle = 'Challenge Restriction'; break;
         }
-        return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
     }
-    
+    return { contacts: [], messages: [{ source: messageSource, title: messageTitle, content }], showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+};
+
+const _getInitialContacts = (jobDrawMode: JobMode): string[] => {
     const STANDARD_CONTACTS = [CONTACT_NAMES.HARKEN, 'Badger', 'Amnon Duul', 'Patience', CONTACT_NAMES.NISKA];
     const JOB_MODE_CONTACTS: Record<string, string[]> = {
         buttons_jobs: ['Amnon Duul', 'Lord Harrow', 'Magistrate Higgins'],
         awful_jobs: [CONTACT_NAMES.HARKEN, 'Amnon Duul', 'Patience'],
         rim_jobs: ['Lord Harrow', 'Mr. Universe', 'Fanty & Mingo', 'Magistrate Higgins'],
     };
-    
-    let contacts = JOB_MODE_CONTACTS[jobDrawMode] || STANDARD_CONTACTS;
+    return JOB_MODE_CONTACTS[jobDrawMode] || STANDARD_CONTACTS;
+};
 
+const _filterContacts = (contacts: string[], allRules: SetupRule[]): string[] => {
+    let filtered = [...contacts];
     const forbiddenContactRule = allRules.find(r => r.type === 'forbidContact') as ForbidContactRule | undefined;
-    const forbiddenStartingContact = forbiddenContactRule?.contact;
-
     const allowedContactsRule = allRules.find(r => r.type === 'allowContacts') as AllowContactsRule | undefined;
-    const allowedStartingContacts = allowedContactsRule?.contacts;
 
+    if (forbiddenContactRule?.contact) {
+        filtered = filtered.filter(c => c !== forbiddenContactRule.contact);
+    }
+    if (allowedContactsRule?.contacts?.length) {
+        filtered = allowedContactsRule.contacts;
+    }
+    return filtered;
+};
+
+const _generateJobMessages = (
+    jobDrawMode: JobMode,
+    forbiddenContact: string | undefined,
+    activeStoryCard: StoryCardDef | undefined,
+    isSingleContactChallenge: boolean
+): JobSetupMessage[] => {
+    const messages: JobSetupMessage[] = [];
     if (jobDrawMode === 'buttons_jobs') {
         messages.push({ source: 'setupCard', title: 'Setup Card Override', content: [{ type: 'strong', content: 'Specific Contacts:' }, ' Draw from Amnon Duul, Lord Harrow, and Magistrate Higgins.', { type: 'br' }, { type: 'strong', content: 'Caper Bonus:' }, ' Draw 1 Caper Card.'] });
     }
     if (jobDrawMode === 'awful_jobs') {
-        const content: StructuredContent = forbiddenStartingContact === CONTACT_NAMES.HARKEN
+        const content: StructuredContent = forbiddenContact === CONTACT_NAMES.HARKEN
             ? [{ type: 'strong', content: 'Limited Contacts.' }, " This setup card normally draws from Harken, Amnon Duul, and Patience.", { type: 'warning-box', content: ['Story Card Conflict: Harken is unavailable. Draw from Amnon Duul and Patience only.'] }]
             : [{ type: 'strong', content: 'Limited Contacts.' }, ' Starting Jobs are drawn only from Harken, Amnon Duul, and Patience.'];
         messages.push({ source: 'setupCard', title: 'Setup Card Override', content });
     }
-    
-    if (forbiddenStartingContact) contacts = contacts.filter(c => c !== forbiddenStartingContact);
-    if (allowedStartingContacts?.length) contacts = allowedStartingContacts;
-    
-    const activeStoryCard = getActiveStoryCard(gameState);
-    if ((forbiddenStartingContact || allowedStartingContacts) && activeStoryCard?.setupDescription) {
-        messages.push({ source: 'story', title: 'Story Override', content: [activeStoryCard.setupDescription] });
-    }
-
     if (isSingleContactChallenge) {
         messages.push({ source: 'warning', title: 'Challenge Active', content: [{ type: 'strong', content: 'Single Contact Only:' }, ' You may only work for one contact.'] });
     }
+    if (activeStoryCard?.setupDescription) {
+        messages.push({ source: 'story', title: 'Story Override', content: [activeStoryCard.setupDescription] });
+    }
+    return messages;
+};
 
+export const getJobSetupDetails = (gameState: GameState, overrides: StepOverrides): JobSetupDetails => {
+    const allRules = getResolvedRules(gameState);
+    const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
+    const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
+
+    if (jobDrawMode === 'no_jobs') {
+        const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
+        const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
+        return _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge)!;
+    }
+    
+    let contacts = _getInitialContacts(jobDrawMode);
+    contacts = _filterContacts(contacts, allRules);
+
+    const isSingleContactChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
+    const messages = _generateJobMessages(
+        jobDrawMode,
+        (allRules.find(r => r.type === 'forbidContact') as ForbidContactRule | undefined)?.contact,
+        getActiveStoryCard(gameState),
+        isSingleContactChallenge
+    );
+    
     return { contacts, messages, showStandardContactList: true, isSingleContactChoice: isSingleContactChallenge, cardsToDraw: 3, totalJobCards: contacts.length };
 };
 

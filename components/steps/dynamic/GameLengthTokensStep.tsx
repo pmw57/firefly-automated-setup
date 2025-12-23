@@ -1,17 +1,13 @@
 import React from 'react';
-import { Step } from '../../../types';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
 import { ActionType } from '../../../state/actions';
 import { hasRuleFlag } from '../../../utils/selectors/rules';
 import { getActiveStoryCard } from '../../../utils/selectors/story';
+import { StepComponentProps } from '../../StepContent';
 
-interface GameLengthTokensStepProps {
-  step: Step;
-}
-
-export const GameLengthTokensStep: React.FC<GameLengthTokensStepProps> = () => {
+export const GameLengthTokensStep: React.FC<StepComponentProps> = () => {
     const { state: gameState, dispatch } = useGameState();
     const activeStoryCard = getActiveStoryCard(gameState);
     const { theme } = useTheme();

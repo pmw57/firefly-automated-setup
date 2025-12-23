@@ -1,25 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Step } from '../../../types';
 import { getResourceDetails } from '../../../utils/selectors/setup';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
 import { ConflictResolver } from '../../ConflictResolver';
 import { ActionType } from '../../../state/actions';
+import { StepComponentProps } from '../../StepContent';
 
-interface StartingCapitolStepProps {
-  step: Step;
-}
-
-export const StartingCapitolStep: React.FC<StartingCapitolStepProps> = () => {
+export const StartingCapitolStep: React.FC<StepComponentProps> = () => {
   const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   const [manualSelection, setManualSelection] = useState<'story' | 'setupCard'>('story');
 
-  // FIX: getResourceDetails now takes an optional second argument for manual selection.
   const resourceDetails = getResourceDetails(gameState, manualSelection);
-  // FIX: The conflict property is now available on resourceDetails.
   const { credits, conflict, creditModifications } = resourceDetails;
 
   useEffect(() => {

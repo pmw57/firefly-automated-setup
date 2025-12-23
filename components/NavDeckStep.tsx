@@ -1,14 +1,11 @@
 import React, { useMemo } from 'react';
-import { Step, StructuredContent } from '../types';
+import { StructuredContent } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { getNavDeckDetails } from '../utils/selectors/setup';
 import { cls } from '../utils/style';
-
-interface NavDeckStepProps {
-  step: Step;
-}
+import { StepComponentProps } from './StepContent';
 
 // Sub-component for Reshuffle Rules display
 const ReshuffleRulesDisplay = ({ isSolo, isHighPlayerCount, playerCount }: { isSolo: boolean, isHighPlayerCount: boolean, playerCount: number }) => {
@@ -68,7 +65,7 @@ const ReshuffleRulesDisplay = ({ isSolo, isHighPlayerCount, playerCount }: { isS
     );
 };
 
-export const NavDeckStep = ({ step }: NavDeckStepProps): React.ReactElement => {
+export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
   const overrides = useMemo(() => step.overrides || {}, [step.overrides]);
   

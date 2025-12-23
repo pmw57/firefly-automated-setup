@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo } from 'react';
-import { Step } from '../types';
 import { getResourceDetails } from '../utils/selectors/setup';
 import { hasRuleFlag, getResolvedRules } from '../utils/selectors/rules';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
@@ -7,12 +6,9 @@ import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { ActionType } from '../state/actions';
 import { cls } from '../utils/style';
+import { StepComponentProps } from './StepContent';
 
-interface ResourcesStepProps {
-  step: Step;
-}
-
-export const ResourcesStep: React.FC<ResourcesStepProps> = () => {
+export const ResourcesStep: React.FC<StepComponentProps> = () => {
   const { state: gameState, dispatch } = useGameState();
   const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
   const { theme } = useTheme();
