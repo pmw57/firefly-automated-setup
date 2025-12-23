@@ -1,8 +1,34 @@
 /** @vitest-environment jsdom */
+import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { render } from '../test-utils';
 import SetupWizard from '../../components/SetupWizard';
+
+vi.mock('../../components/WizardHeader', () => ({
+  WizardHeader: ({ onReset }: { onReset: () => void }) => {
+    const [showConfirm, setShowConfirm] = React.useState(false);
+    return (
+      <div data-testid="mock-wizard-header">
+        <button
+          onClick={() => {
+            if (showConfirm) {
+              onReset();
+            } else {
+              setShowConfirm(true);
+            }
+          }}
+        >
+          {showConfirm ? 'Confirm Restart?' : 'Restart'}
+        </button>
+      </div>
+    );
+  },
+}));
+
+vi.mock('../../components/ProgressBar', () => ({
+  ProgressBar: () => <div data-testid="mock-progress-bar" />,
+}));
 
 describe('components/SetupWizard', () => {
 
@@ -78,7 +104,7 @@ describe('components/SetupWizard', () => {
     const restartButton = screen.getByRole('button', { name: /Restart/i });
     fireEvent.click(restartButton);
 
-    const confirmButton = await screen.findByRole('button', { name: /Confirm Restart?/i });
+    const confirmButton = screen.getByRole('button', { name: /Confirm Restart?/i });
     fireEvent.click(confirmButton);
 
     // Verify reset by checking if we are back at the first step
