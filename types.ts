@@ -85,6 +85,7 @@ export interface BaseRule {
 
 // Rule types
 export interface SetJobModeRule extends BaseRule { type: 'setJobMode'; mode: JobMode; }
+export interface SetJobContactsRule extends BaseRule { type: 'setJobContacts'; contacts: string[]; }
 export interface ForbidContactRule extends BaseRule { type: 'forbidContact'; contact: string; }
 export interface AllowContactsRule extends BaseRule { type: 'allowContacts'; contacts: string[]; }
 export interface PrimeContactsRule extends BaseRule { type: 'primeContacts'; }
@@ -119,6 +120,7 @@ export interface ModifyResourceRule extends BaseRule {
 
 export type SetupRule = 
   | SetJobModeRule
+  | SetJobContactsRule
   | ForbidContactRule
   | AllowContactsRule
   | PrimeContactsRule
@@ -349,7 +351,6 @@ export interface PrimeDetails {
   isHighSupplyVolume: boolean;
   isBlitz: boolean;
   specialRules: SpecialRule[];
-  isSlayingTheDragon: boolean;
 }
 
 export interface SpecialRule {

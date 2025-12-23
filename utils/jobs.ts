@@ -10,7 +10,9 @@ import {
     SetJobModeRule,
     RuleSourceType,
     SetupRule,
-    StoryCardDef
+    StoryCardDef,
+    SetJobContactsRule,
+    SpecialRule
 } from '../types';
 import { getResolvedRules } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
@@ -47,14 +49,13 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
     return { contacts: [], messages: [{ source: messageSource, title: messageTitle, content }], showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
 };
 
-const _getInitialContacts = (jobDrawMode: JobMode): string[] => {
+const _getInitialContacts = (allRules: SetupRule[]): string[] => {
+    const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
+    if (jobContactsRule) {
+        return jobContactsRule.contacts;
+    }
     const STANDARD_CONTACTS = [CONTACT_NAMES.HARKEN, CONTACT_NAMES.BADGER, CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.PATIENCE, CONTACT_NAMES.NISKA];
-    const JOB_MODE_CONTACTS: Record<string, string[]> = {
-        buttons_jobs: [CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.LORD_HARROW, CONTACT_NAMES.MAGISTRATE_HIGGINS],
-        awful_jobs: [CONTACT_NAMES.HARKEN, CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.PATIENCE],
-        rim_jobs: [CONTACT_NAMES.LORD_HARROW, CONTACT_NAMES.MR_UNIVERSE, CONTACT_NAMES.FANTY_MINGO, CONTACT_NAMES.MAGISTRATE_HIGGINS],
-    };
-    return JOB_MODE_CONTACTS[jobDrawMode] || STANDARD_CONTACTS;
+    return STANDARD_CONTACTS;
 };
 
 const _filterContacts = (contacts: string[], allRules: SetupRule[]): string[] => {
@@ -72,25 +73,37 @@ const _filterContacts = (contacts: string[], allRules: SetupRule[]): string[] =>
 };
 
 const _generateJobMessages = (
-    jobDrawMode: JobMode,
-    forbiddenContact: string | undefined,
+    allRules: SetupRule[],
+    initialContacts: string[],
     activeStoryCard: StoryCardDef | undefined,
     isSingleContactChallenge: boolean
 ): JobSetupMessage[] => {
     const messages: JobSetupMessage[] = [];
-    if (jobDrawMode === 'buttons_jobs') {
-        messages.push({ source: 'setupCard', title: 'Setup Card Override', content: [{ type: 'strong', content: 'Specific Contacts:' }, ` Draw from ${CONTACT_NAMES.AMNON_DUUL}, ${CONTACT_NAMES.LORD_HARROW}, and ${CONTACT_NAMES.MAGISTRATE_HIGGINS}.`, { type: 'br' }, { type: 'strong', content: 'Caper Bonus:' }, ' Draw 1 Caper Card.'] });
-    }
+    const specialRules: SpecialRule[] = [];
 
-    if (jobDrawMode === 'awful_jobs') {
-        const originalContacts = _getInitialContacts(jobDrawMode);
-        const isConflict = forbiddenContact && originalContacts.includes(forbiddenContact);
+    // Process generic special rules for this step category
+    allRules.forEach(rule => {
+        if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
+            if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
+                specialRules.push({
+                    source: rule.source as SpecialRule['source'],
+                    ...rule.rule
+                });
+            }
+        }
+    });
+    
+    // Generate a generic "Limited Contacts" message if a specific contact list is defined by a rule.
+    const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
+    if (jobContactsRule) {
+        const forbiddenContact = (allRules.find(r => r.type === 'forbidContact') as ForbidContactRule | undefined)?.contact;
+        const isConflict = forbiddenContact && initialContacts.includes(forbiddenContact);
         
         if (isConflict) {
-            const remainingContacts = originalContacts.filter(c => c !== forbiddenContact);
+            const remainingContacts = initialContacts.filter(c => c !== forbiddenContact);
             const content: StructuredContent = [
                 { type: 'strong', content: 'Limited Contacts.' },
-                ` This setup card normally draws from ${originalContacts.join(', ')}.`, 
+                ` This setup card normally draws from ${initialContacts.join(', ')}.`, 
                 { 
                     type: 'warning-box', 
                     content: [
@@ -106,11 +119,14 @@ const _generateJobMessages = (
         } else {
             const content: StructuredContent = [
                 { type: 'strong', content: 'Limited Contacts.' },
-                ` Starting Jobs are drawn only from ${originalContacts.join(', ')}.`
+                ` Starting Jobs are drawn only from ${initialContacts.join(', ')}.`
             ];
             messages.push({ source: 'setupCard', title: 'Setup Card Override', content });
         }
     }
+    
+    // Add the specific special rules to the messages list
+    specialRules.forEach(rule => messages.push(rule));
     
     if (isSingleContactChallenge) {
         messages.push({ source: 'warning', title: 'Challenge Active', content: [{ type: 'strong', content: 'Single Contact Only:' }, ' You may only work for one contact.'] });
@@ -132,13 +148,13 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         return _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge)!;
     }
     
-    let contacts = _getInitialContacts(jobDrawMode);
-    contacts = _filterContacts(contacts, allRules);
+    const initialContacts = _getInitialContacts(allRules);
+    const contacts = _filterContacts(initialContacts, allRules);
 
     const isSingleContactChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
     const messages = _generateJobMessages(
-        jobDrawMode,
-        (allRules.find(r => r.type === 'forbidContact') as ForbidContactRule | undefined)?.contact,
+        allRules,
+        initialContacts,
         getActiveStoryCard(gameState),
         isSingleContactChallenge
     );

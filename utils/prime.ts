@@ -2,14 +2,12 @@ import {
     GameState, 
     PrimeDetails,
     StepOverrides,
-    ModifyPrimeRule
+    ModifyPrimeRule,
+    SpecialRule
 } from '../types';
 import { getResolvedRules } from './selectors/rules';
-import { STORY_TITLES } from '../data/ids';
-import { getActiveStoryCard } from './selectors/story';
 
 export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides): PrimeDetails => {
-  const activeStoryCard = getActiveStoryCard(gameState);
   const supplyHeavyExpansions: (keyof GameState['expansions'])[] = ['kalidasa', 'pirates', 'breakin_atmo', 'still_flying'];
   const activeSupplyHeavyCount = supplyHeavyExpansions.filter(exp => gameState.expansions[exp]).length;
   const isHighSupplyVolume = activeSupplyHeavyCount >= 3;
@@ -17,6 +15,19 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   const baseDiscard = isHighSupplyVolume && gameState.optionalRules.highVolumeSupply ? 4 : 3;
   
   const rules = getResolvedRules(gameState);
+  const specialRules: SpecialRule[] = [];
+
+  // Process generic special rules for this step category
+  rules.forEach(rule => {
+      if (rule.type === 'addSpecialRule' && rule.category === 'prime') {
+          if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
+              specialRules.push({
+                  source: rule.source as SpecialRule['source'],
+                  ...rule.rule
+              });
+          }
+      }
+  });
   
   const primeMultiplierRule = rules.find(r => r.type === 'modifyPrime' && r.multiplier !== undefined) as ModifyPrimeRule | undefined;
   const storyMultiplier = primeMultiplierRule?.multiplier ?? 1;
@@ -32,7 +43,5 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   let finalCount = baseDiscard * effectiveMultiplier;
   if (primeModifier?.add) finalCount += primeModifier.add;
 
-  const isSlayingTheDragon = activeStoryCard?.title === STORY_TITLES.SLAYING_THE_DRAGON;
-
-  return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, isSlayingTheDragon, specialRules: [] };
+  return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, specialRules };
 };

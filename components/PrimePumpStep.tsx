@@ -3,7 +3,6 @@ import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { getPrimeDetails } from '../utils/prime';
-import { STORY_TITLES } from '../data/ids';
 import { StepComponentProps } from './StepContent';
 
 export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
@@ -21,7 +20,6 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     finalCount,
     isHighSupplyVolume,
     isBlitz,
-    isSlayingTheDragon,
     specialRules,
   } = React.useMemo(() => 
     getPrimeDetails(gameState, overrides),
@@ -52,10 +50,6 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
 
       {effectiveMultiplier > 1 && !isBlitz && (
         <SpecialRuleBlock source="story" title="Story Override" content={[{ type: 'strong', content: `Prime counts are increased by ${effectiveMultiplier}x.` }]} />
-      )}
-
-      {isSlayingTheDragon && (
-        <SpecialRuleBlock source="story" title={STORY_TITLES.SLAYING_THE_DRAGON} content={[{ type: 'strong', content: 'Shu-ki is greasing the rails:' }, ' Turn up ', { type: 'strong', content: '2 additional cards' }, ' from each deck when Priming the Pump.']} />
       )}
 
       <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm text-center transition-colors duration-300`}>

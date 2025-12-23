@@ -7,7 +7,7 @@ import {
     SetShipPlacementRule
 } from '../types';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
-import { CHALLENGE_IDS, STORY_TITLES, STEP_IDS } from '../data/ids';
+import { CHALLENGE_IDS, STEP_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
 export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDetails => {
@@ -16,10 +16,21 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
     const allRules = getResolvedRules(gameState);
     const activeStoryCard = getActiveStoryCard(gameState);
 
+    // Process generic special rules for this step category
+    allRules.forEach(rule => {
+        if (rule.type === 'addSpecialRule' && rule.category === 'draft') {
+            if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
+                specialRules.push({
+                    source: rule.source as SpecialRule['source'],
+                    ...rule.rule
+                });
+            }
+        }
+    });
+
     const isHavenDraft = step.id.includes(STEP_IDS.D_HAVEN_DRAFT);
     const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
-    const isHeroesAndMisfits = activeStoryCard?.title === STORY_TITLES.HEROES_AND_MISFITS;
-    const isRacingAPaleHorse = activeStoryCard?.title === STORY_TITLES.RACING_A_PALE_HORSE;
+    const isHeroesAndMisfits = hasRuleFlag(allRules, 'isHeroesAndMisfits');
 
     const shipPlacementRule = allRules.find(r => r.type === 'setShipPlacement') as (SetShipPlacementRule | undefined);
     
@@ -75,7 +86,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
         });
     }
 
-    if (isRacingAPaleHorse) specialRules.push({ source: 'story', title: 'Story Setup: Haven', content: [{ type: 'strong', content: `Place your Haven at Deadwood (Blue Sun).` }, { type: 'br' }, `If you end your turn at your Haven, remove Disgruntled from all Crew.`] });
     if (addBorderHavens) specialRules.push({ source: 'story', title: activeStoryCard?.title || '', content: [{ type: 'strong', content: `Choose Havens:` }, ` Each player chooses a Haven token. Havens `, { type: 'strong', content: `must be in Border Space` }, `.`] });
     if (startOutsideAllianceSpace) specialRules.push({ source: 'warning', title: 'Placement Restriction', content: [`Players' starting locations `, { type: 'strong', content: `may not be within Alliance Space` }, `.`] });
     if (allianceSpaceOffLimits) specialRules.push({ source: 'warning', title: 'Restricted Airspace', content: [{ type: 'strong', content: `Alliance Space is Off Limits` }, ` until Goal 3.`] });
