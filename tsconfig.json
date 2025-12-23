@@ -13,7 +13,7 @@
     "jsx": "react-jsx",
     "strict": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["node", "vite-plugin-pwa/client"]
+    "types": ["node", "vite-plugin-pwa/client", "vite/client"]
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
   "exclude": ["node_modules"]

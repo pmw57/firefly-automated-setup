@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from 'vite-plugin-pwa'
 import { Plugin } from 'vite';
 
@@ -26,30 +26,14 @@ const tailwindCdnFallbackPlugin = (): Plugin => ({
   }
 });
 
-/**
- * A custom Vite plugin to remove the importmap during Vitest runs.
- * The importmap is for browser-based previews, but it forces Vitest to fetch
- * dependencies from CDNs, which drastically slows down the 'transform' and 'import'
- * test phases. This plugin removes it only when `process.env.VITEST` is true.
- */
-const removeImportmapForTestPlugin = (): Plugin => ({
-  name: 'vite-plugin-remove-importmap-for-test',
-  transformIndexHtml(html) {
-    if (process.env.VITEST) {
-      return html.replace(/<script type="importmap">[\s\S]*?<\/script>/, '');
-    }
-    return html;
-  }
-});
 
-
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   base: '/firefly-automated-setup/',
   plugins: [
     react(),
-    removeImportmapForTestPlugin(),
-    tailwindCdnFallbackPlugin(),
-    VitePWA({
+    // Plugins below are not needed for tests and can slow down setup.
+    mode !== 'test' && tailwindCdnFallbackPlugin(),
+    mode !== 'test' && VitePWA({
       registerType: 'autoUpdate',
       includeAssets: [
         'expansion_sprites.png', 
@@ -97,19 +81,14 @@ export default defineConfig({
         ],
       }
     })
-  ],
+  ].filter(Boolean),
   define: {
     __APP_VERSION__: JSON.stringify(getVersion()),
   },
   test: {
     globals: true,
+    environment: 'jsdom',
     setupFiles: './tests/setup.ts',
-    deps: {
-      optimizer: {
-        ssr: {
-          enabled: true,
-        },
-      },
-    },
+    isolate: false,
   },
-});
+}));

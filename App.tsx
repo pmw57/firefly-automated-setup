@@ -1,15 +1,5 @@
-// FIX: Vite's client types were not being found, causing errors with `import.meta.env`.
-// Re-introducing a global type declaration for ImportMeta as a robust workaround
-// to ensure type safety without relying on a potentially misconfigured environment.
-declare global {
-  interface ImportMeta {
-    readonly env: {
-      readonly DEV: boolean;
-      readonly BASE_URL: string;
-    };
-  }
-}
-
+// FIX: Add reference to vite client types to get correct typings for import.meta.env
+/// <reference types="vite/client" />
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
@@ -90,7 +80,6 @@ const App = (): React.ReactElement => {
     window.location.reload();
   };
 
-  // FIX: Added global type declaration for `import.meta.env` to resolve type errors.
   const isDevMode = typeof import.meta.env !== 'undefined' && import.meta.env.DEV;
   const baseUrl = (typeof import.meta.env !== 'undefined') ? import.meta.env.BASE_URL : '/';
   

@@ -15,7 +15,6 @@ interface ErrorBoundaryState {
  * Using a constructor is the standard and most robust way to initialize state,
  * ensuring that `this.state` and `this.props` are correctly set up from the base `React.Component`.
  */
-// FIX: All reported errors stem from this class not extending React.Component. By extending it, the component gains access to `this.props`, `this.state`, and `this.setState`, resolving the errors.
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);

@@ -1,3 +1,4 @@
+/** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getDraftDetails } from '../../utils/draftRules';
 import { GameState, Step, StructuredContent, StructuredContentPart } from '../../types';
@@ -36,21 +37,21 @@ describe('utils/draftRules', () => {
     const baseStep: Step = { type: 'core', id: STEP_IDS.C3 };
     const baseGameState = getDefaultGameState();
 
-    it('returns empty special rules for a standard game', () => {
+    it.concurrent('returns empty special rules for a standard game', () => {
         const details = getDraftDetails(baseGameState, baseStep);
         expect(details.specialRules).toEqual([]);
         expect(details.isHavenDraft).toBe(false);
         expect(details.specialStartSector).toBeNull();
     });
 
-    it('identifies Haven Draft mode', () => {
+    it.concurrent('identifies Haven Draft mode', () => {
         const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT };
         const details = getDraftDetails(baseGameState, step);
         expect(details.isHavenDraft).toBe(true);
         expect(details.specialRules.some(r => getTextContent(r.title).includes('Placement Rules'))).toBe(true);
     });
     
-    it('generates a rule for Wanted Leader mode', () => {
+    it.concurrent('generates a rule for Wanted Leader mode', () => {
         const step: Step = { ...baseStep, overrides: { leaderSetup: 'wanted' } };
         const details = getDraftDetails(baseGameState, step);
         const rule = details.specialRules.find(r => r.title === 'The Heat Is On');
@@ -58,7 +59,7 @@ describe('utils/draftRules', () => {
         expect(getTextContent(rule?.content)).toContain('each Leader begins play with a Wanted token');
     });
 
-    it('generates a rule for Optional Ship Upgrades', () => {
+    it.concurrent('generates a rule for Optional Ship Upgrades', () => {
         const state: GameState = { ...baseGameState, optionalRules: { ...baseGameState.optionalRules, optionalShipUpgrades: true } };
         const details = getDraftDetails(state, baseStep);
         const rule = details.specialRules.find(r => r.title === 'Optional Ship Upgrades');
@@ -66,7 +67,7 @@ describe('utils/draftRules', () => {
         expect(getTextContent(rule?.content)).toContain('Bonanza');
     });
     
-    it('generates a rule for Racing a Pale Horse', () => {
+    it.concurrent('generates a rule for Racing a Pale Horse', () => {
         const state: GameState = { ...baseGameState, selectedStoryCard: STORY_TITLES.RACING_A_PALE_HORSE };
         const details = getDraftDetails(state, baseStep);
         const rule = details.specialRules.find(r => r.title === 'Story Setup: Haven');
@@ -74,7 +75,7 @@ describe('utils/draftRules', () => {
         expect(getTextContent(rule?.content)).toContain('Place your Haven at Deadwood');
     });
 
-    it('generates a rule for Heroes & Misfits custom setup', () => {
+    it.concurrent('generates a rule for Heroes & Misfits custom setup', () => {
         const state: GameState = { 
             ...baseGameState, 
             selectedStoryCard: STORY_TITLES.HEROES_AND_MISFITS,
@@ -86,7 +87,7 @@ describe('utils/draftRules', () => {
         expect(getTextContent(rule?.content)).toContain('Custom Setup Active');
     });
 
-    it('resolves conflict between Haven Draft and special start sector (Story Priority)', () => {
+    it.concurrent('resolves conflict between Haven Draft and special start sector (Story Priority)', () => {
         const state: GameState = { ...baseGameState, selectedStoryCard: STORY_TITLES.ITS_A_MAD_MAD_VERSE }; // This story forces Persephone start
         const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT }; // This is Haven Draft
         const details = getDraftDetails(state, step);
@@ -96,7 +97,7 @@ describe('utils/draftRules', () => {
         expect(details.specialRules.some(r => r.title === 'Conflict Resolved')).toBe(true);
     });
 
-    it('should generate a warning when "The Browncoat Way" is combined with the "Heroes & Misfits" custom setup challenge', () => {
+    it.concurrent('should generate a warning when "The Browncoat Way" is combined with the "Heroes & Misfits" custom setup challenge', () => {
       const state: GameState = {
         ...baseGameState,
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,

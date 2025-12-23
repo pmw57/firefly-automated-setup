@@ -30,7 +30,6 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ step, on
 
   const titleOverride = step.id === STEP_IDS.D_FIRST_GOAL ? "First, Choose a Story Card" : undefined;
 
-  // FIX: The property on the Expansions type is 'tenth'. Destructuring as 'hasTenth' is incorrect.
   const hasTenth = gameState.expansions.tenth;
   const storyPage = hasTenth ? 25 : 16;
   const storyManual = hasTenth ? '10th AE' : 'Core';

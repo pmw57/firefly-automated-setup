@@ -1,3 +1,4 @@
+/** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getPrimeDetails } from '../../utils/prime';
 import { GameState } from '../../types';
@@ -22,7 +23,7 @@ describe('utils/prime', () => {
         }
     };
 
-    it('calculates standard priming (3 cards)', () => {
+    it.concurrent('calculates standard priming (3 cards)', () => {
       const details = getPrimeDetails(stateForStandardPriming, {});
       
       expect(details.finalCount).toBe(3);
@@ -31,7 +32,7 @@ describe('utils/prime', () => {
       expect(details.isHighSupplyVolume).toBe(false);
     });
 
-    it('identifies high supply volume with 3+ relevant expansions', () => {
+    it.concurrent('identifies high supply volume with 3+ relevant expansions', () => {
       const state: GameState = {
         ...baseGameState,
         expansions: { ...baseGameState.expansions, kalidasa: true, pirates: true, breakin_atmo: true, still_flying: false },
@@ -43,7 +44,7 @@ describe('utils/prime', () => {
       expect(details.finalCount).toBe(3);
     });
     
-    it('applies house rule for high supply volume, increasing base discard to 4', () => {
+    it.concurrent('applies house rule for high supply volume, increasing base discard to 4', () => {
       const state: GameState = {
         ...baseGameState,
         expansions: { ...baseGameState.expansions, kalidasa: true, pirates: true, breakin_atmo: true },
@@ -55,14 +56,14 @@ describe('utils/prime', () => {
       expect(details.finalCount).toBe(4);
     });
 
-    it('applies blitz mode multiplier (2x)', () => {
+    it.concurrent('applies blitz mode multiplier (2x)', () => {
       const details = getPrimeDetails(stateForStandardPriming, { primeMode: 'blitz' });
       expect(details.isBlitz).toBe(true);
       expect(details.effectiveMultiplier).toBe(2);
       expect(details.finalCount).toBe(6); // 3 * 2
     });
 
-    it('applies story multiplier', () => {
+    it.concurrent('applies story multiplier', () => {
       const state: GameState = {
         ...stateForStandardPriming,
         selectedStoryCard: STORY_TITLES.A_FRIEND_IN_EVERY_PORT // This has primingMultiplier: 2
@@ -72,7 +73,7 @@ describe('utils/prime', () => {
       expect(details.finalCount).toBe(6); // 3 * 2
     });
     
-    it('prioritizes blitz multiplier over story multiplier', () => {
+    it.concurrent('prioritizes blitz multiplier over story multiplier', () => {
       const state: GameState = {
         ...stateForStandardPriming,
         selectedStoryCard: STORY_TITLES.A_FRIEND_IN_EVERY_PORT // This has primingMultiplier: 2
@@ -82,7 +83,7 @@ describe('utils/prime', () => {
       expect(details.finalCount).toBe(6); // 3 * 2
     });
 
-    it('applies Slaying the Dragon modifier (+2 cards)', () => {
+    it.concurrent('applies Slaying the Dragon modifier (+2 cards)', () => {
         const state: GameState = {
             ...stateForStandardPriming,
             selectedStoryCard: STORY_TITLES.SLAYING_THE_DRAGON,
@@ -91,7 +92,7 @@ describe('utils/prime', () => {
         expect(details.finalCount).toBe(5); // 3 + 2
     });
 
-    it('combines blitz and Slaying the Dragon', () => {
+    it.concurrent('combines blitz and Slaying the Dragon', () => {
         const state: GameState = {
             ...stateForStandardPriming,
             selectedStoryCard: STORY_TITLES.SLAYING_THE_DRAGON,

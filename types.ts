@@ -21,7 +21,7 @@ export type ThemeColor = 'orangeRed' | 'steelBlue' | 'black' | 'darkSlateBlue' |
 
 export interface ExpansionIconConfig {
   type: 'sprite' | 'text' | 'svg';
-  value: string; // Background position for sprite, text content, or SVG path d attribute
+  value: string;
 }
 
 export interface ExpansionDef {
@@ -52,7 +52,6 @@ export type LeaderSetupMode = 'standard' | 'wanted';
 export type AllianceSetupMode = 'standard' | 'awful_crowded' | 'no_alerts' | 'extra_cruisers';
 
 
-// --- New Rule & Effect System Types ---
 export type ResourceType = 'credits' | 'fuel' | 'parts' | 'warrants' | 'goalTokens';
 export type EffectMethod = 'set' | 'add' | 'disable';
 
@@ -71,7 +70,7 @@ export interface ModifyResourceEffect extends Effect {
   type: 'modifyResource';
   resource: ResourceType;
   method: EffectMethod;
-  value?: number; // Not needed for 'disable'
+  value?: number;
 }
 
 export type RuleSourceType = 'story' | 'setupCard' | 'expansion' | 'optionalRule' | 'challenge';
@@ -80,10 +79,9 @@ export interface BaseRule {
   type: string;
   source: RuleSourceType;
   sourceName: string;
-  condition?: (state: GameState) => boolean; // For complex conditional rules
+  condition?: (state: GameState) => boolean;
 }
 
-// Rule types
 export interface SetJobModeRule extends BaseRule { type: 'setJobMode'; mode: JobMode; }
 export interface SetJobContactsRule extends BaseRule { type: 'setJobContacts'; contacts: string[]; }
 export interface ForbidContactRule extends BaseRule { type: 'forbidContact'; contact: string; }
@@ -98,18 +96,14 @@ export interface SetLeaderSetupRule extends BaseRule { type: 'setLeaderSetup'; m
 export interface SetShipPlacementRule extends BaseRule { type: 'setShipPlacement'; location: 'persephone' | 'londinium' | 'border_of_murphy' | 'outside_alliance'; }
 export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer'; rule: Omit<SpecialRule, 'source'>; }
 
-// A generic flag rule to handle specific one-off logic inside the rules engine.
-// This is a bridge between the old flag system and a fully declarative system.
 export interface AddFlagRule extends BaseRule { type: 'addFlag'; flag: string; }
 
-// A rule to modify priming the pump values
 export interface ModifyPrimeRule extends BaseRule {
   type: 'modifyPrime';
   multiplier?: number;
   modifier?: { add: number };
 }
 
-// Use the existing ModifyResourceEffect as a rule type.
 export interface ModifyResourceRule extends BaseRule {
   type: 'modifyResource';
   resource: ResourceType;
@@ -135,7 +129,6 @@ export type SetupRule =
   | AddFlagRule
   | ModifyPrimeRule
   | ModifyResourceRule;
-// --- End New Rule System Types ---
 
 export interface StepOverrides {
     jobMode?: JobMode;
@@ -146,14 +139,12 @@ export interface StepOverrides {
     leaderSetup?: LeaderSetupMode;
 }
 
-// The final data object for a step in the flow.
 export interface SetupContentData {
   type: 'core' | 'dynamic' | 'setup';
   title: string;
   id?: string;
 }
 
-// A template for step data stored in `data/steps.ts`.
 export interface SetupContentTemplate {
   type: 'core' | 'dynamic';
 }
@@ -166,11 +157,10 @@ export interface SetupCardStep {
   overrides?: StepOverrides;
 }
 
-// Stricter type for SetupCard IDs derived from constants
 export type SetupCardId = typeof SETUP_CARD_IDS[keyof typeof SETUP_CARD_IDS];
 
 export interface SetupCardDef {
-  id: SetupCardId | string; // Allow string for flexibility, but prefer SetupCardId
+  id: SetupCardId | string;
   label: string;
   description?: string;
   requiredExpansion?: keyof Expansions;
@@ -178,7 +168,7 @@ export interface SetupCardDef {
   steps: SetupCardStep[];
   mode?: GameMode;
   rules?: SetupRule[];
-  isCombinable?: boolean; // For meta cards like Flying Solo
+  isCombinable?: boolean;
 }
 
 export interface StoryCardGoal {
@@ -216,7 +206,7 @@ export type GameMode = 'multiplayer' | 'solo';
 
 export interface TimerConfig {
     mode: 'standard' | 'unpredictable';
-    unpredictableSelectedIndices: number[]; // Indices of the [1,1,2,2,3,4] array
+    unpredictableSelectedIndices: number[];
     randomizeUnpredictable: boolean;
 }
 
@@ -242,10 +232,10 @@ export interface GameState {
   playerNames: string[];
   setupCardId: SetupCardId | string;
   setupCardName: string;
-  secondarySetupId?: SetupCardId | string; // Used for Flying Solo
+  secondarySetupId?: SetupCardId | string;
   selectedStoryCard: string;
   selectedGoal?: string;
-  challengeOptions: Record<string, boolean>; // ID -> isEnabled
+  challengeOptions: Record<string, boolean>;
   timerConfig: TimerConfig;
   soloOptions: SoloOptions;
   optionalRules: OptionalRules;
@@ -276,7 +266,6 @@ export interface DraftState {
   placementOrder: string[];
 }
 
-// --- New Types for Refactored Logic & Structured Content ---
 export type StructuredContentPart =
   | string
   | { type: 'strong'; content: string }
@@ -319,7 +308,6 @@ export interface NavDeckSetupDetails {
   specialRules: SpecialRule[];
 }
 
-// Types for manual conflict resolution
 export interface ConflictOptionDetails {
   value: number | string;
   label: string;

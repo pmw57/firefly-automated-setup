@@ -1,3 +1,4 @@
+/** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { SETUP_CARDS } from '../data/setupCards';
 import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
@@ -18,7 +19,7 @@ describe('Setup Cards Step Regression', () => {
     [SETUP_CARD_IDS.THE_HEAT_IS_ON]: [STEP_IDS.D_PRESSURES_HIGH, STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.C3, STEP_IDS.C4, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME],
   };
 
-  it('all defined setup cards should have regression expectations', () => {
+  it.concurrent('all defined setup cards should have regression expectations', () => {
     const cardIds = SETUP_CARDS.map(c => c.id);
     const regressionIds = Object.keys(expectedSteps);
     
@@ -29,7 +30,7 @@ describe('Setup Cards Step Regression', () => {
   });
 
   SETUP_CARDS.forEach(card => {
-    it(`should have the correct step sequence for ${card.id}`, () => {
+    it.concurrent(`should have the correct step sequence for ${card.id}`, () => {
       const actualStepIds = card.steps.map(s => s.id);
       const expectedStepIds = expectedSteps[card.id as keyof typeof expectedSteps];
       
