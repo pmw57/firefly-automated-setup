@@ -4,6 +4,8 @@ import { Button } from '../Button';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useTheme } from '../ThemeContext';
 import { getFilterableExpansions } from '../../utils/selectors/story';
+import { EXPANSIONS_METADATA } from '../../data/expansions';
+import { cls } from '../../utils/style';
 
 interface StoryCardGridProps {
   onSelect: (title: string) => void;
@@ -30,6 +32,8 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
     getFilterableExpansions(isClassicSolo), 
     [isClassicSolo]
   );
+
+  let lastExpansionId: string | null | undefined = '___INITIAL___';
 
   const inputBorder = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
   const inputBg = isDark ? 'bg-zinc-900/50' : 'bg-[#faf8ef]';
@@ -71,18 +75,38 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
         </Button>
       </div>
       
-      <div className={`h-[350px] overflow-y-auto border ${listContainerBorder} rounded-lg ${listContainerBg} p-2 custom-scrollbar`}>
+      <div className={`h-[350px] overflow-y-auto border ${listContainerBorder} rounded-lg ${listContainerBg} custom-scrollbar`}>
         {filteredStories.length > 0 ? (
-          <div className="space-y-3">
-            {filteredStories.map((card) => (
-              <StoryCardGridItem 
-                key={card.title}
-                card={card}
-                isSelected={activeStoryCard?.title === card.title}
-                onClick={() => onSelect(card.title)}
-              />
-            ))}
-          </div>
+          <>
+            {filteredStories.map((card) => {
+              const showHeader = sortMode === 'expansion' && card.requiredExpansion !== lastExpansionId;
+              if (showHeader) {
+                lastExpansionId = card.requiredExpansion;
+              }
+              const expansionMeta = card.requiredExpansion ? EXPANSIONS_METADATA.find(e => e.id === card.requiredExpansion) : null;
+              const headerLabel = expansionMeta ? expansionMeta.label : 'Base Game';
+
+              return (
+                <React.Fragment key={card.title}>
+                  {showHeader && (
+                    <div className={cls(
+                        "sticky top-0 z-10 px-4 py-2 text-xs font-bold uppercase tracking-wider shadow-sm",
+                        isDark ? 'bg-zinc-800 text-zinc-400 border-y border-zinc-700' : 'bg-gray-100 text-gray-600 border-y border-gray-200'
+                    )}>
+                        {headerLabel}
+                    </div>
+                  )}
+                  <div className="p-2">
+                    <StoryCardGridItem 
+                      card={card}
+                      isSelected={activeStoryCard?.title === card.title}
+                      onClick={() => onSelect(card.title)}
+                    />
+                  </div>
+                </React.Fragment>
+              );
+            })}
+          </>
         ) : (
           <div className={`flex flex-col items-center justify-center h-full ${emptyStateText} italic`}>
             <span className="text-4xl mb-2">🕵️</span>
