@@ -1,9 +1,9 @@
-// FIX: The triple-slash directive to "vite/client" was not resolving correctly.
-// Manually defining the ImportMeta interface and its `env` property with the specific
-// variables used in the project (DEV, BASE_URL) resolves the TypeScript errors in App.tsx.
+// FIX: Manually define types for import.meta.env as a workaround for
+// the "Cannot find type definition file for 'vite/client'" error. This provides
+// type safety for the environment variables used in the application.
 interface ImportMetaEnv {
-  readonly DEV: boolean;
   readonly BASE_URL: string;
+  readonly DEV: boolean;
 }
 
 interface ImportMeta {
