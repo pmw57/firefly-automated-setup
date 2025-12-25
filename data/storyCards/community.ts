@@ -23,7 +23,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "One too many loads of smuggled cargo (of the live variety) has really started to stink up the place so the crew has opted to transport something smaller, more specifically with smaller droppings.",
     setupDescription: "Beagles are the contraband. If you lose 'em you can get more at Jiangyin, Red Sun for $1000 each! Start out with 1 Cry Baby on the ship to use at you liken'",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1098646/story-card"
+    sourceUrl: "https://boardgamegeek.com/thread/1098646/article/14445829#14445829"
   },
   {
     title: "Cupid's Little Helpers",

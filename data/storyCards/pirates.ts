@@ -32,6 +32,6 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     title: "The Choices We Make",
     intro: "The 'Verse is full of people trying to carve themselves a little slice, however they can. Even a good man can get turned about from time to time. The straight and narrow can get a might twisted when walkin' the raggedy edge. In the end, the mark a person leaves all comes down to the choices they make.",
     requiredExpansion: "pirates",
-    sourceUrl: "https://boardgamegeek.com/image/2785047/gerryrailbaron"
+    sourceUrl: "https://boardgamegeek.com/image/2785051/gerryrailbaron"
   },
 ];
