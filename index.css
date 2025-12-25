@@ -1,5 +1,7 @@
 
 
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -48,11 +50,6 @@ html {
   --stars-large-opacity: 0.15;
   --starfield-animation-duration-1: 60s;
   --starfield-animation-duration-2: 60s;
-
-  /* Expansion Accent */
-  --accent-color-rgb: 35, 23, 9; /* Default to deepBrown */
-  --accent-shadow-opacity: 0.15;
-  --accent-ring-opacity: 0.2;
 }
 
 html.dark {

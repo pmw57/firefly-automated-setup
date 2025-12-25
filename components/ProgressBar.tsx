@@ -1,4 +1,5 @@
 
+
 import React, { useRef, useEffect } from 'react';
 import { useTheme } from './ThemeContext';
 import { Step } from '../types';
@@ -109,7 +110,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
             return (
               <div 
                 key={step.id} 
-                ref={el => itemsRef.current[index] = el}
+                // FIX: A ref callback function should not return a value. Using a block statement ensures an implicit `undefined` return.
+                ref={el => { itemsRef.current[index] = el; }}
                 className="relative z-10 flex flex-col items-center group snap-center"
                 style={{ width: '40px' }}
               >

@@ -16,9 +16,6 @@ const DEFAULT_THEME_VALUES = {
   starsLargeOpacity: 0.15,
   animationSpeed1: 60,
   animationSpeed2: 60,
-  // Expansion Accent
-  accentShadowOpacity: 0.5,
-  accentRingOpacity: 0.5,
 };
 
 const CSS_VARS = {
@@ -33,8 +30,6 @@ const CSS_VARS = {
   starsLargeOpacity: '--stars-large-opacity',
   animationSpeed1: '--starfield-animation-duration-1',
   animationSpeed2: '--starfield-animation-duration-2',
-  accentShadowOpacity: '--accent-shadow-opacity',
-  accentRingOpacity: '--accent-ring-opacity',
 };
 
 const Slider = ({ label, value, onChange, min = 0, max = 1, step = 0.01 }: { label: string, value: number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, min?: number, max?: number, step?: number }) => (
@@ -116,12 +111,6 @@ export const DevPanel = () => {
             </button>
 
             <div className="space-y-4">
-                <div className="p-2 rounded bg-gray-700">
-                    <h4 className="text-sm font-bold mb-2 text-purple-400">Expansion Accent</h4>
-                    <Slider label="Accent Shadow Opacity" value={themeValues.accentShadowOpacity} onChange={handleChange('accentShadowOpacity')} />
-                    <Slider label="Accent Ring Opacity" value={themeValues.accentRingOpacity} onChange={handleChange('accentRingOpacity')} />
-                </div>
-
                 <div className={`p-2 rounded transition-colors ${theme === 'light' ? 'bg-gray-700' : 'bg-transparent opacity-50'}`}>
                     <h4 className="text-sm font-bold mb-2 text-yellow-400">Light Theme (Parchment)</h4>
                     <Slider label="Grid Size (px)" value={themeValues.gridSize} onChange={handleChange('gridSize')} min={5} max={50} step={1} />

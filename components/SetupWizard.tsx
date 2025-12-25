@@ -10,10 +10,7 @@ import { useTheme } from './ThemeContext';
 import { FinalSummary } from './FinalSummary';
 import { WizardHeader } from './WizardHeader';
 import { cls } from '../utils/style';
-import { getActiveStoryCard } from '../utils/selectors/story';
-import { EXPANSIONS_METADATA } from '../data/expansions';
 import { STEP_IDS } from '../data/ids';
-import { THEME_COLOR_MAP } from '../utils/theme';
 
 const WIZARD_STEP_STORAGE_KEY = 'firefly_wizardStep_v3';
 
@@ -53,24 +50,6 @@ const SetupWizard = (): React.ReactElement | null => {
       setCurrentStepIndex(flow.length - 1);
     }
   }, [flow, currentStepIndex]);
-
-  // Thematic Accents logic
-  const activeStory = getActiveStoryCard(gameState);
-  const accentExpansion = activeStory?.requiredExpansion || 'base';
-  const expansionMeta = EXPANSIONS_METADATA.find(e => e.id === accentExpansion);
-  
-  const hasAccent = useMemo(() => {
-    if (!expansionMeta) return false;
-    // Only apply accents for specific, visually distinct expansions
-    return ['orangeRed', 'steelBlue', 'darkSlateBlue', 'deepBrown'].includes(expansionMeta.themeColor);
-  }, [expansionMeta]);
-
-  const accentStyle = useMemo(() => {
-    if (!hasAccent || !expansionMeta) return {};
-    const rgb = THEME_COLOR_MAP[expansionMeta.themeColor];
-    if (!rgb) return {};
-    return { '--accent-color-rgb': rgb } as React.CSSProperties;
-  }, [expansionMeta, hasAccent]);
 
   const setupCardSelectionStepIndex = useMemo(() =>
     flow.findIndex(step => step.id === STEP_IDS.SETUP_CARD_SELECTION),
@@ -126,11 +105,7 @@ const SetupWizard = (): React.ReactElement | null => {
 
   return (
     <div 
-      className={cls(
-        "max-w-2xl mx-auto transition-all duration-700 p-1 rounded-2xl", 
-        hasAccent && "shadow-[0_0_20px_rgba(var(--accent-color-rgb),var(--accent-shadow-opacity))] ring-1 ring-[rgba(var(--accent-color-rgb),var(--accent-ring-opacity))]"
-      )} 
-      style={accentStyle}
+      className="max-w-2xl mx-auto"
       key={resetKey}
     >
       <WizardHeader gameState={gameState} onReset={performReset} flow={flow} currentStepIndex={currentStepIndex} />
