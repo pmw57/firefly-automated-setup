@@ -1,5 +1,4 @@
-// FIX: Add reference to vite client types to get correct typings for import.meta.env
-/// <reference types="vite/client" />
+
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
@@ -80,10 +79,10 @@ const App = (): React.ReactElement => {
     window.location.reload();
   };
 
-  const isDevMode = typeof import.meta.env !== 'undefined' && import.meta.env.DEV;
-  const baseUrl = (typeof import.meta.env !== 'undefined') ? import.meta.env.BASE_URL : '/';
-  
   const isPreview = typeof import.meta.env === 'undefined';
+  const isDevMode = !isPreview && import.meta.env.DEV;
+  const baseUrl = !isPreview ? import.meta.env.BASE_URL : '/';
+
   const headerImageUrl = isPreview
     ? 'https://cf.geekdo-images.com/FtTleN6TrwDz378_TQ2NFw__imagepage/img/kytwle1zmoWYFCYtr1cq6EPnRHc=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7565930.jpg'
     : `${baseUrl}firefly-cover.png`;

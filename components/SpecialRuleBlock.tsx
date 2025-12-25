@@ -12,12 +12,6 @@ interface SpecialRuleBlockProps {
   manual?: string;
 }
 
-const ActionText: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  return <span className={cls("font-bold border-b border-dotted", isDark ? 'border-zinc-500' : 'border-gray-400')}>{children}</span>;
-};
-
 const renderContent = (content: StructuredContent): React.ReactNode => {
   return content.map((part: StructuredContentPart, index: number) => {
     if (typeof part === 'string') {
@@ -28,7 +22,7 @@ const renderContent = (content: StructuredContent): React.ReactNode => {
       case 'strong':
         return <strong key={index}>{part.content}</strong>;
       case 'action':
-        return <ActionText key={index}>{part.content}</ActionText>;
+        return <strong key={index}>{part.content}</strong>;
       case 'br':
         return <br key={index} />;
       case 'paragraph':
@@ -38,7 +32,7 @@ const renderContent = (content: StructuredContent): React.ReactNode => {
       case 'numbered-list':
         return <ol key={index} className="list-decimal ml-5 space-y-2 mt-1">{part.items.map((item, i) => <li key={i}>{renderContent(item)}</li>)}</ol>;
       case 'warning-box':
-        return <div key={index} className="text-red-700 dark:text-red-400 italic font-bold text-xs mt-1">{renderContent(part.content)}</div>;
+        return <div key={index} className="text-red-700 dark:text-red-400 italic font-bold text-xs mt-1 border-l-2 border-red-500 pl-2 py-1 bg-red-500/5">{renderContent(part.content)}</div>;
       case 'sub-list':
         return <ul key={index} className="list-disc ml-5 grid grid-cols-2 gap-x-4 text-sm font-medium my-2">{part.items.map(item => <li key={item.ship}><strong>{item.ship}</strong></li>)}</ul>
       default:
@@ -77,7 +71,7 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
   const s = getStyles();
 
   return (
-    <div className={cls("border-l-4 p-4 rounded-r-lg shadow-sm mb-4 transition-all hover:shadow-md backdrop-blur-sm", s.border, s.bg)}>
+    <div className={cls("border-l-4 p-4 rounded-r-xl shadow-sm mb-4 transition-all hover:shadow-md backdrop-blur-sm animate-fade-in-up", s.border, s.bg)}>
       <div className="flex items-start mb-2">
         <span className="text-xl mr-3 mt-0.5 select-none opacity-80">{icons[source]}</span>
         <div className="flex-1">

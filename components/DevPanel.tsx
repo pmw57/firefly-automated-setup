@@ -2,28 +2,39 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeContext';
 import { DevStoryAudit } from './DevStoryAudit';
 
-const DEFAULT_OPACITIES = {
+const DEFAULT_THEME_VALUES = {
   // Light Theme
-  gridLines: 0.02,
-  waterStain: 0.2,
-  vignette: 0.1,
+  gridLinesOpacity: 0.02,
+  waterStainOpacity: 0.2,
+  vignetteOpacity: 0.1,
+  gridSize: 15,
   // Dark Theme
-  nebula1: 0.2,
-  nebula2: 0.2,
-  starsTiny: 0.4,
-  starsMedium: 0.25,
-  starsLarge: 0.15,
+  nebula1Opacity: 0.2,
+  nebula2Opacity: 0.2,
+  starsTinyOpacity: 0.4,
+  starsMediumOpacity: 0.25,
+  starsLargeOpacity: 0.15,
+  animationSpeed1: 60,
+  animationSpeed2: 60,
+  // Expansion Accent
+  accentShadowOpacity: 0.5,
+  accentRingOpacity: 0.5,
 };
 
 const CSS_VARS = {
-  gridLines: '--grid-line-opacity',
-  waterStain: '--water-stain-opacity',
-  vignette: '--vignette-opacity',
-  nebula1: '--nebula-1-opacity',
-  nebula2: '--nebula-2-opacity',
-  starsTiny: '--stars-tiny-opacity',
-  starsMedium: '--stars-medium-opacity',
-  starsLarge: '--stars-large-opacity',
+  gridLinesOpacity: '--grid-line-opacity',
+  waterStainOpacity: '--water-stain-opacity',
+  vignetteOpacity: '--vignette-opacity',
+  gridSize: '--grid-size',
+  nebula1Opacity: '--nebula-1-opacity',
+  nebula2Opacity: '--nebula-2-opacity',
+  starsTinyOpacity: '--stars-tiny-opacity',
+  starsMediumOpacity: '--stars-medium-opacity',
+  starsLargeOpacity: '--stars-large-opacity',
+  animationSpeed1: '--starfield-animation-duration-1',
+  animationSpeed2: '--starfield-animation-duration-2',
+  accentShadowOpacity: '--accent-shadow-opacity',
+  accentRingOpacity: '--accent-ring-opacity',
 };
 
 const Slider = ({ label, value, onChange, min = 0, max = 1, step = 0.01 }: { label: string, value: number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, min?: number, max?: number, step?: number }) => (
@@ -47,22 +58,31 @@ const Slider = ({ label, value, onChange, min = 0, max = 1, step = 0.01 }: { lab
 export const DevPanel = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [showStoryAudit, setShowStoryAudit] = useState(false);
-    const [opacities, setOpacities] = useState(DEFAULT_OPACITIES);
+    const [themeValues, setThemeValues] = useState(DEFAULT_THEME_VALUES);
     const { theme } = useTheme();
 
     useEffect(() => {
         const root = document.documentElement;
-        Object.entries(opacities).forEach(([key, value]) => {
-            root.style.setProperty(CSS_VARS[key as keyof typeof CSS_VARS], value.toString());
+        Object.entries(themeValues).forEach(([key, value]) => {
+            const cssVar = CSS_VARS[key as keyof typeof CSS_VARS];
+            if (cssVar) {
+                let cssValue = value.toString();
+                if (key === 'gridSize') {
+                    cssValue += 'px';
+                } else if (key.startsWith('animationSpeed')) {
+                    cssValue += 's';
+                }
+                root.style.setProperty(cssVar, cssValue);
+            }
         });
-    }, [opacities]);
+    }, [themeValues]);
 
-    const handleChange = (key: keyof typeof DEFAULT_OPACITIES) => (e: React.ChangeEvent<HTMLInputElement>) => {
-        setOpacities(prev => ({ ...prev, [key]: parseFloat(e.target.value) }));
+    const handleChange = (key: keyof typeof DEFAULT_THEME_VALUES) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        setThemeValues(prev => ({ ...prev, [key]: parseFloat(e.target.value) }));
     };
 
     const handleReset = () => {
-        setOpacities(DEFAULT_OPACITIES);
+        setThemeValues(DEFAULT_THEME_VALUES);
     };
 
     if (showStoryAudit) {
@@ -96,20 +116,29 @@ export const DevPanel = () => {
             </button>
 
             <div className="space-y-4">
+                <div className="p-2 rounded bg-gray-700">
+                    <h4 className="text-sm font-bold mb-2 text-purple-400">Expansion Accent</h4>
+                    <Slider label="Accent Shadow Opacity" value={themeValues.accentShadowOpacity} onChange={handleChange('accentShadowOpacity')} />
+                    <Slider label="Accent Ring Opacity" value={themeValues.accentRingOpacity} onChange={handleChange('accentRingOpacity')} />
+                </div>
+
                 <div className={`p-2 rounded transition-colors ${theme === 'light' ? 'bg-gray-700' : 'bg-transparent opacity-50'}`}>
                     <h4 className="text-sm font-bold mb-2 text-yellow-400">Light Theme (Parchment)</h4>
-                    <Slider label="Grid Lines" value={opacities.gridLines} onChange={handleChange('gridLines')} />
-                    <Slider label="Water Stain" value={opacities.waterStain} onChange={handleChange('waterStain')} />
-                    <Slider label="Vignette" value={opacities.vignette} onChange={handleChange('vignette')} />
+                    <Slider label="Grid Size (px)" value={themeValues.gridSize} onChange={handleChange('gridSize')} min={5} max={50} step={1} />
+                    <Slider label="Grid Lines Opacity" value={themeValues.gridLinesOpacity} onChange={handleChange('gridLinesOpacity')} />
+                    <Slider label="Water Stain Opacity" value={themeValues.waterStainOpacity} onChange={handleChange('waterStainOpacity')} />
+                    <Slider label="Vignette Opacity" value={themeValues.vignetteOpacity} onChange={handleChange('vignetteOpacity')} />
                 </div>
                 
                 <div className={`p-2 rounded transition-colors ${theme === 'dark' ? 'bg-gray-700' : 'bg-transparent opacity-50'}`}>
                     <h4 className="text-sm font-bold mb-2 text-cyan-400">Dark Theme (Starfield)</h4>
-                    <Slider label="Nebula 1" value={opacities.nebula1} onChange={handleChange('nebula1')} />
-                    <Slider label="Nebula 2" value={opacities.nebula2} onChange={handleChange('nebula2')} />
-                    <Slider label="Tiny Stars" value={opacities.starsTiny} onChange={handleChange('starsTiny')} />
-                    <Slider label="Medium Stars" value={opacities.starsMedium} onChange={handleChange('starsMedium')} />
-                    <Slider label="Large Stars" value={opacities.starsLarge} onChange={handleChange('starsLarge')} />
+                    <Slider label="Animation 1 Speed (s)" value={themeValues.animationSpeed1} onChange={handleChange('animationSpeed1')} min={5} max={200} step={1} />
+                    <Slider label="Animation 2 Speed (s)" value={themeValues.animationSpeed2} onChange={handleChange('animationSpeed2')} min={5} max={200} step={1} />
+                    <Slider label="Nebula 1 Opacity" value={themeValues.nebula1Opacity} onChange={handleChange('nebula1Opacity')} />
+                    <Slider label="Nebula 2 Opacity" value={themeValues.nebula2Opacity} onChange={handleChange('nebula2Opacity')} />
+                    <Slider label="Tiny Stars Opacity" value={themeValues.starsTinyOpacity} onChange={handleChange('starsTinyOpacity')} />
+                    <Slider label="Medium Stars Opacity" value={themeValues.starsMediumOpacity} onChange={handleChange('starsMediumOpacity')} />
+                    <Slider label="Large Stars Opacity" value={themeValues.starsLargeOpacity} onChange={handleChange('starsLargeOpacity')} />
                 </div>
             </div>
 

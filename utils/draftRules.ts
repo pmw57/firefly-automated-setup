@@ -4,7 +4,9 @@ import {
     DraftRuleDetails,
     SpecialRule,
     StructuredContent,
-    SetShipPlacementRule
+    SetShipPlacementRule,
+    SetDraftModeRule,
+    SetLeaderSetupRule
 } from '../types';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CHALLENGE_IDS, STEP_IDS } from '../data/ids';
@@ -45,8 +47,13 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
 
     const allianceSpaceOffLimits = hasRuleFlag(allRules, 'allianceSpaceOffLimits');
     const addBorderHavens = hasRuleFlag(allRules, 'addBorderHavens');
-    const isBrowncoatDraft = overrides.draftMode === 'browncoat';
-    const isWantedLeaderMode = overrides.leaderSetup === 'wanted';
+    
+    const draftModeRule = allRules.find(r => r.type === 'setDraftMode') as SetDraftModeRule | undefined;
+    const isBrowncoatDraft = draftModeRule?.mode === 'browncoat' || overrides.draftMode === 'browncoat';
+
+    const leaderSetupRule = allRules.find(r => r.type === 'setLeaderSetup') as SetLeaderSetupRule | undefined;
+    const isWantedLeaderMode = leaderSetupRule?.mode === 'wanted' || overrides.leaderSetup === 'wanted';
+    
     const showBrowncoatHeroesWarning = isBrowncoatDraft && isHeroesAndMisfits && isHeroesCustomSetup;
     
     let resolvedHavenDraft = isHavenDraft;
@@ -58,7 +65,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
     }
     
     if (conflictMessage) specialRules.push({ source: 'info', title: 'Conflict Resolved', content: conflictMessage });
-    if (isWantedLeaderMode) specialRules.push({ source: 'setupCard', title: 'The Heat Is On', content: [`Choose Ships & Leaders normally, but `, { type: 'strong', content: `each Leader begins play with a Wanted token` }, `.`] });
+    if (isWantedLeaderMode) specialRules.push({ source: 'setupCard', title: 'The Heat Is On', content: ['Choose Ships & Leaders normally, but each Leader begins play with a ', { type: 'strong', content: 'Warrant' }, ' token.'] });
     
     if (showBrowncoatHeroesWarning) {
         specialRules.push({

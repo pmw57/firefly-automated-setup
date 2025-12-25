@@ -105,7 +105,7 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
 
         {clearerSkies && (
           <SpecialRuleBlock source="setupCard" title="Clearer Skies" page={6} manual="C&P" content={[
-            { type: 'strong', content: 'Clearer Skies Rule:' }, ' When initiating a Full Burn, roll a die. The result is how many sectors you may move before you start drawing Nav Cards.',
+            { type: 'strong', content: 'Clearer Skies Rule:' }, ' When initiating a ', { type: 'action', content: 'Full Burn' }, ', roll a die. The result is how many sectors you may move before you start drawing Nav Cards.',
             { type: 'br' },
             "Note: You may not move farther than your Drive Core's range, regardless of the die roll."
           ]} />

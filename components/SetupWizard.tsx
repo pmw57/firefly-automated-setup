@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+
+
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useGameState } from '../hooks/useGameState';
 import { useSetupFlow } from '../hooks/useSetupFlow';
 import { StepContent } from './StepContent';
@@ -8,6 +10,10 @@ import { useTheme } from './ThemeContext';
 import { FinalSummary } from './FinalSummary';
 import { WizardHeader } from './WizardHeader';
 import { cls } from '../utils/style';
+import { getActiveStoryCard } from '../utils/selectors/story';
+import { EXPANSIONS_METADATA } from '../data/expansions';
+import { STEP_IDS } from '../data/ids';
+import { THEME_COLOR_MAP } from '../utils/theme';
 
 const WIZARD_STEP_STORAGE_KEY = 'firefly_wizardStep_v3';
 
@@ -42,19 +48,44 @@ const SetupWizard = (): React.ReactElement | null => {
     localStorage.setItem(WIZARD_STEP_STORAGE_KEY, JSON.stringify(currentStepIndex));
   }, [currentStepIndex, isWizardInitialized]);
   
-  // When the flow changes (e.g., options selected), ensure the current index is still valid.
   useEffect(() => {
     if (currentStepIndex >= flow.length && flow.length > 0) {
       setCurrentStepIndex(flow.length - 1);
     }
   }, [flow, currentStepIndex]);
 
-  const handleNavigation = useCallback((direction: 'next' | 'prev') => {
+  // Thematic Accents logic
+  const activeStory = getActiveStoryCard(gameState);
+  const accentExpansion = activeStory?.requiredExpansion || 'base';
+  const expansionMeta = EXPANSIONS_METADATA.find(e => e.id === accentExpansion);
+  
+  const hasAccent = useMemo(() => {
+    if (!expansionMeta) return false;
+    // Only apply accents for specific, visually distinct expansions
+    return ['orangeRed', 'steelBlue', 'darkSlateBlue', 'deepBrown'].includes(expansionMeta.themeColor);
+  }, [expansionMeta]);
+
+  const accentStyle = useMemo(() => {
+    if (!hasAccent || !expansionMeta) return {};
+    const rgb = THEME_COLOR_MAP[expansionMeta.themeColor];
+    if (!rgb) return {};
+    return { '--accent-color-rgb': rgb } as React.CSSProperties;
+  }, [expansionMeta, hasAccent]);
+
+  const setupCardSelectionStepIndex = useMemo(() =>
+    flow.findIndex(step => step.id === STEP_IDS.SETUP_CARD_SELECTION),
+    [flow]
+  );
+
+  const setupDetermined = setupCardSelectionStepIndex !== -1 && currentStepIndex > setupCardSelectionStepIndex;
+
+  const handleNavigation = useCallback((direction: 'next' | 'prev' | number) => {
     setIsNavigating(true);
-    // Use a short timeout to allow the loading state to render before the (potentially slow) step change.
     setTimeout(() => {
         setCurrentStepIndex(prev => {
-            const nextIndex = direction === 'next'
+            const nextIndex = typeof direction === 'number' 
+              ? direction 
+              : direction === 'next'
                 ? Math.min(prev + 1, flow.length - 1)
                 : Math.max(prev - 1, 0);
             
@@ -69,6 +100,7 @@ const SetupWizard = (): React.ReactElement | null => {
 
   const handleNext = useCallback(() => handleNavigation('next'), [handleNavigation]);
   const handlePrev = useCallback(() => handleNavigation('prev'), [handleNavigation]);
+  const handleJump = useCallback((index: number) => handleNavigation(index), [handleNavigation]);
 
   const performReset = useCallback(() => {
     resetGameState();
@@ -88,18 +120,27 @@ const SetupWizard = (): React.ReactElement | null => {
   }
 
   const currentStep = flow[currentStepIndex];
-  if (!currentStep) {
-    // This can happen briefly while flow recalculates, especially on reset.
-    return null;
-  }
+  if (!currentStep) return null;
   
   const isFinal = currentStep.type === 'final';
 
   return (
-    <div className="max-w-2xl mx-auto" key={resetKey}>
+    <div 
+      className={cls(
+        "max-w-2xl mx-auto transition-all duration-700 p-1 rounded-2xl", 
+        hasAccent && "shadow-[0_0_20px_rgba(var(--accent-color-rgb),var(--accent-shadow-opacity))] ring-1 ring-[rgba(var(--accent-color-rgb),var(--accent-ring-opacity))]"
+      )} 
+      style={accentStyle}
+      key={resetKey}
+    >
       <WizardHeader gameState={gameState} onReset={performReset} flow={flow} currentStepIndex={currentStepIndex} />
 
-      <ProgressBar current={currentStepIndex + 1} total={flow.length} />
+      <ProgressBar 
+        flow={flow} 
+        currentIndex={currentStepIndex} 
+        onJump={handleJump} 
+        setupDetermined={setupDetermined} 
+      />
 
       {isFinal ? (
         <div className={cls(isDark ? 'bg-zinc-900/70 backdrop-blur-md border-zinc-800' : 'bg-[#faf8ef]/80 backdrop-blur-md border-[#d6cbb0]', "rounded-xl shadow-xl p-8 text-center border-t-8 animate-fade-in-up border-x border-b transition-colors duration-300", isDark ? 'border-t-green-800' : 'border-t-[#7f1d1d]')}>

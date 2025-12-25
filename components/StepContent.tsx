@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from 'react';
 import { Step } from '../types';
 import { Button } from './Button';
@@ -38,10 +39,7 @@ export interface StepComponentProps {
   isNavigating: boolean;
 }
 
-// A single, unified registry that maps raw step IDs directly to components.
-// All components now adhere to the StepComponentProps interface for consistency.
 const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
-  // Core Steps
   [STEP_IDS.C1]: NavDeckStep,
   [STEP_IDS.C2]: AllianceReaverStep,
   [STEP_IDS.C3]: DraftStep,
@@ -49,11 +47,9 @@ const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
   [STEP_IDS.C5]: ResourcesStep,
   [STEP_IDS.C6]: JobStep,
   [STEP_IDS.C_PRIME]: PrimePumpStep,
-
-  // Dynamic Steps
   [STEP_IDS.D_FIRST_GOAL]: MissionDossierStep,
-  [STEP_IDS.D_RIM_JOBS]: JobStep, // Reuses JobStep
-  [STEP_IDS.D_HAVEN_DRAFT]: DraftStep, // Reuses DraftStep
+  [STEP_IDS.D_RIM_JOBS]: JobStep,
+  [STEP_IDS.D_HAVEN_DRAFT]: DraftStep,
   [STEP_IDS.D_GAME_LENGTH_TOKENS]: GameLengthTokensStep,
   [STEP_IDS.D_TIME_LIMIT]: TimeLimitStep,
   [STEP_IDS.D_SHUTTLE]: ShuttleDraftStep,
@@ -70,9 +66,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponen
   const isDark = theme === 'dark';
   const titleRef = useRef<HTMLHeadingElement>(null);
 
-  // Accessibility: Focus the heading when the step changes.
   useEffect(() => {
-    // Timeout gives the browser a moment to render and avoids race conditions.
     const timer = setTimeout(() => {
       titleRef.current?.focus();
     }, 100);
@@ -99,7 +93,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponen
 
   if (step.type === 'setup') {
       return (
-          <div className="animate-fade-in-up">
+          <div className="animate-fade-in-up pb-24 sm:pb-0">
               {renderStepBody()}
           </div>
       );
@@ -107,35 +101,37 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponen
 
   const isMissionDossier = step.id === STEP_IDS.C4 || step.id === STEP_IDS.D_FIRST_GOAL;
   const showNav = !isMissionDossier;
-  
   const displayTitle = step.data?.title || step.id;
   
-  const borderTop = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
-  
   const headerBg = isSpecial
-    ? (isDark ? 'bg-green-900' : 'bg-green-800')
-    : 'bg-firefly-saddleBrown';
+    ? (isDark ? 'bg-emerald-950/80 border-emerald-500/50' : 'bg-emerald-800 border-emerald-900')
+    : (isDark ? 'bg-zinc-900/80 border-zinc-700' : 'bg-firefly-saddleBrown border-firefly-brown');
 
   const headerColor = 'text-white';
   const tagColor = isSpecial
-    ? (isDark ? 'text-green-300' : 'text-green-200')
-    : (isDark ? 'text-amber-300' : 'text-amber-200');
+    ? (isDark ? 'text-emerald-400' : 'text-emerald-200')
+    : (isDark ? 'text-amber-400' : 'text-amber-200');
+
+  const footerBg = isDark ? 'bg-zinc-950/90' : 'bg-[#faf8ef]/95';
+  const footerBorder = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
 
   return (
-    <div className="animate-fade-in-up">
+    <div className="animate-fade-in-up pb-32 sm:pb-8">
       <div className="flex flex-wrap items-start justify-between mb-6 gap-4">
         <h2 
             ref={titleRef}
             tabIndex={-1}
-            className={cls("text-2xl font-bold font-western flex-1 min-w-[200px] transition-colors duration-300 flex justify-between items-center p-3 rounded-lg shadow-md focus:outline-none", headerBg, headerColor)}
+            className={cls("text-2xl font-bold font-western flex-1 min-w-[200px] transition-colors duration-300 flex justify-between items-center p-4 rounded-xl shadow-lg border-2 focus:outline-none backdrop-blur-md", headerBg, headerColor)}
         >
-          <div className="flex flex-wrap items-baseline gap-x-2">
-            <span>{displayTitle}</span>
-            {step.page && <PageReference page={step.page} manual={step.manual} />}
+          <div className="flex flex-col">
+            <span className={cls("text-[10px] font-bold uppercase tracking-[0.2em] mb-1 opacity-70", tagColor)}>
+                Step {isSpecial ? 'Override' : 'Standard'}
+            </span>
+            <div className="flex flex-wrap items-baseline gap-x-2">
+              <span className="drop-shadow-md">{displayTitle}</span>
+              {step.page && <PageReference page={step.page} manual={step.manual} />}
+            </div>
           </div>
-          <span className={cls("text-xs font-bold uppercase tracking-wider", tagColor)}>
-              {isSpecial ? 'Special' : 'Standard'}
-          </span>
         </h2>
         <div className="w-full lg:w-1/3 shrink-0 flex">
            <QuotePanel stepId={step.id} className="flex-1" />
@@ -147,18 +143,44 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponen
       </div>
 
       {showNav && (
-        <div className={cls("mt-8 flex justify-between clear-both pt-6 border-t", borderTop)}>
-          <Button onClick={onPrev} variant="secondary" className="shadow-sm" disabled={isNavigating}>
-            ← Previous
-          </Button>
-          <Button 
-              onClick={onNext}
-              className="shadow-lg hover:translate-y-[-2px] transition-transform"
+        <>
+          {/* Desktop Nav */}
+          <div className={cls("hidden sm:flex mt-12 justify-between clear-both pt-8 border-t", isDark ? 'border-zinc-800' : 'border-stone-200')}>
+            <Button onClick={onPrev} variant="secondary" disabled={isNavigating}>
+              ← Previous
+            </Button>
+            <Button onClick={onNext} disabled={isNavigating} className="px-10">
+              Next Step →
+            </Button>
+          </div>
+
+          {/* Sticky Mobile Nav */}
+          <div className={cls(
+            "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex sm:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
+            footerBg, footerBorder
+          )}>
+            <button 
+              onClick={onPrev} 
               disabled={isNavigating}
-          >
-            Next Step →
-          </Button>
-        </div>
+              className={cls(
+                "flex-1 py-3 px-4 rounded-lg font-bold text-xs uppercase tracking-wider transition-all",
+                isDark ? 'bg-zinc-800 text-zinc-300 border border-zinc-700' : 'bg-stone-200 text-stone-700 border border-stone-300'
+              )}
+            >
+              Back
+            </button>
+            <button 
+              onClick={onNext} 
+              disabled={isNavigating}
+              className={cls(
+                "flex-[2] py-3 px-4 rounded-lg font-bold text-xs uppercase tracking-[0.1em] shadow-lg transition-all active:scale-95",
+                isDark ? 'bg-emerald-600 text-white' : 'bg-firefly-red text-white'
+              )}
+            >
+              Continue →
+            </button>
+          </div>
+        </>
       )}
     </div>
   );

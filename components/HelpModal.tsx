@@ -63,39 +63,9 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        <div className="p-6 space-y-6 text-base leading-loose tracking-wide">
-          <p>
-            Hello Captain!
-          </p>
-          <p>
-            This is a setup guide for the board game{' '}
-            <strong className={isDark ? 'text-white' : 'text-black'}>Firefly: The Game</strong>.
-          </p>
-          <p>
-            It helps you set up any game, with any expansion. The guide makes sure you follow all the rules correctly.
-          </p>
-
-          <div>
-            <h3 className={`font-bold text-lg font-western mt-6 mb-3 ${isDark ? 'text-amber-500' : 'text-firefly-saddleBrown'}`}>How to Use It</h3>
-            <ol className="list-decimal list-inside space-y-4 mt-2 pl-2">
-              <li>
-                <strong>Set Up Your Game</strong>
-                <br />
-                Choose your player count and expansions.
-              </li>
-              <li>
-                <strong>Choose Your Rules</strong>
-                <br />
-                Pick a Setup Card to set the rules for your game.
-              </li>
-              <li>
-                <strong>Follow the Guide</strong>
-                <br />
-                The tool gives you simple steps to follow.
-              </li>
-            </ol>
-          </div>
-
+        <div className="p-6 space-y-6 text-base leading-relaxed tracking-wide">
+          <p>This is an automated setup guide for the board game <strong className={isDark ? 'text-white' : 'text-black'}>Firefly: The Game</strong>. It dynamically generates a step-by-step checklist to ensure you follow all the special rules from your selected expansions, Setup Cards, and Story Cards.</p>
+          
           <div>
             <h3 className={`font-bold text-lg font-western mt-6 mb-3 ${isDark ? 'text-amber-500' : 'text-firefly-saddleBrown'}`}>Main Features</h3>
             <ul className="list-disc list-inside space-y-4 mt-2 pl-2">

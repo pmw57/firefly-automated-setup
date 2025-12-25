@@ -51,7 +51,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
       {isSelectedStory && isCampaign && (
         <SpecialRuleBlock source="story" title="Campaign Rules: Jobs & Contacts" content={[
           { type: 'paragraph', content: ["For each Contact you were Solid with at the end of the last game, remove 2 of your completed Jobs from play."] },
-          { type: 'paragraph', content: ["Keep any remaining completed Jobs; you begin the game ", { type: 'strong', content: "Solid with those Contacts" }, "."] }
+          { type: 'paragraph', content: ["Keep any remaining completed Jobs; you begin the game Solid with those Contacts."] }
         ]} />
       )}
 
