@@ -16,7 +16,7 @@ export const CORE_STORIES: StoryCardDef[] = [
     title: "Desperadoes",
     intro: "Your checkered past is catching up with you and the Alliance is hot on your tail! It's time to make a final cash grab and head out to the Rim to retire before the Alliance makes other arrangements.",
     setupDescription: "Start with 1 Warrant. Harken jobs unavailable.",
-    sourceUrl: "https://web.archive.org/web/20220226163502/http://www.flamesofwar.com/Portals/0/all_images/GF9/Firefly/Rulebooks/StoryCards/DesperadoesStoryCard.png",
+    sourceUrl: "https://boardgamegeek.com/image/2785050/gerryrailbaron",
     rules: createStoryRules("Desperadoes", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
       { type: 'forbidContact', contact: CONTACT_NAMES.HARKEN }
@@ -34,12 +34,12 @@ export const CORE_STORIES: StoryCardDef[] = [
   {
     title: "Harken's Folly",
     intro: "Commander Harken has been entrusted by the Alliance to provide security for a gathering of Alliance VIPs and Parliament Officials. Lead Harken off on a wild goose chase and infiltrate the venue. Inside, plant bugs and hack secure servers to gather sensitive intel that'll make you rich.",
-    sourceUrl: "https://web.archive.org/web/20220226163640/http://www.flamesofwar.com/Portals/0/all_images/GF9/Firefly/Rulebooks/StoryCards/HarkensFollyStoryCard.png"
+    sourceUrl: "https://boardgamegeek.com/image/2785049/gerryrailbaron"
   },
   {
     title: "Niska's Holiday",
     intro: "Adelai Niska is taking a holiday and has left his operations in the incompetent hands of one of his wife's many nephews. This presents an opportunity for an ambitious Captain to prove himself during his absence. Insure the continuing profitability of Niska's criminal enterprise and ensure his nephew's failure.",
-    sourceUrl: "https://web.archive.org/web/20240717005750/http://flamesofwar.com:80/Portals/0/all_images/GF9/Firefly/Rulebooks/StoryCards/Firefly_Story_Card_Niska's_Holiday_v1.pdf"
+    sourceUrl: "https://boardgamegeek.com/image/2785048/gerryrailbaron"
   },
   {
     title: "Patience's War",
@@ -54,6 +54,6 @@ export const CORE_STORIES: StoryCardDef[] = [
   {
     title: "The King Of All Londinium",
     intro: "The New Cardiff Museum is about to play host to a grand exhibit of \"Earth That Was\" artifacts, the centerpiece of which is the Crown Jewels of old England. Endeavor to swap a quality counterfeit for the \"Shiny Hat\" and make off with the real one leaving no one the wiser.",
-    sourceUrl: "https://web.archive.org/web/20220226163621/http://www.flamesofwar.com/Portals/0/all_images/GF9/Firefly/Rulebooks/StoryCards/KingofLondiniumStoryCard.png"
+    sourceUrl: "https://boardgamegeek.com/image/2785047/gerryrailbaron"
   },
 ];
