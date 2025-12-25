@@ -3,14 +3,17 @@ import {
     StepOverrides, 
     AllianceReaverDetails, 
     SpecialRule, 
-    CreateAlertTokenStackRule 
+    CreateAlertTokenStackRule,
+    SetAllianceModeRule
 } from '../types';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
 export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: StepOverrides): AllianceReaverDetails => {
   const allRules = getResolvedRules(gameState);
   const specialRules: SpecialRule[] = [];
-  const allianceMode = stepOverrides.allianceMode;
+  
+  const allianceModeRule = allRules.find(r => r.type === 'setAllianceMode') as SetAllianceModeRule | undefined;
+  const allianceMode = allianceModeRule?.mode || stepOverrides.allianceMode;
 
   switch (allianceMode) {
     case 'no_alerts':
@@ -52,12 +55,12 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
   if (smugglersBluesSetup) {
     const useSmugglersRimRule = smugglersBluesSetup && gameState.expansions.blue && gameState.expansions.kalidasa;
     specialRules.push({ source: 'story', title: 'Story Override', content: useSmugglersRimRule 
-      ? ['Place ', { type: 'strong', content: '2 Contraband' }, ' on each Planetary Sector in ', { type: 'strong', content: 'Rim Space' }, '.']
-      : ['Place ', { type: 'strong', content: '3 Contraband' }, ' on each Planetary Sector in ', { type: 'strong', content: 'Alliance Space' }, '.'] });
+      ? ['Place ', { type: 'strong', content: '2 ' }, 'Contraband on each Planetary Sector in ', { type: 'strong', content: 'Rim Space' }, '.']
+      : ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Planetary Sector in ', { type: 'strong', content: 'Alliance Space' }, '.'] });
   }
   
   if (hasRuleFlag(allRules, 'lonelySmugglerSetup')) {
-    specialRules.push({ source: 'story', title: 'Story Override', content: ['Place ', { type: 'strong', content: '3 Contraband' }, ' on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.'] });
+    specialRules.push({ source: 'story', title: 'Story Override', content: ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.'] });
   }
 
   if (hasRuleFlag(allRules, 'startWithAlertCard')) {

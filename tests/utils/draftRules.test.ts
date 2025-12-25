@@ -56,7 +56,7 @@ describe('utils/draftRules', () => {
         const details = getDraftDetails(baseGameState, step);
         const rule = details.specialRules.find(r => r.title === 'The Heat Is On');
         expect(rule).toBeDefined();
-        expect(getTextContent(rule?.content)).toContain('each Leader begins play with a Wanted token');
+        expect(getTextContent(rule?.content)).toContain('each Leader begins play with a Warrant token');
     });
 
     it.concurrent('generates a rule for Optional Ship Upgrades', () => {

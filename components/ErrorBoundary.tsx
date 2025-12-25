@@ -12,21 +12,17 @@ interface ErrorBoundaryState {
 
 /**
  * ErrorBoundary class component to catch rendering errors in its children.
- * Using a constructor is the standard and most robust way to initialize state,
- * ensuring that `this.state` and `this.props` are correctly set up from the base `React.Component`.
  */
+// FIX: The class must extend React.Component to be a valid React class component, giving it access to `this.props` and `this.setState`.
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = {
-      hasError: false,
-      error: null,
-    };
-    this.handleReset = this.handleReset.bind(this);
-  }
+  // Initialize state as a class property
+  state: ErrorBoundaryState = {
+    hasError: false,
+    error: null,
+  };
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    // The getDerivedStateFromError method should return an object that can be merged into the state.
+    // Update state so the next render will show the fallback UI.
     return { hasError: true, error };
   }
 
@@ -34,10 +30,11 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     console.error("Uncaught error:", error, errorInfo);
   }
 
-  handleReset() {
+  // Use an arrow function to preserve `this` context for `setState`.
+  handleReset = () => {
     this.setState({ hasError: false, error: null });
     window.location.reload();
-  }
+  };
 
   render(): ReactNode {
     if (this.state.hasError && this.state.error) {

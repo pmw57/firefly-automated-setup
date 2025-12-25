@@ -3,7 +3,8 @@ import {
     PrimeDetails,
     StepOverrides,
     ModifyPrimeRule,
-    SpecialRule
+    SpecialRule,
+    SetPrimeModeRule
 } from '../types';
 import { getResolvedRules } from './selectors/rules';
 
@@ -35,7 +36,8 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   const primeModifierRule = rules.find(r => r.type === 'modifyPrime' && r.modifier !== undefined) as ModifyPrimeRule | undefined;
   const primeModifier = primeModifierRule?.modifier;
 
-  const isBlitz = overrides.primeMode === 'blitz';
+  const primeModeRule = rules.find(r => r.type === 'setPrimeMode') as SetPrimeModeRule | undefined;
+  const isBlitz = primeModeRule?.mode === 'blitz' || overrides.primeMode === 'blitz';
 
   let effectiveMultiplier = storyMultiplier;
   if (isBlitz) effectiveMultiplier = 2;
