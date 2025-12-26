@@ -9,8 +9,13 @@
     "build": "tsc && vite build",
     "lint": "eslint . --config .eslintrc.cjs --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vitest run --dir tests",
+    "test:unit": "vitest run --dir tests/unit",
+    "test:integration": "vitest run --dir tests/integration",
+    "test:e2e": "echo \"No E2E tests configured yet.\"",
+    "test:watch": "vitest --dir tests",
+    "test:watch:unit": "vitest --dir tests/unit",
+    "test:watch:integration": "vitest --dir tests/integration",
     "check": "npm run lint && npm run test && npm run build"
   },
   "dependencies": {
