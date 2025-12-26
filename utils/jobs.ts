@@ -139,13 +139,25 @@ const _generateJobMessages = (
 
 export const getJobSetupDetails = (gameState: GameState, overrides: StepOverrides): JobSetupDetails => {
     const allRules = getResolvedRules(gameState);
+    const activeStoryCard = getActiveStoryCard(gameState);
     const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
     const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
 
     if (jobDrawMode === 'no_jobs') {
         const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
         const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
-        return _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge)!;
+        const details = _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge)!;
+        
+        // Ensure setupDescription is always added if it exists
+        if (activeStoryCard?.setupDescription) {
+            details.messages.push({ 
+                source: 'story', 
+                title: 'Story Override', 
+                content: [activeStoryCard.setupDescription] 
+            });
+        }
+        
+        return details;
     }
     
     const initialContacts = _getInitialContacts(allRules);
@@ -155,7 +167,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     const messages = _generateJobMessages(
         allRules,
         initialContacts,
-        getActiveStoryCard(gameState),
+        activeStoryCard,
         isSingleContactChallenge
     );
     

@@ -85,47 +85,61 @@ describe('utils/jobs', () => {
     it.concurrent('handles story card "no_jobs" mode with priming', () => {
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: "A Fistful Of Scoundrels" // Has primeContactDecks flag
+        selectedStoryCard: "A Fistful Of Scoundrels", // Has primeContactDecks flag
+        gameMode: 'solo', // Story is solo-only
       };
       const { showStandardContactList, messages } = getJobSetupDetails(state, {});
       expect(showStandardContactList).toBe(false);
-      expect(messages[0].content).toMatchInlineSnapshot(`
+      expect(messages).toMatchInlineSnapshot(`
         [
           {
             "content": [
               {
-                "content": "No Starting Jobs.",
-                "type": "strong",
+                "content": [
+                  {
+                    "content": "No Starting Jobs.",
+                    "type": "strong",
+                  },
+                ],
+                "type": "paragraph",
+              },
+              {
+                "content": [
+                  "Instead, ",
+                  {
+                    "content": "prime the Contact Decks",
+                    "type": "strong",
+                  },
+                  ":",
+                ],
+                "type": "paragraph",
+              },
+              {
+                "items": [
+                  [
+                    "Reveal the top ",
+                    {
+                      "content": "3 cards",
+                      "type": "strong",
+                    },
+                    " of each Contact Deck.",
+                  ],
+                  [
+                    "Place the revealed Job Cards in their discard piles.",
+                  ],
+                ],
+                "type": "list",
               },
             ],
-            "type": "paragraph",
+            "source": "story",
+            "title": "Story Override",
           },
           {
             "content": [
-              "Instead, ",
-              {
-                "content": "prime the Contact Decks",
-                "type": "strong",
-              },
-              ":",
+              "Roots In The Community: Each time you gain Solid with a Contact, recover 2 Game Length Tokens.",
             ],
-            "type": "paragraph",
-          },
-          {
-            "items": [
-              [
-                "Reveal the top ",
-                {
-                  "content": "3 cards",
-                  "type": "strong",
-                },
-                " of each Contact Deck.",
-              ],
-              [
-                "Place the revealed Job Cards in their discard piles.",
-              ],
-            ],
-            "type": "list",
+            "source": "story",
+            "title": "Story Override",
           },
         ]
       `);
