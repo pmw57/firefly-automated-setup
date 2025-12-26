@@ -9,6 +9,8 @@ import { GameStateProvider } from './components/GameStateContext';
 import { UpdatePrompt } from './components/UpdatePrompt';
 import { HelpButton } from './components/HelpButton';
 import { HelpModal } from './components/HelpModal';
+import { QrButton } from './components/QrButton';
+import { QrModal } from './components/QrModal';
 import { DevPanel } from './components/DevPanel';
 
 // Global variable injected by Vite at build time
@@ -17,6 +19,7 @@ declare const __APP_VERSION__: string;
 const App = (): React.ReactElement => {
   const { theme, toggleTheme } = useTheme();
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
   const [offlineReady, setOfflineReady] = useState(false);
   const [needRefresh, setNeedRefresh] = useState(false);
@@ -158,6 +161,7 @@ const App = (): React.ReactElement => {
 
       {createPortal(
         <div className="fixed top-2 right-2 z-[9999] pointer-events-none flex items-center gap-2">
+           <QrButton onClick={() => setIsQrModalOpen(true)} />
            <HelpButton onClick={() => setIsHelpModalOpen(true)} />
            <button 
              onClick={toggleTheme}
@@ -172,6 +176,7 @@ const App = (): React.ReactElement => {
       )}
 
       <HelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
+      <QrModal isOpen={isQrModalOpen} onClose={() => setIsQrModalOpen(false)} />
     </div>
   );
 };
