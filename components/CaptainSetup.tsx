@@ -57,7 +57,7 @@ export const CaptainSetup = ({ onNext }: CaptainSetupProps): React.ReactElement 
     <div data-testid="captain-setup" className={`bg-metal rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in relative overflow-hidden transition-all duration-300`}>
       
       <div className={`flex justify-between items-center mb-6 border-b-2 ${inputBorder} pb-2 relative z-10`}>
-         <h2 className={`text-2xl font-bold font-western drop-shadow-sm ${textColor}`}>Mission Configuration</h2>
+         <h2 className={`text-2xl font-bold font-western drop-shadow-sm ${textColor}`}>Config</h2>
          <span className={`text-xs font-bold ${partBadgeBg} ${partBadgeText} border ${isDark ? 'border-yellow-700/50' : 'border-[#d4af37]'} px-3 py-1 rounded-full shadow-sm`}>Part 1 of {totalParts}</span>
       </div>
       

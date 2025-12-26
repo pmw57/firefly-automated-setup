@@ -22,7 +22,7 @@ describe('components/CaptainSetup', () => {
 
   it.concurrent('renders without crashing', () => {
     const { container } = render(<CaptainSetup onNext={mockOnNext} />);
-    expect(within(container).getByText('Mission Configuration')).toBeInTheDocument();
+    expect(within(container).getByText('Config')).toBeInTheDocument();
     expect(within(container).getByTestId('mock-player-config-section')).toBeInTheDocument();
     expect(within(container).getByTestId('mock-expansion-list-section')).toBeInTheDocument();
   });
