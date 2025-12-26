@@ -33,7 +33,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'big_damn_heroes',
     label: "Big Damn Heroes",
-    description: "Adds 5 new leaders and over 50 new cards. (Rule: Take $100 when proceeding while misbehaving).",
+    description: "Take $100 when proceeding while misbehaving with BDH.",
     themeColor: 'steelBlue',
     icon: { type: 'sprite', value: '25% 0%' },
     page_10th: 28,
@@ -51,7 +51,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'blue',
     label: "Blue Sun",
-    description: "Expands the 'Verse with the Western Rim (Lord Harrow, Mr. Universe) and Reaver mechanics.",
+    description: "Western Rim of the 'Verse with Reavers.",
     themeColor: 'darkSlateBlue',
     icon: { type: 'sprite', value: '75% 0%' },
     page_10th: 36,
@@ -60,7 +60,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'kalidasa',
     label: "Kalidasa",
-    description: "Expands the 'Verse with the Eastern Rim (Fanty & Mingo, Magistrate Higgins) and the Operative.",
+    description: "Eastern Rim of 'Verse with the Operative.",
     themeColor: 'deepBrown',
     icon: { type: 'sprite', value: '100% 0%' },
     page_10th: 42,
@@ -69,7 +69,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'coachworks',
     label: "Coachworks",
-    description: "Adds the Jetwash and Esmerelda ships, plus new setup cards.",
+    description: "Jetwash and Esmerelda ships, plus setup cards.",
     themeColor: 'rebeccaPurple',
     icon: { type: 'sprite', value: '0% 25%' },
     page_10th: 47,
@@ -78,7 +78,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'crime',
     label: "Crime & Punishment",
-    description: "Increases the risks of misbehaving with new Alliance Alert cards and severe penalties.",
+    description: "Increases the risks of misbehaving, and Alliance Alerts.",
     themeColor: 'cordovan',
     icon: { type: 'sprite', value: '25% 25%' },
     page_10th: 49,
