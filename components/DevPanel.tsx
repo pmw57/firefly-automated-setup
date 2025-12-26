@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeContext';
 import { DevStoryAudit } from './DevStoryAudit';
+import { DevAddStoryCard } from './DevAddStoryCard';
 
 const DEFAULT_THEME_VALUES = {
   // Light Theme
@@ -53,6 +55,7 @@ const Slider = ({ label, value, onChange, min = 0, max = 1, step = 0.01 }: { lab
 export const DevPanel = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [showStoryAudit, setShowStoryAudit] = useState(false);
+    const [showAddStory, setShowAddStory] = useState(false);
     const [themeValues, setThemeValues] = useState(DEFAULT_THEME_VALUES);
     const { theme } = useTheme();
 
@@ -83,6 +86,10 @@ export const DevPanel = () => {
     if (showStoryAudit) {
         return <DevStoryAudit onClose={() => setShowStoryAudit(false)} />;
     }
+    
+    if (showAddStory) {
+        return <DevAddStoryCard onClose={() => setShowAddStory(false)} />;
+    }
 
     if (!isOpen) {
         return (
@@ -103,12 +110,20 @@ export const DevPanel = () => {
                 <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
             </div>
             
-            <button
-                onClick={() => setShowStoryAudit(true)}
-                className="w-full mb-4 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 rounded"
-            >
-                Audit Story Links
-            </button>
+            <div className="flex flex-col gap-2 mb-4">
+                <button
+                    onClick={() => setShowStoryAudit(true)}
+                    className="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 rounded"
+                >
+                    Audit Story Links
+                </button>
+                <button
+                    onClick={() => setShowAddStory(true)}
+                    className="w-full bg-green-600 hover:bg-green-500 text-white text-sm font-bold py-2 rounded"
+                >
+                    Add Story Card
+                </button>
+            </div>
 
             <div className="space-y-4">
                 <div className={`p-2 rounded transition-colors ${theme === 'light' ? 'bg-gray-700' : 'bg-transparent opacity-50'}`}>
