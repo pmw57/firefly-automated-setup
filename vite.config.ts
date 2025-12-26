@@ -2,7 +2,6 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from 'vite-plugin-pwa'
-import { Plugin } from 'vite';
 
 const getVersion = () => {
   const date = new Date();
@@ -19,9 +18,11 @@ const getVersion = () => {
  * A custom Vite plugin to remove the Tailwind CDN fallback script during dev/build.
  * This allows index.html to be statically previewed, while Vite handles Tailwind processing.
  */
-const tailwindCdnFallbackPlugin = (): Plugin => ({
+// FIX: The `Plugin` type was causing a conflict. Removing the explicit return
+// type allows TypeScript to infer it, which is structurally compatible.
+const tailwindCdnFallbackPlugin = () => ({
   name: 'vite-plugin-tailwind-cdn-fallback',
-  transformIndexHtml(html) {
+  transformIndexHtml(html: string) {
     const regex = /<!--\s*TAILWIND_CDN_START\s*-->[\s\S]*?<!--\s*TAILWIND_CDN_END\s*-->/g;
     return html.replace(regex, '');
   }
@@ -37,16 +38,16 @@ export default defineConfig(({ mode }) => ({
     mode !== 'test' && VitePWA({
       registerType: 'autoUpdate',
       includeAssets: [
-        'expansion_sprites.png', 
-        'logo.svg', 
+        'assets/images/game/expansion_sprites.png', 
+        'assets/images/branding/logo.svg', 
         'robots.txt', 
         'sitemap.xml', 
         'google45bc800396599bee.html',
-        'starfield-noise-texture.svg',
-        'parchment-body-texture.svg',
-        'parchment-dossier-texture.svg',
-        'metal-noise-texture.svg',
-        'firefly-cover.png'
+        'assets/images/textures/starfield-noise-texture.svg',
+        'assets/images/textures/parchment-body-texture.svg',
+        'assets/images/textures/parchment-dossier-texture.svg',
+        'assets/images/textures/metal-noise-texture.svg',
+        'assets/images/game/firefly-cover.png'
       ],
       manifest: {
         name: 'Firefly Automated Setup Guide',
@@ -55,7 +56,7 @@ export default defineConfig(({ mode }) => ({
         theme_color: '#7f1d1d',
         icons: [
           {
-            src: 'logo.svg',
+            src: 'assets/images/branding/logo.svg',
             sizes: '192x192 512x512',
             type: 'image/svg+xml',
             purpose: 'any maskable'

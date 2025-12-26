@@ -2,8 +2,8 @@
 // the "Cannot find type definition file for 'vite/client'" error. This provides
 // type safety for the environment variables used in the application.
 interface ImportMetaEnv {
-  readonly BASE_URL: string;
-  readonly DEV: boolean;
+  BASE_URL: string;
+  DEV: boolean;
 }
 
 interface ImportMeta {
