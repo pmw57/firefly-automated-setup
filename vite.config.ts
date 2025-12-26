@@ -40,6 +40,7 @@ export default defineConfig(({ mode }) => ({
       includeAssets: [
         'assets/images/game/expansion_sprites.png', 
         'assets/images/branding/logo.svg', 
+        'assets/images/branding/qrcode.png',
         'robots.txt', 
         'sitemap.xml', 
         'google45bc800396599bee.html',
