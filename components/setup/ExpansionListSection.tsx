@@ -1,4 +1,5 @@
 
+
 import React, { useMemo } from 'react';
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { Expansions } from '../../types/index';
@@ -22,7 +23,7 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
         core_mechanics,
         map,
         variants,
-        promo
+        independent
     } = useMemo(() => getCategorizedExpansions(), []);
 
     const handleToggleGroup = (group: typeof core_mechanics, enable: boolean) => {
@@ -92,7 +93,7 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
                 {renderGroup('Core Mechanics', core_mechanics)}
                 {renderGroup('Map Expansions', map)}
                 {renderGroup('Game Variants', variants)}
-                {renderGroup('Independent Content', promo)}
+                {renderGroup('Independent Content', independent)}
             </div>
         </div>
     );

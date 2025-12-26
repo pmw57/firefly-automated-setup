@@ -1,4 +1,5 @@
 
+
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
@@ -100,7 +101,7 @@ export const getCategorizedExpansions = () => {
     core_mechanics: group('core_mechanics'),
     map: group('map'),
     variants: group('variants'),
-    promo: group('promo'),
+    independent: group('independent'),
   };
 };
 

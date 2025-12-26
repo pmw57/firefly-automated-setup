@@ -1,4 +1,5 @@
 
+
 import { SETUP_CARD_IDS } from '../data/ids';
 import { GameMode, Expansions, SetupRule } from './';
 
@@ -9,7 +10,8 @@ export interface ExpansionIconConfig {
   value: string;
 }
 
-export type ExpansionCategory = 'core_mechanics' | 'map' | 'variants' | 'promo';
+// FIX: Add 'independent' to the ExpansionCategory type to match its usage in the data.
+export type ExpansionCategory = 'core_mechanics' | 'map' | 'variants' | 'independent';
 
 export interface ExpansionDef {
   id: ExpansionId;
