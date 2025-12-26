@@ -48,19 +48,19 @@ export const ResourcesStep: React.FC<StepComponentProps> = () => {
   return (
     <div className="space-y-4">
       <div className={`${cardBg} p-4 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300`}>
-        <div className="flex items-start justify-between">
-          <div>
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0 flex-1">
             <h4 className={`font-bold ${textColor}`}>Starting Credits</h4>
-            <div className={`text-xs mt-1 border-t ${modsBorder} pt-1 ${modsText}`}>
-                {creditModifications.map((mod, i) => (
-                  <div key={i} className="flex justify-between w-64 gap-2">
-                    <span>{mod.description}</span>
-                    <span className="font-mono">{mod.value}</span>
-                  </div>
-                ))}
+            <div className={`grid grid-cols-1 xs:grid-cols-[1fr_auto] gap-x-4 text-xs mt-1 border-t ${modsBorder} pt-1 ${modsText}`}>
+              {creditModifications.map((mod, i) => (
+                <React.Fragment key={i}>
+                  <span className="truncate">{mod.description}</span>
+                  <span className="font-mono text-left xs:text-right">{mod.value}</span>
+                </React.Fragment>
+              ))}
             </div>
           </div>
-          <div className={`text-3xl font-bold font-western drop-shadow-sm ${creditColor}`}>${credits.toLocaleString()}</div>
+          <div className={`text-3xl font-bold font-western drop-shadow-sm ${creditColor} flex-shrink-0`}>${credits.toLocaleString()}</div>
         </div>
       </div>
       
