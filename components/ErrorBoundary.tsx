@@ -32,6 +32,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
   // Use an arrow function to preserve `this` context for `setState`.
   handleReset = () => {
+    // FIX: Add this. to setState and ensure class extends React.Component
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
@@ -46,6 +47,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       );
     }
 
+    // FIX: Add this. to props and ensure class extends React.Component
     return this.props.children;
   }
 }

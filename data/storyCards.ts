@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { StoryCardDef } from '../types/index';
 import { SOLO_STORIES } from './storyCards/solo';
@@ -12,6 +13,10 @@ import { COACHWORKS_STORIES } from './storyCards/coachworks';
 import { BLACK_MARKET_STORIES } from './storyCards/blackMarket';
 import { COMMUNITY_STORIES } from './storyCards/community';
 import { EXPANSIONS_METADATA } from './expansions';
+import { ACES_EIGHTS_STORIES } from './storyCards/acesAndEights';
+import { WHITE_LIGHTNING_STORIES } from './storyCards/whiteLightning';
+import { CANTANKEROUS_STORIES } from './storyCards/cantankerous';
+import { HUNTINGDONS_BOLT_STORIES } from './storyCards/huntingdonsBolt';
 
 // Create a map of expansion IDs to their sort index for consistent ordering
 const expansionIndices = EXPANSIONS_METADATA.reduce((acc, exp, idx) => {
@@ -28,13 +33,17 @@ const getSortableTitle = (str: string) => {
 export const STORY_CARDS: StoryCardDef[] = [
   ...SOLO_STORIES,
   ...CORE_STORIES,
-  ...TENTH_STORIES,
-  ...STILL_FLYING_STORIES,
+  ...PIRATES_STORIES,
   ...BLUE_SUN_STORIES,
   ...KALIDASA_STORIES,
-  ...PIRATES_STORIES,
-  ...CRIME_STORIES,
   ...COACHWORKS_STORIES,
+  ...CRIME_STORIES,
+  ...STILL_FLYING_STORIES,
+  ...TENTH_STORIES,
+  ...ACES_EIGHTS_STORIES,
+  ...WHITE_LIGHTNING_STORIES,
+  ...CANTANKEROUS_STORIES,
+  ...HUNTINGDONS_BOLT_STORIES,
   ...BLACK_MARKET_STORIES,
   ...COMMUNITY_STORIES
 ].sort((a, b) => {
