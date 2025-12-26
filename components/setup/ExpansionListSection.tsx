@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { Expansions } from '../../types/index';
@@ -86,11 +87,17 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
     );
 
     return (
-        <div className="mb-8 relative z-10 space-y-6">
-            {renderGroup("Core Content & Mechanics", core_mechanics)}
-            {renderGroup("Map Expansions", map)}
-            {renderGroup("Game Variants & Anniversary", variants)}
-            {renderGroup("Promo & Community Content", promo)}
+        <div className="mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                <div className="space-y-6">
+                    {renderGroup('Core Mechanics', core_mechanics)}
+                    {renderGroup('Map Expansions', map)}
+                </div>
+                <div className="space-y-6">
+                    {renderGroup('Game Variants', variants)}
+                    {renderGroup('Independent Content', promo)}
+                </div>
+            </div>
         </div>
     );
 };

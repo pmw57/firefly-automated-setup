@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
@@ -94,7 +95,7 @@ export const getSoloTimerAdjustmentText = (storyCard: StoryCardDef | undefined):
 }
 
 export const getCategorizedExpansions = () => {
-  const group = (category: string) => EXPANSIONS_METADATA.filter(e => e.id !== 'base' && e.category === category);
+  const group = (category: string) => EXPANSIONS_METADATA.filter(e => e.id !== 'base' && e.category === category && !e.hidden);
   return {
     core_mechanics: group('core_mechanics'),
     map: group('map'),

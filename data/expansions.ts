@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { ExpansionDef } from '../types/index';
 
@@ -102,6 +103,42 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     icon: { type: 'sprite', value: '75% 25%' },
     page_10th: 53,
     category: 'variants'
+  },
+  {
+    id: 'aces_eights',
+    label: "Aces & Eights",
+    description: "Adds high-stakes gambling missions and new gear for games of chance.",
+    themeColor: 'cordovan',
+    icon: { type: 'sprite', value: '0% 50%' },
+    category: 'promo',
+    hidden: true
+  },
+  {
+    id: 'white_lightning',
+    label: "White Lightning",
+    description: "A cargo lifter converted into a popular saloon ship, as a cover for rumrunning and smuggling.",
+    themeColor: 'darkSlateBlue',
+    icon: { type: 'sprite', value: '25% 50%' },
+    category: 'promo',
+    hidden: true
+  },
+  {
+    id: 'cantankerous',
+    label: "Cantankerous",
+    description: "A resurrected Alliance military vessel with reusable ship upgrades and not much room for passengers.",
+    themeColor: 'rebeccaPurple',
+    icon: { type: 'sprite', value: '50% 50%' },
+    category: 'promo',
+    hidden: true
+  },
+  {
+    id: 'huntingdons_bolt',
+    label: "Huntingdon's Bolt",
+    description: "A courier ship with anonymity style and safety, providing modular systems, and a hyper-efficient core.",
+    themeColor: 'orangeRed',
+    icon: { type: 'sprite', value: '75% 50%' },
+    category: 'promo',
+    hidden: true
   },
   {
     id: 'black_market',
