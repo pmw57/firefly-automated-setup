@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useMemo } from 'react';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { Expansions } from '../types/index';
 import { Button } from './Button';
@@ -8,7 +9,7 @@ import { ActionType } from '../state/actions';
 import { PlayerConfigSection } from './setup/PlayerConfigSection';
 import { CampaignConfigSection } from './setup/CampaignConfigSection';
 import { ExpansionListSection } from './setup/ExpansionListSection';
-import { SETUP_CARD_IDS } from '../data/ids';
+import { getSetupCardSelectionInfo } from '../utils/ui';
 
 interface CaptainSetupProps {
   onNext: () => void;
@@ -20,10 +21,9 @@ export const CaptainSetup = ({ onNext }: CaptainSetupProps): React.ReactElement 
   const isDark = theme === 'dark';
   
   const isSolo = gameState.gameMode === 'solo';
-  const isFlyingSolo = gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
   const has10th = gameState.expansions.tenth;
   
-  const totalParts = has10th || isFlyingSolo ? 3 : 2;
+  const { totalParts } = useMemo(() => getSetupCardSelectionInfo(gameState), [gameState]);
 
   // Handlers - Dispatch actions
   const updatePlayerCount = (newCount: number) => {

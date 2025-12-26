@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useGameState } from '../hooks/useGameState';
 import { useSetupFlow } from '../hooks/useSetupFlow';
@@ -10,7 +11,7 @@ import { useTheme } from './ThemeContext';
 import { FinalSummary } from './FinalSummary';
 import { WizardHeader } from './WizardHeader';
 import { cls } from '../utils/style';
-import { STEP_IDS } from '../data/ids';
+import { isSetupDetermined } from '../utils/ui';
 
 const WIZARD_STEP_STORAGE_KEY = 'firefly_wizardStep_v3';
 
@@ -51,12 +52,7 @@ const SetupWizard = (): React.ReactElement | null => {
     }
   }, [flow, currentStepIndex]);
 
-  const setupCardSelectionStepIndex = useMemo(() =>
-    flow.findIndex(step => step.id === STEP_IDS.SETUP_CARD_SELECTION),
-    [flow]
-  );
-
-  const setupDetermined = setupCardSelectionStepIndex !== -1 && currentStepIndex > setupCardSelectionStepIndex;
+  const setupDetermined = useMemo(() => isSetupDetermined(flow, currentStepIndex), [flow, currentStepIndex]);
 
   const handleNavigation = useCallback((direction: 'next' | 'prev' | number) => {
     setIsNavigating(true);
