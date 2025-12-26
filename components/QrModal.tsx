@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from './ThemeContext';
@@ -13,6 +14,17 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
   const isDark = theme === 'dark';
   const modalRef = useRef<HTMLDivElement>(null);
   const [copyButtonText, setCopyButtonText] = useState('Copy Link');
+
+  const [showInFooter, setShowInFooter] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return localStorage.getItem('firefly_show_footer_qr') !== 'false';
+  });
+
+  const handleToggleShowInFooter = () => {
+    const newValue = !showInFooter;
+    setShowInFooter(newValue);
+    localStorage.setItem('firefly_show_footer_qr', String(newValue));
+  };
 
   const isPreview = typeof import.meta.env === 'undefined';
   const baseUrl = !isPreview ? import.meta.env.BASE_URL : '/';
@@ -85,10 +97,25 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
           </div>
           <p className="text-xs mt-4 opacity-70">Useful for playing at the table!</p>
         </div>
+        
+        <div className={`px-6 py-4 border-t ${isDark ? 'border-zinc-800' : 'border-firefly-parchment-border'}`}>
+          <label htmlFor="show-in-footer-toggle" className="flex justify-between items-center cursor-pointer group">
+              <span className="text-sm font-medium">Show QR code in footer</span>
+              <div className={`relative w-11 h-6 rounded-full transition-colors duration-200 ease-in-out ${showInFooter ? 'bg-green-600' : (isDark ? 'bg-zinc-700' : 'bg-gray-200')} group-hover:ring-2 ${isDark ? 'group-hover:ring-zinc-600' : 'group-hover:ring-gray-300'}`}>
+                  <span
+                      className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200 ease-in-out absolute top-1 ${showInFooter ? 'translate-x-6' : 'translate-x-1'}`}
+                  />
+              </div>
+              <input id="show-in-footer-toggle" type="checkbox" className="sr-only" checked={showInFooter} onChange={handleToggleShowInFooter} />
+          </label>
+        </div>
 
-        <div className={`p-4 border-t ${isDark ? 'border-zinc-800' : 'border-firefly-parchment-border'} text-right`}>
+        <div className={`p-4 border-t ${isDark ? 'border-zinc-800' : 'border-firefly-parchment-border'} flex justify-between`}>
           <Button onClick={handleCopyLink} variant="secondary">
             {copyButtonText}
+          </Button>
+           <Button onClick={onClose}>
+            Close
           </Button>
         </div>
       </div>

@@ -9,6 +9,7 @@ import { HelpModal } from './components/HelpModal';
 import { QrModal } from './components/QrModal';
 import { DevPanel } from './components/DevPanel';
 import { HeaderActions } from './components/HeaderActions';
+import { FooterQrCode } from './components/FooterQrCode';
 
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
@@ -16,6 +17,12 @@ declare const __APP_VERSION__: string;
 const App = (): React.ReactElement => {
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  
+  const [showFooterQr, setShowFooterQr] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    // Default to showing the QR code unless explicitly dismissed
+    return localStorage.getItem('firefly_show_footer_qr') !== 'false';
+  });
 
   const [offlineReady, setOfflineReady] = useState(false);
   const [needRefresh, setNeedRefresh] = useState(false);
@@ -79,6 +86,11 @@ const App = (): React.ReactElement => {
     window.location.reload();
   };
 
+  const handleDismissFooterQr = () => {
+    localStorage.setItem('firefly_show_footer_qr', 'false');
+    setShowFooterQr(false);
+  };
+
   const isPreview = typeof import.meta.env === 'undefined';
   const isDevMode = !isPreview && import.meta.env.DEV;
   const baseUrl = !isPreview ? import.meta.env.BASE_URL : '/';
@@ -136,7 +148,9 @@ const App = (): React.ReactElement => {
           Authorized use of assets for fan utility.
         </p>
         
-        <div className="mt-4 flex justify-center gap-4 opacity-80 dark:opacity-60 text-xs">
+        {showFooterQr && <FooterQrCode onDismiss={handleDismissFooterQr} />}
+        
+        <div className="mt-4 flex justify-center flex-wrap gap-x-4 gap-y-2 opacity-80 dark:opacity-60 text-xs">
            <a href="https://github.com/pmw57/firefly-automated-setup" target="_blank" rel="noreferrer" className="hover:text-firefly-brown dark:hover:text-amber-500 transition-colors underline">GitHub Project</a>
            <span>•</span>
            <a href="https://boardgamegeek.com/thread/3627152/firefly-automated-setup" target="_blank" rel="noreferrer" className="hover:text-firefly-brown dark:hover:text-amber-500 transition-colors underline">BGG Thread</a>
@@ -166,7 +180,14 @@ const App = (): React.ReactElement => {
       )}
 
       <HelpModal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} />
-      <QrModal isOpen={isQrModalOpen} onClose={() => setIsQrModalOpen(false)} />
+      <QrModal 
+        isOpen={isQrModalOpen} 
+        onClose={() => {
+          setIsQrModalOpen(false);
+          // Re-check preference when modal closes, in case it was changed
+          setShowFooterQr(localStorage.getItem('firefly_show_footer_qr') !== 'false');
+        }}
+      />
     </div>
   );
 };
