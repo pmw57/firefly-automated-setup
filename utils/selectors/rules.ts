@@ -1,4 +1,5 @@
-import { GameState, SetupRule } from '../../types';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { GameState, SetupRule } from '../../types/index';
 import { getSetupCardById } from './story';
 import { getActiveStoryCard } from './story';
 

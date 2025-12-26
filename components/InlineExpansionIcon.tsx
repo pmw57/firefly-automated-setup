@@ -1,7 +1,11 @@
 
 
+
+
+
 import React, { useState } from 'react';
-import { ExpansionId } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { ExpansionId } from '../types/index';
 import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../data/expansions';
 import { useTheme } from './ThemeContext';
 

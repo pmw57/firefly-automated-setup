@@ -1,4 +1,5 @@
-import { GameState, Expansions } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { GameState, Expansions } from '../types/index';
 import { Action, ActionType } from './actions';
 import { STORY_CARDS } from '../data/storyCards';
 import { SETUP_CARDS } from '../data/setupCards';

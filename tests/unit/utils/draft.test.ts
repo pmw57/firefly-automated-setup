@@ -1,7 +1,7 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../../../utils/draft';
-import { DiceResult } from '../../../types';
+import { DiceResult } from '../../../types/index';
 
 describe('utils/draft', () => {
   describe('calculateDraftOutcome', () => {

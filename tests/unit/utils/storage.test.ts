@@ -1,7 +1,7 @@
 /** @vitest-environment jsdom */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { LocalStorageService } from '../../../utils/storage';
-import { GameState } from '../../../types';
+import { GameState } from '../../../types/index';
 
 describe('utils/LocalStorageService', () => {
   const KEY = 'test-key';

@@ -1,4 +1,5 @@
-import { StoryCardDef, SetupRule } from '../../types';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { StoryCardDef, SetupRule } from '../../types/index';
 
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

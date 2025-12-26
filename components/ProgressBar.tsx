@@ -1,8 +1,12 @@
 
 
+
+
+
 import React, { useRef, useEffect, useMemo } from 'react';
 import { useTheme } from './ThemeContext';
-import { Step } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { Step } from '../types/index';
 import { STEP_IDS } from '../data/ids';
 import { cls } from '../utils/style';
 

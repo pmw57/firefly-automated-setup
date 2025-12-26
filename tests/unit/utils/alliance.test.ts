@@ -1,7 +1,8 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getAllianceReaverDetails } from '../../../utils/alliance';
-import { StructuredContent, StructuredContentPart } from '../../../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { StructuredContent, StructuredContentPart } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 
 // Helper to recursively flatten structured content to a searchable string

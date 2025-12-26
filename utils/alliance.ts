@@ -1,3 +1,4 @@
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { 
     GameState, 
     StepOverrides, 
@@ -5,7 +6,7 @@ import {
     SpecialRule, 
     CreateAlertTokenStackRule,
     SetAllianceModeRule
-} from '../types';
+} from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
 export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: StepOverrides): AllianceReaverDetails => {

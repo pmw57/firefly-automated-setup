@@ -1,9 +1,10 @@
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { 
     GameState, 
     NavDeckSetupDetails,
     StepOverrides,
     SetNavModeRule
-} from '../types';
+} from '../types/index';
 import { getResolvedRules } from './selectors/rules';
 
 export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides): NavDeckSetupDetails => {

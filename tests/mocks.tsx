@@ -1,6 +1,7 @@
 import React from 'react';
 import { vi } from 'vitest';
-import { GameState, Step } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { GameState, Step } from '../types/index';
 import { STEP_IDS } from '../data/ids';
 import { getDefaultGameState } from '../state/reducer';
 

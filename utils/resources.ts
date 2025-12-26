@@ -1,3 +1,4 @@
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { 
     GameState, 
     ResourceDetails,
@@ -5,7 +6,7 @@ import {
     ModifyResourceRule,
     RuleSourceType,
     ResourceConflict
-} from '../types';
+} from '../types/index';
 import { getResolvedRules } from './selectors/rules';
 
 const PRIORITY_ORDER: RuleSourceType[] = ['story', 'challenge', 'setupCard', 'optionalRule', 'expansion'];

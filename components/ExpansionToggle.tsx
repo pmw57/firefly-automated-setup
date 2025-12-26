@@ -1,5 +1,6 @@
 import React from 'react';
-import { Expansions, ThemeColor } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { Expansions, ThemeColor } from '../types/index';
 import { ExpansionIcon } from './ExpansionIcon';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';

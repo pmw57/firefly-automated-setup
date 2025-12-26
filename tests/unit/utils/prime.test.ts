@@ -1,7 +1,7 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getPrimeDetails } from '../../../utils/prime';
-import { GameState } from '../../../types';
+import { GameState } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 
 describe('utils/prime', () => {

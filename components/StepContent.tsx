@@ -1,6 +1,11 @@
 
-import React, { useRef, useEffect } from 'react';
-import { Step } from '../types';
+
+
+
+
+import React, { useRef, useEffect, lazy, Suspense } from 'react';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { Step } from '../types/index';
 import { Button } from './Button';
 import { QuotePanel } from './QuotePanel';
 import { useTheme } from './ThemeContext';
@@ -8,36 +13,39 @@ import { STEP_IDS } from '../data/ids';
 import { cls } from '../utils/style';
 import { PageReference } from './PageReference';
 
-// Core & Dynamic Steps
-import { NavDeckStep } from './NavDeckStep';
-import { AllianceReaverStep } from './AllianceReaverStep';
-import { DraftStep } from './DraftStep';
-import { MissionDossierStep } from './MissionDossierStep';
-import { ResourcesStep } from './ResourcesStep';
-import { JobStep } from './JobStep';
-import { PrimePumpStep } from './PrimePumpStep';
-import { GameLengthTokensStep } from './steps/dynamic/GameLengthTokensStep';
-import { TimeLimitStep } from './steps/dynamic/TimeLimitStep';
-import { ShuttleDraftStep } from './steps/dynamic/ShuttleDraftStep';
-import { StartingCapitolStep } from './steps/dynamic/StartingCapitolStep';
-import { LocalHeroesStep } from './steps/dynamic/LocalHeroesStep';
-import { AllianceAlertStep } from './steps/dynamic/AllianceAlertStep';
-import { PressuresHighStep } from './steps/dynamic/PressuresHighStep';
-import { StripMiningStep } from './steps/dynamic/StripMiningStep';
-
-
-// Setup Steps
-import { CaptainSetup } from './CaptainSetup';
-import { SetupCardSelection } from './setup/SetupCardSelection';
-import { OptionalRulesSelection } from './OptionalRulesSelection';
-
-
 export interface StepComponentProps {
   step: Step;
   onNext: () => void;
   onPrev: () => void;
   isNavigating: boolean;
 }
+
+const StepLoading = () => (
+    <div className="flex items-center justify-center p-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-firefly-red dark:border-emerald-500"></div>
+    </div>
+);
+
+// Lazy load step components
+const NavDeckStep = lazy(() => import('./NavDeckStep').then(m => ({ default: m.NavDeckStep })));
+const AllianceReaverStep = lazy(() => import('./AllianceReaverStep').then(m => ({ default: m.AllianceReaverStep })));
+const DraftStep = lazy(() => import('./DraftStep').then(m => ({ default: m.DraftStep })));
+const MissionDossierStep = lazy(() => import('./MissionDossierStep').then(m => ({ default: m.MissionDossierStep })));
+const ResourcesStep = lazy(() => import('./ResourcesStep').then(m => ({ default: m.ResourcesStep })));
+const JobStep = lazy(() => import('./JobStep').then(m => ({ default: m.JobStep })));
+const PrimePumpStep = lazy(() => import('./PrimePumpStep').then(m => ({ default: m.PrimePumpStep })));
+const GameLengthTokensStep = lazy(() => import('./steps/dynamic/GameLengthTokensStep').then(m => ({ default: m.GameLengthTokensStep })));
+const TimeLimitStep = lazy(() => import('./steps/dynamic/TimeLimitStep').then(m => ({ default: m.TimeLimitStep })));
+const ShuttleDraftStep = lazy(() => import('./steps/dynamic/ShuttleDraftStep').then(m => ({ default: m.ShuttleDraftStep })));
+const StartingCapitolStep = lazy(() => import('./steps/dynamic/StartingCapitolStep').then(m => ({ default: m.StartingCapitolStep })));
+const LocalHeroesStep = lazy(() => import('./steps/dynamic/LocalHeroesStep').then(m => ({ default: m.LocalHeroesStep })));
+const AllianceAlertStep = lazy(() => import('./steps/dynamic/AllianceAlertStep').then(m => ({ default: m.AllianceAlertStep })));
+const PressuresHighStep = lazy(() => import('./steps/dynamic/PressuresHighStep').then(m => ({ default: m.PressuresHighStep })));
+const StripMiningStep = lazy(() => import('./steps/dynamic/StripMiningStep').then(m => ({ default: m.StripMiningStep })));
+
+const CaptainSetup = lazy(() => import('./CaptainSetup').then(m => ({ default: m.CaptainSetup })));
+const SetupCardSelection = lazy(() => import('./setup/SetupCardSelection').then(m => ({ default: m.SetupCardSelection })));
+const OptionalRulesSelection = lazy(() => import('./OptionalRulesSelection').then(m => ({ default: m.OptionalRulesSelection })));
 
 const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
   [STEP_IDS.C1]: NavDeckStep,
@@ -59,7 +67,6 @@ const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
   [STEP_IDS.D_PRESSURES_HIGH]: PressuresHighStep,
   [STEP_IDS.D_STRIP_MINING]: StripMiningStep,
 };
-
 
 export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponentProps): React.ReactElement => {
   const { theme } = useTheme();
@@ -94,7 +101,9 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponen
   if (step.type === 'setup') {
       return (
           <div className="animate-fade-in-up pb-24 sm:pb-0">
+            <Suspense fallback={<StepLoading />}>
               {renderStepBody()}
+            </Suspense>
           </div>
       );
   }
@@ -139,7 +148,9 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponen
       </div>
 
       <div className="relative">
-        {renderStepBody()}
+        <Suspense fallback={<StepLoading />}>
+            {renderStepBody()}
+        </Suspense>
       </div>
 
       {showNav && (

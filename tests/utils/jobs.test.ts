@@ -1,7 +1,8 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getJobSetupDetails } from '../../utils/jobs';
-import { GameState, StepOverrides, StructuredContent, StructuredContentPart } from '../../types';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { GameState, StepOverrides, StructuredContent, StructuredContentPart } from '../../types/index';
 import { getDefaultGameState } from '../../state/reducer';
 import { CONTACT_NAMES, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../data/ids';
 

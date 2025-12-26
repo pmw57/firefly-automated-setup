@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { StructuredContent } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { StructuredContent } from '../types/index';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';

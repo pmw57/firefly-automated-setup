@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { STORY_CARDS } from '../data/storyCards';
-import { StoryCardDef } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { StoryCardDef } from '../types/index';
 
 interface AuditedLink {
   card: StoryCardDef;

@@ -1,4 +1,5 @@
-import { GameState, StoryCardDef, SetupCardDef, SetupRule, SetJobModeRule, SetShipPlacementRule } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule } from '../types/index';
 import { SETUP_CARD_IDS } from '../data/ids';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
@@ -18,42 +19,49 @@ export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
 
 export const getDisplaySetupName = (state: GameState, secondarySetupCard?: SetupCardDef): string => {
     if (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO && secondarySetupCard) {
-        return `Flying Solo + ${secondarySetupCard.label}`;
+        return `${state.setupCardName} + ${secondarySetupCard.label}`;
     }
-    return state.setupCardName;
+    return state.setupCardName || 'Configuring...';
 };
 
 export const getTimerSummaryText = (state: GameState): string | null => {
-    const rules: SetupRule[] = getResolvedRules(state);
+    if (state.gameMode === 'multiplayer') return null;
     
-    const disableSoloTimer = hasRuleFlag(rules, 'disableSoloTimer');
-    const soloGameTimer = hasRuleFlag(rules, 'soloGameTimer');
+    const allRules = getResolvedRules(state);
+    if (hasRuleFlag(allRules, 'disableSoloTimer')) {
+        return "Disabled (Story Override)";
+    }
+    
+    // Timer is only relevant for Flying Solo mode
+    if (state.setupCardId !== SETUP_CARD_IDS.FLYING_SOLO) return "Classic (No Timer)";
 
-    const isSoloTimerActive = state.gameMode === 'solo' && !disableSoloTimer && soloGameTimer;
+    const { mode, unpredictableSelectedIndices, randomizeUnpredictable } = state.timerConfig;
+    const tokensToRemove = state.isCampaign ? state.campaignStoriesCompleted * 2 : 0;
+    const totalTokens = Math.max(0, 20 - tokensToRemove);
 
-    if (!isSoloTimerActive) {
-        return state.gameMode === 'solo' && disableSoloTimer
-            ? "Disabled (Story Override)"
-            : null;
+    if (mode === 'standard') {
+        return `Standard (${totalTokens} Turns)`;
     }
 
-    if (state.timerConfig.mode === 'standard') {
-        return "Standard (20 Turns)";
-    }
+    // Unpredictable Mode
+    const availableTokens = [1, 1, 2, 2, 3, 4];
+    const selectedTokens = unpredictableSelectedIndices.map(i => availableTokens[i]);
+    const numNumbered = selectedTokens.length;
+    const hasExtra = numNumbered > 4;
 
-    const extraTokens = state.timerConfig.unpredictableSelectedIndices.length > 4;
-    const randomized = state.timerConfig.randomizeUnpredictable;
-    let summary = 'Unpredictable';
-    if (extraTokens) summary += ' (Extra Tokens)';
-    if (randomized) summary += ' (Randomized)';
+    let summary = "Unpredictable";
+    if (hasExtra) summary += " (Extra Tokens)";
+    if (randomizeUnpredictable) summary += " (Randomized)";
+    
     return summary;
 };
 
 export const getActiveOptionalRulesText = (state: GameState): string[] => {
-    const rules: string[] = [];
-    if (state.soloOptions?.noSureThings) rules.push("No Sure Things");
-    if (state.soloOptions?.shesTrouble) rules.push("She's Trouble");
-    if (state.soloOptions?.recipeForUnpleasantness) rules.push("Recipe For Unpleasantness");
-    if (state.optionalRules?.optionalShipUpgrades) rules.push("Ship Upgrades");
-    return rules;
+    const activeRules: string[] = [];
+    if (state.soloOptions.noSureThings) activeRules.push("No Sure Things");
+    if (state.soloOptions.shesTrouble) activeRules.push("She's Trouble");
+    if (state.soloOptions.recipeForUnpleasantness) activeRules.push("Recipe For Unpleasantness");
+    if (state.optionalRules.optionalShipUpgrades) activeRules.push("Ship Upgrades");
+
+    return activeRules;
 };

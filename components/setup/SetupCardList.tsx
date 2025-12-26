@@ -1,6 +1,8 @@
 
+
 import React, { useRef, useEffect } from 'react';
-import { SetupCardDef } from '../../types';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { SetupCardDef } from '../../types/index';
 import { ExpansionIcon } from '../ExpansionIcon';
 import { useTheme } from '../ThemeContext';
 import { EXPANSIONS_METADATA } from '../../data/expansions';

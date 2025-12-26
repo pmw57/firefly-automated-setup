@@ -1,12 +1,13 @@
-import { ExpansionDef } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { ExpansionDef } from '../types/index';
 
 export const SPRITE_SHEET_URL = "assets/images/game/expansion_sprites.png";
 
 export type ExpansionCategory = 'core_mechanics' | 'map' | 'variants' | 'promo';
 
-interface CategorizedExpansionDef extends ExpansionDef {
-  category: ExpansionCategory;
-}
+// FIX: This type was defined locally, but now it's part of the main ExpansionDef to fix type errors.
+// The existing data structure is now compatible with the updated ExpansionDef.
+type CategorizedExpansionDef = ExpansionDef;
 
 export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   // Special Entry: Base Game (Hidden from toggles, used for icons)
