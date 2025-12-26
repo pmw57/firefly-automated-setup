@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
@@ -7,17 +6,16 @@ import { InstallPWA } from './components/InstallPWA';
 import { useTheme } from './components/ThemeContext';
 import { GameStateProvider } from './components/GameStateContext';
 import { UpdatePrompt } from './components/UpdatePrompt';
-import { HelpButton } from './components/HelpButton';
 import { HelpModal } from './components/HelpModal';
-import { QrButton } from './components/QrButton';
 import { QrModal } from './components/QrModal';
 import { DevPanel } from './components/DevPanel';
+import { HeaderActions } from './components/HeaderActions';
 
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
 
 const App = (): React.ReactElement => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
@@ -161,16 +159,10 @@ const App = (): React.ReactElement => {
 
       {createPortal(
         <div className="fixed top-2 right-2 z-[9999] pointer-events-none flex items-center gap-2">
-           <QrButton onClick={() => setIsQrModalOpen(true)} />
-           <HelpButton onClick={() => setIsHelpModalOpen(true)} />
-           <button 
-             onClick={toggleTheme}
-             className="pointer-events-auto bg-black/60 hover:bg-black/80 dark:bg-zinc-800/80 dark:hover:bg-zinc-700 backdrop-blur-md text-yellow-400 border-2 border-yellow-600/50 rounded-full p-3 transition-all duration-300 shadow-xl hover:scale-110 active:scale-95 cursor-pointer touch-manipulation"
-             aria-label="Toggle Theme"
-             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-           >
-              {theme === 'dark' ? '☀️' : '🌙'}
-           </button>
+           <HeaderActions 
+             onOpenHelp={() => setIsHelpModalOpen(true)}
+             onOpenQr={() => setIsQrModalOpen(true)}
+           />
         </div>,
         document.body
       )}
