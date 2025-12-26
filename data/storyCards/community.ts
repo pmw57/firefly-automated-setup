@@ -95,12 +95,6 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1119976/story-card-old-friends-and-new"
   },
   {
-    title: "Reap The Whirlwind",
-    intro: "Word is, the Alliance has been hiding all manner of dirty secrets out Himinbjorg way. Convince the Dust Devils you're dangerous -- or desperate -- enough for them to come out of hiding and join forces. But hurry: the upcoming Unification Day Summit seems like the perfect time to let the truth out.",
-    requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/image/7072594/gwek"
-  },
-  {
     title: "Shadows Over Duul",
     intro: "The Silverhold-Hera route is usually a harmless uneventful run. Unless, of course, someone installs a beacon on the cargo which attracts a Reaver party.",
     setupDescription: "Remove Amnon Duul Jobs. Start in border of Murphy.",
