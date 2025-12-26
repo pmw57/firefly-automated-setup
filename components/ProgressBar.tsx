@@ -1,6 +1,6 @@
 
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { useTheme } from './ThemeContext';
 import { Step } from '../types';
 import { STEP_IDS } from '../data/ids';
@@ -13,31 +13,78 @@ interface ProgressBarProps {
   setupDetermined: boolean;
 }
 
-const getStepLabel = (step: Step): string => {
-  switch (step.id) {
-    case STEP_IDS.SETUP_CAPTAIN_EXPANSIONS: return 'Crew';
-    case STEP_IDS.SETUP_CARD_SELECTION: return 'Setup';
-    case STEP_IDS.SETUP_OPTIONAL_RULES: return 'Rules';
-    case STEP_IDS.C1: return 'Nav';
-    case STEP_IDS.C2: return 'Ships';
-    case STEP_IDS.C3: return 'Draft';
-    case STEP_IDS.D_HAVEN_DRAFT: return 'Havens';
-    case STEP_IDS.C4: return 'Goal';
-    case STEP_IDS.D_FIRST_GOAL: return 'Goal';
-    case STEP_IDS.C5: return 'Cash';
-    case STEP_IDS.C6: return 'Jobs';
-    case STEP_IDS.C_PRIME: return 'Prime';
-    case STEP_IDS.D_GAME_LENGTH_TOKENS: return 'Timer';
-    case STEP_IDS.FINAL: return 'Finish';
-    default: return step.data?.title?.split(' ').pop() || '...';
+const getStepDisplay = (step: Step): { label: string; number?: string } => {
+  // Config steps
+  if (step.type === 'setup') {
+    let label = 'Config';
+    if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) label = 'Crew';
+    if (step.id === STEP_IDS.SETUP_CARD_SELECTION) label = 'Setup';
+    if (step.id === STEP_IDS.SETUP_OPTIONAL_RULES) label = 'Rules';
+    return { label };
   }
+
+  // Final step
+  if (step.type === 'final') {
+    return { label: 'Finish' };
+  }
+
+  // Core & Dynamic steps from Setup Cards
+  const title = step.data?.title || '';
+  const match = title.match(/^(\d+)\.\s+(.*)/);
+
+  if (match) {
+    const number = match[1];
+    const textPart = match[2];
+    
+    const ABBREVIATIONS: Record<string, string> = {
+      [STEP_IDS.C1]: 'Nav',
+      [STEP_IDS.C2]: 'Ships',
+      [STEP_IDS.C3]: 'Draft',
+      [STEP_IDS.D_HAVEN_DRAFT]: 'Havens',
+      [STEP_IDS.C4]: 'Goal',
+      [STEP_IDS.D_FIRST_GOAL]: 'Goal',
+      [STEP_IDS.C5]: 'Cash',
+      [STEP_IDS.C6]: 'Jobs',
+      [STEP_IDS.C_PRIME]: 'Prime',
+      [STEP_IDS.D_GAME_LENGTH_TOKENS]: 'Timer',
+      [STEP_IDS.D_RIM_JOBS]: 'Rim Jobs',
+      [STEP_IDS.D_TIME_LIMIT]: 'Time Limit',
+      [STEP_IDS.D_SHUTTLE]: 'Shuttles',
+      [STEP_IDS.D_BC_CAPITOL]: 'Capitol',
+      [STEP_IDS.D_LOCAL_HEROES]: 'Heroes',
+      [STEP_IDS.D_ALLIANCE_ALERT]: 'Alerts',
+      [STEP_IDS.D_PRESSURES_HIGH]: 'Pressure',
+      [STEP_IDS.D_STRIP_MINING]: 'Mining',
+    };
+    const shortLabel = ABBREVIATIONS[step.id] || textPart.split(' ')[0];
+
+    return { label: shortLabel, number };
+  }
+
+  // Fallback for any step without a number in its title
+  return { label: title.split(' ').pop() || '...' };
 };
+
+const toRoman = (num: number): string => {
+  if (num < 1 || num > 10) return String(num);
+  const roman: { [key: number]: string } = {
+    1: 'i', 2: 'ii', 3: 'iii', 4: 'iv', 5: 'v',
+    6: 'vi', 7: 'vii', 8: 'viii', 9: 'ix', 10: 'x'
+  };
+  return roman[num];
+};
+
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, onJump, setupDetermined }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  // FIX: Hooks must be called unconditionally at the top level of the component.
+  // Moved these useMemo calls before the early return to fix the error.
+  const separatorIndex = useMemo(() => flow.findIndex(s => s.type !== 'setup'), [flow]);
+  const finishIndex = useMemo(() => flow.findIndex(s => s.type === 'final'), [flow]);
 
   // Automatic scrolling logic
   useEffect(() => {
@@ -69,6 +116,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
 
   const totalSteps = flow.length;
   const progressPercentage = (currentIndex / (totalSteps - 1)) * 100;
+  
+  const configStepsCount = separatorIndex === -1 ? flow.length - 1 : separatorIndex;
+  const effectiveFinishIndex = finishIndex === -1 ? flow.length : finishIndex;
+  const setupStepsCount = configStepsCount > -1 ? effectiveFinishIndex - configStepsCount : 0;
 
   const trackBg = isDark ? 'bg-zinc-800' : 'bg-stone-200';
   const filledTrackBg = isDark ? 'bg-emerald-500' : 'bg-firefly-red';
@@ -105,16 +156,39 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
             const isCurrent = index === currentIndex;
             const isPast = index < currentIndex;
             const isDetermined = step.type === 'setup' || setupDetermined;
-            const label = isDetermined ? getStepLabel(step) : '...';
+            const isFirstMainStep = separatorIndex !== -1 && index === separatorIndex;
+            
+            const { label, number } = isDetermined ? getStepDisplay(step) : { label: '...', number: undefined };
+            
+            let badgeContent: string | null = null;
+            if (isCurrent && step.type !== 'final') {
+                if (separatorIndex === -1 || index < separatorIndex) {
+                    // Config Phase
+                    if (configStepsCount > 0) {
+                        badgeContent = `${toRoman(index + 1)}`;
+                    }
+                } else {
+                    // Setup Phase
+                    if (setupStepsCount > 0) {
+                        const currentSetupStep = index - configStepsCount + 1;
+                        badgeContent = `${currentSetupStep}/${setupStepsCount}`;
+                    }
+                }
+            }
             
             return (
               <div 
                 key={step.id} 
-                // FIX: A ref callback function should not return a value. Using a block statement ensures an implicit `undefined` return.
                 ref={el => { itemsRef.current[index] = el; }}
                 className="relative z-10 flex flex-col items-center group snap-center"
                 style={{ width: '40px' }}
               >
+                {isFirstMainStep && (
+                  <div 
+                    className="absolute top-1/2 -left-2.5 h-6 w-px bg-stone-400 dark:bg-zinc-600 z-20 -translate-y-1/2"
+                    aria-hidden="true"
+                  />
+                )}
                 {/* The Label */}
                 <button
                   onClick={() => isDetermined && onJump(index)}
@@ -132,7 +206,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
                   onClick={() => isDetermined && onJump(index)}
                   aria-label={isDetermined ? `Jump to ${label} step` : 'Step not yet determined'}
                   className={cls(
-                    "w-4 h-4 rounded-full border-2 transition-all duration-300 shadow-sm touch-manipulation",
+                    "w-4 h-4 rounded-full border-2 transition-all duration-300 shadow-sm touch-manipulation flex items-center justify-center",
                     isDetermined ? "cursor-pointer hover:scale-125" : "cursor-not-allowed",
                     isCurrent 
                       ? cls("bg-white ring-4 ring-opacity-20 scale-125", isDark ? "ring-emerald-400" : "ring-red-600", nodeActiveBorder)
@@ -141,15 +215,22 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
                       : cls(trackBg, "border-transparent")
                   )}
                 >
-                  {isPast && !isCurrent && (
+                  {isPast && !isCurrent ? (
                     <span className="text-[8px] text-white flex items-center justify-center leading-none">✓</span>
-                  )}
+                  ) : number && !isPast ? (
+                    <span className={cls(
+                      "text-[8px] font-bold transition-colors",
+                      isCurrent ? (isDark ? 'text-emerald-500' : 'text-firefly-red-dark') : (isDark ? 'text-zinc-500' : 'text-stone-500')
+                    )}>
+                      {number}
+                    </span>
+                  ) : null}
                 </button>
 
                 {/* Progress Badge */}
-                {isCurrent && (
+                {badgeContent && (
                    <div className={cls("absolute -bottom-5 text-[8px] font-mono", isDark ? 'text-zinc-500' : 'text-stone-400')}>
-                      {index + 1}/{totalSteps}
+                      {badgeContent}
                    </div>
                 )}
               </div>
