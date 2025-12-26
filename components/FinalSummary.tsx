@@ -1,9 +1,10 @@
-import React from 'react';
+
+import React, { useMemo } from 'react';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { GameState } from '../types/index';
 import { getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../utils/ui';
 import { useTheme } from './ThemeContext';
-import { getActiveStoryCard, getActiveExpansions, getActiveAdvancedRules } from '../utils/selectors/story';
+import { getActiveExpansions, getActiveAdvancedRules, getActiveStoryChallenges } from '../utils/selectors/story';
 
 interface FinalSummaryProps {
   gameState: GameState;
@@ -13,7 +14,6 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     
-    const activeStory = getActiveStoryCard(gameState);
     const activeExpansions = getActiveExpansions(gameState);
     
     const displaySetupName = getDisplaySetupName(gameState);
@@ -30,7 +30,7 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
     };
 
     // Calculate Active Challenges & Advanced Rules
-    const activeStoryChallenges = activeStory?.challengeOptions?.filter(o => gameState.challengeOptions[o.id]) || [];
+    const activeStoryChallenges = useMemo(() => getActiveStoryChallenges(gameState), [gameState]);
     const activeAdvancedRules = getActiveAdvancedRules(gameState);
 
     // Styles

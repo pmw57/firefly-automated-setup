@@ -1,7 +1,9 @@
+
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
-import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule } from '../types/index';
-import { SETUP_CARD_IDS } from '../data/ids';
+import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule, Step } from '../types/index';
+import { STEP_IDS } from '../data/ids';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
+import { getSetupCardById } from './selectors/story';
 
 export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     const rules = card.rules || [];
@@ -18,7 +20,10 @@ export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
 };
 
 export const getDisplaySetupName = (state: GameState, secondarySetupCard?: SetupCardDef): string => {
-    if (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO && secondarySetupCard) {
+    const cardDef = getSetupCardById(state.setupCardId);
+    const isCombinable = !!cardDef?.isCombinable;
+
+    if (isCombinable && secondarySetupCard) {
         return `${state.setupCardName} + ${secondarySetupCard.label}`;
     }
     return state.setupCardName || 'Configuring...';
@@ -32,8 +37,11 @@ export const getTimerSummaryText = (state: GameState): string | null => {
         return "Disabled (Story Override)";
     }
     
+    const cardDef = getSetupCardById(state.setupCardId);
+    const isFlyingSolo = !!cardDef?.isCombinable;
+    
     // Timer is only relevant for Flying Solo mode
-    if (state.setupCardId !== SETUP_CARD_IDS.FLYING_SOLO) return "Classic (No Timer)";
+    if (!isFlyingSolo) return "Classic (No Timer)";
 
     const { mode, unpredictableSelectedIndices, randomizeUnpredictable } = state.timerConfig;
     const tokensToRemove = state.isCampaign ? state.campaignStoriesCompleted * 2 : 0;
@@ -64,4 +72,40 @@ export const getActiveOptionalRulesText = (state: GameState): string[] => {
     if (state.optionalRules.optionalShipUpgrades) activeRules.push("Ship Upgrades");
 
     return activeRules;
+};
+
+/**
+ * Provides derived UI state for the SetupCardSelection component.
+ */
+export const getSetupCardSelectionInfo = (gameState: GameState) => {
+    const { setupCardId, gameMode, expansions, secondarySetupId } = gameState;
+
+    const cardDef = getSetupCardById(setupCardId);
+    const isFlyingSoloActive = !!cardDef?.isCombinable;
+
+    const has10th = expansions.tenth;
+    const isSolo = gameMode === 'solo';
+
+    const isFlyingSoloEligible = isSolo && has10th;
+    
+    // The setup process has 3 parts if 10th anniversary content (Flying Solo or Optional Rules) is in play.
+    const totalParts = has10th ? 3 : 2;
+
+    const isNextDisabled = isFlyingSoloActive ? !secondarySetupId : !setupCardId;
+
+    return {
+        isFlyingSoloActive,
+        isFlyingSoloEligible,
+        totalParts,
+        isNextDisabled
+    };
+};
+
+/**
+ * Determines if the setup flow is "determined" based on progress,
+ * which affects how the progress bar displays future steps.
+ */
+export const isSetupDetermined = (flow: Step[], currentIndex: number): boolean => {
+    const setupCardSelectionStepIndex = flow.findIndex(step => step.id === STEP_IDS.SETUP_CARD_SELECTION);
+    return setupCardSelectionStepIndex !== -1 && currentIndex > setupCardSelectionStepIndex;
 };

@@ -1,6 +1,6 @@
 
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
-import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef } from '../../types/index';
+import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { SETUP_CARD_IDS } from '../../data/ids';
@@ -108,6 +108,7 @@ export const getFilterableExpansions = (isClassicSolo: boolean) => {
     return EXPANSIONS_METADATA.filter(e => {
         if (e.id === 'base') return false;
         if (isClassicSolo && e.id === 'community') return false;
+        if (e.hidden) return false;
         return true;
     });
 };
@@ -130,6 +131,16 @@ export const getActiveAdvancedRules = (gameState: GameState): AdvancedRuleDef[] 
     return STORY_CARDS
         .filter(c => c.advancedRule && gameState.challengeOptions[c.advancedRule.id])
         .map(c => c.advancedRule!);
+};
+
+export const getActiveStoryChallenges = (gameState: GameState): ChallengeOption[] => {
+    const activeStoryCard = getActiveStoryCard(gameState);
+    if (!activeStoryCard || !activeStoryCard.challengeOptions) {
+        return [];
+    }
+    return activeStoryCard.challengeOptions.filter(
+        option => gameState.challengeOptions[option.id]
+    );
 };
 
 export const getActiveExpansions = (gameState: GameState): string[] => {

@@ -1,3 +1,4 @@
+
 import React, { useMemo, useCallback } from 'react';
 import { SETUP_CARD_IDS } from '../../data/ids';
 import { Button } from '../Button';
@@ -7,6 +8,7 @@ import { ActionType } from '../../state/actions';
 import { getAvailableSetupCards, getSetupCardById } from '../../utils/selectors/story';
 import { FlyingSoloBanner } from './FlyingSoloBanner';
 import { SetupCardList } from './SetupCardList';
+import { getSetupCardSelectionInfo } from '../../utils/ui';
 
 interface SetupCardSelectionProps {
   onNext: () => void;
@@ -17,16 +19,13 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
   const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const isSolo = gameState.gameMode === 'solo';
-  const has10th = gameState.expansions.tenth;
   
-  const isFlyingSoloActive = useMemo(() => {
-    const cardDef = getSetupCardById(gameState.setupCardId);
-    return !!cardDef?.isCombinable;
-  }, [gameState.setupCardId]);
-
-  const totalParts = (isFlyingSoloActive || has10th) ? 3 : 2;
-  const isFlyingSoloEligible = isSolo && has10th;
+  const {
+    isFlyingSoloActive,
+    isFlyingSoloEligible,
+    totalParts,
+    isNextDisabled
+  } = useMemo(() => getSetupCardSelectionInfo(gameState), [gameState]);
 
   const flyingSoloCard = useMemo(() => getSetupCardById(SETUP_CARD_IDS.FLYING_SOLO), []);
 
@@ -46,9 +45,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
   const containerBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
   const headerColor = isDark ? 'text-amber-500' : 'text-[#292524]';
   const badgeClass = isDark ? 'bg-emerald-900/40 text-emerald-300 border-emerald-800' : 'bg-[#e6ddc5] text-[#7f1d1d] border-[#d6cbb0]';
-  const showOptionalRules = isFlyingSoloActive || has10th;
-
-  const isNextDisabled = isFlyingSoloActive ? !gameState.secondarySetupId : !gameState.setupCardId;
+  const showOptionalRules = totalParts === 3;
 
   return (
     <div className={`${containerBg} rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in transition-all duration-300`}>
@@ -60,7 +57,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
        <div className="mb-8 relative">
         <FlyingSoloBanner 
             isActive={isFlyingSoloActive}
-            isEligible={!!isFlyingSoloEligible}
+            isEligible={isFlyingSoloEligible}
             cardDef={flyingSoloCard}
             onToggle={toggleFlyingSolo}
         />
