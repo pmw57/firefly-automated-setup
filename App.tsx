@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
 import { InstallPWA } from './components/InstallPWA';
-import { useTheme } from './components/ThemeContext';
 import { GameStateProvider } from './components/GameStateContext';
 import { UpdatePrompt } from './components/UpdatePrompt';
 import { HelpModal } from './components/HelpModal';
@@ -15,7 +14,6 @@ import { HeaderActions } from './components/HeaderActions';
 declare const __APP_VERSION__: string;
 
 const App = (): React.ReactElement => {
-  const { theme } = useTheme();
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
