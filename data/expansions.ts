@@ -1,10 +1,10 @@
 
+
+
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { ExpansionDef } from '../types/index';
 
 export const SPRITE_SHEET_URL = "assets/images/game/expansion_sprites.png";
-
-export type ExpansionCategory = 'core_mechanics' | 'map' | 'variants' | 'promo';
 
 // FIX: This type was defined locally, but now it's part of the main ExpansionDef to fix type errors.
 // The existing data structure is now compatible with the updated ExpansionDef.
@@ -110,7 +110,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     description: "Adds high-stakes gambling missions and new gear for games of chance.",
     themeColor: 'cordovan',
     icon: { type: 'sprite', value: '0% 50%' },
-    category: 'promo',
+    category: 'independent',
     hidden: true
   },
   {
@@ -119,7 +119,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     description: "A cargo lifter converted into a popular saloon ship, as a cover for rumrunning and smuggling.",
     themeColor: 'darkSlateBlue',
     icon: { type: 'sprite', value: '25% 50%' },
-    category: 'promo',
+    category: 'independent',
     hidden: true
   },
   {
@@ -128,7 +128,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     description: "A resurrected Alliance military vessel with reusable ship upgrades and not much room for passengers.",
     themeColor: 'rebeccaPurple',
     icon: { type: 'sprite', value: '50% 50%' },
-    category: 'promo',
+    category: 'independent',
     hidden: true
   },
   {
@@ -137,7 +137,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     description: "A courier ship with anonymity style and safety, providing modular systems, and a hyper-efficient core.",
     themeColor: 'orangeRed',
     icon: { type: 'sprite', value: '75% 50%' },
-    category: 'promo',
+    category: 'independent',
     hidden: true
   },
   {
@@ -146,7 +146,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     description: "Adds the Black Market deck and high-risk illegal goods.",
     themeColor: 'dark',
     icon: { type: 'sprite', value: '100% 25%' },
-    category: 'promo'
+    category: 'independent'
   },
   {
     id: 'community',
@@ -157,6 +157,6 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
       type: 'svg', 
       value: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" 
     },
-    category: 'promo'
+    category: 'independent'
   }
 ];
