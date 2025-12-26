@@ -13,7 +13,7 @@ interface ErrorBoundaryState {
 /**
  * ErrorBoundary class component to catch rendering errors in its children.
  */
-// FIX: The class must extend React.Component to be a valid React class component, giving it access to `this.props` and `this.setState`.
+// FIX: The ErrorBoundary class must extend React.Component to have access to component properties like `props` and methods like `setState`.
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   // Initialize state as a class property
   state: ErrorBoundaryState = {

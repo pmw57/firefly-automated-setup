@@ -1,38 +1,9 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getJobSetupDetails } from '../../../utils/jobs';
-import { GameState, StepOverrides, StructuredContent, StructuredContentPart } from '../../../types';
+import { GameState, StepOverrides } from '../../../types';
 import { getDefaultGameState } from '../../../state/reducer';
 import { CONTACT_NAMES, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../../data/ids';
-
-// Helper to recursively flatten structured content to a searchable string
-const getTextContent = (content: StructuredContent | StructuredContentPart): string => {
-    if (typeof content === 'string') {
-        return content;
-    }
-    if (Array.isArray(content)) {
-        return content.map(part => getTextContent(part)).join('');
-    }
-    if (!content) return '';
-
-    switch(content.type) {
-        case 'strong':
-        case 'action':
-        case 'paragraph':
-        case 'warning-box':
-            return getTextContent(content.content);
-        case 'list':
-        case 'numbered-list':
-            return content.items.map(item => getTextContent(item)).join(' ');
-        case 'sub-list':
-             // Not used in jobs, but good for completeness
-            return '';
-        case 'br':
-            return ' ';
-        default:
-            return '';
-    }
-};
 
 describe('utils/jobs', () => {
   const baseGameState = getDefaultGameState();
@@ -159,22 +130,55 @@ describe('utils/jobs', () => {
     it.concurrent('should correctly filter contacts and generate a warning for a jobMode/forbidContact conflict', () => {
       const state: GameState = {
         ...baseGameState,
-        setupCardId: SETUP_CARD_IDS.AWFUL_CROWDED, // Sets jobMode: 'awful_jobs'
-        selectedStoryCard: "Desperadoes", // Forbids 'Harken'
+        setupCardId: SETUP_CARD_IDS.AWFUL_CROWDED, // Sets jobContacts: [Harken, Amnon, Patience]
+        selectedStoryCard: "Desperadoes", // Forbids 'Harken' & has a setupDescription
       };
-      const overrides: StepOverrides = { jobMode: 'awful_jobs' }; // From the setup card
+      const overrides: StepOverrides = { jobMode: 'awful_jobs' };
       const { contacts, messages } = getJobSetupDetails(state, overrides);
 
       // 1. Verify Harken is removed from the contact list
       expect(contacts).not.toContain('Harken');
       expect(contacts).toEqual(['Amnon Duul', 'Patience']);
 
-      // 2. Verify the specific conflict warning message is generated
-      const hasConflictWarning = messages.some(m => 
-        m.source === 'setupCard' && 
-        getTextContent(m.content).includes('Story Card Conflict: Harken is unavailable')
-      );
-      expect(hasConflictWarning).toBe(true);
+      // 2. Verify the messages, now with a snapshot to prevent regression.
+      expect(messages).toMatchInlineSnapshot(`
+        [
+          {
+            "content": [
+              {
+                "content": "Limited Contacts.",
+                "type": "strong",
+              },
+              " This setup card normally draws from Harken, Amnon Duul, Patience.",
+              {
+                "content": [
+                  "Story Card Conflict: ",
+                  {
+                    "content": "Harken",
+                    "type": "strong",
+                  },
+                  " is unavailable. Draw from ",
+                  {
+                    "content": "Amnon Duul and Patience",
+                    "type": "strong",
+                  },
+                  " only.",
+                ],
+                "type": "warning-box",
+              },
+            ],
+            "source": "setupCard",
+            "title": "Setup Card Override",
+          },
+          {
+            "content": [
+              "Start with 1 Warrant. Harken jobs unavailable.",
+            ],
+            "source": "story",
+            "title": "Story Override",
+          },
+        ]
+      `);
     });
   });
 });
