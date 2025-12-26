@@ -43,7 +43,10 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
         if (type === 'checkbox') {
-            setStory(prev => ({ ...prev, [name]: (e.target as HTMLInputElement).checked }));
+            const checked = (e.target as HTMLInputElement).checked;
+            if (name === 'isSolo') {
+                setStory(prev => ({ ...prev, [name]: checked }));
+            }
         } else {
             setStory(prev => ({ ...prev, [name]: value }));
         }
@@ -180,7 +183,9 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
                         <div><label className="text-xs font-bold">Intro</label><Textarea name="intro" value={story.intro} onChange={handleChange} rows={3} /></div>
                         <div><label className="text-xs font-bold">Setup Description (Optional)</label><Input name="setupDescription" value={story.setupDescription} onChange={handleChange} /></div>
                         <div><label className="text-xs font-bold">Source URL (Optional)</label><Input name="sourceUrl" value={story.sourceUrl} onChange={handleChange} /></div>
-                        <div><label className="flex items-center gap-2 text-sm"><Input name="isSolo" type="checkbox" checked={!!story.isSolo} onChange={handleChange} className="w-auto" /> Is Solo?</label></div>
+                        <div className="flex gap-4">
+                            <label className="flex items-center gap-2 text-sm"><Input name="isSolo" type="checkbox" checked={!!story.isSolo} onChange={handleChange} className="w-auto" /> Is Solo?</label>
+                        </div>
 
                         <h3 className="font-bold text-lg text-yellow-400 pt-2 border-t border-gray-700">Requirements</h3>
                         <div>

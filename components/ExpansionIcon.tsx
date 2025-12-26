@@ -3,6 +3,7 @@
 
 
 
+
 import React, { useState } from 'react';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { ExpansionDef, ThemeColor } from '../types/index';
@@ -23,6 +24,10 @@ const ABBREVIATIONS: Record<string, string> = {
   crime: 'CP',
   still_flying: 'SF',
   tenth: '10',
+  aces_eights: 'AE',
+  white_lightning: 'WL',
+  cantankerous: 'CN',
+  huntingdons_bolt: 'HB',
   black_market: 'BM',
   community: 'CC',
   base: 'BG'

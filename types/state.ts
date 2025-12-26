@@ -12,6 +12,10 @@ export interface Expansions {
   crime: boolean; 
   coachworks: boolean;
   tenth: boolean;
+  aces_eights: boolean;
+  white_lightning: boolean;
+  cantankerous: boolean;
+  huntingdons_bolt: boolean;
   black_market: boolean;
   still_flying: boolean;
   community: boolean;

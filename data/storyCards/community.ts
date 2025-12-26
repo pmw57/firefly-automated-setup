@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { StoryCardDef, SetupRule } from '../../types/index';
 import { CONTACT_NAMES } from '../ids';
@@ -17,14 +18,14 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "Bank Job",
     intro: "There's wages belonging to no-one (Alliance don't count). Find out where, and get the tools you'll need, then pull off the heist.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/image/4452357"
+    sourceUrl: "https://boardgamegeek.com/image/4452357",
   },
   {
     title: "Black Market Beagles",
     intro: "One too many loads of smuggled cargo (of the live variety) has really started to stink up the place so the crew has opted to transport something smaller, more specifically with smaller droppings.",
     setupDescription: "Beagles are the contraband. If you lose 'em you can get more at Jiangyin, Red Sun for $1000 each! Start out with 1 Cry Baby on the ship to use at you liken'",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1098646/article/14445829#14445829"
+    sourceUrl: "https://boardgamegeek.com/thread/1098646/article/14445829#14445829",
   },
   {
     title: "Cupid's Little Helpers",
