@@ -63,31 +63,42 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        <div className="p-6 space-y-6 text-base leading-relaxed tracking-wide">
-          <p>This is an automated setup guide for the board game <strong className={isDark ? 'text-white' : 'text-black'}>Firefly: The Game</strong>. It dynamically generates a step-by-step checklist to ensure you follow all the special rules from your selected expansions, Setup Cards, and Story Cards.</p>
+        <div className="p-6 space-y-4 text-lg leading-loose tracking-wide">
+          <p>This guide helps you set up the board game <strong className={isDark ? 'text-white' : 'text-black'}>Firefly: The Game</strong>.</p>
+          <p>It creates a simple checklist for you to follow. The list changes based on the expansions and cards you choose, so you always have the right rules.</p>
           
           <div>
-            <h3 className={`font-bold text-lg font-western mt-6 mb-3 ${isDark ? 'text-amber-500' : 'text-firefly-saddleBrown'}`}>Main Features</h3>
-            <ul className="list-disc list-inside space-y-4 mt-2 pl-2">
+            <h3 className={`font-bold text-xl font-western mt-8 mb-4 ${isDark ? 'text-amber-500' : 'text-firefly-saddleBrown'}`}>Main Features</h3>
+            <ul className="list-disc list-inside space-y-8 mt-2 pl-2">
               <li>
                 <strong>Smart Rules</strong>
-                <br />
-                The guide knows all the rules and tells you what to do. It handles starting money, game rules, and conflicts.
+                <span className="block mt-1 opacity-90">
+                  The guide does the math for you. It calculates your <strong>starting money, jobs, and gear</strong>. It also fixes rule conflicts, so you can focus on playing.
+                </span>
+              </li>
+              <li>
+                <strong>Thematic Interface</strong>
+                <span className="block mt-1 opacity-90">
+                  Choose your look. Switch between a <strong>light parchment theme</strong> and a <strong>dark starfield theme</strong> using the button at the top-right.
+                </span>
               </li>
               <li>
                 <strong>All Content Included</strong>
-                <br />
-                Works with all official expansions and story cards.
+                <span className="block mt-1 opacity-90">
+                  Supports <strong>all official expansions</strong> and story cards, including community content.
+                </span>
               </li>
               <li>
                 <strong>Solo and Campaign</strong>
-                <br />
-                Has full support for solo modes and campaigns.
+                <span className="block mt-1 opacity-90">
+                  Play by yourself. Full support for <strong>solo modes</strong> and the <strong>10th Anniversary campaign rules</strong>.
+                </span>
               </li>
               <li>
                 <strong>Works Offline</strong>
-                <br />
-                You can save this app to your device. It will work even without an internet connection.
+                <span className="block mt-1 opacity-90">
+                  Use it anywhere. You can <strong>save this app</strong> to your device and it will work perfectly <strong>without an internet connection</strong>.
+                </span>
               </li>
             </ul>
           </div>
