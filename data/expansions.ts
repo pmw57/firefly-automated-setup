@@ -1,6 +1,6 @@
 import { ExpansionDef } from '../types';
 
-export const SPRITE_SHEET_URL = "./expansion_sprites.png";
+export const SPRITE_SHEET_URL = "assets/images/game/expansion_sprites.png";
 
 export type ExpansionCategory = 'core_mechanics' | 'map' | 'variants' | 'promo';
 

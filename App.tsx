@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
@@ -85,7 +86,7 @@ const App = (): React.ReactElement => {
 
   const headerImageUrl = isPreview
     ? 'https://cf.geekdo-images.com/FtTleN6TrwDz378_TQ2NFw__imagepage/img/kytwle1zmoWYFCYtr1cq6EPnRHc=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7565930.jpg'
-    : `${baseUrl}firefly-cover.png`;
+    : `${baseUrl}assets/images/game/firefly-cover.png`;
 
   return (
     <div className="min-h-screen font-sans pb-12 transition-colors duration-500 relative">
