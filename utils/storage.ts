@@ -1,4 +1,5 @@
-import { GameState } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { GameState } from '../types/index';
 
 /**
  * An interface for a generic storage service.

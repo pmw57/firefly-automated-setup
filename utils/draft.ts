@@ -1,4 +1,5 @@
-import { DiceResult, DraftState } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { DiceResult, DraftState } from '../types/index';
 
 const findWinnerIndex = (rolls: DiceResult[], overrideWinnerIndex?: number): number => {
     if (overrideWinnerIndex !== undefined && overrideWinnerIndex !== -1) {

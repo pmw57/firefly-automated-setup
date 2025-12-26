@@ -1,5 +1,6 @@
 import React from 'react';
-import { StoryCardDef, AdvancedRuleDef } from '../../types';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { StoryCardDef, AdvancedRuleDef } from '../../types/index';
 import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';

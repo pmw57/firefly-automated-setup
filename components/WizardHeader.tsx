@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { GameState, Step } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { GameState, Step } from '../types/index';
 import { useTheme } from './ThemeContext';
 import { getHeaderDetails } from '../utils/header';
 

@@ -1,7 +1,7 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getJobSetupDetails } from '../../../utils/jobs';
-import { GameState, StepOverrides } from '../../../types';
+import { GameState, StepOverrides } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { CONTACT_NAMES, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../../data/ids';
 

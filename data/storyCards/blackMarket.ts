@@ -1,5 +1,6 @@
 
-import { StoryCardDef } from '../../types';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { StoryCardDef } from '../../types/index';
 
 export const BLACK_MARKET_STORIES: StoryCardDef[] = [
   {

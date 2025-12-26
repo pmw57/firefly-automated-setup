@@ -16,6 +16,7 @@
     "test:watch": "vitest --dir tests",
     "test:watch:unit": "vitest --dir tests/unit",
     "test:watch:integration": "vitest --dir tests/integration",
+    "coverage": "vitest run --coverage",
     "check": "npm run lint && npm run test && npm run build"
   },
   "dependencies": {

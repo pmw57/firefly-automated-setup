@@ -1,0 +1,75 @@
+
+
+import { SETUP_CARD_IDS } from '../data/ids';
+import { GameMode, Expansions, SetupRule } from './';
+
+export type ExpansionId = 'base' | 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'black_market' | 'still_flying' | 'community';
+
+export interface ExpansionIconConfig {
+  type: 'sprite' | 'text' | 'svg';
+  value: string;
+}
+
+export type ExpansionCategory = 'core_mechanics' | 'map' | 'variants' | 'promo';
+
+export interface ExpansionDef {
+  id: ExpansionId;
+  label: string;
+  description: string;
+  themeColor: 'orangeRed' | 'steelBlue' | 'black' | 'darkSlateBlue' | 'deepBrown' | 'rebeccaPurple' | 'cordovan' | 'darkOliveGreen' | 'saddleBrown' | 'teal' | 'dark';
+  icon: ExpansionIconConfig;
+  page_10th?: number;
+  category: ExpansionCategory;
+}
+
+export interface SetupCardStep {
+  id: string;
+  title: string;
+  page?: number | string;
+  manual?: string;
+  overrides?: import('./ui').StepOverrides;
+}
+
+export type SetupCardId = typeof SETUP_CARD_IDS[keyof typeof SETUP_CARD_IDS];
+
+export interface SetupCardDef {
+  id: SetupCardId | string;
+  label: string;
+  description?: string;
+  requiredExpansion?: keyof Expansions;
+  iconOverride?: string;
+  steps: SetupCardStep[];
+  mode?: GameMode;
+  rules?: SetupRule[];
+  isCombinable?: boolean;
+}
+
+export interface StoryCardGoal {
+  title: string;
+  description: string;
+}
+
+export interface ChallengeOption {
+  id: string;
+  label: string;
+}
+
+export interface AdvancedRuleDef {
+  id: string;
+  title: string;
+  description?: string;
+}
+
+export interface StoryCardDef {
+  title: string;
+  intro: string;
+  setupDescription?: string;
+  requiredExpansion?: keyof Expansions;
+  additionalRequirements?: (keyof Expansions)[];
+  sourceUrl?: string;
+  goals?: StoryCardGoal[];
+  isSolo?: boolean;
+  challengeOptions?: ChallengeOption[];
+  advancedRule?: AdvancedRuleDef;
+  rules?: SetupRule[];
+}

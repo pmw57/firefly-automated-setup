@@ -1,3 +1,4 @@
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { 
     GameState, 
     PrimeDetails,
@@ -5,7 +6,7 @@ import {
     ModifyPrimeRule,
     SpecialRule,
     SetPrimeModeRule
-} from '../types';
+} from '../types/index';
 import { getResolvedRules } from './selectors/rules';
 
 export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides): PrimeDetails => {

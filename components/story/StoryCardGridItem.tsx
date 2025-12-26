@@ -1,5 +1,6 @@
 import React from 'react';
-import { StoryCardDef } from '../../types';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { StoryCardDef } from '../../types/index';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { getStoryCardSetupSummary } from '../../utils/ui';
 import { useTheme } from '../ThemeContext';

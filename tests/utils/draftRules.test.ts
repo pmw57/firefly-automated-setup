@@ -1,7 +1,8 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getDraftDetails } from '../../utils/draftRules';
-import { GameState, Step, StructuredContent, StructuredContentPart } from '../../types';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { GameState, Step, StructuredContent, StructuredContentPart } from '../../types/index';
 import { getDefaultGameState } from '../../state/reducer';
 import { STEP_IDS, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../data/ids';
 

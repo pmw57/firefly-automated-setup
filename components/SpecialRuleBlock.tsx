@@ -2,7 +2,8 @@ import React from 'react';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';
 import { PageReference } from './PageReference';
-import { StructuredContent, StructuredContentPart } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { StructuredContent, StructuredContentPart } from '../types/index';
 
 interface SpecialRuleBlockProps {
   source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';

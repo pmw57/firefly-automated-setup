@@ -1,4 +1,5 @@
-import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef } from '../../types';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { SETUP_CARD_IDS } from '../../data/ids';

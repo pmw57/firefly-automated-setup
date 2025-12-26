@@ -1,0 +1,100 @@
+
+import { GameState } from './state';
+import { SpecialRule } from './ui';
+
+export type JobMode = 
+  | 'standard' 
+  | 'no_jobs' 
+  | 'times_jobs' 
+  | 'high_alert_jobs' 
+  | 'buttons_jobs' 
+  | 'awful_jobs' 
+  | 'rim_jobs' 
+  | 'draft_choice' 
+  | 'caper_start' 
+  | 'wind_takes_us';
+
+export type NavMode = 'standard' | 'browncoat' | 'rim' | 'flying_solo' | 'clearer_skies' | 'standard_reshuffle';
+export type PrimeMode = 'standard' | 'blitz';
+export type DraftMode = 'standard' | 'browncoat';
+export type LeaderSetupMode = 'standard' | 'wanted';
+export type AllianceSetupMode = 'standard' | 'awful_crowded' | 'no_alerts' | 'extra_cruisers';
+
+
+export type ResourceType = 'credits' | 'fuel' | 'parts' | 'warrants' | 'goalTokens';
+export type EffectMethod = 'set' | 'add' | 'disable';
+
+export interface EffectSource {
+  source: 'story' | 'setupCard' | 'expansion' | 'optionalRule' | 'challenge';
+  name: string;
+}
+
+export interface Effect {
+  type: string;
+  source: EffectSource;
+  description: string;
+}
+
+export interface ModifyResourceEffect extends Effect {
+  type: 'modifyResource';
+  resource: ResourceType;
+  method: EffectMethod;
+  value?: number;
+}
+
+export type RuleSourceType = 'story' | 'setupCard' | 'expansion' | 'optionalRule' | 'challenge';
+
+export interface BaseRule {
+  type: string;
+  source: RuleSourceType;
+  sourceName: string;
+  condition?: (state: GameState) => boolean;
+}
+
+export interface SetJobModeRule extends BaseRule { type: 'setJobMode'; mode: JobMode; }
+export interface SetJobContactsRule extends BaseRule { type: 'setJobContacts'; contacts: string[]; }
+export interface ForbidContactRule extends BaseRule { type: 'forbidContact'; contact: string; }
+export interface AllowContactsRule extends BaseRule { type: 'allowContacts'; contacts: string[]; }
+export interface PrimeContactsRule extends BaseRule { type: 'primeContacts'; }
+export interface CreateAlertTokenStackRule extends BaseRule { type: 'createAlertTokenStack'; multiplier: number; }
+export interface SetAllianceModeRule extends BaseRule { type: 'setAllianceMode'; mode: AllianceSetupMode; }
+export interface SetNavModeRule extends BaseRule { type: 'setNavMode'; mode: NavMode; }
+export interface SetPrimeModeRule extends BaseRule { type: 'setPrimeMode'; mode: PrimeMode; }
+export interface SetDraftModeRule extends BaseRule { type: 'setDraftMode'; mode: DraftMode; }
+export interface SetLeaderSetupRule extends BaseRule { type: 'setLeaderSetup'; mode: LeaderSetupMode; }
+export interface SetShipPlacementRule extends BaseRule { type: 'setShipPlacement'; location: 'persephone' | 'londinium' | 'border_of_murphy' | 'outside_alliance'; }
+export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer'; rule: Omit<SpecialRule, 'source'>; }
+
+export interface AddFlagRule extends BaseRule { type: 'addFlag'; flag: string; }
+
+export interface ModifyPrimeRule extends BaseRule {
+  type: 'modifyPrime';
+  multiplier?: number;
+  modifier?: { add: number };
+}
+
+export interface ModifyResourceRule extends BaseRule {
+  type: 'modifyResource';
+  resource: ResourceType;
+  method: EffectMethod;
+  value?: number;
+  description: string;
+}
+
+export type SetupRule = 
+  | SetJobModeRule
+  | SetJobContactsRule
+  | ForbidContactRule
+  | AllowContactsRule
+  | PrimeContactsRule
+  | CreateAlertTokenStackRule
+  | SetAllianceModeRule
+  | SetNavModeRule
+  | SetPrimeModeRule
+  | SetDraftModeRule
+  | SetLeaderSetupRule
+  | SetShipPlacementRule
+  | AddSpecialRule
+  | AddFlagRule
+  | ModifyPrimeRule
+  | ModifyResourceRule;

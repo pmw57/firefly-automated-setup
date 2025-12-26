@@ -1,5 +1,6 @@
 import React from 'react';
-import { GameState, DisgruntledDieOption } from '../../types';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { GameState, DisgruntledDieOption } from '../../types/index';
 import { useTheme } from '../ThemeContext';
 import { PageReference } from '../PageReference';
 

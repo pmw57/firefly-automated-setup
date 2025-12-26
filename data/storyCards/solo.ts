@@ -1,4 +1,5 @@
-import { StoryCardDef, SetupRule } from '../../types';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { StoryCardDef, SetupRule } from '../../types/index';
 import { CONTACT_NAMES } from '../ids';
 
 // Helper to avoid repeating source info

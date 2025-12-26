@@ -1,5 +1,6 @@
 import React from 'react';
-import { GameState } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { GameState } from '../types/index';
 import { getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../utils/ui';
 import { useTheme } from './ThemeContext';
 import { getActiveStoryCard, getActiveExpansions, getActiveAdvancedRules } from '../utils/selectors/story';

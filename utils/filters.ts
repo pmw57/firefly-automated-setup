@@ -1,4 +1,5 @@
-import { GameState, StoryCardDef } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { GameState, StoryCardDef } from '../types/index';
 import { SOLO_EXCLUDED_STORIES } from '../data/collections';
 import { SETUP_CARD_IDS } from '../data/ids';
 

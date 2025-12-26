@@ -1,4 +1,5 @@
-import { ThemeColor } from "../types";
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { ThemeColor } from "../types/index";
 
 /**
  * A map from the abstract theme color names used in the expansion metadata

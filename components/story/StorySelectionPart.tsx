@@ -7,7 +7,8 @@ import { PageReference } from '../PageReference';
 import { StoryDossier } from './StoryDossier';
 import { StoryRandomizer } from './StoryRandomizer';
 import { StoryCardGrid } from './StoryCardGrid';
-import { Step } from '../../types';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { Step } from '../../types/index';
 import { STEP_IDS } from '../../data/ids';
 
 interface StorySelectionPartProps {

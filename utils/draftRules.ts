@@ -7,7 +7,8 @@ import {
     SetShipPlacementRule,
     SetDraftModeRule,
     SetLeaderSetupRule
-} from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+} from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CHALLENGE_IDS, STEP_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';

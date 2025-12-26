@@ -1,6 +1,11 @@
 
+
+
+
+
 import React from 'react';
-import { DraftState } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { DraftState } from '../types/index';
 import { useTheme } from './ThemeContext';
 
 interface DiceControlsProps {

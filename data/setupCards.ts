@@ -1,4 +1,5 @@
-import { SetupCardDef, SetupCardStep, SetupRule } from '../types';
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import { SetupCardDef, SetupCardStep, SetupRule } from '../types/index';
 import { STEP_IDS, SETUP_CARD_IDS, CONTACT_NAMES } from './ids';
 
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
