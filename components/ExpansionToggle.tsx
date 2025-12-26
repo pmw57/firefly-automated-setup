@@ -80,40 +80,43 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
       onKeyDown={handleKeyDown}
       className={cls(
         "relative cursor-pointer rounded-xl border-2 p-5 transition-all duration-300 ease-in-out group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500",
+        "md:grid md:grid-cols-[20%_1fr_max-content] md:items-center md:gap-x-6",
         active 
           ? cls(currentTheme.border, currentTheme.bg, "shadow-md")
           : cls(inactiveBorder, inactiveBg, inactiveHover)
       )}
     >
-      <div className="flex items-center">
-        <div className="flex items-center flex-1 min-w-0">
-          <div className={cls(
-            "w-12 h-12 rounded-lg mr-4 flex items-center justify-center font-bold text-xl shadow-sm transition-colors duration-300 overflow-hidden shrink-0",
-            !active && "bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-gray-500"
-          )}>
-            <ExpansionIcon id={id} />
-          </div>
-          
-          <div className="flex-1 min-w-0 mr-4">
-            <div className="flex flex-wrap items-baseline gap-x-2">
-              <h3 className={cls("font-bold text-lg leading-tight transition-colors duration-300 truncate", titleColor)}>
-                {label}
-              </h3>
-              {has10th && page_10th && (
-                <PageReference page={page_10th} manual="10th AE" />
-              )}
-            </div>
-          </div>
+      {/* Col 1: Icon & Title */}
+      <div className="flex items-center md:flex-col">
+        <div className={cls(
+          "w-12 h-12 rounded-lg mr-4 md:mr-0 md:mb-2 flex items-center justify-center font-bold text-xl shadow-sm transition-colors duration-300 overflow-hidden shrink-0",
+          !active && "bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-gray-500"
+        )}>
+          <ExpansionIcon id={id} />
+        </div>
+        
+        <div className="flex-1 min-w-0 mr-4 md:mr-0 md:text-center">
+          <h3 className={cls("font-bold text-lg leading-tight transition-colors duration-300", titleColor)}>
+            {label}
+          </h3>
+          {has10th && page_10th && (
+            <PageReference page={page_10th} manual="10th AE" className="mt-1" />
+          )}
         </div>
       </div>
-
-      <div className="mt-3">
+      
+      {/* Col 2: Description */}
+      <div className="mt-3 md:mt-0">
         <p className={cls("text-sm leading-relaxed", descColor)}>
            {description}
         </p>
       </div>
       
-      <div className="flex items-center justify-between mt-3">
+      {/* Col 3: Badge & Toggle */}
+      <div className={cls(
+        "flex items-center justify-between mt-3", 
+        "md:mt-0 md:flex-col md:items-end md:justify-center md:gap-2"
+      )}>
         <span className={cls(
           "inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded transition-colors duration-300",
           active ? currentTheme.badge : inactiveBadge
