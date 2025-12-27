@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useCallback } from 'react';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { StoryCardDef, AdvancedRuleDef } from '../types/index';
@@ -12,7 +13,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   
   // Local UI State for this step
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterExpansion, setFilterExpansion] = useState<string>('all');
+  const [filterExpansion, setFilterExpansion] = useState<string[]>([]);
   const [shortList, setShortList] = useState<StoryCardDef[]>([]);
   const [subStep, setSubStep] = useState(1);
   const [sortMode, setSortMode] = useState<'expansion' | 'name'>('expansion');
@@ -78,6 +79,16 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     setSortMode(prev => prev === 'expansion' ? 'name' : 'expansion');
   }, []);
 
+  const toggleFilterExpansion = useCallback((id: string) => {
+    setFilterExpansion(prev => {
+        if (prev.includes(id)) {
+            return prev.filter(expId => expId !== id);
+        } else {
+            return [...prev, id];
+        }
+    });
+  }, []);
+
   const value = {
     searchTerm,
     filterExpansion,
@@ -99,6 +110,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     handlePickFromShortList,
     handleCancelShortList,
     toggleSortMode,
+    toggleFilterExpansion,
   };
 
   return (

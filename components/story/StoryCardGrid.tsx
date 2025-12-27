@@ -1,4 +1,6 @@
-import React, { useMemo } from 'react';
+
+
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { StoryCardGridItem } from './StoryCardGridItem';
 import { Button } from '../Button';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
@@ -6,6 +8,9 @@ import { useTheme } from '../ThemeContext';
 import { getFilterableExpansions } from '../../utils/selectors/story';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { cls } from '../../utils/style';
+import { InlineExpansionIcon } from '../InlineExpansionIcon';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+import { ExpansionId } from '../../types/index';
 
 interface StoryCardGridProps {
   onSelect: (title: string) => void;
@@ -23,15 +28,37 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
     setSearchTerm,
     filterExpansion,
     setFilterExpansion,
+    toggleFilterExpansion,
     activeStoryCard,
     sortMode,
     toggleSortMode,
   } = useMissionSelection();
 
-  const availableExpansionsForFilter = useMemo(() => 
-    getFilterableExpansions(isClassicSolo), 
-    [isClassicSolo]
-  );
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const filterRef = useRef<HTMLDivElement>(null);
+
+  const expansionsForFilter = useMemo(() => [
+    { id: 'base', label: 'Base Game' },
+    ...getFilterableExpansions(isClassicSolo),
+  ], [isClassicSolo]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+        setIsFilterOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const filterButtonText = filterExpansion.length === 0 || filterExpansion.length === expansionsForFilter.length
+    ? "All Expansions"
+    : filterExpansion.length === 1
+    ? expansionsForFilter.find(e => e.id === filterExpansion[0])?.label
+    : `${filterExpansion.length} Selected`;
 
   let lastExpansionId: string | null | undefined = '___INITIAL___';
 
@@ -46,7 +73,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
 
   return (
     <div className="space-y-3">
-      <div className="flex gap-3 flex-col sm:flex-row items-center">
+      <div className="flex gap-3 flex-col sm:flex-row items-stretch">
         <input 
           type="text" 
           placeholder="Search Title or Intro..." 
@@ -54,17 +81,41 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <select 
-          value={filterExpansion} 
-          onChange={(e) => setFilterExpansion(e.target.value)}
-          className={`p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none ${inputBg} ${inputText} transition-colors`}
-        >
-          <option value="all">All Expansions</option>
-          <option value="base">Base Game</option>
-          {availableExpansionsForFilter.map(e => (
-            <option key={e.id} value={e.id}>{e.label}</option>
-          ))}
-        </select>
+
+        <div ref={filterRef} className="relative w-full sm:w-56">
+          <button
+            type="button"
+            onClick={() => setIsFilterOpen(prev => !prev)}
+            className={`w-full h-full flex items-center justify-between p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none ${inputBg} ${inputText} transition-colors text-left`}
+          >
+            <span className="truncate">{filterButtonText}</span>
+            <svg className={`w-5 h-5 ml-2 transition-transform duration-200 ${isFilterOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+          </button>
+          
+          {isFilterOpen && (
+            <div className={`absolute z-20 mt-1 w-full rounded-md shadow-lg border animate-fade-in-up ${isDark ? 'bg-zinc-800 border-zinc-700' : 'bg-white border-gray-200'}`}>
+              <div className={`flex justify-between p-2 border-b ${isDark ? 'border-zinc-700' : 'border-gray-100'}`}>
+                <button onClick={() => setFilterExpansion(expansionsForFilter.map(e => e.id))} className={`text-xs font-bold px-2 py-1 rounded ${isDark ? 'hover:bg-zinc-700 text-blue-400' : 'hover:bg-gray-100 text-blue-600'}`}>Select All</button>
+                <button onClick={() => setFilterExpansion([])} className={`text-xs font-bold px-2 py-1 rounded ${isDark ? 'hover:bg-zinc-700 text-red-400' : 'hover:bg-gray-100 text-red-600'}`}>Clear</button>
+              </div>
+              <div className="max-h-60 overflow-y-auto custom-scrollbar">
+                {expansionsForFilter.map(exp => (
+                  <label key={exp.id} className={`flex items-center gap-3 p-3 cursor-pointer ${isDark ? 'hover:bg-zinc-700' : 'hover:bg-gray-50'}`}>
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 dark:bg-zinc-600 dark:border-zinc-500"
+                      checked={filterExpansion.includes(exp.id)}
+                      onChange={() => toggleFilterExpansion(exp.id)}
+                    />
+                    <InlineExpansionIcon type={exp.id as ExpansionId} className="w-6 h-6 shrink-0" />
+                    <span className={`text-sm ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{exp.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
          <Button
             onClick={toggleSortMode}
             variant="secondary"
@@ -114,7 +165,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
             {isClassicSolo && (
               <p className="text-xs mt-2 text-red-500">Classic Solo is restricted to 'Awful Lonely in the Big Black'.</p>
             )}
-            <Button onClick={() => { setSearchTerm(''); setFilterExpansion('all'); }} variant="secondary" className="mt-4 text-sm">Clear Filters</Button>
+            <Button onClick={() => { setSearchTerm(''); setFilterExpansion([]); }} variant="secondary" className="mt-4 text-sm">Clear Filters</Button>
           </div>
         )}
       </div>
