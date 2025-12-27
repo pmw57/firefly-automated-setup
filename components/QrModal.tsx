@@ -5,6 +5,31 @@ import { useTheme } from './ThemeContext';
 import { Button } from './Button';
 import { usePwaInstall } from '../hooks/usePwaInstall';
 
+// FIX: Define a type for the non-standard `standalone` property on `Navigator`
+// to resolve the 'no-explicit-any' linting error.
+interface NavigatorWithStandalone extends Navigator {
+  standalone?: boolean;
+}
+
+/**
+ * Returns manual installation instructions for iOS if applicable.
+ */
+const getIOSInstallGuide = (): string | null => {
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') return null;
+
+    const ua = navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+    
+    // This checks if the PWA is already running in standalone mode on iOS.
+    const isStandalone = 'standalone' in window.navigator && (window.navigator as NavigatorWithStandalone).standalone === true;
+
+    if (isIOS && !isStandalone) {
+        return "To install on an iPhone or iPad, tap the Share button and then 'Add to Home Screen'.";
+    }
+    
+    return null;
+};
+
 interface QrModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -16,11 +41,18 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [copyButtonText, setCopyButtonText] = useState('Copy Link');
   const { canInstall, install } = usePwaInstall();
+  const [iosInstallGuide, setIosInstallGuide] = useState<string | null>(null);
 
   const [showInFooter, setShowInFooter] = useState(() => {
     if (typeof window === 'undefined') return true;
     return localStorage.getItem('firefly_show_footer_qr') !== 'false';
   });
+
+  useEffect(() => {
+    if (isOpen) {
+        setIosInstallGuide(getIOSInstallGuide());
+    }
+  }, [isOpen]);
 
   const handleToggleShowInFooter = () => {
     const newValue = !showInFooter;
@@ -61,11 +93,15 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
 
   const handleInstallClick = async () => {
     await install();
+    // Close the modal after triggering the install prompt for a smoother UX
+    onClose();
   };
 
   if (!isOpen) {
     return null;
   }
+  
+  const showInstallSection = canInstall || iosInstallGuide;
 
   const modalContent = (
     <div
@@ -104,16 +140,23 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
           <p className="text-xs mt-4 opacity-70">Useful for playing at the table!</p>
         </div>
 
-        {canInstall && (
+        {showInstallSection && (
           <div className={`px-6 pb-6 border-t ${isDark ? 'border-zinc-800' : 'border-firefly-parchment-border'}`}>
               <div className="flex items-center gap-3 mt-4 mb-2">
                   <span className="text-xl">🚀</span>
                   <h3 className={`font-bold text-base ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Install App</h3>
               </div>
-              <p className="text-sm opacity-80 mb-4">Add to home screen for offline access and a native experience.</p>
-              <Button onClick={handleInstallClick} fullWidth>
-                  Install Cortex Companion
-              </Button>
+              <p className="text-sm opacity-80 mb-4">
+                {canInstall 
+                  ? "Add to home screen for offline access and a native experience."
+                  : iosInstallGuide
+                }
+              </p>
+              {canInstall && (
+                <Button onClick={handleInstallClick} fullWidth>
+                    Install Cortex Companion
+                </Button>
+              )}
           </div>
         )}
         

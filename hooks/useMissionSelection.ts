@@ -6,7 +6,7 @@ import { StoryCardDef, AdvancedRuleDef } from '../types/index';
 export interface MissionSelectionContextType {
   // State
   searchTerm: string;
-  filterExpansion: string;
+  filterExpansion: string[];
   shortList: StoryCardDef[];
   subStep: number;
   sortMode: 'expansion' | 'name';
@@ -21,7 +21,8 @@ export interface MissionSelectionContextType {
 
   // Actions
   setSearchTerm: (term: string) => void;
-  setFilterExpansion: (id: string) => void;
+  setFilterExpansion: (ids: string[]) => void;
+  toggleFilterExpansion: (id: string) => void;
   setSubStep: (step: number) => void;
   handleStoryCardSelect: (title: string) => void;
   handleRandomPick: () => void;
