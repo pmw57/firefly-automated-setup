@@ -34,7 +34,10 @@ const ABBREVIATIONS: Record<string, string> = {
 };
 
 const THEME_COLOR_CLASSES: Record<ThemeColor, string> = {
-    orangeRed: 'bg-expansion-orangeRed border-orange-600',
+    cyan: 'bg-expansion-cyan border-cyan-600',
+    tan: 'bg-expansion-tan border-yellow-800',
+    mediumPurple: 'bg-expansion-mediumPurple border-purple-700',
+    gamblingGreen: 'bg-expansion-gamblingGreen border-emerald-700',
     steelBlue: 'bg-expansion-steelBlue border-sky-600',
     black: 'bg-black border-zinc-700',
     darkSlateBlue: 'bg-expansion-darkSlateBlue border-indigo-700',
