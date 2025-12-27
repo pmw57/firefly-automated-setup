@@ -1,5 +1,4 @@
 
-
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
@@ -59,7 +58,7 @@ export const getAvailableStoryCards = (gameState: GameState): StoryCardDef[] => 
 
 export const getFilteredStoryCards = (
     gameState: GameState, 
-    filters: { searchTerm: string; filterExpansion: string; sortMode: 'expansion' | 'name' }
+    filters: { searchTerm: string; filterExpansion: string[]; sortMode: 'expansion' | 'name' }
 ): StoryCardDef[] => {
     const validStories = getAvailableStoryCards(gameState);
     const { searchTerm, filterExpansion, sortMode } = filters;
@@ -68,7 +67,11 @@ export const getFilteredStoryCards = (
         const matchesSearch = searchTerm === '' || 
            card.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
            card.intro.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesExpansion = filterExpansion === 'all' || card.requiredExpansion === filterExpansion || (!card.requiredExpansion && filterExpansion === 'base');
+        
+        const matchesExpansion = filterExpansion.length === 0 ||
+            (filterExpansion.includes('base') && !card.requiredExpansion) ||
+            (card.requiredExpansion && filterExpansion.includes(card.requiredExpansion));
+
         return matchesSearch && matchesExpansion;
     });
     
