@@ -94,6 +94,7 @@ const App = (): React.ReactElement => {
   const isPreview = typeof import.meta.env === 'undefined';
   const isDevMode = !isPreview && import.meta.env.DEV;
   const baseUrl = !isPreview ? import.meta.env.BASE_URL : '/';
+  const isAnyModalOpen = isHelpModalOpen || isQrModalOpen;
 
   const headerImageUrl = isPreview
     ? 'https://cf.geekdo-images.com/FtTleN6TrwDz378_TQ2NFw__imagepage/img/kytwle1zmoWYFCYtr1cq6EPnRHc=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7565930.jpg'
@@ -128,7 +129,7 @@ const App = (): React.ReactElement => {
 
       {isDevMode && <DevPanel />}
 
-      <InstallPWA />
+      <InstallPWA isModalOpen={isAnyModalOpen} />
 
       <UpdatePrompt
         offlineReady={offlineReady}
