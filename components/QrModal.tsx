@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from './ThemeContext';
 import { Button } from './Button';
+import { usePwaInstall } from '../hooks/usePwaInstall';
 
 interface QrModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
   const isDark = theme === 'dark';
   const modalRef = useRef<HTMLDivElement>(null);
   const [copyButtonText, setCopyButtonText] = useState('Copy Link');
+  const { canInstall, install } = usePwaInstall();
 
   const [showInFooter, setShowInFooter] = useState(() => {
     if (typeof window === 'undefined') return true;
@@ -57,6 +59,10 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
     });
   };
 
+  const handleInstallClick = async () => {
+    await install();
+  };
+
   if (!isOpen) {
     return null;
   }
@@ -77,7 +83,7 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
       >
         <div className={`p-6 border-b ${isDark ? 'border-zinc-800' : 'border-firefly-parchment-border'}`}>
           <h2 id="qr-modal-title" className={`text-2xl font-bold font-western text-center ${isDark ? 'text-amber-400' : 'text-firefly-brown'}`}>
-            Mobile Access
+            Cortex Companion
           </h2>
           <button
             onClick={onClose}
@@ -97,6 +103,19 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
           </div>
           <p className="text-xs mt-4 opacity-70">Useful for playing at the table!</p>
         </div>
+
+        {canInstall && (
+          <div className={`px-6 pb-6 border-t ${isDark ? 'border-zinc-800' : 'border-firefly-parchment-border'}`}>
+              <div className="flex items-center gap-3 mt-4 mb-2">
+                  <span className="text-xl">🚀</span>
+                  <h3 className={`font-bold text-base ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Install App</h3>
+              </div>
+              <p className="text-sm opacity-80 mb-4">Add to home screen for offline access and a native experience.</p>
+              <Button onClick={handleInstallClick} fullWidth>
+                  Install Cortex Companion
+              </Button>
+          </div>
+        )}
         
         <div className={`px-6 py-4 border-t ${isDark ? 'border-zinc-800' : 'border-firefly-parchment-border'}`}>
           <label htmlFor="show-in-footer-toggle" className="flex justify-between items-center cursor-pointer group">

@@ -113,7 +113,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     themeColor: 'gamblingGreen',
     icon: { type: 'sprite', value: '0% 50%' },
     category: 'independent',
-    hidden: false
+    hidden: true
   },
   {
     id: 'white_lightning',
@@ -122,7 +122,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     themeColor: 'mediumPurple',
     icon: { type: 'sprite', value: '25% 50%' },
     category: 'independent',
-    hidden: false
+    hidden: true
   },
   {
     id: 'cantankerous',
@@ -131,7 +131,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     themeColor: 'tan',
     icon: { type: 'sprite', value: '50% 50%' },
     category: 'independent',
-    hidden: false
+    hidden: true
   },
   {
     id: 'huntingdons_bolt',
@@ -140,7 +140,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     themeColor: 'cyan',
     icon: { type: 'sprite', value: '75% 50%' },
     category: 'independent',
-    hidden: false
+    hidden: true
   },
   {
     id: 'black_market',

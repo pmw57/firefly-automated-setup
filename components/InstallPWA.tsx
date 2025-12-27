@@ -2,50 +2,32 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from './Button';
 import { useTheme } from './ThemeContext';
+import { usePwaInstall } from '../hooks/usePwaInstall';
 
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+interface InstallPWAProps {
+  isModalOpen: boolean;
 }
 
-export const InstallPWA = (): React.ReactElement | null => {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+export const InstallPWA = ({ isModalOpen }: InstallPWAProps): React.ReactElement | null => {
   const [isVisible, setIsVisible] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const { canInstall, install } = usePwaInstall();
 
   useEffect(() => {
-    const handler = (e: Event) => {
-      // Prevent the mini-infobar from appearing on mobile
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      // Update UI notify the user they can install the PWA
+    if (canInstall) {
       setIsVisible(true);
-    };
-
-    window.addEventListener('beforeinstallprompt', handler);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handler);
-    };
-  }, []);
+    }
+  }, [canInstall]);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-
-    // Show the install prompt
-    deferredPrompt.prompt();
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User response to the install prompt: ${outcome}`);
-    
-    // We've used the prompt, and can't use it again, throw it away
-    setDeferredPrompt(null);
-    setIsVisible(false);
+    await install();
+    setIsVisible(false); // Hide banner after prompting
   };
 
-  if (!isVisible) return null;
+  if (!isVisible || isModalOpen) {
+    return null;
+  }
 
   const bgClass = isDark ? 'bg-zinc-800' : 'bg-white';
   const borderClass = isDark ? 'border-zinc-700 border-l-green-500' : 'border-gray-200 border-l-green-600';
