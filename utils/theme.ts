@@ -11,7 +11,10 @@ import { ThemeColor } from "../types/index";
  */
 export const THEME_COLOR_MAP: Record<ThemeColor, string> = {
     // From tailwind.config.js -> theme.extend.colors.expansion
-    orangeRed: '255, 69, 0',       // #FF4500
+    cyan: '6, 182, 212',           // #06b6d4
+    tan: '210, 180, 140',          // #d2b48c
+    mediumPurple: '147, 112, 219', // #9370DB
+    gamblingGreen: '4, 120, 87',   // #047857
     steelBlue: '70, 130, 180',     // #4682B4
     darkSlateBlue: '72, 61, 139',  // #483D8B
     deepBrown: '35, 23, 9',        // #231709

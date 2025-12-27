@@ -17,7 +17,7 @@ export interface ExpansionDef {
   id: ExpansionId;
   label: string;
   description: string;
-  themeColor: 'orangeRed' | 'steelBlue' | 'black' | 'darkSlateBlue' | 'deepBrown' | 'rebeccaPurple' | 'cordovan' | 'darkOliveGreen' | 'saddleBrown' | 'teal' | 'dark';
+  themeColor: 'steelBlue' | 'black' | 'darkSlateBlue' | 'deepBrown' | 'rebeccaPurple' | 'cordovan' | 'darkOliveGreen' | 'saddleBrown' | 'teal' | 'dark' | 'cyan' | 'tan' | 'mediumPurple' | 'gamblingGreen';
   icon: ExpansionIconConfig;
   page_10th?: number;
   category: ExpansionCategory;

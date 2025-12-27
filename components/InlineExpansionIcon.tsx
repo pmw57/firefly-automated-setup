@@ -46,7 +46,10 @@ export const InlineExpansionIcon = ({ type, className = "mx-1 align-bottom" }: I
 
   const getBgColor = () => {
     switch (meta.themeColor) {
-      case 'orangeRed': return 'bg-expansion-orangeRed';
+      case 'cyan': return 'bg-expansion-cyan';
+      case 'tan': return 'bg-expansion-tan';
+      case 'mediumPurple': return 'bg-expansion-mediumPurple';
+      case 'gamblingGreen': return 'bg-expansion-gamblingGreen';
       case 'steelBlue': return 'bg-expansion-steelBlue';
       case 'black': return 'bg-black';
       case 'darkSlateBlue': return 'bg-expansion-darkSlateBlue';
