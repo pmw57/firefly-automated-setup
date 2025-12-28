@@ -1,6 +1,5 @@
-
-
 import { JobMode, NavMode, AllianceSetupMode, PrimeMode, DraftMode, LeaderSetupMode } from './rules';
+import { StructuredContent, SpecialRule } from './core';
 
 export type ThemeColor = 'steelBlue' | 'black' | 'darkSlateBlue' | 'deepBrown' | 'rebeccaPurple' | 'cordovan' | 'darkOliveGreen' | 'saddleBrown' | 'teal' | 'dark' | 'cyan' | 'tan' | 'mediumPurple' | 'gamblingGreen';
 
@@ -23,24 +22,7 @@ export interface SetupContentTemplate {
   type: 'core' | 'dynamic';
 }
 
-export type StructuredContentPart =
-  | string
-  | { type: 'strong'; content: string }
-  | { type: 'action'; content: string }
-  | { type: 'br' }
-  | { type: 'list'; items: StructuredContent[] }
-  | { type: 'numbered-list'; items: StructuredContent[] }
-  | { type: 'paragraph'; content: StructuredContent }
-  | { type: 'warning-box'; content: StructuredContent }
-  | { type: 'sub-list'; items: { ship: string }[] };
-
-export type StructuredContent = StructuredContentPart[];
-
-export interface JobSetupMessage {
-  source: 'story' | 'setupCard' | 'warning' | 'info' | 'expansion';
-  title: string;
-  content: StructuredContent;
-}
+export type JobSetupMessage = SpecialRule;
 
 export interface JobConflict {
   story: { value: string; label: string };
@@ -54,12 +36,6 @@ export interface JobSetupDetails {
   messages: JobSetupMessage[];
   showStandardContactList: boolean;
   totalJobCards: number;
-}
-
-export interface SpecialRule {
-    source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
-    title: string;
-    content: StructuredContent;
 }
 
 export interface NavDeckSetupDetails {

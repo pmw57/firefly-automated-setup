@@ -1,6 +1,4 @@
-
-import { GameState } from './state';
-import { SpecialRule } from './ui';
+import { SpecialRule } from './core';
 
 export type JobMode = 
   | 'standard' 
@@ -48,7 +46,6 @@ export interface BaseRule {
   type: string;
   source: RuleSourceType;
   sourceName: string;
-  condition?: (state: GameState) => boolean;
 }
 
 export interface SetJobModeRule extends BaseRule { type: 'setJobMode'; mode: JobMode; }
