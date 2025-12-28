@@ -6,11 +6,11 @@ import { CONTACT_NAMES } from '../ids';
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule, 'source' | 'sourceName'>[]): SetupRule[] => {
-    return rules.map(rule => ({
-        ...rule,
-        source: 'story',
-        sourceName,
-    })) as SetupRule[];
+  return rules.map(rule => ({
+    ...rule,
+    source: 'story',
+    sourceName,
+  })) as SetupRule[];
 };
 
 export const COMMUNITY_STORIES: StoryCardDef[] = [
@@ -45,6 +45,12 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "After choosing your Leader, search for any Wanted crew from any deck and add them to your crew. You must start in Alliance Space.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1045716/article/13603393#13603393"
+  },
+  {
+    title: "The Heist on Ariel",
+    intro: "Ariel is the crowen jewel of the Core. To rob her, you'll need to play dead, steal the high-tech meds, and outrun the Hands of Blue.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/1066007/article/47073551#47073551"
   },
   {
     title: "Hospital Rescue",
@@ -95,6 +101,18 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1119976/story-card-old-friends-and-new"
   },
   {
+    title: "Our Mrs. Reynolds",
+    intro: "You find a stowaway on your ship. You're not happy about them being there, but you are too far from any planet to drop them off. At least they don't seem like bad company.",
+    sourceUrl: "https://boardgamegeek.com/thread/1066007/article/47073551#47073551",
+    requiredExpansion: "community"
+  },
+  {
+    title: "Out of Gas",
+    intro: "The compression coil blows on your ship and starts an explosion.",
+    sourceUrl: "https://boardgamegeek.com/thread/1066007/article/47073551#47073551",
+    requiredExpansion: "community"
+  },
+  {
     title: "Shadows Over Duul",
     intro: "The Silverhold-Hera route is usually a harmless uneventful run. Unless, of course, someone installs a beacon on the cargo which attracts a Reaver party.",
     setupDescription: "Remove Amnon Duul Jobs. Start in border of Murphy.",
@@ -142,6 +160,12 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     ])
   },
   {
+    title: "The Train Job",
+    intro: "Niska has a job for you, and things won't turn out well if anything goes wrong.",
+    sourceUrl: "https://boardgamegeek.com/thread/1066007/article/47073551#47073551",
+    requiredExpansion: "community"
+  },
+  {
     title: "The Truth Will Out",
     intro: "For too long the tragic fate of the Miranda colony has been covered up by the Alliance, and Mr. Universe would like to correct that, but lacks the manpower to do so on his own. Helping him is bound to be dangerous, but who wouldn't enjoy giving the Alliance a black eye?",
     setupDescription: "Requires Blue Sun Expansion.",
@@ -154,5 +178,11 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "Have MRP (Mrs Reynolds persona) steal and sell the latest Firefly story.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/164355/story-card-trash-part-deux"
+  },
+  {
+    title: "War Stories",
+    intro: "Niska doesn't care for excuses or warrants. You failed him, and now he’s taken what’s yours. To him, they are assets; to you, they are family.",
+    sourceUrl: "https://boardgamegeek.com/thread/1066007/article/47073551#47073551",
+    requiredExpansion: "community"
   }
 ];
