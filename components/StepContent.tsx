@@ -174,7 +174,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponen
                 isDark ? 'bg-zinc-800 text-zinc-300 border border-zinc-700' : 'bg-stone-200 text-stone-700 border border-stone-300'
               )}
             >
-              Back
+              ← Previous
             </button>
             <button 
               onClick={onNext} 
@@ -184,7 +184,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponen
                 isDark ? 'bg-emerald-600 text-white' : 'bg-firefly-red text-white'
               )}
             >
-              Continue →
+              Next Step →
             </button>
           </div>
         </>

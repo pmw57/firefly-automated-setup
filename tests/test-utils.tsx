@@ -1,23 +1,30 @@
+
 /* eslint-disable react-refresh/only-export-components */
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { ThemeProvider } from '../components/ThemeProvider';
 import { GameStateProvider } from '../components/GameStateContext';
+import { GameState } from '../types';
 
-const AllTheProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (
+interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
+  initialState?: GameState;
+}
+
+const customRender = (
+  ui: ReactElement,
+  options?: CustomRenderOptions
+) => {
+  const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     <ThemeProvider>
-      <GameStateProvider>
+      <GameStateProvider initialState={options?.initialState}>
         {children}
       </GameStateProvider>
     </ThemeProvider>
   );
+
+  return render(ui, { wrapper: Wrapper, ...options });
 };
 
-const customRender = (
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-) => render(ui, { wrapper: AllTheProviders, ...options });
 
 export * from '@testing-library/react';
 export { customRender as render };
