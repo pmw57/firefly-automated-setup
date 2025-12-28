@@ -1,4 +1,5 @@
 
+
 import React, { useMemo } from 'react';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { GameState } from '../types/index';
@@ -31,7 +32,7 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
 
     // Calculate Active Challenges & Advanced Rules
     const activeStoryChallenges = useMemo(() => getActiveStoryChallenges(gameState), [gameState]);
-    const activeAdvancedRules = getActiveAdvancedRules(gameState);
+    const activeAdvancedRules = useMemo(() => getActiveAdvancedRules(gameState), [gameState]);
 
     // Styles
     const summaryBg = isDark ? 'bg-black/20' : 'bg-amber-50/50';

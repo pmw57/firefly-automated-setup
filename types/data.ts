@@ -1,6 +1,8 @@
 
 import { SETUP_CARD_IDS } from '../data/ids';
-import { GameMode, Expansions, SetupRule } from './';
+// FIX: Fixed a circular dependency by importing directly from state and rules files instead of the index barrel file.
+import { GameMode, Expansions } from './state';
+import { SetupRule } from './rules';
 
 export type ExpansionId = 'base' | 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'aces_eights' | 'white_lightning' | 'cantankerous' | 'huntingdons_bolt' | 'black_market' | 'still_flying' | 'community';
 

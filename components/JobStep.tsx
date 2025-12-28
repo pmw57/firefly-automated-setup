@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';

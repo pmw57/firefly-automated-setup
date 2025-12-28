@@ -2,13 +2,6 @@ import '@testing-library/jest-dom';
 import { vi, beforeEach, afterEach } from 'vitest';
 import { cleanup } from '@testing-library/react';
 
-// Mock the virtual PWA module that is not available in the test environment.
-vi.mock('virtual:pwa-register', () => {
-  return {
-    registerSW: vi.fn(),
-  };
-});
-
 // Explicitly call cleanup after each test to prevent DOM leakage between tests,
 // especially since the test runner is configured with `isolate: false`.
 afterEach(() => {

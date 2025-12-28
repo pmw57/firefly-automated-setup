@@ -1,6 +1,7 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getStoryCardSetupSummary, getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../../../utils/ui';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
