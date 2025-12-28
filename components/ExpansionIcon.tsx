@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExpansionDef, ThemeColor } from '../types/index';
+import { ExpansionDef } from '../types/index';
 import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../data/expansions';
 import { expansionColorConfig, specialColorConfig } from '../data/themeColors';
 import { useTheme } from './ThemeContext';
