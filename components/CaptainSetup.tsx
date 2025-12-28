@@ -1,5 +1,4 @@
 
-
 import React, { useMemo } from 'react';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { Expansions } from '../types/index';
@@ -55,7 +54,7 @@ export const CaptainSetup = ({ onNext }: CaptainSetupProps): React.ReactElement 
   const partBadgeText = isDark ? 'text-yellow-100' : 'text-[#92400e]';
 
   return (
-    <div data-testid="captain-setup" className={`bg-metal rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in relative overflow-hidden transition-all duration-300`}>
+    <div className={`bg-metal rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in relative overflow-hidden transition-all duration-300`}>
       
       <div className={`flex justify-between items-center mb-6 border-b-2 ${inputBorder} pb-2 relative z-10`}>
          <h2 className={`text-2xl font-bold font-western drop-shadow-sm ${textColor}`}>Config</h2>

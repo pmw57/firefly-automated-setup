@@ -1,9 +1,8 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';
 import { PageReference } from './PageReference';
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { StructuredContent, StructuredContentPart } from '../types/index';
 
 interface SpecialRuleBlockProps {
@@ -72,18 +71,28 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
   const labels = { story: 'Story Override', setupCard: 'Setup Card Override', expansion: 'Expansion Rule', warning: 'Restriction', info: 'Information' };
   const s = getStyles();
 
+  // Generate unique IDs for ARIA labelling
+  const uniqueId = useMemo(() => `srb-${Math.random().toString(36).slice(2, 9)}`, []);
+  const labelId = `${uniqueId}-label`;
+  const titleId = `${uniqueId}-title`;
+  const labelledby = [labelId, title ? titleId : undefined].filter(Boolean).join(' ');
+
+
   return (
-    <div className={cls("border-l-4 p-4 rounded-r-xl shadow-sm mb-4 transition-all hover:shadow-md backdrop-blur-sm animate-fade-in-up", s.border, s.bg)}>
+    <section 
+      className={cls("border-l-4 p-4 rounded-r-xl shadow-sm mb-4 transition-all hover:shadow-md backdrop-blur-sm animate-fade-in-up", s.border, s.bg)}
+      aria-labelledby={labelledby}
+    >
       <div className="flex items-start mb-2">
-        <span className="text-xl mr-3 mt-0.5 select-none opacity-80">{icons[source]}</span>
+        <span className="text-xl mr-3 mt-0.5 select-none opacity-80" aria-hidden="true">{icons[source]}</span>
         <div className="flex-1">
           <div className="flex justify-between items-baseline">
             <div className="flex items-center gap-2">
               <div>
-                <span className={cls("text-[10px] font-bold uppercase tracking-widest opacity-60 block mb-0.5", s.text)}>
+                <span id={labelId} className={cls("text-[10px] font-bold uppercase tracking-widest opacity-60 block mb-0.5", s.text)}>
                   {labels[source]}
                 </span>
-                {title && <h4 className={cls("font-bold text-base leading-tight", s.text)}>{title}</h4>}
+                {title && <h4 id={titleId} className={cls("font-bold text-base leading-tight", s.text)}>{title}</h4>}
               </div>
             </div>
             {page && <PageReference page={page} manual={manual} />}
@@ -93,6 +102,6 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
       <div className={cls("text-sm leading-loose tracking-wide pl-1 opacity-90", s.text)}>
         {renderContent(content)}
       </div>
-    </div>
+    </section>
   );
 };

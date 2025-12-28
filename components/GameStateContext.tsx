@@ -1,6 +1,5 @@
 
 import React, { useReducer, useEffect, useCallback, useState } from 'react';
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { GameState } from '../types/index';
 import { gameReducer, getDefaultGameState } from '../state/reducer';
 import { LocalStorageService } from '../utils/storage';
@@ -35,26 +34,33 @@ const initializer = (): GameState => {
   return getDefaultGameState();
 };
 
-export const GameStateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, dispatch] = useReducer(gameReducer, undefined, initializer);
-  const [isStateInitialized, setIsStateInitialized] = useState(false);
+export const GameStateProvider: React.FC<{ children: React.ReactNode, initialState?: GameState }> = ({ children, initialState }) => {
+  const [state, dispatch] = useReducer(
+    gameReducer,
+    initialState,
+    (arg) => arg ?? initializer()
+  );
+  
+  // For tests, state is initialized immediately. Otherwise, it's initialized after the first render.
+  const [isStateInitialized, setIsStateInitialized] = useState(!!initialState);
   
   // This effect synchronizes the reducer's state with localStorage.
+  // It's skipped during tests (when an initialState is provided) to improve isolation.
   useEffect(() => {
-    // We only start saving *after* the initial state has been loaded.
-    if (isStateInitialized) {
+    if (isStateInitialized && !initialState) {
       storageService.save(state);
     }
-  }, [state, isStateInitialized]);
+  }, [state, isStateInitialized, initialState]);
 
-  // Mark initialization as complete after the first render.
+  // Mark initialization as complete after the first render for non-test scenarios.
   useEffect(() => {
-    setIsStateInitialized(true);
-  }, []);
+    if (!initialState) {
+      setIsStateInitialized(true);
+    }
+  }, [initialState]);
 
   const resetGameState = useCallback(() => {
     storageService.clear();
-    // Dispatch RESET_GAME instead of reload to stay within the same route context
     dispatch({ type: ActionType.RESET_GAME });
   }, []);
 

@@ -1,5 +1,4 @@
 
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { 
     GameState, 
     StepOverrides, 
@@ -20,11 +19,11 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
 
   switch (allianceMode) {
     case 'no_alerts':
-      specialRules.push({ source: 'setupCard', title: 'Setup Card Override', content: [{ type: 'strong', content: 'Safe Skies:' }, ' Do not place any Alert Tokens at the start of the game.'] });
+      specialRules.push({ source: 'setupCard', title: 'Setup Override', content: [{ type: 'strong', content: 'Safe Skies:' }, ' Do not place any Alert Tokens at the start of the game.'] });
       break;
     case 'awful_crowded':
       specialRules.push({
-        source: 'setupCard', title: 'Setup Card Override',
+        source: 'setupCard', title: 'Setup Override',
         content: [
           { type: 'strong', content: 'Awful Crowded:' },
           { type: 'list', items: [

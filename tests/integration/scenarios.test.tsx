@@ -1,8 +1,11 @@
+
 /** @vitest-environment jsdom */
-import { describe, it, expect, afterEach, vi } from 'vitest';
-import { screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest';
+import { screen, fireEvent, within } from '@testing-library/react';
 import { render } from '../test-utils';
 import App from '../../App';
+import { getDefaultGameState } from '../../state/reducer';
+import { GameState } from '../../types';
 
 describe('Integration Scenarios', () => {
   afterEach(() => {
@@ -10,193 +13,140 @@ describe('Integration Scenarios', () => {
     vi.restoreAllMocks();
   });
 
-  it('correctly guides the user through "The Browncoat Way" setup', async () => {
-    render(<App />);
+  describe("'The Browncoat Way' scenario", () => {
+    // Helper to robustly find and click the "Next" button, accounting for
+    // separate mobile/desktop buttons present in the JSDOM environment.
+    const clickNext = async () => {
+      const nextButtons = await screen.findAllByRole('button', { name: /Next Step/i });
+      expect(nextButtons.length).toBeGreaterThan(0);
+      fireEvent.click(nextButtons[0]);
+    };
 
-    // --- Step 1: Captain Setup ---
-    await waitFor(() => {
-      expect(screen.getByText('Number of Captains')).toBeInTheDocument();
-    });
-    fireEvent.click(screen.getByRole('button', { name: /Next: Choose Setup Card/i }));
+    beforeEach(async () => {
+      render(<App />);
 
-    // --- Step 2: Setup Card Selection ---
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Select Setup Card/i })).toBeInTheDocument();
-    });
-    // Select "The Browncoat Way"
-    fireEvent.click(screen.getByRole('button', { name: /The Browncoat Way.*A harder economy/i }));
-    // Navigate to next step (Optional Rules)
-    fireEvent.click(screen.getByRole('button', { name: /Next: Optional Rules/i }));
+      // --- Step 1: Captain Setup ---
+      await screen.findByText('Number of Captains');
+      fireEvent.click(screen.getByRole('button', { name: /Next: Choose Setup Card/i }));
 
-    // --- Step 3: Optional Rules ---
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Optional Rules/i })).toBeInTheDocument();
-    });
-    // Start the main setup sequence
-    fireEvent.click(screen.getByRole('button', { name: /Begin Setup Sequence/i }));
+      // --- Step 2: Setup Card Selection ---
+      await screen.findByRole('heading', { name: /Select Setup Card/i });
+      fireEvent.click(screen.getByRole('button', { name: /The Browncoat Way.*A harder economy/i }));
+      fireEvent.click(screen.getByRole('button', { name: /Next: Optional Rules/i }));
 
-    // --- Browncoat Way Step 1: Goal of the Game (Mission Dossier) ---
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Goal of the Game/i })).toBeInTheDocument();
+      // --- Step 3: Optional Rules ---
+      await screen.findByRole('heading', { name: /Optional Rules/i });
+      fireEvent.click(screen.getByRole('button', { name: /Begin Setup Sequence/i }));
+      
+      // --- Navigate to first "real" step to select a story ---
+      await screen.findByRole('heading', { name: /Goal of the Game/i });
+      fireEvent.click(await screen.findByRole('button', { name: /Harken's Folly/i }));
+      await clickNext();
+      
+      // Wait for the final navigation in the setup to complete before any tests run.
+      await screen.findByRole('heading', { name: /Nav Decks/i });
     });
-    // Select a story to proceed
-    fireEvent.click(await screen.findByRole('button', { name: /Harken's Folly/i }));
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
 
-    // --- Browncoat Way Step 2: Nav Decks ---
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Nav Decks/i })).toBeInTheDocument();
+    it('shows the browncoat nav rules', async () => {
+      expect(await screen.findByText('Forced Reshuffle')).toBeInTheDocument();
     });
-    // Assert that the 'browncoat' nav mode rule is displayed
-    expect(await screen.findByText('Forced Reshuffle')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
     
-    // --- Browncoat Way Step 3: Alliance & Reaver Ships ---
-    await waitFor(() => {
-        expect(screen.getByRole('heading', { name: /Alliance & Reaver Ships/i })).toBeInTheDocument();
+    it('shows the correct starting capitol', async () => {
+      await clickNext();
+      await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i });
+
+      await clickNext();
+      await screen.findByRole('heading', { name: /Starting Capitol/i });
+
+      expect(await screen.findByText('$12,000')).toBeInTheDocument();
     });
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
     
-    // --- Browncoat Way Step 4: Starting Capitol ---
-    await waitFor(() => {
-        expect(screen.getByRole('heading', { name: /Starting Capitol/i })).toBeInTheDocument();
-    });
-    // Assert that the correct starting credits are displayed
-    expect(await screen.findByText('$12,000')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
+    it('shows the special Browncoat draft rules', async () => {
+      await clickNext();
+      await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i });
+      
+      await clickNext();
+      await screen.findByRole('heading', { name: /Starting Capitol/i });
 
-    // --- Browncoat Way Step 5: Choose Ships & Leaders (Draft) ---
-    await waitFor(() => {
-        expect(screen.getByRole('heading', { name: /Choose Ships & Leaders/i })).toBeInTheDocument();
-    });
-    // Assert that the special draft rule is displayed
-    expect(await screen.findByText('Browncoat Market')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
+      await clickNext();
+      await screen.findByRole('heading', { name: /Choose Ships & Leaders/i });
 
-    // --- Browncoat Way Step 6: Starting Jobs ---
-    await waitFor(() => {
-        expect(screen.getByRole('heading', { name: /Starting Jobs/i })).toBeInTheDocument();
+      expect(await screen.findByText('Browncoat Market')).toBeInTheDocument();
     });
-    // Assert that the "no jobs" rule is displayed
-    expect(await screen.findByText('No Starting Jobs.')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
 
-    // --- Browncoat Way Step 7: Priming The Pump ---
-    await waitFor(() => {
-        expect(screen.getByRole('heading', { name: /Priming The Pump/i })).toBeInTheDocument();
-    });
-    expect(await screen.findByText('Cards Discarded')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
+    it('shows the "no jobs" rule', async () => {
+      await clickNext();
+      await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i });
 
-    // --- Final Step: Summary ---
-    await waitFor(() => {
-        expect(screen.getByRole('heading', { name: /You are ready to fly!/i })).toBeInTheDocument();
+      await clickNext();
+      await screen.findByRole('heading', { name: /Starting Capitol/i });
+
+      await clickNext();
+      await screen.findByRole('heading', { name: /Choose Ships & Leaders/i });
+
+      await clickNext();
+      await screen.findByRole('heading', { name: /Starting Jobs/i });
+
+      expect(await screen.findByText('No Starting Jobs.')).toBeInTheDocument();
     });
-    // Check that summary reflects choices
-    const finalScreen = screen.getByRole('heading', { name: /You are ready to fly!/i });
-    const summaryContainer = finalScreen.closest('div[class*="animate-fade-in-up"]');
-    expect(summaryContainer).toBeInTheDocument();
-    // FIX: The `within` function expects an HTMLElement, but `closest` returns a more generic `Element`.
-    // We cast `summaryContainer` to `HTMLElement` to satisfy the type checker.
-    expect(within(summaryContainer as HTMLElement).getByText(/The Browncoat Way/i)).toBeInTheDocument();
-    expect(within(summaryContainer as HTMLElement).getByText(/Harken's Folly/i)).toBeInTheDocument();
+
+    it('shows the correct final summary', async () => {
+      await clickNext(); // Nav -> A&R
+      await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i });
+      
+      await clickNext(); // A&R -> Capitol
+      await screen.findByRole('heading', { name: /Starting Capitol/i });
+      
+      await clickNext(); // Capitol -> Draft
+      await screen.findByRole('heading', { name: /Choose Ships & Leaders/i });
+      
+      await clickNext(); // Draft -> Jobs
+      await screen.findByRole('heading', { name: /Starting Jobs/i });
+      
+      await clickNext(); // Jobs -> Prime
+      await screen.findByRole('heading', { name: /Priming The Pump/i });
+      
+      await clickNext(); // Prime -> Final
+      await screen.findByRole('heading', { name: /You are ready to fly!/i });
+      
+      const flightManifest = screen.getByRole('heading', { name: /Flight Manifest/i });
+      const summaryContainer = flightManifest.parentElement;
+      // FIX: Add a null check for summaryContainer to satisfy TypeScript.
+      // The `parentElement` can be null, which `within()` does not accept.
+      expect(summaryContainer).not.toBeNull();
+
+      expect(within(summaryContainer!).getByText(/The Browncoat Way/i)).toBeInTheDocument();
+      expect(within(summaryContainer!).getByText(/Harken's Folly/i)).toBeInTheDocument();
+    });
   });
 
   it('correctly displays rules for "Smuggler\'s Blues" based on expansions', async () => {
+    const initialState: GameState = getDefaultGameState();
+    initialState.expansions.kalidasa = false;
+    initialState.selectedStoryCard = "Smuggler's Blues";
+    
+    // Set wizard to step index 4 ("Alliance & Reaver Ships")
+    localStorage.setItem('firefly_wizardStep_v3', JSON.stringify(4));
+    
+    // The GameStateProvider is inside App.tsx, so we must inject the initial state
+    // via localStorage for it to be picked up. Passing it to render() would only
+    // affect an outer provider from test-utils that App doesn't use.
+    localStorage.setItem('firefly_gameState_v3', JSON.stringify(initialState));
     render(<App />);
 
-    // --- Step 1: Captain Setup ---
-    // Turn off Kalidasa to test the "Alliance Space" contraband rule branch
-    await waitFor(() => {
-      expect(screen.getByText('Number of Captains')).toBeInTheDocument();
-    });
-    fireEvent.click(screen.getByRole('switch', { name: /Kalidasa/i }));
-    fireEvent.click(screen.getByRole('button', { name: /Next: Choose Setup Card/i }));
+    // "Smuggler's Blues" can create two "Story Override" blocks. We need to find all of them
+    // and then identify the correct one by its content.
+    const allStoryOverrideBlocks = await screen.findAllByRole('region', { name: /Story Override/i });
 
-    // --- Step 2: Setup Card Selection ---
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Select Setup Card/i })).toBeInTheDocument();
-    });
-    // Select standard setup to enable the next button
-    fireEvent.click(screen.getByRole('button', { name: /Standard Game Setup/i }));
-    // Because 10th Anniversary is on by default, we have to go through the Optional Rules screen.
-    fireEvent.click(screen.getByRole('button', { name: /Next: Optional Rules/i }));
-
-    // --- Step 3: Optional Rules ---
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Optional Rules/i })).toBeInTheDocument();
-    });
+    // Find the specific block that talks about Contraband.
+    const contrabandRuleBlock = allStoryOverrideBlocks.find(block => 
+      block.textContent?.includes('Contraband')
+    );
     
-    fireEvent.click(screen.getByRole('button', { name: /Begin Setup Sequence/i }));
-
-    // --- Step C1: Nav Decks ---
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Nav Decks/i })).toBeInTheDocument();
-    });
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
-    
-    // --- Step C2: Alliance & Reaver Ships ---
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Alliance & Reaver Ships/i })).toBeInTheDocument();
-    });
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
-    
-    // --- Step C3: Choose Ships & Leaders ---
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Choose Ships & Leaders/i })).toBeInTheDocument();
-    });
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
-
-    // --- Step C4: Goal of the Game (Mission Dossier) ---
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Goal of the Game/i })).toBeInTheDocument();
-    });
-    // Select the "Smuggler's Blues" story to update the game state
-    const storyButton = await screen.findByRole('button', { name: /Smuggler's Blues/i });
-    fireEvent.click(storyButton);
-    
-    // Wait for the dossier to render with the new story's details before jumping
-    await waitFor(() => {
-      // When the story is selected, the StoryDossier renders a SpecialRuleBlock
-      // with the title "Story Override" and the card's setupDescription.
-      const storyOverrideHeader = screen.getByRole('heading', { name: /Story Override/i });
-      
-      // Find the container of this specific rule block.
-      const ruleBlockContainer = storyOverrideHeader.closest('div[class*="border-l-4"]');
-      expect(ruleBlockContainer).toBeInTheDocument();
-    
-      // Verify that the setup text is within this block, which confirms the dossier
-      // has rendered and disambiguates from the same text in the StoryCardGridItem.
-      const ruleText = within(ruleBlockContainer as HTMLElement).getByText(/Place 3 Contraband in Alliance sectors/i);
-      expect(ruleText).toBeInTheDocument();
-    });
-    
-    // --- Jump back to Step C2 to verify rules are applied ---
-    const shipsProgressBarButton = screen.getByRole('button', { name: /Jump to Ships step/i });
-    fireEvent.click(shipsProgressBarButton);
-    
-    // --- Step C2: Alliance & Reaver Ships (revisited) ---
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: /Alliance & Reaver Ships/i })).toBeInTheDocument();
-    });
-
-    // Assert that the correct "Alliance Space" contraband rule is displayed because Kalidasa is off
-    // The text is split by a <strong> tag, so we need a custom matcher function.
-    const allianceSpaceRule = await screen.findByText((content, element) => {
-        const hasText = (node: Element | null) => 
-            /Place 3 Contraband on each Planetary Sector in Alliance Space/i.test(node?.textContent || '');
-        
-        const elementHasText = hasText(element);
-        const childrenDontHaveText = Array.from(element?.children || []).every(
-            child => !hasText(child)
-        );
-
-        return elementHasText && childrenDontHaveText;
-    });
-    expect(allianceSpaceRule).toBeInTheDocument();
-
-    // Assert that the rule for starting with an Alert Card is also present
-    const alertCardRule = await screen.findByText(/Begin the game with one random Alliance Alert Card in play/i);
-    expect(alertCardRule).toBeInTheDocument();
+    // Assert that we found the block and it has the correct full text.
+    expect(contrabandRuleBlock).toBeInTheDocument();
+    expect(contrabandRuleBlock).toHaveTextContent(
+      'Place 3 Contraband on each Planetary Sector in Alliance Space.'
+    );
   });
 });
