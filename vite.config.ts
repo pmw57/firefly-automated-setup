@@ -1,3 +1,4 @@
+
 // FIX: Use vitest/config for proper defineConfig typing including vitest options.
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react-swc'
@@ -55,6 +56,10 @@ export default defineConfig(({ mode }) => ({
         short_name: 'Firefly Setup',
         description: 'A dynamic, step-by-step setup guide for Firefly: The Game board game.',
         theme_color: '#7f1d1d',
+        background_color: '#f5f0e1',
+        display: 'standalone',
+        scope: '/firefly-automated-setup/',
+        start_url: '/firefly-automated-setup/',
         icons: [
           {
             src: 'assets/images/branding/logo.svg',
