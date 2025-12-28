@@ -1,5 +1,19 @@
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { ThemeColor } from "../types/index";
+import { expansionColorConfig } from '../data/themeColors';
+
+/**
+ * Converts a hex color string to an "R, G, B" string.
+ * @param hex The hex color string (e.g., "#d2b48c").
+ * @returns The RGB string (e.g., "210, 180, 140").
+ */
+const hexToRgb = (hex: string): string => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) return '0, 0, 0';
+  const r = parseInt(result[1], 16);
+  const g = parseInt(result[2], 16);
+  const b = parseInt(result[3], 16);
+  return `${r}, ${g}, ${b}`;
+};
 
 /**
  * A map from the abstract theme color names used in the expansion metadata
@@ -7,24 +21,12 @@ import { ThemeColor } from "../types/index";
  * a CSS variable for the color, which can then be used by various theme-related
  * utility classes.
  * 
- * The hex values are sourced from `tailwind.config.js`.
+ * This map is now generated dynamically from the single source of truth in `data/themeColors.ts`.
  */
 export const THEME_COLOR_MAP: Record<ThemeColor, string> = {
-    // From tailwind.config.js -> theme.extend.colors.expansion
-    cyan: '6, 182, 212',           // #06b6d4
-    tan: '210, 180, 140',          // #d2b48c
-    mediumPurple: '147, 112, 219', // #9370DB
-    gamblingGreen: '4, 120, 87',   // #047857
-    steelBlue: '70, 130, 180',     // #4682B4
-    darkSlateBlue: '72, 61, 139',  // #483D8B
-    deepBrown: '35, 23, 9',        // #231709
-    rebeccaPurple: '102, 51, 153', // #663399
-    cordovan: '137, 63, 69',       // #893f45
-    darkOliveGreen: '85, 107, 47', // #556b2f
-    teal: '13, 148, 136',          // #0d9488
-
-    // From tailwind.config.js -> theme.extend.colors.firefly
-    saddleBrown: '139, 69, 19',    // #8B4513
+    ...Object.fromEntries(
+        Object.entries(expansionColorConfig).map(([key, { hex }]) => [key, hexToRgb(hex)])
+    ) as Record<Exclude<ThemeColor, 'black' | 'dark'>, string>,
     
     // Generic colors
     black: '0, 0, 0',

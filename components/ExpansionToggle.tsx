@@ -1,18 +1,10 @@
 import React from 'react';
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { Expansions, ThemeColor } from '../types/index';
 import { ExpansionIcon } from './ExpansionIcon';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';
 import { PageReference } from './PageReference';
-
-interface ThemeStyles {
-  border: string;
-  bg: string;
-  badge: string;
-  toggle: string;
-  icon: string;
-}
+import { expansionColorConfig, specialColorConfig } from '../data/themeColors';
 
 interface ExpansionToggleProps {
   id: keyof Expansions;
@@ -25,31 +17,22 @@ interface ExpansionToggleProps {
   page_10th?: number;
 }
 
-const THEME_COLOR_STYLES: Record<ThemeColor, { light: ThemeStyles, dark: ThemeStyles }> = {
-  cyan:            { light: { border: 'border-cyan-500', bg: 'bg-expansion-cyan/10', badge: 'bg-expansion-cyan/20 text-cyan-900', toggle: 'bg-expansion-cyan', icon: 'bg-expansion-cyan text-white' }, dark: { border: 'border-cyan-600', bg: 'bg-expansion-cyan/20', badge: 'bg-expansion-cyan/40 text-white', toggle: 'bg-expansion-cyan', icon: 'bg-expansion-cyan text-white' } },
-  tan:             { light: { border: 'border-yellow-700', bg: 'bg-expansion-tan/10', badge: 'bg-expansion-tan/20 text-yellow-900', toggle: 'bg-expansion-tan', icon: 'bg-expansion-tan text-white' }, dark: { border: 'border-yellow-800', bg: 'bg-expansion-tan/20', badge: 'bg-expansion-tan/40 text-yellow-100', toggle: 'bg-expansion-tan', icon: 'bg-expansion-tan text-white' } },
-  mediumPurple:    { light: { border: 'border-purple-500', bg: 'bg-expansion-mediumPurple/10', badge: 'bg-expansion-mediumPurple/20 text-purple-900', toggle: 'bg-expansion-mediumPurple', icon: 'bg-expansion-mediumPurple text-white' }, dark: { border: 'border-purple-600', bg: 'bg-expansion-mediumPurple/20', badge: 'bg-expansion-mediumPurple/40 text-white', toggle: 'bg-expansion-mediumPurple', icon: 'bg-expansion-mediumPurple text-white' } },
-  gamblingGreen:   { light: { border: 'border-emerald-600', bg: 'bg-expansion-gamblingGreen/10', badge: 'bg-expansion-gamblingGreen/20 text-emerald-900', toggle: 'bg-expansion-gamblingGreen', icon: 'bg-expansion-gamblingGreen text-white' }, dark: { border: 'border-emerald-700', bg: 'bg-expansion-gamblingGreen/20', badge: 'bg-expansion-gamblingGreen/40 text-white', toggle: 'bg-expansion-gamblingGreen', icon: 'bg-expansion-gamblingGreen text-white' } },
-  steelBlue:     { light: { border: 'border-sky-500', bg: 'bg-expansion-steelBlue/10', badge: 'bg-expansion-steelBlue/20 text-sky-900', toggle: 'bg-expansion-steelBlue', icon: 'bg-expansion-steelBlue text-white' }, dark: { border: 'border-sky-600', bg: 'bg-expansion-steelBlue/20', badge: 'bg-expansion-steelBlue/40 text-sky-100', toggle: 'bg-expansion-steelBlue', icon: 'bg-expansion-steelBlue text-white' } },
-  black:           { light: { border: 'border-gray-800', bg: 'bg-gray-100', badge: 'bg-black text-white', toggle: 'bg-black', icon: 'bg-black text-white' }, dark: { border: 'border-zinc-700', bg: 'bg-black/60', badge: 'bg-zinc-800 text-white', toggle: 'bg-black', icon: 'bg-black text-white border border-zinc-700' } },
-  darkSlateBlue: { light: { border: 'border-indigo-600', bg: 'bg-expansion-darkSlateBlue/10', badge: 'bg-expansion-darkSlateBlue/20 text-indigo-900', toggle: 'bg-expansion-darkSlateBlue', icon: 'bg-expansion-darkSlateBlue text-white' }, dark: { border: 'border-indigo-800', bg: 'bg-expansion-darkSlateBlue/30', badge: 'bg-expansion-darkSlateBlue/50 text-indigo-100', toggle: 'bg-expansion-darkSlateBlue', icon: 'bg-expansion-darkSlateBlue text-white' } },
-  deepBrown:       { light: { border: 'border-stone-800', bg: 'bg-expansion-deepBrown/10', badge: 'bg-expansion-deepBrown/20 text-black', toggle: 'bg-expansion-deepBrown', icon: 'bg-expansion-deepBrown text-white' }, dark: { border: 'border-stone-900', bg: 'bg-expansion-deepBrown/60', badge: 'bg-expansion-deepBrown text-amber-100', toggle: 'bg-expansion-deepBrown', icon: 'bg-expansion-deepBrown text-white' } },
-  rebeccaPurple: { light: { border: 'border-purple-600', bg: 'bg-expansion-rebeccaPurple/10', badge: 'bg-expansion-rebeccaPurple/20 text-purple-900', toggle: 'bg-expansion-rebeccaPurple', icon: 'bg-expansion-rebeccaPurple text-white' }, dark: { border: 'border-purple-800', bg: 'bg-expansion-rebeccaPurple/30', badge: 'bg-expansion-rebeccaPurple/50 text-purple-100', toggle: 'bg-expansion-rebeccaPurple', icon: 'bg-expansion-rebeccaPurple text-white' } },
-  cordovan:        { light: { border: 'border-red-800', bg: 'bg-expansion-cordovan/10', badge: 'bg-expansion-cordovan/20 text-red-900', toggle: 'bg-expansion-cordovan', icon: 'bg-expansion-cordovan text-white' }, dark: { border: 'border-red-900', bg: 'bg-expansion-cordovan/30', badge: 'bg-expansion-cordovan/50 text-rose-100', toggle: 'bg-expansion-cordovan', icon: 'bg-expansion-cordovan text-white' } },
-  darkOliveGreen:  { light: { border: 'border-lime-700', bg: 'bg-expansion-darkOliveGreen/10', badge: 'bg-expansion-darkOliveGreen/20 text-lime-900', toggle: 'bg-expansion-darkOliveGreen', icon: 'bg-expansion-darkOliveGreen text-white' }, dark: { border: 'border-lime-900', bg: 'bg-expansion-darkOliveGreen/30', badge: 'bg-expansion-darkOliveGreen/50 text-lime-100', toggle: 'bg-expansion-darkOliveGreen', icon: 'bg-expansion-darkOliveGreen text-white' } },
-  saddleBrown:     { light: { border: 'border-orange-800', bg: 'bg-firefly-saddleBrown/10', badge: 'bg-firefly-saddleBrown/20 text-orange-900', toggle: 'bg-firefly-saddleBrown', icon: 'bg-firefly-saddleBrown text-white' }, dark: { border: 'border-orange-900', bg: 'bg-firefly-saddleBrown/30', badge: 'bg-firefly-saddleBrown/50 text-orange-100', toggle: 'bg-firefly-saddleBrown', icon: 'bg-firefly-saddleBrown text-white' } },
-  teal:            { light: { border: 'border-teal-500', bg: 'bg-teal-50', badge: 'bg-teal-100 text-teal-800', toggle: 'bg-expansion-teal', icon: 'bg-expansion-teal text-white' }, dark: { border: 'border-teal-900', bg: 'bg-teal-950/40', badge: 'bg-teal-900/60 text-teal-100', toggle: 'bg-expansion-teal', icon: 'bg-expansion-teal text-teal-100' } },
-  dark:            { light: { border: 'border-gray-800', bg: 'bg-gray-50', badge: 'bg-gray-200 text-gray-900', toggle: 'bg-gray-900', icon: 'bg-gray-900 text-white' }, dark: { border: 'border-zinc-700', bg: 'bg-black/40', badge: 'bg-zinc-800 text-gray-300', toggle: 'bg-zinc-700', icon: 'bg-zinc-900 text-gray-400' } },
-};
-
 export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({ 
   id, label, active, themeColor, description, onToggle, has10th, page_10th
 }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const styles = THEME_COLOR_STYLES[themeColor] || THEME_COLOR_STYLES.dark;
-  const currentTheme = isDark ? styles.dark : styles.light;
+  const styles = (themeColor in specialColorConfig)
+    ? specialColorConfig[themeColor as keyof typeof specialColorConfig]
+    : expansionColorConfig[themeColor as keyof typeof expansionColorConfig];
+
+  const currentTheme = styles ? (isDark ? styles.dark : styles.light) : null;
+  
+  if (!currentTheme) {
+      // Fallback for an unknown themeColor to prevent crashes
+      return <div>Error: Unknown theme color '{themeColor}'</div>;
+  }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {

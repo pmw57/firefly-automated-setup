@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { 
     GameState, 
@@ -15,7 +16,7 @@ import {
     SetJobContactsRule,
     SpecialRule
 } from '../types/index';
-import { getResolvedRules } from './selectors/rules';
+import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
@@ -141,6 +142,21 @@ const _generateJobMessages = (
 export const getJobSetupDetails = (gameState: GameState, overrides: StepOverrides): JobSetupDetails => {
     const allRules = getResolvedRules(gameState);
     const activeStoryCard = getActiveStoryCard(gameState);
+
+    if (hasRuleFlag(allRules, 'customJobDraw')) {
+        const messages: JobSetupMessage[] = [];
+        if (activeStoryCard?.setupDescription) {
+            messages.push({ source: 'story', title: 'Job Draw Instructions', content: [activeStoryCard.setupDescription] });
+        }
+        return {
+            contacts: [], 
+            messages,
+            showStandardContactList: false, 
+            isSingleContactChoice: false, 
+            totalJobCards: 0 
+        };
+    }
+    
     const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
     const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
 

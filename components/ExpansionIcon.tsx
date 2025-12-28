@@ -1,13 +1,8 @@
-
-
-
-
-
-
 import React, { useState } from 'react';
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { ExpansionDef, ThemeColor } from '../types/index';
 import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../data/expansions';
+import { expansionColorConfig, specialColorConfig } from '../data/themeColors';
+import { useTheme } from './ThemeContext';
 
 interface ExpansionIconProps {
   id: string;
@@ -33,27 +28,12 @@ const ABBREVIATIONS: Record<string, string> = {
   base: 'BG'
 };
 
-const THEME_COLOR_CLASSES: Record<ThemeColor, string> = {
-    cyan: 'bg-expansion-cyan border-cyan-600',
-    tan: 'bg-expansion-tan border-yellow-800',
-    mediumPurple: 'bg-expansion-mediumPurple border-purple-700',
-    gamblingGreen: 'bg-expansion-gamblingGreen border-emerald-700',
-    steelBlue: 'bg-expansion-steelBlue border-sky-600',
-    black: 'bg-black border-zinc-700',
-    darkSlateBlue: 'bg-expansion-darkSlateBlue border-indigo-700',
-    deepBrown: 'bg-expansion-deepBrown border-stone-800',
-    rebeccaPurple: 'bg-expansion-rebeccaPurple border-purple-700',
-    cordovan: 'bg-expansion-cordovan border-red-800',
-    darkOliveGreen: 'bg-expansion-darkOliveGreen border-lime-800',
-    saddleBrown: 'bg-firefly-saddleBrown border-orange-800',
-    teal: 'bg-expansion-teal border-teal-700',
-    dark: 'bg-gray-800 border-gray-600',
-};
-
 const getMeta = (id: string): ExpansionDef | undefined => EXPANSIONS_METADATA.find(e => e.id === id);
 
 export const ExpansionIcon = ({ id, className = "w-full h-full" }: ExpansionIconProps): React.ReactElement => {
   const [imgError, setImgError] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const meta = getMeta(id);
 
   if (!meta) {
@@ -64,7 +44,11 @@ export const ExpansionIcon = ({ id, className = "w-full h-full" }: ExpansionIcon
       );
   }
 
-  const themeClasses = THEME_COLOR_CLASSES[meta.themeColor] || 'bg-gray-700 border-gray-500';
+  const styles = (meta.themeColor in specialColorConfig)
+    ? specialColorConfig[meta.themeColor as keyof typeof specialColorConfig]
+    : expansionColorConfig[meta.themeColor as keyof typeof expansionColorConfig];
+
+  const themeClasses = styles ? (isDark ? styles.dark.icon : styles.light.icon) : 'bg-gray-700';
 
   if (id === 'base') {
     return (
