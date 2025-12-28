@@ -1,6 +1,7 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../../../utils/draft';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { DiceResult } from '../../../types/index';
 
 describe('utils/draft', () => {

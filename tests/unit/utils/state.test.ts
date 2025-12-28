@@ -1,6 +1,7 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { gameReducer, getDefaultGameState } from '../../../state/reducer';
+// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { GameState } from '../../../types/index';
 import { ActionType } from '../../../state/actions';
 import { SETUP_CARD_IDS } from '../../../data/ids';

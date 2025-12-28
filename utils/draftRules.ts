@@ -1,3 +1,4 @@
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { 
     GameState, 
     Step,
@@ -7,7 +8,6 @@ import {
     SetShipPlacementRule,
     SetDraftModeRule,
     SetLeaderSetupRule
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CHALLENGE_IDS, STEP_IDS } from '../data/ids';

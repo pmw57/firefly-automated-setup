@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { GameState, Step } from '../types/index';

@@ -1,5 +1,6 @@
+
 import React from 'react';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { StoryCardDef, AdvancedRuleDef } from '../../types/index';
 import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
@@ -112,25 +113,19 @@ export const SoloOptionsPart: React.FC<SoloOptionsPartProps> = ({
                     />
                   </div>
                   <div className="ml-3 text-sm">
-                    <span className={`font-medium block ${isChecked ? (isDark ? 'text-purple-300' : 'text-purple-800') : (isDark ? 'text-gray-300' : 'text-gray-700')}`}>
+                    <span className={`font-medium ${isChecked ? (isDark ? 'text-purple-300' : 'text-purple-800') : (isDark ? 'text-gray-300' : 'text-gray-700')}`}>
                       {rule.title}
                     </span>
                     {rule.description && (
-                      <span className={`text-xs block mt-0.5 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                      <p className={`text-xs italic mt-1 ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>
                         {rule.description}
-                      </span>
+                      </p>
                     )}
                   </div>
                 </label>
               );
             })}
           </div>
-        </div>
-      )}
-      
-      {(!activeStoryCard.challengeOptions || activeStoryCard.challengeOptions.length === 0) && availableAdvancedRules.length === 0 && (
-        <div className={`p-8 text-center italic ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
-          No optional rules available for this story/configuration.
         </div>
       )}
     </div>
