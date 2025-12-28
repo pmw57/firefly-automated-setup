@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { StoryCardDef, SetupRule } from '../../types/index';
 import { CONTACT_NAMES } from '../ids';
@@ -5,11 +6,11 @@ import { CONTACT_NAMES } from '../ids';
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule, 'source' | 'sourceName'>[]): SetupRule[] => {
-    return rules.map(rule => ({
-        ...rule,
-        source: 'story',
-        sourceName,
-    })) as SetupRule[];
+  return rules.map(rule => ({
+    ...rule,
+    source: 'story',
+    sourceName,
+  })) as SetupRule[];
 };
 
 export const SOLO_STORIES: StoryCardDef[] = [
@@ -31,6 +32,13 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true
   },
   {
+    "title": "Christmas Delivery",
+    "intro": "The 'Verse is just too big for one man to provide joy for all of the good little boys and girls. He needs your help and you'd better not misbehave!",
+    "isSolo": true,
+    "setupDescription": "The same as Awful Lonely in the Big Black",
+    "sourceUrl": "https://boardgamegeek.com/thread/1076227/article/14229639#14229639"
+  },
+  {
     title: "A Fistful Of Scoundrels",
     intro: "A captain is only as good as his reputation. And you never know when the winds might change, so best to be on terms with as many folks as possible.",
     setupDescription: "Roots In The Community: Each time you gain Solid with a Contact, recover 2 Game Length Tokens.",
@@ -50,8 +58,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { id: 'caper_first', label: "Complete a Caper before gaining any Solid Rep." }
     ],
     advancedRule: {
-        id: "adv_alt_alliance_contacts",
-        title: "Alternate Alliance Contacts"
+      id: "adv_alt_alliance_contacts",
+      title: "Alternate Alliance Contacts"
     }
   },
   {
@@ -69,14 +77,14 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'setJobMode', mode: 'no_jobs' }
     ]),
     challengeOptions: [
-        { id: 'one_job_per_contact', label: "Work no more than one Job per Contact." },
-        { id: 'legal_jobs_only', label: "Work only Legal Jobs, including Bounties." },
-        { id: 'single_contact', label: "Work for a single Contact only." },
-        { id: 'pay_on_botch', label: "Pay your Crew whenever you Botch. Otherwise, Disgruntle them." }
+      { id: 'one_job_per_contact', label: "Work no more than one Job per Contact." },
+      { id: 'legal_jobs_only', label: "Work only Legal Jobs, including Bounties." },
+      { id: 'single_contact', label: "Work for a single Contact only." },
+      { id: 'pay_on_botch', label: "Pay your Crew whenever you Botch. Otherwise, Disgruntle them." }
     ],
     advancedRule: {
-        id: "adv_alt_corvette_contacts",
-        title: "Alternate Corvette Contacts"
+      id: "adv_alt_corvette_contacts",
+      title: "Alternate Corvette Contacts"
     }
   },
   {
@@ -92,8 +100,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'addFlag', flag: 'soloGameTimer' }
     ]),
     advancedRule: {
-        id: "adv_wolf_at_your_door",
-        title: "Wolf At Your Door"
+      id: "adv_wolf_at_your_door",
+      title: "Wolf At Your Door"
     }
   },
   {
@@ -114,8 +122,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { id: 'heroes_custom_setup', label: "Why should Mal have all the fun? Pick the Leader, Ship, and Supply Planet of your choice. Begin the game with $2000 and a full compliment of your favourite Crew from the show or game." }
     ],
     advancedRule: {
-        id: "adv_contact_quirks_work",
-        title: "Contact Quirks - Work"
+      id: "adv_contact_quirks_work",
+      title: "Contact Quirks - Work"
     }
   },
   {
@@ -135,8 +143,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { id: 'universe_challenge', label: "Attach a Mr. Universe Challenge Card to every Job." }
     ],
     advancedRule: {
-        id: "adv_alt_reaver_contacts",
-        title: "Alternate Reaver Contacts"
+      id: "adv_alt_reaver_contacts",
+      title: "Alternate Reaver Contacts"
     }
   },
   {
@@ -159,9 +167,16 @@ export const SOLO_STORIES: StoryCardDef[] = [
       }
     ]),
     advancedRule: {
-        id: "adv_automated_movement",
-        title: "Automated Movement"
+      id: "adv_automated_movement",
+      title: "Automated Movement"
     }
+  },
+  {
+    title: "Ruining It For Everyone",
+    maxPlayerCount: 2,
+    intro: "During the war you watched your twin get cut down in a hail of shrapnel. You've lived an empty existence since that day making ends meet and trying to keep flying as best you can. Then you get a message from your Ma out on the Rim. \"Come home right away.\"\n\nSo you fly to St. Albans, Red Sun to see your Mother.\n\nOnce there, your twin (Who wasn't dead!) steals your ship and sets about ruining your life. Your twin has the exact same abilities as you do. Your twin may not discard any of your inactive jobs.",
+    sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
+    setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship."
   },
   {
     title: "Seeds Of Rebellion",
@@ -176,8 +191,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'forbidContact', contact: CONTACT_NAMES.HARKEN }
     ]),
     advancedRule: {
-        id: "adv_lost_little_lambs",
-        title: "Lost Little Lambs"
+      id: "adv_lost_little_lambs",
+      title: "Lost Little Lambs"
     }
   },
   {
@@ -196,8 +211,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'setJobMode', mode: 'no_jobs' }
     ]),
     advancedRule: {
-        id: "adv_lone_targets",
-        title: "Lone Targets"
+      id: "adv_lone_targets",
+      title: "Lone Targets"
     }
   },
   {
@@ -214,8 +229,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'addFlag', flag: 'startWithAlertCard' }
     ]),
     advancedRule: {
-        id: "adv_contact_quirks_deal",
-        title: "Contact Quirks - Deal"
+      id: "adv_contact_quirks_deal",
+      title: "Contact Quirks - Deal"
     }
   },
 ];
