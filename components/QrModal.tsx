@@ -5,26 +5,30 @@ import { useTheme } from './ThemeContext';
 import { Button } from './Button';
 import { usePwaInstall } from '../hooks/usePwaInstall';
 
-// FIX: Define a type for the non-standard `standalone` property on `Navigator`
-// to resolve the 'no-explicit-any' linting error.
 interface NavigatorWithStandalone extends Navigator {
   standalone?: boolean;
 }
 
 /**
- * Returns manual installation instructions for iOS if applicable.
+ * Returns manual installation instructions for mobile platforms if applicable.
  */
-const getIOSInstallGuide = (): string | null => {
+const getManualInstallGuide = (): string | null => {
     if (typeof window === 'undefined' || typeof navigator === 'undefined') return null;
 
-    const ua = navigator.userAgent.toLowerCase();
-    const isIOS = /iphone|ipad|ipod/.test(ua);
-    
-    // This checks if the PWA is already running in standalone mode on iOS.
-    const isStandalone = 'standalone' in window.navigator && (window.navigator as NavigatorWithStandalone).standalone === true;
+    const ua = navigator.userAgent;
+    const isStandalone = 'standalone' in (window.navigator as NavigatorWithStandalone) && (window.navigator as NavigatorWithStandalone).standalone === true;
 
-    if (isIOS && !isStandalone) {
+    if (isStandalone) return null; // Don't show if already in standalone mode.
+
+    const isIOS = /iPad|iPhone|iPod/.test(ua);
+    if (isIOS) {
         return "To install on an iPhone or iPad, tap the Share button and then 'Add to Home Screen'.";
+    }
+
+    // A broader check for other mobile devices (like Android on Firefox)
+    const isMobile = /Mobi|Android/i.test(ua);
+    if (isMobile) {
+         return "To install, look for an 'Add to Home Screen' or 'Install' option in your browser's menu.";
     }
     
     return null;
@@ -41,7 +45,7 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [copyButtonText, setCopyButtonText] = useState('Copy Link');
   const { canInstall, install } = usePwaInstall();
-  const [iosInstallGuide, setIosInstallGuide] = useState<string | null>(null);
+  const [manualInstallGuide, setManualInstallGuide] = useState<string | null>(null);
 
   const [showInFooter, setShowInFooter] = useState(() => {
     if (typeof window === 'undefined') return true;
@@ -50,7 +54,7 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
-        setIosInstallGuide(getIOSInstallGuide());
+        setManualInstallGuide(getManualInstallGuide());
     }
   }, [isOpen]);
 
@@ -101,7 +105,7 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
     return null;
   }
   
-  const showInstallSection = canInstall || iosInstallGuide;
+  const showInstallSection = canInstall || manualInstallGuide;
 
   const modalContent = (
     <div
@@ -119,7 +123,7 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
       >
         <div className={`p-6 border-b ${isDark ? 'border-zinc-800' : 'border-firefly-parchment-border'}`}>
           <h2 id="qr-modal-title" className={`text-2xl font-bold font-western text-center ${isDark ? 'text-amber-400' : 'text-firefly-brown'}`}>
-            Cortex Companion
+            Mobile Access
           </h2>
           <button
             onClick={onClose}
@@ -149,12 +153,12 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
               <p className="text-sm opacity-80 mb-4">
                 {canInstall 
                   ? "Add to home screen for offline access and a native experience."
-                  : iosInstallGuide
+                  : manualInstallGuide
                 }
               </p>
               {canInstall && (
                 <Button onClick={handleInstallClick} fullWidth>
-                    Install Cortex Companion
+                    Install Firefly Setup
                 </Button>
               )}
           </div>
