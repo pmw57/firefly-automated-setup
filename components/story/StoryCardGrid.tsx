@@ -1,5 +1,4 @@
 
-
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { StoryCardGridItem } from './StoryCardGridItem';
 import { Button } from '../Button';
@@ -9,15 +8,14 @@ import { getFilterableExpansions } from '../../utils/selectors/story';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { cls } from '../../utils/style';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { ExpansionId } from '../../types/index';
 
 interface StoryCardGridProps {
   onSelect: (title: string) => void;
-  isClassicSolo: boolean;
 }
 
-export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassicSolo }) => {
+export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
@@ -37,10 +35,9 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
 
-  const expansionsForFilter = useMemo(() => [
-    { id: 'base', label: 'Base Game' },
-    ...getFilterableExpansions(isClassicSolo),
-  ], [isClassicSolo]);
+  const expansionsForFilter = useMemo(() => {
+    return [{ id: 'base', label: 'Base Game' }, ...getFilterableExpansions()];
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -162,9 +159,6 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect, isClassi
           <div className={`flex flex-col items-center justify-center h-full ${emptyStateText} italic`}>
             <span className="text-4xl mb-2">🕵️</span>
             <p>No stories found.</p>
-            {isClassicSolo && (
-              <p className="text-xs mt-2 text-red-500">Classic Solo is restricted to 'Awful Lonely in the Big Black'.</p>
-            )}
             <Button onClick={() => { setSearchTerm(''); setFilterExpansion([]); }} variant="secondary" className="mt-4 text-sm">Clear Filters</Button>
           </div>
         )}

@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { StoryCardDef, SetupRule } from '../../types/index';
 
@@ -14,6 +15,7 @@ const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule,
 export const STILL_FLYING_STORIES: StoryCardDef[] = [
   {
     title: "A Rare Specimen Indeed",
+    soloTimerAdjustment: "Send Out Invites before discarding your last token to win the game.",
     intro: "Saffron's at it again. This time, she's convinced Badger that she's from a respectable family, and now the sad little king has his eye on a psychotic blushing bride. Whoever collects the most presents gets to give the toast... before it turns into a shotgun wedding.",
     setupDescription: "Players start with a Caper Card. No Starting Jobs dealt.",
     requiredExpansion: "still_flying",

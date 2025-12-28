@@ -1,7 +1,7 @@
+
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { isStoryCompatible } from '../../utils/filters';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { GameState, StoryCardDef } from '../../types/index';
 import { getDefaultGameState } from '../../state/reducer';
 import { SETUP_CARD_IDS } from '../../data/ids';
@@ -13,7 +13,7 @@ describe('utils/filters', () => {
     const multiStory: StoryCardDef = { title: 'Multi Story', intro: '' };
     const expansionStory: StoryCardDef = { title: 'Blue Sun Story', intro: '', requiredExpansion: 'blue' };
     const multiReqStory: StoryCardDef = { title: 'Multi Req Story', intro: '', requiredExpansion: 'blue', additionalRequirements: ['kalidasa'] };
-    const slayStory: StoryCardDef = { title: "Slaying The Dragon", intro: '' };
+    const slayStory: StoryCardDef = { title: "Slaying The Dragon", intro: '', playerCount: 2 };
 
     it.concurrent('returns true for a standard story in a standard multiplayer game', () => {
       expect(isStoryCompatible(multiStory, baseGameState)).toBe(true);
@@ -58,13 +58,24 @@ describe('utils/filters', () => {
     });
     
     // Solo Modes
-    it.concurrent('in Classic Solo mode, only allows "Awful Lonely in the Big Black"', () => {
-      const state: GameState = { ...baseGameState, gameMode: 'solo', setupCardId: SETUP_CARD_IDS.STANDARD };
-      const awfulLonelyStory: StoryCardDef = { title: "Awful Lonely In The Big Black", intro: '' };
+    it.concurrent('in Classic Solo mode, only allows stories explicitly marked as `isSolo`', () => {
+      // Classic solo state means gameMode is solo and not using Flying Solo setup card.
+      const state: GameState = { 
+        ...baseGameState, 
+        gameMode: 'solo', 
+        setupCardId: SETUP_CARD_IDS.STANDARD,
+        expansions: { ...baseGameState.expansions, tenth: false, community: true }
+      };
       
-      expect(isStoryCompatible(awfulLonelyStory, state)).toBe(true);
-      expect(isStoryCompatible(multiStory, state)).toBe(false);
-      expect(isStoryCompatible(soloStory, state)).toBe(false); // Other solo stories are excluded
+      const soloStory: StoryCardDef = { title: "Awful Lonely In The Big Black", intro: '', isSolo: true };
+      const communitySoloStory: StoryCardDef = { title: "Hunt for the Arc", intro: '', isSolo: true, requiredExpansion: 'community' };
+      const tenthSoloStory: StoryCardDef = { title: "A Fistful of Scoundrels", intro: '', isSolo: true, requiredExpansion: 'tenth' };
+      const nonSoloStory: StoryCardDef = { title: 'Harkens Folly', intro: '' }; // Not marked as solo
+
+      expect(isStoryCompatible(soloStory, state), 'Solo story should be available').toBe(true);
+      expect(isStoryCompatible(communitySoloStory, state), 'Community solo story should be available').toBe(true);
+      expect(isStoryCompatible(nonSoloStory, state), 'Non-solo story should NOT be available in Classic Solo').toBe(false);
+      expect(isStoryCompatible(tenthSoloStory, state), '10th Anniv. story should be filtered out because expansion is off').toBe(false);
     });
 
     it.concurrent('in Flying Solo mode, allows compatible non-multiplayer-exclusive stories', () => {

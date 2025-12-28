@@ -16,7 +16,6 @@ export interface MissionSelectionContextType {
   validStories: StoryCardDef[];
   filteredStories: StoryCardDef[];
   availableAdvancedRules: AdvancedRuleDef[];
-  isClassicSolo: boolean;
   enablePart2: boolean;
 
   // Actions

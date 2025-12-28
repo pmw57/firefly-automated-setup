@@ -65,7 +65,11 @@ export interface SetLeaderSetupRule extends BaseRule { type: 'setLeaderSetup'; m
 export interface SetShipPlacementRule extends BaseRule { type: 'setShipPlacement'; location: 'persephone' | 'londinium' | 'border_of_murphy' | 'outside_alliance'; }
 export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer'; rule: Omit<SpecialRule, 'source'>; }
 
-export interface AddFlagRule extends BaseRule { type: 'addFlag'; flag: string; }
+export interface AddFlagRule extends BaseRule { 
+  type: 'addFlag'; 
+  flag: string;
+  reaverShipCount?: number; 
+}
 
 export interface ModifyPrimeRule extends BaseRule {
   type: 'modifyPrime';

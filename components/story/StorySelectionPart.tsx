@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useGameState } from '../../hooks/useGameState';
@@ -7,7 +8,7 @@ import { PageReference } from '../PageReference';
 import { StoryDossier } from './StoryDossier';
 import { StoryRandomizer } from './StoryRandomizer';
 import { StoryCardGrid } from './StoryCardGrid';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { Step } from '../../types/index';
 import { STEP_IDS } from '../../data/ids';
 
@@ -22,7 +23,6 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ step, on
   const { 
     activeStoryCard,
     handleStoryCardSelect,
-    isClassicSolo,
     enablePart2
   } = useMissionSelection();
   const { state: gameState } = useGameState();
@@ -76,7 +76,7 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ step, on
 
       <div className="space-y-4">
         <StoryRandomizer onSelect={handleStoryCardSelect} />
-        <StoryCardGrid onSelect={handleStoryCardSelect} isClassicSolo={isClassicSolo} />
+        <StoryCardGrid onSelect={handleStoryCardSelect} />
       </div>
 
       <div className={`mt-8 flex justify-between clear-both pt-6 border-t ${navBorderTop}`}>
