@@ -1,6 +1,4 @@
 
-
-
 import React, { useRef, useEffect } from 'react';
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { SetupCardDef } from '../../types/index';
