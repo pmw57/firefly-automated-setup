@@ -1,5 +1,5 @@
 
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
@@ -87,15 +87,8 @@ export const getFilteredStoryCards = (
 // Rule & Expansion Selectors
 // =================================================================
 
-const SOLO_TIMER_ADJUSTMENTS: Record<string, string> = {
-  "Desperadoes": "Declare Last Call before discarding your last token to win the game.",
-  '"Respectable" Persons Of Business': "Declare Last Call before discarding your last token to win the game.",
-  "A Rare Specimen Indeed": "Send Out Invites before discarding your last token to win the game."
-};
-
 export const getSoloTimerAdjustmentText = (storyCard: StoryCardDef | undefined): string | null => {
-    if (!storyCard) return null;
-    return SOLO_TIMER_ADJUSTMENTS[storyCard.title] || null;
+    return storyCard?.soloTimerAdjustment || null;
 }
 
 export const getCategorizedExpansions = () => {
@@ -108,10 +101,9 @@ export const getCategorizedExpansions = () => {
   };
 };
 
-export const getFilterableExpansions = (isClassicSolo: boolean) => {
+export const getFilterableExpansions = () => {
     return EXPANSIONS_METADATA.filter(e => {
         if (e.id === 'base') return false;
-        if (isClassicSolo && e.id === 'community') return false;
         if (e.hidden) return false;
         return true;
     });

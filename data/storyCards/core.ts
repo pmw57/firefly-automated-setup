@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { StoryCardDef, SetupRule } from '../../types/index';
 import { CONTACT_NAMES } from '../ids';
@@ -15,6 +16,7 @@ const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule,
 export const CORE_STORIES: StoryCardDef[] = [
   {
     title: "Desperadoes",
+    soloTimerAdjustment: "Declare Last Call before discarding your last token to win the game.",
     intro: "Your checkered past is catching up with you and the Alliance is hot on your tail! It's time to make a final cash grab and head out to the Rim to retire before the Alliance makes other arrangements.",
     setupDescription: "Start with 1 Warrant. Harken jobs unavailable.",
     sourceUrl: "https://boardgamegeek.com/image/2785050/gerryrailbaron",
@@ -49,6 +51,7 @@ export const CORE_STORIES: StoryCardDef[] = [
   },
   {
     title: '"Respectable" Persons Of Business',
+    soloTimerAdjustment: "Declare Last Call before discarding your last token to win the game.",
     intro: "There's a heap of trouble waiting out in the 'Verse. The Big Black is full of derelict ships, drifting proof of their Captain's missteps. Keeping you and yours in bullets and chow can be challenge enough. Not everyone has the mettle to keep their boat in the air. Prove you've got what it takes.",
     sourceUrl: "https://boardgamegeek.com/image/2785036/gerryrailbaron"
   },

@@ -1,7 +1,7 @@
+
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getAvailableStoryCards, getAvailableSetupCards } from '../../utils/selectors/story';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { GameState } from '../../types/index';
 import { getDefaultGameState } from '../../state/reducer';
 import { SETUP_CARD_IDS } from '../../data/ids';
@@ -54,11 +54,26 @@ describe('utils/selectors', () => {
             expect(cards.some(c => c.isSolo)).toBe(false);
         });
 
-        it.concurrent('should only return "Awful Lonely" in classic solo mode', () => {
-            const classicSoloState: GameState = { ...baseGameState, gameMode: 'solo', setupCardId: SETUP_CARD_IDS.STANDARD };
+        it.concurrent('should return only `isSolo` cards in classic solo mode', () => {
+            const classicSoloState: GameState = { 
+              ...baseGameState, 
+              gameMode: 'solo', 
+              setupCardId: SETUP_CARD_IDS.STANDARD,
+            };
             const cards = getAvailableStoryCards(classicSoloState);
-            expect(cards.length).toBe(1);
-            expect(cards[0].title).toBe("Awful Lonely In The Big Black");
+            
+            // Check that all returned cards are indeed solo cards
+            const nonSoloCards = cards.filter(c => !c.isSolo);
+            expect(nonSoloCards.length, `Found non-solo cards in classic solo: ${nonSoloCards.map(c=>c.title).join(', ')}`).toBe(0);
+
+            // Check that some specific solo cards are present
+            expect(cards.some(c => c.title === "Awful Lonely In The Big Black")).toBe(true);
+            expect(cards.some(c => c.title === "Hunt For The Arc")).toBe(true);
+            // This one should be present because 10th is on by default in baseGameState
+            expect(cards.some(c => c.title === "A Fistful Of Scoundrels")).toBe(true);
+
+            // Check that a known non-solo card is NOT present
+            expect(cards.some(c => c.title === "Harken's Folly")).toBe(false);
         });
 
         it.concurrent('should filter based on expansion requirements', () => {

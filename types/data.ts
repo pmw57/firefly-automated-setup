@@ -1,5 +1,4 @@
 
-
 import { SETUP_CARD_IDS } from '../data/ids';
 import { GameMode, Expansions, SetupRule } from './';
 
@@ -71,6 +70,9 @@ export interface StoryCardDef {
   sourceUrl?: string;
   goals?: StoryCardGoal[];
   isSolo?: boolean;
+  playerCount?: number;
+  maxPlayerCount?: number;
+  soloTimerAdjustment?: string;
   challengeOptions?: ChallengeOption[];
   advancedRule?: AdvancedRuleDef;
   rules?: SetupRule[];

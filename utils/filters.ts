@@ -20,8 +20,11 @@ export const isStoryCompatible = (card: StoryCardDef, state: GameState): boolean
         }
     }
 
-    // Rule 3: Specific story card rules
-    if (card.title === "Slaying The Dragon" && state.playerCount !== 2) {
+    // Rule 3: Specific story card rules based on player count
+    if (card.playerCount && card.playerCount !== state.playerCount) {
+        return false;
+    }
+    if (card.maxPlayerCount && state.playerCount > card.maxPlayerCount) {
         return false;
     }
 
@@ -30,8 +33,10 @@ export const isStoryCompatible = (card: StoryCardDef, state: GameState): boolean
     const isClassicSolo = state.gameMode === 'solo' && !isFlyingSolo;
     
     if (isClassicSolo) {
-        // Classic solo only allows one story card.
-        return card.title === "Awful Lonely In The Big Black";
+        // Classic solo only allows story cards explicitly marked for solo play.
+        if (!card.isSolo) {
+            return false;
+        }
     }
     
     if (isFlyingSolo) {

@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { 
     GameState, 
@@ -5,7 +6,8 @@ import {
     AllianceReaverDetails, 
     SpecialRule, 
     CreateAlertTokenStackRule,
-    SetAllianceModeRule
+    SetAllianceModeRule,
+    AddFlagRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
@@ -69,7 +71,33 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
   }
 
   const alliancePlacement = allianceMode === 'extra_cruisers' ? "Place a Cruiser at Regulus AND Persephone." : "Place the Cruiser at Londinium.";
-  const reaverPlacement = gameState.expansions.blue ? "Place 3 Cutters in the border sectors closest to Miranda." : "Place 1 Cutter at the Firefly logo (Regina/Osiris).";
+  
+  const huntForTheArcRule = allRules.find(
+    (r): r is AddFlagRule => r.type === 'addFlag' && r.flag === 'huntForTheArcReaverPlacement'
+  );
+
+  const totalReavers = gameState.expansions.blue ? 3 : 1;
+  let reaverPlacement: string;
+
+  if (huntForTheArcRule) {
+      const storyReavers = huntForTheArcRule.reaverShipCount || 1;
+      const remainingReavers = totalReavers - storyReavers;
+      
+      const placementParts = [
+          `Story Override: Place ${storyReavers} Reaver ship in the Border Space sector directly below Valentine.`
+      ];
+      
+      if (remainingReavers > 0) {
+          // Standard Blue Sun rule for the rest
+          placementParts.push(`Place the remaining ${remainingReavers} Cutter(s) in the border sectors closest to Miranda.`);
+      }
+      reaverPlacement = placementParts.join(' ');
+
+  } else {
+      reaverPlacement = gameState.expansions.blue 
+          ? "Place 3 Cutters in the border sectors closest to Miranda." 
+          : "Place 1 Cutter at the Firefly logo (Regina/Osiris).";
+  }
 
   return { specialRules, alliancePlacement, reaverPlacement };
 };

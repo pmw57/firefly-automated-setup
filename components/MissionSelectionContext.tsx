@@ -5,7 +5,6 @@ import { StoryCardDef, AdvancedRuleDef } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
 import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getStoryCardByTitle, getAvailableAdvancedRules } from '../utils/selectors/story';
-import { SETUP_CARD_IDS } from '../data/ids';
 import { ActionType } from '../state/actions';
 
 export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -20,11 +19,6 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
 
   // Memoized derived data
   const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
-
-  const isClassicSolo = useMemo(() => 
-    gameState.gameMode === 'solo' && gameState.setupCardId !== SETUP_CARD_IDS.FLYING_SOLO,
-    [gameState.gameMode, gameState.setupCardId]
-  );
 
   const validStories = useMemo(() => getAvailableStoryCards(gameState), [gameState]);
 
@@ -98,7 +92,6 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     validStories,
     filteredStories,
     availableAdvancedRules,
-    isClassicSolo,
     enablePart2,
     sortMode,
     setSearchTerm,

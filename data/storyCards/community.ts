@@ -76,6 +76,16 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/186593/where-it-all-started-story-card"
   },
   {
+    title: "Hunt For The Arc",
+    intro: "The Joan of Arc, one of the great colony ships that left Earth-That-Was hundreds of years ago, never arrived at its destination. Filled with priceless Earth artifacts, the huge vessel has long been rumored to be floating out beyond Alliance space, just waiting to make some lucky crew filthy rich. It's haunted you, become an obsession, but you pored over star charts and history books for years, and now you might just have a notion where she 'bides. Find the Arc and successfully deliver her to the Alliance for a hefty sum, or fence her to a criminal boss to become financially set for life...",
+    isSolo: true,
+    sourceUrl: "https://boardgamegeek.com/thread/1049419/hunt-for-the-arc-a-solo-adventure",
+    setupDescription: "Place a Reaver ship in the Border Space sector directly below Valentine, instead of its usual position.",
+    rules: createStoryRules("Hunt For The Arc", [
+      { type: 'addFlag', flag: 'huntForTheArcReaverPlacement', reaverShipCount: 1 }
+    ])
+  },
+  {
     title: "It Ain't Easy Goin' Legit",
     intro: "Your last run in with Harken turned South and you've got a boatload of warrants trailin' ya. Time to clean your ledger and get dirt on Harken instead.",
     setupDescription: "Start with 2 Warrants. Alliance Space off limits. No Harken.",
@@ -125,6 +135,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
   },
   {
     title: "Slaying The Dragon",
+    playerCount: 2,
     intro: "Adelai Niska has been lord of the underworld for as long as anyone can remember. Shu-ki, the tong boss of Gonghe, has long suffered under Niska's yoke. After being publicly shamed by Niska at a meeting of crime-bosses, an enraged Shu-ki has decided to bring Niska down. He has a plan - Operation Dragon - but the job is so daunting that it requires two crews to have any hope of success. Can two Firefly captains bring down the most feared criminal boss in the 'Verse?",
     setupDescription: "2-Player Co-Op. Niska jobs forbidden. Remove Niska Deck. Prime +2 cards/deck. Stack 16 Disgruntled Tokens (Countdown).",
     requiredExpansion: "community",
