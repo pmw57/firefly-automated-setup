@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { LocalStorageService } from '../../../utils/storage';
 import { GameState } from '../../../types/index';
 
-describe('utils/LocalStorageService', () => {
+describe('state/storage', () => {
   const KEY = 'test-key';
   let storageService: LocalStorageService;
   beforeEach(() => {
