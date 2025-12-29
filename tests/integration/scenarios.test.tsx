@@ -5,7 +5,6 @@ import { render, user } from '../test-utils';
 import App from '../../App';
 import { getDefaultGameState } from '../../state/reducer';
 import { GameState } from '../../types';
-// FIX: SETUP_CARDS is not exported from storyCards. It's in its own file.
 import { STORY_CARDS } from '../../data/storyCards';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { SETUP_CARD_IDS } from '../../data/ids';
@@ -43,7 +42,8 @@ describe('Integration Scenarios', () => {
       render(<App />);
 
       // --- Step 1: Captain Setup ---
-      await screen.findByText('Number of Captains');
+      // Use a more semantic role query for the initial step's heading
+      await screen.findByRole('heading', { name: /Config/i });
       await user.click(screen.getByRole('button', { name: /Next: Choose Setup Card/i }));
 
       // --- Step 2: Setup Card Selection ---
@@ -147,14 +147,18 @@ describe('Integration Scenarios', () => {
     localStorage.setItem('firefly_gameState_v3', JSON.stringify(initialState));
     render(<App />);
 
-    const allStoryOverrideBlocks = await screen.findAllByRole('region', { name: /Story Override/i });
-    const contrabandRuleBlock = allStoryOverrideBlocks.find(block => 
-      block.textContent?.includes('Contraband')
-    );
-    
-    expect(contrabandRuleBlock).toBeInTheDocument();
-    expect(contrabandRuleBlock).toHaveTextContent(
-      'Place 3 Contraband on each Planetary Sector in Alliance Space.'
-    );
+    // FIX: Use a custom text matcher function. The rule's text is split across
+    // multiple DOM nodes (text nodes and <strong> tags), which the default text
+    // matcher cannot always find reliably. This function checks the combined
+    // `textContent` of an element to find the correct one.
+    const contrabandRule = await screen.findByText((content, element) => {
+      const expectedText = 'Place 3 Contraband on each Planetary Sector in Alliance Space.';
+      return element?.textContent === expectedText;
+    });
+    expect(contrabandRule).toBeInTheDocument();
+
+    // Verify it's within a "Story Override" block for context
+    const storyOverrideRegion = contrabandRule.closest('section');
+    expect(storyOverrideRegion).toHaveAccessibleName('Story Override');
   });
 });
