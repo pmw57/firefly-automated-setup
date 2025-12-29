@@ -42,21 +42,11 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
     }
   };
 
-  const titleColor = active 
-    ? (isDark ? 'text-white' : 'text-gray-900') 
-    : (isDark ? 'text-gray-300' : 'text-gray-600');
-    
-  const descColor = active
-    ? (isDark ? 'text-gray-300' : 'text-gray-700')
-    : (isDark ? 'text-zinc-400' : 'text-gray-500');
-
   const inactiveBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const inactiveBg = isDark ? 'bg-black/60' : 'bg-white';
   const inactiveHover = isDark ? 'hover:border-zinc-600' : 'hover:border-gray-300';
-  
   const inactiveBadge = isDark ? 'bg-zinc-800 text-zinc-400' : 'bg-gray-100 text-gray-600';
   const inactiveToggle = isDark ? 'bg-zinc-700' : 'bg-gray-300';
-  const toggleKnob = isDark ? 'bg-zinc-200' : 'bg-white';
 
   return (
     <div 
@@ -69,21 +59,24 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
         "relative cursor-pointer rounded-xl border-2 p-5 transition-all duration-300 ease-in-out group focus:outline-none focus:ring-2 focus:ring-green-500",
         "md:grid md:grid-cols-[20%_1fr_max-content] md:items-center md:gap-x-6",
         active 
-          ? cls(currentTheme.border, currentTheme.bg, "shadow-md")
-          : cls(inactiveBorder, inactiveBg, inactiveHover)
+          ? [currentTheme.border, currentTheme.bg, "shadow-md"]
+          : [inactiveBorder, inactiveBg, inactiveHover]
       )}
     >
       {/* Col 1: Icon & Title */}
       <div className="flex items-center md:flex-col">
         <div className={cls(
           "w-12 h-12 rounded-lg mr-4 md:mr-0 md:mb-2 flex items-center justify-center font-bold text-xl shadow-sm transition-colors duration-300 overflow-hidden shrink-0",
-          !active && "bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-gray-500"
+          { "bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-gray-500": !active }
         )}>
           <ExpansionIcon id={id} />
         </div>
         
         <div className="flex-1 min-w-0 mr-4 md:mr-0 md:text-center">
-          <h3 className={cls("font-bold text-lg leading-tight transition-colors duration-300", titleColor)}>
+          <h3 className={cls("font-bold text-lg leading-tight transition-colors duration-300", {
+            'text-white dark:text-gray-900': active,
+            'text-gray-600 dark:text-gray-300': !active,
+          })}>
             {label}
           </h3>
           {has10th && page_10th && (
@@ -94,7 +87,10 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
       
       {/* Col 2: Description */}
       <div className="mt-3 md:mt-0">
-        <p className={cls("text-sm leading-relaxed", descColor)}>
+        <p className={cls("text-sm leading-relaxed", {
+          'text-gray-700 dark:text-gray-300': active,
+          'text-gray-500 dark:text-zinc-400': !active,
+        })}>
            {description}
         </p>
       </div>
@@ -115,9 +111,9 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
           active ? currentTheme.toggle : inactiveToggle
         )}>
           <div className={cls(
-            toggleKnob, 
+            isDark ? 'bg-zinc-200' : 'bg-white',
             "w-6 h-6 rounded-full shadow-sm transform transition-transform duration-300 ease-in-out",
-            active ? 'translate-x-6' : 'translate-x-0'
+            { 'translate-x-6': active, 'translate-x-0': !active }
           )}></div>
         </div>
       </div>
