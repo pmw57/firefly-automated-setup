@@ -98,7 +98,10 @@ export default defineConfig(({ mode }) => ({
     globals: true,
     environment: 'jsdom',
     setupFiles: './tests/setup.ts',
-    isolate: false,
+    // FIX: Re-enable isolation to prevent state leakage between test files.
+    // This is the standard and most robust way to ensure a clean testing
+    // environment for each test file, fixing the widespread jsdom error.
+    isolate: true,
     alias: {
       'virtual:pwa-register': './tests/pwa-register.mock.ts'
     }

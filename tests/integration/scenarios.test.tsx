@@ -1,8 +1,8 @@
 
 /** @vitest-environment jsdom */
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest';
-import { screen, fireEvent, within } from '@testing-library/react';
-import { render } from '../test-utils';
+import { screen, within } from '@testing-library/react';
+import { render, user } from '../test-utils';
 import App from '../../App';
 import { getDefaultGameState } from '../../state/reducer';
 import { GameState } from '../../types';
@@ -19,7 +19,7 @@ describe('Integration Scenarios', () => {
     const clickNext = async () => {
       const nextButtons = await screen.findAllByRole('button', { name: /Next Step/i });
       expect(nextButtons.length).toBeGreaterThan(0);
-      fireEvent.click(nextButtons[0]);
+      await user.click(nextButtons[0]);
     };
 
     beforeEach(async () => {
@@ -27,20 +27,20 @@ describe('Integration Scenarios', () => {
 
       // --- Step 1: Captain Setup ---
       await screen.findByText('Number of Captains');
-      fireEvent.click(screen.getByRole('button', { name: /Next: Choose Setup Card/i }));
+      await user.click(screen.getByRole('button', { name: /Next: Choose Setup Card/i }));
 
       // --- Step 2: Setup Card Selection ---
       await screen.findByRole('heading', { name: /Select Setup Card/i });
-      fireEvent.click(screen.getByRole('button', { name: /The Browncoat Way.*A harder economy/i }));
-      fireEvent.click(screen.getByRole('button', { name: /Next: Optional Rules/i }));
+      await user.click(screen.getByRole('button', { name: /The Browncoat Way.*A harder economy/i }));
+      await user.click(screen.getByRole('button', { name: /Next: Optional Rules/i }));
 
       // --- Step 3: Optional Rules ---
       await screen.findByRole('heading', { name: /Optional Rules/i });
-      fireEvent.click(screen.getByRole('button', { name: /Begin Setup Sequence/i }));
+      await user.click(screen.getByRole('button', { name: /Begin Setup Sequence/i }));
       
       // --- Navigate to first "real" step to select a story ---
       await screen.findByRole('heading', { name: /Goal of the Game/i });
-      fireEvent.click(await screen.findByRole('button', { name: /Harken's Folly/i }));
+      await user.click(await screen.findByRole('button', { name: /Harken's Folly/i }));
       await clickNext();
       
       // Wait for the final navigation in the setup to complete before any tests run.

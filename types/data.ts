@@ -18,6 +18,8 @@ export interface ExpansionDef {
   themeColor: 'steelBlue' | 'black' | 'darkSlateBlue' | 'deepBrown' | 'rebeccaPurple' | 'cordovan' | 'darkOliveGreen' | 'saddleBrown' | 'teal' | 'dark' | 'cyan' | 'tan' | 'mediumPurple' | 'gamblingGreen';
   icon: ExpansionIconConfig;
   page_10th?: number;
+  // FIX: This property was present in the data but missing from the type,
+  // causing type errors. It has now been correctly added.
   category: ExpansionCategory;
   hidden?: boolean;
 }
