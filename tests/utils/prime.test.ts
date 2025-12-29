@@ -1,17 +1,20 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getPrimeDetails } from '../../utils/prime';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { GameState } from '../../types/index';
 import { getDefaultGameState } from '../../state/reducer';
+import { STORY_CARDS } from '../../data/storyCards';
+
+const getStoryTitle = (title: string): string => {
+  const card = STORY_CARDS.find(c => c.title === title);
+  if (!card) throw new Error(`Test data missing: Could not find story card "${title}"`);
+  return card.title;
+};
 
 describe('utils/prime', () => {
   describe('getPrimeDetails', () => {
     const baseGameState = getDefaultGameState();
 
-    // This state is for testing standard priming (base discard of 3)
-    // The default game state enables all expansions. To test the "standard" priming
-    // without high supply volume, we must explicitly disable supply-heavy expansions.
     const stateForStandardPriming: GameState = {
         ...baseGameState,
         expansions: {
@@ -66,7 +69,7 @@ describe('utils/prime', () => {
     it.concurrent('applies story multiplier', () => {
       const state: GameState = {
         ...stateForStandardPriming,
-        selectedStoryCard: "A Friend In Every Port" // This has primingMultiplier: 2
+        selectedStoryCard: getStoryTitle("A Friend In Every Port")
       };
       const details = getPrimeDetails(state, {});
       expect(details.effectiveMultiplier).toBe(2);
@@ -76,7 +79,7 @@ describe('utils/prime', () => {
     it.concurrent('prioritizes blitz multiplier over story multiplier', () => {
       const state: GameState = {
         ...stateForStandardPriming,
-        selectedStoryCard: "A Friend In Every Port" // This has primingMultiplier: 2
+        selectedStoryCard: getStoryTitle("A Friend In Every Port")
       };
       const details = getPrimeDetails(state, { primeMode: 'blitz' });
       expect(details.effectiveMultiplier).toBe(2); // Blitz is 2x
@@ -86,7 +89,7 @@ describe('utils/prime', () => {
     it.concurrent('applies Slaying the Dragon modifier (+2 cards)', () => {
         const state: GameState = {
             ...stateForStandardPriming,
-            selectedStoryCard: "Slaying The Dragon",
+            selectedStoryCard: getStoryTitle("Slaying The Dragon"),
         };
         const details = getPrimeDetails(state, {});
         expect(details.finalCount).toBe(5); // 3 + 2
@@ -95,7 +98,7 @@ describe('utils/prime', () => {
     it.concurrent('combines blitz and Slaying the Dragon', () => {
         const state: GameState = {
             ...stateForStandardPriming,
-            selectedStoryCard: "Slaying The Dragon",
+            selectedStoryCard: getStoryTitle("Slaying The Dragon"),
         };
         const details = getPrimeDetails(state, { primeMode: 'blitz' });
         expect(details.finalCount).toBe(8); // (3 * 2) + 2

@@ -1,4 +1,3 @@
-
 /** @vitest-environment jsdom */
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest';
 import { screen, within } from '@testing-library/react';
@@ -6,6 +5,22 @@ import { render, user } from '../test-utils';
 import App from '../../App';
 import { getDefaultGameState } from '../../state/reducer';
 import { GameState } from '../../types';
+// FIX: SETUP_CARDS is not exported from storyCards. It's in its own file.
+import { STORY_CARDS } from '../../data/storyCards';
+import { SETUP_CARDS } from '../../data/setupCards';
+import { SETUP_CARD_IDS } from '../../data/ids';
+
+// Helper to get card definitions robustly
+const getStory = (title: string) => {
+    const card = STORY_CARDS.find(c => c.title === title);
+    if (!card) throw new Error(`Test setup failed: Story card "${title}" not found.`);
+    return card;
+};
+const getSetup = (id: string) => {
+    const card = SETUP_CARDS.find(c => c.id === id);
+    if (!card) throw new Error(`Test setup failed: Setup card with id "${id}" not found.`);
+    return card;
+};
 
 describe('Integration Scenarios', () => {
   afterEach(() => {
@@ -14,8 +29,10 @@ describe('Integration Scenarios', () => {
   });
 
   describe("'The Browncoat Way' scenario", () => {
-    // Helper to robustly find and click the "Next" button, accounting for
-    // separate mobile/desktop buttons present in the JSDOM environment.
+    // Decouple from hardcoded strings by using data definitions
+    const browncoatCard = getSetup(SETUP_CARD_IDS.THE_BROWNCOAT_WAY);
+    const harkensFollyCard = getStory("Harken's Folly");
+
     const clickNext = async () => {
       const nextButtons = await screen.findAllByRole('button', { name: /Next Step/i });
       expect(nextButtons.length).toBeGreaterThan(0);
@@ -31,7 +48,8 @@ describe('Integration Scenarios', () => {
 
       // --- Step 2: Setup Card Selection ---
       await screen.findByRole('heading', { name: /Select Setup Card/i });
-      await user.click(screen.getByRole('button', { name: /The Browncoat Way.*A harder economy/i }));
+      // Use a regex with the label from the card definition
+      await user.click(screen.getByRole('button', { name: new RegExp(browncoatCard.label) }));
       await user.click(screen.getByRole('button', { name: /Next: Optional Rules/i }));
 
       // --- Step 3: Optional Rules ---
@@ -40,10 +58,10 @@ describe('Integration Scenarios', () => {
       
       // --- Navigate to first "real" step to select a story ---
       await screen.findByRole('heading', { name: /Goal of the Game/i });
-      await user.click(await screen.findByRole('button', { name: /Harken's Folly/i }));
+      // Use a regex with the title from the card definition
+      await user.click(await screen.findByRole('button', { name: new RegExp(harkensFollyCard.title) }));
       await clickNext();
       
-      // Wait for the final navigation in the setup to complete before any tests run.
       await screen.findByRole('heading', { name: /Nav Decks/i });
     });
 
@@ -75,16 +93,16 @@ describe('Integration Scenarios', () => {
     });
 
     it('shows the "no jobs" rule', async () => {
-      await clickNext();
+      await clickNext(); // Nav -> A&R
       await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i });
-
-      await clickNext();
+      
+      await clickNext(); // A&R -> Capitol
       await screen.findByRole('heading', { name: /Starting Capitol/i });
-
-      await clickNext();
+      
+      await clickNext(); // Capitol -> Draft
       await screen.findByRole('heading', { name: /Choose Ships & Leaders/i });
-
-      await clickNext();
+      
+      await clickNext(); // Draft -> Jobs
       await screen.findByRole('heading', { name: /Starting Jobs/i });
 
       expect(await screen.findByText('No Starting Jobs.')).toBeInTheDocument();
@@ -111,39 +129,29 @@ describe('Integration Scenarios', () => {
       
       const flightManifest = screen.getByRole('heading', { name: /Flight Manifest/i });
       const summaryContainer = flightManifest.parentElement;
-      // FIX: Add a null check for summaryContainer to satisfy TypeScript.
-      // The `parentElement` can be null, which `within()` does not accept.
       expect(summaryContainer).not.toBeNull();
 
-      expect(within(summaryContainer!).getByText(/The Browncoat Way/i)).toBeInTheDocument();
-      expect(within(summaryContainer!).getByText(/Harken's Folly/i)).toBeInTheDocument();
+      // Use regex with card labels/titles for resilient assertions
+      expect(within(summaryContainer!).getByText(new RegExp(browncoatCard.label))).toBeInTheDocument();
+      expect(within(summaryContainer!).getByText(new RegExp(harkensFollyCard.title))).toBeInTheDocument();
     });
   });
 
   it('correctly displays rules for "Smuggler\'s Blues" based on expansions', async () => {
+    const smugglersBluesCard = getStory("Smuggler's Blues");
     const initialState: GameState = getDefaultGameState();
     initialState.expansions.kalidasa = false;
-    initialState.selectedStoryCard = "Smuggler's Blues";
+    initialState.selectedStoryCard = smugglersBluesCard.title;
     
-    // Set wizard to step index 4 ("Alliance & Reaver Ships")
     localStorage.setItem('firefly_wizardStep_v3', JSON.stringify(4));
-    
-    // The GameStateProvider is inside App.tsx, so we must inject the initial state
-    // via localStorage for it to be picked up. Passing it to render() would only
-    // affect an outer provider from test-utils that App doesn't use.
     localStorage.setItem('firefly_gameState_v3', JSON.stringify(initialState));
     render(<App />);
 
-    // "Smuggler's Blues" can create two "Story Override" blocks. We need to find all of them
-    // and then identify the correct one by its content.
     const allStoryOverrideBlocks = await screen.findAllByRole('region', { name: /Story Override/i });
-
-    // Find the specific block that talks about Contraband.
     const contrabandRuleBlock = allStoryOverrideBlocks.find(block => 
       block.textContent?.includes('Contraband')
     );
     
-    // Assert that we found the block and it has the correct full text.
     expect(contrabandRuleBlock).toBeInTheDocument();
     expect(contrabandRuleBlock).toHaveTextContent(
       'Place 3 Contraband on each Planetary Sector in Alliance Space.'

@@ -1,10 +1,16 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getResourceDetails } from '../../utils/resources';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { GameState } from '../../types/index';
 import { getDefaultGameState } from '../../state/reducer';
 import { SETUP_CARD_IDS } from '../../data/ids';
+import { STORY_CARDS } from '../../data/storyCards';
+
+const getStoryTitle = (title: string): string => {
+  const card = STORY_CARDS.find(c => c.title === title);
+  if (!card) throw new Error(`Test data missing: Could not find story card "${title}"`);
+  return card.title;
+};
 
 describe('utils/resources', () => {
   const baseGameState = getDefaultGameState();
@@ -38,7 +44,7 @@ describe('utils/resources', () => {
     it.concurrent('applies an "add" credits effect from a story card', () => {
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
-        selectedStoryCard: "Running On Empty" // Adds $1200
+        selectedStoryCard: getStoryTitle("Running On Empty")
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(4200); // 3000 + 1200
@@ -49,7 +55,7 @@ describe('utils/resources', () => {
     it.concurrent('applies a "set" credits effect from a story card, overriding the base', () => {
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
-        selectedStoryCard: "How It All Started" // Sets to $500
+        selectedStoryCard: getStoryTitle("How It All Started")
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(500);
@@ -58,10 +64,9 @@ describe('utils/resources', () => {
 
     it.concurrent('resolves conflict between "set" credit effects by prioritizing the story rule', () => {
       const state = getGameStateWithConfig({
-        setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY, // Sets to $12000
-        selectedStoryCard: "How It All Started" // Sets to $500
+        setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
+        selectedStoryCard: getStoryTitle("How It All Started")
       });
-      // FIX: The conflict property is now on the details object, and should be undefined here as manual resolution is off.
       const details = getResourceDetails(state);
       
       expect(details.conflict).toBeUndefined();
@@ -72,7 +77,7 @@ describe('utils/resources', () => {
     it.concurrent('applies "disable" effects for fuel and parts from a story', () => {
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD,
-        selectedStoryCard: "Running On Empty" // Disables fuel and parts
+        selectedStoryCard: getStoryTitle("Running On Empty")
       });
       const details = getResourceDetails(state);
 
@@ -96,19 +101,18 @@ describe('utils/resources', () => {
     it.concurrent('handles adding warrants and other resources', () => {
       const state = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.STANDARD,
-        selectedStoryCard: "It Ain't Easy Goin' Legit" // Adds 2 warrants
+        selectedStoryCard: getStoryTitle("It Ain't Easy Goin' Legit")
       });
       const details = getResourceDetails(state);
 
       expect(details.warrants).toBe(2);
-      // This story doesn't add goal tokens, so it should be the default
       expect(details.goalTokens).toBe(0);
     });
 
     it.concurrent('should return a conflict object and respect manual selection when manual resolution is enabled', () => {
       const state: GameState = getGameStateWithConfig({
-        setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY, // Sets to $12000
-        selectedStoryCard: "How It All Started", // Sets to $500
+        setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
+        selectedStoryCard: getStoryTitle("How It All Started"),
         optionalRules: { ...baseGameState.optionalRules, resolveConflictsManually: true },
       });
 

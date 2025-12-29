@@ -1,10 +1,10 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getHeaderDetails } from '../../utils/header';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { GameState, Step } from '../../types/index';
 import { getDefaultGameState } from '../../state/reducer';
 import { STEP_IDS, SETUP_CARD_IDS } from '../../data/ids';
+import { getSetupCardById } from '../../utils/selectors/story';
 
 describe('utils/header', () => {
     const baseGameState = getDefaultGameState();
@@ -21,9 +21,10 @@ describe('utils/header', () => {
     });
 
     it.concurrent('shows the setup card name once selected', () => {
-        const state: GameState = { ...baseGameState, setupCardId: 'TheBrowncoatWay', setupCardName: 'The Browncoat Way' };
+        const browncoatDef = getSetupCardById(SETUP_CARD_IDS.THE_BROWNCOAT_WAY)!;
+        const state: GameState = { ...baseGameState, setupCardId: browncoatDef.id, setupCardName: browncoatDef.label };
         const details = getHeaderDetails(state, mockFlow, 1);
-        expect(details.setupName).toBe('The Browncoat Way');
+        expect(details.setupName).toBe(browncoatDef.label);
     });
 
     it.concurrent('shows the story name once selected', () => {
