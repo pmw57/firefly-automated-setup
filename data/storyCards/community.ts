@@ -65,12 +65,6 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1101220/story-card-gentlemans-agreement"
   },
   {
-    title: "The Heist on Ariel (tv episode)",
-    intro: "Ariel is the crowen jewel of the Core. To rob her, you'll need to play dead, steal the high-tech meds, and outrun the Hands of Blue.",
-    requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1066007/article/47073551#47073551"
-  },
-  {
     title: "Hospital Rescue",
     intro: "River is prisoner in a secure hospital at Londinium, and needs rescuing.",
     requiredExpansion: "community",
@@ -151,18 +145,6 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1119976/story-card-old-friends-and-new"
   },
   {
-    title: "Our Mrs. Reynolds (tv episode)",
-    intro: "You find a stowaway on your ship. You're not happy about them being there, but you are too far from any planet to drop them off. At least they don't seem like bad company.",
-    sourceUrl: "https://boardgamegeek.com/thread/1066007/article/47073551#47073551",
-    requiredExpansion: "community"
-  },
-  {
-    title: "Out of Gas (tv episode)",
-    intro: "The compression coil blows on your ship and starts an explosion.",
-    sourceUrl: "https://boardgamegeek.com/thread/1066007/article/47073551#47073551",
-    requiredExpansion: "community"
-  },
-  {
     title: "Round the 'Verse in \"80 Days\"",
     intro: "Mr. Big Bucks, who lives next to the Tams in Sihnon, has two 19-year-old kids. They are finishing a semester of school at Osiris. Mr. Big Bucks wants the kids to experience the universe. He's looking for someone to show them around the universe and return them healthily. You can put the kids to work to some extent, but must return them healthy. He'll pay $20,000 when done.",
     requiredExpansion: "community",
@@ -233,12 +215,6 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     ])
   },
   {
-    title: "The Train Job (tv episode)",
-    intro: "Niska has a job for you, and things won't turn out well if anything goes wrong.",
-    sourceUrl: "https://boardgamegeek.com/thread/1066007/article/47073551#47073551",
-    requiredExpansion: "community"
-  },
-  {
     title: "The Truth Will Out",
     intro: "For too long the tragic fate of the Miranda colony has been covered up by the Alliance, and Mr. Universe would like to correct that, but lacks the manpower to do so on his own. Helping him is bound to be dangerous, but who wouldn't enjoy giving the Alliance a black eye?",
     setupDescription: "Requires Blue Sun Expansion.",
@@ -258,10 +234,4 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1083899/unification-day-alliance-oriented-story-card"
   },
-  {
-    title: "War Stories (tv episode)",
-    intro: "Niska doesn't care for excuses or warrants. You failed him, and now he’s taken what’s yours. To him, they are assets; to you, they are family.",
-    sourceUrl: "https://boardgamegeek.com/thread/1066007/article/47073551#47073551",
-    requiredExpansion: "community"
-  }
 ];
