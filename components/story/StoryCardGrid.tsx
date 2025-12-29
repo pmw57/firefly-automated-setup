@@ -8,7 +8,6 @@ import { getFilterableExpansions } from '../../utils/selectors/story';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { cls } from '../../utils/style';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { ExpansionId } from '../../types/index';
 
 interface StoryCardGridProps {
@@ -36,8 +35,18 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
   const filterRef = useRef<HTMLDivElement>(null);
 
   const expansionsForFilter = useMemo(() => {
-    return [{ id: 'base', label: 'Base Game' }, ...getFilterableExpansions()];
-  }, []);
+    // 1. Get all unique expansion IDs present in the currently valid stories.
+    const storyExpansionIds = new Set<string>();
+    validStories.forEach(story => {
+      storyExpansionIds.add(story.requiredExpansion || 'base');
+    });
+
+    // 2. Get the base list of all possible filterable expansions.
+    const allPossibleFilters = [{ id: 'base', label: 'Base Game' }, ...getFilterableExpansions()];
+    
+    // 3. Filter this list to only include expansions that have valid stories.
+    return allPossibleFilters.filter(exp => storyExpansionIds.has(exp.id));
+  }, [validStories]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -57,7 +66,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
     ? expansionsForFilter.find(e => e.id === filterExpansion[0])?.label
     : `${filterExpansion.length} Selected`;
 
-  let lastExpansionId: string | null | undefined = '___INITIAL___';
+  let lastExpansionId: string | null | undefined = '___INITIAL___'; // Unique initial value
 
   const inputBorder = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
   const inputBg = isDark ? 'bg-zinc-900/50' : 'bg-[#faf8ef]';
