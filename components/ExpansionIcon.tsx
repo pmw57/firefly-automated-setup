@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
 import { ExpansionDef } from '../types/index';
-import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../data/expansions';
+import { EXPANSIONS_METADATA } from '../data/expansions';
 import { expansionColorConfig, specialColorConfig } from '../data/themeColors';
 import { useTheme } from './ThemeContext';
+import { SPRITE_SHEET_URL } from '../data/constants';
 
 interface ExpansionIconProps {
   id: string;

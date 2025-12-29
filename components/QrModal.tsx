@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import { useTheme } from './ThemeContext';
 import { Button } from './Button';
 import { usePwaInstall } from '../hooks/usePwaInstall';
+import { SHOW_FOOTER_QR_KEY } from '../data/constants';
 
 interface NavigatorWithStandalone extends Navigator {
   standalone?: boolean;
@@ -49,7 +50,7 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
 
   const [showInFooter, setShowInFooter] = useState(() => {
     if (typeof window === 'undefined') return true;
-    return localStorage.getItem('firefly_show_footer_qr') !== 'false';
+    return localStorage.getItem(SHOW_FOOTER_QR_KEY) !== 'false';
   });
 
   useEffect(() => {
@@ -61,7 +62,7 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
   const handleToggleShowInFooter = () => {
     const newValue = !showInFooter;
     setShowInFooter(newValue);
-    localStorage.setItem('firefly_show_footer_qr', String(newValue));
+    localStorage.setItem(SHOW_FOOTER_QR_KEY, String(newValue));
   };
 
   const isPreview = typeof import.meta.env === 'undefined';

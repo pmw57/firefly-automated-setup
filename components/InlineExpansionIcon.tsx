@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { ExpansionId } from '../types/index';
-import { EXPANSIONS_METADATA, SPRITE_SHEET_URL } from '../data/expansions';
+import { EXPANSIONS_METADATA } from '../data/expansions';
 import { useTheme } from './ThemeContext';
+import { SPRITE_SHEET_URL } from '../data/constants';
 
 interface InlineExpansionIconProps {
   type: ExpansionId | 'base';

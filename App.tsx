@@ -10,6 +10,7 @@ import { QrModal } from './components/QrModal';
 import { DevPanel } from './components/DevPanel';
 import { HeaderActions } from './components/HeaderActions';
 import { FooterQrCode } from './components/FooterQrCode';
+import { SHOW_FOOTER_QR_KEY } from './data/constants';
 
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
@@ -21,7 +22,7 @@ const App = (): React.ReactElement => {
   const [showFooterQr, setShowFooterQr] = useState(() => {
     if (typeof window === 'undefined') return true;
     // Default to showing the QR code unless explicitly dismissed
-    return localStorage.getItem('firefly_show_footer_qr') !== 'false';
+    return localStorage.getItem(SHOW_FOOTER_QR_KEY) !== 'false';
   });
 
   const [offlineReady, setOfflineReady] = useState(false);
@@ -87,7 +88,7 @@ const App = (): React.ReactElement => {
   };
 
   const handleDismissFooterQr = () => {
-    localStorage.setItem('firefly_show_footer_qr', 'false');
+    localStorage.setItem(SHOW_FOOTER_QR_KEY, 'false');
     setShowFooterQr(false);
   };
 
@@ -186,7 +187,7 @@ const App = (): React.ReactElement => {
         onClose={() => {
           setIsQrModalOpen(false);
           // Re-check preference when modal closes, in case it was changed
-          setShowFooterQr(localStorage.getItem('firefly_show_footer_qr') !== 'false');
+          setShowFooterQr(localStorage.getItem(SHOW_FOOTER_QR_KEY) !== 'false');
         }}
       />
     </div>

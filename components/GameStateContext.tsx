@@ -5,9 +5,8 @@ import { gameReducer, getDefaultGameState } from '../state/reducer';
 import { LocalStorageService } from '../utils/storage';
 import { ActionType } from '../state/actions';
 import { GameStateContext } from '../hooks/useGameState';
+import { GAME_STATE_STORAGE_KEY, WIZARD_STEP_STORAGE_KEY } from '../data/constants';
 
-const GAME_STATE_STORAGE_KEY = 'firefly_gameState_v3';
-const WIZARD_STEP_STORAGE_KEY = 'firefly_wizardStep_v3';
 const storageService = new LocalStorageService(GAME_STATE_STORAGE_KEY);
 
 const initializer = (): GameState => {

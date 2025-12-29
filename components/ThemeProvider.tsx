@@ -1,5 +1,7 @@
+
 import React, { useEffect, useState } from 'react';
 import { Theme, themeContext } from './ThemeContext';
+import { THEME_STORAGE_KEY } from '../data/constants';
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Initialize state based on storage or system preference immediately to avoid flash of incorrect theme
@@ -8,7 +10,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (typeof window === 'undefined') return 'dark';
 
     // 1. Check Local Storage
-    const saved = localStorage.getItem('firefly-theme') as Theme;
+    const saved = localStorage.getItem(THEME_STORAGE_KEY) as Theme;
     if (saved === 'light' || saved === 'dark') {
       return saved;
     }
@@ -27,7 +29,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
-    localStorage.setItem('firefly-theme', theme);
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
 
   // Listen for system preference changes
