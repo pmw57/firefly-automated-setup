@@ -1,5 +1,5 @@
 
-import React, { useMemo, useCallback, useReducer } from 'react';
+import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
@@ -73,6 +73,21 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     gameState.gameMode === 'solo' && gameState.expansions.tenth,
     [gameState.gameMode, gameState.expansions.tenth]
   );
+
+  // When valid stories change, sanitize the expansion filter to remove any
+  // selections that are no longer relevant.
+  useEffect(() => {
+    const storyExpansionIds = new Set<string>();
+    validStories.forEach(story => {
+      storyExpansionIds.add(story.requiredExpansion || 'base');
+    });
+
+    const newFilterExpansion = filterExpansion.filter(expId => storyExpansionIds.has(expId));
+
+    if (newFilterExpansion.length !== filterExpansion.length) {
+      localDispatch({ type: 'SET_FILTER_EXPANSION', payload: newFilterExpansion });
+    }
+  }, [validStories, filterExpansion]);
 
   // --- Action Dispatchers ---
   const setSearchTerm = useCallback((term: string) => localDispatch({ type: 'SET_SEARCH_TERM', payload: term }), []);
