@@ -45,11 +45,6 @@ export const CORE_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/2785048/gerryrailbaron"
   },
   {
-    title: "Patience's War",
-    intro: "Patience has gotten herself embroiled in an all out Range War. She is paying hard cash to any crew smart enough to use a gun and dumb enough to put themselves in harm's way... and you know just the right crew for the job!",
-    sourceUrl: "https://boardgamegeek.com/image/2785040/gerryrailbaron"
-  },
-  {
     title: '"Respectable" Persons Of Business',
     soloTimerAdjustment: "Declare Last Call before discarding your last token to win the game.",
     intro: "There's a heap of trouble waiting out in the 'Verse. The Big Black is full of derelict ships, drifting proof of their Captain's missteps. Keeping you and yours in bullets and chow can be challenge enough. Not everyone has the mettle to keep their boat in the air. Prove you've got what it takes.",
