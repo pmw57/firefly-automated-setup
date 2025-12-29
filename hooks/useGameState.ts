@@ -1,3 +1,4 @@
+
 import React, { useContext, createContext } from 'react';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { GameState } from '../types/index';
@@ -8,6 +9,10 @@ export interface GameStateContextType {
   dispatch: React.Dispatch<Action>;
   isStateInitialized: boolean;
   resetGameState: () => void;
+  // Wizard state, managed here to centralize persistence logic
+  currentStepIndex: number;
+  setCurrentStepIndex: React.Dispatch<React.SetStateAction<number>>;
+  isWizardInitialized: boolean;
 }
 
 export const GameStateContext = createContext<GameStateContextType | undefined>(undefined);

@@ -1,6 +1,4 @@
 
-
-
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useGameState } from '../hooks/useGameState';
 import { useSetupFlow } from '../hooks/useSetupFlow';
@@ -13,44 +11,28 @@ import { WizardHeader } from './WizardHeader';
 import { cls } from '../utils/style';
 import { isSetupDetermined } from '../utils/ui';
 
-const WIZARD_STEP_STORAGE_KEY = 'firefly_wizardStep_v3';
-
 const SetupWizard = (): React.ReactElement | null => {
-  const { state: gameState, isStateInitialized: isGameStateInitialized, resetGameState } = useGameState();
+  const { 
+    state: gameState, 
+    isStateInitialized: isGameStateInitialized, 
+    resetGameState,
+    currentStepIndex,
+    setCurrentStepIndex,
+    isWizardInitialized
+  } = useGameState();
   const { flow } = useSetupFlow();
 
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [isWizardInitialized, setIsWizardInitialized] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-
-  useEffect(() => {
-    const savedStep = localStorage.getItem(WIZARD_STEP_STORAGE_KEY);
-    if (savedStep) {
-      try {
-        const parsedStep: number = JSON.parse(savedStep);
-        setCurrentStepIndex(parsedStep);
-      } catch (e) {
-        console.warn("Wizard step reset due to error", e);
-        localStorage.removeItem(WIZARD_STEP_STORAGE_KEY);
-      }
-    }
-    setIsWizardInitialized(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isWizardInitialized) return;
-    localStorage.setItem(WIZARD_STEP_STORAGE_KEY, JSON.stringify(currentStepIndex));
-  }, [currentStepIndex, isWizardInitialized]);
   
   useEffect(() => {
     if (currentStepIndex >= flow.length && flow.length > 0) {
       setCurrentStepIndex(flow.length - 1);
     }
-  }, [flow, currentStepIndex]);
+  }, [flow, currentStepIndex, setCurrentStepIndex]);
 
   const setupDetermined = useMemo(() => isSetupDetermined(flow, currentStepIndex), [flow, currentStepIndex]);
 
@@ -71,7 +53,7 @@ const SetupWizard = (): React.ReactElement | null => {
         });
         setIsNavigating(false);
     }, 50);
-  }, [flow.length]);
+  }, [flow.length, setCurrentStepIndex]);
 
   const handleNext = useCallback(() => handleNavigation('next'), [handleNavigation]);
   const handlePrev = useCallback(() => handleNavigation('prev'), [handleNavigation]);
@@ -79,8 +61,6 @@ const SetupWizard = (): React.ReactElement | null => {
 
   const performReset = useCallback(() => {
     resetGameState();
-    localStorage.removeItem(WIZARD_STEP_STORAGE_KEY);
-    setCurrentStepIndex(0);
     setResetKey(prev => prev + 1);
     window.scrollTo(0, 0);
   }, [resetGameState]);

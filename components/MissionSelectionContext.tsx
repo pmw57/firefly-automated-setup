@@ -1,65 +1,110 @@
 
-
-import React, { useState, useMemo, useCallback } from 'react';
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+import React, { useMemo, useCallback, useReducer } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
 import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getStoryCardByTitle, getAvailableAdvancedRules } from '../utils/selectors/story';
 import { ActionType } from '../state/actions';
 
-export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { state: gameState, dispatch } = useGameState();
-  
-  // Local UI State for this step
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterExpansion, setFilterExpansion] = useState<string[]>([]);
-  const [shortList, setShortList] = useState<StoryCardDef[]>([]);
-  const [subStep, setSubStep] = useState(1);
-  const [sortMode, setSortMode] = useState<'expansion' | 'name'>('expansion');
+interface LocalState {
+  searchTerm: string;
+  filterExpansion: string[];
+  shortList: StoryCardDef[];
+  subStep: number;
+  sortMode: 'expansion' | 'name';
+}
 
+type LocalAction =
+  | { type: 'SET_SEARCH_TERM'; payload: string }
+  | { type: 'SET_FILTER_EXPANSION'; payload: string[] }
+  | { type: 'TOGGLE_FILTER_EXPANSION'; payload: string }
+  | { type: 'SET_SHORT_LIST'; payload: StoryCardDef[] }
+  | { type: 'SET_SUB_STEP'; payload: number }
+  | { type: 'TOGGLE_SORT_MODE' };
+
+const initialState: LocalState = {
+  searchTerm: '',
+  filterExpansion: [],
+  shortList: [],
+  subStep: 1,
+  sortMode: 'expansion',
+};
+
+function reducer(state: LocalState, action: LocalAction): LocalState {
+  switch (action.type) {
+    case 'SET_SEARCH_TERM':
+      return { ...state, searchTerm: action.payload };
+    case 'SET_FILTER_EXPANSION':
+      return { ...state, filterExpansion: action.payload };
+    case 'TOGGLE_FILTER_EXPANSION': {
+      const { payload: id } = action;
+      const newFilter = state.filterExpansion.includes(id)
+        ? state.filterExpansion.filter(expId => expId !== id)
+        : [...state.filterExpansion, id];
+      return { ...state, filterExpansion: newFilter };
+    }
+    case 'SET_SHORT_LIST':
+      return { ...state, shortList: action.payload };
+    case 'SET_SUB_STEP':
+      return { ...state, subStep: action.payload };
+    case 'TOGGLE_SORT_MODE':
+      return { ...state, sortMode: state.sortMode === 'expansion' ? 'name' : 'expansion' };
+    default:
+      return state;
+  }
+}
+
+export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { state: gameState, dispatch: gameDispatch } = useGameState();
+  const [localState, localDispatch] = useReducer(reducer, initialState);
+  const { searchTerm, filterExpansion, shortList, subStep, sortMode } = localState;
+  
   // Memoized derived data
   const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
-
   const validStories = useMemo(() => getAvailableStoryCards(gameState), [gameState]);
-
   const filteredStories = useMemo(() => {
     return getFilteredStoryCards(gameState, { searchTerm, filterExpansion, sortMode });
   }, [gameState, searchTerm, filterExpansion, sortMode]);
-
   const availableAdvancedRules: AdvancedRuleDef[] = useMemo(() => 
     getAvailableAdvancedRules(gameState, activeStoryCard),
     [gameState, activeStoryCard]
   );
-
   const enablePart2 = useMemo(() => 
     gameState.gameMode === 'solo' && gameState.expansions.tenth,
     [gameState.gameMode, gameState.expansions.tenth]
   );
 
-  // Actions wrapped in useCallback for performance
+  // --- Action Dispatchers ---
+  const setSearchTerm = useCallback((term: string) => localDispatch({ type: 'SET_SEARCH_TERM', payload: term }), []);
+  const setFilterExpansion = useCallback((ids: string[]) => localDispatch({ type: 'SET_FILTER_EXPANSION', payload: ids }), []);
+  const setSubStep = useCallback((step: number) => localDispatch({ type: 'SET_SUB_STEP', payload: step }), []);
+  const toggleSortMode = useCallback(() => localDispatch({ type: 'TOGGLE_SORT_MODE' }), []);
+  const toggleFilterExpansion = useCallback((id: string) => localDispatch({ type: 'TOGGLE_FILTER_EXPANSION', payload: id }), []);
+  const handleCancelShortList = useCallback(() => localDispatch({ type: 'SET_SHORT_LIST', payload: [] }), []);
+
+  // --- Handlers with Logic ---
   const handleStoryCardSelect = useCallback((title: string) => {
     const card = getStoryCardByTitle(title);
-    dispatch({ 
+    gameDispatch({ 
       type: ActionType.SET_STORY_CARD, 
       payload: { 
         title, 
         goal: card?.goals?.[0]?.title 
       } 
     });
-  }, [dispatch]);
+  }, [gameDispatch]);
 
   const handleRandomPick = useCallback(() => {
     if (validStories.length === 0) return;
     const r = Math.floor(Math.random() * validStories.length);
     handleStoryCardSelect(validStories[r].title);
-    setShortList([]);
+    localDispatch({ type: 'SET_SHORT_LIST', payload: [] });
   }, [validStories, handleStoryCardSelect]);
 
   const handleGenerateShortList = useCallback(() => {
     if (validStories.length === 0) return;
     const shuffled = [...validStories].sort(() => 0.5 - Math.random());
-    setShortList(shuffled.slice(0, 3));
+    localDispatch({ type: 'SET_SHORT_LIST', payload: shuffled.slice(0, 3) });
   }, [validStories]);
 
   const handlePickFromShortList = useCallback(() => {
@@ -68,43 +113,31 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     handleStoryCardSelect(shortList[r].title);
   }, [shortList, handleStoryCardSelect]);
 
-  const handleCancelShortList = useCallback(() => setShortList([]), []);
-  
-  const toggleSortMode = useCallback(() => {
-    setSortMode(prev => prev === 'expansion' ? 'name' : 'expansion');
-  }, []);
-
-  const toggleFilterExpansion = useCallback((id: string) => {
-    setFilterExpansion(prev => {
-        if (prev.includes(id)) {
-            return prev.filter(expId => expId !== id);
-        } else {
-            return [...prev, id];
-        }
-    });
-  }, []);
-
   const value = {
+    // State
     searchTerm,
     filterExpansion,
     shortList,
     subStep,
+    sortMode,
+    // Derived Data
     activeStoryCard,
     validStories,
     filteredStories,
     availableAdvancedRules,
     enablePart2,
-    sortMode,
+    // Actions
     setSearchTerm,
     setFilterExpansion,
+    toggleFilterExpansion,
     setSubStep,
+    toggleSortMode,
+    // Handlers
     handleStoryCardSelect,
     handleRandomPick,
     handleGenerateShortList,
     handlePickFromShortList,
     handleCancelShortList,
-    toggleSortMode,
-    toggleFilterExpansion,
   };
 
   return (

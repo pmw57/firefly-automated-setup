@@ -7,6 +7,7 @@ import { ActionType } from '../state/actions';
 import { GameStateContext } from '../hooks/useGameState';
 
 const GAME_STATE_STORAGE_KEY = 'firefly_gameState_v3';
+const WIZARD_STEP_STORAGE_KEY = 'firefly_wizardStep_v3';
 const storageService = new LocalStorageService(GAME_STATE_STORAGE_KEY);
 
 const initializer = (): GameState => {
@@ -41,11 +42,37 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode, initialSta
     (arg) => arg ?? initializer()
   );
   
-  // For tests, state is initialized immediately. Otherwise, it's initialized after the first render.
   const [isStateInitialized, setIsStateInitialized] = useState(!!initialState);
+
+  // --- Wizard Step Persistence Logic (moved from SetupWizard.tsx) ---
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [isWizardInitialized, setIsWizardInitialized] = useState(false);
+
+  useEffect(() => {
+    if (initialState) {
+        setIsWizardInitialized(true);
+        return;
+    }
+    const savedStep = localStorage.getItem(WIZARD_STEP_STORAGE_KEY);
+    if (savedStep) {
+      try {
+        const parsedStep: number = JSON.parse(savedStep);
+        setCurrentStepIndex(parsedStep);
+      } catch (e) {
+        console.warn("Wizard step reset due to error", e);
+        localStorage.removeItem(WIZARD_STEP_STORAGE_KEY);
+      }
+    }
+    setIsWizardInitialized(true);
+  }, [initialState]);
+
+  useEffect(() => {
+    if (!isWizardInitialized || initialState) return;
+    localStorage.setItem(WIZARD_STEP_STORAGE_KEY, JSON.stringify(currentStepIndex));
+  }, [currentStepIndex, isWizardInitialized, initialState]);
+  // --- End Wizard Step Logic ---
   
   // This effect synchronizes the reducer's state with localStorage.
-  // It's skipped during tests (when an initialState is provided) to improve isolation.
   useEffect(() => {
     if (isStateInitialized && !initialState) {
       storageService.save(state);
@@ -61,10 +88,12 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode, initialSta
 
   const resetGameState = useCallback(() => {
     storageService.clear();
+    localStorage.removeItem(WIZARD_STEP_STORAGE_KEY);
+    setCurrentStepIndex(0);
     dispatch({ type: ActionType.RESET_GAME });
   }, []);
 
-  const value = { state, dispatch, isStateInitialized, resetGameState };
+  const value = { state, dispatch, isStateInitialized, resetGameState, currentStepIndex, setCurrentStepIndex, isWizardInitialized };
 
   return (
     <GameStateContext.Provider value={value}>
