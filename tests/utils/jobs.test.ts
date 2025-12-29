@@ -1,38 +1,15 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getJobSetupDetails } from '../../utils/jobs';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
-import { GameState, StepOverrides, StructuredContent, StructuredContentPart } from '../../types/index';
+import { GameState, StepOverrides } from '../../types/index';
 import { getDefaultGameState } from '../../state/reducer';
 import { CONTACT_NAMES, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../data/ids';
+import { STORY_CARDS } from '../../data/storyCards';
 
-// Helper to recursively flatten structured content to a searchable string
-const getTextContent = (content: StructuredContent | StructuredContentPart): string => {
-    if (typeof content === 'string') {
-        return content;
-    }
-    if (Array.isArray(content)) {
-        return content.map(part => getTextContent(part)).join('');
-    }
-    if (!content) return '';
-
-    switch(content.type) {
-        case 'strong':
-        case 'action':
-        case 'paragraph':
-        case 'warning-box':
-            return getTextContent(content.content);
-        case 'list':
-        case 'numbered-list':
-            return content.items.map(item => getTextContent(item)).join(' ');
-        case 'sub-list':
-             // Not used in jobs, but good for completeness
-            return '';
-        case 'br':
-            return ' ';
-        default:
-            return '';
-    }
+const getStoryTitle = (title: string): string => {
+  const card = STORY_CARDS.find(c => c.title === title);
+  if (!card) throw new Error(`Test data missing: Could not find story card "${title}"`);
+  return card.title;
 };
 
 describe('utils/jobs', () => {
@@ -49,7 +26,7 @@ describe('utils/jobs', () => {
     it.concurrent('removes a forbidden contact from the list', () => {
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: "Let's Be Bad Guys" // This story forbids Niska
+        selectedStoryCard: getStoryTitle("Let's Be Bad Guys")
       };
       const { contacts } = getJobSetupDetails(state, {});
       expect(contacts).not.toContain(CONTACT_NAMES.NISKA);
@@ -58,7 +35,7 @@ describe('utils/jobs', () => {
     it.concurrent('filters contacts to only those allowed by the story', () => {
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: "First Time in the Captain's Chair" // Allows Harken & Amnon Duul
+        selectedStoryCard: getStoryTitle("First Time in the Captain's Chair")
       };
       const { contacts } = getJobSetupDetails(state, {});
       expect(contacts).toEqual(['Harken', 'Amnon Duul']);
@@ -86,8 +63,8 @@ describe('utils/jobs', () => {
     it.concurrent('handles story card "no_jobs" mode with priming', () => {
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: "A Fistful Of Scoundrels", // Has primeContactDecks flag
-        gameMode: 'solo', // Story is solo-only
+        selectedStoryCard: getStoryTitle("A Fistful Of Scoundrels"),
+        gameMode: 'solo',
       };
       const { showStandardContactList, messages } = getJobSetupDetails(state, {});
       expect(showStandardContactList).toBe(false);
@@ -149,7 +126,7 @@ describe('utils/jobs', () => {
     it.concurrent('handles "no_jobs" with "Don\'t Prime Contacts" challenge override', () => {
         const state: GameState = {
             ...baseGameState,
-            selectedStoryCard: "A Fistful Of Scoundrels", // Has primeContactDecks flag
+            selectedStoryCard: getStoryTitle("A Fistful Of Scoundrels"),
             challengeOptions: { [CHALLENGE_IDS.DONT_PRIME_CONTACTS]: true }
         };
         const { messages } = getJobSetupDetails(state, {});
@@ -160,22 +137,55 @@ describe('utils/jobs', () => {
     it.concurrent('should correctly filter contacts and generate a warning for a jobMode/forbidContact conflict', () => {
       const state: GameState = {
         ...baseGameState,
-        setupCardId: SETUP_CARD_IDS.AWFUL_CROWDED, // Sets jobMode: 'awful_jobs'
-        selectedStoryCard: "Desperadoes", // Forbids 'Harken'
+        setupCardId: SETUP_CARD_IDS.AWFUL_CROWDED,
+        selectedStoryCard: getStoryTitle("Desperadoes"),
       };
-      const overrides: StepOverrides = { jobMode: 'awful_jobs' }; // From the setup card
+      const overrides: StepOverrides = { jobMode: 'awful_jobs' };
       const { contacts, messages } = getJobSetupDetails(state, overrides);
 
       // 1. Verify Harken is removed from the contact list
       expect(contacts).not.toContain('Harken');
       expect(contacts).toEqual(['Amnon Duul', 'Patience']);
 
-      // 2. Verify the specific conflict warning message is generated
-      const hasConflictWarning = messages.some(m => 
-        m.source === 'setupCard' && 
-        getTextContent(m.content).includes('Story Card Conflict: Harken is unavailable')
-      );
-      expect(hasConflictWarning).toBe(true);
+      // 2. Verify the messages, now with a snapshot to prevent regression.
+      expect(messages).toMatchInlineSnapshot(`
+        [
+          {
+            "content": [
+              {
+                "content": "Limited Contacts.",
+                "type": "strong",
+              },
+              " This setup card normally draws from Harken, Amnon Duul, Patience.",
+              {
+                "content": [
+                  "Story Card Conflict: ",
+                  {
+                    "content": "Harken",
+                    "type": "strong",
+                  },
+                  " is unavailable. Draw from ",
+                  {
+                    "content": "Amnon Duul and Patience",
+                    "type": "strong",
+                  },
+                  " only.",
+                ],
+                "type": "warning-box",
+              },
+            ],
+            "source": "setupCard",
+            "title": "Setup Card Override",
+          },
+          {
+            "content": [
+              "Start with 1 Warrant. Harken jobs unavailable.",
+            ],
+            "source": "story",
+            "title": "Story Override",
+          },
+        ]
+      `);
     });
   });
 });

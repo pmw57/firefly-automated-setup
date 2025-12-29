@@ -1,54 +1,60 @@
-
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { isStoryCompatible } from '../../utils/filters';
 import { GameState, StoryCardDef } from '../../types/index';
 import { getDefaultGameState } from '../../state/reducer';
 import { SETUP_CARD_IDS } from '../../data/ids';
+import { STORY_CARDS } from '../../data/storyCards';
+
+const getStory = (title: string): StoryCardDef => {
+  const card = STORY_CARDS.find(c => c.title === title);
+  if (!card) throw new Error(`Test data missing: Could not find story card "${title}"`);
+  return card;
+};
 
 describe('utils/filters', () => {
   describe('isStoryCompatible', () => {
     const baseGameState: GameState = getDefaultGameState();
-    const soloStory: StoryCardDef = { title: 'Solo Story', intro: '', isSolo: true };
-    const multiStory: StoryCardDef = { title: 'Multi Story', intro: '' };
-    const expansionStory: StoryCardDef = { title: 'Blue Sun Story', intro: '', requiredExpansion: 'blue' };
-    const multiReqStory: StoryCardDef = { title: 'Multi Req Story', intro: '', requiredExpansion: 'blue', additionalRequirements: ['kalidasa'] };
-    const slayStory: StoryCardDef = { title: "Slaying The Dragon", intro: '', playerCount: 2 };
+    // Mocks for generic tests
+    const mockSoloStory: StoryCardDef = { title: 'Mock Solo Story', intro: '', isSolo: true };
+    const mockMultiStory: StoryCardDef = { title: 'Mock Multi Story', intro: '' };
+    const mockExpansionStory: StoryCardDef = { title: 'Mock Blue Sun Story', intro: '', requiredExpansion: 'blue' };
+    const mockMultiReqStory: StoryCardDef = { title: 'Mock Multi Req Story', intro: '', requiredExpansion: 'blue', additionalRequirements: ['kalidasa'] };
+    
+    // Real cards for specific logic tests
+    const slayStory = getStory("Slaying The Dragon");
+    const greatRecessionStory = getStory("The Great Recession");
+    const awfulLonelyStory = getStory("Awful Lonely In The Big Black");
+    const huntForArcStory = getStory("Hunt For The Arc");
+    const fistfulStory = getStory("A Fistful Of Scoundrels");
+    const harkensFollyStory = getStory("Harken's Folly");
 
     it.concurrent('returns true for a standard story in a standard multiplayer game', () => {
-      expect(isStoryCompatible(multiStory, baseGameState)).toBe(true);
+      expect(isStoryCompatible(mockMultiStory, baseGameState)).toBe(true);
     });
 
     it.concurrent('returns false for a solo story in multiplayer mode', () => {
-      expect(isStoryCompatible(soloStory, { ...baseGameState, gameMode: 'multiplayer' })).toBe(false);
+      expect(isStoryCompatible(mockSoloStory, { ...baseGameState, gameMode: 'multiplayer' })).toBe(false);
     });
 
     it.concurrent('returns false for a story with unmet expansion requirements', () => {
-      // The default game state now enables all expansions, so we must explicitly
-      // create a state where the required expansion is disabled for this test.
-      const stateWithBlueOff = {
-        ...baseGameState,
-        expansions: {
-          ...baseGameState.expansions,
-          blue: false
-        }
-      };
-      expect(isStoryCompatible(expansionStory, stateWithBlueOff)).toBe(false);
+      const stateWithBlueOff = { ...baseGameState, expansions: { ...baseGameState.expansions, blue: false }};
+      expect(isStoryCompatible(mockExpansionStory, stateWithBlueOff)).toBe(false);
     });
 
     it.concurrent('returns true for a story when expansion requirements are met', () => {
       const state = { ...baseGameState, expansions: { ...baseGameState.expansions, blue: true } };
-      expect(isStoryCompatible(expansionStory, state)).toBe(true);
+      expect(isStoryCompatible(mockExpansionStory, state)).toBe(true);
     });
 
     it.concurrent('returns false if additional requirements are not met', () => {
       const state = { ...baseGameState, expansions: { ...baseGameState.expansions, blue: true, kalidasa: false } };
-      expect(isStoryCompatible(multiReqStory, state)).toBe(false);
+      expect(isStoryCompatible(mockMultiReqStory, state)).toBe(false);
     });
 
     it.concurrent('returns true if all requirements are met', () => {
       const state = { ...baseGameState, expansions: { ...baseGameState.expansions, blue: true, kalidasa: true } };
-      expect(isStoryCompatible(multiReqStory, state)).toBe(true);
+      expect(isStoryCompatible(mockMultiReqStory, state)).toBe(true);
     });
     
     it.concurrent('returns true for "Slaying the Dragon" only with 2 players', () => {
@@ -59,7 +65,6 @@ describe('utils/filters', () => {
     
     // Solo Modes
     it.concurrent('in Classic Solo mode, only allows stories explicitly marked as `isSolo`', () => {
-      // Classic solo state means gameMode is solo and not using Flying Solo setup card.
       const state: GameState = { 
         ...baseGameState, 
         gameMode: 'solo', 
@@ -67,27 +72,21 @@ describe('utils/filters', () => {
         expansions: { ...baseGameState.expansions, tenth: false, community: true }
       };
       
-      const soloStory: StoryCardDef = { title: "Awful Lonely In The Big Black", intro: '', isSolo: true };
-      const communitySoloStory: StoryCardDef = { title: "Hunt for the Arc", intro: '', isSolo: true, requiredExpansion: 'community' };
-      const tenthSoloStory: StoryCardDef = { title: "A Fistful of Scoundrels", intro: '', isSolo: true, requiredExpansion: 'tenth' };
-      const nonSoloStory: StoryCardDef = { title: 'Harkens Folly', intro: '' }; // Not marked as solo
-
-      expect(isStoryCompatible(soloStory, state), 'Solo story should be available').toBe(true);
-      expect(isStoryCompatible(communitySoloStory, state), 'Community solo story should be available').toBe(true);
-      expect(isStoryCompatible(nonSoloStory, state), 'Non-solo story should NOT be available in Classic Solo').toBe(false);
-      expect(isStoryCompatible(tenthSoloStory, state), '10th Anniv. story should be filtered out because expansion is off').toBe(false);
+      expect(isStoryCompatible(awfulLonelyStory, state), 'Solo story should be available').toBe(true);
+      expect(isStoryCompatible(huntForArcStory, state), 'Community solo story should be available').toBe(true);
+      expect(isStoryCompatible(harkensFollyStory, state), 'Non-solo story should NOT be available in Classic Solo').toBe(false);
+      expect(isStoryCompatible(fistfulStory, state), '10th Anniv. story should be filtered out because expansion is off').toBe(false);
     });
 
     it.concurrent('in Flying Solo mode, allows compatible non-multiplayer-exclusive stories', () => {
       const state: GameState = { ...baseGameState, gameMode: 'solo', setupCardId: SETUP_CARD_IDS.FLYING_SOLO };
-      expect(isStoryCompatible(soloStory, state)).toBe(true);
-      expect(isStoryCompatible(multiStory, state)).toBe(true); // Should also be true if not specifically solo
+      expect(isStoryCompatible(mockSoloStory, state)).toBe(true);
+      expect(isStoryCompatible(mockMultiStory, state)).toBe(true);
     });
     
     it.concurrent('in Flying Solo mode, excludes stories on the SOLO_EXCLUDED_STORIES list', () => {
       const state: GameState = { ...baseGameState, gameMode: 'solo', setupCardId: SETUP_CARD_IDS.FLYING_SOLO };
-      const excludedStory: StoryCardDef = { title: "The Great Recession", intro: '' }; // This is on the list
-      expect(isStoryCompatible(excludedStory, state)).toBe(false);
+      expect(isStoryCompatible(greatRecessionStory, state)).toBe(false);
     });
   });
 });
