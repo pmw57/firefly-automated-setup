@@ -1,34 +1,41 @@
+
 import '@testing-library/jest-dom';
 import { vi, beforeEach, afterEach } from 'vitest';
 import { cleanup } from '@testing-library/react';
+// FIX: Use `import type` to only load the type definitions. This prevents the
+// user-event module from executing its browser-specific setup code when
+// imported in a Node.js test environment.
+import type userEvent from '@testing-library/user-event';
 
-// Explicitly call cleanup after each test to prevent DOM leakage between tests,
-// especially since the test runner is configured with `isolate: false`.
+// The type can be correctly inferred from the type-only import.
+export let user: ReturnType<typeof userEvent.setup>;
+
+// Run cleanup after each test to ensure a clean DOM environment.
 afterEach(() => {
-  cleanup();
-  // Restore all mocks to ensure test isolation
+  if (typeof window !== 'undefined') {
+    cleanup();
+  }
   vi.restoreAllMocks();
 });
 
-// By using `beforeEach` in the global setup file, we ensure that all mocks
-// are reset before every single test runs. This makes tests more isolated
-// and prevents issues where `vi.restoreAllMocks()` in one test file could
-// break mocks for another.
-
-beforeEach(() => {
-  // Guard for Node.js environment where 'window' and other browser globals are not defined.
-  // This allows tests that don't need a DOM to run in the faster 'node' environment
-  // without crashing the global setup.
+// `beforeEach` runs before every test. We make it async to support dynamic import.
+beforeEach(async () => {
+  // Guard for Node.js environment where 'window' is not defined.
   if (typeof window !== 'undefined') {
-    // Mock window.matchMedia for jsdom environment (used by Vitest)
+    // FIX: Dynamically import the actual user-event library inside the JSDOM
+    // environment guard. This ensures its code only runs when a DOM is present.
+    const userEventActual = (await import('@testing-library/user-event')).default;
+    user = userEventActual.setup();
+    
+    // Mock window.matchMedia for jsdom environment
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: vi.fn().mockImplementation(query => ({
-        matches: false, // Default to dark mode for tests.
+        matches: false,
         media: query,
         onchange: null,
-        addListener: vi.fn(), // deprecated
-        removeListener: vi.fn(), // deprecated
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
         addEventListener: vi.fn(),
         removeEventListener: vi.fn(),
         dispatchEvent: vi.fn(),
@@ -47,7 +54,6 @@ beforeEach(() => {
     }
 
     // Mock localStorage globally for all tests
-    // This creates a fresh, empty store for each test.
     const localStorageMock = (() => {
       let store: Record<string, string> = {};
       return {
@@ -62,14 +68,13 @@ beforeEach(() => {
           store = {};
         }),
         key: vi.fn((index: number) => Object.keys(store)[index] || null),
-        // Use a getter for length so it's dynamic.
         get length() {
           return Object.keys(store).length;
         },
       };
     })();
 
-    // Use Object.defineProperty to overwrite the read-only localStorage property in JSDOM
+    // Overwrite the read-only localStorage property in JSDOM
     Object.defineProperty(window, 'localStorage', {
       value: localStorageMock,
       writable: true

@@ -66,7 +66,7 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
       onClick={() => onToggle(id)}
       onKeyDown={handleKeyDown}
       className={cls(
-        "relative cursor-pointer rounded-xl border-2 p-5 transition-all duration-300 ease-in-out group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500",
+        "relative cursor-pointer rounded-xl border-2 p-5 transition-all duration-300 ease-in-out group focus:outline-none focus:ring-2 focus:ring-green-500",
         "md:grid md:grid-cols-[20%_1fr_max-content] md:items-center md:gap-x-6",
         active 
           ? cls(currentTheme.border, currentTheme.bg, "shadow-md")

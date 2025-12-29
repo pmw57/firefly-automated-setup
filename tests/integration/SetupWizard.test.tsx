@@ -1,8 +1,8 @@
 
 /** @vitest-environment jsdom */
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { screen, fireEvent } from '@testing-library/react';
-import { render } from '../test-utils';
+import { screen } from '@testing-library/react';
+import { render, user } from '../test-utils';
 import App from '../../App';
 
 describe('SetupWizard integration', () => {
@@ -22,7 +22,7 @@ describe('SetupWizard integration', () => {
 
         // Find the "Next" button within the CaptainSetup step.
         const nextButton = screen.getByRole('button', { name: /Next: Choose Setup Card/i });
-        fireEvent.click(nextButton);
+        await user.click(nextButton);
 
         // After clicking, we should be on the SetupCardSelection step.
         const setupCardHeading = await screen.findByRole('heading', { name: /Select Setup Card/i });
@@ -30,7 +30,7 @@ describe('SetupWizard integration', () => {
 
         // Find the "Back" button within the SetupCardSelection step.
         const backButton = screen.getByRole('button', { name: /← Back/i });
-        fireEvent.click(backButton);
+        await user.click(backButton);
 
         // After clicking back, we should be on the CaptainSetup step again.
         const returnedHeaderText = await screen.findByText('Number of Captains');
