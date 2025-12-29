@@ -1,7 +1,5 @@
 
 import React, { useState } from 'react';
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
-// FIX: Import specific types for goals and challenges to enhance type safety.
 import { StoryCardDef, ExpansionId, SetupRule, StoryCardGoal, ChallengeOption } from '../types/index';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 
@@ -64,8 +62,6 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
         });
     };
 
-    // FIX: Made `handleListChange` type-safe by using keyof and explicit checks,
-    // preventing unsafe property access and potential runtime errors.
     const handleListChange = (
         listName: 'goals' | 'challengeOptions',
         index: number,
@@ -89,8 +85,6 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
         });
     };
 
-    // FIX: Refactored `addListItem` to be type-safe, removing dynamic property
-    // access and ensuring the correct object shape is added to the state.
     const addListItem = (listName: 'goals' | 'challengeOptions') => {
         setStory(prev => {
             if (listName === 'goals') {
@@ -103,8 +97,6 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
         });
     };
     
-    // FIX: Refactored `removeListItem` to be type-safe by removing dynamic property
-    // access and using explicit logic for each list type.
     const removeListItem = (listName: 'goals' | 'challengeOptions', index: number) => {
         setStory(prev => {
             if (listName === 'goals') {
@@ -136,7 +128,7 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
                 sourceName: rule.sourceName || story.title,
             }));
 
-            // FIX: Cast the dynamically created rules array to SetupRule[] to satisfy TypeScript.
+            // Cast the dynamically created rules array to SetupRule[].
             // The JSON input from the developer is assumed to have the correct structure.
             finalStory.rules = filledRules as SetupRule[];
 
@@ -167,8 +159,6 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
     
     const expansionOptions = EXPANSIONS_METADATA.filter(e => e.id !== 'base' && e.id !== 'community');
 
-    // FIX: Replaced generic `renderDynamicList` with two specific, type-safe
-    // components to eliminate unsafe property access and improve readability.
     const renderGoalsList = () => (
         <div className="space-y-2">
             {(story.goals || []).map((item, index) => (

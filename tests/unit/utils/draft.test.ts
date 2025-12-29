@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../../../utils/draft';
 import { DiceResult } from '../../../types/index';
 
-describe('rules/draft', () => {
+describe('utils/draft', () => {
   describe('calculateDraftOutcome', () => {
     it.concurrent('correctly identifies the winner and sets draft order', () => {
       const rolls: DiceResult[] = [

@@ -1,5 +1,5 @@
+
 import { useMemo } from 'react';
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { Step } from '../types/index';
 import { useGameState } from './useGameState';
 import { calculateSetupFlow } from '../utils/flow';

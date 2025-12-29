@@ -1,7 +1,6 @@
 
 import React, { useRef, useEffect, useMemo } from 'react';
 import { useTheme } from './ThemeContext';
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { Step } from '../types/index';
 import { STEP_IDS } from '../data/ids';
 import { cls } from '../utils/style';
@@ -81,8 +80,6 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  // FIX: Hooks must be called unconditionally at the top level of the component.
-  // Moved these useMemo calls before the early return to fix the error.
   const separatorIndex = useMemo(() => flow.findIndex(s => s.type !== 'setup'), [flow]);
   const finishIndex = useMemo(() => flow.findIndex(s => s.type === 'final'), [flow]);
 

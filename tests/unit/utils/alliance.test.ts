@@ -4,13 +4,6 @@ import { describe, it, expect } from 'vitest';
 import { getAllianceReaverDetails } from '../../../utils/alliance';
 import { StructuredContent, StructuredContentPart } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
-import { STORY_CARDS } from '../../../data/storyCards';
-
-const getStoryTitle = (title: string): string => {
-  const card = STORY_CARDS.find(c => c.title === title);
-  if (!card) throw new Error(`Test data missing: Could not find story card "${title}"`);
-  return card.title;
-};
 
 // Helper to recursively flatten structured content to a searchable string
 const getTextContent = (content: StructuredContent | StructuredContentPart): string => {
@@ -40,7 +33,7 @@ const getTextContent = (content: StructuredContent | StructuredContentPart): str
     }
 };
 
-describe('rules/alliance', () => {
+describe('utils/alliance', () => {
   describe('getAllianceReaverDetails', () => {
     const baseGameState = getDefaultGameState();
 
@@ -55,7 +48,7 @@ describe('rules/alliance', () => {
       const state = { 
         ...baseGameState, 
         playerCount: 4, 
-        selectedStoryCard: getStoryTitle("It's All In Who You Know")
+        selectedStoryCard: "It's All In Who You Know" // This story has a multiplier of 3
       };
       
       const details = getAllianceReaverDetails(state, {});
@@ -66,12 +59,11 @@ describe('rules/alliance', () => {
     });
 
     it.concurrent('generates the correct smugglersBluesSetup content based on expansions', () => {
-      const storyTitle = getStoryTitle("Smuggler's Blues");
       // Case 1: Both expansions active
       const stateWithBoth = { 
         ...baseGameState, 
         expansions: { ...baseGameState.expansions, blue: true, kalidasa: true }, 
-        selectedStoryCard: storyTitle
+        selectedStoryCard: "Smuggler's Blues"
       };
       const detailsBoth = getAllianceReaverDetails(stateWithBoth, {});
       expect(detailsBoth.specialRules.some(rule => getTextContent(rule.content).includes('Rim Space'))).toBe(true);
@@ -80,7 +72,7 @@ describe('rules/alliance', () => {
       const stateWithOne = { 
         ...baseGameState, 
         expansions: { ...baseGameState.expansions, blue: true, kalidasa: false }, 
-        selectedStoryCard: storyTitle
+        selectedStoryCard: "Smuggler's Blues" 
       };
       const detailsOne = getAllianceReaverDetails(stateWithOne, {});
       expect(detailsOne.specialRules.some(rule => getTextContent(rule.content).includes('Alliance Space'))).toBe(true);

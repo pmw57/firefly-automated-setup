@@ -6,7 +6,7 @@ import { GameState } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { STEP_IDS, SETUP_CARD_IDS } from '../../../data/ids';
 
-describe('state/flow', () => {
+describe('utils/flow', () => {
   describe('calculateSetupFlow', () => {
     const baseGameState = getDefaultGameState();
 

@@ -1,3 +1,4 @@
+
 /** @vitest-environment jsdom */
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest';
 import { screen, within } from '@testing-library/react';
@@ -43,18 +44,15 @@ describe('Integration Scenarios', () => {
 
       // --- Step 1: Captain Setup ---
       await screen.findByRole('heading', { name: /Config/i });
-      // FIX: Prefer async find* queries to prevent race conditions
       await user.click(await screen.findByRole('button', { name: /Next: Choose Setup Card/i }));
 
       // --- Step 2: Setup Card Selection ---
       await screen.findByRole('heading', { name: /Select Setup Card/i });
-      // FIX: Use async find* queries for robustness
       await user.click(await screen.findByRole('button', { name: new RegExp(browncoatCard.label) }));
       await user.click(await screen.findByRole('button', { name: /Next: Optional Rules/i }));
 
       // --- Step 3: Optional Rules ---
       await screen.findByRole('heading', { name: /Optional Rules/i });
-      // FIX: Use async find* queries for robustness
       await user.click(await screen.findByRole('button', { name: /Begin Setup Sequence/i }));
       
       // --- Navigate to first "real" step to select a story ---
@@ -127,12 +125,10 @@ describe('Integration Scenarios', () => {
       await clickNext(); // Prime -> Final
       await screen.findByRole('heading', { name: /You are ready to fly!/i });
       
-      // FIX: Use async find* queries
       const flightManifest = await screen.findByRole('heading', { name: /Flight Manifest/i });
       const summaryContainer = flightManifest.parentElement;
       expect(summaryContainer).not.toBeNull();
 
-      // FIX: Use async find* queries within the container
       expect(await within(summaryContainer!).findByText(new RegExp(browncoatCard.label))).toBeInTheDocument();
       expect(await within(summaryContainer!).findByText(new RegExp(harkensFollyCard.title))).toBeInTheDocument();
     });

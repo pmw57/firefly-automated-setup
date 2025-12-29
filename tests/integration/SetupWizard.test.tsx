@@ -1,3 +1,4 @@
+
 /** @vitest-environment jsdom */
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { screen } from '@testing-library/react';
@@ -19,8 +20,6 @@ describe('SetupWizard integration', () => {
       const initialHeading = await screen.findByRole('heading', { name: /Config/i }, { timeout: 5000 });
       expect(initialHeading).toBeInTheDocument();
 
-      // FIX: Use async `findByRole` to prevent race conditions. This is a best
-      // practice that makes tests more robust by waiting for elements to appear.
       const nextButton = await screen.findByRole('button', { name: /Next: Choose Setup Card/i });
       await user.click(nextButton);
 
@@ -32,7 +31,6 @@ describe('SetupWizard integration', () => {
       const browncoatButton = await screen.findByRole('button', { name: browncoatRegex });
       expect(browncoatButton).toBeInTheDocument();
 
-      // FIX: Use async `findByRole` to ensure the UI is stable before interaction.
       const backButton = await screen.findByRole('button', { name: /← Back/i });
       await user.click(backButton);
 

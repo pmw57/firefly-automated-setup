@@ -2,9 +2,7 @@
 import '@testing-library/jest-dom';
 import { vi, beforeEach, afterEach } from 'vitest';
 import { cleanup } from '@testing-library/react';
-// FIX: Use `import type` to only load the type definitions. This prevents the
-// user-event module from executing its browser-specific setup code when
-// imported in a Node.js test environment.
+// Use `import type` to only load the type definitions for user-event.
 import type userEvent from '@testing-library/user-event';
 
 // The type can be correctly inferred from the type-only import.
@@ -22,7 +20,7 @@ afterEach(() => {
 beforeEach(async () => {
   // Guard for Node.js environment where 'window' is not defined.
   if (typeof window !== 'undefined') {
-    // FIX: Dynamically import the actual user-event library inside the JSDOM
+    // Dynamically import the actual user-event library inside the JSDOM
     // environment guard. This ensures its code only runs when a DOM is present.
     const userEventActual = (await import('@testing-library/user-event')).default;
     user = userEventActual.setup();
