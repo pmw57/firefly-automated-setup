@@ -5,8 +5,21 @@ import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacement
 import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
 import { SETUP_CARDS } from '../../../data/setupCards';
+import { STORY_CARDS } from '../../../data/storyCards';
 
-describe('utils/ui', () => {
+const getStory = (title: string): StoryCardDef => {
+    const card = STORY_CARDS.find(c => c.title === title);
+    if (!card) throw new Error(`Test setup failed: Story card "${title}" not found.`);
+    return card;
+};
+
+const getSetupCard = (id: string): SetupCardDef => {
+    const card = SETUP_CARDS.find(c => c.id === id);
+    if (!card) throw new Error(`Test setup failed: Setup card with id "${id}" not found.`);
+    return card;
+}
+
+describe('selectors/ui', () => {
     const baseGameState = getDefaultGameState();
 
     describe('getStoryCardSetupSummary', () => {
@@ -38,14 +51,15 @@ describe('utils/ui', () => {
 
     describe('getDisplaySetupName', () => {
         it.concurrent('returns the setup name from the state', () => {
-            const state: GameState = { ...baseGameState, setupCardName: 'The Browncoat Way' };
-            expect(getDisplaySetupName(state)).toBe('The Browncoat Way');
+            const browncoatCard = getSetupCard(SETUP_CARD_IDS.THE_BROWNCOAT_WAY);
+            const state: GameState = { ...baseGameState, setupCardName: browncoatCard.label };
+            expect(getDisplaySetupName(state)).toBe(browncoatCard.label);
         });
 
         it.concurrent('combines Flying Solo with its secondary setup card name', () => {
-            const state: GameState = { ...baseGameState, setupCardId: SETUP_CARD_IDS.FLYING_SOLO, secondarySetupId: 'TheBrowncoatWay', setupCardName: 'Flying Solo' };
-            const browncoatCard = SETUP_CARDS.find(c => c.id === 'TheBrowncoatWay') as SetupCardDef;
-            expect(getDisplaySetupName(state, browncoatCard)).toBe('Flying Solo + The Browncoat Way');
+            const browncoatCard = getSetupCard(SETUP_CARD_IDS.THE_BROWNCOAT_WAY);
+            const state: GameState = { ...baseGameState, setupCardId: SETUP_CARD_IDS.FLYING_SOLO, secondarySetupId: browncoatCard.id, setupCardName: 'Flying Solo' };
+            expect(getDisplaySetupName(state, browncoatCard)).toBe(`Flying Solo + ${browncoatCard.label}`);
         });
     });
 
@@ -55,7 +69,7 @@ describe('utils/ui', () => {
         });
 
         it.concurrent('returns "Disabled" if story card disables solo timer', () => {
-            const state: GameState = { ...baseGameState, gameMode: 'solo', selectedStoryCard: "Racing A Pale Horse" };
+            const state: GameState = { ...baseGameState, gameMode: 'solo', selectedStoryCard: getStory("Racing A Pale Horse").title };
             expect(getTimerSummaryText(state)).toBe("Disabled (Story Override)");
         });
 
@@ -84,7 +98,7 @@ describe('utils/ui', () => {
               gameMode: 'solo',
               setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
               secondarySetupId: SETUP_CARD_IDS.STANDARD,
-              selectedStoryCard: "Racing A Pale Horse", // This story disables the timer
+              selectedStoryCard: getStory("Racing A Pale Horse").title,
             };
             
             const timerSummary = getTimerSummaryText(state);
