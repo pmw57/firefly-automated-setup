@@ -20,7 +20,7 @@ const getSetupCard = (id: string): SetupCardDef => {
     return card;
 }
 
-describe('selectors/ui', () => {
+describe('utils/ui', () => {
     const baseGameState = getDefaultGameState();
 
     describe('getStoryCardSetupSummary', () => {

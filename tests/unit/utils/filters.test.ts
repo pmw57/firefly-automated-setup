@@ -13,7 +13,7 @@ const getStory = (title: string): StoryCardDef => {
   return card;
 };
 
-describe('selectors/filters', () => {
+describe('utils/filters', () => {
   describe('isStoryCompatible', () => {
     const baseGameState: GameState = getDefaultGameState();
     // Mocks for generic tests

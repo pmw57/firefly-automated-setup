@@ -1,6 +1,4 @@
 
-
-// FIX: Use vitest/config for proper defineConfig typing including vitest options.
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from 'vite-plugin-pwa'
@@ -20,8 +18,6 @@ const getVersion = () => {
  * A custom Vite plugin to remove the Tailwind CDN fallback script during dev/build.
  * This allows index.html to be statically previewed, while Vite handles Tailwind processing.
  */
-// FIX: The `Plugin` type was causing a conflict. Removing the explicit return
-// type allows TypeScript to infer it, which is structurally compatible.
 const tailwindCdnFallbackPlugin = () => ({
   name: 'vite-plugin-tailwind-cdn-fallback',
   transformIndexHtml(html: string) {
@@ -98,9 +94,6 @@ export default defineConfig(({ mode }) => ({
     globals: true,
     environment: 'jsdom',
     setupFiles: './tests/setup.ts',
-    // FIX: Re-enable isolation to prevent state leakage between test files.
-    // This is the standard and most robust way to ensure a clean testing
-    // environment for each test file, fixing the widespread jsdom error.
     isolate: true,
     alias: {
       'virtual:pwa-register': './tests/pwa-register.mock.ts'

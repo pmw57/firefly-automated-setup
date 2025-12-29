@@ -1,6 +1,5 @@
 
 import React, { useMemo } from 'react';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { Expansions } from '../../types/index';
 import { ExpansionToggle } from '../ExpansionToggle';
 import { useTheme } from '../ThemeContext';
@@ -28,8 +27,8 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
     const handleToggleGroup = (group: typeof core_mechanics, enable: boolean) => {
         group.forEach(exp => {
             const id = exp.id as keyof Expansions;
-            // Only toggle if the state is different from the target state
-            // FIX: Ensure 'id' is a valid key before accessing expansions[id]
+            // Only toggle if the state is different from the target state.
+            // This also ensures 'id' is a valid key before access.
             if (id in expansions && expansions[id] !== enable) {
                 onToggle(id);
             }
