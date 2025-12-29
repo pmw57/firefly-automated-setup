@@ -15,9 +15,10 @@ const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule,
 
 export const COMMUNITY_STORIES: StoryCardDef[] = [
   {
-    "title": "5 Goal Story Card",
-    "intro": " ",
-    "sourceUrl": "https://boardgamegeek.com/filepage/99870/5-goal-story-card"
+    title: "5 Goal Story Card",
+    intro: " ",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/filepage/99870/5-goal-story-card"
   },
   {
     title: "Bank Job",
@@ -26,10 +27,11 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/4452357",
   },
   {
-    "title": "The Battle of Serenity Valley (PvP)",
-    "intro": "Serenity Valley was a valley located on Hera; it was mainly sparse and rocky with little vegetation. The valley was famous for being the location of the Battle of Serenity Valley—one of the bloodiest battles of the entire Unification War. Due to Hera's strategic positioning, taking the planet was a key to winning the war, and Serenity Valley became the turning point of the entire conflict.",
-    "setupDescription": "Take all Crew cards with \"Fight\" skill and all gear cards with \"Fight\" skill, add crew compartment ship upgrades and put them all in one deck; Shuffle. Take all Misbehave cards with \"Fight\" skill checks; Shuffle. Remove half \"Keep Flying\" cards from Alliance and Border decks. Other cards won't be used. Players evenly pick Alliance or Independents (Browncoats). Deal 3 crew/gear to each player (disregard warrants). Place ships in appropriate space. Alliance to inner planets, Browncoats to Border Planets.",
-    "sourceUrl": "https://boardgamegeek.com/thread/1099553/story-card-the-battle-of-serenity-valley-pvp"
+    title: "The Battle of Serenity Valley (PvP)",
+    intro: "Serenity Valley was a valley located on Hera; it was mainly sparse and rocky with little vegetation. The valley was famous for being the location of the Battle of Serenity Valley—one of the bloodiest battles of the entire Unification War. Due to Hera's strategic positioning, taking the planet was a key to winning the war, and Serenity Valley became the turning point of the entire conflict.",
+    setupDescription: "Take all Crew cards with \"Fight\" skill and all gear cards with \"Fight\" skill, add crew compartment ship upgrades and put them all in one deck; Shuffle. Take all Misbehave cards with \"Fight\" skill checks; Shuffle. Remove half \"Keep Flying\" cards from Alliance and Border decks. Other cards won't be used. Players evenly pick Alliance or Independents (Browncoats). Deal 3 crew/gear to each player (disregard warrants). Place ships in appropriate space. Alliance to inner planets, Browncoats to Border Planets.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/1099553/story-card-the-battle-of-serenity-valley-pvp"
   },
   {
     title: "Black Market Beagles",
@@ -58,9 +60,10 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1045716/article/13603393#13603393"
   },
   {
-    "title": "Gentleman's Agreement",
-    "intro": "Until now, the big players in the 'verse have agreed to keep to their own back yards, but that's about to change. Badger has received word that Adelai Niska has grown too big for his Skyplex around Ezra, and is branching out. The rumor is that Niska is setting up shop in Badger's territory. This doesn't sit well with Badger.",
-    "sourceUrl": "https://boardgamegeek.com/thread/1101220/story-card-gentlemans-agreement"
+    title: "Gentleman's Agreement",
+    intro: "Until now, the big players in the 'verse have agreed to keep to their own back yards, but that's about to change. Badger has received word that Adelai Niska has grown too big for his Skyplex around Ezra, and is branching out. The rumor is that Niska is setting up shop in Badger's territory. This doesn't sit well with Badger.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/1101220/story-card-gentlemans-agreement"
   },
   {
     title: "The Heist on Ariel (tv episode)",
@@ -113,15 +116,17 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     ])
   },
   {
-    "title": "Laying Down the Law",
-    "intro": "Alliance brass has handed down some flush to the local magistrates to round up some old warrants and they're hiring new law men who can prove they can get the job done.",
-    "setupDescription": "Laying Low: Wanted crew may not be hired.",
-    "sourceUrl": "https://boardgamegeek.com/thread/1093761/story-card-laying-down-the-law"
+    title: "Laying Down the Law",
+    intro: "Alliance brass has handed down some flush to the local magistrates to round up some old warrants and they're hiring new law men who can prove they can get the job done.",
+    setupDescription: "Laying Low: Wanted crew may not be hired.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/1093761/story-card-laying-down-the-law"
   },
   {
-    "title": "The Long Haul",
-    "intro": "Anson's looking for a top notch crew for a really big job. He doesn't just hand out jobs to anyone though. Can you prove yourself capable, secure the job, and make a fortune?",
-    "sourceUrl": "https://boardgamegeek.com/thread/1107085/the-long-haul-idea-for-an-unofficial-story-card"
+    title: "The Long Haul",
+    intro: "Anson's looking for a top notch crew for a really big job. He doesn't just hand out jobs to anyone though. Can you prove yourself capable, secure the job, and make a fortune?",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/1107085/the-long-haul-idea-for-an-unofficial-story-card"
   },
   {
     title: "Miranda",
@@ -159,9 +164,10 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     requiredExpansion: "community"
   },
   {
-    "title": "Round the 'Verse in \"80 Days\"",
-    "intro": "Mr. Big Bucks, who lives next to the Tams in Sihnon, has two 19-year-old kids. They are finishing a semester of school at Osiris. Mr. Big Bucks wants the kids to experience the universe. He's looking for someone to show them around the universe and return them healthily. You can put the kids to work to some extent, but must return them healthy. He'll pay $20,000 when done.",
-    "sourceUrl": "https://boardgamegeek.com/image/9306408/pmw57"
+    title: "Round the 'Verse in \"80 Days\"",
+    intro: "Mr. Big Bucks, who lives next to the Tams in Sihnon, has two 19-year-old kids. They are finishing a semester of school at Osiris. Mr. Big Bucks wants the kids to experience the universe. He's looking for someone to show them around the universe and return them healthily. You can put the kids to work to some extent, but must return them healthy. He'll pay $20,000 when done.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/image/9306408/pmw57"
   },
   {
     title: "Save River Tam",
@@ -248,9 +254,10 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/164355/story-card-trash-part-deux"
   },
   {
-    "title": "Unification Day",
-    "intro": "Unification Day is fast approaching and you have plans to cause all sorts of mischief, but what better way to do it than right under the nose of the Alliance? You just might get more than a little pay back out of it.",
-    "sourceUrl": "https://boardgamegeek.com/thread/1083899/unification-day-alliance-oriented-story-card"
+    title: "Unification Day",
+    intro: "Unification Day is fast approaching and you have plans to cause all sorts of mischief, but what better way to do it than right under the nose of the Alliance? You just might get more than a little pay back out of it.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/1083899/unification-day-alliance-oriented-story-card"
   },
   {
     title: "War Stories (tv episode)",
