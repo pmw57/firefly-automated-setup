@@ -42,23 +42,23 @@ describe('Integration Scenarios', () => {
       render(<App />);
 
       // --- Step 1: Captain Setup ---
-      // Use a more semantic role query for the initial step's heading
       await screen.findByRole('heading', { name: /Config/i });
-      await user.click(screen.getByRole('button', { name: /Next: Choose Setup Card/i }));
+      // FIX: Prefer async find* queries to prevent race conditions
+      await user.click(await screen.findByRole('button', { name: /Next: Choose Setup Card/i }));
 
       // --- Step 2: Setup Card Selection ---
       await screen.findByRole('heading', { name: /Select Setup Card/i });
-      // Use a regex with the label from the card definition
-      await user.click(screen.getByRole('button', { name: new RegExp(browncoatCard.label) }));
-      await user.click(screen.getByRole('button', { name: /Next: Optional Rules/i }));
+      // FIX: Use async find* queries for robustness
+      await user.click(await screen.findByRole('button', { name: new RegExp(browncoatCard.label) }));
+      await user.click(await screen.findByRole('button', { name: /Next: Optional Rules/i }));
 
       // --- Step 3: Optional Rules ---
       await screen.findByRole('heading', { name: /Optional Rules/i });
-      await user.click(screen.getByRole('button', { name: /Begin Setup Sequence/i }));
+      // FIX: Use async find* queries for robustness
+      await user.click(await screen.findByRole('button', { name: /Begin Setup Sequence/i }));
       
       // --- Navigate to first "real" step to select a story ---
       await screen.findByRole('heading', { name: /Goal of the Game/i });
-      // Use a regex with the title from the card definition
       await user.click(await screen.findByRole('button', { name: new RegExp(harkensFollyCard.title) }));
       await clickNext();
       
@@ -127,13 +127,14 @@ describe('Integration Scenarios', () => {
       await clickNext(); // Prime -> Final
       await screen.findByRole('heading', { name: /You are ready to fly!/i });
       
-      const flightManifest = screen.getByRole('heading', { name: /Flight Manifest/i });
+      // FIX: Use async find* queries
+      const flightManifest = await screen.findByRole('heading', { name: /Flight Manifest/i });
       const summaryContainer = flightManifest.parentElement;
       expect(summaryContainer).not.toBeNull();
 
-      // Use regex with card labels/titles for resilient assertions
-      expect(within(summaryContainer!).getByText(new RegExp(browncoatCard.label))).toBeInTheDocument();
-      expect(within(summaryContainer!).getByText(new RegExp(harkensFollyCard.title))).toBeInTheDocument();
+      // FIX: Use async find* queries within the container
+      expect(await within(summaryContainer!).findByText(new RegExp(browncoatCard.label))).toBeInTheDocument();
+      expect(await within(summaryContainer!).findByText(new RegExp(harkensFollyCard.title))).toBeInTheDocument();
     });
   });
 
@@ -147,10 +148,6 @@ describe('Integration Scenarios', () => {
     localStorage.setItem('firefly_gameState_v3', JSON.stringify(initialState));
     render(<App />);
 
-    // FIX: Use a custom text matcher function. The rule's text is split across
-    // multiple DOM nodes (text nodes and <strong> tags), which the default text
-    // matcher cannot always find reliably. This function checks the combined
-    // `textContent` of an element to find the correct one.
     const contrabandRule = await screen.findByText((content, element) => {
       const expectedText = 'Place 3 Contraband on each Planetary Sector in Alliance Space.';
       return element?.textContent === expectedText;

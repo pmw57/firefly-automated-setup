@@ -16,13 +16,12 @@ describe('SetupWizard integration', () => {
     it('allows moving forward to the next step and back to the previous step', async () => {
       render(<App />);
 
-      // Use a more semantic role query for the initial step's heading
-      // FIX: The `timeout` option for `findBy*` queries should be in the third
-      // argument (waitForOptions), not the second (query options).
       const initialHeading = await screen.findByRole('heading', { name: /Config/i }, { timeout: 5000 });
       expect(initialHeading).toBeInTheDocument();
 
-      const nextButton = screen.getByRole('button', { name: /Next: Choose Setup Card/i });
+      // FIX: Use async `findByRole` to prevent race conditions. This is a best
+      // practice that makes tests more robust by waiting for elements to appear.
+      const nextButton = await screen.findByRole('button', { name: /Next: Choose Setup Card/i });
       await user.click(nextButton);
 
       const setupCardHeading = await screen.findByRole('heading', { name: /Select Setup Card/i });
@@ -33,7 +32,8 @@ describe('SetupWizard integration', () => {
       const browncoatButton = await screen.findByRole('button', { name: browncoatRegex });
       expect(browncoatButton).toBeInTheDocument();
 
-      const backButton = screen.getByRole('button', { name: /← Back/i });
+      // FIX: Use async `findByRole` to ensure the UI is stable before interaction.
+      const backButton = await screen.findByRole('button', { name: /← Back/i });
       await user.click(backButton);
 
       // Verify returning to the first step
