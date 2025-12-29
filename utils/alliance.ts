@@ -1,4 +1,3 @@
-
 import { 
     GameState, 
     StepOverrides, 
@@ -56,7 +55,7 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
   const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
   if (smugglersBluesSetup) {
     const useSmugglersRimRule = smugglersBluesSetup && gameState.expansions.blue && gameState.expansions.kalidasa;
-    specialRules.push({ source: 'story', title: 'Story Override', content: useSmugglersRimRule 
+    specialRules.push({ source: 'story', content: useSmugglersRimRule 
       ? ['Place ', { type: 'strong', content: '2 ' }, 'Contraband on each Planetary Sector in ', { type: 'strong', content: 'Rim Space' }, '.']
       : ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Planetary Sector in ', { type: 'strong', content: 'Alliance Space' }, '.'] });
   }

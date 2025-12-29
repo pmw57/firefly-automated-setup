@@ -16,6 +16,6 @@ export type StructuredContent = StructuredContentPart[];
 
 export interface SpecialRule {
     source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
-    title: string;
+    title?: string;
     content: StructuredContent;
 }
