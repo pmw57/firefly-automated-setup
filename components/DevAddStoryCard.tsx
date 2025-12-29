@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
-import { StoryCardDef, ExpansionId, SetupRule } from '../types/index';
+// FIX: Import specific types for goals and challenges to enhance type safety.
+import { StoryCardDef, ExpansionId, SetupRule, StoryCardGoal, ChallengeOption } from '../types/index';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 
 interface DevAddStoryCardProps {
@@ -63,33 +64,55 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
         });
     };
 
-    const handleListChange = (listName: 'goals' | 'challengeOptions', index: number, field: string, value: string) => {
+    // FIX: Made `handleListChange` type-safe by using keyof and explicit checks,
+    // preventing unsafe property access and potential runtime errors.
+    const handleListChange = (
+        listName: 'goals' | 'challengeOptions',
+        index: number,
+        field: keyof StoryCardGoal | keyof ChallengeOption,
+        value: string
+    ) => {
         setStory(prev => {
-            if (listName === 'goals') {
+            if (listName === 'goals' && (field === 'title' || field === 'description')) {
                 const newList = [...(prev.goals || [])];
-                const item = newList[index];
-                if (field === 'title' || field === 'description') {
-                    newList[index] = { ...item, [field]: value };
-                }
+                const item = newList[index] || { title: '', description: '' };
+                newList[index] = { ...item, [field]: value };
                 return { ...prev, goals: newList };
-            } else { // challengeOptions
+            }
+            if (listName === 'challengeOptions' && (field === 'id' || field === 'label')) {
                 const newList = [...(prev.challengeOptions || [])];
-                const item = newList[index];
-                if (field === 'id' || field === 'label') {
-                    newList[index] = { ...item, [field]: value };
-                }
+                const item = newList[index] || { id: '', label: '' };
+                newList[index] = { ...item, [field]: value };
                 return { ...prev, challengeOptions: newList };
             }
+            return prev;
         });
     };
 
+    // FIX: Refactored `addListItem` to be type-safe, removing dynamic property
+    // access and ensuring the correct object shape is added to the state.
     const addListItem = (listName: 'goals' | 'challengeOptions') => {
-        const newItem = listName === 'goals' ? { title: '', description: '' } : { id: '', label: '' };
-        setStory(prev => ({ ...prev, [listName]: [...(prev[listName] || []), newItem] }));
+        setStory(prev => {
+            if (listName === 'goals') {
+                const newItem: StoryCardGoal = { title: '', description: '' };
+                return { ...prev, goals: [...(prev.goals || []), newItem] };
+            } else { // challengeOptions
+                const newItem: ChallengeOption = { id: '', label: '' };
+                return { ...prev, challengeOptions: [...(prev.challengeOptions || []), newItem] };
+            }
+        });
     };
-
+    
+    // FIX: Refactored `removeListItem` to be type-safe by removing dynamic property
+    // access and using explicit logic for each list type.
     const removeListItem = (listName: 'goals' | 'challengeOptions', index: number) => {
-        setStory(prev => ({ ...prev, [listName]: (prev[listName] || []).filter((_, i) => i !== index) }));
+        setStory(prev => {
+            if (listName === 'goals') {
+                return { ...prev, goals: (prev.goals || []).filter((_, i) => i !== index) };
+            } else { // challengeOptions
+                return { ...prev, challengeOptions: (prev.challengeOptions || []).filter((_, i) => i !== index) };
+            }
+        });
     };
 
     const handleGenerate = () => {
@@ -144,26 +167,58 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
     
     const expansionOptions = EXPANSIONS_METADATA.filter(e => e.id !== 'base' && e.id !== 'community');
 
-    const renderDynamicList = (listName: 'goals' | 'challengeOptions', fields: string[]) => (
+    // FIX: Replaced generic `renderDynamicList` with two specific, type-safe
+    // components to eliminate unsafe property access and improve readability.
+    const renderGoalsList = () => (
         <div className="space-y-2">
-            {(story[listName] || []).map((item, index) => (
+            {(story.goals || []).map((item, index) => (
                 <div key={index} className="flex gap-2 items-start bg-gray-900 p-2 rounded border border-gray-700">
                     <div className="flex-1 space-y-1">
-                        {fields.map(field => (
-                             <Input 
-                                key={field}
-                                type="text"
-                                placeholder={field}
-                                value={(item as unknown as Record<string, string>)[field] || ''}
-                                onChange={(e) => handleListChange(listName, index, field, e.target.value)}
-                            />
-                        ))}
+                        <Input
+                            type="text"
+                            placeholder="title"
+                            value={item.title}
+                            onChange={(e) => handleListChange('goals', index, 'title', e.target.value)}
+                        />
+                        <Input
+                            type="text"
+                            placeholder="description"
+                            value={item.description}
+                            onChange={(e) => handleListChange('goals', index, 'description', e.target.value)}
+                        />
                     </div>
-                    <button onClick={() => removeListItem(listName, index)} className="text-red-500 hover:text-red-400 p-2">&times;</button>
+                    <button onClick={() => removeListItem('goals', index)} className="text-red-500 hover:text-red-400 p-2">&times;</button>
                 </div>
             ))}
-            <button onClick={() => addListItem(listName)} className="text-xs bg-blue-600 hover:bg-blue-500 px-2 py-1 rounded">
-                Add {listName.slice(0, -1)}
+            <button onClick={() => addListItem('goals')} className="text-xs bg-blue-600 hover:bg-blue-500 px-2 py-1 rounded">
+                Add Goal
+            </button>
+        </div>
+    );
+
+    const renderChallengesList = () => (
+        <div className="space-y-2">
+            {(story.challengeOptions || []).map((item, index) => (
+                <div key={index} className="flex gap-2 items-start bg-gray-900 p-2 rounded border border-gray-700">
+                    <div className="flex-1 space-y-1">
+                        <Input
+                            type="text"
+                            placeholder="id"
+                            value={item.id}
+                            onChange={(e) => handleListChange('challengeOptions', index, 'id', e.target.value)}
+                        />
+                        <Input
+                            type="text"
+                            placeholder="label"
+                            value={item.label}
+                            onChange={(e) => handleListChange('challengeOptions', index, 'label', e.target.value)}
+                        />
+                    </div>
+                    <button onClick={() => removeListItem('challengeOptions', index)} className="text-red-500 hover:text-red-400 p-2">&times;</button>
+                </div>
+            ))}
+            <button onClick={() => addListItem('challengeOptions')} className="text-xs bg-blue-600 hover:bg-blue-500 px-2 py-1 rounded">
+                Add Challenge Option
             </button>
         </div>
     );
@@ -209,10 +264,10 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
                         </div>
                         
                         <h3 className="font-bold text-lg text-yellow-400 pt-2 border-t border-gray-700">Goals</h3>
-                        {renderDynamicList('goals', ['title', 'description'])}
+                        {renderGoalsList()}
                         
                         <h3 className="font-bold text-lg text-yellow-400 pt-2 border-t border-gray-700">Challenge Options</h3>
-                        {renderDynamicList('challengeOptions', ['id', 'label'])}
+                        {renderChallengesList()}
 
                         <h3 className="font-bold text-lg text-yellow-400 pt-2 border-t border-gray-700">Setup Rules (Raw JSON)</h3>
                         <div>
