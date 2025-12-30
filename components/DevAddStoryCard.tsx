@@ -142,7 +142,13 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
             if (!finalStory.challengeOptions?.length) delete finalStory.challengeOptions;
             if (!finalStory.rules?.length) delete finalStory.rules;
 
-            setGeneratedJson(JSON.stringify(finalStory, null, 2));
+            // Generate JSON string with 2 spaces for indentation
+            const jsonString = JSON.stringify(finalStory, null, 2);
+            
+            // Convert to JS object literal by unquoting keys
+            const objectLiteralString = jsonString.replace(/"([^"]+)":/g, '$1:');
+            
+            setGeneratedJson(objectLiteralString);
             setCopyButtonText('Copy JSON');
         } catch (e) {
             alert('Invalid JSON in rules text area.');
