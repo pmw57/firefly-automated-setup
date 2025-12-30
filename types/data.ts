@@ -83,6 +83,7 @@ export interface StoryCardDef {
   advancedRule?: AdvancedRuleDef;
   rules?: SetupRule[];
   requiredFlag?: string;
+  requiredSetupCardId?: string;
   sortOrder?: number;
   campaignSetupNotes?: CampaignSetupNote[];
 }

@@ -1,19 +1,33 @@
 
 import React, { useMemo } from 'react';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
-import { StoryCardDef } from '../../types/index';
+// FIX: Changed import from '../../types' to '../types/index' to fix module resolution ambiguity.
+// FIX: Added RuleSourceType and SpecialRule to imports for type safety.
+import { StoryCardDef, AddSpecialRule, RuleSourceType, SpecialRule } from '../../types/index';
 import { SpecialRuleBlock } from '../SpecialRuleBlock';
 import { useTheme } from '../ThemeContext';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionIcon } from '../ExpansionIcon';
 import { useGameState } from '../../hooks/useGameState';
 import { ActionType } from '../../state/actions';
-import { hasRuleFlag } from '../../utils/selectors/rules';
+import { hasRuleFlag, getResolvedRules } from '../../utils/selectors/rules';
 import { getSoloTimerAdjustmentText } from '../../utils/selectors/story';
 
 interface StoryDossierProps {
   activeStoryCard: StoryCardDef;
 }
+
+// FIX: Added a helper function to safely map the broader RuleSourceType
+// to the narrower source type expected by SpecialRuleBlock. This resolves the
+// TypeScript error by explicitly handling 'challenge' and 'optionalRule' cases.
+const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source'] => {
+  if (source === 'challenge') {
+    return 'warning';
+  }
+  if (source === 'optionalRule') {
+    return 'info';
+  }
+  return source;
+};
 
 export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) => {
   const { state: gameState, dispatch } = useGameState();
@@ -23,6 +37,15 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
   const handleGoalSelect = (goalTitle: string) => {
     dispatch({ type: ActionType.SET_GOAL, payload: goalTitle });
   };
+
+  const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
+
+  const goalRules = useMemo(() => {
+    return allRules.filter(
+        (rule): rule is AddSpecialRule =>
+            rule.type === 'addSpecialRule' && rule.category === 'goal'
+    );
+  }, [allRules]);
 
   const soloTimerAdjustment = useMemo(() => 
     getSoloTimerAdjustmentText(activeStoryCard), 
@@ -56,6 +79,15 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
       </div>
       <p className={`${italicTextColor} italic font-serif text-lg leading-relaxed border-l-4 ${quoteBorder} pl-4 mb-4`}>"{activeStoryCard.intro}"</p>
       
+      {goalRules.map((rule, index) => (
+          <SpecialRuleBlock
+              key={`goal-rule-${index}`}
+              source={mapRuleSourceToBlockSource(rule.source)}
+              title={rule.rule.title}
+              content={rule.rule.content}
+          />
+      ))}
+
       {/* Multi-Goal Display */}
       {activeStoryCard.goals && activeStoryCard.goals.length > 0 && (
         <div className={`mb-6`}>

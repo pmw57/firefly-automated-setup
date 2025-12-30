@@ -1,6 +1,6 @@
 
 import { StoryCardDef, SetupRule } from '../../types/index';
-import { CONTACT_NAMES, STEP_IDS } from '../ids';
+import { CONTACT_NAMES, STEP_IDS, SETUP_CARD_IDS } from '../ids';
 
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
@@ -399,7 +399,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
   },
   {
     title: "Serenity Part 1",
-    intro: "Mal Reynolds and the crew of the Firefly Class Transport Serenity are involved in illegally slavaging crates off an abandoned spaceship for Badger, a small-time crime boss on the planet Persephone.",
+    intro: "Mal Reynolds and the crew of the Firefly Class Transport Serenity are involved in illegally slavaging crates off an abandoned spaceship for Badger, a small-time crime boss on the planet persephone.",
     setupDescription: "Set up Serenity at Valentine with Malcolm, Zoe, Wash, Kaylee, Jaune, 1 Fuel, $500, Cry Baby, Expanded Crew Quarters. Load 2 Contra, then turn over a Nav Card.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
@@ -486,6 +486,52 @@ export const SOLO_STORIES: StoryCardDef[] = [
       id: "adv_contact_quirks_deal",
       title: "Contact Quirks - Deal"
     }
+  },
+  {
+    title: "They're Part Of My Crew",
+    intro: "We all know Mal's got a good aim when it comes to misnehavin'. We also know Mal's stepped on quite a few tows with his misbehavin'. There's more than a few folk like to see him and his crew behind bars or six feet under. Regardless of who or what comes at Serenity, Mal's gonna do what he's always done. Protect his crew.",
+    isSolo: true,
+    goals: [
+      {
+        title: "Free Your Crew",
+        description: "Once the 7-turn timer is up, you must immediately fly to Londinium and proceed past 5 negotiation skill checks to free your crew from the Alliance prison. If you are successful, you have won the game."
+      }
+    ],
+    rules: createStoryRules("They're Part Of My Crew", [
+      { 
+        type: 'modifyResource', 
+        resource: 'credits', 
+        method: 'set', 
+        value: 1000, 
+        description: "Story Override" 
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+            title: "Story Setup",
+            content: [
+                { type: 'paragraph', content: ['Use ', { type: 'strong', content: 'Malcolm' }, ' as your Leader and ', { type: 'strong', content: 'Serenity' }, ' as your ship.'] },
+                { type: 'paragraph', content: ['Your starting crew is: ', { type: 'strong', content: 'Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River' }, '.'] },
+                { type: 'paragraph', content: ['Take 1 ', { type: 'strong', content: 'Expanded Crew Quarters' }, ' from the Osiris Supply Deck.'] }
+            ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+            title: "Disgruntled Timer",
+            content: [
+                { type: 'paragraph', content: ['Collect ', { type: 'strong', content: '7 Disgruntled tokens' }, '. These will be used as a special game timer.'] },
+                { type: 'paragraph', content: ['Discard 1 token at the start of each of your turns.'] },
+            ]
+        }
+      }
+    ]),
+    sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
+    requiredExpansion: "community",
+    requiredSetupCardId: SETUP_CARD_IDS.STANDARD,
   },
   {
     title: "The Train Job",
