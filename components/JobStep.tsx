@@ -17,6 +17,11 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const isDark = theme === 'dark';
   const { isCampaign } = gameState;
   
+  const campaignNote = useMemo(
+    () => activeStoryCard?.campaignSetupNotes?.find(n => n.stepId === step.id), 
+    [activeStoryCard, step.id]
+  );
+  
   const { 
     contacts, 
     messages, 
@@ -49,6 +54,14 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   return (
     <div className="space-y-4">
+      {campaignNote && (
+        <SpecialRuleBlock 
+          source="story" 
+          title="Campaign Setup Note" 
+          content={campaignNote.content} 
+        />
+      )}
+      
       {isSelectedStory && isCampaign && (
         <SpecialRuleBlock source="story" title="Campaign Rules: Jobs & Contacts" content={[
           { type: 'paragraph', content: ["For each Contact you were Solid with at the end of the last game, remove 2 of your completed Jobs from play."] },

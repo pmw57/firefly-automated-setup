@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { DraftState } from '../types/index';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/draft';
 import { getDraftDetails } from '../utils/draftRules';
@@ -10,6 +10,7 @@ import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
+import { getActiveStoryCard } from '../utils/selectors/story';
 
 // Sub-component for Draft Order
 const DraftOrderPanel = ({ 
@@ -151,6 +152,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const isSolo = gameState.playerCount === 1;
+  const activeStoryCard = getActiveStoryCard(gameState);
   
   const {
       specialRules,
@@ -158,6 +160,11 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       isBrowncoatDraft,
       specialStartSector,
   } = React.useMemo(() => getDraftDetails(gameState, step), [gameState, step]);
+  
+  const campaignNote = useMemo(
+    () => activeStoryCard?.campaignSetupNotes?.find(n => n.stepId === step.id), 
+    [activeStoryCard, step.id]
+  );
 
   useEffect(() => {
     if (isSolo && !draftState) {
@@ -194,6 +201,14 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
     <>
       {!isSolo && <p className={cls("mb-4 italic", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>}
       
+      {campaignNote && (
+        <SpecialRuleBlock 
+          source="story" 
+          title="Campaign Setup Note" 
+          content={campaignNote.content} 
+        />
+      )}
+
       {specialRules.map((rule, index) => (
         <SpecialRuleBlock key={index} source={rule.source} title={rule.title} content={rule.content} />
       ))}

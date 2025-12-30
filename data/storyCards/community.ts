@@ -17,7 +17,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "Bank Job",
     intro: "There's wages belonging to no-one (Alliance don't count). Find out where, and get the tools you'll need, then pull off the heist.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/2104020/article/30623845#30623845",
+    sourceUrl: "https://boardgamegeek.com/filepage/103321/firefly-goal-bank-job-jpeg-and-psd",
   },
   {
     title: "The Battle of Serenity Valley (PvP)",
@@ -43,7 +43,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "Double Duty",
     intro: "Sometimes, It's best to work under the radar and quiet-like. Fanty and Mingo have goods and folks in need of moving throughout the 'Verse. Use your connections with others to keep the twins' names out of the picture. Do a good enough job, and you might become their new favorite captain.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/2444019/article/37316409#37316409"
+    sourceUrl: "https://boardgamegeek.com/image/6067255"
   },
   {
     title: "Fruity Oat Bar",
@@ -59,16 +59,10 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1101220/story-card-gentlemans-agreement"
   },
   {
-    title: "The Ghost Rock Run",
-    intro: "On Anson's World the Sweetrock Mining Co. has discovered a rare mineral called \"Ghost Rock\". Will you handle the run, or sell it to the highest bidder?",
-    requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1199652/custom-story-card-the-ghost-rock-run"
-  },
-  {
     title: "Hospital Rescue",
     intro: "River is prisoner in a secure hospital at Londinium, and needs rescuing.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/2104020/article/30620058#30620058",
+    sourceUrl: "https://boardgamegeek.com/filepage/103582/goal-hospital-rescue",
     rules: createStoryRules("Hospital Rescue", [
       { type: 'addFlag', flag: 'removeRiver' }
     ])
@@ -87,21 +81,11 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/186593/where-it-all-started-story-card"
   },
   {
-    title: "Hunt For The Arc",
-    intro: "The Joan of Arc, one of the great colony ships that left Earth-That-Was hundreds of years ago, never arrived at its destination. Filled with priceless Earth artifacts, the huge vessel has long been rumored to be floating out beyond Alliance space, just waiting to make some lucky crew filthy rich. It's haunted you, become an obsession, but you pored over star charts and history books for years, and now you might just have a notion where she 'bides. Find the Arc and successfully deliver her to the Alliance for a hefty sum, or fence her to a criminal boss to become financially set for life...",
-    isSolo: true,
-    sourceUrl: "https://boardgamegeek.com/thread/1049419/hunt-for-the-arc-a-solo-adventure",
-    setupDescription: "Place a Reaver ship in the Border Space sector directly below Valentine, instead of its usual position.",
-    rules: createStoryRules("Hunt For The Arc", [
-      { type: 'addFlag', flag: 'huntForTheArcReaverPlacement', reaverShipCount: 1 }
-    ])
-  },
-  {
     title: "It Ain't Easy Goin' Legit",
     intro: "Your last run in with Harken turned South and you've got a boatload of warrants trailin' ya. Time to clean your ledger and get dirt on Harken instead.",
     setupDescription: "Start with 2 Warrants. Alliance Space off limits. No Harken.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/2104020/article/30627405#30627405",
+    sourceUrl: "https://boardgamegeek.com/image/4434522",
     rules: createStoryRules("It Ain't Easy Goin' Legit", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, description: "Start with 2 Warrants." },
       { type: 'addFlag', flag: 'allianceSpaceOffLimits' },
@@ -120,17 +104,6 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "Anson's looking for a top notch crew for a really big job. He doesn't just hand out jobs to anyone though. Can you prove yourself capable, secure the job, and make a fortune?",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1107085/the-long-haul-idea-for-an-unofficial-story-card"
-  },
-  {
-    title: "The Magnificent Crew",
-    intro: "On a backwater planet, an old friend sends out a plea. Marauders are bleeding their town dry. Suss out the trouble, assemble a crew, and eliminate the pesky varmints.",
-    setupDescription: "Remove all Job Decks. High-value cargo sales.",
-    requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/https://boardgamegeek.com/thread/1255266/article/17228877#17228877",
-    rules: createStoryRules("The Magnificent Crew", [
-      { type: 'addFlag', flag: 'removeJobDecks' },
-      { type: 'setJobMode', mode: 'no_jobs' }
-    ])
   },
   {
     title: "Miranda",
@@ -209,6 +182,23 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1049020/article/13686225#13686225"
   },
   {
+    title: "The Ghost Rock Run",
+    intro: "On Anson's World the Sweetrock Mining Co. has discovered a rare mineral called \"Ghost Rock\". Will you handle the run, or sell it to the highest bidder?",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/filepage/105342/custom-story-card-the-ghost-rock-run"
+  },
+  {
+    title: "The Magnificent Crew",
+    intro: "On a backwater planet, an old friend sends out a plea. Marauders are bleeding their town dry. Suss out the trouble, assemble a crew, and eliminate the pesky varmints.",
+    setupDescription: "Remove all Job Decks. High-value cargo sales.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/image/2277037/upstarter",
+    rules: createStoryRules("The Magnificent Crew", [
+      { type: 'addFlag', flag: 'removeJobDecks' },
+      { type: 'setJobMode', mode: 'no_jobs' }
+    ])
+  },
+  {
     title: "The Truth Will Out",
     intro: "For too long the tragic fate of the Miranda colony has been covered up by the Alliance, and Mr. Universe would like to correct that, but lacks the manpower to do so on his own. Helping him is bound to be dangerous, but who wouldn't enjoy giving the Alliance a black eye?",
     setupDescription: "Requires Blue Sun Expansion.",
@@ -220,7 +210,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "Trash Part Deux",
     intro: "Have MRP (Mrs Reynolds persona) steal and sell the latest Firefly story.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1065518/trash-part-deux"
+    sourceUrl: "https://boardgamegeek.com/filepage/164355/story-card-trash-part-deux"
   },
   {
     title: "Unification Day",

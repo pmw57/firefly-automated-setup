@@ -47,6 +47,13 @@ export const STORY_CARDS: StoryCardDef[] = [
   ...BLACK_MARKET_STORIES,
   ...COMMUNITY_STORIES
 ].sort((a, b) => {
+    // Prioritize cards with a specific sortOrder (for TV episode campaign)
+    if (a.sortOrder !== undefined && b.sortOrder !== undefined) {
+        return a.sortOrder - b.sortOrder;
+    }
+    if (a.sortOrder !== undefined) return -1; // a comes first
+    if (b.sortOrder !== undefined) return 1;  // b comes first
+
     // Base game cards (no requiredExpansion) get index -1 to stay at the very top.
     const idxA = a.requiredExpansion ? (expansionIndices[a.requiredExpansion] ?? 999) : -1;
     const idxB = b.requiredExpansion ? (expansionIndices[b.requiredExpansion] ?? 999) : -1;

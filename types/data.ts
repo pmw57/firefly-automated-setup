@@ -43,6 +43,7 @@ export interface SetupCardDef {
   mode?: GameMode;
   rules?: SetupRule[];
   isCombinable?: boolean;
+  sourceUrl?: string;
 }
 
 export interface StoryCardGoal {
@@ -61,6 +62,11 @@ export interface AdvancedRuleDef {
   description?: string;
 }
 
+export interface CampaignSetupNote {
+  stepId: string;
+  content: import('./core').StructuredContent;
+}
+
 export interface StoryCardDef {
   title: string;
   intro: string;
@@ -76,4 +82,7 @@ export interface StoryCardDef {
   challengeOptions?: ChallengeOption[];
   advancedRule?: AdvancedRuleDef;
   rules?: SetupRule[];
+  requiredFlag?: string;
+  sortOrder?: number;
+  campaignSetupNotes?: CampaignSetupNote[];
 }

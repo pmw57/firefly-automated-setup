@@ -109,16 +109,29 @@ describe('selectors/ui', () => {
 
     describe('getActiveOptionalRulesText', () => {
         it.concurrent('returns an empty array if no optional rules are active', () => {
-            expect(getActiveOptionalRulesText(baseGameState)).toEqual([]);
+            const state: GameState = {
+                ...baseGameState,
+                optionalRules: { ...baseGameState.optionalRules, optionalShipUpgrades: false },
+                soloOptions: { noSureThings: false, shesTrouble: false, recipeForUnpleasantness: false },
+            };
+            expect(getActiveOptionalRulesText(state)).toEqual([]);
         });
 
         it.concurrent('returns a list of active solo options', () => {
-            const state: GameState = { ...baseGameState, soloOptions: { noSureThings: true, shesTrouble: false, recipeForUnpleasantness: true } };
+            const state: GameState = { 
+                ...baseGameState, 
+                optionalRules: { ...baseGameState.optionalRules, optionalShipUpgrades: false },
+                soloOptions: { noSureThings: true, shesTrouble: false, recipeForUnpleasantness: true } 
+            };
             expect(getActiveOptionalRulesText(state)).toEqual(["No Sure Things", "Recipe For Unpleasantness"]);
         });
         
         it.concurrent('returns ship upgrades when active', () => {
-            const state: GameState = { ...baseGameState, optionalRules: { ...baseGameState.optionalRules, optionalShipUpgrades: true } };
+            const state: GameState = { 
+                ...baseGameState, 
+                optionalRules: { ...baseGameState.optionalRules, optionalShipUpgrades: true },
+                soloOptions: { noSureThings: false, shesTrouble: false, recipeForUnpleasantness: false }
+            };
             expect(getActiveOptionalRulesText(state)).toEqual(["Ship Upgrades"]);
         });
     });
