@@ -61,5 +61,14 @@ export const isStoryCompatible = (card: StoryCardDef, state: GameState): boolean
       }
     }
 
+    // Rule 6: Required Setup Card.
+    // A story card can require a specific setup card to be active.
+    if (card.requiredSetupCardId) {
+        const effectiveSetupCardId = isFlyingSolo ? state.secondarySetupId : state.setupCardId;
+        if (card.requiredSetupCardId !== effectiveSetupCardId) {
+            return false;
+        }
+    }
+
     return true;
 };

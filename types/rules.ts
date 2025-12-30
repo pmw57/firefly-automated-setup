@@ -1,3 +1,4 @@
+
 import { SpecialRule } from './core';
 
 export type JobMode = 
@@ -60,7 +61,7 @@ export interface SetPrimeModeRule extends BaseRule { type: 'setPrimeMode'; mode:
 export interface SetDraftModeRule extends BaseRule { type: 'setDraftMode'; mode: DraftMode; }
 export interface SetLeaderSetupRule extends BaseRule { type: 'setLeaderSetup'; mode: LeaderSetupMode; }
 export interface SetShipPlacementRule extends BaseRule { type: 'setShipPlacement'; location: 'persephone' | 'londinium' | 'border_of_murphy' | 'outside_alliance'; }
-export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer'; rule: Omit<SpecialRule, 'source'>; }
+export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer' | 'goal'; rule: Omit<SpecialRule, 'source'>; }
 
 export interface AddFlagRule extends BaseRule { 
   type: 'addFlag'; 
