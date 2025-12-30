@@ -67,17 +67,6 @@ const validateGameMode = (state: GameState): GameState => {
         };
     }
 
-    // Auto-select 'Flying Solo' if player count is 1, 10th expansion is on, and setup is standard.
-    const isDefaultSetup = !newState.setupCardId || newState.setupCardId === SETUP_CARD_IDS.STANDARD;
-    if (newState.gameMode === 'solo' && newState.expansions.tenth && isDefaultSetup) {
-        newState = {
-            ...newState,
-            setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
-            setupCardName: 'Flying Solo',
-            secondarySetupId: newState.setupCardId || SETUP_CARD_IDS.STANDARD,
-        };
-    }
-
     return newState;
 }
 
