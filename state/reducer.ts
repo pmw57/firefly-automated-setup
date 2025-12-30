@@ -1,10 +1,28 @@
 
-import { GameState, Expansions } from '../types/index';
+import { GameState, Expansions, GameMode } from '../types/index';
 import { Action, ActionType } from './actions';
 import { STORY_CARDS } from '../data/storyCards';
 import { SETUP_CARDS } from '../data/setupCards';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { SETUP_CARD_IDS } from '../data/ids';
+
+/**
+ * A helper function to default to "Flying Solo" mode if the conditions are met.
+ * This should be called when entering solo mode or when enabling the 10th Anniversary expansion.
+ */
+const defaultToFlyingSoloIfNeeded = (state: GameState): GameState => {
+    // Conditions: in solo mode, 10th anniversary is enabled, and not already using Flying Solo.
+    if (state.gameMode === 'solo' && state.expansions.tenth && state.setupCardId !== SETUP_CARD_IDS.FLYING_SOLO) {
+        const flyingSoloDef = SETUP_CARDS.find(c => c.id === SETUP_CARD_IDS.FLYING_SOLO);
+        return {
+            ...state,
+            setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
+            setupCardName: flyingSoloDef?.label || 'Flying Solo',
+            secondarySetupId: state.setupCardId,
+        };
+    }
+    return state;
+};
 
 // --- Pure Validation Functions ---
 
@@ -64,17 +82,6 @@ const validateGameMode = (state: GameState): GameState => {
             setupCardId: SETUP_CARD_IDS.STANDARD,
             setupCardName: 'Standard Game Setup',
             secondarySetupId: undefined,
-        };
-    }
-
-    // Auto-select 'Flying Solo' if player count is 1, 10th expansion is on, and setup is standard.
-    const isDefaultSetup = !newState.setupCardId || newState.setupCardId === SETUP_CARD_IDS.STANDARD;
-    if (newState.gameMode === 'solo' && newState.expansions.tenth && isDefaultSetup) {
-        newState = {
-            ...newState,
-            setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
-            setupCardName: 'Flying Solo',
-            secondarySetupId: newState.setupCardId || SETUP_CARD_IDS.STANDARD,
         };
     }
 
@@ -183,23 +190,32 @@ const adjustPlayerNames = (currentNames: string[], targetCount: number): string[
 
 const handlePlayerCountChange = (state: GameState, count: number): GameState => {
     const safeCount = Math.max(1, Math.min(9, count));
-    const newMode = safeCount === 1 ? 'solo' : 'multiplayer';
+    // FIX: Explicitly type `newMode` as `GameMode` to prevent TypeScript from widening it to `string`.
+    // This resolves an incompatibility with the `GameState` type when constructing `intermediateState`.
+    const newMode: GameMode = safeCount === 1 ? 'solo' : 'multiplayer';
     
-    return {
+    const intermediateState = {
         ...state,
         playerCount: safeCount,
         gameMode: newMode,
         playerNames: adjustPlayerNames(state.playerNames, safeCount),
         isCampaign: newMode === 'multiplayer' ? false : state.isCampaign,
     };
+
+    return defaultToFlyingSoloIfNeeded(intermediateState);
 };
 
 const handleExpansionToggle = (state: GameState, expansionId: keyof GameState['expansions']): GameState => {
     const nextExpansions = { ...state.expansions, [expansionId]: !state.expansions[expansionId] };
-    const newState: GameState = { ...state, expansions: nextExpansions };
+    let newState: GameState = { ...state, expansions: nextExpansions };
     
     if (expansionId === 'tenth') {
         newState.gameEdition = nextExpansions.tenth ? 'tenth' : 'original';
+        
+        // Only apply the default if we are ENABLING the expansion
+        if (nextExpansions.tenth) {
+            newState = defaultToFlyingSoloIfNeeded(newState);
+        }
     }
     
     return newState;
