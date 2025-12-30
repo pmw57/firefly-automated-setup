@@ -14,6 +14,28 @@ const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule,
 
 export const SOLO_STORIES: StoryCardDef[] = [
   {
+    title: "And That Makes Us Mighty",
+    intro: "Feeling disrespected, broke, and in a bad mood, you finally decide to do something about it. But how many of your problems can you solve at once?",
+    isSolo: true,
+    goals: [
+      {
+        title: "Earn Their Respect",
+        description: "End the game Solid with at least 5 different Contacts."
+      },
+      {
+        title: "Flush with Cash",
+        description: "End the game with at least $15,000."
+      },
+      {
+        title: "Let Off Some Steam",
+        description: "Successfully Proceed past 20 more Misbehave cards by the end of the game."
+      }
+    ],
+    setupDescription: "Setup follows the rules on the official solo play Story Card, with the following exceptions: 1. After randomly selecting a Leader, you may select up to 4 Crew cards revealed when Priming the Pump - up to a total value of $1000. 2. In addition to selecting and completing one of the following Goals, you must try to complete as many Goals as possible by the end of the game.",
+    sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
+    requiredExpansion: "community"
+  },
+  {
     title: "Ariel",
     intro: "When River slashes Jayne's chest, Simon decides it's time to get serious about treating her. He hires the crew of Serenity to get him and River into a high-tech hospital on Ariel so he can see what the Alliance did to her.",
     setupDescription: "Continue with the crew and items you acquired after completing Out of Gas. Requires EXPLOSIVES.",
@@ -42,6 +64,14 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { title: "Goal 3: The Ugly", description: "No Rest For The Wicked: Successfully Proceed past 20 or more Misbehave cards. Set aside Misbehave Cards you Proceed past to track your progress." }
     ],
     isSolo: true
+  },
+  {
+    title: "Beholden to Niska",
+    intro: "You have gotten a loan from Niska to buy your first ship. Niska will expect favors and to be paid back (with interest) in a timely manner. Failure to do so will result in legal confiscation of your ship, and illegal confiscation of your life!",
+    isSolo: true,
+    setupDescription: "Game lasts for 30 turns (plus a final \"No Fly Action\" turn). Start at the Osiris ShipWorks with $3000, a Leader and a Ship. Do not draw any jobs to consider during the set up. Do not \"Prime the Pump\". ",
+    sourceUrl: "https://boardgamegeek.com/filepage/129108/beholden-to-niska-firefly-solitaire-story-card-by",
+    requiredExpansion: "community"
   },
   {
     title: "Bushwhacked",
@@ -182,6 +212,28 @@ export const SOLO_STORIES: StoryCardDef[] = [
     campaignSetupNotes: [
       { stepId: STEP_IDS.C5, content: ["You may want to get ", { type: 'strong', content: 'Jayne' }, " some negotiation gear, or things could go badly."] }
     ]
+  },
+  {
+    title: "Jubal's Early Years",
+    intro: "Not much is know about Jubal's past.",
+    isSolo: true,
+    goals: [
+      {
+        "title": "Hunt the Verse's Most Wanted",
+        "description": "During Setup, mark 3 random bounties (not Cortex Alerts). Deliver the 3 marked bounties."
+      }
+    ],
+    setupDescription: "Start play with Jubal Early as your Leader. Remove Serenity's crew from the Bounty and Supply Decks. The Bounty deck is placd face up. All bounties are active.",
+    sourceUrl: "https://boardgamegeek.com/filepage/289736/jubals-story-solo-cards",
+    requiredExpansion: "community"
+  },
+  {
+    title: "The Hero of Canton",
+    intro: "You can't do that to my people. Can't crush them under your heel. I'll strap on my hat, and in 20 rounds flat, steal every Mudder Boss Higgins has to steal.",
+    isSolo: true,
+    setupDescription: "Start play with Cap'n Jayne as your Leader, Jayne's Cunning Hat, and Vera. Suybtract the cost of Vera frm your Starting Cash. Pull all Mudders and Stitch from the Supply decks. Shuffle them all together and place them face up as the Mudder deck. If the Foreman or Stitch is the top card after a shuffle, reshuffle the deck. Use 20 Disgruntle tokens as the game length timer.",
+    sourceUrl: "https://boardgamegeek.com/filepage/288785/the-hero-of-canton-solo-story-card",
+    requiredExpansion: "community"
   },
   {
     title: "Objects in Space",
