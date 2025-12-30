@@ -151,7 +151,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
             ← Back
             </Button>
             <Button onClick={onStart} fullWidth className="w-2/3 text-lg py-4 border-b-4 border-[#450a0a]">
-            Begin Setup Sequence
+            Begin Setup →
             </Button>
         </div>
     </div>

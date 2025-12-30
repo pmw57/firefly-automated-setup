@@ -87,7 +87,7 @@ export const CaptainSetup = ({ onNext }: CaptainSetupProps): React.ReactElement 
 
       <div className="flex gap-4 relative z-10">
         <Button onClick={onNext} fullWidth className={'w-full text-lg py-4 border-b-4 border-[#450a0a]'}>
-          Next: Choose Setup Card →
+          Next: Choose Setup →
         </Button>
       </div>
     </div>

@@ -77,10 +77,10 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
         <Button 
           onClick={onNext} 
           fullWidth 
-          className="w-2/3 text-xl py-4 border-b-4 border-[#450a0a]"
+          className="w-2/3 text-lg py-4 border-b-4 border-[#450a0a]"
           disabled={isNextDisabled}
         >
-          {showOptionalRules ? "Next: Optional Rules →" : "Launch Setup Sequence"}
+          {showOptionalRules ? "Next: Optional Rules →" : "Begin Setup →"}
         </Button>
       </div>
     </div>

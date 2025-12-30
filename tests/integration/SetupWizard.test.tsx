@@ -20,7 +20,7 @@ describe('SetupWizard integration', () => {
       const initialHeading = await screen.findByRole('heading', { name: /Config/i }, { timeout: 5000 });
       expect(initialHeading).toBeInTheDocument();
 
-      const nextButton = await screen.findByRole('button', { name: /Next: Choose Setup Card/i });
+      const nextButton = await screen.findByRole('button', { name: /Next: Choose Setup →/i });
       await user.click(nextButton);
 
       const setupCardHeading = await screen.findByRole('heading', { name: /Select Setup Card/i });
