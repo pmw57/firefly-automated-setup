@@ -5,6 +5,7 @@ import { STORY_CARDS } from '../data/storyCards';
 import { SETUP_CARDS } from '../data/setupCards';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { SETUP_CARD_IDS } from '../data/ids';
+import { EXPANSION_SETTINGS_STORAGE_KEY } from '../data/constants';
 
 /**
  * A helper function to default to "Flying Solo" mode if the conditions are met.
@@ -134,14 +135,37 @@ const validateState = (state: GameState): GameState => {
 
 // --- Reducer and Action Handlers ---
 
-export const getDefaultGameState = (): GameState => {
-    const allExpansions = EXPANSIONS_METADATA.reduce((acc, exp) => {
+/**
+ * Retrieves expansion settings from dedicated local storage.
+ * Defaults to all 'true' if no settings are found.
+ * Merges with defaults to ensure new expansions are enabled.
+ */
+const getPersistedExpansions = (): Expansions => {
+    const defaultExpansions = EXPANSIONS_METADATA.reduce((acc, exp) => {
         if (exp.id !== 'base') {
-            (acc as Record<keyof Expansions, boolean>)[exp.id] = true; // Default all expansions to ON
+            (acc as Record<keyof Expansions, boolean>)[exp.id] = true;
         }
         return acc;
     }, {} as Expansions);
 
+    try {
+        // FIX: Use a more robust check for browser environment to prevent test errors.
+        if (typeof window !== 'undefined' && window.localStorage) {
+            const saved = localStorage.getItem(EXPANSION_SETTINGS_STORAGE_KEY);
+            if (saved) {
+                const savedExpansions = JSON.parse(saved);
+                return { ...defaultExpansions, ...savedExpansions };
+            }
+        }
+    } catch (e) {
+        console.error("Could not load expansion settings.", e);
+    }
+
+    return defaultExpansions;
+};
+
+
+export const getDefaultGameState = (): GameState => {
     return {
         gameEdition: 'tenth',
         gameMode: 'multiplayer',
@@ -169,7 +193,7 @@ export const getDefaultGameState = (): GameState => {
             resolveConflictsManually: false,
             highVolumeSupply: true,
         },
-        expansions: allExpansions,
+        expansions: getPersistedExpansions(),
         isCampaign: false,
         campaignStoriesCompleted: 0,
         finalStartingCredits: null,
@@ -207,6 +231,16 @@ const handlePlayerCountChange = (state: GameState, count: number): GameState => 
 
 const handleExpansionToggle = (state: GameState, expansionId: keyof GameState['expansions']): GameState => {
     const nextExpansions = { ...state.expansions, [expansionId]: !state.expansions[expansionId] };
+
+    try {
+        // FIX: Use a more robust check for browser environment to prevent test errors.
+        if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem(EXPANSION_SETTINGS_STORAGE_KEY, JSON.stringify(nextExpansions));
+        }
+    } catch (e) {
+        console.error("Could not save expansion settings.", e);
+    }
+    
     let newState: GameState = { ...state, expansions: nextExpansions };
     
     if (expansionId === 'tenth') {

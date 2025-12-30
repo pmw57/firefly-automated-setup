@@ -13,18 +13,21 @@ interface ErrorBoundaryState {
 /**
  * ErrorBoundary class component to catch rendering errors in its children.
  */
+// FIX: Changed to extend from `React.Component` directly. The previous approach of extending
+// from a named `Component` import was causing type inference issues where inherited
+// properties like `setState` and `props` were not being found on the class type.
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  // FIX: State initialization is moved into the constructor. The previous use of a class property
-  // was causing TypeScript to fail to infer the inherited `setState` and `props`
-  // members from React.Component. This more traditional pattern resolves the issue.
-  state: ErrorBoundaryState;
+  // FIX: Initializing state as a class field. The previous method of initializing
+  // only in the constructor was causing TypeScript to fail to find inherited properties
+  // like `state`, `setState` and `props` from React.Component. This change explicitly
+  // defines `state` on the class, resolving the type errors.
+  state: ErrorBoundaryState = {
+    hasError: false,
+    error: null,
+  };
 
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = {
-      hasError: false,
-      error: null,
-    };
     this.handleReset = this.handleReset.bind(this);
   }
 
