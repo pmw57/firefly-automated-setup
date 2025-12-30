@@ -1,6 +1,6 @@
 
 import React from 'react';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
+// FIX: Changed import from '../../types' to '../types/index' to fix module resolution ambiguity.
 import { StoryCardDef } from '../../types/index';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { getStoryCardSetupSummary } from '../../utils/ui';
@@ -43,6 +43,8 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
         : (isDark ? 'bg-amber-900/60 text-amber-200' : 'bg-[#fef3c7] text-[#92400e]');
         
     const soloBadgeClass = isDark ? 'bg-indigo-900/60 text-indigo-200' : 'bg-indigo-100 text-indigo-800';
+    const coOpBadgeClass = isDark ? 'bg-teal-900/60 text-teal-200' : 'bg-teal-100 text-teal-800';
+    const pvpBadgeClass = isDark ? 'bg-rose-900/60 text-rose-200' : 'bg-rose-100 text-rose-800';
 
     const introColor = isDark ? 'text-gray-400' : 'text-[#57534e]';
     const footerBorder = isDark ? 'border-zinc-700/50' : 'border-[#e7e5e4]';
@@ -86,6 +88,16 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
                              <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded ${soloBadgeClass}`}>
                                 Solo Play
                              </span>
+                         )}
+                         {card.isCoOp && (
+                            <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded ${coOpBadgeClass}`}>
+                                Co-op
+                            </span>
+                         )}
+                         {card.isPvP && (
+                            <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded ${pvpBadgeClass}`}>
+                                PvP Scenario
+                            </span>
                          )}
                          {summary && (
                              <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded ${badgeClass}`}>

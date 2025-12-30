@@ -76,6 +76,8 @@ export interface StoryCardDef {
   sourceUrl?: string;
   goals?: StoryCardGoal[];
   isSolo?: boolean;
+  isCoOp?: boolean;
+  isPvP?: boolean;
   playerCount?: number;
   maxPlayerCount?: number;
   soloTimerAdjustment?: string;
