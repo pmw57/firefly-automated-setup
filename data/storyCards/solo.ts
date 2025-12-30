@@ -15,6 +15,28 @@ const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule,
 
 export const SOLO_STORIES: StoryCardDef[] = [
   {
+    title: "And That Makes Us Mighty",
+    intro: "Feeling disrespected, broke, and in a bad mood, you finally decide to do something about it. But how many of your problems can you solve at once?",
+    isSolo: true,
+    goals: [
+      {
+        title: "Earn Their Respect",
+        description: "End the game Solid with at least 5 different Contacts."
+      },
+      {
+        title: "Flush with Cash",
+        description: "End the game with at least $15,000."
+      },
+      {
+        title: "Let Off Some Steam",
+        description: "Successfully Proceed past 20 more Misbehave cards by the end of the game."
+      }
+    ],
+    setupDescription: "Setup follows the rules on the official solo play Story Card, with the following exceptions: 1. After randomly selecting a Leader, you may select up to 4 Crew cards revealed when Priming the Pump - up to a total value of $1000. 2. In addition to selecting and completing one of the following Goals, you must try to complete as many Goals as possible by the end of the game.",
+    sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
+    requiredExpansion: "community"
+  },
+  {
     title: "Ariel (tv episode)",
     intro: "When River slashes Jayne's chest, Simon decides it's time to get serious about treating her. He hires the crew of Serenity to get him and River into a high-tech hospital on Ariel so he can see what the Alliance did to her.",
     setupDescription: "Continue with the crew and items you acquired after completing Out of Gas. Requires EXPLOSIVES.",
@@ -38,6 +60,14 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { title: "Goal 3: The Ugly", description: "No Rest For The Wicked: Successfully Proceed past 20 or more Misbehave cards. Set aside Misbehave Cards you Proceed past to track your progress." }
     ],
     isSolo: true
+  },
+  {
+    title: "Beholden to Niska",
+    intro: "You have gotten a loan from Niska to buy your first ship. Niska will expect favors and to be paid back (with interest) in a timely manner. Failure to do so will result in legal confiscation of your ship, and illegal confiscation of your life!",
+    isSolo: true,
+    setupDescription: "Game lasts for 30 turns (plus a final \"No Fly Action\" turn). Start at the Osiris ShipWorks with $3000, a Leader and a Ship. Do not draw any jobs to consider during the set up. Do not \"Prime the Pump\". ",
+    sourceUrl: "https://boardgamegeek.com/filepage/129108/beholden-to-niska-firefly-solitaire-story-card-by",
+    requiredExpansion: "community"
   },
   {
     title: "Bushwhacked (tv episode)",
@@ -121,12 +151,34 @@ export const SOLO_STORIES: StoryCardDef[] = [
     }
   },
   {
+    title: "Jubal's Early Years",
+    intro: "Not much is know about Jubal's past.",
+    isSolo: true,
+    goals: [
+      {
+        "title": "Hunt the Verse's Most Wanted",
+        "description": "During Setup, mark 3 random bounties (not Cortex Alerts). Deliver the 3 marked bounties."
+      }
+    ],
+    setupDescription: "Start play with Jubal Early as your Leader. Remove Serenity's crew from the Bounty and Supply Decks. The Bounty deck is placd face up. All bounties are active.",
+    sourceUrl: "https://boardgamegeek.com/filepage/289736/jubals-story-solo-cards",
+    requiredExpansion: "community"
+  },
+  {
     title: "Objects in Space (tv episode)",
     intro: "With the crew asleep, Jubel Early, a bounty hunter, sneaks aboard Serenity. He has been paid to abduct River Tam. He locks most of the crew in their cabins. However, River has disappeared.",
     setupDescription: "Continue with the crew and items you acquired after completing Heart of Gold. This Story can take place in any sector. If a named Crew is missing, choose another Crew.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true
+  },
+  {
+    title: "The Hero of Canton",
+    intro: "You can't do that to my people. Can't crush them under your heel. I'll strap on my hat, and in 20 rounds flat, steal every Mudder Boss Higgins has to steal.",
+    isSolo: true,
+    setupDescription: "Start play with Cap'n Jayne as your Leader, Jayne's Cunning Hat, and Vera. Suybtract the cost of Vera frm your Starting Cash. Pull all Mudders and Stitch from the Supply decks. Shuffle them all together and place them face up as the Mudder deck. If the Foreman or Stitch is the top card after a shuffle, reshuffle the deck. Use 20 Disgruntle tokens as the game length timer.",
+    sourceUrl: "https://boardgamegeek.com/filepage/288785/the-hero-of-canton-solo-story-card",
+    requiredExpansion: "community"
   },
   {
     title: "Heroes & Misfits",
@@ -360,6 +412,14 @@ export const SOLO_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true
+  },
+  {
+    title: "They're Part of My Crew",
+    intro: "We all know Mal's got a good aim whern it comes to misbehavin'. We also know Mal's stepped on quite a few toes with his misbehavin'. There's more than a few folk like to see him and his crew behind bars or six feet under. Regardless of who or what comes at Serenity, Mal's gonna do what he's always done. Protect his crew.",
+    isSolo: true,
+    setupDescription: "Use the Standard Set Up card with Malcolm as your Leader and Serenisy as your ship. Take only $1000 in starting cash. Take Zoe, Wash, Jayne, Kaylee, Inara, Book, Simon, and River. Take 1 Expanded Crew Quarters from Osiris. Collect 7 Disgruntled tokens. These Disgruntled tokens will be used as a timer that will trigger the arrest of 5 crew members. Discard 1 token at the start of each turn.",
+    sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
+    requiredExpansion: "community"
   },
   {
     title: "Trash (tv episode)",
