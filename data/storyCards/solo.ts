@@ -31,7 +31,26 @@ export const SOLO_STORIES: StoryCardDef[] = [
         description: "Successfully Proceed past 20 more Misbehave cards by the end of the game."
       }
     ],
-    setupDescription: "Setup follows the rules on the official solo play Story Card, with the following exceptions: 1. After randomly selecting a Leader, you may select up to 4 Crew cards revealed when Priming the Pump - up to a total value of $1000. 2. In addition to selecting and completing one of the following Goals, you must try to complete as many Goals as possible by the end of the game.",
+    rules: createStoryRules("And That Makes Us Mighty", [
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Post-Priming Draft',
+          content: [
+            { type: 'paragraph', content: ["After Priming the Pump, you may select up to ", { type: 'strong', content: '4 Crew cards' }, " that were revealed, up to a total value of ", { type: 'strong', content: '$1000' }, "."] },
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Multiple Goals',
+          content: [ "In addition to selecting one Goal, you must try to complete as many Goals as possible by the end of the game." ]
+        }
+      }
+    ]),
     sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
     requiredExpansion: "community"
   },
@@ -51,7 +70,6 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Awful Lonely In The Big Black",
     intro: "It takes a brave soul to sail the Big Black alone... Pick your goal and test your skills.",
-    setupDescription: "Solo Play. Draft Crew ($1000 limit). Stack 20 Disgruntled Tokens (Timer). Remove Piracy Jobs.",
     sourceUrl: "https://web.archive.org/web/20220226163627/https://www.flamesofwar.com/Portals/0/all_images/GF9/Firefly/Rulebooks/StoryCards/AwfulLonelyStoryCard.png",
     rules: createStoryRules("Awful Lonely In The Big Black", [
       { type: 'addFlag', flag: 'removePiracyJobs' },
@@ -69,7 +87,33 @@ export const SOLO_STORIES: StoryCardDef[] = [
     title: "Beholden to Niska",
     intro: "You have gotten a loan from Niska to buy your first ship. Niska will expect favors and to be paid back (with interest) in a timely manner. Failure to do so will result in legal confiscation of your ship, and illegal confiscation of your life!",
     isSolo: true,
-    setupDescription: "Game lasts for 30 turns (plus a final \"No Fly Action\" turn). Start at the Osiris ShipWorks with $3000, a Leader and a Ship. Do not draw any jobs to consider during the set up. Do not \"Prime the Pump\". ",
+    rules: createStoryRules("Beholden to Niska", [
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Game Timer',
+          content: ["Game lasts for ", { type: 'strong', content: '30 turns' }, " (plus a final \"No Fly Action\" turn)."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Start Location',
+          content: ["Start at the ", { type: 'strong', content: 'Osiris ShipWorks' }, " with a Leader and a Ship."]
+        }
+      },
+      { type: 'setJobMode', mode: 'no_jobs' },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'No Priming',
+          content: [{ type: 'strong', content: 'Do not "Prime the Pump"' }, " during setup."]
+        }
+      }
+    ]),
     sourceUrl: "https://boardgamegeek.com/filepage/129108/beholden-to-niska-firefly-solitaire-story-card-by",
     requiredExpansion: "community"
   },
@@ -223,7 +267,24 @@ export const SOLO_STORIES: StoryCardDef[] = [
         "description": "During Setup, mark 3 random bounties (not Cortex Alerts). Deliver the 3 marked bounties."
       }
     ],
-    setupDescription: "Start play with Jubal Early as your Leader. Remove Serenity's crew from the Bounty and Supply Decks. The Bounty deck is placd face up. All bounties are active.",
+    rules: createStoryRules("Jubal's Early Years", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Leader Assignment',
+          content: ["Start play with ", { type: 'strong', content: "Jubal Early" }, " as your Leader. Remove Serenity's crew from the Bounty and Supply Decks."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'allianceReaver',
+        rule: {
+          title: 'Active Bounties',
+          content: ["The Bounty deck is placed face up. All bounties are active."]
+        }
+      }
+    ]),
     sourceUrl: "https://boardgamegeek.com/filepage/289736/jubals-story-solo-cards",
     requiredExpansion: "community"
   },
@@ -231,7 +292,43 @@ export const SOLO_STORIES: StoryCardDef[] = [
     title: "The Hero of Canton",
     intro: "You can't do that to my people. Can't crush them under your heel. I'll strap on my hat, and in 20 rounds flat, steal every Mudder Boss Higgins has to steal.",
     isSolo: true,
-    setupDescription: "Start play with Cap'n Jayne as your Leader, Jayne's Cunning Hat, and Vera. Suybtract the cost of Vera frm your Starting Cash. Pull all Mudders and Stitch from the Supply decks. Shuffle them all together and place them face up as the Mudder deck. If the Foreman or Stitch is the top card after a shuffle, reshuffle the deck. Use 20 Disgruntle tokens as the game length timer.",
+    rules: createStoryRules("The Hero of Canton", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Hero Assignment',
+          content: ["Start play with ", { type: 'strong', content: "Cap'n Jayne" }, " as your Leader, ", { type: 'strong', content: "Jayne's Cunning Hat" }, ", and ", { type: 'strong', content: "Vera" }, "."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Starting Gear Cost',
+          content: ["Subtract the cost of Vera from your Starting Cash."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Mudder Deck',
+          content: [
+            { type: 'paragraph', content: ["Pull all Mudders and Stitch from the Supply decks."] },
+            { type: 'paragraph', content: ["Shuffle them all together and place them face up as the Mudder deck. If the Foreman or Stitch is the top card after a shuffle, reshuffle the deck."] },
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Game Timer',
+          content: ["Use ", { type: 'strong', content: "20 Disgruntle tokens" }, " as the game length timer."]
+        }
+      }
+    ]),
     sourceUrl: "https://boardgamegeek.com/filepage/288785/the-hero-of-canton-solo-story-card",
     requiredExpansion: "community"
   },
@@ -322,6 +419,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Ruining It For Everyone",
     maxPlayerCount: 2,
+    isPvP: true,
     intro: "During the war you watched your twin get cut down in a hail of shrapnel. You've lived an empty existence since that day making ends meet and trying to keep flying as best you can. Then you get a message from your Ma out on the Rim. \"Come home right away.\"\n\nSo you fly to St. Albans, Red Sun to see your Mother.\n\nOnce there, your twin (Who wasn't dead!) steals your ship and sets about ruining your life. Your twin has the exact same abilities as you do. Your twin may not discard any of your inactive jobs.",
     sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
     setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship."

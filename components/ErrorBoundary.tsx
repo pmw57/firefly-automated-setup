@@ -14,16 +14,17 @@ interface ErrorBoundaryState {
  * ErrorBoundary class component to catch rendering errors in its children.
  */
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  // FIX: Initializing state as a class property. This is the modern syntax for React class
-  // components and helps TypeScript correctly infer the existence of `state` on the component instance,
-  // resolving the errors about `state`, `setState`, and `props` not existing.
-  state: ErrorBoundaryState = {
-    hasError: false,
-    error: null,
-  };
+  // FIX: State initialization is moved into the constructor. The previous use of a class property
+  // was causing TypeScript to fail to infer the inherited `setState` and `props`
+  // members from React.Component. This more traditional pattern resolves the issue.
+  state: ErrorBoundaryState;
 
   constructor(props: ErrorBoundaryProps) {
     super(props);
+    this.state = {
+      hasError: false,
+      error: null,
+    };
     this.handleReset = this.handleReset.bind(this);
   }
 

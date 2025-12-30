@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { StoryCardDef, SetupRule } from '../../types/index';
 
@@ -15,7 +16,6 @@ export const KALIDASA_STORIES: StoryCardDef[] = [
   {
     title: "It's All In Who You Know",
     intro: "Credits are all well and good, but a strong network of contacts will pay greater dividends in the future. That's a lesson every captain gets to learn early, or they're likely not to be around long enough to learn it at all.",
-    setupDescription: "Create a stack of Alliance Alert Tokens (3x Players). No Starting Jobs.",
     requiredExpansion: "kalidasa",
     sourceUrl: "https://boardgamegeek.com/image/2785039/gerryrailbaron",
     rules: createStoryRules("It's All In Who You Know", [

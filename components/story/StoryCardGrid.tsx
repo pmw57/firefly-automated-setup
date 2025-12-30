@@ -29,10 +29,14 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
     activeStoryCard,
     sortMode,
     toggleSortMode,
+    filterCoOpOnly,
+    toggleFilterCoOp,
   } = useMissionSelection();
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
+
+  const hasCoOpStories = useMemo(() => validStories.some(s => s.isCoOp), [validStories]);
 
   const expansionsForFilter = useMemo(() => {
     // 1. Get all unique expansion IDs present in the currently valid stories.
@@ -79,16 +83,32 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
 
   return (
     <div className="space-y-3">
-      <div className="flex gap-3 flex-col sm:flex-row items-stretch">
+      <div className="flex gap-3 flex-wrap items-stretch">
         <input 
           type="text" 
           placeholder="Search Title or Intro..." 
-          className={`flex-1 p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none ${inputBg} ${inputText} ${inputPlaceholder} transition-colors`}
+          className={`flex-1 p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none ${inputBg} ${inputText} ${inputPlaceholder} transition-colors min-w-[150px]`}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        
+        {hasCoOpStories && (
+          <label className={cls(
+            `flex items-center gap-2 p-3 border rounded-lg shadow-sm transition-colors cursor-pointer`,
+            inputBorder, inputBg, inputText,
+            isDark ? 'hover:border-zinc-500' : 'hover:border-stone-400'
+          )}>
+            <input
+              type="checkbox"
+              checked={filterCoOpOnly}
+              onChange={toggleFilterCoOp}
+              className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 dark:bg-zinc-700 dark:border-zinc-600"
+            />
+            <span className="text-sm font-medium whitespace-nowrap">Co-op Only</span>
+          </label>
+        )}
 
-        <div ref={filterRef} className="relative w-full sm:w-56">
+        <div ref={filterRef} className="relative w-full sm:w-auto sm:flex-1 md:flex-none md:w-56">
           <button
             type="button"
             onClick={() => setIsFilterOpen(prev => !prev)}

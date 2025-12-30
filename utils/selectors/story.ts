@@ -58,10 +58,11 @@ export const getAvailableStoryCards = (gameState: GameState): StoryCardDef[] => 
 
 export const getFilteredStoryCards = (
     gameState: GameState, 
-    filters: { searchTerm: string; filterExpansion: string[]; sortMode: 'expansion' | 'name' }
+    // FIX: Added filterCoOpOnly to handle co-op filtering.
+    filters: { searchTerm: string; filterExpansion: string[]; filterCoOpOnly: boolean; sortMode: 'expansion' | 'name' }
 ): StoryCardDef[] => {
     const validStories = getAvailableStoryCards(gameState);
-    const { searchTerm, filterExpansion, sortMode } = filters;
+    const { searchTerm, filterExpansion, filterCoOpOnly, sortMode } = filters;
     
     const stories = validStories.filter(card => {
         const matchesSearch = searchTerm === '' || 
@@ -72,7 +73,10 @@ export const getFilteredStoryCards = (
             (filterExpansion.includes('base') && !card.requiredExpansion) ||
             (card.requiredExpansion && filterExpansion.includes(card.requiredExpansion));
 
-        return matchesSearch && matchesExpansion;
+        // FIX: Added logic to filter by co-op status.
+        const matchesCoOp = !filterCoOpOnly || card.isCoOp;
+
+        return matchesSearch && matchesExpansion && matchesCoOp;
     });
     
     if (sortMode === 'name') {

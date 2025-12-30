@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { StoryCardDef, SetupRule } from '../../types/index';
 import { CONTACT_NAMES } from '../ids';
@@ -16,7 +17,6 @@ export const CRIME_STORIES: StoryCardDef[] = [
   {
     title: "Smuggler's Blues",
     intro: "Bringin' goods to folk who want 'em is an old-fashioned way to make a living... 'cept, sometimes, a law or two gets in the way.",
-    setupDescription: "Place 3 Contraband in Alliance sectors. Place $2000 under specified decks. No Starting Jobs. Start at Londinium. Start with Alert Card.",
     requiredExpansion: "crime",
     sourceUrl: "https://boardgamegeek.com/image/3464668/firefly-the-game-crime-and-punishment",
     rules: createStoryRules("Smuggler's Blues", [

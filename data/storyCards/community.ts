@@ -21,6 +21,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
   },
   {
     title: "The Battle of Serenity Valley (PvP)",
+    isPvP: true,
     intro: "Serenity Valley was a valley located on Hera; it was mainly sparse and rocky with little vegetation. The valley was famous for being the location of the Battle of Serenity Valley—one of the bloodiest battles of the entire Unification War. Due to Hera's strategic positioning, taking the planet was a key to winning the war, and Serenity Valley became the turning point of the entire conflict.",
     setupDescription: "Take all Crew cards with \"Fight\" skill and all gear cards with \"Fight\" skill, add crew compartment ship upgrades and put them all in one deck; Shuffle. Take all Misbehave cards with \"Fight\" skill checks; Shuffle. Remove half \"Keep Flying\" cards from Alliance and Border decks. Other cards won't be used. Players evenly pick Alliance or Independents (Browncoats). Deal 3 crew/gear to each player (disregard warrants). Place ships in appropriate space. Alliance to inner planets, Browncoats to Border Planets.",
     requiredExpansion: "community",
@@ -70,7 +71,6 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
   {
     title: "How It All Started",
     intro: "You're low on funds, and need to get a job. Badger's hired you to scavenge a derelict ship dangerously close to an Alliance cruiser. Get the cargo, evade the Alliance, and sell it.",
-    setupDescription: "Start with $500, 2 Fuel, 2 Parts. Nandi discounts.",
     requiredExpansion: "community",
     rules: createStoryRules("How It All Started", [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Story Override" },
@@ -83,7 +83,6 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
   {
     title: "It Ain't Easy Goin' Legit",
     intro: "Your last run in with Harken turned South and you've got a boatload of warrants trailin' ya. Time to clean your ledger and get dirt on Harken instead.",
-    setupDescription: "Start with 2 Warrants. Alliance Space off limits. No Harken.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/image/4434522",
     rules: createStoryRules("It Ain't Easy Goin' Legit", [
@@ -113,10 +112,32 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1135128/article/15123932#15123932"
   },
   {
+    title: "My Fellow Browncoats",
+    isCoOp: true,
+    intro: "The crew of Serenity needs your help. They've been captured by the Alliance and sent to unknown prison camps all over the 'Verse. For a price, Badger might let you in on a little secret.",
+    rules: createStoryRules("My Fellow Browncoats", [
+      { 
+        type: 'addSpecialRule', 
+        category: 'goal',
+        rule: {
+          title: 'Story Override',
+          content: [
+            { type: 'list', items: [
+                ['Place ', { type: 'strong', content: 'Serenity' }, ' on Shadow, Murphy as the drop-off point for rescued crew.'],
+                ['Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together.'],
+                ['Place them face down as the ', { type: 'strong', content: '"Prisoner Deck"' }, '. They are your goals for this game.']
+            ]}
+          ]
+        }
+      }
+    ]),
+    sourceUrl: "https://boardgamegeek.com/thread/3282832/my-fellow-browncoats-remastered-into-a-solo-and-co",
+    requiredExpansion: "community"
+  },
+  {
     title: "My Number One Guy (PvP)",
+    isPvP: true,
     intro: "Loyalty is a luxury you can’t afford. In this Verse, you’re either the right-hand man or the man in the way. Time to prove you’re the number one guy.",
-    sourceUrl: "https://boardgamegeek.com/thread/1076645/story-card-my-number-one-guy-player-vs-player",
-    setupDescription: "Draw 3 jobs from a single contact and two other jobs from any other contacts. You may keep up to 3 jobs.",
     requiredExpansion: "community",
     rules: createStoryRules("My Number One Guy (PvP)", [
       { type: 'addFlag', flag: 'customJobDraw' }
@@ -153,7 +174,6 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
   {
     title: "Shadows Over Duul",
     intro: "The Silverhold-Hera route is usually a harmless uneventful run. Unless, of course, someone installs a beacon on the cargo which attracts a Reaver party.",
-    setupDescription: "Remove Amnon Duul Jobs. Start in border of Murphy.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/100497/shadows-over-duul-new-goal-reupload",
     rules: createStoryRules("Shadows Over Duul", [
@@ -164,8 +184,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
   {
     title: "Slaying The Dragon",
     playerCount: 2,
+    isCoOp: true,
     intro: "Adelai Niska has been lord of the underworld for as long as anyone can remember. Shu-ki, the tong boss of Gonghe, has long suffered under Niska's yoke. After being publicly shamed by Niska at a meeting of crime-bosses, an enraged Shu-ki has decided to bring Niska down. He has a plan - Operation Dragon - but the job is so daunting that it requires two crews to have any hope of success. Can two Firefly captains bring down the most feared criminal boss in the 'Verse?",
-    setupDescription: "2-Player Co-Op. Niska jobs forbidden. Remove Niska Deck. Prime +2 cards/deck. Stack 16 Disgruntled Tokens (Countdown).",
     requiredExpansion: "community",
     rules: createStoryRules("Slaying The Dragon", [
       { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
@@ -174,8 +194,19 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
         type: 'addSpecialRule', 
         category: 'prime',
         rule: {
-          title: 'Slaying The Dragon',
+          title: 'Setup Override',
           content: [{ type: 'strong', content: 'Shu-ki is greasing the rails:' }, ' Turn up ', { type: 'strong', content: '2 additional cards' }, ' from each deck when Priming the Pump.']
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Co-Op & Countdown',
+          content: [
+            { type: 'paragraph', content: [{ type: 'strong', content: '2-Player Co-Op:' }, " Both players win or lose together."] },
+            { type: 'paragraph', content: [{ type: 'strong', content: 'Countdown:' }, " Stack ", { type: 'strong', content: '16 Disgruntled Tokens' }, ". At the start of each player's turn, discard one token. The game ends when the last token is discarded."] },
+          ]
         }
       }
     ]),
@@ -190,12 +221,18 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
   {
     title: "The Magnificent Crew",
     intro: "On a backwater planet, an old friend sends out a plea. Marauders are bleeding their town dry. Suss out the trouble, assemble a crew, and eliminate the pesky varmints.",
-    setupDescription: "Remove all Job Decks. High-value cargo sales.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/image/2277037/upstarter",
     rules: createStoryRules("The Magnificent Crew", [
-      { type: 'addFlag', flag: 'removeJobDecks' },
-      { type: 'setJobMode', mode: 'no_jobs' }
+      { type: 'setJobMode', mode: 'no_jobs' },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Gameplay Note',
+          content: ['This story features special high-value cargo sales rules that apply during gameplay.']
+        }
+      }
     ])
   },
   {
