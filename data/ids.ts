@@ -1,3 +1,4 @@
+
 export const SETUP_CARD_IDS = {
   STANDARD: 'Standard',
   FLYING_SOLO: 'FlyingSolo',
@@ -11,6 +12,7 @@ export const SETUP_CARD_IDS = {
   AINT_ALL_BUTTONS_AND_CHARTS: 'AintAllButtonsAndCharts',
   HOME_SWEET_HAVEN: 'HomeSweetHaven',
   THE_HEAT_IS_ON: 'TheHeatIsOn',
+  SOLITAIRE_FIREFLY: 'SolitaireFirefly',
 };
 
 export const STEP_IDS = {

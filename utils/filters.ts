@@ -46,5 +46,20 @@ export const isStoryCompatible = (card: StoryCardDef, state: GameState): boolean
         }
     }
 
+    // Rule 5: Exclusive Setup Card stories (like Solitaire Firefly)
+    const isSolitaireActive = state.setupCardId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY || state.secondarySetupId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY;
+
+    if (isSolitaireActive) {
+      // If Solitaire Firefly is active, ONLY show cards that require its flag.
+      if (card.requiredFlag !== 'isSolitaireFirefly') {
+        return false;
+      }
+    } else {
+      // If Solitaire Firefly is NOT active, HIDE cards that require its flag.
+      if (card.requiredFlag === 'isSolitaireFirefly') {
+        return false;
+      }
+    }
+
     return true;
 };

@@ -1,5 +1,4 @@
 
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { SetupCardDef, SetupCardStep, SetupRule } from '../types/index';
 import { STEP_IDS, SETUP_CARD_IDS, CONTACT_NAMES } from './ids';
 
@@ -278,5 +277,29 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { id: STEP_IDS.C6, title: `7. ${BASE_TITLES.C6}` },
       { id: STEP_IDS.C_PRIME, title: `8. ${BASE_TITLES.C_PRIME}` }
     ]
+  },
+  {
+    id: SETUP_CARD_IDS.SOLITAIRE_FIREFLY,
+    label: "Solitaire Firefly",
+    description: "A solo campaign following the TV series, based on 'Awful Lonely in the Big Black' rules. Source: boardgamegeek.com/thread/1335810",
+    requiredExpansion: 'community',
+    iconOverride: 'community',
+    mode: 'solo',
+    sourceUrl: "https://boardgamegeek.com/thread/1335810/solitaire-firefly-some-new-story-cards-for-fans-of",
+    rules: createRules("Solitaire Firefly", [
+      { type: 'addFlag', flag: 'isSolitaireFirefly' },
+      { type: 'addFlag', flag: 'removePiracyJobs' },
+      { type: 'addFlag', flag: 'soloCrewDraft' },
+      { type: 'addFlag', flag: 'soloGameTimer' },
+    ]),
+    steps: [
+      { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}`, page: 4, manual: 'Core' },
+      { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}`, page: 3, manual: 'Core' },
+      { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}`, page: 3, manual: 'Core' },
+      { id: STEP_IDS.C3, title: `4. ${BASE_TITLES.C3}`, page: 3, manual: 'Core' },
+      { id: STEP_IDS.C5, title: `5. ${BASE_TITLES.C5}`, page: 4, manual: 'Core' },
+      { id: STEP_IDS.C6, title: `6. ${BASE_TITLES.C6}`, page: 4, manual: 'Core' },
+      { id: STEP_IDS.C_PRIME, title: `7. ${BASE_TITLES.C_PRIME}`, page: 4, manual: 'Core' }
+    ],
   }
 ];

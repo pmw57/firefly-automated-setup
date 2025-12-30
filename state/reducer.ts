@@ -81,6 +81,34 @@ const validateGameMode = (state: GameState): GameState => {
     return newState;
 }
 
+/**
+ * Validates and resets optional rules if their required expansion (10th Anniversary) is disabled.
+ */
+const validateOptionalRules = (state: GameState): GameState => {
+    let newState = { ...state };
+    // If 10th Anniversary is not active, disable related optional rules.
+    if (!newState.expansions.tenth) {
+        newState = {
+            ...newState,
+            optionalRules: {
+                ...newState.optionalRules,
+                optionalShipUpgrades: false,
+                disgruntledDie: 'standard',
+            },
+            soloOptions: {
+                noSureThings: false,
+                shesTrouble: false,
+                recipeForUnpleasantness: false,
+            },
+            timerConfig: {
+                ...newState.timerConfig,
+                mode: 'standard',
+            }
+        };
+    }
+    return newState;
+};
+
 
 /**
  * A master validation function that runs after every state change to ensure consistency.
@@ -91,6 +119,7 @@ const validateState = (state: GameState): GameState => {
     validatedState = validateSetupCard(validatedState);
     validatedState = validateStoryCard(validatedState);
     validatedState = validateGameMode(validatedState);
+    validatedState = validateOptionalRules(validatedState);
     // Add other validation functions here as needed
     return validatedState;
 };

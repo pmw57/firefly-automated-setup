@@ -1,3 +1,4 @@
+
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { SETUP_CARDS } from '../../../data/setupCards';
@@ -17,6 +18,7 @@ describe('Setup Cards Step Regression', () => {
     [SETUP_CARD_IDS.AINT_ALL_BUTTONS_AND_CHARTS]: [STEP_IDS.D_FIRST_GOAL, STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.C3, STEP_IDS.D_SHUTTLE, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME],
     [SETUP_CARD_IDS.HOME_SWEET_HAVEN]: [STEP_IDS.D_FIRST_GOAL, STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.D_HAVEN_DRAFT, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME, STEP_IDS.D_LOCAL_HEROES],
     [SETUP_CARD_IDS.THE_HEAT_IS_ON]: [STEP_IDS.D_PRESSURES_HIGH, STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.C3, STEP_IDS.C4, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME],
+    [SETUP_CARD_IDS.SOLITAIRE_FIREFLY]: [STEP_IDS.C4, STEP_IDS.C1, STEP_IDS.C2, STEP_IDS.C3, STEP_IDS.C5, STEP_IDS.C6, STEP_IDS.C_PRIME],
   };
 
   it.concurrent('all defined setup cards should have regression expectations', () => {

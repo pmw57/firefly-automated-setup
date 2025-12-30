@@ -10,7 +10,8 @@ import { StoryRandomizer } from './StoryRandomizer';
 import { StoryCardGrid } from './StoryCardGrid';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { Step } from '../../types/index';
-import { STEP_IDS } from '../../data/ids';
+import { STEP_IDS, SETUP_CARD_IDS } from '../../data/ids';
+import { SpecialRuleBlock } from '../SpecialRuleBlock';
 
 interface StorySelectionPartProps {
   step: Step;
@@ -35,6 +36,32 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ step, on
   const storyPage = hasTenth ? 25 : 16;
   const storyManual = hasTenth ? '10th AE' : 'Core';
 
+  const setupOverrideMessage = React.useMemo(() => {
+    if (gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
+      return (
+        <SpecialRuleBlock
+          source="setupCard"
+          title="Flying Solo Mode Active"
+          content={[
+            { type: 'paragraph', content: ["You are playing in the 10th Anniversary Expanded Solo Mode. This mode allows you to play almost any story card solo, but it excludes some stories designed for the 'classic' solo variant."] }
+          ]}
+        />
+      );
+    }
+    if (gameState.setupCardId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY) {
+      return (
+        <SpecialRuleBlock
+          source="setupCard"
+          title="Solitaire Firefly Mode Active"
+          content={[
+            { type: 'paragraph', content: ["You are playing the fan-made solo campaign that follows the TV series. Only the episodic story cards are available in this mode."] }
+          ]}
+        />
+      );
+    }
+    return null;
+  }, [gameState.setupCardId]);
+
   const containerBg = 'bg-[#faf8ef]/80 dark:bg-zinc-900/70 backdrop-blur-md';
   const containerBorder = 'border-[#d6cbb0] dark:border-zinc-800';
   const headerBarBg = 'bg-[#5e1916] dark:bg-black/40';
@@ -50,6 +77,8 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ step, on
       <h4 className={`text-center font-bold text-sm uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
           {titleOverride || 'Choose a Story Card'}
       </h4>
+      
+      {setupOverrideMessage}
       
       <div className={`${containerBg} rounded-lg shadow-md border ${containerBorder} overflow-hidden transition-colors duration-300`}>
         <div className={`${headerBarBg} p-4 flex justify-between items-center border-b ${headerBarBorder} transition-colors duration-300`}>

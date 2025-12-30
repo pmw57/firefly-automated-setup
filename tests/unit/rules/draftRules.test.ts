@@ -39,7 +39,8 @@ describe('rules/draftRules', () => {
     const baseGameState = getDefaultGameState();
 
     it.concurrent('returns empty special rules for a standard game', () => {
-        const details = getDraftDetails(baseGameState, baseStep);
+        const state: GameState = { ...baseGameState, optionalRules: { ...baseGameState.optionalRules, optionalShipUpgrades: false } };
+        const details = getDraftDetails(state, baseStep);
         expect(details.specialRules).toEqual([]);
         expect(details.isHavenDraft).toBe(false);
         expect(details.specialStartSector).toBeNull();

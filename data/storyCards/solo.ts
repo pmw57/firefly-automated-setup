@@ -1,7 +1,6 @@
 
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { StoryCardDef, SetupRule } from '../../types/index';
-import { CONTACT_NAMES } from '../ids';
+import { CONTACT_NAMES, STEP_IDS } from '../ids';
 
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
@@ -15,34 +14,17 @@ const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule,
 
 export const SOLO_STORIES: StoryCardDef[] = [
   {
-    title: "And That Makes Us Mighty",
-    intro: "Feeling disrespected, broke, and in a bad mood, you finally decide to do something about it. But how many of your problems can you solve at once?",
-    isSolo: true,
-    goals: [
-      {
-        title: "Earn Their Respect",
-        description: "End the game Solid with at least 5 different Contacts."
-      },
-      {
-        title: "Flush with Cash",
-        description: "End the game with at least $15,000."
-      },
-      {
-        title: "Let Off Some Steam",
-        description: "Successfully Proceed past 20 more Misbehave cards by the end of the game."
-      }
-    ],
-    setupDescription: "Setup follows the rules on the official solo play Story Card, with the following exceptions: 1. After randomly selecting a Leader, you may select up to 4 Crew cards revealed when Priming the Pump - up to a total value of $1000. 2. In addition to selecting and completing one of the following Goals, you must try to complete as many Goals as possible by the end of the game.",
-    sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
-    requiredExpansion: "community"
-  },
-  {
-    title: "Ariel (tv episode)",
+    title: "Ariel",
     intro: "When River slashes Jayne's chest, Simon decides it's time to get serious about treating her. He hires the crew of Serenity to get him and River into a high-tech hospital on Ariel so he can see what the Alliance did to her.",
     setupDescription: "Continue with the crew and items you acquired after completing Out of Gas. Requires EXPLOSIVES.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 10,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: 'Requires EXPLOSIVES.' }] }
+    ]
   },
   {
     title: "Awful Lonely In The Big Black",
@@ -62,27 +44,22 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true
   },
   {
-    title: "Beholden to Niska",
-    intro: "You have gotten a loan from Niska to buy your first ship. Niska will expect favors and to be paid back (with interest) in a timely manner. Failure to do so will result in legal confiscation of your ship, and illegal confiscation of your life!",
-    isSolo: true,
-    setupDescription: "Game lasts for 30 turns (plus a final \"No Fly Action\" turn). Start at the Osiris ShipWorks with $3000, a Leader and a Ship. Do not draw any jobs to consider during the set up. Do not \"Prime the Pump\". ",
-    sourceUrl: "https://boardgamegeek.com/filepage/129108/beholden-to-niska-firefly-solitaire-story-card-by",
-    requiredExpansion: "community"
-  },
-  {
-    title: "Bushwhacked (tv episode)",
+    title: "Bushwhacked",
     intro: "Serenity encounters a drifting spaceship of  a type which was converted to transport settlers to the Outer Planets. Mal decides to check out the derelict in order to either help survivors or loot the dead.",
     setupDescription: "Continue with the crew and items you acquired after completing The Train Job.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 4
   },
   {
-    "title": "Christmas Delivery",
-    "intro": "The 'Verse is just too big for one man to provide joy for all of the good little boys and girls. He needs your help and you'd better not misbehave!",
-    "isSolo": true,
-    "setupDescription": "The same as Awful Lonely in the Big Black",
-    "sourceUrl": "https://boardgamegeek.com/thread/1076227/article/14229639#14229639"
+    title: "Christmas Delivery",
+    intro: "The 'Verse is just too big for one man to provide joy for all of the good little boys and girls. He needs your help and you'd better not misbehave!",
+    requiredExpansion: "community",
+    isSolo: true,
+    setupDescription: "The same as Awful Lonely in the Big Black",
+    sourceUrl: "https://boardgamegeek.com/thread/1076227/article/14229639#14229639"
   },
   {
     title: "A Fistful Of Scoundrels",
@@ -151,34 +128,14 @@ export const SOLO_STORIES: StoryCardDef[] = [
     }
   },
   {
-    title: "Jubal's Early Years",
-    intro: "Not much is know about Jubal's past.",
-    isSolo: true,
-    goals: [
-      {
-        "title": "Hunt the Verse's Most Wanted",
-        "description": "During Setup, mark 3 random bounties (not Cortex Alerts). Deliver the 3 marked bounties."
-      }
-    ],
-    setupDescription: "Start play with Jubal Early as your Leader. Remove Serenity's crew from the Bounty and Supply Decks. The Bounty deck is placd face up. All bounties are active.",
-    sourceUrl: "https://boardgamegeek.com/filepage/289736/jubals-story-solo-cards",
-    requiredExpansion: "community"
-  },
-  {
-    title: "Objects in Space (tv episode)",
-    intro: "With the crew asleep, Jubel Early, a bounty hunter, sneaks aboard Serenity. He has been paid to abduct River Tam. He locks most of the crew in their cabins. However, River has disappeared.",
-    setupDescription: "Continue with the crew and items you acquired after completing Heart of Gold. This Story can take place in any sector. If a named Crew is missing, choose another Crew.",
+    title: "Heart of Gold",
+    intro: "Aboard Serenity, a crew member receives a distress call from a friend, Nandi, owner of a border moon bordello. Nandi asks for help dealing with a landowner named Burgess, who is victimizing one of her employees.",
+    setupDescription: "Continue with the crew and items you acquired after completing The Message.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
-  },
-  {
-    title: "The Hero of Canton",
-    intro: "You can't do that to my people. Can't crush them under your heel. I'll strap on my hat, and in 20 rounds flat, steal every Mudder Boss Higgins has to steal.",
     isSolo: true,
-    setupDescription: "Start play with Cap'n Jayne as your Leader, Jayne's Cunning Hat, and Vera. Suybtract the cost of Vera frm your Starting Cash. Pull all Mudders and Stitch from the Supply decks. Shuffle them all together and place them face up as the Mudder deck. If the Foreman or Stitch is the top card after a shuffle, reshuffle the deck. Use 20 Disgruntle tokens as the game length timer.",
-    sourceUrl: "https://boardgamegeek.com/filepage/288785/the-hero-of-canton-solo-story-card",
-    requiredExpansion: "community"
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 14
   },
   {
     title: "Heroes & Misfits",
@@ -195,7 +152,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'addFlag', flag: 'isHeroesAndMisfits' }
     ]),
     challengeOptions: [
-      { id: 'heroes_custom_setup', label: "Why should Mal have all the fun? Pick the Leader, Ship, and Supply Planet of your choice. Begin the game with $2000 and a full compliment of your favourite Crew from the show or game." }
+      { id: 'heroes_custom_setup', label: "Why should Mal have all the fun? Pick the Leader, Ship, and Supply Planet of your choice. Begin the game with $2000 and a full compliment of your favourite crew from the show or game." }
     ],
     advancedRule: {
       id: "adv_contact_quirks_work",
@@ -203,20 +160,41 @@ export const SOLO_STORIES: StoryCardDef[] = [
     }
   },
   {
-    title: "Jaynestown (tv episode)",
+    title: "Hunt For The Arc",
+    intro: "The Joan of Arc, one of the great colony ships that left Earth-That-Was hundreds of years ago, never arrived at its destination. Filled with priceless Earth artifacts, the huge vessel has long been rumored to be floating out beyond Alliance space, just waiting to make some lucky crew filthy rich. It's haunted you, become an obsession, but you pored over star charts and history books for years, and now you might just have a notion where she 'bides. Find the Arc and successfully deliver her to the Alliance for a hefty sum, or fence her to a criminal boss to become financially set for life...",
+    requiredExpansion: "community",
+    isSolo: true,
+    sourceUrl: "https://boardgamegeek.com/thread/1049419/hunt-for-the-arc-a-solo-adventure",
+    setupDescription: "Place a Reaver ship in the Border Space sector directly below Valentine, instead of its usual position.",
+    rules: createStoryRules("Hunt For The Arc", [
+      { type: 'addFlag', flag: 'huntForTheArcReaverPlacement', reaverShipCount: 1 }
+    ])
+  },
+  {
+    title: "Jaynestown",
     intro: "On Higgins' Moon, Inara meets the son of Magistrate Higgins. The rest of the crew is in search of loot. Meanwhile, One of the crew worries that his past misdeeds on Higgins' Moon might catch up with him.",
     setupDescription: "Continue with the crew and items you acquired after completing Our Mrs. Reynolds. You may want to get Jayne some negotiation gear, or things could gho badly.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 8,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C5, content: ["You may want to get ", { type: 'strong', content: 'Jayne' }, " some negotiation gear, or things could go badly."] }
+    ]
   },
   {
-    title: "Heart of Gold (tv episode)",
-    intro: "Aboard Serenity, a crew member receives a distress call from a friend, Nandi, owner of a border moon bordello. Nandi asks for help dealing with a landowner named Burgess, who is victimizing one of her employees.",
-    setupDescription: "Continue with the crew and items you acquired after completing The Message.",
+    title: "Objects in Space",
+    intro: "With the crew asleep, Jubel Early, a bounty hunter, sneaks aboard Serenity. He has been paid to abduct River Tam. He locks most of the crew in their cabins. However, River has disappeared.",
+    setupDescription: "Continue with the crew and items you acquired after completing Heart of Gold. This Story can take place in any sector. If a named Crew is missing, choose another Crew.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 15,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C3, content: ["This Story can take place in any sector. If a named Crew from the show is missing, choose another Crew."] }
+    ]
   },
   {
     title: "Once Upon A Time In The Big Black",
@@ -240,20 +218,30 @@ export const SOLO_STORIES: StoryCardDef[] = [
     }
   },
   {
-    title: "Our Mrs. Reynolds (tv episode)",
+    title: "Our Mrs. Reynolds",
     intro: "The crew of Serenity have agrees to help rid a settlement on Triumph of its bandit problem. The community can't pay, but promises the crew a big party and whatever other presents they can give.",
     setupDescription: "Continue with the crew and items you acquired after completing Safe Suggested: Mal's Pretty Floral Bonnet & Vera.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 7,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: "Suggested:" }, " Mal's Pretty Floral Bonnet & Vera."] }
+    ]
   },
   {
-    title: "Out of Gas (tv episode)",
+    title: "Out of Gas",
     intro: "Something has gone terribly wrong on Serenity. Remember that compression coil that Kaylee's always going on about? Well it busted, and we are driftin'. And in deep space too. Can things get any worse?",
     setupDescription: "Continue with the crew and items you acquired after completing Jaynestown. This Story can take place in any empty sector.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 9,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C3, content: ["This Story can take place in any empty sector."] }
+    ]
   },
   {
     title: "Racing A Pale Horse",
@@ -287,12 +275,17 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship."
   },
   {
-    title: "Safe (tv episode)",
+    title: "Safe",
     intro: "The crew of Serenity find themselves on Jiangyin, where Mal is selling livestock to the Grange Brothers. Just as business is about to be concluded, the law shows up. To complicate things more, Simon and River are missing.",
     setupDescription: "Continue with the crew and items you acquired after completing Shindig. Requires FAKE ID.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 6,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: 'Requires FAKE ID.' }] }
+    ]
   },
   {
     title: "Seeds Of Rebellion",
@@ -317,7 +310,13 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupDescription: "Continue with the crew and items you acquired after completing Objects in Space. Remove Inara and Shepherd Book from the game. Requires Transport.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 16,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C3, content: ["Remove ", { type: 'strong', content: 'Inara' }, " and ", { type: 'strong', content: 'Shepherd Book' }, " from the game."] },
+      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: 'Requires Transport.' }] }
+    ]
   },
   {
     title: "Serenity Movie Part 2",
@@ -325,7 +324,13 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupDescription: "Continue with the crew and items you acquired after completing Serenity Movie Part 1. Remove Disgruntled Tokens from all crew. Inara rejoins the crew at this point.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 17,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C3, content: [{ type: 'strong', content: 'Inara rejoins' }, " the crew at this point."] },
+      { stepId: STEP_IDS.C5, content: ["Remove ", { type: 'strong', content: 'Disgruntled Tokens' }, " from all crew."] }
+    ]
   },
   {
     title: "Serenity Movie Part 3",
@@ -333,31 +338,50 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupDescription: "Continue with the crew and items you acquired after completing Serenity Movie Part 2. Fully Equipped Med Bay may not be used. Suggested: Simon's Surgical Kit.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 18,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: 'Fully Equipped Med Bay' }, " may not be used. ", { type: 'strong', content: "Suggested:" }, " Simon's Surgical Kit."] }
+    ]
   },
   {
-    title: "Serenity Part 1 (tv episode)",
-    intro: "Mal Reynolds and the crew of the Firefly Class Transport Serenity are involved in illegally slavaging crates off an abandoned spaceship for Badger, a small-time crime boss on the planet persephone.",
+    title: "Serenity Part 1",
+    intro: "Mal Reynolds and the crew of the Firefly Class Transport Serenity are involved in illegally slavaging crates off an abandoned spaceship for Badger, a small-time crime boss on the planet Persephone.",
     setupDescription: "Set up Serenity at Valentine with Malcolm, Zoe, Wash, Kaylee, Jaune, 1 Fuel, $500, Cry Baby, Expanded Crew Quarters. Load 2 Contra, then turn over a Nav Card.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 1,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C3, content: ["Set up ", { type: 'strong', content: 'Serenity' }, " at ", { type: 'strong', content: 'Valentine' }, " with Malcolm, Zoe, Wash, Kaylee, Jayne, Cry Baby, and Expanded Crew Quarters."] },
+      { stepId: STEP_IDS.C5, content: ["Start with ", { type: 'strong', content: '1 Fuel' }, " and ", { type: 'strong', content: '$500' }, "."] },
+      { stepId: STEP_IDS.C6, content: ["Load ", { type: 'strong', content: '2 Contraband' }, ", then turn over a Nav Card."] }
+    ]
   },
   {
-    title: "Serenity Part 2 (tv episode)",
+    title: "Serenity Part 2",
     intro: "Mal Reynolds and the crew of the Firefly Class Transport Serenity are despereately trying to sell contraband they found on an abandoned spaceship. Arriving at Whitefall, they need to deal with Patience.",
     setupDescription: "Continue with the crew and items you acquired after completing Serenity Part 1.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 2
   },
   {
-    title: "Shindig (tv episode)",
+    title: "Shindig",
     intro: "The crew of Serenity attends a high society ball - a \"Shindig\" Badger wants Mal to deal with Sir Warrick Harrow. Everything goes smoothly until Mal inadvertently challenges someone to a duel.",
     setupDescription: "Continue with the crew and items you acquired after completing Bushwhacked. Suggested: Kaylee's Fluffy Pink Dress. Required: Mal must wear FANCY DUDS throughout.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 5,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: "Suggested:" }, " Kaylee's Fluffy Pink Dress. ", { type: 'strong', content: "Required:" }, " Mal must wear FANCY DUDS throughout."] }
+    ]
   },
   {
     title: "The Lonely Smuggler's Blues",
@@ -380,12 +404,18 @@ export const SOLO_STORIES: StoryCardDef[] = [
     }
   },
   {
-    title: "The Message (tv episode)",
+    title: "The Message",
     intro: "Amnon Duul has a crate for Mal. Inside is the body of Tracey, a man Mal knew during the war. The crew take the crate aboard Serenity and plan to take it home for burial, but now corrupt police are in pursuit.",
     setupDescription: "Continue with the crew and items you acquired after completing Trash. Start the Story at the Space Bazaar. Suggested: Fully Equipped Med Bay. Take Jayne's \"Cunning\" Hat.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 13,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C3, content: ["Start the Story at the ", { type: 'strong', content: 'Space Bazaar' }, "."] },
+      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: "Suggested:" }, " Fully Equipped Med Bay. Take Jayne's \"Cunning\" Hat."] }
+    ]
   },
   {
     title: "The Raggedy Edge",
@@ -406,35 +436,43 @@ export const SOLO_STORIES: StoryCardDef[] = [
     }
   },
   {
-    title: "The Train Job (tv episode)",
+    title: "The Train Job",
     intro: "Unification Day: six years since the Alliance won the war. The crew of Serenity are on a moon of Ariel in the White Sun system. Mal and the crew are relaxing in a local bar.",
     setupDescription: "Continue with the crew and items you acquired after completing Serenity Part 2. If you have the credits, a Fully Equipped Med Bay might also come in handy.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
-  },
-  {
-    title: "They're Part of My Crew",
-    intro: "We all know Mal's got a good aim whern it comes to misbehavin'. We also know Mal's stepped on quite a few toes with his misbehavin'. There's more than a few folk like to see him and his crew behind bars or six feet under. Regardless of who or what comes at Serenity, Mal's gonna do what he's always done. Protect his crew.",
     isSolo: true,
-    setupDescription: "Use the Standard Set Up card with Malcolm as your Leader and Serenisy as your ship. Take only $1000 in starting cash. Take Zoe, Wash, Jayne, Kaylee, Inara, Book, Simon, and River. Take 1 Expanded Crew Quarters from Osiris. Collect 7 Disgruntled tokens. These Disgruntled tokens will be used as a timer that will trigger the arrest of 5 crew members. Discard 1 token at the start of each turn.",
-    sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
-    requiredExpansion: "community"
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 3,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C5, content: ["If you have the credits, a ", { type: 'strong', content: 'Fully Equipped Med Bay' }, " might also come in handy."] }
+    ]
   },
   {
-    title: "Trash (tv episode)",
+    title: "Trash",
     intro: "While overseeing a cargo transfer for a smuggling job, Mal runs into Saffron. Guns are drawn, but Saffron convinces Mal to get in on her plan t steal the Lassiter Laser Pistol - a priceless artifact.",
     setupDescription: "Continue with the crew and items you acquired after completing War Stories. Before starting, pick up Saffron on Newhope. Requires HACKING RIG.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 12,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C3, content: ["Before starting, pick up ", { type: 'strong', content: 'Saffron' }, " on ", { type: 'strong', content: 'Newhope' }, "."] },
+      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: 'Requires HACKING RIG.' }] }
+    ]
   },
   {
-    title: "War Stories (tv episode)",
+    title: "War Stories",
     intro: "After a simple business deal goes badly wrong, Mal and Wash find themselves in the hands of Adelai Niska, who is still holding a grudge from an earlier encounter. The rest of the crew must mount a rescue.",
     setupDescription: "Continue with the crew and items you acquired after completing Ariel. Requires EXPLOSIVES.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
-    isSolo: true
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 11,
+    campaignSetupNotes: [
+      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: 'Requires EXPLOSIVES.' }] }
+    ]
   },
 ];

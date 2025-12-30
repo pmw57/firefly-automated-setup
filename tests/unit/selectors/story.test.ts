@@ -5,7 +5,6 @@ import { getAvailableStoryCards, getAvailableSetupCards } from '../../../utils/s
 import { GameState } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
-import { SETUP_CARDS } from '../../../data/setupCards';
 
 describe('selectors/story', () => {
     const baseGameState = getDefaultGameState();
@@ -13,8 +12,8 @@ describe('selectors/story', () => {
     describe('getAvailableSetupCards', () => {
         it.concurrent('should return all non-FlyingSolo cards when all expansions are enabled', () => {
             const cards = getAvailableSetupCards(baseGameState);
-            // Total setup cards (12) minus Flying Solo (1) = 11
-            expect(cards.length).toBe(SETUP_CARDS.length - 1);
+            // Total setup cards (13) minus Flying Solo (1) and SolitaireFirefly (1, solo only) = 11 for multiplayer.
+            expect(cards.length).toBe(11);
             expect(cards.find(c => c.id === SETUP_CARD_IDS.FLYING_SOLO)).toBeUndefined();
         });
 
