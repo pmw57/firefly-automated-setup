@@ -44,7 +44,7 @@ describe('Integration Scenarios', () => {
 
       // --- Step 1: Captain Setup ---
       await screen.findByRole('heading', { name: /Config/i });
-      await user.click(await screen.findByRole('button', { name: /Next: Choose Setup Card/i }));
+      await user.click(await screen.findByRole('button', { name: /Next: Choose Setup →/i }));
 
       // --- Step 2: Setup Card Selection ---
       await screen.findByRole('heading', { name: /Select Setup Card/i });
@@ -53,7 +53,7 @@ describe('Integration Scenarios', () => {
 
       // --- Step 3: Optional Rules ---
       await screen.findByRole('heading', { name: /Optional Rules/i });
-      await user.click(await screen.findByRole('button', { name: /Begin Setup Sequence/i }));
+      await user.click(await screen.findByRole('button', { name: /Begin Setup →/i }));
       
       // --- Navigate to first "real" step to select a story ---
       await screen.findByRole('heading', { name: /Goal of the Game/i });

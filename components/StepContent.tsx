@@ -153,7 +153,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponen
           {/* Desktop Nav */}
           <div className={cls("hidden sm:flex mt-12 justify-between clear-both pt-8 border-t", isDark ? 'border-zinc-800' : 'border-stone-200')}>
             <Button onClick={onPrev} variant="secondary" disabled={isNavigating}>
-              ← Previous
+              ← Back
             </Button>
             <Button onClick={onNext} disabled={isNavigating} className="px-10">
               Next Step →
@@ -165,26 +165,21 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponen
             "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex sm:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
             footerBg, footerBorder
           )}>
-            <button 
+            <Button 
               onClick={onPrev} 
+              variant="secondary"
               disabled={isNavigating}
-              className={cls(
-                "flex-1 py-3 px-4 rounded-lg font-bold text-xs uppercase tracking-wider transition-all",
-                isDark ? 'bg-zinc-800 text-zinc-300 border border-zinc-700' : 'bg-stone-200 text-stone-700 border border-stone-300'
-              )}
+              className="flex-1 text-xs uppercase tracking-wider !py-3"
             >
-              ← Previous
-            </button>
-            <button 
+              ← Back
+            </Button>
+            <Button 
               onClick={onNext} 
               disabled={isNavigating}
-              className={cls(
-                "flex-[2] py-3 px-4 rounded-lg font-bold text-xs uppercase tracking-[0.1em] shadow-lg transition-all active:scale-95",
-                isDark ? 'bg-emerald-600 text-white' : 'bg-firefly-red text-white'
-              )}
+              className="flex-[2] text-xs uppercase tracking-[0.1em] !py-3"
             >
               Next Step →
-            </button>
+            </Button>
           </div>
         </>
       )}
