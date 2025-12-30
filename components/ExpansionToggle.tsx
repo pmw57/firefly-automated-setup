@@ -74,7 +74,7 @@ export const ExpansionToggle: React.FC<ExpansionToggleProps> = ({
         
         <div className="flex-1 min-w-0 mr-4 md:mr-0 md:text-center">
           <h3 className={cls("font-bold text-lg leading-tight transition-colors duration-300", {
-            'text-white dark:text-gray-900': active,
+            'text-gray-900 dark:text-gray-100': active,
             'text-gray-600 dark:text-gray-300': !active,
           })}>
             {label}
