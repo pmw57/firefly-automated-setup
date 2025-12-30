@@ -129,7 +129,7 @@ export const getDefaultGameState = (): GameState => {
         },
         optionalRules: {
             disgruntledDie: 'standard',
-            optionalShipUpgrades: false,
+            optionalShipUpgrades: true,
             resolveConflictsManually: false,
             highVolumeSupply: true,
         },
