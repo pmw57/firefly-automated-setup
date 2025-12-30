@@ -14,16 +14,10 @@ const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule,
 
 export const COMMUNITY_STORIES: StoryCardDef[] = [
   {
-    title: "5 Goal Story Card",
-    intro: " ",
-    requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/filepage/99870/5-goal-story-card"
-  },
-  {
     title: "Bank Job",
     intro: "There's wages belonging to no-one (Alliance don't count). Find out where, and get the tools you'll need, then pull off the heist.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/image/4452357",
+    sourceUrl: "https://boardgamegeek.com/filepage/103321/firefly-goal-bank-job-jpeg-and-psd",
   },
   {
     title: "The Battle of Serenity Valley (PvP)",
@@ -68,7 +62,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "Hospital Rescue",
     intro: "River is prisoner in a secure hospital at Londinium, and needs rescuing.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/image/4434520",
+    sourceUrl: "https://boardgamegeek.com/filepage/103582/goal-hospital-rescue",
     rules: createStoryRules("Hospital Rescue", [
       { type: 'addFlag', flag: 'removeRiver' }
     ])
@@ -171,7 +165,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "The Silverhold-Hera route is usually a harmless uneventful run. Unless, of course, someone installs a beacon on the cargo which attracts a Reaver party.",
     setupDescription: "Remove Amnon Duul Jobs. Start in border of Murphy.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/image/4437772",
+    sourceUrl: "https://boardgamegeek.com/filepage/100497/shadows-over-duul-new-goal-reupload",
     rules: createStoryRules("Shadows Over Duul", [
       { type: 'forbidContact', contact: CONTACT_NAMES.AMNON_DUUL },
       { type: 'setShipPlacement', location: 'border_of_murphy' }
@@ -201,7 +195,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "The Ghost Rock Run",
     intro: "On Anson's World the Sweetrock Mining Co. has discovered a rare mineral called \"Ghost Rock\". Will you handle the run, or sell it to the highest bidder?",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/image/2072290"
+    sourceUrl: "https://boardgamegeek.com/filepage/105342/custom-story-card-the-ghost-rock-run"
   },
   {
     title: "The Magnificent Crew",
