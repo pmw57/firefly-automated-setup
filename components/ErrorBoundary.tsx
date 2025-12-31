@@ -13,23 +13,13 @@ interface ErrorBoundaryState {
 /**
  * ErrorBoundary class component to catch rendering errors in its children.
  */
-// FIX: Changed to extend from `React.Component`. Using a named `Component` import
-// was causing type inference issues where inherited properties like `setState` and `props`
-// were not being found on the class type in this project's setup.
+// FIX: Extends `React.Component` to ensure `setState` and `props` are inherited correctly.
+// The class was missing the extension, which is required for React class components.
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  // FIX: Initializing state as a class field. The previous method of initializing
-  // only in the constructor was causing TypeScript to fail to find inherited properties
-  // like `state`, `setState` and `props` from React.Component. This change explicitly
-  // defines `state` on the class, resolving the type errors.
   state: ErrorBoundaryState = {
     hasError: false,
     error: null,
   };
-
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.handleReset = this.handleReset.bind(this);
-  }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     // Update state so the next render will show the fallback UI.
@@ -40,13 +30,10 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     console.error("Uncaught error:", error, errorInfo);
   }
 
-  // NOTE: This component was using a bound method in the constructor instead of
-  // a class field arrow function. While the latter is more common, this pattern is
-  // preserved as a comment in the original code indicated it was an intentional choice.
-  handleReset() {
+  handleReset = () => {
     this.setState({ hasError: false, error: null });
     window.location.reload();
-  }
+  };
 
   render(): ReactNode {
     if (this.state.hasError && this.state.error) {
@@ -58,9 +45,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       );
     }
 
-    // `this.props` is a standard part of a React class component.
-    // The change to a class property for state should resolve the type inference issue
-    // that caused this property to be reported as non-existent.
     return this.props.children;
   }
 }

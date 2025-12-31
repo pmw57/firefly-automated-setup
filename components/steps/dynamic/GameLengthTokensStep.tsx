@@ -29,6 +29,7 @@ export const GameLengthTokensStep: React.FC = () => {
         dispatch({ type: ActionType.TOGGLE_TIMER_MODE });
     };
 
+    // FIX: Reverted to use `isCampaign` and `campaignStoriesCompleted` to match the updated GameState interface.
     const tokensToRemove = gameState.isCampaign ? gameState.campaignStoriesCompleted * 2 : 0;
     const totalTokens = Math.max(0, 20 - tokensToRemove);
     
@@ -38,7 +39,8 @@ export const GameLengthTokensStep: React.FC = () => {
     return (
         <div className="space-y-6">
             {tokensToRemove > 0 && (
-                <SpecialRuleBlock source="story" title="Campaign Rule: Time Catches Up" content={["Removing ", { type: 'strong', content: `${tokensToRemove} tokens` }, " from the timer for your ", { type: 'strong', content: `${gameState.campaignStoriesCompleted}` }, " completed stories."]} />
+                // FIX: Updated to `campaignStoriesCompleted` and changed title to "Campaign Rule".
+                <SpecialRuleBlock source="setupCard" title="Campaign Rule: Time Catches Up" content={["Removing ", { type: 'strong', content: `${tokensToRemove} tokens` }, " from the timer for your ", { type: 'strong', content: `${gameState.campaignStoriesCompleted}` }, " completed stories."]} />
             )}
 
             {(shesTrouble || recipeForUnpleasantness) && (

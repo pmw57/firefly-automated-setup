@@ -7,7 +7,6 @@ interface CampaignConfigSectionProps {
     storiesCompleted: number;
     onToggle: () => void;
     onStoriesChange: (count: number) => void;
-    has10th: boolean;
 }
 
 export const CampaignConfigSection: React.FC<CampaignConfigSectionProps> = ({
@@ -15,7 +14,6 @@ export const CampaignConfigSection: React.FC<CampaignConfigSectionProps> = ({
     storiesCompleted,
     onToggle,
     onStoriesChange,
-    has10th
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -26,25 +24,31 @@ export const CampaignConfigSection: React.FC<CampaignConfigSectionProps> = ({
     const inputText = isDark ? 'text-gray-200' : 'text-[#292524]';
     const inputBorder = isDark ? 'border-zinc-700' : 'border-[#d6cbb0]';
     const textColor = isDark ? 'text-amber-500' : 'text-[#292524]';
+    const subTextColor = isDark ? 'text-gray-400' : 'text-gray-500';
 
     return (
         <div className="mb-8 relative z-10">
             <div className="flex justify-between items-baseline mb-2">
-                <label className={`block font-bold uppercase tracking-wide text-xs ${labelColor}`}>Campaign Mode</label>
-                {has10th && <PageReference page={56} manual="10th AE" />}
+                <label className={`block font-bold uppercase tracking-wide text-xs ${labelColor}`}>Flying Solo: Campaign Mode</label>
+                <PageReference page={56} manual="10th AE" />
             </div>
             <div className={`${isDark ? 'bg-black/30' : 'bg-white/50'} p-4 rounded-lg border ${containerBorder} shadow-inner`}>
                 <div 
                     onClick={onToggle}
                     className="flex justify-between items-center cursor-pointer"
+                    role="switch"
+                    aria-checked={isCampaign}
                 >
                     <label htmlFor="campaign-toggle" className={`font-bold ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                        Continuing a Solo Campaign?
+                        Enable Campaign Mode?
                     </label>
                     <div className={`w-12 h-6 rounded-full p-1 transition-colors duration-300 ease-in-out flex items-center ${isCampaign ? 'bg-green-600' : (isDark ? 'bg-zinc-600' : 'bg-gray-300')}`}>
                         <div className={`bg-white w-4 h-4 rounded-full shadow-sm transform transition-transform duration-300 ${isCampaign ? 'translate-x-6' : 'translate-x-0'}`} />
                     </div>
                 </div>
+                <p className={`text-xs mt-1 ${subTextColor}`}>
+                    For ongoing solo careers. In a campaign, the timer is reduced based on stories you've already won.
+                </p>
                 {isCampaign && (
                     <div className="mt-4 pt-4 border-t border-dashed border-gray-300 dark:border-zinc-700 animate-fade-in">
                         <label className={`block text-sm font-medium mb-2 text-center ${labelColor}`}>

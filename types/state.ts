@@ -1,26 +1,9 @@
-import { SetupCardId } from './data';
 import { SetupContentData, StepOverrides } from './ui';
-import { GameMode, GameEdition, Expansions, TimerConfig, SoloOptions, OptionalRules } from './common';
+// FIX: Removed local definitions and imported the updated GameState from common types
+// to ensure consistency with the new 'Continuity' naming scheme.
+import { GameState } from './common';
 
-export interface GameState {
-  gameEdition: GameEdition;
-  gameMode: GameMode;
-  playerCount: number;
-  playerNames: string[];
-  setupCardId: SetupCardId | string;
-  setupCardName: string;
-  secondarySetupId?: SetupCardId | string;
-  selectedStoryCard: string;
-  selectedGoal?: string;
-  challengeOptions: Record<string, boolean>;
-  timerConfig: TimerConfig;
-  soloOptions: SoloOptions;
-  optionalRules: OptionalRules;
-  expansions: Expansions;
-  isCampaign: boolean;
-  campaignStoriesCompleted: number;
-  finalStartingCredits: number | null;
-}
+export { GameState };
 
 export interface Step {
   type: 'core' | 'dynamic' | 'final' | 'setup';

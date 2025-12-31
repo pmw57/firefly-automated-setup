@@ -1,4 +1,3 @@
-
 import { SETUP_CARD_IDS } from '../data/ids';
 import { GameMode, Expansions } from './common';
 import { SetupRule } from './rules';
@@ -87,5 +86,6 @@ export interface StoryCardDef {
   requiredFlag?: string;
   requiredSetupCardId?: string;
   sortOrder?: number;
-  campaignSetupNotes?: CampaignSetupNote[];
+  campaignSetupNotes?: string[];
+  rating?: number;
 }

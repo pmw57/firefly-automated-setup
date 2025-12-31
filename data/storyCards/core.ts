@@ -1,4 +1,3 @@
-
 import { StoryCardDef, SetupRule } from '../../types/index';
 import { CONTACT_NAMES } from '../ids';
 
@@ -21,7 +20,15 @@ export const CORE_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/2785050/gerryrailbaron",
     rules: createStoryRules("Desperadoes", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
-      { type: 'forbidContact', contact: CONTACT_NAMES.HARKEN }
+      { type: 'forbidContact', contact: CONTACT_NAMES.HARKEN },
+      { 
+        type: 'addSpecialRule', 
+        category: 'jobs',
+        rule: {
+          title: "Contact Restriction",
+          content: ["Harken jobs are unavailable."]
+        }
+      }
     ])
   },
   {
@@ -30,7 +37,15 @@ export const CORE_STORIES: StoryCardDef[] = [
     setupDescription: "Starting Jobs drawn only from Harken and Amnon Duul.",
     sourceUrl: "https://boardgamegeek.com/image/2785053/gerryrailbaron",
     rules: createStoryRules("First Time in the Captain's Chair", [
-      { type: 'allowContacts', contacts: [CONTACT_NAMES.HARKEN, CONTACT_NAMES.AMNON_DUUL] }
+      { type: 'allowContacts', contacts: [CONTACT_NAMES.HARKEN, CONTACT_NAMES.AMNON_DUUL] },
+      { 
+        type: 'addSpecialRule', 
+        category: 'jobs',
+        rule: {
+          title: "Limited Job Contacts",
+          content: ["Starting Jobs are drawn only from Harken and Amnon Duul."]
+        }
+      }
     ])
   },
   {

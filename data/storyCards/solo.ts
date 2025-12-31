@@ -1,6 +1,5 @@
-
 import { StoryCardDef, SetupRule } from '../../types/index';
-import { CONTACT_NAMES, STEP_IDS, SETUP_CARD_IDS } from '../ids';
+import { SETUP_CARD_IDS } from '../ids';
 
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
@@ -20,7 +19,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     goals: [
       {
         title: "Earn Their Respect",
-        description: "End the game Solid with at least 5 different Contacts."
+        description: "End the game with at least 5 different Contacts."
       },
       {
         title: "Flush with Cash",
@@ -63,9 +62,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 10,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: 'Requires EXPLOSIVES.' }] }
-    ]
+    campaignSetupNotes: ['EXPLOSIVES_REQUIRED']
   },
   {
     title: "Awful Lonely In The Big Black",
@@ -253,9 +250,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 8,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C5, content: ["You may want to get ", { type: 'strong', content: 'Jayne' }, " some negotiation gear, or things could go badly."] }
-    ]
+    campaignSetupNotes: ['SUGGEST_NEGOTIATION_GEAR']
   },
   {
     title: "Jubal's Early Years",
@@ -341,9 +336,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 15,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C3, content: ["This Story can take place in any sector. If a named Crew from the show is missing, choose another Crew."] }
-    ]
+    campaignSetupNotes: ['ANY_SECTOR_PLACEMENT_WITH_CREW_NOTE']
   },
   {
     title: "Once Upon A Time In The Big Black",
@@ -375,9 +368,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 7,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: "Suggested:" }, " Mal's Pretty Floral Bonnet & Vera."] }
-    ]
+    campaignSetupNotes: ['SUGGEST_BONNET_VERA']
   },
   {
     title: "Out of Gas",
@@ -388,9 +379,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 9,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C3, content: ["This Story can take place in any empty sector."] }
-    ]
+    campaignSetupNotes: ['ANY_SECTOR_PLACEMENT']
   },
   {
     title: "Racing A Pale Horse",
@@ -433,9 +422,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 6,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: 'Requires FAKE ID.' }] }
-    ]
+    campaignSetupNotes: ['FAKE_ID_REQUIRED']
   },
   {
     title: "Seeds Of Rebellion",
@@ -447,7 +434,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/8860507/sjliver",
     rules: createStoryRules("Seeds Of Rebellion", [
       { type: 'addFlag', flag: 'soloGameTimer' },
-      { type: 'forbidContact', contact: CONTACT_NAMES.HARKEN }
+      { type: 'forbidContact', contact: 'Harken' }
     ]),
     advancedRule: {
       id: "adv_lost_little_lambs",
@@ -463,10 +450,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 16,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C3, content: ["Remove ", { type: 'strong', content: 'Inara' }, " and ", { type: 'strong', content: 'Shepherd Book' }, " from the game."] },
-      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: 'Requires Transport.' }] }
-    ]
+    campaignSetupNotes: ['REMOVE_INARA_AND_BOOK', 'TRANSPORT_REQUIRED']
   },
   {
     title: "Serenity Movie Part 2",
@@ -477,10 +461,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 17,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C3, content: [{ type: 'strong', content: 'Inara rejoins' }, " the crew at this point."] },
-      { stepId: STEP_IDS.C5, content: ["Remove ", { type: 'strong', content: 'Disgruntled Tokens' }, " from all crew."] }
-    ]
+    campaignSetupNotes: ['INARA_REJOINS', 'REMOVE_DISGRUNTLED']
   },
   {
     title: "Serenity Movie Part 3",
@@ -491,9 +472,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 18,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: 'Fully Equipped Med Bay' }, " may not be used. ", { type: 'strong', content: "Suggested:" }, " Simon's Surgical Kit."] }
-    ]
+    campaignSetupNotes: ['NO_MED_BAY_SUGGEST_KIT']
   },
   {
     title: "Serenity Part 1",
@@ -505,9 +484,9 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 1,
     campaignSetupNotes: [
-      { stepId: STEP_IDS.C3, content: ["Set up ", { type: 'strong', content: 'Serenity' }, " at ", { type: 'strong', content: 'Valentine' }, " with Malcolm, Zoe, Wash, Kaylee, Jayne, Cry Baby, and Expanded Crew Quarters."] },
-      { stepId: STEP_IDS.C5, content: ["Start with ", { type: 'strong', content: '1 Fuel' }, " and ", { type: 'strong', content: '$500' }, "."] },
-      { stepId: STEP_IDS.C6, content: ["Load ", { type: 'strong', content: '2 Contraband' }, ", then turn over a Nav Card."] }
+      'SERENITY_PART_1_CREW',
+      'SERENITY_PART_1_RESOURCES',
+      'SERENITY_PART_1_JOBS'
     ]
   },
   {
@@ -529,9 +508,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 5,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: "Suggested:" }, " Kaylee's Fluffy Pink Dress. ", { type: 'strong', content: "Required:" }, " Mal must wear FANCY DUDS throughout."] }
-    ]
+    campaignSetupNotes: ['SUGGEST_FANCY_DUDS']
   },
   {
     title: "The Lonely Smuggler's Blues",
@@ -562,10 +539,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 13,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C3, content: ["Start the Story at the ", { type: 'strong', content: 'Space Bazaar' }, "."] },
-      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: "Suggested:" }, " Fully Equipped Med Bay. Take Jayne's \"Cunning\" Hat."] }
-    ]
+    campaignSetupNotes: ['START_AT_SPACE_BAZAAR', 'SUGGEST_MED_BAY_AND_HAT']
   },
   {
     title: "The Raggedy Edge",
@@ -640,9 +614,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 3,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C5, content: ["If you have the credits, a ", { type: 'strong', content: 'Fully Equipped Med Bay' }, " might also come in handy."] }
-    ]
+    campaignSetupNotes: ['SUGGEST_MED_BAY']
   },
   {
     title: "Trash",
@@ -653,10 +625,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 12,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C3, content: ["Before starting, pick up ", { type: 'strong', content: 'Saffron' }, " on ", { type: 'strong', content: 'Newhope' }, "."] },
-      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: 'Requires HACKING RIG.' }] }
-    ]
+    campaignSetupNotes: ['PICK_UP_SAFFRON', 'HACKING_RIG_REQUIRED']
   },
   {
     title: "War Stories",
@@ -667,8 +636,6 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 11,
-    campaignSetupNotes: [
-      { stepId: STEP_IDS.C5, content: [{ type: 'strong', content: 'Requires EXPLOSIVES.' }] }
-    ]
+    campaignSetupNotes: ['EXPLOSIVES_REQUIRED']
   },
 ];

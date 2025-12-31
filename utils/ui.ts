@@ -1,4 +1,3 @@
-
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule, Step } from '../types/index';
 import { STEP_IDS } from '../data/ids';
@@ -43,6 +42,7 @@ export const getTimerSummaryText = (state: GameState): string | null => {
     // Timer is only relevant for Flying Solo mode
     if (!isFlyingSolo) return "Classic (No Timer)";
 
+    // FIX: Reverted to 'Campaign' state properties.
     const { mode, unpredictableSelectedIndices, randomizeUnpredictable } = state.timerConfig;
     const tokensToRemove = state.isCampaign ? state.campaignStoriesCompleted * 2 : 0;
     const totalTokens = Math.max(0, 20 - tokensToRemove);

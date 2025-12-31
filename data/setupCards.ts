@@ -225,7 +225,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { 
         type: 'addSpecialRule', 
         category: 'jobs',
-        rule: { title: 'Setup Card Override', content: [{ type: 'strong', content: 'Caper Bonus:' }, ' Draw 1 Caper Card.'] }
+        rule: { title: 'Caper Bonus', content: ['Draw 1 Caper Card.'] }
       }
     ]),
     steps: [

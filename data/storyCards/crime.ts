@@ -1,4 +1,3 @@
-
 // FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
 import { StoryCardDef, SetupRule } from '../../types/index';
 import { CONTACT_NAMES } from '../ids';
@@ -36,7 +35,15 @@ export const CRIME_STORIES: StoryCardDef[] = [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
       { type: 'addFlag', flag: 'startOutsideAllianceSpace' },
       { type: 'addFlag', flag: 'startWithAlertCard' },
-      { type: 'allowContacts', contacts: [CONTACT_NAMES.PATIENCE, CONTACT_NAMES.BADGER, CONTACT_NAMES.NISKA, CONTACT_NAMES.MR_UNIVERSE, CONTACT_NAMES.FANTY_MINGO] }
+      { type: 'allowContacts', contacts: [CONTACT_NAMES.PATIENCE, CONTACT_NAMES.BADGER, CONTACT_NAMES.NISKA, CONTACT_NAMES.MR_UNIVERSE, CONTACT_NAMES.FANTY_MINGO] },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: "Limited Job Contacts",
+          content: ["Job contacts are limited. Draw one Job Card from each Contact listed below."]
+        }
+      }
     ])
   },
 ];

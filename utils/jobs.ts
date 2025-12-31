@@ -1,4 +1,3 @@
-
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { 
     GameState, 
@@ -133,9 +132,7 @@ const _generateJobMessages = (
     if (isSingleContactChallenge) {
         messages.push({ source: 'warning', title: 'Challenge Active', content: [{ type: 'strong', content: 'Single Contact Only:' }, ' You may only work for one contact.'] });
     }
-    if (activeStoryCard?.setupDescription) {
-        messages.push({ source: 'story', title: 'Story Override', content: [activeStoryCard.setupDescription] });
-    }
+
     return messages;
 };
 
@@ -164,15 +161,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
         const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
         const details = _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge)!;
-        
-        // Ensure setupDescription is always added if it exists
-        if (activeStoryCard?.setupDescription) {
-            details.messages.push({ 
-                source: 'story', 
-                title: 'Story Override', 
-                content: [activeStoryCard.setupDescription] 
-            });
-        }
         
         return details;
     }

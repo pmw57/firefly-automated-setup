@@ -1,4 +1,3 @@
-
 import { createContext, useContext } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types/index';
 
@@ -9,7 +8,7 @@ export interface MissionSelectionContextType {
   filterCoOpOnly: boolean;
   shortList: StoryCardDef[];
   subStep: number;
-  sortMode: 'expansion' | 'name';
+  sortMode: 'expansion' | 'name' | 'rating';
   activeStoryCard: StoryCardDef | undefined;
   validStories: StoryCardDef[];
   filteredStories: StoryCardDef[];

@@ -18,7 +18,7 @@ const getStepDisplay = (step: Step): { label: string; number?: string } => {
     let label = 'Config';
     if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) label = 'Crew';
     if (step.id === STEP_IDS.SETUP_CARD_SELECTION) label = 'Setup';
-    if (step.id === STEP_IDS.SETUP_OPTIONAL_RULES) label = 'Rules';
+    if (step.id === STEP_IDS.SETUP_OPTIONAL_RULES) label = 'Settings';
     return { label };
   }
 

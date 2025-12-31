@@ -1,6 +1,6 @@
-
 import { GameState } from '../types/index';
 
+// FIX: Reverted to 'Campaign' action types to align with state changes.
 export enum ActionType {
   SET_PLAYER_COUNT = 'SET_PLAYER_COUNT',
   SET_PLAYER_NAME = 'SET_PLAYER_NAME',
@@ -21,6 +21,7 @@ export enum ActionType {
   TOGGLE_TIMER_MODE = 'TOGGLE_TIMER_MODE',
   RESET_CHALLENGES = 'RESET_CHALLENGES',
   RESET_GAME = 'RESET_GAME',
+  TOGGLE_STORY_RATING_FILTER = 'TOGGLE_STORY_RATING_FILTER',
 }
 
 // You can also define payload types here for more complex actions
@@ -43,4 +44,5 @@ export type Action =
   | { type: ActionType.TOGGLE_SOLO_OPTION; payload: keyof GameState['soloOptions'] }
   | { type: ActionType.TOGGLE_TIMER_MODE }
   | { type: ActionType.RESET_CHALLENGES }
-  | { type: ActionType.RESET_GAME };
+  | { type: ActionType.RESET_GAME }
+  | { type: ActionType.TOGGLE_STORY_RATING_FILTER; payload: number };
