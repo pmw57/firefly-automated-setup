@@ -1,3 +1,4 @@
+
 import type { Config } from 'tailwindcss';
 import { expansionColorConfig } from './data/themeColors';
 
@@ -58,21 +59,26 @@ export default {
         },
         fadeInUp: {
           '0%': { opacity: '0', transform: 'translateY(10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+          '100%': { opacity: '1' },
         },
-        kenBurns: {
-          '0%': { transform: 'scale(1.05) translate(1%, -1%)' },
-          '100%': { transform: 'scale(1) translate(0, 0)' },
+        kenBurnsMobile: {
+          '0%': { transform: 'scale(1)' },
+          '100%': { transform: 'scale(1.25)' },
+        },
+        kenBurnsDesktop: {
+          '0%': { transform: 'scale(1)' },
+          '100%': { transform: 'scale(1.1)' },
         },
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',
         'fade-in-up': 'fadeInUp 0.5s ease-out',
-        'ken-burns': 'kenBurns 60s ease-out infinite alternate',
+        'ken-burns-mobile': 'kenBurnsMobile 30s ease-in-out infinite alternate',
+        'ken-burns-desktop': 'kenBurnsDesktop 30s ease-in-out infinite alternate',
       },
       backgroundSize: {
-        'zoom-slice': '257.14% auto', // 900px image / 350px slice
         'full-width': '100% auto',
+        'zoom-mobile': '260% auto',
       },
     },
   },
