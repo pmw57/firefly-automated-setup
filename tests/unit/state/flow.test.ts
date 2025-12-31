@@ -10,20 +10,20 @@ describe('state/flow', () => {
   describe('calculateSetupFlow', () => {
     const baseGameState = getDefaultGameState();
 
-    it.concurrent('generates the standard flow for a default game', () => {
-      // The new default state enables all expansions. To test the "standard" flow
-      // without optional rules, we must explicitly create a state where the 10th
-      // Anniversary expansion is disabled.
-      const stateWithout10th: GameState = {
+    it.concurrent('generates the standard flow and always includes optional rules', () => {
+      // This test verifies the flow for a standard setup, ensuring
+      // the Optional Rules step is always included, regardless of expansions.
+      const state: GameState = {
         ...baseGameState,
-        expansions: { ...baseGameState.expansions, tenth: false },
+        setupCardId: SETUP_CARD_IDS.STANDARD,
       };
-      const flow = calculateSetupFlow(stateWithout10th);
+      const flow = calculateSetupFlow(state);
       const flowIds = flow.map(f => f.id);
       
       expect(flowIds).toEqual([
         STEP_IDS.SETUP_CAPTAIN_EXPANSIONS,
         STEP_IDS.SETUP_CARD_SELECTION,
+        STEP_IDS.SETUP_OPTIONAL_RULES, // Now always present
         STEP_IDS.C1,
         STEP_IDS.C2,
         STEP_IDS.C3,
@@ -33,7 +33,7 @@ describe('state/flow', () => {
         STEP_IDS.C_PRIME,
         STEP_IDS.FINAL,
       ]);
-      expect(flow.find(f => f.id === STEP_IDS.SETUP_OPTIONAL_RULES)).toBeUndefined();
+      expect(flow.find(f => f.id === STEP_IDS.SETUP_OPTIONAL_RULES)).toBeDefined();
     });
 
     it.concurrent('includes optional rules step if 10th Anniversary expansion is active', () => {
@@ -42,10 +42,10 @@ describe('state/flow', () => {
       expect(flow.find(f => f.id === STEP_IDS.SETUP_OPTIONAL_RULES)).toBeDefined();
     });
     
-    it.concurrent('does not include optional rules step if Flying Solo is selected but 10th is off', () => {
+    it.concurrent('includes optional rules step even if 10th expansion is off', () => {
       const state: GameState = { ...baseGameState, setupCardId: SETUP_CARD_IDS.FLYING_SOLO, expansions: { ...baseGameState.expansions, tenth: false }};
       const flow = calculateSetupFlow(state);
-      expect(flow.find(f => f.id === STEP_IDS.SETUP_OPTIONAL_RULES)).toBeUndefined();
+      expect(flow.find(f => f.id === STEP_IDS.SETUP_OPTIONAL_RULES)).toBeDefined();
     });
 
     it.concurrent('generates a different flow for "The Browncoat Way"', () => {
