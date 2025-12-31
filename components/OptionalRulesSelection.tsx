@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { DisgruntledDieOption } from '../types/index';
 import { Button } from './Button';
@@ -14,9 +14,19 @@ interface OptionalRulesSelectionProps {
   onBack: () => void;
 }
 
+const ratingLabels = [
+    "0 stars: Dev/Not Ready",
+    "1 star: Draft/Prototype",
+    "2 stars: Experimental",
+    "3 stars: Stable/Playtested",
+    "4 stars: Highly Recommended",
+    "5 stars: Essential"
+];
+
 export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ onStart, onBack }) => {
   const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
+  const [showRatingFilters, setShowRatingFilters] = useState(false);
   const isDark = theme === 'dark';
   const isSolo = gameState.gameMode === 'solo';
   const has10th = gameState.expansions.tenth;
@@ -82,7 +92,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
   return (
     <div className={`${containerBg} rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in transition-all duration-300`}>
        <div className={`flex justify-between items-center mb-6 border-b ${containerBorder} pb-2`}>
-           <h2 className={`text-2xl font-bold font-western ${headerColor}`}>Optional Rules</h2>
+           <h2 className={`text-2xl font-bold font-western ${headerColor}`}>Optional Settings</h2>
            <span className={`text-xs font-bold ${badgeClass} border px-2 py-1 rounded`}>Part 3 of 3</span>
         </div>
 
@@ -144,6 +154,55 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
                 </div>
                </div>
             </section>
+            
+            {gameState.expansions.community && (
+                <section>
+                  <h4 className={`font-bold uppercase tracking-wide text-xs mb-4 pb-1 border-b ${houseRuleHeaderBorder} ${houseRuleHeaderText}`}>
+                    Community Content
+                  </h4>
+                  <div className="space-y-4">
+                    <div
+                        role="checkbox"
+                        aria-checked={showRatingFilters}
+                        tabIndex={0}
+                        onClick={() => setShowRatingFilters(!showRatingFilters)}
+                        onKeyDown={(e) => handleKeyDown(e, () => setShowRatingFilters(!showRatingFilters))}
+                        className={`flex items-center p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
+                    >
+                        <div className="mr-4 shrink-0"><Checkbox checked={showRatingFilters} /></div>
+                        <div>
+                            <h3 className={`font-bold text-base ${textMain}`}>Filter by Rating</h3>
+                            <p className={`text-sm leading-relaxed ${textSub}`}>Show options to filter community stories by their rating.</p>
+                        </div>
+                    </div>
+                    
+                    {showRatingFilters && (
+                        <div className="pl-4 ml-5 border-l-2 border-dashed border-gray-300 dark:border-zinc-700 animate-fade-in">
+                            <p className={`text-sm leading-relaxed ${textSub} mb-4 pt-4`}>Select which ratings to include. Unrated stories are always shown.</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                {[...ratingLabels].reverse().map((label, index) => {
+                                    const rating = 5 - index;
+                                    return (
+                                        <div
+                                            key={rating}
+                                            role="checkbox"
+                                            aria-checked={gameState.storyRatingFilters[rating]}
+                                            tabIndex={0}
+                                            onClick={() => dispatch({ type: ActionType.TOGGLE_STORY_RATING_FILTER, payload: rating })}
+                                            onKeyDown={(e) => handleKeyDown(e, () => dispatch({ type: ActionType.TOGGLE_STORY_RATING_FILTER, payload: rating }))}
+                                            className={`flex items-center p-3 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
+                                        >
+                                            <div className="mr-3 shrink-0"><Checkbox checked={gameState.storyRatingFilters[rating]} /></div>
+                                            <span className={`text-sm ${textMain}`}>{label}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+                  </div>
+                </section>
+            )}
         </div>
 
         <div className="flex gap-4 mt-8 pt-6 border-t border-dashed border-gray-300 dark:border-zinc-700">

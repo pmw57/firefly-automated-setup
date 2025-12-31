@@ -1,4 +1,3 @@
-
 import { StoryCardDef, SetupRule } from '../../types/index';
 import { CONTACT_NAMES } from '../ids';
 
@@ -18,6 +17,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "There's wages belonging to no-one (Alliance don't count). Find out where, and get the tools you'll need, then pull off the heist.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/103321/firefly-goal-bank-job-jpeg-and-psd",
+    rating: 3,
   },
   {
     title: "The Battle of Serenity Valley (PvP)",
@@ -25,7 +25,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "Serenity Valley was a valley located on Hera; it was mainly sparse and rocky with little vegetation. The valley was famous for being the location of the Battle of Serenity Valley—one of the bloodiest battles of the entire Unification War. Due to Hera's strategic positioning, taking the planet was a key to winning the war, and Serenity Valley became the turning point of the entire conflict.",
     setupDescription: "Take all Crew cards with \"Fight\" skill and all gear cards with \"Fight\" skill, add crew compartment ship upgrades and put them all in one deck; Shuffle. Take all Misbehave cards with \"Fight\" skill checks; Shuffle. Remove half \"Keep Flying\" cards from Alliance and Border decks. Other cards won't be used. Players evenly pick Alliance or Independents (Browncoats). Deal 3 crew/gear to each player (disregard warrants). Place ships in appropriate space. Alliance to inner planets, Browncoats to Border Planets.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1099553/story-card-the-battle-of-serenity-valley-pvp"
+    sourceUrl: "https://boardgamegeek.com/thread/1099553/story-card-the-battle-of-serenity-valley-pvp",
+    rating: 0,
   },
   {
     title: "Black Market Beagles",
@@ -33,31 +34,36 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Beagles are the contraband. If you lose 'em you can get more at Jiangyin, Red Sun for $1000 each! Start out with 1 Cry Baby on the ship to use at you liken'",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1098646/article/14445829#14445829",
+    rating: 1,
   },
   {
     title: "Cupid's Little Helpers",
     intro: "Sometimes romance needs a little helping hand in the 'Verse. Here are three Jobs that let your Crew give love a fighting chance. The Jobs may be attempted in any order, and the Crew with the most money when the last Job is completed is the winner. Each Job may only be completed once per game.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1122149/story-card-cupids-little-helpers"
+    sourceUrl: "https://boardgamegeek.com/thread/1122149/story-card-cupids-little-helpers",
+    rating: 0,
   },
   {
     title: "Double Duty",
     intro: "Sometimes, It's best to work under the radar and quiet-like. Fanty and Mingo have goods and folks in need of moving throughout the 'Verse. Use your connections with others to keep the twins' names out of the picture. Do a good enough job, and you might become their new favorite captain.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/image/6067255"
+    sourceUrl: "https://boardgamegeek.com/image/6067255",
+    rating: 3,
   },
   {
     title: "Fruity Oat Bar",
     intro: "One of your crew was once used in an experiment by the Alliance. After escaping and joining your crew, they are now wanted. Before you are caught, you decide to get to the bottom of things, and discover the secret that the Alliance wants kept secret.",
     setupDescription: "After choosing your Leader, search for any Wanted crew from any deck and add them to your crew. You must start in Alliance Space.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1045716/article/13603393#13603393"
+    sourceUrl: "https://boardgamegeek.com/thread/1045716/article/13603393#13603393",
+    rating: 1,
   },
   {
     title: "Gentleman's Agreement",
     intro: "Until now, the big players in the 'verse have agreed to keep to their own back yards, but that's about to change. Badger has received word that Adelai Niska has grown too big for his Skyplex around Ezra, and is branching out. The rumor is that Niska is setting up shop in Badger's territory. This doesn't sit well with Badger.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1101220/story-card-gentlemans-agreement"
+    sourceUrl: "https://boardgamegeek.com/thread/1101220/story-card-gentlemans-agreement",
+    rating: 0,
   },
   {
     title: "Hospital Rescue",
@@ -66,7 +72,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/103582/goal-hospital-rescue",
     rules: createStoryRules("Hospital Rescue", [
       { type: 'addFlag', flag: 'removeRiver' }
-    ])
+    ]),
+    rating: 2,
   },
   {
     title: "How It All Started",
@@ -89,7 +96,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, description: "Start with 2 Warrants." },
       { type: 'addFlag', flag: 'allianceSpaceOffLimits' },
       { type: 'forbidContact', contact: CONTACT_NAMES.HARKEN }
-    ])
+    ]),
+    rating: 2,
   },
   {
     title: "Laying Down the Law",
@@ -120,7 +128,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
         type: 'addSpecialRule', 
         category: 'goal',
         rule: {
-          title: 'Story Override',
+          title: 'Rescue Mission Setup',
           content: [
             { type: 'list', items: [
                 ['Place ', { type: 'strong', content: 'Serenity' }, ' on Shadow, Murphy as the drop-off point for rescued crew.'],
@@ -179,7 +187,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     rules: createStoryRules("Shadows Over Duul", [
       { type: 'forbidContact', contact: CONTACT_NAMES.AMNON_DUUL },
       { type: 'setShipPlacement', location: 'border_of_murphy' }
-    ])
+    ]),
+    rating: 2,
   },
   {
     title: "Slaying The Dragon",
@@ -194,7 +203,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
         type: 'addSpecialRule', 
         category: 'prime',
         rule: {
-          title: 'Setup Override',
+          title: 'Priming Bonus',
           content: [{ type: 'strong', content: 'Shu-ki is greasing the rails:' }, ' Turn up ', { type: 'strong', content: '2 additional cards' }, ' from each deck when Priming the Pump.']
         }
       },
@@ -216,7 +225,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "The Ghost Rock Run",
     intro: "On Anson's World the Sweetrock Mining Co. has discovered a rare mineral called \"Ghost Rock\". Will you handle the run, or sell it to the highest bidder?",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/filepage/105342/custom-story-card-the-ghost-rock-run"
+    sourceUrl: "https://boardgamegeek.com/filepage/105342/custom-story-card-the-ghost-rock-run",
+    rating: 2,
   },
   {
     title: "The Magnificent Crew",

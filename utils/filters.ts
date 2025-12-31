@@ -70,5 +70,12 @@ export const isStoryCompatible = (card: StoryCardDef, state: GameState): boolean
         }
     }
 
+    // Rule 7: Community Content Rating Filter
+    if (card.requiredExpansion === 'community' && typeof card.rating === 'number') {
+        if (state.storyRatingFilters && !state.storyRatingFilters[card.rating]) {
+            return false;
+        }
+    }
+
     return true;
 };

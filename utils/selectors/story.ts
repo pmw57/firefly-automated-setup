@@ -1,11 +1,11 @@
-
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
-import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption } from '../../types/index';
+import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption, CampaignSetupNote } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { SETUP_CARD_IDS } from '../../data/ids';
 import { STORY_CARDS } from '../../data/storyCards';
 import { isStoryCompatible } from '../filters';
+import { CAMPAIGN_SETUP_NOTES } from '../../data/collections';
 
 // =================================================================
 // Card Definition Fetchers
@@ -58,8 +58,7 @@ export const getAvailableStoryCards = (gameState: GameState): StoryCardDef[] => 
 
 export const getFilteredStoryCards = (
     gameState: GameState, 
-    // FIX: Added filterCoOpOnly to handle co-op filtering.
-    filters: { searchTerm: string; filterExpansion: string[]; filterCoOpOnly: boolean; sortMode: 'expansion' | 'name' }
+    filters: { searchTerm: string; filterExpansion: string[]; filterCoOpOnly: boolean; sortMode: 'expansion' | 'name' | 'rating' }
 ): StoryCardDef[] => {
     const validStories = getAvailableStoryCards(gameState);
     const { searchTerm, filterExpansion, filterCoOpOnly, sortMode } = filters;
@@ -73,15 +72,21 @@ export const getFilteredStoryCards = (
             (filterExpansion.includes('base') && !card.requiredExpansion) ||
             (card.requiredExpansion && filterExpansion.includes(card.requiredExpansion));
 
-        // FIX: Added logic to filter by co-op status.
         const matchesCoOp = !filterCoOpOnly || card.isCoOp;
 
         return matchesSearch && matchesExpansion && matchesCoOp;
     });
     
+    const getSortableTitle = (str: string) => str.replace(/^[^a-zA-Z0-9]+/, '').replace(/^The\s+/i, '');
+    
     if (sortMode === 'name') {
-      const getSortableTitle = (str: string) => str.replace(/^[^a-zA-Z0-9]+/, '').replace(/^The\s+/i, '');
-      stories.sort((a, b) => getSortableTitle(a.title).localeCompare(getSortableTitle(b.title)));
+        stories.sort((a, b) => getSortableTitle(a.title).localeCompare(getSortableTitle(b.title)));
+    } else if (sortMode === 'rating') {
+        stories.sort((a, b) => {
+            const ratingA = a.rating ?? -1;
+            const ratingB = b.rating ?? -1;
+            return ratingB - ratingA;
+        });
     }
     
     return stories;
@@ -94,6 +99,17 @@ export const getFilteredStoryCards = (
 export const getSoloTimerAdjustmentText = (storyCard: StoryCardDef | undefined): string | null => {
     return storyCard?.soloTimerAdjustment || null;
 }
+
+export const getCampaignNotesForStep = (gameState: GameState, stepId: string): CampaignSetupNote[] => {
+    const activeStoryCard = getActiveStoryCard(gameState);
+    if (!activeStoryCard?.campaignSetupNotes) {
+        return [];
+    }
+    
+    return activeStoryCard.campaignSetupNotes
+        .map(noteId => CAMPAIGN_SETUP_NOTES[noteId])
+        .filter((note): note is CampaignSetupNote => !!note && note.stepId === stepId);
+};
 
 export const getCategorizedExpansions = () => {
   const group = (category: string) => EXPANSIONS_METADATA.filter(e => e.id !== 'base' && e.category === category && !e.hidden);

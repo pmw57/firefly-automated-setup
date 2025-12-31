@@ -4,6 +4,7 @@ import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { getPrimeDetails } from '../utils/prime';
 import { StepComponentProps } from './StepContent';
+import { SETUP_CARD_IDS } from '../data/ids';
 
 export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState } = useGameState();
@@ -12,7 +13,6 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   const isDark = theme === 'dark';
   
   const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
-  const { isCampaign } = gameState;
   
   const {
     baseDiscard,
@@ -26,6 +26,11 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     [gameState, overrides]
   );
   
+  // FIX: This rule block is specific to the "Solitaire Firefly" fan campaign.
+  // The condition has been corrected to check for that specific setup card,
+  // preventing it from incorrectly appearing for the "Flying Solo" continuity mode.
+  const isSolitaireFirefly = gameState.setupCardId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY;
+
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-[#faf8ef]/70 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
   const titleColor = isDark ? 'text-white' : 'text-[#292524]';
@@ -71,8 +76,8 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
         <SpecialRuleBlock key={i} {...rule} />
       ))}
       
-      {isCampaign ? (
-        <SpecialRuleBlock source="story" title="Campaign Rules: Supplies" content={[
+      {isSolitaireFirefly ? (
+        <SpecialRuleBlock source="story" title="Solitaire Firefly: Supplies" content={[
           { type: 'paragraph', content: ['You receive your standard starting credits. ', { type: 'strong', content: 'Remember to add any money you saved from the last game.' }] },
           { type: 'paragraph', content: ['After priming, you may spend up to ', { type: 'strong', content: '$1000 (plus your saved money)' }, ' to repurchase any Supply Cards you set aside at the end of the last game.'] },
           { type: 'paragraph', content: ["Place any unpurchased cards into their discard piles."] }

@@ -1,4 +1,3 @@
-
 import React from 'react';
 // FIX: Changed import from '../../types' to '../types/index' to fix module resolution ambiguity.
 import { StoryCardDef } from '../../types/index';
@@ -6,6 +5,7 @@ import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { getStoryCardSetupSummary } from '../../utils/ui';
 import { useTheme } from '../ThemeContext';
 import { ExpansionIcon } from '../ExpansionIcon';
+import { StarRating } from '../StarRating';
 
 interface StoryCardGridItemProps {
   card: StoryCardDef;
@@ -83,7 +83,10 @@ export const StoryCardGridItem: React.FC<StoryCardGridItemProps> = ({ card, isSe
                      </h4>
                      
                      {/* Badges Container */}
-                     <div className="flex flex-wrap gap-1 mt-1">
+                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
+                         {card.rating !== undefined && card.rating >= 0 && (
+                             <StarRating rating={card.rating} />
+                         )}
                          {card.isSolo && (
                              <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded ${soloBadgeClass}`}>
                                 Solo Play

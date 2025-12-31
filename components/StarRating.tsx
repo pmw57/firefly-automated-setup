@@ -1,0 +1,50 @@
+import React from 'react';
+import { useTheme } from './ThemeContext';
+import { cls } from '../utils/style';
+
+interface StarRatingProps {
+  rating: number;
+  maxRating?: number;
+  className?: string;
+}
+
+// FIX: Define a props interface and explicitly type `Star` as a React.FC
+// This resolves the type error by helping TypeScript correctly handle the special `key` prop.
+interface StarProps {
+  filled: boolean;
+  color: string;
+}
+
+const Star: React.FC<StarProps> = ({ filled, color }) => (
+  <svg
+    className={cls('w-3 h-3', filled ? color : 'text-gray-300 dark:text-gray-600')}
+    fill="currentColor"
+    viewBox="0 0 20 20"
+  >
+    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+  </svg>
+);
+
+export const StarRating: React.FC<StarRatingProps> = ({ rating, maxRating = 5, className = '' }) => {
+  const { theme } = useTheme();
+  const starColor = theme === 'dark' ? 'text-yellow-400' : 'text-yellow-500';
+
+  const ratingLabels = [
+    "0 stars: Dev/Not Ready",
+    "1 star: Draft/Prototype",
+    "2 stars: Experimental",
+    "3 stars: Stable/Playtested",
+    "4 stars: Highly Recommended",
+    "5 stars: Essential"
+  ];
+  
+  const title = rating >= 0 && rating < ratingLabels.length ? ratingLabels[rating] : `${rating} stars`;
+
+  return (
+    <div className={cls('flex items-center gap-0.5', className)} title={title}>
+      {[...Array(maxRating)].map((_, i) => (
+        <Star key={i} filled={i < rating} color={starColor} />
+      ))}
+    </div>
+  );
+};

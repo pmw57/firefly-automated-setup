@@ -1,4 +1,3 @@
-
 import { GameState, Expansions, GameMode } from '../types/index';
 import { Action, ActionType } from './actions';
 import { STORY_CARDS } from '../data/storyCards';
@@ -197,6 +196,14 @@ export const getDefaultGameState = (): GameState => {
         isCampaign: false,
         campaignStoriesCompleted: 0,
         finalStartingCredits: null,
+        storyRatingFilters: {
+            0: false,
+            1: false,
+            2: false,
+            3: true,
+            4: true,
+            5: true,
+        },
     };
 };
 
@@ -366,6 +373,16 @@ export function gameReducer(state: GameState, action: Action): GameState {
 
     case ActionType.RESET_GAME:
       nextState = getDefaultGameState();
+      break;
+
+    case ActionType.TOGGLE_STORY_RATING_FILTER:
+      nextState = {
+        ...state,
+        storyRatingFilters: {
+          ...state.storyRatingFilters,
+          [action.payload]: !state.storyRatingFilters[action.payload],
+        },
+      };
       break;
 
     default:

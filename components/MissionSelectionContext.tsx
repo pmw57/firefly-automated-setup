@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
@@ -12,7 +11,7 @@ interface LocalState {
   filterCoOpOnly: boolean;
   shortList: StoryCardDef[];
   subStep: number;
-  sortMode: 'expansion' | 'name';
+  sortMode: 'expansion' | 'name' | 'rating';
 }
 
 type LocalAction =
@@ -52,8 +51,14 @@ function reducer(state: LocalState, action: LocalAction): LocalState {
       return { ...state, shortList: action.payload };
     case 'SET_SUB_STEP':
       return { ...state, subStep: action.payload };
-    case 'TOGGLE_SORT_MODE':
-      return { ...state, sortMode: state.sortMode === 'expansion' ? 'name' : 'expansion' };
+    case 'TOGGLE_SORT_MODE': {
+      const nextMode = state.sortMode === 'expansion' 
+        ? 'name' 
+        : state.sortMode === 'name'
+        ? 'rating'
+        : 'expansion';
+      return { ...state, sortMode: nextMode };
+    }
     default:
       return state;
   }

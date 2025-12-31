@@ -1,4 +1,3 @@
-
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { StoryCardGridItem } from './StoryCardGridItem';
 import { Button } from '../Button';
@@ -81,6 +80,8 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
   const emptyStateText = isDark ? 'text-zinc-500' : 'text-[#78716c]';
   const countText = isDark ? 'text-zinc-500' : 'text-[#78350f]';
 
+  const nextSortMode = sortMode === 'expansion' ? 'Name' : sortMode === 'name' ? 'Rating' : 'Expansion';
+
   return (
     <div className="space-y-3">
       <div className="flex gap-3 flex-wrap items-stretch">
@@ -148,7 +149,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
             className="py-2 px-4 text-xs w-full sm:w-auto shrink-0"
             title={`Currently sorted by ${sortMode}. Click to change.`}
         >
-            Sort by {sortMode === 'expansion' ? 'Name' : 'Expansion'}
+            Sort by {nextSortMode}
         </Button>
       </div>
       

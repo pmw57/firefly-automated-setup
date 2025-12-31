@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { Expansions } from '../types/index';
@@ -69,13 +68,12 @@ export const CaptainSetup = ({ onNext }: CaptainSetupProps): React.ReactElement 
         onNameChange={handleNameChange}
       />
       
-      {isSolo && (
+      {isSolo && has10th && (
         <CampaignConfigSection 
             isCampaign={gameState.isCampaign}
             storiesCompleted={gameState.campaignStoriesCompleted}
             onToggle={handleCampaignToggle}
             onStoriesChange={updateCampaignStories}
-            has10th={has10th}
         />
       )}
 

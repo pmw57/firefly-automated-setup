@@ -43,3 +43,25 @@ export interface OptionalRules {
     resolveConflictsManually: boolean;
     highVolumeSupply: boolean;
 }
+
+// FIX: Reverted to 'Campaign' terminology as requested to match the rulebook.
+export interface GameState {
+  gameEdition: GameEdition;
+  gameMode: GameMode;
+  playerCount: number;
+  playerNames: string[];
+  setupCardId: import('./data').SetupCardId | string;
+  setupCardName: string;
+  secondarySetupId?: import('./data').SetupCardId | string;
+  selectedStoryCard: string;
+  selectedGoal?: string;
+  challengeOptions: Record<string, boolean>;
+  timerConfig: TimerConfig;
+  soloOptions: SoloOptions;
+  optionalRules: OptionalRules;
+  expansions: Expansions;
+  isCampaign: boolean;
+  campaignStoriesCompleted: number;
+  finalStartingCredits: number | null;
+  storyRatingFilters: Record<number, boolean>;
+}

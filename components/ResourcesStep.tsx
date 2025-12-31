@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo } from 'react';
 import { getResourceDetails } from '../utils/resources';
 import { hasRuleFlag, getResolvedRules } from '../utils/selectors/rules';
@@ -8,18 +7,17 @@ import { useGameState } from '../hooks/useGameState';
 import { ActionType } from '../state/actions';
 import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
-import { getActiveStoryCard } from '../utils/selectors/story';
+import { getCampaignNotesForStep } from '../utils/selectors/story';
 
 export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState, dispatch } = useGameState();
   const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
-  const activeStoryCard = getActiveStoryCard(gameState);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  const campaignNote = useMemo(
-    () => activeStoryCard?.campaignSetupNotes?.find(n => n.stepId === step.id), 
-    [activeStoryCard, step.id]
+  const campaignNotes = useMemo(
+    () => getCampaignNotesForStep(gameState, step.id), 
+    [gameState, step.id]
   );
 
   const resourceDetails = React.useMemo(() => 
@@ -55,13 +53,14 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
 
   return (
     <div className="space-y-4">
-      {campaignNote && (
+      {campaignNotes.map((note, i) => (
         <SpecialRuleBlock 
+          key={i}
           source="story" 
           title="Campaign Setup Note" 
-          content={campaignNote.content} 
+          content={note.content} 
         />
-      )}
+      ))}
       
       <div className={`${cardBg} p-4 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300`}>
         <div className="flex items-start justify-between gap-4">

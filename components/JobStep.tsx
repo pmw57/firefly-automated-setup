@@ -1,11 +1,10 @@
-
 import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { getJobSetupDetails } from '../utils/jobs';
-import { getActiveStoryCard } from '../utils/selectors/story';
-import { STEP_IDS } from '../data/ids';
+import { getActiveStoryCard, getCampaignNotesForStep } from '../utils/selectors/story';
+import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
 import { StepComponentProps } from './StepContent';
 
 export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
@@ -15,11 +14,10 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const stepId = step.id;
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const { isCampaign } = gameState;
   
-  const campaignNote = useMemo(
-    () => activeStoryCard?.campaignSetupNotes?.find(n => n.stepId === step.id), 
-    [activeStoryCard, step.id]
+  const campaignNotes = useMemo(
+    () => getCampaignNotesForStep(gameState, step.id), 
+    [gameState, step.id]
   );
   
   const { 
@@ -52,18 +50,24 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const dividerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const noteText = isDark ? 'text-gray-400' : 'text-gray-700';
 
+  // FIX: This rule block is specific to the "Solitaire Firefly" fan campaign.
+  // The condition has been corrected to check for that specific setup card,
+  // preventing it from incorrectly appearing for the "Flying Solo" continuity mode.
+  const isSolitaireFirefly = gameState.setupCardId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY;
+
   return (
     <div className="space-y-4">
-      {campaignNote && (
+      {campaignNotes.map((note, i) => (
         <SpecialRuleBlock 
+          key={i}
           source="story" 
           title="Campaign Setup Note" 
-          content={campaignNote.content} 
+          content={note.content} 
         />
-      )}
+      ))}
       
-      {isSelectedStory && isCampaign && (
-        <SpecialRuleBlock source="story" title="Campaign Rules: Jobs & Contacts" content={[
+      {isSolitaireFirefly && (
+        <SpecialRuleBlock source="story" title="Solitaire Firefly: Jobs & Contacts" content={[
           { type: 'paragraph', content: ["For each Contact you were Solid with at the end of the last game, remove 2 of your completed Jobs from play."] },
           { type: 'paragraph', content: ["Keep any remaining completed Jobs; you begin the game Solid with those Contacts."] }
         ]} />

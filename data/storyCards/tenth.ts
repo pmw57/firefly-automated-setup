@@ -23,6 +23,16 @@ export const TENTH_STORIES: StoryCardDef[] = [
     rules: [
       { type: 'setJobMode', mode: 'draft_choice', source: 'story', sourceName: "A Friend In Every Port" },
       { type: 'modifyPrime', multiplier: 2, source: 'story', sourceName: "A Friend In Every Port" },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        source: 'story',
+        sourceName: "A Friend In Every Port",
+        rule: {
+          title: "Job Draft Rules",
+          content: ["Draft 3 specific contact decks for starting jobs."]
+        }
+      }
     ],
   },
   {
