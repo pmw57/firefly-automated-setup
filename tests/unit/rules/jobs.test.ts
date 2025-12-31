@@ -112,13 +112,6 @@ describe('rules/jobs', () => {
             "source": "story",
             "title": "Story Override",
           },
-          {
-            "content": [
-              "Roots In The Community: Each time you gain Solid with a Contact, recover 2 Game Length Tokens.",
-            ],
-            "source": "story",
-            "title": "Story Override",
-          },
         ]
       `);
     });
@@ -179,10 +172,10 @@ describe('rules/jobs', () => {
           },
           {
             "content": [
-              "Start with 1 Warrant. Harken jobs unavailable.",
+              "Harken jobs are unavailable.",
             ],
             "source": "story",
-            "title": "Story Override",
+            "title": "Contact Restriction",
           },
         ]
       `);

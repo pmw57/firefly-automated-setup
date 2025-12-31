@@ -1,9 +1,9 @@
 import { SetupContentData, StepOverrides } from './ui';
 // FIX: Removed local definitions and imported the updated GameState from common types
 // to ensure consistency with the new 'Continuity' naming scheme.
-import { GameState } from './common';
+import type { GameState } from './common';
 
-export { GameState };
+export type { GameState };
 
 export interface Step {
   type: 'core' | 'dynamic' | 'final' | 'setup';

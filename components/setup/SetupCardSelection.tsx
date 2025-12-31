@@ -1,4 +1,3 @@
-
 import React, { useMemo, useCallback } from 'react';
 import { SETUP_CARD_IDS } from '../../data/ids';
 import { Button } from '../Button';
@@ -80,7 +79,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
           className="w-2/3 text-lg py-4 border-b-4 border-[#450a0a]"
           disabled={isNextDisabled}
         >
-          {showOptionalRules ? "Next: Optional Rules →" : "Begin Setup →"}
+          {showOptionalRules ? "Next: Optional Settings →" : "Begin Setup →"}
         </Button>
       </div>
     </div>
