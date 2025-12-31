@@ -88,8 +88,8 @@ export const getSetupCardSelectionInfo = (gameState: GameState) => {
 
     const isFlyingSoloEligible = isSolo && has10th;
     
-    // The setup process has 3 parts if 10th anniversary content (Flying Solo or Optional Rules) is in play.
-    const totalParts = has10th ? 3 : 2;
+    // The setup process has 3 parts: Captain/Expansions, Setup Card, and Optional Rules.
+    const totalParts = 3;
 
     const isNextDisabled = isFlyingSoloActive ? !secondarySetupId : !setupCardId;
 
