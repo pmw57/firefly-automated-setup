@@ -110,13 +110,11 @@ const App = (): React.ReactElement => {
             backgroundImage: `url('${headerImageUrl}')`,
           }}
         ></div>
-        
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/60 to-black/30 opacity-80 dark:opacity-100 dark:from-zinc-950/90 dark:via-zinc-950/60 dark:to-zinc-950/20 pointer-events-none"></div>
 
         <div className="container mx-auto px-2 sm:px-4 pt-24 pb-4 relative z-20 flex flex-col justify-end items-center">
             {/* Accessible heading, as the visual "Firefly: The Game" is in the background image */}
             <h1 className="sr-only">Firefly: The Game</h1>
-            <p className="text-yellow-100/90 dark:text-gray-300 font-medium tracking-[0.3em] uppercase text-sm md:text-base drop-shadow-[0_3px_5px_rgba(0,0,0,1)]">
+            <p className="text-yellow-100/90 dark:text-gray-300 font-medium tracking-[0.3em] uppercase text-sm md:text-base [text-shadow:0_2px_6px_rgba(0,0,0,0.9)]">
                 Automated Setup Guide
             </p>
         </div>
