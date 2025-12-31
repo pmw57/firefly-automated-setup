@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { StepOverrides, GameState, Step, SetupCardStep, SetupContentData } from '../types/index';
 import { SETUP_CONTENT } from '../data/steps';
@@ -28,13 +29,11 @@ const getInitialSetupSteps = (): Step[] => [
     { type: 'setup', id: STEP_IDS.SETUP_CARD_SELECTION },
 ];
 
-const getOptionalRulesStep = (state: GameState): Step[] => {
-    // Optional rules are part of the 10th Anniversary Expansion content.
-    // They should show if the expansion is enabled.
-    if (state.expansions.tenth) {
-        return [{ type: 'setup', id: STEP_IDS.SETUP_OPTIONAL_RULES }];
-    }
-    return [];
+const getOptionalRulesStep = (): Step[] => {
+    // The optional rules step includes house rules that are always available,
+    // plus conditional rules for the 10th Anniversary expansion and solo mode.
+    // Therefore, this step should always be included in the flow.
+    return [{ type: 'setup', id: STEP_IDS.SETUP_OPTIONAL_RULES }];
 };
 
 const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
@@ -90,7 +89,7 @@ const getFinalStep = (): Step => ({ type: 'final', id: STEP_IDS.FINAL });
 export const calculateSetupFlow = (state: GameState): Step[] => {
     return [
         ...getInitialSetupSteps(),
-        ...getOptionalRulesStep(state),
+        ...getOptionalRulesStep(),
         ...getCoreStepsFromSetupCard(state),
         getFinalStep(),
     ];
