@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { StoryCardDef, ExpansionId, SetupRule, StoryCardGoal, ChallengeOption } from '../types/index';
 import { EXPANSIONS_METADATA } from '../data/expansions';
@@ -15,6 +14,16 @@ const ruleExample = `[
     "sourceName": "Your Story Title"
   }
 ]`;
+
+const ratingLabels = [
+    "Not Rated",
+    "0 stars: Dev/Not Ready",
+    "1 star: Draft/Prototype",
+    "2 stars: Experimental",
+    "3 stars: Stable/Playtested",
+    "4 stars: Highly Recommended",
+    "5 stars: Essential"
+];
 
 const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
     <input {...props} className="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
@@ -46,6 +55,12 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
             if (name === 'isSolo') {
                 setStory(prev => ({ ...prev, [name]: checked }));
             }
+        } else if (name === 'rating') {
+            const ratingValue = parseInt(value, 10);
+            setStory(prev => ({
+                ...prev,
+                rating: ratingValue === -1 ? undefined : ratingValue,
+            }));
         } else {
             setStory(prev => ({ ...prev, [name]: value }));
         }
@@ -141,6 +156,7 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
             if (!finalStory.goals?.length) delete finalStory.goals;
             if (!finalStory.challengeOptions?.length) delete finalStory.challengeOptions;
             if (!finalStory.rules?.length) delete finalStory.rules;
+            if (finalStory.rating === undefined) delete finalStory.rating;
 
             // Generate JSON string with 2 spaces for indentation
             const jsonString = JSON.stringify(finalStory, null, 2);
@@ -238,6 +254,17 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
                             <label className="flex items-center gap-2 text-sm"><Input name="isSolo" type="checkbox" checked={!!story.isSolo} onChange={handleChange} className="w-auto" /> Is Solo?</label>
                         </div>
 
+                        <div>
+                            <label className="text-xs font-bold">Rating (for Community Content)</label>
+                            <Select name="rating" value={story.rating === undefined ? -1 : story.rating} onChange={handleChange}>
+                                {ratingLabels.map((label, index) => (
+                                    <option key={index - 1} value={index - 1}>
+                                        {label}
+                                    </option>
+                                ))}
+                            </Select>
+                        </div>
+                        
                         <h3 className="font-bold text-lg text-yellow-400 pt-2 border-t border-gray-700">Requirements</h3>
                         <div>
                             <label className="text-xs font-bold">Required Expansion</label>
