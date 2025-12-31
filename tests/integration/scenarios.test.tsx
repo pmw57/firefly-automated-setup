@@ -1,4 +1,3 @@
-
 /** @vitest-environment jsdom */
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest';
 import { screen, within } from '@testing-library/react';
@@ -49,10 +48,10 @@ describe('Integration Scenarios', () => {
       // --- Step 2: Setup Card Selection ---
       await screen.findByRole('heading', { name: /Select Setup Card/i });
       await user.click(await screen.findByRole('button', { name: new RegExp(browncoatCard.label) }));
-      await user.click(await screen.findByRole('button', { name: /Next: Optional Rules/i }));
+      await user.click(await screen.findByRole('button', { name: /Next: Optional Settings/i }));
 
-      // --- Step 3: Optional Rules ---
-      await screen.findByRole('heading', { name: /Optional Rules/i });
+      // --- Step 3: Optional Settings ---
+      await screen.findByRole('heading', { name: /Optional Settings/i });
       await user.click(await screen.findByRole('button', { name: /Begin Setup →/i }));
       
       // --- Navigate to first "real" step to select a story ---
