@@ -157,9 +157,6 @@ const VisualRuleBuilder: React.FC<{ rules: Partial<SetupRule>[], onRulesChange: 
     const newRules = [...rules];
     let processedRule = newRule;
     
-    // FIX: Cast `processedRule.contacts` to unknown to handle cases where the form
-    // input provides it as a string instead of the expected string array. This
-    // allows the type guard to correctly identify and parse the comma-separated string.
     if (processedRule.type === 'setJobContacts' || processedRule.type === 'allowContacts') {
       const contactsValue = processedRule.contacts as unknown;
       if (typeof contactsValue === 'string') {
@@ -238,6 +235,11 @@ const getInitialState = () => ({
         goals: [],
         challengeOptions: [],
         additionalRequirements: [],
+        // Explicitly define all clearable fields for a robust reset
+        setupDescription: '',
+        sourceUrl: '',
+        requiredExpansion: undefined,
+        rating: undefined,
     } as Partial<StoryCardDef>,
     rules: [] as Partial<SetupRule>[],
 });
@@ -319,7 +321,8 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
                 rating: ratingValue === -1 ? undefined : ratingValue,
             }));
         } else {
-            setStory(prev => ({ ...prev, [name]: value }));
+            const finalValue = name === 'requiredExpansion' && value === '' ? undefined : value;
+            setStory(prev => ({ ...prev, [name]: finalValue }));
         }
     };
     
@@ -470,7 +473,7 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
         isSolo: !!story.isSolo,
         isCoOp: !!story.isCoOp,
         isPvP: !!story.isPvP,
-        requiredExpansion: story.requiredExpansion as ExpansionId,
+        requiredExpansion: story.requiredExpansion,
         ...story,
     };
 
@@ -496,10 +499,10 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
                         </div>
 
                         <h3 className="font-bold text-lg text-yellow-400 pt-2 border-t border-gray-700">Card Details</h3>
-                        <div><label className="text-xs font-bold">Title</label><Input name="title" value={story.title} onChange={handleChange} /></div>
-                        <div><label className="text-xs font-bold">Intro</label><Textarea name="intro" value={story.intro} onChange={handleChange} rows={3} /></div>
-                        <div><label className="text-xs font-bold">Setup Description (Optional)</label><Input name="setupDescription" value={story.setupDescription} onChange={handleChange} /></div>
-                        <div><label className="text-xs font-bold">Source URL (Optional)</label><Input name="sourceUrl" value={story.sourceUrl} onChange={handleChange} /></div>
+                        <div><label className="text-xs font-bold">Title</label><Input name="title" value={story.title || ''} onChange={handleChange} /></div>
+                        <div><label className="text-xs font-bold">Intro</label><Textarea name="intro" value={story.intro || ''} onChange={handleChange} rows={3} /></div>
+                        <div><label className="text-xs font-bold">Setup Description (Optional)</label><Input name="setupDescription" value={story.setupDescription || ''} onChange={handleChange} /></div>
+                        <div><label className="text-xs font-bold">Source URL (Optional)</label><Input name="sourceUrl" value={story.sourceUrl || ''} onChange={handleChange} /></div>
                         <div className="flex gap-4">
                             <label className="flex items-center gap-2 text-sm"><Input name="isSolo" type="checkbox" checked={!!story.isSolo} onChange={handleChange} className="w-auto" /> Is Solo?</label>
                             <label className="flex items-center gap-2 text-sm"><Input name="isCoOp" type="checkbox" checked={!!story.isCoOp} onChange={handleChange} className="w-auto" /> Is Co-Op?</label>
@@ -518,7 +521,7 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
                         <h3 className="font-bold text-lg text-yellow-400 pt-2 border-t border-gray-700">Requirements</h3>
                         <div>
                             <label className="text-xs font-bold">Required Expansion</label>
-                            <Select name="requiredExpansion" value={story.requiredExpansion} onChange={handleChange}>
+                            <Select name="requiredExpansion" value={story.requiredExpansion || ''} onChange={handleChange}>
                                 <option value="">None (Base Game)</option>
                                 <option value="community">Community Content</option>
                                 {expansionOptions.map(e => <option key={e.id} value={e.id}>{e.label}</option>)}
