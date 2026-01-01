@@ -248,6 +248,8 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
     const [generatedJson, setGeneratedJson] = useState('');
     const [copyButtonText, setCopyButtonText] = useState('Copy JSON');
     const [cardToLoad, setCardToLoad] = useState('');
+    // Add a key to force re-mounting of the VisualRuleBuilder on clear
+    const [builderKey, setBuilderKey] = useState(0);
 
     const sortedStoryCardsForDropdown = useMemo(() => 
         [...STORY_CARDS].sort((a, b) => a.title.localeCompare(b.title)), 
@@ -299,6 +301,9 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
         setRules(initialRules);
         setCardToLoad('');
         setGeneratedJson('');
+        setCopyButtonText('Copy JSON');
+        // Incrementing the key will force VisualRuleBuilder to re-mount with fresh state
+        setBuilderKey(prev => prev + 1); 
         localStorage.removeItem(DEV_STORY_CARD_DRAFT_KEY);
     };
 
@@ -533,7 +538,7 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
                         {renderChallengesList()}
 
                         <h3 className="font-bold text-lg text-yellow-400 pt-2 border-t border-gray-700">Setup Rules (Visual Builder)</h3>
-                        <VisualRuleBuilder rules={rules} onRulesChange={setRules} />
+                        <VisualRuleBuilder key={builderKey} rules={rules} onRulesChange={setRules} />
                     </div>
 
                     {/* Output Column */}
