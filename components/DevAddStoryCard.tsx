@@ -245,7 +245,6 @@ const getInitialState = () => ({
 export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => {
     const [story, setStory] = useState<Partial<StoryCardDef>>(getInitialState().story);
     const [rules, setRules] = useState<Partial<SetupRule>[]>(getInitialState().rules);
-    const [generatedJson, setGeneratedJson] = useState('');
     const [copyButtonText, setCopyButtonText] = useState('Copy JSON');
     const [cardToLoad, setCardToLoad] = useState('');
     // Add a key to force re-mounting of the VisualRuleBuilder on clear
@@ -300,7 +299,6 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
         setStory(initialStory);
         setRules(initialRules);
         setCardToLoad('');
-        setGeneratedJson('');
         setCopyButtonText('Copy JSON');
         // Incrementing the key will force VisualRuleBuilder to re-mount with fresh state
         setBuilderKey(prev => prev + 1); 
@@ -381,48 +379,55 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
         });
     };
 
-    const handleGenerate = () => {
-        if (!story.title || !story.intro) {
-            alert('Title and Intro are required.');
-            return;
-        }
-        try {
-            const finalStory: Partial<StoryCardDef> = { ...story };
-            
-            const filledRules = rules.map(rule => ({
-                ...rule,
-                source: rule.source || 'story' as RuleSourceType,
-                sourceName: rule.sourceName || story.title,
-            }));
+    const generatedJson = useMemo(() => {
+      if (!story.title || !story.intro) {
+        return '// Title and Intro are required to generate valid JSON.';
+      }
+      try {
+        const finalStory: Partial<StoryCardDef> = { ...story };
+        
+        const filledRules = rules.map(rule => ({
+          ...rule,
+          source: 'story' as RuleSourceType,
+          sourceName: story.title,
+        }));
 
-            finalStory.rules = filledRules as SetupRule[];
+        finalStory.rules = filledRules as SetupRule[];
 
-            if (!finalStory.setupDescription) delete finalStory.setupDescription;
-            if (!finalStory.requiredExpansion) delete finalStory.requiredExpansion;
-            if (!finalStory.additionalRequirements?.length) delete finalStory.additionalRequirements;
-            if (!finalStory.sourceUrl) delete finalStory.sourceUrl;
-            if (!finalStory.isSolo) delete finalStory.isSolo;
-            if (!finalStory.isCoOp) delete finalStory.isCoOp;
-            if (!finalStory.isPvP) delete finalStory.isPvP;
-            if (!finalStory.goals?.length) delete finalStory.goals;
-            if (!finalStory.challengeOptions?.length) delete finalStory.challengeOptions;
-            if (!finalStory.rules?.length) delete finalStory.rules;
-            if (finalStory.rating === undefined) delete finalStory.rating;
+        if (!finalStory.setupDescription) delete finalStory.setupDescription;
+        if (!finalStory.requiredExpansion) delete finalStory.requiredExpansion;
+        if (!finalStory.additionalRequirements?.length) delete finalStory.additionalRequirements;
+        if (!finalStory.sourceUrl) delete finalStory.sourceUrl;
+        if (!finalStory.isSolo) delete finalStory.isSolo;
+        if (!finalStory.isCoOp) delete finalStory.isCoOp;
+        if (!finalStory.isPvP) delete finalStory.isPvP;
+        if (!finalStory.goals?.length) delete finalStory.goals;
+        if (!finalStory.challengeOptions?.length) delete finalStory.challengeOptions;
+        if (!finalStory.rules?.length) delete finalStory.rules;
+        if (finalStory.rating === undefined) delete finalStory.rating;
 
-            const jsonString = JSON.stringify(finalStory, null, 2);
-            const objectLiteralString = jsonString.replace(/"([^"]+)":/g, '$1:');
-            
-            setGeneratedJson(objectLiteralString);
-            setCopyButtonText('Copy JSON');
-        } catch (e) {
-            alert('Error generating JSON.');
-            console.error(e);
-        }
-    };
+        const jsonString = JSON.stringify(finalStory, null, 2);
+        const objectLiteralString = jsonString.replace(/"([^"]+)":/g, '$1:');
+        
+        return objectLiteralString;
+      } catch (e) {
+        console.error(e);
+        return '// Error generating JSON. See console for details.';
+      }
+    }, [story, rules]);
+
+    useEffect(() => {
+        setCopyButtonText('Copy JSON');
+    }, [generatedJson]);
     
     const handleCopy = () => {
+        if (!generatedJson || generatedJson.startsWith('//')) return;
         navigator.clipboard.writeText(generatedJson).then(() => {
             setCopyButtonText('Copied!');
+            setTimeout(() => setCopyButtonText('Copy JSON'), 2000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            setCopyButtonText('Error');
             setTimeout(() => setCopyButtonText('Copy JSON'), 2000);
         });
     };
@@ -543,20 +548,17 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
 
                     {/* Output Column */}
                     <div className="space-y-4">
-                        <h3 className="font-bold text-lg text-green-400">Generated JSON</h3>
+                        <h3 className="font-bold text-lg text-green-400">Generated Object Literal</h3>
                         <div className="relative">
                             <pre className="w-full h-[600px] overflow-auto bg-black p-4 rounded text-xs border border-gray-600 custom-scrollbar">
-                                <code>{generatedJson || '// Click "Generate JSON" to see output'}</code>
+                                <code>{generatedJson}</code>
                             </pre>
-                            {generatedJson && (
+                            {!generatedJson.startsWith('//') && (
                                 <button onClick={handleCopy} className="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-xs px-2 py-1 rounded">
                                     {copyButtonText}
                                 </button>
                             )}
                         </div>
-                        <button onClick={handleGenerate} className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 rounded">
-                            Generate JSON
-                        </button>
                     </div>
                 </div>
 
