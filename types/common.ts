@@ -64,4 +64,5 @@ export interface GameState {
   campaignStoriesCompleted: number;
   finalStartingCredits: number | null;
   storyRatingFilters: Record<number, boolean>;
+  overriddenStepIds: string[];
 }

@@ -5,7 +5,7 @@ import { cls } from '../utils/style';
 import { PageReference } from './PageReference';
 import { StructuredContent, StructuredContentPart } from '../types/index';
 
-interface SpecialRuleBlockProps {
+export interface SpecialRuleBlockProps {
   source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
   title?: string;
   content: StructuredContent;
