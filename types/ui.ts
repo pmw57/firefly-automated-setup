@@ -1,8 +1,6 @@
 import { JobMode, NavMode, AllianceSetupMode, PrimeMode, DraftMode, LeaderSetupMode } from './rules';
 import { StructuredContent, SpecialRule } from './core';
 
-export type ThemeColor = 'steelBlue' | 'black' | 'darkSlateBlue' | 'deepBrown' | 'rebeccaPurple' | 'cordovan' | 'darkOliveGreen' | 'saddleBrown' | 'teal' | 'dark' | 'cyan' | 'tan' | 'mediumPurple' | 'gamblingGreen';
-
 export interface StepOverrides {
     jobMode?: JobMode;
     navMode?: NavMode;
