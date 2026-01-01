@@ -1,7 +1,5 @@
-// FIX: Changed React import to a namespace import (`* as React`). This resolves an issue in some TypeScript
-// configurations where the default import doesn't correctly provide the base `React.Component` class,
-// leading to errors about missing `setState` and `props`.
-import * as React from 'react';
+// FIX: Changed to extend `Component` directly from React to resolve issues with `setState` and `props` not being found on the class instance. The previous usage of `React.Component` was not resolving correctly.
+import React, { Component } from 'react';
 import { ErrorFallback } from './ErrorFallback';
 
 interface ErrorBoundaryProps {
@@ -16,7 +14,7 @@ interface ErrorBoundaryState {
 /**
  * ErrorBoundary class component to catch rendering errors in its children.
  */
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = {
     hasError: false,
     error: null,
@@ -32,7 +30,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   handleReset = () => {
-    // FIX: `this.setState` is now correctly inherited from `React.Component`.
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
@@ -47,7 +44,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       );
     }
 
-    // FIX: `this.props` is now correctly inherited from `React.Component`.
     return this.props.children;
   }
 }

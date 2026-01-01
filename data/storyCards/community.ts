@@ -170,7 +170,9 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
   {
     title: "A Jubilant Victory",
     intro: "10,000 Credits will put a mighty fine jungle in anyone's pocket. If that pocket belongs to you, best keep a watchful eye out for Jubal Early and his intentions.",
-    requiredExpansion: "community",
+    requiredExpansion: "aces_eights",
+    additionalRequirements: ["local_color"],
+    rating: 1,
     sourceUrl: "https://boardgamegeek.com/filepage/235439/storycard-a-jubilant-victory",
     setupDescription: "Just anther day in the 'Verse: Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, and uses a D8 die for movement, starting from Meridian."
   },
@@ -442,6 +444,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
   {
     title: "Wild Cards",
     intro: "Prove you're the best - r luckiest - crew around by collecting tales of your exploits.",
+    requiredExpansion: "aces_eights",
     sourceUrl: "https://boardgamegeek.com/thread/3281169/article/47090467#47090467",
     rating: 3
   },
