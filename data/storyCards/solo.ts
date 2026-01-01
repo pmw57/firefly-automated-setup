@@ -1,5 +1,5 @@
 import { StoryCardDef, SetupRule } from '../../types/index';
-import { SETUP_CARD_IDS } from '../ids';
+import { SETUP_CARD_IDS, CONTACT_NAMES } from '../ids';
 
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
@@ -130,6 +130,11 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "community",
     isSolo: true,
     setupDescription: "The same as Awful Lonely in the Big Black",
+    rules: createStoryRules("Christmas Delivery", [
+      { type: 'addFlag', flag: 'removePiracyJobs' },
+      { type: 'addFlag', flag: 'soloCrewDraft' },
+      { type: 'addFlag', flag: 'soloGameTimer' }
+    ]),
     sourceUrl: "https://boardgamegeek.com/thread/1076227/article/14229639#14229639"
   },
   {
@@ -644,6 +649,11 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     setupDescription: "Use Standard Setup Up card. No starting cash. Use Serenity as your ship. Equip an Expanded Crew Quarters from Osiris. Start play with 9 original Serenity crew members. Don't give a starting job from Niska. Use 15 Disgruntled tokens as a game timer.",
     sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards",
-    requiredExpansion: "community"
+    requiredExpansion: "community",
+    rules: createStoryRules("War Stories", [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 0, description: "No starting cash (Story Override)" },
+      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA }
+    ]),
+    requiredSetupCardId: SETUP_CARD_IDS.STANDARD
   }
 ];

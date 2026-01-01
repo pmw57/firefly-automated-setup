@@ -113,6 +113,9 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Only MORAL leaders can be chosen. Exclude Niska from Starting Jobs. Immoral Jobs cannot be accepted. Remove Crow from the game.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1624739/story-card-the-good-guys",
+    rules: createStoryRules("The Good Guys", [
+      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA }
+    ]),
     rating: 1
   },
   {
@@ -225,7 +228,10 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "The 'Verse is a profitable place for a crew that can rise to any occasion. Be the first to prove their crew is ready for anything... without attracting the law.",
     setupDescription: "In turn order, choose an empty planet with a Contact as a starting point. Draw only 3 of that contact's jobs for your Starting Jobs. Start with an Alliance Alert in play and replace it whenever a Goal Token is won or when any RESHUFFLE card is drawn.",
     sourceUrl: "https://boardgamegeek.com/thread/2941994/master-of-all-story-card",
-    requiredExpansion: "community"
+    requiredExpansion: "community",
+    rules: createStoryRules("Master Of All", [
+      { type: 'addFlag', flag: 'startWithAlertCard' }
+    ])
   },
   {
     title: "Miranda",
@@ -431,7 +437,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     isSolo: true,
     setupDescription: "Use the Standard Set Up card with Malcolm as your Leader and Serenity as your ship. Take Jayne, Kaylee, and River as your starting crew and an Expanded Crew Quarters from Osiris for your ship. Shuffle Zoe, Wash, Inara, Book, and Simon, together. Place them face down as the \"Prisoner Deck\". They are your goals for this game.",
     sourceUrl: "https://boardgamegeek.com/thread/3282832/my-fellow-browncoats-remastered-into-a-solo-and-co",
-    requiredExpansion: "community"
+    requiredExpansion: "community",
+    requiredSetupCardId: SETUP_CARD_IDS.STANDARD
   },
   {
     title: "The Truth Will Out",
