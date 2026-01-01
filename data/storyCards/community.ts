@@ -13,6 +13,26 @@ const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule,
 
 export const COMMUNITY_STORIES: StoryCardDef[] = [
   {
+    title: "A New Leaf",
+    intro: "You're a Captain who's tire dof the smuggling life. Also, recent inflation spikes in the 'Verse are making ship maintenance costs too ruttin' expensive. You're considering a government land grab program that helps people get settled on planets in Alliance Space. The program has only one slot left to claim a free piece of land.",
+    additionalRequirements: [
+      "blue",
+      "kalidasa",
+      "pirates"
+    ],
+    setupDescription: "When placing ships, each player also places a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Start with $10,000. Buy a small ship (less than 10 cargo hold). Buy parts/fuel at listed price. ",
+    sourceUrl: "https://boardgamegeek.com/thread/3092841/a-new-leaf-story-card-using-fan-made-ships",
+    requiredExpansion: "community",
+    rating: 1
+  },
+  {
+    title: "Aimin' To Misbehave",
+    intro: "A big time crime boss has retired to a life of ease and comfort, leaving behind a nice little power vacuum. If you want to take his place you'll need money and business parthers. Shady business oartners to be exact. The shadier the better.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/3077380/aimin-to-misbehave",
+    setupDescription: "Remove all legal jobs from play."
+  },
+  {
     title: "Bank Job",
     intro: "There's wages belonging to no-one (Alliance don't count). Find out where, and get the tools you'll need, then pull off the heist.",
     requiredExpansion: "community",
@@ -44,6 +64,14 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     rating: 0,
   },
   {
+    title: "Doing Good Works",
+    intro: "A plague has broken out on the border worlds. A natural disease? Leftover bioweapons from the Unification War? Or an attempt by the Alliance to exterminate those whoresist its rule? No one knows. But word's gotten out that the Alliance has a cure for it--and they're not sharing.",
+    setupDescription: "Players starting on a Supply world may choose three cards from that Supply deck. Crew are hired for free. Other cards must be paid for at half price from the player's starting cash. Corbin and Marco's half-price abilities apply--round the price of each item up to the nearest $100. More than one player may start on the same world. Additional players must wait until the previous player has selected three cards before taking their selections.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/1240655/doing-good-works-soloco-op-scenario",
+    rating: 0
+  },
+  {
     title: "Double Duty",
     intro: "Sometimes, It's best to work under the radar and quiet-like. Fanty and Mingo have goods and folks in need of moving throughout the 'Verse. Use your connections with others to keep the twins' names out of the picture. Do a good enough job, and you might become their new favorite captain.",
     requiredExpansion: "community",
@@ -64,6 +92,46 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1101220/story-card-gentlemans-agreement",
     rating: 0,
+  },
+  {
+    title: "The Ghost Rock Run",
+    intro: "On Anson's World the Sweetrock Mining Co. has discovered a rare mineral called \"Ghost Rock\". Will you handle the run, or sell it to the highest bidder?",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/filepage/105342/custom-story-card-the-ghost-rock-run",
+    rating: 2,
+  },
+  {
+    title: "Going Legit",
+    intro: "With the strong arm of the Alliance growing ever string, there's gettin' to be less and less room for naughty men like us to slip about... I head Blue Sun's in need of a legitimate transport company that can get government goods to the people what need 'em.",
+    setupDescription: "A PORT OF OPERATION: While choosing starting positions, players must choose a planetary sector within the Blue Sun system that is not a Contact od Supply sector. Mark the sector with a Haven token. Leave unused ships out of the box as a \"For Sale\" pile.",
+    sourceUrl: "https://boardgamegeek.com/thread/3560944/going-legit-story-card",
+    requiredExpansion: "community"
+  },
+  {
+    title: "The Good Guys",
+    intro: " ",
+    setupDescription: "Only MORAL leaders can be chosen. Exclude Niska from Starting Jobs. Immoral Jobs cannot be accepted. Remove Crow from the game.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/1624739/story-card-the-good-guys"
+  },
+  {
+    title: "The Good, The Bad, and The Ugly",
+    intro: "To survive the 'Verse, you must walk among saints, trade with devils, and strike a deal with the depraved. Prove you can master every side of the law.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/2688034/the-good-the-bad-and-the-ugly-story-card"
+  },
+  {
+    title: "The Great Escape",
+    intro: "The Alliance has been busy. Rounded up a few of our nearest and dearest. We aim to right that wrong, and see about ending that incarceration.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/2717955/co-op-story-the-great-escape"
+  },
+  {
+    title: "Honorably Dishonorable Men",
+    intro: "Care to press your luck? All them shiny things in the core sure could be of some use to folks out on the Rim.",
+    setupDescription: "Place 8 contraband tokens on each of the following sectors in Alliance Space: Londonium, Bernadette, Liann Jiun, Sihnon, Gonghe, and Bellerophon. Use 20 Disgruntled tokens as the game length timer. The player in first position discards 1 Disgruntled token at the start of each round. After the last timer token is discarded, all players take their final turn.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/3602682/honorably-dishonorable-men"
   },
   {
     title: "Hospital Rescue",
@@ -100,6 +168,13 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     rating: 2,
   },
   {
+    title: "A Jubilant Victory",
+    intro: "10,000 Credits will put a mighty fine jungle in anyone's pocket. If that pocket belongs to you, best keep a watchful eye out for Jubal Early and his intentions.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/filepage/235439/storycard-a-jubilant-victory",
+    setupDescription: "Just anther day in the 'Verse: Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, and uses a D8 die for movement, starting from Meridian."
+  },
+  {
     title: "Laying Down the Law",
     intro: "Alliance brass has handed down some flush to the local magistrates to round up some old warrants and they're hiring new law men who can prove they can get the job done.",
     setupDescription: "Laying Low: Wanted crew may not be hired.",
@@ -113,11 +188,52 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1107085/the-long-haul-idea-for-an-unofficial-story-card"
   },
   {
+    title: "The Magnificent Crew",
+    intro: "On a backwater planet, an old friend sends out a plea. Marauders are bleeding their town dry. Suss out the trouble, assemble a crew, and eliminate the pesky varmints.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/image/2277037/upstarter",
+    rules: createStoryRules("The Magnificent Crew", [
+      { type: 'setJobMode', mode: 'no_jobs' },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Gameplay Note',
+          content: ['This story features special high-value cargo sales rules that apply during gameplay.']
+        }
+      }
+    ])
+  },
+  {
+    title: "Mark Of A Great Captain",
+    intro: "If you don't much care for the wellbeing of your crew, your crew won't care much for you. Do what you can to keep your chosen family together. Without them, who's gonna keep you company when you're floating in the black?",
+    setupDescription: "Each player chooses a Moral Leader. After all players collect their Starting Supplies, each player pays for an Expanded Crew Quarters ($600) and can now hold 3 more crew. Hiring Crew: Starting with 1st player, each player searches for and hires a crew card from any supply deck of their choice. Continue rounds of hiring crew until all player ships have a full set of crew on their ship. Remove all other crew cards from play. You may only use the crew you start with. 7 Disgruntled tokens will be used as a timer that triggers the arrest of 4 crew members from each ship. First player will discard 1 token at the start of each round of play.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/filepage/286230/mark-of-a-great-captain-story-card"
+  },
+  {
+    title: "Master Of All",
+    intro: "The 'Verse is a profitable place for a crew that can rise to any occasion. Be the first to prove their crew is ready for anything... without attracting the law.",
+    setupDescription: "In turn order, choose an empty planet with a Contact as a starting point. Draw only 3 of that contact's jobs for your Starting Jobs. Start with an Alliance Alert in play and replace it whenever a Goal Token is won or when any RESHUFFLE card is drawn.",
+    sourceUrl: "https://boardgamegeek.com/thread/2941994/master-of-all-story-card",
+    requiredExpansion: "community"
+  },
+  {
     title: "Miranda",
     intro: "You suspect that there is a hidden message in the Fruity Oaty Bars advertisement recently broadcast by the Alliance network. Decoding it may reveal something of value or maybe it's just a new form of subliminal advertising.",
     setupDescription: "Place your Firefly on a supply world to begin the game. Draw 1 starting crew from any deck by flipping the draw pile and taking the first named character that is revealed.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1135128/article/15123932#15123932"
+  },
+  {
+    title: "Miranda's Secret",
+    intro: "So you have heard of Miranda. The forgotton planet deep inside the Reaver space. There is some secret it holds that can change the Alliance position in the Verse. Are you bold enough to ventur there and try to find it?",
+    additionalRequirements: [
+      "blue",
+      "pirates"
+    ],
+    sourceUrl: "https://boardgamegeek.com/filepage/110153/story-card-mirandas-secret",
+    requiredExpansion: "community",
   },
   {
     title: "My Fellow Browncoats",
@@ -131,9 +247,9 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
           title: 'Rescue Mission Setup',
           content: [
             { type: 'list', items: [
-                ['Place ', { type: 'strong', content: 'Serenity' }, ' on Shadow, Murphy as the drop-off point for rescued crew.'],
-                ['Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together.'],
-                ['Place them face down as the ', { type: 'strong', content: '"Prisoner Deck"' }, '. They are your goals for this game.']
+              ['Place ', { type: 'strong', content: 'Serenity' }, ' on Shadow, Murphy as the drop-off point for rescued crew.'],
+              ['Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together.'],
+              ['Place them face down as the ', { type: 'strong', content: '"Prisoner Deck"' }, '. They are your goals for this game.']
             ]}
           ]
         }
@@ -143,19 +259,68 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     requiredExpansion: "community"
   },
   {
-    title: "My Number One Guy (PvP)",
+    title: "My Number One Guy",
+    intro: " ",
     isPvP: true,
-    intro: "Loyalty is a luxury you can’t afford. In this Verse, you’re either the right-hand man or the man in the way. Time to prove you’re the number one guy.",
+    sourceUrl: "https://boardgamegeek.com/thread/1076645/story-card-my-number-one-guy-player-vs-player",
+    setupDescription: "Draw three starting jobs from a single contact, and two other jobs from any other contacts. You may only keep 3 jobs.",
+    rating: 0,
     requiredExpansion: "community",
-    rules: createStoryRules("My Number One Guy (PvP)", [
-      { type: 'addFlag', flag: 'customJobDraw' }
-    ])
+  },
+  {
+    title: "New Heroes of Canton",
+    intro: "Them Mudders got the shortest end of a stick ever been offered. How's about we offer 'em a better stick.",
+    additionalRequirements: [
+      "kalidasa"
+    ],    isCoOp: true,
+    goals: [
+      {
+        title: "Easy",
+        description: "Use 26 Disgruntled tokens as the game timer."
+      },
+      {
+        title: "Medium",
+        description: "Use 21 Disgruntled tokens as the game timer."
+      },
+      {
+        title: "Hard",
+        description: "Use 17 Disgruntled tokens as the game timer."
+      }
+    ],
+    setupDescription: "Pull all Mudders from Supply decks. Shuffle together the Foreman plus 3 Mudders per player. Place them face up. If the Foreman is on top after a shuffle, reshuffle. ",
+    sourceUrl: "https://boardgamegeek.com/filepage/294565/new-heroes-of-canton-co-op-story-card",
+    requiredExpansion: "community"
   },
   {
     title: "Old Friends And New",
     intro: "You thought he was dead, but now you know your old War buddy is being held in a max-security prison on Valentine. You'll need the help of some new friends to unlock the Cortex master identity files, then mingle with the high and mighty to get the prison plans, and finally it's off to the rescue!",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1119976/story-card-old-friends-and-new"
+  },
+  {
+    title: "Rags To Riches",
+    intro: " ",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/filepage/108288/rags-to-riches",
+    rating: 0
+  },
+  {
+    title: "Return to Sturges",
+    intro: "The Barrle of Sturges was the shortest and bloodiest battle of the Unification War. Badger has broadcast news that there is a hoard of Alliance treasure left in the wreckage of this space battle to a few \"trusted friends\". The race is on to get the information, equipment and speed to get there first, find the goods and get clear before the Alliance shows up to claim its property!",
+    setupDescription: "Captains Nandi and Atherton may not be used by any player.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/filepage/125866/return-to-sturges-a-firefly-mission"
+  },
+  {
+    title: "River's Run 1v1",
+    intro: "The Alliance had her in that institution for a purpose, whatever it was, and they will want her back.",
+    isPvP: true,
+    additionalRequirements: [
+      "blue"
+    ],
+    setupDescription: "Player 1 will be the Captain of Serenity with Malcolm, Zoë, Wash, Kaylee, Jayne, Inara, Book, Simon, and River. Serenity starts with the Xùnsù Whisper X1 from Meridian, an Expanded Crew Quarters from Osiris, and an EVA Suit from Space Bazaar for River. No Starting Jobs. Player 2 is a Bounty Hunter and chooses the Setup card. No Starting Jobs. Remove all Serenity's crew from the Bounty deck, excluding River Tam. The Bounty deck is placed face up and all bounties are active.",
+    sourceUrl: "https://boardgamegeek.com/thread/3454248/rivers-run-1v1",
+    requiredExpansion: "community"
   },
   {
     title: "Round the 'Verse in \"80 Days\"",
@@ -180,6 +345,21 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     ])
   },
   {
+    title: "Saving Pirate Ryan",
+    intro: "You know, there's a certain motto. A creed among folks like us. You may have heard it: \"Leave no man behind.\" Wash - Firefy Episide 10 - War Stories",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/1536695/article/22110859#22110859"
+  },
+  {
+    title: "Scavengers",
+    intro: "This game only uses dice, cash, Leader cards, Supply decks, cargo, and contraband. Everything else stays in the box. A scavengers goal is simple, Find a Crew, Attack Another Crew, Keep Trying.",
+    isPvP: true,
+    setupDescription: "Shuffle all Supply decks and lay them face down in the middle of thet able with the banks cash. All players start with $10,000 and 10 cargo. Roll for first player. First player chooses a Leader card then passes the Leader deck to the next player until each player has a Leader card.",
+    sourceUrl: "https://boardgamegeek.com/thread/3114859/scavenger-card-game-story-card",
+    requiredExpansion: "community",
+    rating: 1
+  },
+  {
     title: "Shadows Over Duul",
     intro: "The Silverhold-Hera route is usually a harmless uneventful run. Unless, of course, someone installs a beacon on the cargo which attracts a Reaver party.",
     requiredExpansion: "community",
@@ -189,6 +369,16 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
       { type: 'setShipPlacement', location: 'border_of_murphy' }
     ]),
     rating: 2,
+  },
+  {
+    title: "Shiny New Year 25 - Protect Or Plunder",
+    intro: "An affluent governor from Osiris is hosting a grand New Year's celebration--a wedding for his daughter aboard the luxury linder, Shiny New Year. The event has drawn attention from both well-meaning guardians and those with darker intentions. Which one are you? Protector or plunderer?",
+    additionalRequirements: [
+      "pirates"
+    ],
+    setupDescription: "After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard pules. Reshuffle the Contact Decks.",
+    sourceUrl: "https://boardgamegeek.com/thread/3405568/article/45332549#45332549",
+    requiredExpansion: "community"
   },
   {
     title: "Slaying The Dragon",
@@ -222,28 +412,12 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1049020/article/13686225#13686225"
   },
   {
-    title: "The Ghost Rock Run",
-    intro: "On Anson's World the Sweetrock Mining Co. has discovered a rare mineral called \"Ghost Rock\". Will you handle the run, or sell it to the highest bidder?",
-    requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/filepage/105342/custom-story-card-the-ghost-rock-run",
-    rating: 2,
-  },
-  {
-    title: "The Magnificent Crew",
-    intro: "On a backwater planet, an old friend sends out a plea. Marauders are bleeding their town dry. Suss out the trouble, assemble a crew, and eliminate the pesky varmints.",
-    requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/image/2277037/upstarter",
-    rules: createStoryRules("The Magnificent Crew", [
-      { type: 'setJobMode', mode: 'no_jobs' },
-      {
-        type: 'addSpecialRule',
-        category: 'goal',
-        rule: {
-          title: 'Gameplay Note',
-          content: ['This story features special high-value cargo sales rules that apply during gameplay.']
-        }
-      }
-    ])
+    title: "They're Part Of My Crew",
+    intro: "Mal's last job went south in a bad way. As a result, some of the crew was captured by the Alliance and sent to unknown prison camps all over the 'Verse. For a price, Badger might let you in on a little secret.",
+    isSolo: true,
+    setupDescription: "Use the Standard Set Up card with Malcolm as your Leader and Serenity as your ship. Take Jayne, Kaylee, and River as your starting crew and an Expanded Crew Quarters from Osiris for your ship. Shuffle Zoe, Wash, Inara, Book, and Simon, together. Place them face down as the \"Prisoner Deck\". They are your goals for this game.",
+    sourceUrl: "https://boardgamegeek.com/thread/3282832/my-fellow-browncoats-remastered-into-a-solo-and-co",
+    requiredExpansion: "community"
   },
   {
     title: "The Truth Will Out",
@@ -264,5 +438,17 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "Unification Day is fast approaching and you have plans to cause all sorts of mischief, but what better way to do it than right under the nose of the Alliance? You just might get more than a little pay back out of it.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1083899/unification-day-alliance-oriented-story-card"
+  },
+  {
+    title: "Wild Cards",
+    intro: "Prove you're the best - r luckiest - crew around by collecting tales of your exploits.",
+    sourceUrl: "https://boardgamegeek.com/thread/3281169/article/47090467#47090467",
+    rating: 3
+  },
+  {
+    title: "X Marks The Spot",
+    intro: "Pirate Captain Medina's legendary buried treasure was forever lost when he split his treasure map ensuring none could find it. Who will be first to unearth his fabled booty?",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/2954291/x-marks-the-spot-story-card-playtest-update"
   },
 ];
