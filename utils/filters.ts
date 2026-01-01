@@ -1,4 +1,3 @@
-
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { GameState, StoryCardDef } from '../types/index';
 import { SOLO_EXCLUDED_STORIES } from '../data/collections';
@@ -66,6 +65,14 @@ export const isStoryCompatible = (card: StoryCardDef, state: GameState): boolean
     if (card.requiredSetupCardId) {
         const effectiveSetupCardId = isFlyingSolo ? state.secondarySetupId : state.setupCardId;
         if (card.requiredSetupCardId !== effectiveSetupCardId) {
+            return false;
+        }
+    }
+
+    // Rule 6.5: Incompatible Setup Card
+    if (card.incompatibleSetupCardIds) {
+        const effectiveSetupCardId = isFlyingSolo ? state.secondarySetupId : state.setupCardId;
+        if (effectiveSetupCardId && card.incompatibleSetupCardIds.includes(effectiveSetupCardId)) {
             return false;
         }
     }
