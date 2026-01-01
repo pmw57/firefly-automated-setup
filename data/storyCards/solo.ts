@@ -581,23 +581,23 @@ export const SOLO_STORIES: StoryCardDef[] = [
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-            title: "Story Setup",
-            content: [
-                { type: 'paragraph', content: ['Use ', { type: 'strong', content: 'Malcolm' }, ' as your Leader and ', { type: 'strong', content: 'Serenity' }, ' as your ship.'] },
-                { type: 'paragraph', content: ['Your starting crew is: ', { type: 'strong', content: 'Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River' }, '.'] },
-                { type: 'paragraph', content: ['Take 1 ', { type: 'strong', content: 'Expanded Crew Quarters' }, ' from the Osiris Supply Deck.'] }
-            ]
+          title: "Story Setup",
+          content: [
+            { type: 'paragraph', content: ['Use ', { type: 'strong', content: 'Malcolm' }, ' as your Leader and ', { type: 'strong', content: 'Serenity' }, ' as your ship.'] },
+            { type: 'paragraph', content: ['Your starting crew is: ', { type: 'strong', content: 'Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River' }, '.'] },
+            { type: 'paragraph', content: ['Take 1 ', { type: 'strong', content: 'Expanded Crew Quarters' }, ' from the Osiris Supply Deck.'] }
+          ]
         }
       },
       {
         type: 'addSpecialRule',
         category: 'goal',
         rule: {
-            title: "Disgruntled Timer",
-            content: [
-                { type: 'paragraph', content: ['Collect ', { type: 'strong', content: '7 Disgruntled tokens' }, '. These will be used as a special game timer.'] },
-                { type: 'paragraph', content: ['Discard 1 token at the start of each of your turns.'] },
-            ]
+          title: "Disgruntled Timer",
+          content: [
+            { type: 'paragraph', content: ['Collect ', { type: 'strong', content: '7 Disgruntled tokens' }, '. These will be used as a special game timer.'] },
+            { type: 'paragraph', content: ['Discard 1 token at the start of each of your turns.'] },
+          ]
         }
       }
     ]),
@@ -638,4 +638,12 @@ export const SOLO_STORIES: StoryCardDef[] = [
     sortOrder: 11,
     campaignSetupNotes: ['EXPLOSIVES_REQUIRED']
   },
+  {
+    title: "War Stories",
+    intro: "Remember when Malcolm put Niska's man through an engine? Well, Niska remembers and now he's lookin' to kill some folk.",
+    isSolo: true,
+    setupDescription: "Use Standard Setup Up card. No starting cash. Use Serenity as your ship. Equip an Expanded Crew Quarters from Osiris. Start play with 9 original Serenity crew members. Don't give a starting job from Niska. Use 15 Disgruntled tokens as a game timer.",
+    sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards",
+    requiredExpansion: "community"
+  }
 ];
