@@ -180,7 +180,10 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     additionalRequirements: ["local_color"],
     rating: 1,
     sourceUrl: "https://boardgamegeek.com/filepage/235439/storycard-a-jubilant-victory",
-    setupDescription: "Just anther day in the 'Verse: Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, and uses a D8 die for movement, starting from Meridian."
+    setupDescription: "Just anther day in the 'Verse: Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, and uses a D8 die for movement, starting from Meridian.",
+    rules: createStoryRules("A Jubilant Victory", [
+      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Story Override" }
+    ])
   },
   {
     title: "Laying Down the Law",
@@ -283,6 +286,9 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Draw three starting jobs from a single contact, and two other jobs from any other contacts. You may only keep 3 jobs.",
     rating: 0,
     requiredExpansion: "community",
+    rules: createStoryRules("My Number One Guy", [
+      { type: 'addFlag', flag: 'customJobDraw' }
+    ])
   },
   {
     title: "New Heroes of Canton",
@@ -327,7 +333,17 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "The Barrle of Sturges was the shortest and bloodiest battle of the Unification War. Badger has broadcast news that there is a hoard of Alliance treasure left in the wreckage of this space battle to a few \"trusted friends\". The race is on to get the information, equipment and speed to get there first, find the goods and get clear before the Alliance shows up to claim its property!",
     setupDescription: "Captains Nandi and Atherton may not be used by any player.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/filepage/125866/return-to-sturges-a-firefly-mission"
+    sourceUrl: "https://boardgamegeek.com/filepage/125866/return-to-sturges-a-firefly-mission",
+    rules: createStoryRules("Return to Sturges", [
+      { 
+        type: 'addSpecialRule', 
+        category: 'draft',
+        rule: {
+          title: 'Leader Restriction',
+          content: ["Captains Nandi and Atherton may not be used by any player."]
+        }
+      }
+    ])
   },
   {
     title: "River's Run 1v1",
@@ -396,9 +412,19 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     additionalRequirements: [
       "pirates"
     ],
-    setupDescription: "After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard pules. Reshuffle the Contact Decks.",
+    setupDescription: "After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks.",
     sourceUrl: "https://boardgamegeek.com/thread/3405568/article/45332549#45332549",
-    requiredExpansion: "community"
+    requiredExpansion: "community",
+    rules: createStoryRules("Shiny New Year 25 - Protect Or Plunder", [
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Deck Modification',
+          content: ["After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks."]
+        }
+      }
+    ])
   },
   {
     title: "Slaying The Dragon",
