@@ -1,5 +1,5 @@
 import { StoryCardDef, SetupRule } from '../../types/index';
-import { CONTACT_NAMES } from '../ids';
+import { CONTACT_NAMES, SETUP_CARD_IDS } from '../ids';
 
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
@@ -112,19 +112,22 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: " ",
     setupDescription: "Only MORAL leaders can be chosen. Exclude Niska from Starting Jobs. Immoral Jobs cannot be accepted. Remove Crow from the game.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1624739/story-card-the-good-guys"
+    sourceUrl: "https://boardgamegeek.com/thread/1624739/story-card-the-good-guys",
+    rating: 1
   },
   {
     title: "The Good, The Bad, and The Ugly",
     intro: "To survive the 'Verse, you must walk among saints, trade with devils, and strike a deal with the depraved. Prove you can master every side of the law.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/2688034/the-good-the-bad-and-the-ugly-story-card"
+    sourceUrl: "https://boardgamegeek.com/thread/2688034/the-good-the-bad-and-the-ugly-story-card",
+    rating: 2
   },
   {
     title: "The Great Escape",
     intro: "The Alliance has been busy. Rounded up a few of our nearest and dearest. We aim to right that wrong, and see about ending that incarceration.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/2717955/co-op-story-the-great-escape"
+    isCoOp: true,
+    sourceUrl: "https://boardgamegeek.com/thread/2717955/article/38380038#38380038"
   },
   {
     title: "Honorably Dishonorable Men",
@@ -181,13 +184,15 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "Alliance brass has handed down some flush to the local magistrates to round up some old warrants and they're hiring new law men who can prove they can get the job done.",
     setupDescription: "Laying Low: Wanted crew may not be hired.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1093761/story-card-laying-down-the-law"
+    sourceUrl: "https://boardgamegeek.com/thread/1093761/article/14404723#14404723",
+    rating: 1
   },
   {
     title: "The Long Haul",
     intro: "Anson's looking for a top notch crew for a really big job. He doesn't just hand out jobs to anyone though. Can you prove yourself capable, secure the job, and make a fortune?",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1107085/the-long-haul-idea-for-an-unofficial-story-card"
+    sourceUrl: "https://boardgamegeek.com/thread/1107085/the-long-haul-idea-for-an-unofficial-story-card",
+    rating: 1
   },
   {
     title: "The Magnificent Crew",
@@ -204,14 +209,16 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
           content: ['This story features special high-value cargo sales rules that apply during gameplay.']
         }
       }
-    ])
+    ]),
+    rating: 2
   },
   {
     title: "Mark Of A Great Captain",
     intro: "If you don't much care for the wellbeing of your crew, your crew won't care much for you. Do what you can to keep your chosen family together. Without them, who's gonna keep you company when you're floating in the black?",
     setupDescription: "Each player chooses a Moral Leader. After all players collect their Starting Supplies, each player pays for an Expanded Crew Quarters ($600) and can now hold 3 more crew. Hiring Crew: Starting with 1st player, each player searches for and hires a crew card from any supply deck of their choice. Continue rounds of hiring crew until all player ships have a full set of crew on their ship. Remove all other crew cards from play. You may only use the crew you start with. 7 Disgruntled tokens will be used as a timer that triggers the arrest of 4 crew members from each ship. First player will discard 1 token at the start of each round of play.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/filepage/286230/mark-of-a-great-captain-story-card"
+    sourceUrl: "https://boardgamegeek.com/filepage/286230/mark-of-a-great-captain-story-card",
+    rating: 2
   },
   {
     title: "Master Of All",
@@ -225,7 +232,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "You suspect that there is a hidden message in the Fruity Oaty Bars advertisement recently broadcast by the Alliance network. Decoding it may reveal something of value or maybe it's just a new form of subliminal advertising.",
     setupDescription: "Place your Firefly on a supply world to begin the game. Draw 1 starting crew from any deck by flipping the draw pile and taking the first named character that is revealed.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1135128/article/15123932#15123932"
+    sourceUrl: "https://boardgamegeek.com/thread/1135128/article/1512332#1512332",
+    rating: 2
   },
   {
     title: "Miranda's Secret",
@@ -236,6 +244,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     ],
     sourceUrl: "https://boardgamegeek.com/filepage/110153/story-card-mirandas-secret",
     requiredExpansion: "community",
+    rating: 2
   },
   {
     title: "My Fellow Browncoats",
@@ -297,7 +306,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "Old Friends And New",
     intro: "You thought he was dead, but now you know your old War buddy is being held in a max-security prison on Valentine. You'll need the help of some new friends to unlock the Cortex master identity files, then mingle with the high and mighty to get the prison plans, and finally it's off to the rescue!",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1119976/story-card-old-friends-and-new"
+    sourceUrl: "https://boardgamegeek.com/thread/1119976/story-card-old-friends-and-new",
+    rating: 2
   },
   {
     title: "Rags To Riches",
@@ -344,13 +354,15 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
           content: ['Remove ', { type: 'strong', content: 'River Tam' }, ' from play before shuffling the Supply Decks.']
         }
       }
-    ])
+    ]),
+    rating: 1
   },
   {
     title: "Saving Pirate Ryan",
     intro: "You know, there's a certain motto. A creed among folks like us. You may have heard it: \"Leave no man behind.\" Wash - Firefy Episide 10 - War Stories",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1536695/article/22110859#22110859"
+    sourceUrl: "https://boardgamegeek.com/thread/1536695/article/22110859#22110859",
+    rating: 1
   },
   {
     title: "Scavengers",
@@ -439,7 +451,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "Unification Day",
     intro: "Unification Day is fast approaching and you have plans to cause all sorts of mischief, but what better way to do it than right under the nose of the Alliance? You just might get more than a little pay back out of it.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1083899/unification-day-alliance-oriented-story-card"
+    sourceUrl: "https://boardgamegeek.com/thread/1083899/unification-day-alliance-oriented-story-card",
+    rating: 1
   },
   {
     title: "Wild Cards",
@@ -452,6 +465,8 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "X Marks The Spot",
     intro: "Pirate Captain Medina's legendary buried treasure was forever lost when he split his treasure map ensuring none could find it. Who will be first to unearth his fabled booty?",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/2954291/x-marks-the-spot-story-card-playtest-update"
+    sourceUrl: "https://boardgamegeek.com/thread/2954291/article/41076542#41076542",
+    rating: 2,
+    incompatibleSetupCardIds: [SETUP_CARD_IDS.CLEARER_SKIES_BETTER_DAYS]
   },
 ];

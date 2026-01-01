@@ -1,4 +1,6 @@
-// FIX: Changed to extend `Component` directly from React to resolve issues with `setState` and `props` not being found on the class instance. The previous usage of `React.Component` was not resolving correctly.
+// FIX: The errors about `setState` and `props` not existing indicate a type resolution
+// issue with the base React.Component class. Switching to a named import for `Component`
+// is a common way to resolve such issues in modern TypeScript/React setups.
 import React, { Component } from 'react';
 import { ErrorFallback } from './ErrorFallback';
 
