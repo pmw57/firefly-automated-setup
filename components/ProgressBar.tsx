@@ -10,6 +10,7 @@ interface ProgressBarProps {
   currentIndex: number;
   onJump: (index: number) => void;
   setupDetermined: boolean;
+  overriddenStepIds: string[];
 }
 
 const getStepDisplay = (step: Step): { label: string; number?: string } => {
@@ -74,7 +75,7 @@ const toRoman = (num: number): string => {
 };
 
 
-export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, onJump, setupDetermined }) => {
+export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, onJump, setupDetermined, overriddenStepIds }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const containerRef = useRef<HTMLDivElement>(null);
@@ -152,6 +153,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
           {flow.map((step, index) => {
             const isCurrent = index === currentIndex;
             const isPast = index < currentIndex;
+            const isOverridden = isPast && overriddenStepIds.includes(step.id);
             const isDetermined = step.type === 'setup' || setupDetermined;
             const isFirstMainStep = separatorIndex !== -1 && index === separatorIndex;
             
@@ -192,7 +194,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
                   className={cls(
                     "absolute -top-7 whitespace-nowrap text-[9px] uppercase font-bold tracking-tighter transition-all duration-300 transform",
                     isDetermined ? "group-hover:scale-110 cursor-pointer" : "cursor-not-allowed",
-                    isCurrent ? labelActive : isPast ? labelCompleted : labelUpcoming
+                    isCurrent ? labelActive : isPast ? labelCompleted : labelUpcoming,
+                    isOverridden && '!text-yellow-500 dark:!text-amber-400'
                   )}
                 >
                   {label}
@@ -201,18 +204,22 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
                 {/* The Node */}
                 <button
                   onClick={() => isDetermined && onJump(index)}
-                  aria-label={isDetermined ? `Jump to ${label} step` : 'Step not yet determined'}
+                  aria-label={isDetermined ? `Jump to ${label} step${isOverridden ? ' (Modified by story)' : ''}` : 'Step not yet determined'}
                   className={cls(
                     "w-4 h-4 rounded-full border-2 transition-all duration-300 shadow-sm touch-manipulation flex items-center justify-center",
                     isDetermined ? "cursor-pointer hover:scale-125" : "cursor-not-allowed",
                     isCurrent 
                       ? cls("bg-white ring-4 ring-opacity-20 scale-125", isDark ? "ring-emerald-400" : "ring-red-600", nodeActiveBorder)
+                      : isOverridden
+                      ? "bg-yellow-500 border-yellow-700 dark:bg-amber-500 dark:border-amber-700"
                       : isPast 
                       ? cls(nodeCompletedBg, "border-transparent")
                       : cls(trackBg, "border-transparent")
                   )}
                 >
-                  {isPast && !isCurrent ? (
+                  {isOverridden ? (
+                    <span className="text-sm text-white font-bold leading-none" title="This step has been modified by your Story Card selection.">!</span>
+                  ) : isPast && !isCurrent ? (
                     <span className="text-[8px] text-white flex items-center justify-center leading-none">✓</span>
                   ) : number && !isPast ? (
                     <span className={cls(

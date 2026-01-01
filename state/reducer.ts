@@ -204,6 +204,7 @@ export const getDefaultGameState = (): GameState => {
             4: true,
             5: true,
         },
+        overriddenStepIds: [],
     };
 };
 
@@ -325,7 +326,7 @@ export function gameReducer(state: GameState, action: Action): GameState {
       break;
 
     case ActionType.SET_STORY_CARD:
-      nextState = { ...state, selectedStoryCard: action.payload.title, selectedGoal: action.payload.goal, challengeOptions: {} };
+      nextState = { ...state, selectedStoryCard: action.payload.title, selectedGoal: action.payload.goal, challengeOptions: {}, overriddenStepIds: [] };
       break;
       
     case ActionType.SET_GOAL:
@@ -383,6 +384,10 @@ export function gameReducer(state: GameState, action: Action): GameState {
           [action.payload]: !state.storyRatingFilters[action.payload],
         },
       };
+      break;
+
+    case ActionType.SET_STORY_OVERRIDES:
+      nextState = { ...state, overriddenStepIds: action.payload };
       break;
 
     default:

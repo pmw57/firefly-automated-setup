@@ -1,5 +1,3 @@
-
-
 import React, { ErrorInfo, ReactNode } from 'react';
 import { ErrorFallback } from './ErrorFallback';
 
@@ -16,8 +14,7 @@ interface ErrorBoundaryState {
  * ErrorBoundary class component to catch rendering errors in its children.
  */
 // FIX: The ErrorBoundary class must extend React.Component to be a valid React class component.
-// This inheritance provides access to component properties like `this.props` and methods like `this.setState`.
-// FIX: Extended React.Component to make ErrorBoundary a valid React class component, providing access to `this.props` and `this.setState`.
+// This provides access to component lifecycle methods, props, and state.
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = {
     hasError: false,
@@ -34,6 +31,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   handleReset = () => {
+    // FIX: Corrected by extending React.Component, which provides this.setState.
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
@@ -48,6 +46,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       );
     }
 
+    // FIX: Corrected by extending React.Component, which provides this.props.
     return this.props.children;
   }
 }

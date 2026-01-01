@@ -1,5 +1,7 @@
 
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { useGameState } from '../hooks/useGameState';
 import { useSetupFlow } from '../hooks/useSetupFlow';
 import { StepContent } from './StepContent';
@@ -8,13 +10,19 @@ import { Button } from './Button';
 import { useTheme } from './ThemeContext';
 import { FinalSummary } from './FinalSummary';
 import { WizardHeader } from './WizardHeader';
+import { OverrideModal } from './OverrideModal';
+import { detectOverrides } from '../utils/overrides';
+import { getStoryCardByTitle } from '../utils/selectors/story';
+import { ActionType } from '../state/actions';
+import { STEP_IDS } from '../data/ids';
 import { cls } from '../utils/style';
 import { isSetupDetermined } from '../utils/ui';
 
 const SetupWizard = (): React.ReactElement | null => {
   const { 
     state: gameState, 
-    isStateInitialized: isGameStateInitialized, 
+    dispatch,
+    isStateInitialized, 
     resetGameState,
     currentStepIndex,
     setCurrentStepIndex,
@@ -24,10 +32,26 @@ const SetupWizard = (): React.ReactElement | null => {
 
   const [resetKey, setResetKey] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [overrideModalState, setOverrideModalState] = useState<{ firstAffectedIndex: number; stepLabels: string[] } | null>(null);
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
+  // Effect to detect and set story overrides in global state
+  useEffect(() => {
+    if (gameState.selectedStoryCard) {
+      const storyCard = getStoryCardByTitle(gameState.selectedStoryCard);
+      if (storyCard) {
+        const storyStepIndex = flow.findIndex(s => s.id === STEP_IDS.C4 || s.id === STEP_IDS.D_FIRST_GOAL);
+        const overriddenIds = detectOverrides(storyCard, flow, storyStepIndex);
+        if (overriddenIds.length > 0 && overriddenIds.join(',') !== gameState.overriddenStepIds.join(',')) {
+          dispatch({ type: ActionType.SET_STORY_OVERRIDES, payload: overriddenIds });
+        }
+      }
+    }
+  }, [gameState.selectedStoryCard, flow, dispatch, gameState.overriddenStepIds]);
+
+
   useEffect(() => {
     if (currentStepIndex >= flow.length && flow.length > 0) {
       setCurrentStepIndex(flow.length - 1);
@@ -55,7 +79,20 @@ const SetupWizard = (): React.ReactElement | null => {
     }, 50);
   }, [flow.length, setCurrentStepIndex]);
 
-  const handleNext = useCallback(() => handleNavigation('next'), [handleNavigation]);
+  const handleNext = useCallback(() => {
+    const isStoryStep = flow[currentStepIndex]?.id === STEP_IDS.C4 || flow[currentStepIndex]?.id === STEP_IDS.D_FIRST_GOAL;
+    
+    if (isStoryStep && gameState.overriddenStepIds.length > 0) {
+      const affectedSteps = flow.filter(step => gameState.overriddenStepIds.includes(step.id));
+      const firstAffectedIndex = Math.min(...affectedSteps.map(step => flow.indexOf(step)));
+      const stepLabels = affectedSteps.map(step => step.data?.title.replace(/^\d+\.\s+/, '') || step.id);
+
+      setOverrideModalState({ firstAffectedIndex, stepLabels });
+    } else {
+      handleNavigation('next');
+    }
+  }, [handleNavigation, currentStepIndex, flow, gameState.overriddenStepIds]);
+
   const handlePrev = useCallback(() => handleNavigation('prev'), [handleNavigation]);
   const handleJump = useCallback((index: number) => handleNavigation(index), [handleNavigation]);
 
@@ -64,8 +101,22 @@ const SetupWizard = (): React.ReactElement | null => {
     setResetKey(prev => prev + 1);
     window.scrollTo(0, 0);
   }, [resetGameState]);
+  
+  const handleModalContinue = () => {
+    setOverrideModalState(null);
+    handleNavigation('next');
+  };
+  
+  const handleModalJump = () => {
+    if (overrideModalState) {
+      handleJump(overrideModalState.firstAffectedIndex);
+      setOverrideModalState(null);
+    }
+  };
 
-  if (!isGameStateInitialized || !isWizardInitialized || flow.length === 0) {
+
+  // FIX: Corrected typo from `isGameStateInitialized` to `isStateInitialized` to match the destructured variable from the `useGameState` hook.
+  if (!isStateInitialized || !isWizardInitialized || flow.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-900 mb-6"></div>
@@ -90,7 +141,8 @@ const SetupWizard = (): React.ReactElement | null => {
         flow={flow} 
         currentIndex={currentStepIndex} 
         onJump={handleJump} 
-        setupDetermined={setupDetermined} 
+        setupDetermined={setupDetermined}
+        overriddenStepIds={gameState.overriddenStepIds}
       />
 
       {isFinal ? (
@@ -113,6 +165,15 @@ const SetupWizard = (): React.ReactElement | null => {
           onPrev={handlePrev}
           isNavigating={isNavigating}
         />
+      )}
+      
+      {overrideModalState && createPortal(
+        <OverrideModal
+          affectedStepLabels={overrideModalState.stepLabels}
+          onContinue={handleModalContinue}
+          onJump={handleModalJump}
+        />,
+        document.body
       )}
     </div>
   );
