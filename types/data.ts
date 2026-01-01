@@ -2,7 +2,7 @@ import { SETUP_CARD_IDS } from '../data/ids';
 import { GameMode, Expansions } from './common';
 import { SetupRule } from './rules';
 
-export type ExpansionId = 'base' | 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'aces_eights' | 'white_lightning' | 'cantankerous' | 'huntingdons_bolt' | 'black_market' | 'still_flying' | 'community';
+export type ExpansionId = 'base' | 'breakin_atmo' | 'big_damn_heroes' | 'blue' | 'kalidasa' | 'pirates' | 'crime' | 'coachworks' | 'tenth' | 'aces_eights' | 'white_lightning' | 'cantankerous' | 'huntingdons_bolt' | 'black_market' | 'still_flying' | 'community' | 'local_color';
 
 export interface ExpansionIconConfig {
   type: 'sprite' | 'text' | 'svg';

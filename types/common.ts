@@ -21,6 +21,7 @@ export interface Expansions {
   black_market: boolean;
   still_flying: boolean;
   community: boolean;
+  local_color: boolean;
 }
 
 export interface TimerConfig {

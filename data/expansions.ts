@@ -136,6 +136,15 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     hidden: true
   },
   {
+    id: 'local_color',
+    label: "Local Color",
+    description: "Unofficial content required by some community stories.",
+    themeColor: 'teal',
+    icon: { type: 'text', value: 'LC' },
+    category: 'independent',
+    hidden: true
+  },
+  {
     id: 'black_market',
     label: "Black Market",
     description: "Adds the Black Market deck and high-risk illegal goods.",
