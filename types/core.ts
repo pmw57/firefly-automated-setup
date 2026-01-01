@@ -1,6 +1,8 @@
 // This file contains core, low-level type definitions for content structures
 // that are used across UI, rules, and data layers.
 
+export type ThemeColor = 'steelBlue' | 'black' | 'darkSlateBlue' | 'deepBrown' | 'rebeccaPurple' | 'cordovan' | 'darkOliveGreen' | 'saddleBrown' | 'teal' | 'dark' | 'cyan' | 'tan' | 'mediumPurple' | 'gamblingGreen' | 'darkGoldenRod';
+
 export type StructuredContentPart =
   | string
   | { type: 'strong'; content: string }
@@ -10,7 +12,7 @@ export type StructuredContentPart =
   | { type: 'numbered-list'; items: StructuredContent[] }
   | { type: 'paragraph'; content: StructuredContent }
   | { type: 'warning-box'; content: StructuredContent }
-  | { type: 'sub-list'; items: { ship: string }[] };
+  | { type: 'sub-list'; items: { ship: string; color: ThemeColor }[] };
 
 export type StructuredContent = StructuredContentPart[];
 

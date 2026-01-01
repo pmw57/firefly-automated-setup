@@ -1,9 +1,11 @@
-
-import React, { ErrorInfo, ReactNode } from 'react';
+// FIX: Changed React import to a namespace import (`* as React`). This resolves an issue in some TypeScript
+// configurations where the default import doesn't correctly provide the base `React.Component` class,
+// leading to errors about missing `setState` and `props`.
+import * as React from 'react';
 import { ErrorFallback } from './ErrorFallback';
 
 interface ErrorBoundaryProps {
-  children?: ReactNode;
+  children?: React.ReactNode;
 }
 
 interface ErrorBoundaryState {
@@ -25,16 +27,17 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error("Uncaught error:", error, errorInfo);
   }
 
   handleReset = () => {
+    // FIX: `this.setState` is now correctly inherited from `React.Component`.
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
 
-  render(): ReactNode {
+  render(): React.ReactNode {
     if (this.state.hasError && this.state.error) {
       return (
         <ErrorFallback
@@ -44,6 +47,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       );
     }
 
+    // FIX: `this.props` is now correctly inherited from `React.Component`.
     return this.props.children;
   }
 }

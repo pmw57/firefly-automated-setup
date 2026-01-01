@@ -7,7 +7,8 @@ import {
     StructuredContent,
     SetShipPlacementRule,
     SetDraftModeRule,
-    SetLeaderSetupRule
+    SetLeaderSetupRule,
+    ThemeColor
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CHALLENGE_IDS, STEP_IDS } from '../data/ids';
@@ -88,7 +89,17 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
             source: 'expansion', title: 'Optional Ship Upgrades',
             content: [
                 { type: 'paragraph', content: [`The following ships have `, { type: 'strong', content: `Optional Ship Upgrade` }, ` cards available. If you choose one of these ships, take its corresponding upgrade card.`] },
-                { type: 'sub-list', items: ['Bonanza', 'Bonnie Mae', 'Interceptor', 'Serenity', 'Walden', 'Yun Qi'].map(ship => ({ ship })) },
+                { 
+                    type: 'sub-list', 
+                    items: [
+                        { ship: 'Bonanza', color: 'darkOliveGreen' as ThemeColor },
+                        { ship: 'Bonnie Mae', color: 'darkSlateBlue' as ThemeColor },
+                        { ship: 'Interceptor', color: 'black' as ThemeColor },
+                        { ship: 'Serenity', color: 'saddleBrown' as ThemeColor },
+                        { ship: 'Walden', color: 'cordovan' as ThemeColor },
+                        { ship: 'Yun Qi', color: 'darkGoldenRod' as ThemeColor }
+                    ]
+                },
                 { type: 'warning-box', content: [{ type: 'strong', content: `Walden & Interceptor:` }, ` These upgrades are double-sided. Choose your side during setup—you cannot switch later.`] }
             ]
         });
