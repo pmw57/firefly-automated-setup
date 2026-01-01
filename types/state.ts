@@ -1,6 +1,6 @@
 import { SetupContentData, StepOverrides } from './ui';
 // FIX: Removed local definitions and imported the updated GameState from common types
-// to ensure consistency with the new 'Continuity' naming scheme.
+// to ensure consistency with the new 'Campaign' naming scheme.
 import type { GameState } from './common';
 
 export type { GameState };

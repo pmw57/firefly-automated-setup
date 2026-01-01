@@ -1,9 +1,9 @@
-
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getAllianceReaverDetails } from '../../../utils/alliance';
 import { StructuredContent, StructuredContentPart } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
+import { STORY_CARDS } from '../../../data/storyCards';
 
 // Helper to recursively flatten structured content to a searchable string
 const getTextContent = (content: StructuredContent | StructuredContentPart): string => {
@@ -20,7 +20,7 @@ const getTextContent = (content: StructuredContent | StructuredContentPart): str
         case 'action':
         case 'paragraph':
         case 'warning-box':
-            return getTextContent(content.content);
+            return getTextContent(content.content as StructuredContent);
         case 'list':
         case 'numbered-list':
             return content.items.map(item => getTextContent(item)).join(' ');
@@ -33,7 +33,7 @@ const getTextContent = (content: StructuredContent | StructuredContentPart): str
     }
 };
 
-describe('utils/alliance', () => {
+describe('rules/alliance', () => {
   describe('getAllianceReaverDetails', () => {
     const baseGameState = getDefaultGameState();
 
@@ -45,10 +45,12 @@ describe('utils/alliance', () => {
     });
 
     it.concurrent('generates a rule for alertStackCount based on player count and multiplier', () => {
+      const storyTitle = "It's All In Who You Know";
+      const storyIndex = STORY_CARDS.findIndex(c => c.title === storyTitle);
       const state = { 
         ...baseGameState, 
         playerCount: 4, 
-        selectedStoryCard: "It's All In Who You Know" // This story has a multiplier of 3
+        selectedStoryCardIndex: storyIndex
       };
       
       const details = getAllianceReaverDetails(state, {});
@@ -59,11 +61,13 @@ describe('utils/alliance', () => {
     });
 
     it.concurrent('generates the correct smugglersBluesSetup content based on expansions', () => {
+      const storyTitle = "Smuggler's Blues";
+      const storyIndex = STORY_CARDS.findIndex(c => c.title === storyTitle);
       // Case 1: Both expansions active
       const stateWithBoth = { 
         ...baseGameState, 
         expansions: { ...baseGameState.expansions, blue: true, kalidasa: true }, 
-        selectedStoryCard: "Smuggler's Blues"
+        selectedStoryCardIndex: storyIndex
       };
       const detailsBoth = getAllianceReaverDetails(stateWithBoth, {});
       expect(detailsBoth.specialRules.some(rule => getTextContent(rule.content).includes('Rim Space'))).toBe(true);
@@ -72,7 +76,7 @@ describe('utils/alliance', () => {
       const stateWithOne = { 
         ...baseGameState, 
         expansions: { ...baseGameState.expansions, blue: true, kalidasa: false }, 
-        selectedStoryCard: "Smuggler's Blues" 
+        selectedStoryCardIndex: storyIndex
       };
       const detailsOne = getAllianceReaverDetails(stateWithOne, {});
       expect(detailsOne.specialRules.some(rule => getTextContent(rule.content).includes('Alliance Space'))).toBe(true);

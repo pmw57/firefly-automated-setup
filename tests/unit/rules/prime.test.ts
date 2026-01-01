@@ -5,12 +5,6 @@ import { GameState } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { STORY_CARDS } from '../../../data/storyCards';
 
-const getStoryTitle = (title: string): string => {
-  const card = STORY_CARDS.find(c => c.title === title);
-  if (!card) throw new Error(`Test data missing: Could not find story card "${title}"`);
-  return card.title;
-};
-
 describe('rules/prime', () => {
   describe('getPrimeDetails', () => {
     const baseGameState = getDefaultGameState();
@@ -67,9 +61,11 @@ describe('rules/prime', () => {
     });
 
     it.concurrent('applies story multiplier', () => {
+      const storyTitle = "A Friend In Every Port";
       const state: GameState = {
         ...stateForStandardPriming,
-        selectedStoryCard: getStoryTitle("A Friend In Every Port")
+        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
       };
       const details = getPrimeDetails(state, {});
       expect(details.effectiveMultiplier).toBe(2);
@@ -77,9 +73,11 @@ describe('rules/prime', () => {
     });
     
     it.concurrent('prioritizes blitz multiplier over story multiplier', () => {
+      const storyTitle = "A Friend In Every Port";
       const state: GameState = {
         ...stateForStandardPriming,
-        selectedStoryCard: getStoryTitle("A Friend In Every Port")
+        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
       };
       const details = getPrimeDetails(state, { primeMode: 'blitz' });
       expect(details.effectiveMultiplier).toBe(2); // Blitz is 2x
@@ -87,18 +85,22 @@ describe('rules/prime', () => {
     });
 
     it.concurrent('applies Slaying the Dragon modifier (+2 cards)', () => {
+        const storyTitle = "Slaying The Dragon";
         const state: GameState = {
             ...stateForStandardPriming,
-            selectedStoryCard: getStoryTitle("Slaying The Dragon"),
+            // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
+            selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
         };
         const details = getPrimeDetails(state, {});
         expect(details.finalCount).toBe(5); // 3 + 2
     });
 
     it.concurrent('combines blitz and Slaying the Dragon', () => {
+        const storyTitle = "Slaying The Dragon";
         const state: GameState = {
             ...stateForStandardPriming,
-            selectedStoryCard: getStoryTitle("Slaying The Dragon"),
+            // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
+            selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
         };
         const details = getPrimeDetails(state, { primeMode: 'blitz' });
         expect(details.finalCount).toBe(8); // (3 * 2) + 2

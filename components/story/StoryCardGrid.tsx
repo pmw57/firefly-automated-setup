@@ -5,12 +5,13 @@ import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useTheme } from '../ThemeContext';
 import { getFilterableExpansions } from '../../utils/selectors/story';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
+import { STORY_CARDS } from '../../data/storyCards';
 import { cls } from '../../utils/style';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionId } from '../../types/index';
 
 interface StoryCardGridProps {
-  onSelect: (title: string) => void;
+  onSelect: (index: number) => void;
 }
 
 export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
@@ -25,7 +26,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
     filterExpansion,
     setFilterExpansion,
     toggleFilterExpansion,
-    activeStoryCard,
+    selectedStoryCardIndex,
     sortMode,
     toggleSortMode,
     filterCoOpOnly,
@@ -157,6 +158,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
         {filteredStories.length > 0 ? (
           <>
             {filteredStories.map((card) => {
+              const originalIndex = STORY_CARDS.indexOf(card);
               const showHeader = sortMode === 'expansion' && card.requiredExpansion !== lastExpansionId;
               if (showHeader) {
                 lastExpansionId = card.requiredExpansion;
@@ -165,7 +167,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
               const headerLabel = expansionMeta ? expansionMeta.label : 'Base Game';
 
               return (
-                <React.Fragment key={card.title}>
+                <React.Fragment key={`${card.title}-${originalIndex}`}>
                   {showHeader && (
                     <div className={cls(
                         "sticky top-0 z-10 px-4 py-2 text-xs font-bold uppercase tracking-wider shadow-sm",
@@ -177,8 +179,8 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
                   <div className="p-2">
                     <StoryCardGridItem 
                       card={card}
-                      isSelected={activeStoryCard?.title === card.title}
-                      onClick={() => onSelect(card.title)}
+                      isSelected={selectedStoryCardIndex === originalIndex}
+                      onClick={() => onSelect(originalIndex)}
                     />
                   </div>
                 </React.Fragment>

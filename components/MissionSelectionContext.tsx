@@ -2,8 +2,9 @@ import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
-import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getStoryCardByTitle, getAvailableAdvancedRules } from '../utils/selectors/story';
+import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getAvailableAdvancedRules } from '../utils/selectors/story';
 import { ActionType } from '../state/actions';
+import { STORY_CARDS } from '../data/storyCards';
 
 interface LocalState {
   searchTerm: string;
@@ -109,12 +110,12 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   const handleCancelShortList = useCallback(() => localDispatch({ type: 'SET_SHORT_LIST', payload: [] }), []);
 
   // --- Handlers with Logic ---
-  const handleStoryCardSelect = useCallback((title: string) => {
-    const card = getStoryCardByTitle(title);
+  const handleStoryCardSelect = useCallback((index: number | null) => {
+    const card = index !== null ? STORY_CARDS[index] : undefined;
     gameDispatch({ 
       type: ActionType.SET_STORY_CARD, 
       payload: { 
-        title, 
+        index, 
         goal: card?.goals?.[0]?.title 
       } 
     });
@@ -123,7 +124,9 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   const handleRandomPick = useCallback(() => {
     if (validStories.length === 0) return;
     const r = Math.floor(Math.random() * validStories.length);
-    handleStoryCardSelect(validStories[r].title);
+    const card = validStories[r];
+    const originalIndex = STORY_CARDS.indexOf(card);
+    handleStoryCardSelect(originalIndex);
     localDispatch({ type: 'SET_SHORT_LIST', payload: [] });
   }, [validStories, handleStoryCardSelect]);
 
@@ -136,7 +139,9 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   const handlePickFromShortList = useCallback(() => {
     if (shortList.length === 0) return;
     const r = Math.floor(Math.random() * shortList.length);
-    handleStoryCardSelect(shortList[r].title);
+    const card = shortList[r];
+    const originalIndex = STORY_CARDS.indexOf(card);
+    handleStoryCardSelect(originalIndex);
   }, [shortList, handleStoryCardSelect]);
 
   const value = {
@@ -149,6 +154,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     sortMode,
     // Derived Data
     activeStoryCard,
+    selectedStoryCardIndex: gameState.selectedStoryCardIndex,
     validStories,
     filteredStories,
     availableAdvancedRules,

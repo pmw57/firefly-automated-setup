@@ -1,4 +1,3 @@
-
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getResourceDetails } from '../../../utils/resources';
@@ -7,13 +6,7 @@ import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
 import { STORY_CARDS } from '../../../data/storyCards';
 
-const getStoryTitle = (title: string): string => {
-  const card = STORY_CARDS.find(c => c.title === title);
-  if (!card) throw new Error(`Test data missing: Could not find story card "${title}"`);
-  return card.title;
-};
-
-describe('utils/resources', () => {
+describe('rules/resources', () => {
   const baseGameState = getDefaultGameState();
 
   const getGameStateWithConfig = (
@@ -43,9 +36,10 @@ describe('utils/resources', () => {
     });
 
     it.concurrent('applies an "add" credits effect from a story card', () => {
+      const storyTitle = "Running On Empty";
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
-        selectedStoryCard: getStoryTitle("Running On Empty")
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(4200); // 3000 + 1200
@@ -54,9 +48,10 @@ describe('utils/resources', () => {
     });
     
     it.concurrent('applies a "set" credits effect from a story card, overriding the base', () => {
+      const storyTitle = "How It All Started";
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
-        selectedStoryCard: getStoryTitle("How It All Started")
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(500);
@@ -64,9 +59,10 @@ describe('utils/resources', () => {
     });
 
     it.concurrent('resolves conflict between "set" credit effects by prioritizing the story rule', () => {
+      const storyTitle = "How It All Started";
       const state = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
-        selectedStoryCard: getStoryTitle("How It All Started")
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       });
       const details = getResourceDetails(state);
       
@@ -76,9 +72,10 @@ describe('utils/resources', () => {
     });
 
     it.concurrent('applies "disable" effects for fuel and parts from a story', () => {
+      const storyTitle = "Running On Empty";
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD,
-        selectedStoryCard: getStoryTitle("Running On Empty")
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       });
       const details = getResourceDetails(state);
 
@@ -100,9 +97,10 @@ describe('utils/resources', () => {
     });
 
     it.concurrent('handles adding warrants and other resources', () => {
+      const storyTitle = "It Ain't Easy Goin' Legit";
       const state = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.STANDARD,
-        selectedStoryCard: getStoryTitle("It Ain't Easy Goin' Legit")
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       });
       const details = getResourceDetails(state);
 
@@ -111,9 +109,10 @@ describe('utils/resources', () => {
     });
 
     it.concurrent('should return a conflict object and respect manual selection when manual resolution is enabled', () => {
+      const storyTitle = "How It All Started";
       const state: GameState = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
-        selectedStoryCard: getStoryTitle("How It All Started"),
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
         optionalRules: { ...baseGameState.optionalRules, resolveConflictsManually: true },
       });
 

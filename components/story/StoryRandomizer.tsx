@@ -1,12 +1,12 @@
-
 import React from 'react';
 import { Button } from '../Button';
 import { StoryCardGridItem } from './StoryCardGridItem';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useTheme } from '../ThemeContext';
+import { STORY_CARDS } from '../../data/storyCards';
 
 interface StoryRandomizerProps {
-  onSelect: (title: string) => void;
+  onSelect: (index: number) => void;
 }
 
 export const StoryRandomizer: React.FC<StoryRandomizerProps> = ({ onSelect }) => {
@@ -16,7 +16,7 @@ export const StoryRandomizer: React.FC<StoryRandomizerProps> = ({ onSelect }) =>
   const {
     validStories,
     shortList,
-    activeStoryCard,
+    selectedStoryCardIndex,
     handleRandomPick,
     handleGenerateShortList,
     handlePickFromShortList,
@@ -58,15 +58,18 @@ export const StoryRandomizer: React.FC<StoryRandomizerProps> = ({ onSelect }) =>
             <span className={`text-xs ${shortListBadgeColor} px-2 py-1 rounded-full font-bold`}>Pick one below or roll</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-            {shortList.map((card) => (
-              <StoryCardGridItem 
-                key={card.title}
-                card={card}
-                isSelected={activeStoryCard?.title === card.title}
-                onClick={() => onSelect(card.title)}
-                isShortList={true}
-              />
-            ))}
+            {shortList.map((card) => {
+                const originalIndex = STORY_CARDS.indexOf(card);
+                return (
+                  <StoryCardGridItem 
+                    key={`${card.title}-${originalIndex}`}
+                    card={card}
+                    isSelected={selectedStoryCardIndex === originalIndex}
+                    onClick={() => onSelect(originalIndex)}
+                    isShortList={true}
+                  />
+                )
+            })}
           </div>
           <div className="flex gap-3">
             <Button onClick={handlePickFromShortList} className="flex-1 py-2 text-sm">

@@ -12,8 +12,10 @@ import { CAMPAIGN_SETUP_NOTES } from '../../data/collections';
 // =================================================================
 
 export const getActiveStoryCard = (gameState: GameState): StoryCardDef | undefined => {
-    if (!gameState.selectedStoryCard) return undefined;
-    return STORY_CARDS.find(c => c.title === gameState.selectedStoryCard);
+    if (gameState.selectedStoryCardIndex === null) {
+        return undefined;
+    }
+    return STORY_CARDS[gameState.selectedStoryCardIndex];
 };
 
 export const getStoryCardByTitle = (title: string): StoryCardDef | undefined => {

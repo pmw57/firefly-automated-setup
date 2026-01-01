@@ -1,3 +1,4 @@
+
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule, Step } from '../types/index';
 import { STEP_IDS } from '../data/ids';

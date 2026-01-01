@@ -10,6 +10,7 @@ export interface MissionSelectionContextType {
   subStep: number;
   sortMode: 'expansion' | 'name' | 'rating';
   activeStoryCard: StoryCardDef | undefined;
+  selectedStoryCardIndex: number | null;
   validStories: StoryCardDef[];
   filteredStories: StoryCardDef[];
   availableAdvancedRules: AdvancedRuleDef[];
@@ -20,7 +21,7 @@ export interface MissionSelectionContextType {
   toggleFilterCoOp: () => void;
   setSubStep: (step: number) => void;
   toggleSortMode: () => void;
-  handleStoryCardSelect: (title: string) => void;
+  handleStoryCardSelect: (index: number | null) => void;
   handleRandomPick: () => void;
   handleGenerateShortList: () => void;
   handlePickFromShortList: () => void;

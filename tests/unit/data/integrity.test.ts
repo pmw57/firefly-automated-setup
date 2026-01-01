@@ -44,11 +44,5 @@ describe('Data Integrity', () => {
         }
       });
     });
-
-    it.concurrent('unique titles', () => {
-        const titles = STORY_CARDS.map(c => c.title);
-        const unique = new Set(titles);
-        expect(unique.size).toBe(titles.length);
-    });
   });
 });

@@ -2,7 +2,7 @@
 import { GameState, Step, HeaderDetails } from '../types/index';
 import { getDisplaySetupName } from './ui';
 import { SETUP_CARD_IDS } from '../data/ids';
-import { getSetupCardById } from './selectors/story';
+import { getActiveStoryCard, getSetupCardById } from './selectors/story';
 
 /**
  * Consolidates all presentation logic for the main wizard header.
@@ -25,7 +25,7 @@ export const getHeaderDetails = (
     const secondaryCard = gameState.secondarySetupId ? getSetupCardById(gameState.secondarySetupId) : undefined;
     const setupName = gameState.setupCardName ? getDisplaySetupName(gameState, secondaryCard) : 'Configuring...';
     
-    const storyName = gameState.selectedStoryCard ? gameState.selectedStoryCard : null;
+    const storyName = getActiveStoryCard(gameState)?.title ?? null;
 
     let soloMode: 'Expanded' | 'Classic' | null = null;
     if (gameState.gameMode === 'solo' && isPastFirstStep) {

@@ -13,7 +13,8 @@ import { getActiveStoryCard } from './story';
  */
 export const getResolvedRules = (gameState: GameState): SetupRule[] => {
     const rules: SetupRule[] = [];
-    const { setupCardId, secondarySetupId, selectedStoryCard } = gameState;
+    // FIX: Refactored to use `getActiveStoryCard` correctly, as `selectedStoryCard` is not a property of `gameState`. The new logic is cleaner and correctly retrieves story rules.
+    const { setupCardId, secondarySetupId } = gameState;
 
     const primaryCardDef = getSetupCardById(setupCardId);
     const isCombinable = !!primaryCardDef?.isCombinable;
@@ -37,11 +38,9 @@ export const getResolvedRules = (gameState: GameState): SetupRule[] => {
     }
 
     // Get rules from the selected story card.
-    if (selectedStoryCard) {
-        const storyCard = getActiveStoryCard(gameState);
-        if (storyCard?.rules) {
-            rules.push(...storyCard.rules);
-        }
+    const storyCard = getActiveStoryCard(gameState);
+    if (storyCard?.rules) {
+        rules.push(...storyCard.rules);
     }
     
     return rules;
