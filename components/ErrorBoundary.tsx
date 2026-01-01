@@ -13,8 +13,7 @@ interface ErrorBoundaryState {
 /**
  * ErrorBoundary class component to catch rendering errors in its children.
  */
-// FIX: The ErrorBoundary class must extend React.Component to be a valid React class component.
-// This provides access to component lifecycle methods, props, and state.
+// FIX: The ErrorBoundary class must extend React.Component to be a valid React class component. This provides access to component lifecycle methods, props, and state, resolving the errors for missing 'setState' and 'props'.
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = {
     hasError: false,
@@ -31,7 +30,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   handleReset = () => {
-    // FIX: Corrected by extending React.Component, which provides this.setState.
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
@@ -46,7 +44,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       );
     }
 
-    // FIX: Corrected by extending React.Component, which provides this.props.
     return this.props.children;
   }
 }

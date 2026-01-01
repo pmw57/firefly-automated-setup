@@ -1,4 +1,3 @@
-
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { ExpansionDef } from '../types/index';
 
@@ -22,7 +21,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'breakin_atmo',
     label: "Breakin' Atmo",
-    description: "Adds 50 new jobs and 25 new supply cards to the 'Verse.",
+    description: "Adds new skill-based Jobs, resourceful Crew, and specialized gear for bigger scores.",
     themeColor: 'steelBlue',
     icon: { type: 'sprite', value: '0% 0%' },
     page_10th: 28,
@@ -31,7 +30,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'big_damn_heroes',
     label: "Big Damn Heroes",
-    description: "Take $100 when proceeding while misbehaving with BDH.",
+    description: "Recruit special versions of Serenity's Crew with a unique 'Big Damn Heroes' ability.",
     themeColor: 'steelBlue',
     icon: { type: 'sprite', value: '25% 0%' },
     page_10th: 28,
@@ -40,7 +39,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'pirates',
     label: "Pirates & Bounty Hunters",
-    description: "Introduces piracy, bounties, and direct player conflict.",
+    description: "Introduces player-versus-player conflict with piracy, bounties, new ships, and aggressive leaders.",
     themeColor: 'black',
     icon: { type: 'sprite', value: '50% 0%' },
     page_10th: 29,
@@ -49,7 +48,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'blue',
     label: "Blue Sun",
-    description: "Western Rim of the 'Verse with Reavers.",
+    description: "Explore the dangerous Blue Sun Rim, facing new Reaver threats and powerful ship upgrades.",
     themeColor: 'darkSlateBlue',
     icon: { type: 'sprite', value: '75% 0%' },
     page_10th: 36,
@@ -58,7 +57,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'kalidasa',
     label: "Kalidasa",
-    description: "Eastern Rim of 'Verse with the Operative.",
+    description: "Venture into the Kalidasa Rim, avoiding the relentless Alliance Operative and discovering new opportunities.",
     themeColor: 'deepBrown',
     icon: { type: 'sprite', value: '100% 0%' },
     page_10th: 42,
@@ -67,7 +66,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'coachworks',
     label: "Coachworks",
-    description: "Jetwash and Esmerelda ships, plus setup cards.",
+    description: "Adds two new ships, Esmeralda and Jetwash, each with new Supply/Story/Setup cards.",
     themeColor: 'rebeccaPurple',
     icon: { type: 'sprite', value: '0% 25%' },
     page_10th: 47,
@@ -76,7 +75,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'crime',
     label: "Crime & Punishment",
-    description: "Increases the risks of misbehaving, and Alliance Alerts.",
+    description: "Adds new troubles with Misbehave cards, game-wide Alliance Priority Alerts, and new stories.",
     themeColor: 'cordovan',
     icon: { type: 'sprite', value: '25% 25%' },
     page_10th: 49,
@@ -85,7 +84,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'still_flying',
     label: "Still Flying",
-    description: "Adds the R-Class ship, new story cards, and new contacts.",
+    description: "Adds the Restless Sole ship, shuttles, new cards, and risky Capers from Saffron.",
     themeColor: 'darkOliveGreen',
     icon: { type: 'sprite', value: '50% 25%' },
     page_10th: 50,
@@ -94,7 +93,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'tenth',
     label: "10th Anniversary",
-    description: "Adds 50 extra cards, Drifters, and 'Big Money' mechanics.",
+    description: "Includes new cards of all types, all released promo cards, and expanded solo rules.",
     themeColor: 'saddleBrown',
     icon: { type: 'sprite', value: '75% 25%' },
     page_10th: 53,
@@ -112,7 +111,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'white_lightning',
     label: "White Lightning",
-    description: "A cargo lifter converted into a popular saloon ship, as a cover for rumrunning and smuggling.",
+    description: "Pilot the White Lightning, a saloon ship perfect for rumrunning, smuggling, and new jobs.",
     themeColor: 'mediumPurple',
     icon: { type: 'sprite', value: '25% 50%' },
     category: 'independent',
@@ -121,7 +120,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'cantankerous',
     label: "Cantankerous",
-    description: "A resurrected Alliance military vessel with reusable ship upgrades and not much room for passengers.",
+    description: "Fly the Cantankerous, a repurposed Alliance gunship with powerful, reusable ship upgrades.",
     themeColor: 'tan',
     icon: { type: 'sprite', value: '50% 50%' },
     category: 'independent',
@@ -130,7 +129,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
   {
     id: 'huntingdons_bolt',
     label: "Huntingdon's Bolt",
-    description: "A courier ship with anonymity style and safety, providing modular systems, and a hyper-efficient core.",
+    description: "Command the Huntingdon's Bolt, a hyper-efficient courier ship with unique modular ship upgrades.",
     themeColor: 'cyan',
     icon: { type: 'sprite', value: '75% 50%' },
     category: 'independent',
