@@ -1,10 +1,10 @@
-
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getDraftDetails } from '../../../utils/draftRules';
 import { GameState, Step, StructuredContent, StructuredContentPart } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { STEP_IDS, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../../data/ids';
+import { STORY_CARDS } from '../../../data/storyCards';
 
 // Helper to recursively flatten structured content to a searchable string
 const getTextContent = (content: StructuredContent | StructuredContentPart | undefined): string => {
@@ -21,7 +21,7 @@ const getTextContent = (content: StructuredContent | StructuredContentPart | und
         case 'action':
         case 'paragraph':
         case 'warning-box':
-            return getTextContent(content.content);
+            return getTextContent(content.content as StructuredContent);
         case 'list':
         case 'numbered-list':
             return content.items.map(item => getTextContent(item)).join(' ');
@@ -70,7 +70,8 @@ describe('rules/draftRules', () => {
     });
     
     it.concurrent('generates a rule for Racing a Pale Horse', () => {
-        const state: GameState = { ...baseGameState, selectedStoryCard: "Racing A Pale Horse" };
+        // FIX: Updated test state setup to use `selectedStoryCardIndex` instead of the non-existent `selectedStoryCard` property, aligning with the `GameState` type. This involves finding the story card index by its title.
+        const state: GameState = { ...baseGameState, selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "Racing A Pale Horse") };
         const details = getDraftDetails(state, baseStep);
         const rule = details.specialRules.find(r => r.title === 'Story Setup: Haven');
         expect(rule).toBeDefined();
@@ -80,7 +81,8 @@ describe('rules/draftRules', () => {
     it.concurrent('generates a rule for Heroes & Misfits custom setup', () => {
         const state: GameState = { 
             ...baseGameState, 
-            selectedStoryCard: "Heroes & Misfits",
+            // FIX: Updated test state setup to use `selectedStoryCardIndex` instead of the non-existent `selectedStoryCard` property, aligning with the `GameState` type. This involves finding the story card index by its title.
+            selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "Heroes & Misfits"),
             challengeOptions: { [CHALLENGE_IDS.HEROES_CUSTOM_SETUP]: true }
         };
         const details = getDraftDetails(state, baseStep);
@@ -90,7 +92,8 @@ describe('rules/draftRules', () => {
     });
 
     it.concurrent('resolves conflict between Haven Draft and special start sector (Story Priority)', () => {
-        const state: GameState = { ...baseGameState, selectedStoryCard: "It's a Mad, Mad, Mad, Mad 'Verse!" }; // This story forces Persephone start
+        // FIX: Updated test state setup to use `selectedStoryCardIndex` instead of the non-existent `selectedStoryCard` property, aligning with the `GameState` type. This involves finding the story card index by its title.
+        const state: GameState = { ...baseGameState, selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "It's a Mad, Mad, Mad, Mad 'Verse!") }; // This story forces Persephone start
         const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT }; // This is Haven Draft
         const details = getDraftDetails(state, step);
         
@@ -103,7 +106,8 @@ describe('rules/draftRules', () => {
       const state: GameState = {
         ...baseGameState,
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
-        selectedStoryCard: "Heroes & Misfits",
+        // FIX: Updated test state setup to use `selectedStoryCardIndex` instead of the non-existent `selectedStoryCard` property, aligning with the `GameState` type. This involves finding the story card index by its title.
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "Heroes & Misfits"),
         challengeOptions: { [CHALLENGE_IDS.HEROES_CUSTOM_SETUP]: true },
         finalStartingCredits: 12000, // From Browncoat Way
       };

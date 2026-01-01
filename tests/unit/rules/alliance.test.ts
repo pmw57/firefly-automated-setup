@@ -1,4 +1,3 @@
-
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getAllianceReaverDetails } from '../../../utils/alliance';
@@ -27,7 +26,7 @@ const getTextContent = (content: StructuredContent | StructuredContentPart): str
         case 'action':
         case 'paragraph':
         case 'warning-box':
-            return getTextContent(content.content);
+            return getTextContent(content.content as StructuredContent);
         case 'list':
         case 'numbered-list':
             return content.items.map(item => getTextContent(item)).join(' ');
@@ -52,10 +51,12 @@ describe('rules/alliance', () => {
     });
 
     it.concurrent('generates a rule for alertStackCount based on player count and multiplier', () => {
+      const storyTitle = "It's All In Who You Know";
       const state = { 
         ...baseGameState, 
         playerCount: 4, 
-        selectedStoryCard: getStoryTitle("It's All In Who You Know")
+        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
       };
       
       const details = getAllianceReaverDetails(state, {});
@@ -67,11 +68,12 @@ describe('rules/alliance', () => {
 
     it.concurrent('generates the correct smugglersBluesSetup content based on expansions', () => {
       const storyTitle = getStoryTitle("Smuggler's Blues");
+      const storyIndex = STORY_CARDS.findIndex(c => c.title === storyTitle);
       // Case 1: Both expansions active
       const stateWithBoth = { 
         ...baseGameState, 
         expansions: { ...baseGameState.expansions, blue: true, kalidasa: true }, 
-        selectedStoryCard: storyTitle
+        selectedStoryCardIndex: storyIndex
       };
       const detailsBoth = getAllianceReaverDetails(stateWithBoth, {});
       expect(detailsBoth.specialRules.some(rule => getTextContent(rule.content).includes('Rim Space'))).toBe(true);
@@ -80,7 +82,7 @@ describe('rules/alliance', () => {
       const stateWithOne = { 
         ...baseGameState, 
         expansions: { ...baseGameState.expansions, blue: true, kalidasa: false }, 
-        selectedStoryCard: storyTitle
+        selectedStoryCardIndex: storyIndex
       };
       const detailsOne = getAllianceReaverDetails(stateWithOne, {});
       expect(detailsOne.specialRules.some(rule => getTextContent(rule.content).includes('Alliance Space'))).toBe(true);

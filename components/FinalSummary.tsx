@@ -1,9 +1,8 @@
-
 import React, { useMemo } from 'react';
 import { GameState } from '../types/index';
 import { getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../utils/ui';
 import { useTheme } from './ThemeContext';
-import { getActiveExpansions, getActiveAdvancedRules, getActiveStoryChallenges } from '../utils/selectors/story';
+import { getActiveExpansions, getActiveAdvancedRules, getActiveStoryChallenges, getActiveStoryCard } from '../utils/selectors/story';
 
 interface FinalSummaryProps {
   gameState: GameState;
@@ -18,6 +17,7 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
     const displaySetupName = getDisplaySetupName(gameState);
     const timerSummary = getTimerSummaryText(gameState);
     const activeOptionalRules = getActiveOptionalRulesText(gameState);
+    const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
     
     // Disgruntled Die
     const disgruntledDieMode = gameState.optionalRules?.disgruntledDie || 'standard';
@@ -52,7 +52,7 @@ export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactEleme
 
                  <div>
                     <div className={labelClass}>Story</div>
-                    <div className={valueClass}>{gameState.selectedStoryCard}</div>
+                    <div className={valueClass}>{activeStoryCard?.title}</div>
                  </div>
 
                  {gameState.selectedGoal && (

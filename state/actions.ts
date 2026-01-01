@@ -34,7 +34,7 @@ export type Action =
   | { type: ActionType.SET_CAMPAIGN_STORIES; payload: number }
   | { type: ActionType.SET_SETUP_CARD; payload: { id: string; name: string } }
   | { type: ActionType.TOGGLE_FLYING_SOLO }
-  | { type: ActionType.SET_STORY_CARD; payload: { title: string; goal?: string } }
+  | { type: ActionType.SET_STORY_CARD; payload: { index: number | null; goal?: string } }
   | { type: ActionType.SET_GOAL; payload: string }
   | { type: ActionType.TOGGLE_CHALLENGE_OPTION; payload: string }
   | { type: ActionType.SET_DISGRUNTLED_DIE; payload: GameState['optionalRules']['disgruntledDie'] }

@@ -6,13 +6,7 @@ import { getDefaultGameState } from '../../../state/reducer';
 import { CONTACT_NAMES, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../../data/ids';
 import { STORY_CARDS } from '../../../data/storyCards';
 
-const getStoryTitle = (title: string): string => {
-  const card = STORY_CARDS.find(c => c.title === title);
-  if (!card) throw new Error(`Test data missing: Could not find story card "${title}"`);
-  return card.title;
-};
-
-describe('utils/jobs', () => {
+describe('rules/jobs', () => {
   const baseGameState = getDefaultGameState();
 
   describe('getJobSetupDetails', () => {
@@ -24,18 +18,20 @@ describe('utils/jobs', () => {
     });
 
     it.concurrent('removes a forbidden contact from the list', () => {
+      const storyTitle = "Let's Be Bad Guys";
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: getStoryTitle("Let's Be Bad Guys")
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       };
       const { contacts } = getJobSetupDetails(state, {});
       expect(contacts).not.toContain(CONTACT_NAMES.NISKA);
     });
 
     it.concurrent('filters contacts to only those allowed by the story', () => {
+      const storyTitle = "First Time in the Captain's Chair";
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: getStoryTitle("First Time in the Captain's Chair")
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       };
       const { contacts } = getJobSetupDetails(state, {});
       expect(contacts).toEqual(['Harken', 'Amnon Duul']);
@@ -61,9 +57,10 @@ describe('utils/jobs', () => {
     });
     
     it.concurrent('handles story card "no_jobs" mode with priming', () => {
+      const storyTitle = "A Fistful Of Scoundrels";
       const state: GameState = {
         ...baseGameState,
-        selectedStoryCard: getStoryTitle("A Fistful Of Scoundrels"),
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
         gameMode: 'solo',
       };
       const { showStandardContactList, messages } = getJobSetupDetails(state, {});
@@ -117,9 +114,10 @@ describe('utils/jobs', () => {
     });
 
     it.concurrent('handles "no_jobs" with "Don\'t Prime Contacts" challenge override', () => {
+        const storyTitle = "A Fistful Of Scoundrels";
         const state: GameState = {
             ...baseGameState,
-            selectedStoryCard: getStoryTitle("A Fistful Of Scoundrels"),
+            selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
             challengeOptions: { [CHALLENGE_IDS.DONT_PRIME_CONTACTS]: true }
         };
         const { messages } = getJobSetupDetails(state, {});
@@ -128,10 +126,11 @@ describe('utils/jobs', () => {
     });
 
     it.concurrent('should correctly filter contacts and generate a warning for a jobMode/forbidContact conflict', () => {
+      const storyTitle = "Desperadoes";
       const state: GameState = {
         ...baseGameState,
         setupCardId: SETUP_CARD_IDS.AWFUL_CROWDED,
-        selectedStoryCard: getStoryTitle("Desperadoes"),
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       };
       const overrides: StepOverrides = { jobMode: 'awful_jobs' };
       const { contacts, messages } = getJobSetupDetails(state, overrides);

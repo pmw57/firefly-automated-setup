@@ -4,7 +4,7 @@ import { screen, within } from '@testing-library/react';
 import { render, user } from '../test-utils';
 import App from '../../App';
 import { getDefaultGameState } from '../../state/reducer';
-import { GameState } from '../../types';
+import { GameState } from '../../types/index';
 import { STORY_CARDS } from '../../data/storyCards';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { SETUP_CARD_IDS } from '../../data/ids';
@@ -135,9 +135,11 @@ describe('Integration Scenarios', () => {
 
   it('correctly displays rules for "Smuggler\'s Blues" based on expansions', async () => {
     const smugglersBluesCard = getStory("Smuggler's Blues");
+    const smugglersBluesIndex = STORY_CARDS.findIndex(c => c.title === smugglersBluesCard.title);
     const initialState: GameState = getDefaultGameState();
     initialState.expansions.kalidasa = false;
-    initialState.selectedStoryCard = smugglersBluesCard.title;
+    // FIX: Replaced deprecated `selectedStoryCard` property with `selectedStoryCardIndex` to align with the updated `GameState` type definition.
+    initialState.selectedStoryCardIndex = smugglersBluesIndex;
     
     localStorage.setItem('firefly_wizardStep_v3', JSON.stringify(4));
     localStorage.setItem('firefly_gameState_v3', JSON.stringify(initialState));

@@ -57,11 +57,12 @@ const validateSetupCard = (state: GameState): GameState => {
  * Validates that a solo-only Story Card is not selected in a multiplayer game.
  */
 const validateStoryCard = (state: GameState): GameState => {
-    const currentStoryDef = STORY_CARDS.find(c => c.title === state.selectedStoryCard);
+    if (state.selectedStoryCardIndex === null) return state;
+    const currentStoryDef = STORY_CARDS[state.selectedStoryCardIndex];
     if (state.gameMode === 'multiplayer' && currentStoryDef?.isSolo) {
         return {
             ...state,
-            selectedStoryCard: '',
+            selectedStoryCardIndex: null,
             selectedGoal: undefined,
             challengeOptions: {},
         };
@@ -173,7 +174,7 @@ export const getDefaultGameState = (): GameState => {
         setupCardId: '',
         setupCardName: '',
         secondarySetupId: undefined,
-        selectedStoryCard: '',
+        selectedStoryCardIndex: null,
         selectedGoal: undefined,
         challengeOptions: {},
         timerConfig: {
@@ -326,7 +327,7 @@ export function gameReducer(state: GameState, action: Action): GameState {
       break;
 
     case ActionType.SET_STORY_CARD:
-      nextState = { ...state, selectedStoryCard: action.payload.title, selectedGoal: action.payload.goal, challengeOptions: {}, overriddenStepIds: [] };
+      nextState = { ...state, selectedStoryCardIndex: action.payload.index, selectedGoal: action.payload.goal, challengeOptions: {}, overriddenStepIds: [] };
       break;
       
     case ActionType.SET_GOAL:

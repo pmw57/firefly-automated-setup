@@ -12,7 +12,7 @@ import { FinalSummary } from './FinalSummary';
 import { WizardHeader } from './WizardHeader';
 import { OverrideModal } from './OverrideModal';
 import { detectOverrides } from '../utils/overrides';
-import { getStoryCardByTitle } from '../utils/selectors/story';
+import { getActiveStoryCard } from '../utils/selectors/story';
 import { ActionType } from '../state/actions';
 import { STEP_IDS } from '../data/ids';
 import { cls } from '../utils/style';
@@ -39,17 +39,15 @@ const SetupWizard = (): React.ReactElement | null => {
   
   // Effect to detect and set story overrides in global state
   useEffect(() => {
-    if (gameState.selectedStoryCard) {
-      const storyCard = getStoryCardByTitle(gameState.selectedStoryCard);
-      if (storyCard) {
-        const storyStepIndex = flow.findIndex(s => s.id === STEP_IDS.C4 || s.id === STEP_IDS.D_FIRST_GOAL);
-        const overriddenIds = detectOverrides(storyCard, flow, storyStepIndex);
-        if (overriddenIds.length > 0 && overriddenIds.join(',') !== gameState.overriddenStepIds.join(',')) {
-          dispatch({ type: ActionType.SET_STORY_OVERRIDES, payload: overriddenIds });
-        }
+    const storyCard = getActiveStoryCard(gameState);
+    if (storyCard) {
+      const storyStepIndex = flow.findIndex(s => s.id === STEP_IDS.C4 || s.id === STEP_IDS.D_FIRST_GOAL);
+      const overriddenIds = detectOverrides(storyCard, flow, storyStepIndex);
+      if (overriddenIds.length > 0 && overriddenIds.join(',') !== gameState.overriddenStepIds.join(',')) {
+        dispatch({ type: ActionType.SET_STORY_OVERRIDES, payload: overriddenIds });
       }
     }
-  }, [gameState.selectedStoryCard, flow, dispatch, gameState.overriddenStepIds]);
+  }, [gameState.selectedStoryCardIndex, flow, dispatch, gameState.overriddenStepIds, gameState]);
 
 
   useEffect(() => {

@@ -1,4 +1,3 @@
-
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getHeaderDetails } from '../../../utils/header';
@@ -6,6 +5,7 @@ import { GameState, Step } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { STEP_IDS, SETUP_CARD_IDS } from '../../../data/ids';
 import { getSetupCardById } from '../../../utils/selectors/story';
+import { STORY_CARDS } from '../../../data/storyCards';
 
 describe('selectors/header', () => {
     const baseGameState = getDefaultGameState();
@@ -32,9 +32,10 @@ describe('selectors/header', () => {
         const details1 = getHeaderDetails(baseGameState, mockFlow, 1);
         expect(details1.storyName).toBeNull();
 
-        const state: GameState = { ...baseGameState, selectedStoryCard: 'My Story' };
+        const storyIndex = STORY_CARDS.findIndex(c => c.title === "Harken's Folly");
+        const state: GameState = { ...baseGameState, selectedStoryCardIndex: storyIndex };
         const details2 = getHeaderDetails(state, mockFlow, 1);
-        expect(details2.storyName).toBe('My Story');
+        expect(details2.storyName).toBe("Harken's Folly");
     });
 
     it.concurrent('does not show solo mode indicator before core steps begin', () => {

@@ -53,7 +53,7 @@ export interface GameState {
   setupCardId: import('./data').SetupCardId | string;
   setupCardName: string;
   secondarySetupId?: import('./data').SetupCardId | string;
-  selectedStoryCard: string;
+  selectedStoryCardIndex: number | null;
   selectedGoal?: string;
   challengeOptions: Record<string, boolean>;
   timerConfig: TimerConfig;

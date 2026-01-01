@@ -1,4 +1,5 @@
 
+
 import { StoryCardDef, SetupRule } from '../../types/index';
 
 // FIX: Using a distributive Omit to correctly type the 'rules' parameter, which is an array of a discriminated union.

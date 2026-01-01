@@ -1,4 +1,3 @@
-
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getStoryCardSetupSummary, getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../../../utils/ui';
@@ -8,19 +7,13 @@ import { SETUP_CARD_IDS } from '../../../data/ids';
 import { SETUP_CARDS } from '../../../data/setupCards';
 import { STORY_CARDS } from '../../../data/storyCards';
 
-const getStory = (title: string): StoryCardDef => {
-    const card = STORY_CARDS.find(c => c.title === title);
-    if (!card) throw new Error(`Test setup failed: Story card "${title}" not found.`);
-    return card;
-};
-
 const getSetupCard = (id: string): SetupCardDef => {
     const card = SETUP_CARDS.find(c => c.id === id);
     if (!card) throw new Error(`Test setup failed: Setup card with id "${id}" not found.`);
     return card;
 }
 
-describe('selectors/ui', () => {
+describe('utils/ui', () => {
     const baseGameState = getDefaultGameState();
 
     describe('getStoryCardSetupSummary', () => {
@@ -70,7 +63,13 @@ describe('selectors/ui', () => {
         });
 
         it.concurrent('returns "Disabled" if story card disables solo timer', () => {
-            const state: GameState = { ...baseGameState, gameMode: 'solo', selectedStoryCard: getStory("Racing A Pale Horse").title };
+            const storyTitle = "Racing A Pale Horse";
+            const state: GameState = { 
+                ...baseGameState, 
+                gameMode: 'solo', 
+                // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
+                selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle) 
+            };
             expect(getTimerSummaryText(state)).toBe("Disabled (Story Override)");
         });
 
@@ -94,12 +93,14 @@ describe('selectors/ui', () => {
         });
 
         it.concurrent('should correctly show the timer as disabled when "Racing a Pale Horse" overrides "Flying Solo"', () => {
+            const storyTitle = "Racing A Pale Horse";
             const state: GameState = {
               ...baseGameState,
               gameMode: 'solo',
               setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
               secondarySetupId: SETUP_CARD_IDS.STANDARD,
-              selectedStoryCard: getStory("Racing A Pale Horse").title,
+              // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
+              selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
             };
             
             const timerSummary = getTimerSummaryText(state);
