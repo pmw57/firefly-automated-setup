@@ -158,7 +158,22 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "With the strong arm of the Alliance growing ever string, there's gettin' to be less and less room for naughty men like us to slip about... I head Blue Sun's in need of a legitimate transport company that can get government goods to the people what need 'em.",
     setupDescription: "A PORT OF OPERATION: While choosing starting positions, players must choose a planetary sector within the Blue Sun system that is not a Contact od Supply sector. Mark the sector with a Haven token. Leave unused ships out of the box as a \"For Sale\" pile.",
     sourceUrl: "https://boardgamegeek.com/thread/3560944/going-legit-story-card",
-    requiredExpansion: "community"
+    requiredExpansion: "community",
+    rules: createStoryRules("Going Legit", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Special Setup: Going Legit',
+          content: [
+            { type: 'list', items: [
+              [{ type: 'strong', content: 'A Port of Operation:' }, " When choosing starting positions, players must choose a planetary sector within the Blue Sun system that is not a Contact or Supply sector. Mark the sector with a Haven token."],
+              [{ type: 'strong', content: 'For Sale:' }, " Leave unused ships out of the box to form a 'For Sale' pile for in-game purchases."]
+            ]}
+          ]
+        }
+      }
+    ])
   },
   {
     title: "The Good Guys",
@@ -190,7 +205,22 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "Care to press your luck? All them shiny things in the core sure could be of some use to folks out on the Rim.",
     setupDescription: "Place 8 contraband tokens on each of the following sectors in Alliance Space: Londonium, Bernadette, Liann Jiun, Sihnon, Gonghe, and Bellerophon. Use 20 Disgruntled tokens as the game length timer. The player in first position discards 1 Disgruntled token at the start of each round. After the last timer token is discarded, all players take their final turn.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/3602682/honorably-dishonorable-men"
+    sourceUrl: "https://boardgamegeek.com/thread/3602682/honorably-dishonorable-men",
+    rules: createStoryRules("Honorably Dishonorable Men", [
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Special Setup: Contraband & Timer',
+          content: [
+            { type: 'list', items: [
+              ["Place 8 contraband tokens on each of the following sectors in Alliance Space: Londonium, Bernadette, Liann Jiun, Sihnon, Gonghe, and Bellerophon."],
+              ["Use 20 Disgruntled tokens as the game length timer. The player in first position discards 1 token at the start of each round. After the last token is discarded, all players take one final turn."]
+            ]}
+          ]
+        }
+      }
+    ])
   },
   {
     title: "Hospital Rescue",
@@ -277,7 +307,39 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Each player chooses a Moral Leader. After all players collect their Starting Supplies, each player pays for an Expanded Crew Quarters ($600) and can now hold 3 more crew. Hiring Crew: Starting with 1st player, each player searches for and hires a crew card from any supply deck of their choice. Continue rounds of hiring crew until all player ships have a full set of crew on their ship. Remove all other crew cards from play. You may only use the crew you start with. 7 Disgruntled tokens will be used as a timer that triggers the arrest of 4 crew members from each ship. First player will discard 1 token at the start of each round of play.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/286230/mark-of-a-great-captain-story-card",
-    rating: 2
+    rating: 2,
+    rules: createStoryRules("Mark Of A Great Captain", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Special Draft & Hiring Rules',
+          content: [
+            { type: 'list', items: [
+              ['Each player must choose a ', { type: 'strong', content: 'Moral Leader' }, '.'],
+              [{ type: 'strong', content: 'Special Hiring Round:' }, ' Starting with the 1st player, each player searches for and hires one crew card from any supply deck. Continue hiring rounds until all ships are full.'],
+              [{ type: 'strong', content: 'Fixed Crew:' }, ' Remove all other crew cards from play. You may only use the crew you start with.'],
+            ]}
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Mandatory Ship Upgrade',
+          content: ["After collecting Starting Supplies, each player must pay ", { type: 'strong', content: '$600' }, " for an ", { type: 'strong', content: 'Expanded Crew Quarters' }, ", increasing crew capacity by 3."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Game Timer',
+          content: ["Use ", { type: 'strong', content: '7 Disgruntled tokens' }, " as a timer. The first player discards 1 token at the start of each round. When the timer runs out, a special game event occurs (arrest of 4 crew members from each ship)."]
+        }
+      }
+    ])
   },
   {
     title: "Master Of All",
