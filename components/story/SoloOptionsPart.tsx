@@ -1,5 +1,5 @@
 import React from 'react';
-import { StoryCardDef, AdvancedRuleDef, ChallengeOption } from '../../types';
+import { StoryCardDef, AdvancedRuleDef } from '../../types';
 import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
@@ -44,43 +44,6 @@ export const SoloOptionsPart: React.FC<SoloOptionsPartProps> = ({
           <div className={`font-bold font-western ${mainTitleColor}`}>{activeStoryCard.title}</div>
         </div>
       </div>
-
-      {/* Challenge Options ("Further Adventures") */}
-      {activeStoryCard.challengeOptions && activeStoryCard.challengeOptions.length > 0 && (
-        <div className={`mb-6`}>
-          <div className={`flex items-center gap-2 mb-2`}>
-            <span className="text-xl">🚀</span>
-            <h5 className={`font-bold uppercase tracking-wide text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-              Further Adventures (Optional Challenges)
-            </h5>
-          </div>
-          <div className={`border rounded-lg ${isDark ? 'border-zinc-700 bg-zinc-800/40' : 'border-gray-300 bg-white/50'}`}>
-            {activeStoryCard.challengeOptions.map((option: ChallengeOption) => {
-              const isChecked = !!gameState.challengeOptions[option.id];
-              return (
-                <label 
-                  key={option.id}
-                  className={`flex items-start p-3 border-b last:border-b-0 cursor-pointer hover:bg-black/5 transition-colors ${isDark ? 'border-zinc-700 hover:bg-white/5' : 'border-gray-200'}`}
-                >
-                  <div className="relative flex items-center mt-0.5">
-                    <input 
-                      type="checkbox" 
-                      className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                      checked={isChecked}
-                      onChange={() => toggleChallengeOption(option.id)}
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <span className={`font-medium ${isChecked ? (isDark ? 'text-green-300' : 'text-green-800') : (isDark ? 'text-gray-300' : 'text-gray-700')}`}>
-                      {option.label}
-                    </span>
-                  </div>
-                </label>
-              );
-            })}
-          </div>
-        </div>
-      )}
       
       {/* Advanced Rules (10th Anniversary Solo) */}
       {availableAdvancedRules.length > 0 && (

@@ -23,6 +23,7 @@ export enum ActionType {
   RESET_GAME = 'RESET_GAME',
   TOGGLE_STORY_RATING_FILTER = 'TOGGLE_STORY_RATING_FILTER',
   SET_STORY_OVERRIDES = 'SET_STORY_OVERRIDES',
+  ACKNOWLEDGE_OVERRIDES = 'ACKNOWLEDGE_OVERRIDES',
   SET_DRAFT_CONFIG = 'SET_DRAFT_CONFIG',
   TOGGLE_SHOW_HIDDEN_CONTENT = 'TOGGLE_SHOW_HIDDEN_CONTENT',
 }
@@ -50,5 +51,6 @@ export type Action =
   | { type: ActionType.RESET_GAME }
   | { type: ActionType.TOGGLE_STORY_RATING_FILTER; payload: number }
   | { type: ActionType.SET_STORY_OVERRIDES; payload: string[] }
+  | { type: ActionType.ACKNOWLEDGE_OVERRIDES; payload: string[] }
   | { type: ActionType.SET_DRAFT_CONFIG; payload: GameState['draft'] }
   | { type: ActionType.TOGGLE_SHOW_HIDDEN_CONTENT };

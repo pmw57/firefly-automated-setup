@@ -67,6 +67,8 @@ export interface ResourceDetails {
 
   creditModifications: { description: string; value: string }[];
   conflict?: ResourceConflict;
+  specialRules: SpecialRule[];
+  smugglersBluesVariantAvailable?: boolean;
 }
 
 

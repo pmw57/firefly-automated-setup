@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../../types';
 import { createStoryRules } from '../utils';
 
@@ -43,7 +42,14 @@ export const STORIES_H_L: StoryCardDef[] = [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Story Funds" },
       { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, description: "Story-Specific Fuel" },
       { type: 'modifyResource', resource: 'parts', method: 'set', value: 2, description: "Story-Specific Parts" },
-      { type: 'addFlag', flag: 'nandiCrewDiscount' }
+      { 
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: "Hiring Bonus",
+          content: ["Nandi pays half price (rounded up) when hiring crew."]
+        }
+      }
     ]),
     sourceUrl: "https://boardgamegeek.com/filepage/186593/where-it-all-started-story-card"
   },
@@ -51,7 +57,7 @@ export const STORIES_H_L: StoryCardDef[] = [
     title: "It Ain't Easy Goin' Legit",
     intro: "Your last run in with Harken turned South and you've got a boatload of warrants trailin' ya. Time to clean your ledger and get dirt on Harken instead.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/image/4434522",
+    sourceUrl: "https://boardgamegeek.com/image/4434522/pmw57",
     rules: createStoryRules("It Ain't Easy Goin' Legit", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, description: "Start with 2 Warrants." },
       { type: 'addFlag', flag: 'allianceSpaceOffLimits' },
