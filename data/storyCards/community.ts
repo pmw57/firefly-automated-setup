@@ -442,7 +442,24 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     ],
     setupDescription: "Pull all Mudders from Supply decks. Shuffle together the Foreman plus 3 Mudders per player. Place them face up. If the Foreman is on top after a shuffle, reshuffle. ",
     sourceUrl: "https://boardgamegeek.com/filepage/294565/new-heroes-of-canton-co-op-story-card",
-    requiredExpansion: "community"
+    requiredExpansion: "community",
+    rules: createStoryRules("New Heroes of Canton", [
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Custom Mudder Deck',
+          content: [
+            { type: 'list', items: [
+              ['Pull all ', { type: 'strong', content: 'Mudders' }, ' from Supply decks.'],
+              ['Shuffle together the ', { type: 'strong', content: 'Foreman' }, ' plus ', { type: 'strong', content: '3 Mudders per player' }, '.'],
+              ['Place this new deck face up.'],
+              ['If the Foreman is on top after a shuffle, reshuffle.']
+            ]}
+          ]
+        }
+      }
+    ])
   },
   {
     title: "Old Friends And New",
@@ -484,7 +501,42 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     ],
     setupDescription: "Player 1 will be the Captain of Serenity with Malcolm, Zoë, Wash, Kaylee, Jayne, Inara, Book, Simon, and River. Serenity starts with the Xùnsù Whisper X1 from Meridian, an Expanded Crew Quarters from Osiris, and an EVA Suit from Space Bazaar for River. No Starting Jobs. Player 2 is a Bounty Hunter and chooses the Setup card. No Starting Jobs. Remove all Serenity's crew from the Bounty deck, excluding River Tam. The Bounty deck is placed face up and all bounties are active.",
     sourceUrl: "https://boardgamegeek.com/thread/3454248/rivers-run-1v1",
-    requiredExpansion: "community"
+    requiredExpansion: "community",
+    rules: createStoryRules("River's Run 1v1", [
+      { type: 'setJobMode', mode: 'no_jobs' },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Asymmetric Setup',
+          content: [
+            { type: 'paragraph', content: [{ type: 'strong', content: 'Player 1 (Serenity):' }] },
+            { type: 'list', items: [
+              ['Leader: ', { type: 'strong', content: 'Malcolm' }, ', Ship: ', { type: 'strong', content: 'Serenity' }, '.'],
+              ['Crew: Zoë, Wash, Kaylee, Jayne, Inara, Book, Simon, and River.'],
+              ['Upgrades: Xùnsù Whisper X1 (Meridian), Expanded Crew Quarters (Osiris), EVA Suit (Space Bazaar for River).']
+            ]},
+            { type: 'paragraph', content: [{ type: 'strong', content: 'Player 2 (Bounty Hunter):' }] },
+            { type: 'list', items: [
+                ["Choose any Setup Card to determine starting conditions."]
+            ]}
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Bounty Deck Setup',
+          content: [
+            { type: 'list', items: [
+              ["Remove all of Serenity's crew from the Bounty deck, ", { type: 'strong', content: 'excluding River Tam' }, "."],
+              ["The Bounty deck is placed face up and all bounties are active."]
+            ]}
+          ]
+        }
+      }
+    ])
   },
   {
     title: "Round the 'Verse in \"80 Days\"",
