@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../../types';
 import { createStoryRules } from '../utils';
 
@@ -39,9 +40,9 @@ export const STORIES_H_L: StoryCardDef[] = [
     intro: "You're low on funds, and need to get a job. Badger's hired you to scavenge a derelict ship dangerously close to an Alliance cruiser. Get the cargo, evade the Alliance, and sell it.",
     requiredExpansion: "community",
     rules: createStoryRules("How It All Started", [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Story Override" },
-      { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, description: "Story Override" },
-      { type: 'modifyResource', resource: 'parts', method: 'set', value: 2, description: "Story Override" },
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Story Funds" },
+      { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, description: "Story-Specific Fuel" },
+      { type: 'modifyResource', resource: 'parts', method: 'set', value: 2, description: "Story-Specific Parts" },
       { type: 'addFlag', flag: 'nandiCrewDiscount' }
     ]),
     sourceUrl: "https://boardgamegeek.com/filepage/186593/where-it-all-started-story-card"
@@ -67,7 +68,7 @@ export const STORIES_H_L: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/235439/storycard-a-jubilant-victory",
     setupDescription: "Just anther day in the 'Verse: Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, and uses a D8 die for movement, starting from Meridian.",
     rules: createStoryRules("A Jubilant Victory", [
-      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Story Override" }
+      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Story-Specific Warrant" }
     ])
   },
   {

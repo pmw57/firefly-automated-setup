@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../types';
 import { SETUP_CARD_IDS, CONTACT_NAMES } from '../ids';
 import { createStoryRules } from './utils';
@@ -212,7 +213,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860504/sjliver",
     rules: createStoryRules("Heroes & Misfits", [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Override" },
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Funds" },
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'addFlag', flag: 'startWithAlertCard' },
       { type: 'setShipPlacement', location: 'persephone' },
@@ -364,7 +365,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 7,
-    campaignSetupNotes: ['SUGGEST_BONNET_VERA']
+    campaignSetupNotes: ['SUGGEST_BONNET_Vera']
   },
   {
     title: "Out of Gas",
@@ -409,7 +410,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
     setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship.",
     rules: createStoryRules("Ruining It For Everyone", [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Override" }
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Funds" }
     ])
   },
   {
@@ -574,7 +575,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
         resource: 'credits', 
         method: 'set', 
         value: 1000, 
-        description: "Story Override" 
+        description: "Story Funds" 
       },
       {
         type: 'addSpecialRule',
@@ -645,7 +646,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards",
     requiredExpansion: "community",
     rules: createStoryRules("War Stories", [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 0, description: "No starting cash (Story Override)" },
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 0, description: "Story Funds" },
       { type: 'forbidContact', contact: CONTACT_NAMES.NISKA }
     ]),
     requiredSetupCardId: SETUP_CARD_IDS.STANDARD

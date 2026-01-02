@@ -1,1 +1,0 @@
-if('serviceWorker' in navigator) navigator.serviceWorker.register('/firefly-automated-setup/dev-sw.js?dev-sw', { scope: '/firefly-automated-setup/', type: 'classic' })
