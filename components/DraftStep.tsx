@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { DraftState, StructuredContent, StructuredContentPart } from '../types/index';
+import { DraftState, StructuredContent, StructuredContentPart } from '../types';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/draft';
 import { getDraftDetails } from '../utils/draftRules';
 import { Button } from './Button';

@@ -1,6 +1,6 @@
 
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
-import { SetupContentTemplate } from '../types/index';
+
+import { SetupContentTemplate } from '../types';
 
 export const SETUP_CONTENT: Record<string, SetupContentTemplate> = {
   // Core Steps

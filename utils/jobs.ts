@@ -1,4 +1,3 @@
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { 
     GameState, 
     StepOverrides,
@@ -14,7 +13,7 @@ import {
     StoryCardDef,
     SetJobContactsRule,
     SpecialRule
-} from '../types/index';
+} from '../types';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';

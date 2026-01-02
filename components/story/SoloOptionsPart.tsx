@@ -1,7 +1,5 @@
-
 import React from 'react';
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
-import { StoryCardDef, AdvancedRuleDef } from '../../types/index';
+import { StoryCardDef, AdvancedRuleDef, ChallengeOption } from '../../types';
 import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
@@ -57,7 +55,7 @@ export const SoloOptionsPart: React.FC<SoloOptionsPartProps> = ({
             </h5>
           </div>
           <div className={`border rounded-lg ${isDark ? 'border-zinc-700 bg-zinc-800/40' : 'border-gray-300 bg-white/50'}`}>
-            {activeStoryCard.challengeOptions.map((option) => {
+            {activeStoryCard.challengeOptions.map((option: ChallengeOption) => {
               const isChecked = !!gameState.challengeOptions[option.id];
               return (
                 <label 

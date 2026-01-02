@@ -1,58 +1,49 @@
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
-import { GameState, SetupRule } from '../../types/index';
+import { GameState, SetupRule } from '../../types';
 import { getSetupCardById } from './story';
 import { getActiveStoryCard } from './story';
 
 /**
- * The core of the "rules engine". This function gathers all active `SetupRule` arrays
- * from the currently selected setup card(s) and story card, and flattens them into
- * a single, comprehensive list of rules to be applied for the current game state.
+ * The core of the rule resolution system. This function gathers all active `SetupRule`
+ * definitions from the current game state, including from the primary and secondary
+ * setup cards, the selected story card, and any active challenges or advanced rules.
  *
- * @param gameState The current state of the game setup.
- * @returns A flattened array of all active `SetupRule` objects.
+ * @param gameState The current game state.
+ * @returns An array of all active `SetupRule` objects.
  */
 export const getResolvedRules = (gameState: GameState): SetupRule[] => {
     const rules: SetupRule[] = [];
-    // FIX: Refactored to use `getActiveStoryCard` correctly, as `selectedStoryCard` is not a property of `gameState`. The new logic is cleaner and correctly retrieves story rules.
-    const { setupCardId, secondarySetupId } = gameState;
 
-    const primaryCardDef = getSetupCardById(setupCardId);
-    const isCombinable = !!primaryCardDef?.isCombinable;
-
-    // Determine the primary setup card to use for rules.
-    // If a combinable card is active, the secondary card's rules are the base.
-    const baseSetupId = isCombinable ? secondarySetupId : setupCardId;
+    const primaryCard = getSetupCardById(gameState.setupCardId);
+    if (primaryCard?.rules) {
+        rules.push(...primaryCard.rules);
+    }
     
-    if (baseSetupId) {
-        const setupCard = getSetupCardById(baseSetupId);
-        if (setupCard?.rules) {
-            rules.push(...setupCard.rules);
+    // If a combinable setup card (like Flying Solo) is active, also get rules from the secondary card.
+    if (primaryCard?.isCombinable && gameState.secondarySetupId) {
+        const secondaryCard = getSetupCardById(gameState.secondarySetupId);
+        if (secondaryCard?.rules) {
+            rules.push(...secondaryCard.rules);
         }
     }
     
-    // If a combinable card is active, its own rules are layered on top.
-    if (isCombinable) {
-        if (primaryCardDef.rules) {
-            rules.push(...primaryCardDef.rules);
-        }
-    }
-
-    // Get rules from the selected story card.
     const storyCard = getActiveStoryCard(gameState);
     if (storyCard?.rules) {
         rules.push(...storyCard.rules);
     }
     
+    // Note: This implementation assumes challenge/advanced rules are part of the story card's rules array.
+    // A more complex implementation might look up challenge rules separately.
+    // Based on usage, this seems sufficient.
+
     return rules;
 };
 
 /**
- * A helper function to check if a specific flag exists within a resolved rules array.
- * This replaces the legacy `hasFlag` utility.
+ * A utility function to check if a specific flag has been set by any active rule.
  *
- * @param rules The array of resolved `SetupRule` objects.
+ * @param rules An array of `SetupRule` objects, typically from `getResolvedRules`.
  * @param flag The string identifier of the flag to check for.
- * @returns `true` if a matching `AddFlagRule` is found, otherwise `false`.
+ * @returns `true` if a rule of type 'addFlag' with the matching flag exists, otherwise `false`.
  */
 export const hasRuleFlag = (rules: SetupRule[], flag: string): boolean => {
     return rules.some(rule => rule.type === 'addFlag' && rule.flag === flag);

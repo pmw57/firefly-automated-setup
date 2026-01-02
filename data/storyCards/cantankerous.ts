@@ -1,4 +1,4 @@
-import { StoryCardDef } from '../../types/index';
+import { StoryCardDef } from '../../types';
 
 export const CANTANKEROUS_STORIES: StoryCardDef[] = [
     {

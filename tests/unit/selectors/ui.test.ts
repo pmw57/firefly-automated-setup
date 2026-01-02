@@ -1,7 +1,7 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getStoryCardSetupSummary, getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../../../utils/ui';
-import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule } from '../../../types/index';
+import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule } from '../../../types';
 import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
 import { SETUP_CARDS } from '../../../data/setupCards';
@@ -67,7 +67,6 @@ describe('utils/ui', () => {
             const state: GameState = { 
                 ...baseGameState, 
                 gameMode: 'solo', 
-                // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
                 selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle) 
             };
             expect(getTimerSummaryText(state)).toBe("Disabled (Story Override)");
@@ -99,7 +98,6 @@ describe('utils/ui', () => {
               gameMode: 'solo',
               setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
               secondarySetupId: SETUP_CARD_IDS.STANDARD,
-              // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
               selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
             };
             

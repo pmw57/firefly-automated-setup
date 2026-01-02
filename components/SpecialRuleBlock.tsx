@@ -1,9 +1,8 @@
-
 import React, { useMemo } from 'react';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';
 import { PageReference } from './PageReference';
-import { StructuredContent, StructuredContentPart } from '../types/index';
+import { StructuredContent, StructuredContentPart } from '../types';
 import { expansionColorConfig, specialColorConfig } from '../data/themeColors';
 
 export interface SpecialRuleBlockProps {

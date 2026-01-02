@@ -1,6 +1,7 @@
 
+
 import React, { useRef, useEffect, lazy, Suspense } from 'react';
-import { Step } from '../types/index';
+import { Step } from '../types';
 import { Button } from './Button';
 import { QuotePanel } from './QuotePanel';
 import { useTheme } from './ThemeContext';

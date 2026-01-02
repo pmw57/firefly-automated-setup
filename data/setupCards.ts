@@ -1,5 +1,6 @@
 
-import { SetupCardDef, SetupCardStep, SetupRule } from '../types/index';
+
+import { SetupCardDef, SetupCardStep, SetupRule } from '../types';
 import { STEP_IDS, SETUP_CARD_IDS, CONTACT_NAMES } from './ids';
 
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

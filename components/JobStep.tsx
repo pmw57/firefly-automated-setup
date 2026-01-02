@@ -1,3 +1,5 @@
+
+
 import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
@@ -32,7 +34,6 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     [gameState, overrides]
   );
   
-  // FIX: Corrected property access from `gameState.selectedStoryCard` to `gameState.selectedStoryCardIndex` to match the `GameState` type definition.
   const isSelectedStory = gameState.selectedStoryCardIndex !== null;
   const isRimDeckBuild = stepId.includes(STEP_IDS.D_RIM_JOBS);
 

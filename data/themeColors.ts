@@ -1,7 +1,7 @@
 // data/themeColors.ts
 // This file is the single source of truth for expansion color theming.
 
-import { ThemeColor } from '../types/index';
+import { ThemeColor } from '../types';
 
 type ThemeStyle = { border: string; bg: string; badge: string; toggle: string; icon: string; };
 type ColorDefinition = {

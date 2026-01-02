@@ -113,7 +113,6 @@ const SetupWizard = (): React.ReactElement | null => {
   };
 
 
-  // FIX: Corrected typo from `isGameStateInitialized` to `isStateInitialized` to match the destructured variable from the `useGameState` hook.
   if (!isStateInitialized || !isWizardInitialized || flow.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in">

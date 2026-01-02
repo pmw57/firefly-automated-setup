@@ -1,6 +1,5 @@
-
 import React, { useMemo } from 'react';
-import { Expansions } from '../../types/index';
+import { Expansions } from '../../types';
 import { ExpansionToggle } from '../ExpansionToggle';
 import { useTheme } from '../ThemeContext';
 import { cls } from '../../utils/style';
