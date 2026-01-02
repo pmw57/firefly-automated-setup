@@ -357,7 +357,22 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Place your Firefly on a supply world to begin the game. Draw 1 starting crew from any deck by flipping the draw pile and taking the first named character that is revealed.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1135128/article/1512332#1512332",
-    rating: 2
+    rating: 2,
+    rules: createStoryRules("Miranda", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Special Placement & Crew Draw',
+          content: [
+            { type: 'list', items: [
+              ["Place your Firefly on a supply world to begin the game."],
+              ["Draw 1 starting crew from any deck by flipping the draw pile and taking the first named character that is revealed."]
+            ]}
+          ]
+        }
+      }
+    ])
   },
   {
     title: "Miranda's Secret",
