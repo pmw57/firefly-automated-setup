@@ -1,4 +1,3 @@
-
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { cls } from '../../../utils/style';
@@ -23,8 +22,8 @@ describe('utils/style', () => {
       expect(cls()).toBe('');
     });
 
-            it.concurrent('returns an empty string if only falsy arguments are provided', () => {
-              expect(cls(null, undefined, false)).toBe('');
-            });
-          });
-        });
+    it.concurrent('returns an empty string if only falsy arguments are provided', () => {
+      expect(cls(null, undefined, false)).toBe('');
+    });
+  });
+});
