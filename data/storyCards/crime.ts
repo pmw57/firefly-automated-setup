@@ -33,6 +33,16 @@ export const CRIME_STORIES: StoryCardDef[] = [
         mode: "no_jobs",
         source: "story",
         sourceName: "Smuggler's Blues"
+      },
+      {
+        type: "addSpecialRule",
+        category: "jobs",
+        rule: {
+          title: "Contact Deck Bonus",
+          content: [{ type: 'paragraph', content: ['Place a ', { type: 'strong', content: '$2000 Bill' }, ' under the Contact Decks for ', { type: 'strong', content: 'Amnon Duul, Patience, Badger, and Niska' }, '.'] }]
+        },
+        source: "story",
+        sourceName: "Smuggler's Blues"
       }
     ]
   },
