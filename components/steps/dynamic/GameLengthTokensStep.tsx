@@ -18,7 +18,7 @@ export const GameLengthTokensStep: React.FC = () => {
 
     if (activeStoryCard.rules && hasRuleFlag(activeStoryCard.rules, 'disableSoloTimer')) {
         return (
-            <SpecialRuleBlock source="story" title="Story Override" content={[{ type: 'strong', content: "No Timer:" }, " Do not use a Game Timer for this game."]} />
+            <SpecialRuleBlock source="story" title="Timer Disabled" content={[{ type: 'strong', content: "No Timer:" }, " Do not use a Game Timer for this game."]} />
         );
     }
     

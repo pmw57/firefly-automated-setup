@@ -34,14 +34,14 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
           { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
         ];
         messageSource = 'story';
-        messageTitle = 'Story Override';
+        messageTitle = 'No Starting Jobs';
     } else {
         content = (jobModeSource === 'setupCard')
           ? [{ type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] }, { type: 'paragraph', content: ["Crews must find work on their own out in the black."] }]
           : [{ type: 'paragraph', content: [{ type: 'strong', content: 'Do not take Starting Jobs.' }] }];
         
         switch (jobModeSource) {
-            case 'story': messageSource = 'story'; messageTitle = 'Story Override'; break;
+            case 'story': messageSource = 'story'; messageTitle = 'No Starting Jobs'; break;
             case 'setupCard': messageSource = 'setupCard'; messageTitle = 'Setup Card Override'; break;
             case 'challenge': messageSource = 'warning'; messageTitle = 'Challenge Restriction'; break;
         }

@@ -101,7 +101,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
       )}
 
       {goalTokens > 0 && (
-        <SpecialRuleBlock source="story" title="Story Override" content={["Begin play with ", { type: 'strong', content: `${goalTokens} Goal Token${goalTokens > 1 ? 's' : ''}` }, "."]} />
+        <SpecialRuleBlock source="story" title="Starting Goal Tokens" content={["Begin play with ", { type: 'strong', content: `${goalTokens} Goal Token${goalTokens > 1 ? 's' : ''}` }, "."]} />
       )}
 
       {removeRiver && (

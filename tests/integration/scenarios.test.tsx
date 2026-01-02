@@ -153,6 +153,6 @@ describe('Integration Scenarios', () => {
 
     // Verify it's within a "Story Override" block for context
     const storyOverrideRegion = contrabandRule.closest('section');
-    expect(storyOverrideRegion).toHaveAccessibleName('Story Override');
+    expect(storyOverrideRegion).toHaveAccessibleName("Story Rule Smuggler's Blues Contraband");
   });
 });

@@ -39,8 +39,7 @@ describe('rules/resources', () => {
       const storyTitle = "Running On Empty";
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(4200); // 3000 + 1200
@@ -52,34 +51,31 @@ describe('rules/resources', () => {
       const storyTitle = "How It All Started";
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(500);
-      expect(details.creditModifications[0].description).toBe('Story Override');
+      expect(details.creditModifications[0].description).toBe('Story Funds');
     });
 
     it.concurrent('resolves conflict between "set" credit effects by prioritizing the story rule', () => {
       const storyTitle = "How It All Started";
       const state = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       });
       const details = getResourceDetails(state);
       
       expect(details.conflict).toBeUndefined();
       expect(details.credits).toBe(500); // Story wins by default
-      expect(details.creditModifications[0].description).toBe('Story Override');
+      expect(details.creditModifications[0].description).toBe('Story Funds');
     });
 
     it.concurrent('applies "disable" effects for fuel and parts from a story', () => {
       const storyTitle = "Running On Empty";
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD,
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       });
       const details = getResourceDetails(state);
 
@@ -104,8 +100,7 @@ describe('rules/resources', () => {
       const storyTitle = "It Ain't Easy Goin' Legit";
       const state = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.STANDARD,
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       });
       const details = getResourceDetails(state);
 
@@ -117,7 +112,6 @@ describe('rules/resources', () => {
       const storyTitle = "How It All Started";
       const state: GameState = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
         optionalRules: { ...baseGameState.optionalRules, resolveConflictsManually: true },
       });
