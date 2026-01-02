@@ -77,14 +77,25 @@ const App = (): React.ReactElement => {
     }
   }, []);
 
-  const handleForceUpdate = async () => {
+  const handleForceUpdate = () => {
     if ('serviceWorker' in navigator) {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      for (const registration of registrations) {
-        await registration.unregister();
-      }
+      // Use promise chaining to ensure unregistration completes before reloading.
+      // This prevents a race condition where the document becomes invalid.
+      navigator.serviceWorker.getRegistrations()
+        .then(registrations => {
+          return Promise.all(registrations.map(r => r.unregister()));
+        })
+        .then(() => {
+          console.log('All service workers unregistered for force update.');
+          window.location.reload();
+        })
+        .catch(error => {
+          console.error('Error during force update:', error);
+          window.location.reload(); // Still reload on error
+        });
+    } else {
+      window.location.reload();
     }
-    window.location.reload();
   };
 
   const handleDismissFooterQr = () => {

@@ -162,6 +162,7 @@
           }
           .reset-btn:hover { background-color: #991b1b; }
           .reset-btn:active { transform: translateY(2px); border-bottom-width: 2px; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
+          .reset-btn:disabled { background-color: #9ca3af; border-color: #4b5563; cursor: wait; }
         </style>
         <div class="app-loader">
           <div class="app-loader-spinner"></div>
@@ -188,18 +189,22 @@
 
       const resetButton = document.getElementById('reset-button');
       if (resetButton) {
-        resetButton.addEventListener('click', async () => {
-          try {
-            if ('serviceWorker' in navigator) {
-              const registrations = await navigator.serviceWorker.getRegistrations();
-              for (const registration of registrations) {
-                await registration.unregister();
-              }
+        resetButton.addEventListener('click', () => {
+          resetButton.disabled = true;
+          resetButton.textContent = 'Resetting...';
+
+          if ('serviceWorker' in navigator) {
+            // Use promise chaining to ensure unregistration completes before reloading.
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+              return Promise.all(registrations.map(r => r.unregister()));
+            }).then(() => {
               console.log('All service workers unregistered.');
-            }
-          } catch (error) {
-            console.error('Error unregistering service workers:', error);
-          } finally {
+              window.location.reload(true);
+            }).catch(error => {
+              console.error('Error during hard reset:', error);
+              window.location.reload(true); // Still reload on error
+            });
+          } else {
             window.location.reload(true);
           }
         });
