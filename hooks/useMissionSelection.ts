@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { StoryCardDef, AdvancedRuleDef } from '../types';
+import { StoryCardDef, AdvancedRuleDef, GameState } from '../types';
 
 // Define the shape of the context data
 export interface MissionSelectionContextType {
@@ -26,6 +26,7 @@ export interface MissionSelectionContextType {
   handleGenerateShortList: () => void;
   handlePickFromShortList: () => void;
   handleCancelShortList: () => void;
+  gameState: GameState;
 }
 
 // Create and export the context object. The initial value is undefined

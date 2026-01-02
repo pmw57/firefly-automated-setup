@@ -66,4 +66,5 @@ export interface GameState {
   finalStartingCredits: number | null;
   storyRatingFilters: Record<number, boolean>;
   overriddenStepIds: string[];
+  showHiddenContent: boolean;
 }

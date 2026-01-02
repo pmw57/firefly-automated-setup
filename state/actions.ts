@@ -23,6 +23,7 @@ export enum ActionType {
   RESET_GAME = 'RESET_GAME',
   TOGGLE_STORY_RATING_FILTER = 'TOGGLE_STORY_RATING_FILTER',
   SET_STORY_OVERRIDES = 'SET_STORY_OVERRIDES',
+  TOGGLE_SHOW_HIDDEN_CONTENT = 'TOGGLE_SHOW_HIDDEN_CONTENT',
 }
 
 // You can also define payload types here for more complex actions
@@ -47,4 +48,5 @@ export type Action =
   | { type: ActionType.RESET_CHALLENGES }
   | { type: ActionType.RESET_GAME }
   | { type: ActionType.TOGGLE_STORY_RATING_FILTER; payload: number }
-  | { type: ActionType.SET_STORY_OVERRIDES; payload: string[] };
+  | { type: ActionType.SET_STORY_OVERRIDES; payload: string[] }
+  | { type: ActionType.TOGGLE_SHOW_HIDDEN_CONTENT };

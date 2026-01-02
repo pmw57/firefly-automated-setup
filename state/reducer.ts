@@ -206,6 +206,7 @@ export const getDefaultGameState = (): GameState => {
             5: true,
         },
         overriddenStepIds: [],
+        showHiddenContent: false,
     };
 };
 
@@ -390,6 +391,22 @@ export function gameReducer(state: GameState, action: Action): GameState {
     case ActionType.SET_STORY_OVERRIDES:
       nextState = { ...state, overriddenStepIds: action.payload };
       break;
+      
+    case ActionType.TOGGLE_SHOW_HIDDEN_CONTENT: {
+      const showHidden = !state.showHiddenContent;
+      let nextExpansions = state.expansions;
+      if (!showHidden) {
+        // If we're hiding them, turn them all off.
+        nextExpansions = { ...state.expansions };
+        EXPANSIONS_METADATA.forEach(exp => {
+          if (exp.hidden) {
+            nextExpansions[exp.id as keyof Expansions] = false;
+          }
+        });
+      }
+      nextState = { ...state, showHiddenContent: showHidden, expansions: nextExpansions };
+      break;
+    }
 
     default:
       nextState = state;

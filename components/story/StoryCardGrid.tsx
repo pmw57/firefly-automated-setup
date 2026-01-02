@@ -31,6 +31,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
     toggleSortMode,
     filterCoOpOnly,
     toggleFilterCoOp,
+    gameState,
   } = useMissionSelection();
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -46,11 +47,11 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
     });
 
     // 2. Get the base list of all possible filterable expansions.
-    const allPossibleFilters = [{ id: 'base', label: 'Base Game' }, ...getFilterableExpansions()];
+    const allPossibleFilters = [{ id: 'base', label: 'Base Game' }, ...getFilterableExpansions(gameState.showHiddenContent)];
     
     // 3. Filter this list to only include expansions that have valid stories.
     return allPossibleFilters.filter(exp => storyExpansionIds.has(exp.id));
-  }, [validStories]);
+  }, [validStories, gameState.showHiddenContent]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

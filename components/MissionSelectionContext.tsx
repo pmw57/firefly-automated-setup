@@ -1,7 +1,8 @@
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types';
 import { useGameState } from '../hooks/useGameState';
-import { MissionSelectionContext } from '../hooks/useMissionSelection';
+// FIX: Imported the MissionSelectionContextType interface to resolve the "Cannot find name" error.
+import { MissionSelectionContext, MissionSelectionContextType } from '../hooks/useMissionSelection';
 import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getAvailableAdvancedRules } from '../utils/selectors/story';
 import { ActionType } from '../state/actions';
 import { STORY_CARDS } from '../data/storyCards';
@@ -144,7 +145,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     handleStoryCardSelect(originalIndex);
   }, [shortList, handleStoryCardSelect]);
 
-  const value = {
+  const value: MissionSelectionContextType = {
     // State
     searchTerm,
     filterExpansion,
@@ -172,6 +173,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     handleGenerateShortList,
     handlePickFromShortList,
     handleCancelShortList,
+    gameState,
   };
 
   return (

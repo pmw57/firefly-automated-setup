@@ -113,8 +113,13 @@ export const getCampaignNotesForStep = (gameState: GameState, stepId: string): C
         .filter((note): note is CampaignSetupNote => !!note && note.stepId === stepId);
 };
 
-export const getCategorizedExpansions = () => {
-  const group = (category: string) => EXPANSIONS_METADATA.filter(e => e.id !== 'base' && e.category === category && !e.hidden);
+export const getCategorizedExpansions = (showHidden = false) => {
+  const group = (category: string) => EXPANSIONS_METADATA.filter(e => {
+    if (e.id === 'base') return false;
+    if (e.category !== category) return false;
+    if (e.hidden && !showHidden) return false;
+    return true;
+  });
   return {
     core_mechanics: group('core_mechanics'),
     map: group('map'),
@@ -123,10 +128,10 @@ export const getCategorizedExpansions = () => {
   };
 };
 
-export const getFilterableExpansions = () => {
+export const getFilterableExpansions = (showHidden = false) => {
     return EXPANSIONS_METADATA.filter(e => {
         if (e.id === 'base') return false;
-        if (e.hidden) return false;
+        if (e.hidden && !showHidden) return false;
         return true;
     });
 };

@@ -11,9 +11,10 @@ import { getSetupCardSelectionInfo } from '../utils/ui';
 
 interface CaptainSetupProps {
   onNext: () => void;
+  isDevMode?: boolean;
 }
 
-export const CaptainSetup = ({ onNext }: CaptainSetupProps): React.ReactElement => {
+export const CaptainSetup = ({ onNext, isDevMode }: CaptainSetupProps): React.ReactElement => {
   const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -80,6 +81,7 @@ export const CaptainSetup = ({ onNext }: CaptainSetupProps): React.ReactElement 
         expansions={gameState.expansions}
         onToggle={handleExpansionChange}
         has10th={has10th}
+        isDevMode={isDevMode}
       />
 
       <div className="flex gap-4 relative z-10">
