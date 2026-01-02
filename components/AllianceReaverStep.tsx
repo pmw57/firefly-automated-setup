@@ -12,7 +12,7 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   const {
     specialRules,
     alliancePlacement,
-    reaverPlacement
+    reaverPlacement,
   } = React.useMemo(() => 
     getAllianceReaverDetails(gameState, overrides), 
     [gameState, overrides]

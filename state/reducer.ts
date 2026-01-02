@@ -206,6 +206,7 @@ export const getDefaultGameState = (): GameState => {
             5: true,
         },
         overriddenStepIds: [],
+        acknowledgedOverrides: [],
         draft: {
             state: null,
             isManual: false,
@@ -323,7 +324,7 @@ export function gameReducer(state: GameState, action: Action): GameState {
     case ActionType.SET_SETUP_CARD: {
       const { id, name } = action.payload;
       if (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
-        nextState = { ...state, secondarySetupId: id, draft: { state: null, isManual: false } };
+        nextState = { ...state, secondarySetupId: id };
       } else {
         nextState = { ...state, setupCardId: id, setupCardName: name, secondarySetupId: undefined, draft: { state: null, isManual: false } };
       }
@@ -335,7 +336,7 @@ export function gameReducer(state: GameState, action: Action): GameState {
       break;
 
     case ActionType.SET_STORY_CARD:
-      nextState = { ...state, selectedStoryCardIndex: action.payload.index, selectedGoal: action.payload.goal, challengeOptions: {}, overriddenStepIds: [], draft: { state: null, isManual: false } };
+      nextState = { ...state, selectedStoryCardIndex: action.payload.index, selectedGoal: action.payload.goal, challengeOptions: {}, overriddenStepIds: [], acknowledgedOverrides: [] };
       break;
       
     case ActionType.SET_GOAL:
@@ -397,6 +398,10 @@ export function gameReducer(state: GameState, action: Action): GameState {
 
     case ActionType.SET_STORY_OVERRIDES:
       nextState = { ...state, overriddenStepIds: action.payload };
+      break;
+
+    case ActionType.ACKNOWLEDGE_OVERRIDES:
+      nextState = { ...state, acknowledgedOverrides: action.payload };
       break;
       
     case ActionType.SET_DRAFT_CONFIG:

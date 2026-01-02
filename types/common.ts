@@ -66,6 +66,7 @@ export interface GameState {
   finalStartingCredits: number | null;
   storyRatingFilters: Record<number, boolean>;
   overriddenStepIds: string[];
+  acknowledgedOverrides: string[];
   draft: {
     state: import('./state').DraftState | null;
     isManual: boolean;

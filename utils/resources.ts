@@ -4,9 +4,10 @@ import {
     ResourceType,
     ModifyResourceRule,
     RuleSourceType,
-    ResourceConflict
+    ResourceConflict,
+    SpecialRule
 } from '../types';
-import { getResolvedRules } from './selectors/rules';
+import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
 const PRIORITY_ORDER: RuleSourceType[] = ['story', 'challenge', 'setupCard', 'optionalRule', 'expansion'];
 
@@ -92,6 +93,18 @@ const _applyResourceRules = (
 export const getResourceDetails = (gameState: GameState, manualSelection?: 'story' | 'setupCard'): ResourceDetails => {
   const allRules = getResolvedRules(gameState);
   const resourceRules = allRules.filter(r => r.type === 'modifyResource') as ModifyResourceRule[];
+  const specialRules: SpecialRule[] = [];
+  
+  allRules.forEach(rule => {
+    if (rule.type === 'addSpecialRule' && rule.category === 'resources') {
+        if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
+            specialRules.push({
+                source: rule.source as SpecialRule['source'],
+                ...rule.rule
+            });
+        }
+    }
+  });
   
   const baseResources: Record<ResourceType, number> = { credits: 3000, fuel: 6, parts: 2, warrants: 0, goalTokens: 0 };
   const finalResources: Partial<Record<ResourceType, number>> = {};
@@ -112,6 +125,21 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
       finalCreditModifications = modifications;
     }
   });
+  
+  const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
+  let smugglersBluesVariantAvailable = false;
+  if (smugglersBluesSetup) {
+    const canUseRimRule = gameState.expansions.blue && gameState.expansions.kalidasa;
+    if (canUseRimRule) {
+      smugglersBluesVariantAvailable = true;
+    } else {
+      specialRules.push({ source: 'story', title: "Smuggler's Blues Contraband", content: ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Planetary Sector in ', { type: 'strong', content: 'Alliance Space' }, '.'] });
+    }
+  }
+  
+  if (hasRuleFlag(allRules, 'lonelySmugglerSetup')) {
+    specialRules.push({ source: 'story', title: "Lonely Smuggler's Stash", content: ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.'] });
+  }
 
   return {
     credits: finalResources.credits!,
@@ -122,6 +150,8 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     isFuelDisabled: resourceRules.some(e => e.resource === 'fuel' && e.method === 'disable'),
     isPartsDisabled: resourceRules.some(e => e.resource === 'parts' && e.method === 'disable'),
     creditModifications: finalCreditModifications,
-    conflict: creditConflictInfo.conflict
+    conflict: creditConflictInfo.conflict,
+    specialRules,
+    smugglersBluesVariantAvailable
   };
 };

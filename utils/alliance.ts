@@ -3,7 +3,6 @@ import {
     StepOverrides, 
     AllianceReaverDetails, 
     SpecialRule, 
-    CreateAlertTokenStackRule,
     SetAllianceModeRule,
     AddFlagRule
 } from '../types/index';
@@ -44,32 +43,6 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
   
   if (hasRuleFlag(allRules, 'placeMixedAlertTokens')) {
     specialRules.push({ source: 'story', title: 'Verse-Wide Tension', content: ['Place ', { type: 'strong', content: '3 Alliance Alert Tokens' }, " in the 'Verse:", { type: 'list', items: [['1 in ', { type: 'strong', content: 'Alliance Space' }], ['1 in ', { type: 'strong', content: 'Border Space' }], ['1 in ', { type: 'strong', content: 'Rim Space' }]] }] });
-  }
-
-  const createAlertTokenStackRule = allRules.find(r => r.type === 'createAlertTokenStack') as CreateAlertTokenStackRule | undefined;
-  if (createAlertTokenStackRule) {
-    const alertStackCount = createAlertTokenStackRule.multiplier * gameState.playerCount;
-    specialRules.push({ source: 'story', title: 'Increased Alliance Presence', content: ['Create a stack of ', { type: 'strong', content: `${alertStackCount} Alliance Alert Tokens` }, ` (${createAlertTokenStackRule.multiplier} per player).`] });
-  }
-
-  const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
-  if (smugglersBluesSetup) {
-    const useSmugglersRimRule = smugglersBluesSetup && gameState.expansions.blue && gameState.expansions.kalidasa;
-    specialRules.push({
-      source: 'story',
-      title: "Smuggler's Blues Contraband",
-      content: useSmugglersRimRule 
-        ? ['Place ', { type: 'strong', content: '2 ' }, 'Contraband on each Planetary Sector in ', { type: 'strong', content: 'Rim Space' }, '.']
-        : ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Planetary Sector in ', { type: 'strong', content: 'Alliance Space' }, '.']
-    });
-  }
-  
-  if (hasRuleFlag(allRules, 'lonelySmugglerSetup')) {
-    specialRules.push({ source: 'story', title: "Lonely Smuggler's Stash", content: ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.'] });
-  }
-
-  if (hasRuleFlag(allRules, 'startWithAlertCard')) {
-    specialRules.push({ source: 'story', title: 'Alliance High Alert', content: ['Begin the game with one random Alliance Alert Card in play.'] });
   }
 
   const alliancePlacement = allianceMode === 'extra_cruisers' ? "Place a Cruiser at Regulus AND Persephone." : "Place the Cruiser at Londinium.";

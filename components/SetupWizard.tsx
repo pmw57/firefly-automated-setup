@@ -41,6 +41,11 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
+  // Calculate overrides that have been detected but not yet shown to the user in the modal.
+  const unacknowledgedOverrides = useMemo(() => {
+      return gameState.overriddenStepIds.filter(id => !gameState.acknowledgedOverrides.includes(id));
+  }, [gameState.overriddenStepIds, gameState.acknowledgedOverrides]);
+
   // Effect to detect and set story overrides in global state
   useEffect(() => {
     const storyCard = getActiveStoryCard(gameState);
@@ -84,8 +89,8 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   const handleNext = useCallback(() => {
     const isStoryStep = flow[currentStepIndex]?.id === STEP_IDS.C4 || flow[currentStepIndex]?.id === STEP_IDS.D_FIRST_GOAL;
     
-    if (isStoryStep && gameState.overriddenStepIds.length > 0) {
-      const affectedSteps = flow.filter(step => gameState.overriddenStepIds.includes(step.id));
+    if (isStoryStep && unacknowledgedOverrides.length > 0) {
+      const affectedSteps = flow.filter(step => unacknowledgedOverrides.includes(step.id));
       const firstAffectedIndex = Math.min(...affectedSteps.map(step => flow.indexOf(step)));
       const stepLabels = affectedSteps.map(step => step.data?.title.replace(/^\d+\.\s+/, '') || step.id);
 
@@ -93,7 +98,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
     } else {
       handleNavigation('next');
     }
-  }, [handleNavigation, currentStepIndex, flow, gameState.overriddenStepIds]);
+  }, [handleNavigation, currentStepIndex, flow, unacknowledgedOverrides]);
 
   const handlePrev = useCallback(() => handleNavigation('prev'), [handleNavigation]);
   const handleJump = useCallback((index: number) => handleNavigation(index), [handleNavigation]);
@@ -105,12 +110,14 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   }, [resetGameState]);
   
   const handleModalContinue = () => {
+    dispatch({ type: ActionType.ACKNOWLEDGE_OVERRIDES, payload: gameState.overriddenStepIds });
     setOverrideModalState(null);
     handleNavigation('next');
   };
   
   const handleModalJump = () => {
     if (overrideModalState) {
+      dispatch({ type: ActionType.ACKNOWLEDGE_OVERRIDES, payload: gameState.overriddenStepIds });
       handleJump(overrideModalState.firstAffectedIndex);
       setOverrideModalState(null);
     }

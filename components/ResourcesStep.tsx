@@ -25,7 +25,15 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
     [gameState]
   );
   
-  const { credits, fuel, parts, warrants, goalTokens, isFuelDisabled, isPartsDisabled, creditModifications } = resourceDetails;
+  const { credits, fuel, parts, warrants, goalTokens, isFuelDisabled, isPartsDisabled, creditModifications, specialRules, smugglersBluesVariantAvailable } = resourceDetails;
+
+  const useRimVariant = !!gameState.challengeOptions.smugglers_blues_rim_variant;
+
+  const handleVariantChange = (useRim: boolean) => {
+      if (useRim !== useRimVariant) {
+          dispatch({ type: ActionType.TOGGLE_CHALLENGE_OPTION, payload: 'smugglers_blues_rim_variant' });
+      }
+  };
 
   useEffect(() => {
     if (credits !== gameState.finalStartingCredits) {
@@ -34,7 +42,6 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   }, [credits, dispatch, gameState.finalStartingCredits]);
   
   const removeRiver = hasRuleFlag(allRules, 'removeRiver');
-  const nandiCrewDiscount = hasRuleFlag(allRules, 'nandiCrewDiscount');
   
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -61,6 +68,47 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
           content={note.content} 
         />
       ))}
+
+      {smugglersBluesVariantAvailable && (
+        <section className={cls("border-l-4 p-4 rounded-r-xl shadow-sm mb-4 transition-all hover:shadow-md backdrop-blur-sm animate-fade-in-up", isDark ? 'border-amber-700 bg-amber-900/20' : 'border-[#b45309] bg-[#fffbeb]')}>
+          <div className="flex items-start mb-2">
+            <span className="text-xl mr-3 mt-0.5 select-none opacity-80" aria-hidden="true">📜</span>
+            <div className="flex-1">
+              <span className={cls("text-[10px] font-bold uppercase tracking-widest opacity-60 block mb-0.5", isDark ? 'text-amber-200/90' : 'text-[#92400e]')}>
+                Story Override
+              </span>
+              <h4 className={cls("font-bold text-base leading-tight", isDark ? 'text-amber-200/90' : 'text-[#92400e]')}>Smuggler's Blues: Contraband Placement</h4>
+            </div>
+          </div>
+          <div className={cls("text-sm leading-relaxed tracking-wide pl-1 opacity-90", isDark ? 'text-amber-200/90' : 'text-[#92400e]')}>
+            <p className="mb-3">Because the <strong>Blue Sun</strong> and <strong>Kalidasa</strong> expansions are active, an optional placement rule is available. Please choose which rule to use:</p>
+            <div className="space-y-2">
+              <label 
+                onClick={() => handleVariantChange(false)}
+                className={cls("flex items-start p-3 rounded-lg border cursor-pointer transition-colors", !useRimVariant ? (isDark ? 'border-green-500 bg-green-900/20' : 'border-green-600 bg-green-50') : (isDark ? 'border-zinc-700 hover:bg-zinc-800/80' : 'border-gray-300 hover:bg-gray-50'))}
+              >
+                <input type="radio" name="smugglers-variant" checked={!useRimVariant} readOnly className="mt-1 mr-3 accent-green-600"/>
+                <div>
+                  <span className="font-bold">Standard Rule</span>
+                  <p className="text-xs">Place <strong>3 Contraband</strong> on each Planetary Sector in <strong>Alliance Space</strong>.</p>
+                </div>
+              </label>
+              <label 
+                onClick={() => handleVariantChange(true)}
+                className={cls("flex items-start p-3 rounded-lg border cursor-pointer transition-colors", useRimVariant ? (isDark ? 'border-green-500 bg-green-900/20' : 'border-green-600 bg-green-50') : (isDark ? 'border-zinc-700 hover:bg-zinc-800/80' : 'border-gray-300 hover:bg-gray-50'))}
+              >
+                <input type="radio" name="smugglers-variant" checked={useRimVariant} readOnly className="mt-1 mr-3 accent-green-600"/>
+                <div>
+                  <span className="font-bold">Optional Variant</span>
+                  <p className="text-xs">Place <strong>2 Contraband</strong> on each Planetary Sector in <strong>Rim Space</strong>.</p>
+                </div>
+              </label>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {specialRules.map((rule, i) => <SpecialRuleBlock key={`special-rule-${i}`} {...rule} />)}
       
       <div className={`${cardBg} p-4 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300`}>
         <div className="flex items-start justify-between gap-4">
@@ -106,10 +154,6 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
 
       {removeRiver && (
         <SpecialRuleBlock source="story" title="Missing Person" content={["Remove ", { type: 'strong', content: "River Tam" }, " from play."]} />
-      )}
-
-      {nandiCrewDiscount && (
-        <SpecialRuleBlock source="story" title="Hiring Bonus" content={["Nandi pays half price (rounded up) when hiring crew."]} />
       )}
     </div>
   );
