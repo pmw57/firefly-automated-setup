@@ -505,7 +505,7 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     title: "Scavengers",
     intro: "This game only uses dice, cash, Leader cards, Supply decks, cargo, and contraband. Everything else stays in the box. A scavengers goal is simple, Find a Crew, Attack Another Crew, Keep Trying.",
     isPvP: true,
-    setupDescription: "Shuffle all Supply decks and lay them face down in the middle of thet able with the banks cash. All players start with $10,000 and 10 cargo. Roll for first player. First player chooses a Leader card then passes the Leader deck to the next player until each player has a Leader card.",
+    setupDescription: "Shuffle all Supply decks and lay them face down in the middle of the table with the banks cash. All players start with $10,000 and 10 cargo. Roll for first player. First player chooses a Leader card then passes the Leader deck to the next player until each player has a Leader card.",
     sourceUrl: "https://boardgamegeek.com/thread/3114859/scavenger-card-game-story-card",
     requiredExpansion: "community",
     rating: 1
