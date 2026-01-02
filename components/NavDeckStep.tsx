@@ -78,6 +78,7 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
     isSolo, 
     isHighPlayerCount,
     specialRules,
+    hasRimDecks,
   } = useMemo(() => getNavDeckDetails(gameState, overrides), [gameState, overrides]);
 
   const { theme } = useTheme();
@@ -86,7 +87,6 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
   const panelBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const panelBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const panelText = isDark ? 'text-gray-300' : 'text-gray-800';
-  const hasRimDecks = gameState.expansions.blue || gameState.expansions.kalidasa;
 
   const forcedReshuffleContent: StructuredContent = [
     { type: 'paragraph', content: ['Place the ', { type: 'action', content: '"RESHUFFLE"' }, ' cards in the Nav Decks at the start of the game, regardless of the number of players.'] }
