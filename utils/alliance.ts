@@ -74,7 +74,8 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
     (r): r is AddFlagRule => r.type === 'addFlag' && r.flag === 'huntForTheArcReaverPlacement'
   );
 
-  const totalReavers = gameState.expansions.blue ? 3 : 1;
+  const hasBlueSunReavers = hasRuleFlag(allRules, 'blueSunReaverPlacement');
+  const totalReavers = hasBlueSunReavers ? 3 : 1;
   let reaverPlacement: string;
 
   if (huntForTheArcRule) {
@@ -92,7 +93,7 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
       reaverPlacement = placementParts.join(' ');
 
   } else {
-      reaverPlacement = gameState.expansions.blue 
+      reaverPlacement = hasBlueSunReavers
           ? "Place 3 Cutters in the border sectors closest to Miranda." 
           : "Place 1 Cutter at the Firefly logo (Regina/Osiris).";
   }

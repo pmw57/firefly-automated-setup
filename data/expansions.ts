@@ -26,7 +26,8 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     themeColor: 'steelBlue',
     icon: { type: 'sprite', value: '0% 0%' },
     page_10th: 28,
-    category: 'core_mechanics'
+    category: 'core_mechanics',
+    isSupplyHeavy: true
   },
   {
     id: 'big_damn_heroes',
@@ -44,7 +45,8 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     themeColor: 'black',
     icon: { type: 'sprite', value: '50% 0%' },
     page_10th: 29,
-    category: 'core_mechanics'
+    category: 'core_mechanics',
+    isSupplyHeavy: true
   },
   {
     id: 'blue',
@@ -53,7 +55,10 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     themeColor: 'darkSlateBlue',
     icon: { type: 'sprite', value: '75% 0%' },
     page_10th: 36,
-    category: 'map'
+    category: 'map',
+    rules: createExpansionRules('Blue Sun', [
+      { type: 'addFlag', flag: 'blueSunReaverPlacement' }
+    ])
   },
   {
     id: 'kalidasa',
@@ -62,7 +67,8 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     themeColor: 'deepBrown',
     icon: { type: 'sprite', value: '100% 0%' },
     page_10th: 42,
-    category: 'map'
+    category: 'map',
+    isSupplyHeavy: true
   },
   {
     id: 'coachworks',
@@ -80,7 +86,22 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     themeColor: 'cordovan',
     icon: { type: 'sprite', value: '25% 25%' },
     page_10th: 49,
-    category: 'variants'
+    category: 'variants',
+    rules: createExpansionRules('Crime & Punishment', [
+      {
+        type: 'addSpecialRule',
+        category: 'nav',
+        rule: {
+          title: 'Additional Components',
+          content: [
+            { type: 'list', items: [
+              ['Shuffle the 5 Alliance Priority Alert cards and place them as a face-down deck.'],
+              ['Add the new Misbehave cards to the Misbehave deck.'],
+            ]}
+          ]
+        }
+      }
+    ])
   },
   {
     id: 'still_flying',
@@ -89,7 +110,8 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     themeColor: 'darkOliveGreen',
     icon: { type: 'sprite', value: '50% 25%' },
     page_10th: 50,
-    category: 'variants'
+    category: 'variants',
+    isSupplyHeavy: true
   },
   {
     id: 'tenth',
@@ -161,7 +183,17 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     description: "Adds the Black Market deck and high-risk illegal goods.",
     themeColor: 'dark',
     icon: { type: 'sprite', value: '100% 25%' },
-    category: 'independent'
+    category: 'independent',
+    rules: createExpansionRules('Black Market', [
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Black Market Deck',
+          content: [{ type: 'paragraph', content: ['Place the Black Market deck near the Supply Planets.'] }]
+        }
+      }
+    ])
   },
   {
     id: 'community',
