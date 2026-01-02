@@ -11,7 +11,7 @@ import { PIRATES_STORIES } from './storyCards/pirates';
 import { CRIME_STORIES } from './storyCards/crime';
 import { COACHWORKS_STORIES } from './storyCards/coachworks';
 import { BLACK_MARKET_STORIES } from './storyCards/blackMarket';
-import { COMMUNITY_STORIES } from './storyCards/community';
+import { COMMUNITY_STORIES } from './storyCards/community/index';
 import { EXPANSIONS_METADATA } from './expansions';
 import { ACES_EIGHTS_STORIES } from './storyCards/acesAndEights';
 import { WHITE_LIGHTNING_STORIES } from './storyCards/whiteLightning';
