@@ -21,6 +21,7 @@ export interface ExpansionDef {
   category: ExpansionCategory;
   hidden?: boolean;
   rules?: SetupRule[];
+  isSupplyHeavy?: boolean;
 }
 
 export interface SetupCardStep {

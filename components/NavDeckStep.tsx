@@ -76,7 +76,8 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
     clearerSkies, 
     showStandardRules, 
     isSolo, 
-    isHighPlayerCount 
+    isHighPlayerCount,
+    specialRules,
   } = useMemo(() => getNavDeckDetails(gameState, overrides), [gameState, overrides]);
 
   const { theme } = useTheme();
@@ -95,8 +96,12 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
   }
 
   return (
-    <>
-      <div className={cls(panelBg, "p-6 rounded-lg border shadow-sm mb-6 overflow-hidden transition-colors duration-300 space-y-4", panelBorder)}>
+    <div className="space-y-4">
+      {specialRules.map((rule, i) => (
+        <SpecialRuleBlock key={i} {...rule} />
+      ))}
+
+      <div className={cls(panelBg, "p-6 rounded-lg border shadow-sm overflow-hidden transition-colors duration-300 space-y-4", panelBorder)}>
         {showStandardRules && (
           <p className={cls(panelText)}><span className={cls("font-bold border-b border-dotted", isDark ? 'border-zinc-500' : 'border-gray-400')}>Shuffle Alliance & Border Nav Cards</span> according to standard player count rules.</p>
         )}
@@ -121,6 +126,6 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
             playerCount={gameState.playerCount} 
         />
       )}
-    </>
+    </div>
   );
 };

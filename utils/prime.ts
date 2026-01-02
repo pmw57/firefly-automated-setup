@@ -7,10 +7,12 @@ import {
     SetPrimeModeRule
 } from '../types';
 import { getResolvedRules } from './selectors/rules';
+import { EXPANSIONS_METADATA } from '../data/expansions';
 
 export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides): PrimeDetails => {
-  const supplyHeavyExpansions: (keyof GameState['expansions'])[] = ['kalidasa', 'pirates', 'breakin_atmo', 'still_flying'];
-  const activeSupplyHeavyCount = supplyHeavyExpansions.filter(exp => gameState.expansions[exp]).length;
+  const activeSupplyHeavyCount = EXPANSIONS_METADATA.filter(
+    exp => exp.isSupplyHeavy && gameState.expansions[exp.id as keyof typeof gameState.expansions]
+  ).length;
   const isHighSupplyVolume = activeSupplyHeavyCount >= 3;
 
   const baseDiscard = isHighSupplyVolume && gameState.optionalRules.highVolumeSupply ? 4 : 3;
