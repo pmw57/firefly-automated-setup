@@ -99,7 +99,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
           title: 'Additional Components',
           content: [
             { type: 'list', items: [
-              ['Shuffle the 5 Alliance Priority Alert cards and place them as a face-down deck.'],
+              ['Shuffle the Alliance Priority Alert cards and place them as a face-down deck.'],
               ['Add the new Misbehave cards to the Misbehave deck.'],
             ]}
           ]
