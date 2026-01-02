@@ -30,7 +30,17 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "A big time crime boss has retired to a life of ease and comfort, leaving behind a nice little power vacuum. If you want to take his place you'll need money and business parthers. Shady business oartners to be exact. The shadier the better.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/3077380/aimin-to-misbehave",
-    setupDescription: "Remove all legal jobs from play."
+    setupDescription: "Remove all legal jobs from play.",
+    rules: createStoryRules("Aimin' To Misbehave", [
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Deck Modification',
+          content: ["Remove all legal jobs from play."]
+        }
+      }
+    ])
   },
   {
     title: "Bank Job",
@@ -51,10 +61,20 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
   {
     title: "Black Market Beagles",
     intro: "One too many loads of smuggled cargo (of the live variety) has really started to stink up the place so the crew has opted to transport something smaller, more specifically with smaller droppings.",
-    setupDescription: "Beagles are the contraband. If you lose 'em you can get more at Jiangyin, Red Sun for $1000 each! Start out with 1 Cry Baby on the ship to use at you liken'",
+    setupDescription: "Start out with 1 Cry Baby on the ship",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1098646/article/14445829#14445829",
     rating: 1,
+    rules: createStoryRules("Black Market Beagles", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Starting Gear',
+          content: ["Each player begins the game with 1 ", { type: 'strong', content: 'Cry Baby' }, " on their ship."]
+        }
+      }
+    ])
   },
   {
     title: "Cupid's Little Helpers",
@@ -69,7 +89,25 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Players starting on a Supply world may choose three cards from that Supply deck. Crew are hired for free. Other cards must be paid for at half price from the player's starting cash. Corbin and Marco's half-price abilities apply--round the price of each item up to the nearest $100. More than one player may start on the same world. Additional players must wait until the previous player has selected three cards before taking their selections.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1240655/doing-good-works-soloco-op-scenario",
-    rating: 0
+    rating: 0,
+    rules: createStoryRules("Doing Good Works", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Special Starting Procedure',
+          content: [
+            { type: 'list', items: [
+              ["Players starting on a Supply world may choose three cards from that Supply deck."],
+              ["Crew are hired for free. Other cards must be paid for at half price from the player's starting cash."],
+              ["Corbin and Marco's half-price abilities apply (round up to nearest $100)."],
+              ["More than one player may start on the same world."],
+              ["Additional players must wait for the previous player to finish before selecting their cards."]
+            ]}
+          ]
+        }
+      }
+    ])
   },
   {
     title: "Double Duty",
@@ -85,6 +123,21 @@ export const COMMUNITY_STORIES: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1045716/article/13603393#13603393",
     rating: 1,
+    rules: createStoryRules("Fruity Oat Bar", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Special Crew & Placement',
+          content: [
+            { type: 'list', items: [
+              ["After choosing your Leader, search for any ", { type: 'strong', content: 'Wanted crew' }, " from any deck and add them to your crew."],
+              ["You must start in Alliance Space."]
+            ]}
+          ]
+        }
+      }
+    ])
   },
   {
     title: "Gentleman's Agreement",
