@@ -1,6 +1,7 @@
 import { GameState, SetupRule } from '../../types';
 import { getSetupCardById } from './story';
 import { getActiveStoryCard } from './story';
+import { EXPANSIONS_METADATA } from '../../data/expansions';
 
 /**
  * The core of the rule resolution system. This function gathers all active `SetupRule`
@@ -13,12 +14,12 @@ import { getActiveStoryCard } from './story';
 export const getResolvedRules = (gameState: GameState): SetupRule[] => {
     const rules: SetupRule[] = [];
 
+    // Rules from Setup Cards
     const primaryCard = getSetupCardById(gameState.setupCardId);
     if (primaryCard?.rules) {
         rules.push(...primaryCard.rules);
     }
     
-    // If a combinable setup card (like Flying Solo) is active, also get rules from the secondary card.
     if (primaryCard?.isCombinable && gameState.secondarySetupId) {
         const secondaryCard = getSetupCardById(gameState.secondarySetupId);
         if (secondaryCard?.rules) {
@@ -26,9 +27,17 @@ export const getResolvedRules = (gameState: GameState): SetupRule[] => {
         }
     }
     
+    // Rules from Story Card
     const storyCard = getActiveStoryCard(gameState);
     if (storyCard?.rules) {
         rules.push(...storyCard.rules);
+    }
+
+    // Rules from Active Expansions
+    for (const expansion of EXPANSIONS_METADATA) {
+        if (expansion.rules && gameState.expansions[expansion.id as keyof typeof gameState.expansions]) {
+            rules.push(...expansion.rules);
+        }
     }
     
     // Note: This implementation assumes challenge/advanced rules are part of the story card's rules array.

@@ -1,5 +1,6 @@
 
 import { ExpansionDef } from '../types';
+import { createExpansionRules } from './storyCards/utils';
 
 // FIX: This type was defined locally, but now it's part of the main ExpansionDef to fix type errors.
 // The existing data structure is now compatible with the updated ExpansionDef.
@@ -142,7 +143,17 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     themeColor: 'teal',
     icon: { type: 'text', value: 'LC' },
     category: 'independent',
-    hidden: true
+    hidden: true,
+    rules: createExpansionRules('Local Color', [
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Local Color Deck',
+          content: [{ type: 'paragraph', content: ['Place the Local Color deck near the map, close to the Nav Decks.'] }]
+        }
+      }
+    ])
   },
   {
     id: 'black_market',

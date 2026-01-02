@@ -20,6 +20,7 @@ export interface ExpansionDef {
   page_10th?: number;
   category: ExpansionCategory;
   hidden?: boolean;
+  rules?: SetupRule[];
 }
 
 export interface SetupCardStep {
