@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
@@ -56,7 +54,7 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
       )}
 
       {effectiveMultiplier > 1 && !isBlitz && (
-        <SpecialRuleBlock source="story" title="Story Override" content={[{ type: 'strong', content: `Prime counts are increased by ${effectiveMultiplier}x.` }]} />
+        <SpecialRuleBlock source="story" title="Market Instability" content={[{ type: 'strong', content: `Prime counts are increased by ${effectiveMultiplier}x.` }]} />
       )}
 
       <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm text-center transition-colors duration-300`}>

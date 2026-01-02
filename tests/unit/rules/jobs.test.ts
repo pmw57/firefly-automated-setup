@@ -21,8 +21,7 @@ describe('rules/jobs', () => {
       const storyTitle = "Let's Be Bad Guys";
       const state: GameState = {
         ...baseGameState,
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       };
       const { contacts } = getJobSetupDetails(state, {});
       expect(contacts).not.toContain(CONTACT_NAMES.NISKA);
@@ -32,8 +31,7 @@ describe('rules/jobs', () => {
       const storyTitle = "First Time in the Captain's Chair";
       const state: GameState = {
         ...baseGameState,
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       };
       const { contacts } = getJobSetupDetails(state, {});
       expect(contacts).toEqual(['Harken', 'Amnon Duul']);
@@ -62,7 +60,6 @@ describe('rules/jobs', () => {
       const storyTitle = "A Fistful Of Scoundrels";
       const state: GameState = {
         ...baseGameState,
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
         gameMode: 'solo',
       };
@@ -110,7 +107,7 @@ describe('rules/jobs', () => {
               },
             ],
             "source": "story",
-            "title": "Story Override",
+            "title": "No Starting Jobs",
           },
         ]
       `);
@@ -120,7 +117,6 @@ describe('rules/jobs', () => {
         const storyTitle = "A Fistful Of Scoundrels";
         const state: GameState = {
             ...baseGameState,
-            // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
             selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
             challengeOptions: { [CHALLENGE_IDS.DONT_PRIME_CONTACTS]: true }
         };
@@ -134,7 +130,6 @@ describe('rules/jobs', () => {
       const state: GameState = {
         ...baseGameState,
         setupCardId: SETUP_CARD_IDS.AWFUL_CROWDED,
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       };
       const overrides: StepOverrides = { jobMode: 'awful_jobs' };

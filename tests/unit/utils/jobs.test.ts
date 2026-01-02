@@ -107,7 +107,7 @@ describe('rules/jobs', () => {
               },
             ],
             "source": "story",
-            "title": "Story Override",
+            "title": "No Starting Jobs",
           },
         ]
       `);

@@ -18,11 +18,11 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
 
   switch (allianceMode) {
     case 'no_alerts':
-      specialRules.push({ source: 'setupCard', title: 'Setup Override', content: [{ type: 'strong', content: 'Safe Skies:' }, ' Do not place any Alert Tokens at the start of the game.'] });
+      specialRules.push({ source: 'setupCard', title: 'Safe Skies', content: [{ type: 'strong', content: 'Safe Skies:' }, ' Do not place any Alert Tokens at the start of the game.'] });
       break;
     case 'awful_crowded':
       specialRules.push({
-        source: 'setupCard', title: 'Setup Override',
+        source: 'setupCard', title: 'Awful Crowded',
         content: [
           { type: 'strong', content: 'Awful Crowded:' },
           { type: 'list', items: [
@@ -39,33 +39,37 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
   }
   
   if (hasRuleFlag(allRules, 'placeAllianceAlertsInAllianceSpace')) {
-    specialRules.push({ source: 'story', title: 'Story Override', content: ['Place an ', { type: 'action', content: 'Alliance Alert Token' }, ' on ', { type: 'strong', content: 'every planetary sector in Alliance Space' }, '.'] });
+    specialRules.push({ source: 'story', title: 'Alliance Space Lockdown', content: ['Place an ', { type: 'action', content: 'Alliance Alert Token' }, ' on ', { type: 'strong', content: 'every planetary sector in Alliance Space' }, '.'] });
   }
   
   if (hasRuleFlag(allRules, 'placeMixedAlertTokens')) {
-    specialRules.push({ source: 'story', title: 'Story Override', content: ['Place ', { type: 'strong', content: '3 Alliance Alert Tokens' }, " in the 'Verse:", { type: 'list', items: [['1 in ', { type: 'strong', content: 'Alliance Space' }], ['1 in ', { type: 'strong', content: 'Border Space' }], ['1 in ', { type: 'strong', content: 'Rim Space' }]] }] });
+    specialRules.push({ source: 'story', title: 'Verse-Wide Tension', content: ['Place ', { type: 'strong', content: '3 Alliance Alert Tokens' }, " in the 'Verse:", { type: 'list', items: [['1 in ', { type: 'strong', content: 'Alliance Space' }], ['1 in ', { type: 'strong', content: 'Border Space' }], ['1 in ', { type: 'strong', content: 'Rim Space' }]] }] });
   }
 
   const createAlertTokenStackRule = allRules.find(r => r.type === 'createAlertTokenStack') as CreateAlertTokenStackRule | undefined;
   if (createAlertTokenStackRule) {
     const alertStackCount = createAlertTokenStackRule.multiplier * gameState.playerCount;
-    specialRules.push({ source: 'story', title: 'Story Override', content: ['Create a stack of ', { type: 'strong', content: `${alertStackCount} Alliance Alert Tokens` }, ` (${createAlertTokenStackRule.multiplier} per player).`] });
+    specialRules.push({ source: 'story', title: 'Increased Alliance Presence', content: ['Create a stack of ', { type: 'strong', content: `${alertStackCount} Alliance Alert Tokens` }, ` (${createAlertTokenStackRule.multiplier} per player).`] });
   }
 
   const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
   if (smugglersBluesSetup) {
     const useSmugglersRimRule = smugglersBluesSetup && gameState.expansions.blue && gameState.expansions.kalidasa;
-    specialRules.push({ source: 'story', content: useSmugglersRimRule 
-      ? ['Place ', { type: 'strong', content: '2 ' }, 'Contraband on each Planetary Sector in ', { type: 'strong', content: 'Rim Space' }, '.']
-      : ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Planetary Sector in ', { type: 'strong', content: 'Alliance Space' }, '.'] });
+    specialRules.push({
+      source: 'story',
+      title: "Smuggler's Blues Contraband",
+      content: useSmugglersRimRule 
+        ? ['Place ', { type: 'strong', content: '2 ' }, 'Contraband on each Planetary Sector in ', { type: 'strong', content: 'Rim Space' }, '.']
+        : ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Planetary Sector in ', { type: 'strong', content: 'Alliance Space' }, '.']
+    });
   }
   
   if (hasRuleFlag(allRules, 'lonelySmugglerSetup')) {
-    specialRules.push({ source: 'story', title: 'Story Override', content: ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.'] });
+    specialRules.push({ source: 'story', title: "Lonely Smuggler's Stash", content: ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.'] });
   }
 
   if (hasRuleFlag(allRules, 'startWithAlertCard')) {
-    specialRules.push({ source: 'story', title: 'Story Override', content: ['Begin the game with one random Alliance Alert Card in play.'] });
+    specialRules.push({ source: 'story', title: 'Alliance High Alert', content: ['Begin the game with one random Alliance Alert Card in play.'] });
   }
 
   const alliancePlacement = allianceMode === 'extra_cruisers' ? "Place a Cruiser at Regulus AND Persephone." : "Place the Cruiser at Londinium.";
@@ -83,7 +87,7 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
       const remainingReavers = totalReavers - storyReavers;
       
       const placementParts = [
-          `Story Override: Place ${storyReavers} Reaver ship in the Border Space sector directly below Valentine.`
+          `Hunt For The Arc Placement: Place ${storyReavers} Reaver ship in the Border Space sector directly below Valentine.`
       ];
       
       if (remainingReavers > 0) {
