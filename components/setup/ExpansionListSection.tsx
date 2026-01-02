@@ -4,14 +4,18 @@ import { ExpansionToggle } from '../ExpansionToggle';
 import { useTheme } from '../ThemeContext';
 import { cls } from '../../utils/style';
 import { getCategorizedExpansions } from '../../utils/selectors/story';
+import { useGameState } from '../../hooks/useGameState';
+import { ActionType } from '../../state/actions';
 
 interface ExpansionListSectionProps {
     expansions: Expansions;
     onToggle: (key: keyof Expansions) => void;
     has10th: boolean;
+    isDevMode?: boolean;
 }
 
-export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expansions, onToggle, has10th }) => {
+export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expansions, onToggle, has10th, isDevMode }) => {
+    const { state, dispatch } = useGameState();
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     const labelColor = isDark ? 'text-zinc-400' : 'text-[#78350f]';
@@ -21,7 +25,7 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
         map,
         variants,
         independent
-    } = useMemo(() => getCategorizedExpansions(), []);
+    } = useMemo(() => getCategorizedExpansions(state.showHiddenContent), [state.showHiddenContent]);
 
     const handleToggleGroup = (group: typeof core_mechanics, enable: boolean) => {
         group.forEach(exp => {
@@ -87,11 +91,37 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
     return (
         <div className="mb-8">
             <div className="space-y-8 relative z-10">
-                {renderGroup('Core Mechanics', core_mechanics)}
-                {renderGroup('Map Expansions', map)}
-                {renderGroup('Game Variants', variants)}
-                {renderGroup('Independent Content', independent)}
+                {core_mechanics.length > 0 && renderGroup('Core Mechanics', core_mechanics)}
+                {map.length > 0 && renderGroup('Map Expansions', map)}
+                {variants.length > 0 && renderGroup('Game Variants', variants)}
+                {independent.length > 0 && renderGroup('Independent Content', independent)}
             </div>
+            {isDevMode && (
+                <div className="mt-8 pt-6 border-t border-dashed border-gray-300 dark:border-zinc-700">
+                    <div 
+                        role="switch"
+                        aria-checked={state.showHiddenContent}
+                        tabIndex={0}
+                        onClick={() => dispatch({ type: ActionType.TOGGLE_SHOW_HIDDEN_CONTENT })}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dispatch({ type: ActionType.TOGGLE_SHOW_HIDDEN_CONTENT }); } }}
+                        className="flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-colors border-gray-300 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800/50"
+                    >
+                        <div>
+                            <h3 className="font-bold text-base text-gray-900 dark:text-gray-200">Show Unreleased Content</h3>
+                            <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">Includes fan-made expansions and promotional content.</p>
+                        </div>
+                        <div className={cls(
+                            "w-14 h-8 rounded-full p-1 transition-colors duration-300 ease-in-out flex items-center shrink-0",
+                            state.showHiddenContent ? 'bg-green-600' : (isDark ? 'bg-zinc-600' : 'bg-gray-300')
+                        )}>
+                            <div className={cls(
+                                "bg-white w-6 h-6 rounded-full shadow-sm transform transition-transform duration-300 ease-in-out",
+                                { 'translate-x-6': state.showHiddenContent, 'translate-x-0': !state.showHiddenContent }
+                            )}></div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

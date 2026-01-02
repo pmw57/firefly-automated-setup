@@ -133,7 +133,7 @@ const App = (): React.ReactElement => {
 
       <main className="container mx-auto px-2 sm:px-4 relative z-10">
         <GameStateProvider>
-          <SetupWizard />
+          <SetupWizard isDevMode={isDevMode} />
         </GameStateProvider>
       </main>
 

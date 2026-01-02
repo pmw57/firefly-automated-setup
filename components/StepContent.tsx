@@ -14,6 +14,7 @@ export interface StepComponentProps {
   onNext: () => void;
   onPrev: () => void;
   isNavigating: boolean;
+  isDevMode?: boolean;
 }
 
 const StepLoading = () => (
@@ -64,7 +65,7 @@ const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
   [STEP_IDS.D_STRIP_MINING]: StripMiningStep,
 };
 
-export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponentProps): React.ReactElement => {
+export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode }: StepComponentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -80,7 +81,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating }: StepComponen
 
   const renderStepBody = () => {
     if (step.type === 'setup') {
-      if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) return <CaptainSetup onNext={onNext} />;
+      if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) return <CaptainSetup onNext={onNext} isDevMode={isDevMode} />;
       if (step.id === STEP_IDS.SETUP_CARD_SELECTION) return <SetupCardSelection onNext={onNext} onBack={onPrev} />;
       if (step.id === STEP_IDS.SETUP_OPTIONAL_RULES) return <OptionalRulesSelection onStart={onNext} onBack={onPrev} />;
       return <div className="text-red-500">Unknown Setup Step: {step.id}</div>;

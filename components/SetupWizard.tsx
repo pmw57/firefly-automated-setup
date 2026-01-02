@@ -18,7 +18,11 @@ import { STEP_IDS } from '../data/ids';
 import { cls } from '../utils/style';
 import { isSetupDetermined } from '../utils/ui';
 
-const SetupWizard = (): React.ReactElement | null => {
+interface SetupWizardProps {
+  isDevMode: boolean;
+}
+
+const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null => {
   const { 
     state: gameState, 
     dispatch,
@@ -161,6 +165,7 @@ const SetupWizard = (): React.ReactElement | null => {
           onNext={handleNext} 
           onPrev={handlePrev}
           isNavigating={isNavigating}
+          isDevMode={isDevMode}
         />
       )}
       
