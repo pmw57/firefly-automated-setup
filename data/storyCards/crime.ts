@@ -8,12 +8,33 @@ export const CRIME_STORIES: StoryCardDef[] = [
     intro: "Bringin' goods to folk who want 'em is an old-fashioned way to make a living... 'cept, sometimes, a law or two gets in the way.",
     requiredExpansion: "crime",
     sourceUrl: "https://boardgamegeek.com/image/3464668/firefly-the-game-crime-and-punishment",
-    rules: createStoryRules("Smuggler's Blues", [
-      { type: 'addFlag', flag: 'smugglersBluesSetup' },
-      { type: 'addFlag', flag: 'startWithAlertCard' },
-      { type: 'setShipPlacement', location: 'londinium' },
-      { type: 'setJobMode', mode: 'no_jobs' }
-    ])
+    setupDescription: "Place 3 Contraband on each Planetary Sector in Alliance Space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead, Place a $2000 Bill under Amnon Duul, Patience, Badger, and Niska's Contact Decks. Players do not receive Starting Jobs and begin at Londinium. Start with one random Alliance Alert Card in play.",
+    rules: [
+      {
+        type: "addFlag",
+        flag: "smugglersBluesSetup",
+        source: "story",
+        sourceName: "Smuggler's Blues"
+      },
+      {
+        type: "addFlag",
+        flag: "startWithAlertCard",
+        source: "story",
+        sourceName: "Smuggler's Blues"
+      },
+      {
+        type: "setShipPlacement",
+        location: "londinium",
+        source: "story",
+        sourceName: "Smuggler's Blues"
+      },
+      {
+        type: "setJobMode",
+        mode: "no_jobs",
+        source: "story",
+        sourceName: "Smuggler's Blues"
+      }
+    ]
   },
   {
     title: "Wanted Men",
