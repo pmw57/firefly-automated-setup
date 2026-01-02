@@ -206,6 +206,10 @@ export const getDefaultGameState = (): GameState => {
             5: true,
         },
         overriddenStepIds: [],
+        draft: {
+            state: null,
+            isManual: false,
+        },
         showHiddenContent: false,
     };
 };
@@ -234,6 +238,7 @@ const handlePlayerCountChange = (state: GameState, count: number): GameState => 
         gameMode: newMode,
         playerNames: adjustPlayerNames(state.playerNames, safeCount),
         isCampaign: newMode === 'multiplayer' ? false : state.isCampaign,
+        draft: { state: null, isManual: false },
     };
 
     return defaultToFlyingSoloIfNeeded(intermediateState);
@@ -274,14 +279,16 @@ const handleToggleFlyingSolo = (state: GameState): GameState => {
             ...state,
             setupCardId: newId,
             setupCardName: newDef?.label || '',
-            secondarySetupId: undefined
+            secondarySetupId: undefined,
+            draft: { state: null, isManual: false },
         };
     } else {
         return {
             ...state,
             setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
             setupCardName: 'Flying Solo',
-            secondarySetupId: state.setupCardId
+            secondarySetupId: state.setupCardId,
+            draft: { state: null, isManual: false },
         };
     }
 };
@@ -316,9 +323,9 @@ export function gameReducer(state: GameState, action: Action): GameState {
     case ActionType.SET_SETUP_CARD: {
       const { id, name } = action.payload;
       if (state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
-        nextState = { ...state, secondarySetupId: id };
+        nextState = { ...state, secondarySetupId: id, draft: { state: null, isManual: false } };
       } else {
-        nextState = { ...state, setupCardId: id, setupCardName: name, secondarySetupId: undefined };
+        nextState = { ...state, setupCardId: id, setupCardName: name, secondarySetupId: undefined, draft: { state: null, isManual: false } };
       }
       break;
     }
@@ -328,7 +335,7 @@ export function gameReducer(state: GameState, action: Action): GameState {
       break;
 
     case ActionType.SET_STORY_CARD:
-      nextState = { ...state, selectedStoryCardIndex: action.payload.index, selectedGoal: action.payload.goal, challengeOptions: {}, overriddenStepIds: [] };
+      nextState = { ...state, selectedStoryCardIndex: action.payload.index, selectedGoal: action.payload.goal, challengeOptions: {}, overriddenStepIds: [], draft: { state: null, isManual: false } };
       break;
       
     case ActionType.SET_GOAL:
@@ -390,6 +397,10 @@ export function gameReducer(state: GameState, action: Action): GameState {
 
     case ActionType.SET_STORY_OVERRIDES:
       nextState = { ...state, overriddenStepIds: action.payload };
+      break;
+      
+    case ActionType.SET_DRAFT_CONFIG:
+      nextState = { ...state, draft: action.payload };
       break;
       
     case ActionType.TOGGLE_SHOW_HIDDEN_CONTENT: {

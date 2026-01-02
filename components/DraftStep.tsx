@@ -1,46 +1,17 @@
 
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { DraftState, StructuredContent, StructuredContentPart } from '../types';
+import React, { useEffect, useMemo } from 'react';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/draft';
 import { getDraftDetails } from '../utils/draftRules';
 import { Button } from './Button';
 import { DiceControls } from './DiceControls';
-import { SpecialRuleBlock, SpecialRuleBlockProps } from './SpecialRuleBlock';
+import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
-
-// Helper to recursively flatten structured content to a searchable string for categorization
-const getTextContent = (content: StructuredContent | StructuredContentPart | undefined): string => {
-    if (typeof content === 'string') {
-        return content;
-    }
-    if (Array.isArray(content)) {
-        return content.map(part => getTextContent(part)).join('');
-    }
-    if (!content) return '';
-
-    switch(content.type) {
-        case 'strong':
-        case 'action':
-        case 'paragraph':
-        case 'warning-box':
-            // FIX: Type assertion to handle the recursive nature of StructuredContentPart
-            return getTextContent(content.content as StructuredContent | StructuredContentPart);
-        case 'list':
-        case 'numbered-list':
-            return content.items.map(item => getTextContent(item)).join(' ');
-        case 'sub-list':
-            return content.items.map(item => item.ship).join(' ');
-        case 'br':
-            return ' ';
-        default:
-            return '';
-    }
-};
+import { ActionType } from '../state/actions';
 
 // Sub-component for Draft Order
 const DraftOrderPanel = ({ 
@@ -49,14 +20,12 @@ const DraftOrderPanel = ({
     isHavenDraft, 
     isBrowncoatDraft,
     stepBadgeClass,
-    infoBlocks
 }: { 
     draftOrder: string[]; 
     isSolo: boolean; 
     isHavenDraft: boolean; 
     isBrowncoatDraft: boolean;
     stepBadgeClass: string; 
-    infoBlocks: React.ReactNode[];
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -75,12 +44,6 @@ const DraftOrderPanel = ({
                   {isHavenDraft ? 'Select Leader & Ship' : 'Select Ship & Leader'}
               </h4>
               
-              {infoBlocks.length > 0 && (
-                <div className="space-y-2 mb-3">
-                    {infoBlocks}
-                </div>
-              )}
-
               <p className={cls("text-xs mb-3 italic", panelSubColor)}>
                 {isSolo 
                     ? (isHavenDraft ? "Choose a Leader & Ship." : "Choose a Leader & Ship.")
@@ -108,7 +71,6 @@ const PlacementOrderPanel = ({
     isBrowncoatDraft,
     specialStartSector,
     stepBadgeClass,
-    infoBlocks
 }: {
     placementOrder: string[];
     isSolo: boolean;
@@ -116,7 +78,6 @@ const PlacementOrderPanel = ({
     isBrowncoatDraft: boolean;
     specialStartSector: string | null;
     stepBadgeClass: string;
-    infoBlocks: React.ReactNode[];
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -140,12 +101,6 @@ const PlacementOrderPanel = ({
                 {isHavenDraft ? 'Haven Placement' : 'Placement'}
             </h4>
 
-            {infoBlocks.length > 0 && (
-                <div className="space-y-2 mb-3">
-                    {infoBlocks}
-                </div>
-            )}
-            
             {isHavenDraft ? (
                 <>
                 <p className={cls("text-xs mb-3 italic", isDark ? 'text-green-300' : 'text-green-800')}>
@@ -193,9 +148,9 @@ const PlacementOrderPanel = ({
 };
 
 export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
-  const { state: gameState } = useGameState();
-  const [draftState, setDraftState] = useState<DraftState | null>(null);
-  const [isManualEntry, setIsManualEntry] = useState(false);
+  const { state: gameState, dispatch } = useGameState();
+  const { state: draftState, isManual: isManualEntry } = gameState.draft;
+  
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const isSolo = gameState.playerCount === 1;
@@ -212,46 +167,23 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
     [gameState, step.id]
   );
 
-  const { draftPhaseInfo, placementPhaseInfo } = useMemo(() => {
-    const draft: React.ReactNode[] = [];
-    const placement: React.ReactNode[] = [];
-
-    const allNotes = campaignNotes.map((note, i) => (
+  const allInfoBlocks = useMemo(() => {
+    const notes = campaignNotes.map((note, i) => (
       <SpecialRuleBlock key={`campaign-${i}`} source="story" title="Campaign Setup Note" content={note.content} />
     ));
-
-    const allRules = specialRules.map((rule, i) => <SpecialRuleBlock key={`special-${i}`} {...rule} />);
-
-    [...allNotes, ...allRules].forEach(component => {
-      const props = component.props as SpecialRuleBlockProps;
-      const title = (props.title || '').toLowerCase();
-      const content = getTextContent(props.content).toLowerCase();
-
-      const placementTriggers = [
-        'placement', 'haven', 'market', 'start at', 'sector', 'fuel', 'parts', 'outside alliance', 'off limits', 'conflict'
-      ];
-      
-      const isPlacementRule = placementTriggers.some(trigger => title.includes(trigger) || content.includes(trigger));
-
-      if (isPlacementRule) {
-        placement.push(component);
-      } else {
-        draft.push(component);
-      }
-    });
-
-    return { draftPhaseInfo: draft, placementPhaseInfo: placement };
+    const rules = specialRules.map((rule, i) => <SpecialRuleBlock key={`special-${i}`} {...rule} />);
+    return [...notes, ...rules];
   }, [campaignNotes, specialRules]);
+
 
   useEffect(() => {
     if (isSolo && !draftState) {
-        setDraftState(getInitialSoloDraftState(gameState.playerNames[0]));
+        dispatch({ type: ActionType.SET_DRAFT_CONFIG, payload: { state: getInitialSoloDraftState(gameState.playerNames[0]), isManual: false } });
     }
-  }, [isSolo, gameState.playerNames, draftState]);
+  }, [isSolo, gameState.playerNames, draftState, dispatch]);
 
   const handleDetermineOrder = () => {
-    setDraftState(runAutomatedDraft(gameState.playerNames));
-    setIsManualEntry(false);
+    dispatch({ type: ActionType.SET_DRAFT_CONFIG, payload: { state: runAutomatedDraft(gameState.playerNames), isManual: false } });
   };
 
   const handleRollChange = (index: number, newValue: string) => {
@@ -260,14 +192,13 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
     const newRolls = [...draftState.rolls];
     newRolls[index] = { ...newRolls[index], roll: val };
     const newState = calculateDraftOutcome(newRolls, gameState.playerCount);
-    setDraftState(newState);
-    setIsManualEntry(true);
+    dispatch({ type: ActionType.SET_DRAFT_CONFIG, payload: { state: newState, isManual: true } });
   };
 
   const handleSetWinner = (index: number) => {
     if (!draftState) return;
     const newState = calculateDraftOutcome(draftState.rolls, gameState.playerCount, index);
-    setDraftState(newState);
+    dispatch({ type: ActionType.SET_DRAFT_CONFIG, payload: { state: newState, isManual: true } });
   };
 
   const introText = isDark ? 'text-gray-400' : 'text-gray-600';
@@ -275,14 +206,15 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const stepBadgeAmberBg = isDark ? 'bg-amber-900/50 text-amber-200' : 'bg-amber-100 text-amber-800';
 
   return (
-    <>
-      {!isSolo && <p className={cls("mb-4 italic", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>}
-      
-      {!draftState && (
+    <div className="space-y-6">
+      {allInfoBlocks.length > 0 && (
         <div className="space-y-4">
-            {draftPhaseInfo}
-            {placementPhaseInfo}
+          {allInfoBlocks}
         </div>
+      )}
+      
+      {!isSolo && !draftState && (
+        <p className={cls("italic text-center", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>
       )}
 
       {!draftState ? (
@@ -307,7 +239,6 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 isHavenDraft={isHavenDraft}
                 isBrowncoatDraft={isBrowncoatDraft}
                 stepBadgeClass={stepBadgeBlueBg}
-                infoBlocks={draftPhaseInfo}
             />
 
             <PlacementOrderPanel 
@@ -317,11 +248,10 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 isBrowncoatDraft={isBrowncoatDraft}
                 specialStartSector={specialStartSector}
                 stepBadgeClass={stepBadgeAmberBg}
-                infoBlocks={placementPhaseInfo}
             />
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };

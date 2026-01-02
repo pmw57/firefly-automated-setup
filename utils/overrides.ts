@@ -32,8 +32,19 @@ const RULE_TYPE_TO_STEP_ID: { [key in SetupRule['type']]?: string | ((rule: Setu
   },
   addFlag: (rule: SetupRule): string => {
     const r = rule as AddFlagRule;
-    if (r.flag === 'huntForTheArcReaverPlacement') return STEP_IDS.C2;
-    // Most flags apply during gameplay, not setup. Add specific cases here if needed.
+    const flag = r.flag;
+
+    if (['huntForTheArcReaverPlacement', 'smugglersBluesSetup', 'startWithAlertCard', 'placeAllianceAlertsInAllianceSpace', 'placeMixedAlertTokens', 'lonelySmugglerSetup'].includes(flag)) {
+        return STEP_IDS.C2;
+    }
+    if (['startOutsideAllianceSpace', 'isHeroesAndMisfits', 'soloCrewDraft', 'addBorderHavens', 'allianceSpaceOffLimits'].includes(flag)) {
+        return STEP_IDS.C3;
+    }
+    if (['removePiracyJobs', 'customJobDraw'].includes(flag)) {
+        return STEP_IDS.C6;
+    }
+    
+    // Most flags apply during gameplay, not setup.
     return '';
   }
 };
