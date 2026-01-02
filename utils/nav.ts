@@ -5,7 +5,7 @@ import {
     SetNavModeRule,
     SpecialRule
 } from '../types';
-import { getResolvedRules } from './selectors/rules';
+import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
 export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides): NavDeckSetupDetails => {
     const allRules = getResolvedRules(gameState);
@@ -28,6 +28,8 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
             }
         }
     });
+    
+    const hasRimDecks = hasRuleFlag(allRules, 'activatesRimDecks');
 
     return {
         forceReshuffle,
@@ -36,5 +38,6 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
         isSolo: gameState.playerCount === 1,
         isHighPlayerCount: gameState.playerCount >= 3,
         specialRules,
+        hasRimDecks,
     };
 };

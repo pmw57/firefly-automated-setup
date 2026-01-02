@@ -7,7 +7,7 @@ import { ActionType } from '../state/actions';
 import { PlayerConfigSection } from './setup/PlayerConfigSection';
 import { CampaignConfigSection } from './setup/CampaignConfigSection';
 import { ExpansionListSection } from './setup/ExpansionListSection';
-import { getSetupCardSelectionInfo } from '../utils/ui';
+import { getSetupCardSelectionInfo, isFlyingSoloEligible } from '../utils/ui';
 
 interface CaptainSetupProps {
   onNext: () => void;
@@ -68,7 +68,7 @@ export const CaptainSetup = ({ onNext, isDevMode }: CaptainSetupProps): React.Re
         onNameChange={handleNameChange}
       />
       
-      {isSolo && has10th && (
+      {isFlyingSoloEligible(gameState) && (
         <CampaignConfigSection 
             isCampaign={gameState.isCampaign}
             storiesCompleted={gameState.campaignStoriesCompleted}

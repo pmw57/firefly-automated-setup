@@ -57,7 +57,8 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     page_10th: 36,
     category: 'map',
     rules: createExpansionRules('Blue Sun', [
-      { type: 'addFlag', flag: 'blueSunReaverPlacement' }
+      { type: 'addFlag', flag: 'blueSunReaverPlacement' },
+      { type: 'addFlag', flag: 'activatesRimDecks' }
     ])
   },
   {
@@ -68,7 +69,10 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     icon: { type: 'sprite', value: '100% 0%' },
     page_10th: 42,
     category: 'map',
-    isSupplyHeavy: true
+    isSupplyHeavy: true,
+    rules: createExpansionRules('Kalidasa', [
+      { type: 'addFlag', flag: 'activatesRimDecks' }
+    ])
   },
   {
     id: 'coachworks',

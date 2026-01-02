@@ -3,6 +3,14 @@ import { STEP_IDS } from '../data/ids';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { getSetupCardById } from './selectors/story';
 
+/**
+ * Determines if the "Flying Solo" setup card is a valid option.
+ * This requires solo mode and the 10th Anniversary expansion.
+ */
+export const isFlyingSoloEligible = (gameState: GameState): boolean => {
+  return gameState.gameMode === 'solo' && gameState.expansions.tenth;
+};
+
 export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     const rules = card.rules || [];
     if (card.setupDescription) return "Setup Changes";
@@ -77,15 +85,12 @@ export const getActiveOptionalRulesText = (state: GameState): string[] => {
  * Provides derived UI state for the SetupCardSelection component.
  */
 export const getSetupCardSelectionInfo = (gameState: GameState) => {
-    const { setupCardId, gameMode, expansions, secondarySetupId } = gameState;
+    const { setupCardId, secondarySetupId } = gameState;
 
     const cardDef = getSetupCardById(setupCardId);
     const isFlyingSoloActive = !!cardDef?.isCombinable;
-
-    const has10th = expansions.tenth;
-    const isSolo = gameMode === 'solo';
-
-    const isFlyingSoloEligible = isSolo && has10th;
+    
+    const flyingSoloEligible = isFlyingSoloEligible(gameState);
     
     // The setup process has 3 parts: Captain/Expansions, Setup Card, and Optional Rules.
     const totalParts = 3;
@@ -94,7 +99,7 @@ export const getSetupCardSelectionInfo = (gameState: GameState) => {
 
     return {
         isFlyingSoloActive,
-        isFlyingSoloEligible,
+        isFlyingSoloEligible: flyingSoloEligible,
         totalParts,
         isNextDisabled
     };

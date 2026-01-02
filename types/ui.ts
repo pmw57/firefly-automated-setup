@@ -43,6 +43,7 @@ export interface NavDeckSetupDetails {
   isSolo: boolean;
   isHighPlayerCount: boolean;
   specialRules: SpecialRule[];
+  hasRimDecks: boolean;
 }
 
 export interface ConflictOptionDetails {
