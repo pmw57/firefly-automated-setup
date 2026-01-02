@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
-import { StoryCardDef, AdvancedRuleDef } from '../types/index';
+import { StoryCardDef, AdvancedRuleDef } from '../types';
 import { useGameState } from '../hooks/useGameState';
 import { MissionSelectionContext } from '../hooks/useMissionSelection';
 import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getAvailableAdvancedRules } from '../utils/selectors/story';

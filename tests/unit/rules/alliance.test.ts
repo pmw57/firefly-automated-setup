@@ -1,7 +1,7 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getAllianceReaverDetails } from '../../../utils/alliance';
-import { StructuredContent, StructuredContentPart } from '../../../types/index';
+import { StructuredContent, StructuredContentPart, GameState } from '../../../types';
 import { getDefaultGameState } from '../../../state/reducer';
 import { STORY_CARDS } from '../../../data/storyCards';
 
@@ -52,10 +52,9 @@ describe('rules/alliance', () => {
 
     it.concurrent('generates a rule for alertStackCount based on player count and multiplier', () => {
       const storyTitle = "It's All In Who You Know";
-      const state = { 
+      const state: GameState = { 
         ...baseGameState, 
         playerCount: 4, 
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
       };
       
@@ -70,7 +69,7 @@ describe('rules/alliance', () => {
       const storyTitle = getStoryTitle("Smuggler's Blues");
       const storyIndex = STORY_CARDS.findIndex(c => c.title === storyTitle);
       // Case 1: Both expansions active
-      const stateWithBoth = { 
+      const stateWithBoth: GameState = { 
         ...baseGameState, 
         expansions: { ...baseGameState.expansions, blue: true, kalidasa: true }, 
         selectedStoryCardIndex: storyIndex
@@ -79,7 +78,7 @@ describe('rules/alliance', () => {
       expect(detailsBoth.specialRules.some(rule => getTextContent(rule.content).includes('Rim Space'))).toBe(true);
 
       // Case 2: Only one expansion active
-      const stateWithOne = { 
+      const stateWithOne: GameState = { 
         ...baseGameState, 
         expansions: { ...baseGameState.expansions, blue: true, kalidasa: false }, 
         selectedStoryCardIndex: storyIndex

@@ -1,4 +1,4 @@
-import { SetupRule, Step, AddSpecialRule, AddFlagRule } from '../types/index';
+import { SetupRule, Step, AddSpecialRule, AddFlagRule } from '../types';
 import { STEP_IDS } from '../data/ids';
 
 const RULE_TYPE_TO_STEP_ID: { [key in SetupRule['type']]?: string | ((rule: SetupRule) => string) } = {

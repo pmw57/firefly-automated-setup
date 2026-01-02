@@ -1,8 +1,7 @@
-
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { isStoryCompatible } from '../../../utils/filters';
-import { GameState, StoryCardDef } from '../../../types/index';
+import { GameState, StoryCardDef } from '../../../types';
 import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
 import { STORY_CARDS } from '../../../data/storyCards';

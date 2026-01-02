@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
-import { Expansions } from '../types/index';
+import { Expansions } from '../types';
 import { Button } from './Button';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';

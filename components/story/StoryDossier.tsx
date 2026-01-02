@@ -1,9 +1,8 @@
 
 
+
 import React, { useMemo } from 'react';
-// FIX: Changed import from '../../types' to '../types/index' to fix module resolution ambiguity.
-// FIX: Added RuleSourceType and SpecialRule to imports for type safety.
-import { StoryCardDef, AddSpecialRule, RuleSourceType, SpecialRule } from '../../types/index';
+import { StoryCardDef, AddSpecialRule, RuleSourceType, SpecialRule } from '../../types';
 import { SpecialRuleBlock } from '../SpecialRuleBlock';
 import { useTheme } from '../ThemeContext';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';

@@ -1,4 +1,4 @@
-import { SetupRule } from '../types/index';
+import { SetupRule } from '../../types';
 
 // Helper to avoid repeating source info
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;

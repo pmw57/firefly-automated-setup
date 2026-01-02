@@ -1,6 +1,4 @@
-
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
-import { StepOverrides, GameState, Step, SetupCardStep, SetupContentData } from '../types/index';
+import { StepOverrides, GameState, Step, SetupCardStep, SetupContentData } from '../types';
 import { SETUP_CONTENT } from '../data/steps';
 import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
 import { getSetupCardById } from './selectors/story';

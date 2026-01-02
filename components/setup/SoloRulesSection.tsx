@@ -1,7 +1,7 @@
 
+
 import React from 'react';
-// FIX: Changed import from '../../types' to '../../types/index' to fix module resolution ambiguity.
-import { GameState } from '../../types/index';
+import { GameState } from '../../types';
 import { useTheme } from '../ThemeContext';
 import { PageReference } from '../PageReference';
 

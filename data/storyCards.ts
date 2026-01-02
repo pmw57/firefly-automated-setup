@@ -1,6 +1,6 @@
 
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
-import { StoryCardDef } from '../types/index';
+
+import { StoryCardDef } from '../types';
 import { SOLO_STORIES } from './storyCards/solo';
 import { CORE_STORIES } from './storyCards/core';
 import { TENTH_STORIES } from './storyCards/tenth';

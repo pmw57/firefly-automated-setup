@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
@@ -12,7 +14,7 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  const isFlyingSolo = gameState.setupCardId === 'FlyingSolo';
+  const isFlyingSolo = gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
   
   const {
     baseDiscard,

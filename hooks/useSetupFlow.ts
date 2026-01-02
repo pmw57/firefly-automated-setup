@@ -1,6 +1,5 @@
-
 import { useMemo } from 'react';
-import { Step } from '../types/index';
+import { Step } from '../types';
 import { useGameState } from './useGameState';
 import { calculateSetupFlow } from '../utils/flow';
 

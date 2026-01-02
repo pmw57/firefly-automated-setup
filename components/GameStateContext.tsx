@@ -1,6 +1,7 @@
 
+
 import React, { useReducer, useEffect, useCallback, useState } from 'react';
-import { GameState } from '../types/index';
+import { GameState } from '../types';
 import { gameReducer, getDefaultGameState } from '../state/reducer';
 import { LocalStorageService } from '../utils/storage';
 import { ActionType } from '../state/actions';

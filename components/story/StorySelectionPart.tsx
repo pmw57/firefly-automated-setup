@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useGameState } from '../../hooks/useGameState';
@@ -8,8 +9,7 @@ import { PageReference } from '../PageReference';
 import { StoryDossier } from './StoryDossier';
 import { StoryRandomizer } from './StoryRandomizer';
 import { StoryCardGrid } from './StoryCardGrid';
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
-import { Step } from '../../types/index';
+import { Step } from '../../types';
 import { STEP_IDS, SETUP_CARD_IDS } from '../../data/ids';
 import { SpecialRuleBlock } from '../SpecialRuleBlock';
 

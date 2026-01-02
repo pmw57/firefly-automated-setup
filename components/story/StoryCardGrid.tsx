@@ -8,7 +8,7 @@ import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { STORY_CARDS } from '../../data/storyCards';
 import { cls } from '../../utils/style';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
-import { ExpansionId } from '../../types/index';
+import { ExpansionId } from '../../types';
 
 interface StoryCardGridProps {
   onSelect: (index: number) => void;

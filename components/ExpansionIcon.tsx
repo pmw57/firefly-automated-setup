@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { ExpansionDef } from '../types/index';
+import { ExpansionDef } from '../types';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { expansionColorConfig, specialColorConfig } from '../data/themeColors';
 import { useTheme } from './ThemeContext';

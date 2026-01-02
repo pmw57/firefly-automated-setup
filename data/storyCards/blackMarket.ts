@@ -1,5 +1,6 @@
 
-import { StoryCardDef } from '../../types/index';
+
+import { StoryCardDef } from '../../types';
 
 export const BLACK_MARKET_STORIES: StoryCardDef[] = [
   {

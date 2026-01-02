@@ -1,4 +1,4 @@
-import { StoryCardDef } from '../../types/index';
+import { StoryCardDef } from '../../types';
 import { createStoryRules } from './utils';
 
 export const KALIDASA_STORIES: StoryCardDef[] = [

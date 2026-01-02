@@ -1,7 +1,8 @@
 
+
 import React, { useRef, useEffect, useMemo } from 'react';
 import { useTheme } from './ThemeContext';
-import { Step } from '../types/index';
+import { Step } from '../types';
 import { STEP_IDS } from '../data/ids';
 import { cls } from '../utils/style';
 

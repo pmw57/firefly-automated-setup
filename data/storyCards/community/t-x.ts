@@ -1,4 +1,4 @@
-import { StoryCardDef } from '../../types/index';
+import { StoryCardDef } from '../../../types';
 import { SETUP_CARD_IDS } from '../../ids';
 
 export const STORIES_T_X: StoryCardDef[] = [

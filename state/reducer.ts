@@ -1,4 +1,4 @@
-import { GameState, Expansions, GameMode } from '../types/index';
+import { GameState, Expansions, GameMode } from '../types';
 import { Action, ActionType } from './actions';
 import { STORY_CARDS } from '../data/storyCards';
 import { SETUP_CARDS } from '../data/setupCards';

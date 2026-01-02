@@ -1,4 +1,4 @@
-import { StoryCardDef } from '../../types/index';
+import { StoryCardDef } from '../../../types';
 import { STORIES_A_D } from './a-d';
 import { STORIES_F_G } from './f-g';
 import { STORIES_H_L } from './h-l';
