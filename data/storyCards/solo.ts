@@ -1,15 +1,6 @@
-import { StoryCardDef, SetupRule } from '../../types/index';
+import { StoryCardDef } from '../../types/index';
 import { SETUP_CARD_IDS, CONTACT_NAMES } from '../ids';
-
-// Helper to avoid repeating source info
-type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
-const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule, 'source' | 'sourceName'>[]): SetupRule[] => {
-  return rules.map(rule => ({
-    ...rule,
-    source: 'story',
-    sourceName,
-  })) as SetupRule[];
-};
+import { createStoryRules } from './utils';
 
 export const SOLO_STORIES: StoryCardDef[] = [
   {

@@ -1,18 +1,5 @@
-
-
-import { StoryCardDef, SetupRule } from '../../types/index';
-
-// FIX: Using a distributive Omit to correctly type the 'rules' parameter, which is an array of a discriminated union.
-// This ensures that properties like 'category' are correctly recognized on members of the SetupRule union.
-type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
-
-const createStoryRules = (sourceName: string, rules: DistributiveOmit<SetupRule, 'source' | 'sourceName'>[]): SetupRule[] => {
-  return rules.map(rule => ({
-    ...rule,
-    source: 'story',
-    sourceName,
-  })) as SetupRule[];
-};
+import { StoryCardDef } from '../../types/index';
+import { createStoryRules } from './utils';
 
 export const HUNTINGDONS_BOLT_STORIES: StoryCardDef[] = [
     {
