@@ -55,7 +55,7 @@ describe('rules/resources', () => {
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(500);
-      expect(details.creditModifications[0].description).toBe('Story Override');
+      expect(details.creditModifications[0].description).toBe('Story Funds');
     });
 
     it.concurrent('resolves conflict between "set" credit effects by prioritizing the story rule', () => {
@@ -68,7 +68,7 @@ describe('rules/resources', () => {
       
       expect(details.conflict).toBeUndefined();
       expect(details.credits).toBe(500); // Story wins by default
-      expect(details.creditModifications[0].description).toBe('Story Override');
+      expect(details.creditModifications[0].description).toBe('Story Funds');
     });
 
     it.concurrent('applies "disable" effects for fuel and parts from a story', () => {

@@ -1,6 +1,3 @@
-
-
-
 import React, { useMemo } from 'react';
 import { StoryCardDef, AddSpecialRule, RuleSourceType, SpecialRule } from '../../types';
 import { SpecialRuleBlock } from '../SpecialRuleBlock';
@@ -137,7 +134,7 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
 
       {/* Detailed Setup Description Block */}
       {activeStoryCard.setupDescription && (
-        <SpecialRuleBlock source="story" title="Story Override" content={[activeStoryCard.setupDescription]} />
+        <SpecialRuleBlock source="story" title="Story-Specific Setup" content={[activeStoryCard.setupDescription]} />
       )}
 
       {/* Solo Adjustments */}

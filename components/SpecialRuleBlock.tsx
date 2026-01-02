@@ -90,7 +90,7 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
   };
 
   const icons = { story: '📜', setupCard: '⚙️', expansion: '🧩', warning: '⚠️', info: 'ℹ️' };
-  const labels = { story: 'Story Override', setupCard: 'Setup Override', expansion: 'Expansion Rule', warning: 'Restriction', info: 'Information' };
+  const labels = { story: 'Story Rule', setupCard: 'Setup Override', expansion: 'Expansion Rule', warning: 'Restriction', info: 'Information' };
   const s = getStyles();
 
   // Generate unique IDs for ARIA labelling
