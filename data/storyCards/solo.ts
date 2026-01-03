@@ -403,17 +403,6 @@ export const SOLO_STORIES: StoryCardDef[] = [
     }
   },
   {
-    title: "Ruining It For Everyone",
-    maxPlayerCount: 2,
-    isPvP: true,
-    intro: "During the war you watched your twin get cut down in a hail of shrapnel. You've lived an empty existence since that day making ends meet and trying to keep flying as best you can. Then you get a message from your Ma out on the Rim. \"Come home right away.\"\n\nSo you fly to St. Albans, Red Sun to see your Mother.\n\nOnce there, your twin (Who wasn't dead!) steals your ship and sets about ruining your life. Your twin has the exact same abilities as you do. Your twin may not discard any of your inactive jobs.",
-    sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
-    setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship.",
-    rules: createStoryRules("Ruining It For Everyone", [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Funds" }
-    ])
-  },
-  {
     title: "Safe",
     intro: "The crew of Serenity find themselves on Jiangyin, where Mal is selling livestock to the Grange Brothers. Just as business is about to be concluded, the law shows up. To complicate things more, Simon and River are missing.",
     setupDescription: "Continue with the crew and items you acquired after completing Shindig. Requires FAKE ID.",
