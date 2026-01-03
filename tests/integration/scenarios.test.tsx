@@ -138,18 +138,14 @@ describe('Integration Scenarios', () => {
     const smugglersBluesIndex = STORY_CARDS.findIndex(c => c.title === smugglersBluesCard.title);
     const initialState: GameState = getDefaultGameState();
     initialState.expansions.kalidasa = false;
-    // FIX: Replaced deprecated `selectedStoryCard` property with `selectedStoryCardIndex` to align with the updated `GameState` type definition.
     initialState.selectedStoryCardIndex = smugglersBluesIndex;
     
-    localStorage.setItem('firefly_wizardStep_v3', JSON.stringify(4));
+    // The contraband rule for Smuggler's Blues is shown on the Resources step (C5), which is at index 7.
+    localStorage.setItem('firefly_wizardStep_v3', JSON.stringify(7));
     localStorage.setItem('firefly_gameState_v3', JSON.stringify(initialState));
     render(<App />);
 
-    const contrabandRule = await screen.findByText(/place 3 contraband on each planetary sector in alliance space/i);
-    expect(contrabandRule).toBeInTheDocument();
-
-    // Verify it's within a "Story Override" block for context
-    const storyOverrideRegion = contrabandRule.closest('section');
-    expect(storyOverrideRegion).toHaveAccessibleName("Story Override Smuggler's Blues Contraband");
+    const ruleBlock = await screen.findByRole('region', { name: "Story Override Smuggler's Blues Contraband" });
+    expect(ruleBlock).toHaveTextContent(/Place 3 Contraband on each Planetary Sector in Alliance Space/i);
   });
 });

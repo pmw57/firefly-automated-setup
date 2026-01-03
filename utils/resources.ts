@@ -133,12 +133,12 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     if (canUseRimRule) {
       smugglersBluesVariantAvailable = true;
     } else {
-      specialRules.push({ source: 'story', title: "Smuggler's Blues Contraband", content: ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Planetary Sector in ', { type: 'strong', content: 'Alliance Space' }, '.'] });
+      specialRules.push({ source: 'story', title: "Smuggler's Blues Contraband", content: ['Place ', { type: 'strong', content: '3 Contraband' }, ' on each Planetary Sector in ', { type: 'strong', content: 'Alliance Space' }, '.'] });
     }
   }
   
   if (hasRuleFlag(allRules, 'lonelySmugglerSetup')) {
-    specialRules.push({ source: 'story', title: "Lonely Smuggler's Stash", content: ['Place ', { type: 'strong', content: '3 ' }, 'Contraband on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.'] });
+    specialRules.push({ source: 'story', title: "Lonely Smuggler's Stash", content: ['Place ', { type: 'strong', content: '3 Contraband' }, ' on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.'] });
   }
 
   return {

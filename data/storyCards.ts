@@ -1,6 +1,6 @@
 
 
-import { StoryCardDef } from '../types';
+import { StoryCardDef } from '../types/index';
 import { SOLO_STORIES } from './storyCards/solo';
 import { CORE_STORIES } from './storyCards/core';
 import { TENTH_STORIES } from './storyCards/tenth';
