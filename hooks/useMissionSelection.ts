@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { StoryCardDef, AdvancedRuleDef, GameState } from '../types';
+import { StoryCardDef, AdvancedRuleDef, GameState } from '../types/index';
 
 // Define the shape of the context data
 export interface MissionSelectionContextType {

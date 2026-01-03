@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { ThemeProvider } from '../components/ThemeProvider';
 import { GameStateProvider } from '../components/GameStateContext';
-import { GameState } from '../types';
+import { GameState } from '../types/index';
 import { user } from './setup';
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {

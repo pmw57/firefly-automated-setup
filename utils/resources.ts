@@ -6,7 +6,7 @@ import {
     RuleSourceType,
     ResourceConflict,
     SpecialRule
-} from '../types';
+} from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
 const PRIORITY_ORDER: RuleSourceType[] = ['story', 'challenge', 'setupCard', 'optionalRule', 'expansion'];

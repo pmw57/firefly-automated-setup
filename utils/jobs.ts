@@ -13,7 +13,7 @@ import {
     StoryCardDef,
     SetJobContactsRule,
     SpecialRule
-} from '../types';
+} from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';

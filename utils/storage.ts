@@ -1,4 +1,4 @@
-import { GameState } from '../types';
+import { GameState } from '../types/index';
 
 /**
  * An interface for a generic storage service.

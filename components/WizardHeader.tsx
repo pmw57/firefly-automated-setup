@@ -1,7 +1,5 @@
-
-
 import React, { useState, useMemo } from 'react';
-import { GameState, Step } from '../types';
+import { GameState, Step } from '../types/index';
 import { useTheme } from './ThemeContext';
 import { getHeaderDetails } from '../utils/header';
 

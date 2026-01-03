@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Expansions } from '../types';
+import { Expansions } from '../types/index';
 import { Button } from './Button';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';

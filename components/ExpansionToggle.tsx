@@ -1,7 +1,5 @@
-
-
 import React from 'react';
-import { Expansions, ThemeColor } from '../types';
+import { Expansions, ThemeColor } from '../types/index';
 import { ExpansionIcon } from './ExpansionIcon';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';

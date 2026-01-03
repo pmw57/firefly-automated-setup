@@ -1,4 +1,4 @@
-import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule, Step } from '../types';
+import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule, Step } from '../types/index';
 import { STEP_IDS } from '../data/ids';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { getSetupCardById } from './selectors/story';

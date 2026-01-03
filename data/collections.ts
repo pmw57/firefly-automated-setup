@@ -1,4 +1,4 @@
-import { CampaignSetupNote } from '../types';
+import { CampaignSetupNote } from '../types/index';
 import { STEP_IDS } from './ids';
 
 export const SOLO_EXCLUDED_STORIES: string[] = [

@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
-import { StoryCardDef, AdvancedRuleDef } from '../types';
+import { StoryCardDef, AdvancedRuleDef } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
 // FIX: Imported the MissionSelectionContextType interface to resolve the "Cannot find name" error.
 import { MissionSelectionContext, MissionSelectionContextType } from '../hooks/useMissionSelection';

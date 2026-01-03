@@ -1,6 +1,6 @@
 
 
-import { SetupContentTemplate } from '../types';
+import { SetupContentTemplate } from '../types/index';
 
 export const SETUP_CONTENT: Record<string, SetupContentTemplate> = {
   // Core Steps

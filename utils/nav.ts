@@ -4,7 +4,7 @@ import {
     StepOverrides,
     SetNavModeRule,
     SpecialRule
-} from '../types';
+} from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
 export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides): NavDeckSetupDetails => {

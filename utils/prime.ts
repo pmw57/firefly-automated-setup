@@ -6,7 +6,7 @@ import {
     SpecialRule,
     SetPrimeModeRule,
     CreateAlertTokenStackRule
-} from '../types';
+} from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 

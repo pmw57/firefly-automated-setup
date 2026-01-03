@@ -1,4 +1,4 @@
-import { SetupRule, Step, AddSpecialRule, AddFlagRule } from '../types';
+import { SetupRule, Step, AddSpecialRule, AddFlagRule } from '../types/index';
 import { STEP_IDS } from '../data/ids';
 
 /**
@@ -73,7 +73,7 @@ const RULE_TYPE_TO_STEP_ID: { [key in SetupRule['type']]?: string | ((rule: Setu
   }
 };
 
-export function detectOverrides(storyCard: import('../types').StoryCardDef, flow: Step[], currentStepIndex: number): string[] {
+export function detectOverrides(storyCard: import('../types/index').StoryCardDef, flow: Step[], currentStepIndex: number): string[] {
     if (!storyCard.rules) return [];
 
     const pastStepIds = new Set(flow.slice(0, currentStepIndex).map(step => step.id));

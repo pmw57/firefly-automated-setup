@@ -1,4 +1,4 @@
-import { GameState } from '../types';
+import { GameState } from '../types/index';
 
 // FIX: Reverted to 'Campaign' action types to align with state changes.
 export enum ActionType {

@@ -1,4 +1,4 @@
-import { ThemeColor } from "../types";
+import { ThemeColor } from "../types/index";
 import { expansionColorConfig } from '../data/themeColors';
 
 /**

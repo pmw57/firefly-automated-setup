@@ -1,7 +1,5 @@
-
-
 import React, { useState } from 'react';
-import { DisgruntledDieOption } from '../types';
+import { DisgruntledDieOption } from '../types/index';
 import { Button } from './Button';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
