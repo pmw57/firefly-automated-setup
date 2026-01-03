@@ -181,6 +181,12 @@ export const STORIES_M_O: StoryCardDef[] = [
     ])
   },
   {
+    title: "Oh Captain My Captain",
+    intro: "Remember that one time your Leader failed a Niska Job? Well, Niska remembers and now he's lookin' to kill some folk.",
+    setupDescription: "Niska: Do not prime his deck. No jobs given. 1st player is given 20 Disgruntled tokens as a game timer.",
+    sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards"
+  },
+  {
     title: "Old Friends And New",
     intro: "You thought he was dead, but now you know your old War buddy is being held in a max-security prison on Valentine. You'll need the help of some new friends to unlock the Cortex master identity files, then mingle with the high and mighty to get the prison plans, and finally it's off to the rescue!",
     requiredExpansion: "community",
