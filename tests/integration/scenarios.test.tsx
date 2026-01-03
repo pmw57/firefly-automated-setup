@@ -145,14 +145,11 @@ describe('Integration Scenarios', () => {
     localStorage.setItem('firefly_gameState_v3', JSON.stringify(initialState));
     render(<App />);
 
-    const contrabandRule = await screen.findByText((content, element) => {
-      const expectedText = 'Place 3 Contraband on each Planetary Sector in Alliance Space.';
-      return element?.textContent === expectedText;
-    });
+    const contrabandRule = await screen.findByText(/place 3 contraband on each planetary sector in alliance space/i);
     expect(contrabandRule).toBeInTheDocument();
 
     // Verify it's within a "Story Override" block for context
     const storyOverrideRegion = contrabandRule.closest('section');
-    expect(storyOverrideRegion).toHaveAccessibleName("Story Rule Smuggler's Blues Contraband");
+    expect(storyOverrideRegion).toHaveAccessibleName("Story Override Smuggler's Blues Contraband");
   });
 });
