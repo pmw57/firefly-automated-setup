@@ -698,12 +698,39 @@ export const SOLO_STORIES: StoryCardDef[] = [
     title: "War Stories",
     intro: "Remember when Malcolm put Niska's man through an engine? Well, Niska remembers and now he's lookin' to kill some folk.",
     isSolo: true,
-    setupDescription: "Use Standard Setup Up card. No starting cash. Use Serenity as your ship. Equip an Expanded Crew Quarters from Osiris. Start play with 9 original Serenity crew members. Don't give a starting job from Niska. Use 15 Disgruntled tokens as a game timer.",
+    setupDescription: "Fixed Assignment: Serenity's Crew. Game Timer (15 Disgruntled tokens). No starting cash. Niska jobs unavailable. Uses Standard Setup.",
     sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards",
     requiredExpansion: "community",
     rules: createStoryRules("War Stories", [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 0, description: "Story Funds" },
-      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA }
+      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: "Fixed Assignment: Serenity's Crew",
+          content: [
+            { type: 'paragraph', content: ["Your assignment for this story is fixed. You do not perform the standard draft."] },
+            {
+              type: 'list',
+              items: [
+                ['Ship: ', { type: 'strong', content: 'Serenity' }],
+                ['Leader: ', { type: 'strong', content: 'Malcolm Reynolds' }],
+                ['Ship Upgrade: Equip one ', { type: 'strong', content: 'Expanded Crew Quarters' }, ' from the Osiris Supply Deck.'],
+                ['Crew: Start play with the 9 original Serenity crew members.'],
+              ]
+            }
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Game Timer',
+          content: ["Use ", { type: 'strong', content: '15 Disgruntled tokens' }, " as the game length timer. Discard one at the start of your turn."]
+        }
+      }
     ]),
     requiredSetupCardId: SETUP_CARD_IDS.STANDARD
   }
