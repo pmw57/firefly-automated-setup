@@ -77,7 +77,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
               <span className={cls("text-[10px] font-bold uppercase tracking-widest opacity-60 block mb-0.5", isDark ? 'text-amber-200/90' : 'text-[#92400e]')}>
                 Story Override
               </span>
-              <h4 className={cls("font-bold text-base leading-tight", isDark ? 'text-amber-200/90' : 'text-[#92400e]')}>Smuggler's Blues: Contraband Placement</h4>
+              <h4 className={cls("font-bold text-base leading-tight", isDark ? 'text-amber-200/90' : 'text-[#92400e]')}>Seeding the 'Verse</h4>
             </div>
           </div>
           <div className={cls("text-sm leading-relaxed tracking-wide pl-1 opacity-90", isDark ? 'text-amber-200/90' : 'text-[#92400e]')}>

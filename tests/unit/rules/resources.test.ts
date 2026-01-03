@@ -130,5 +130,37 @@ describe('rules/resources', () => {
       const storySelectionDetails = getResourceDetails(state, 'story');
       expect(storySelectionDetails.credits).toBe(500);
     });
+
+    describe("for Smuggler's Blues", () => {
+      const storyTitle = "Smuggler's Blues";
+      const storyIndex = STORY_CARDS.findIndex(c => c.title === storyTitle);
+  
+      it.concurrent('makes variant available when Blue Sun and Kalidasa are active', () => {
+          const state: GameState = { 
+              ...baseGameState, 
+              expansions: { ...baseGameState.expansions, blue: true, kalidasa: true }, 
+              selectedStoryCardIndex: storyIndex
+          };
+          const details = getResourceDetails(state);
+          expect(details.smugglersBluesVariantAvailable).toBe(true);
+          // It should NOT add a special rule directly in this case
+          expect(details.specialRules.some(r => r.title?.includes("Smuggler's Blues"))).toBe(false);
+      });
+  
+      it.concurrent('adds a special rule for standard placement when only Blue Sun is active', () => {
+          const state: GameState = { 
+              ...baseGameState, 
+              expansions: { ...baseGameState.expansions, blue: true, kalidasa: false }, 
+              selectedStoryCardIndex: storyIndex
+          };
+          const details = getResourceDetails(state);
+          expect(details.smugglersBluesVariantAvailable).toBe(false);
+          const rule = details.specialRules.find(r => r.title === "Smuggler's Blues Contraband");
+          expect(rule).toBeDefined();
+          const contentString = JSON.stringify(rule?.content);
+          expect(contentString).toContain("3 Contraband");
+          expect(contentString).toContain("Alliance Space");
+      });
+    });
   });
 });
