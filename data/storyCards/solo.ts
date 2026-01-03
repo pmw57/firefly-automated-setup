@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../types';
 import { SETUP_CARD_IDS, CONTACT_NAMES } from '../ids';
 import { createStoryRules } from './utils';
@@ -206,6 +205,50 @@ export const SOLO_STORIES: StoryCardDef[] = [
     sortOrder: 14
   },
   {
+    title: "The Hero of Canton",
+    intro: "You can't do that to my people. Can't crush them under your heel. I'll strap on my hat, and in 20 rounds flat, steal every Mudder Boss Higgins has to steal.",
+    isSolo: true,
+    rules: createStoryRules("The Hero of Canton", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Hero Assignment',
+          content: ["Start play with ", { type: 'strong', content: "Cap'n Jayne" }, " as your Leader, ", { type: 'strong', content: "Jayne's Cunning Hat" }, ", and ", { type: 'strong', content: "Vera" }, "."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Starting Gear Cost',
+          content: ["Subtract the cost of Vera from your Starting Cash."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Mudder Deck',
+          content: [
+            { type: 'paragraph', content: ["Pull all Mudders and Stitch from the Supply decks."] },
+            { type: 'paragraph', content: ["Shuffle them all together and place them face up as the Mudder deck. If the Foreman or Stitch is the top card after a shuffle, reshuffle the deck."] },
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Game Timer',
+          content: ["Use ", { type: 'strong', content: "20 Disgruntle tokens" }, " as the game length timer."]
+        }
+      }
+    ]),
+    sourceUrl: "https://boardgamegeek.com/filepage/288785/the-hero-of-canton-solo-story-card",
+    requiredExpansion: "community"
+  },
+  {
     title: "Heroes & Misfits",
     intro: "Legends whisper the tales of the ship that could outrun Alliance Cruisers and Reavers alike. A ship that carried a rag-tag crew, each a misfit, each a hero. Now, it's time for you to make your own legacy.",
     setupDescription: "Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000. Alliance Alerts: Start with one random Alliance Alert in play. Adventure Deck: Shuffle all 3-Goal story cards into a single deck.",
@@ -281,48 +324,103 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "community"
   },
   {
-    title: "The Hero of Canton",
-    intro: "You can't do that to my people. Can't crush them under your heel. I'll strap on my hat, and in 20 rounds flat, steal every Mudder Boss Higgins has to steal.",
+    title: "Jubal's Mighty Roar",
+    intro: "Bounty Hunting's been 'round since long before you was born and it'll be 'round long after you're gone. So, why not cash in some of them high priced Bounties. I hear there's a young girl that'll fetch a nice price.",
     isSolo: true,
-    rules: createStoryRules("The Hero of Canton", [
+    requiredExpansion: "community",
+    rating: 3,
+    rules: createStoryRules("Jubal's Mighty Roar", [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: 'Hero Assignment',
-          content: ["Start play with ", { type: 'strong', content: "Cap'n Jayne" }, " as your Leader, ", { type: 'strong', content: "Jayne's Cunning Hat" }, ", and ", { type: 'strong', content: "Vera" }, "."]
+          title: 'Fixed Assignment',
+          content: [
+            {
+              type: 'paragraph',
+              content: ['Start play with the following fixed assignment:']
+            },
+            {
+              type: 'list',
+              items: [
+                ['Leader: ', { type: 'strong', content: 'Jubal Early' }],
+                ['Ship: ', { type: 'strong', content: 'The Interceptor' }],
+                ['Gear: ', { type: 'strong', content: "Early's Pistol & Early's Combat Armor" }],
+              ]
+            }
+          ]
         }
       },
       {
+        type: 'modifyResource',
+        resource: 'credits',
+        method: 'add',
+        value: -1600,
+        description: "Cost of Starting Gear"
+      },
+      {
         type: 'addSpecialRule',
-        category: 'resources',
+        category: 'allianceReaver',
         rule: {
-          title: 'Starting Gear Cost',
-          content: ["Subtract the cost of Vera from your Starting Cash."]
+          title: 'Special Token Placement',
+          content: [
+            'Place the ',
+            { type: 'strong', content: 'Serenity ship token' },
+            ' on any non-planetary sector within the ',
+            { type: 'strong', content: 'Georgia system' },
+            '.'
+          ]
         }
       },
       {
         type: 'addSpecialRule',
         category: 'prime',
         rule: {
-          title: 'Mudder Deck',
+          title: 'Deck Preparation Overrides',
           content: [
-            { type: 'paragraph', content: ["Pull all Mudders and Stitch from the Supply decks."] },
-            { type: 'paragraph', content: ["Shuffle them all together and place them face up as the Mudder deck. If the Foreman or Stitch is the top card after a shuffle, reshuffle the deck."] },
+            {
+              type: 'list',
+              items: [
+                ['Find and remove all of ', { type: 'strong', content: "Serenity's crew cards" }, ' from the various Supply Decks and set them aside.'],
+                ['The Bounty Deck is placed ', { type: 'strong', content: 'face up' }, ', and ', { type: 'strong', content: 'all Bounties are considered active' }, ' from the start of the game.'],
+              ]
+            }
           ]
-        }
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'goal',
-        rule: {
-          title: 'Game Timer',
-          content: ["Use ", { type: 'strong', content: "20 Disgruntle tokens" }, " as the game length timer."]
         }
       }
     ]),
-    sourceUrl: "https://boardgamegeek.com/filepage/288785/the-hero-of-canton-solo-story-card",
-    requiredExpansion: "community"
+    sourceUrl: "https://boardgamegeek.com/thread/3399878/jubals-mighty-roar"
+  },
+  {
+    title: "The Lonely Smuggler's Blues",
+    intro: "Sometimes, it gets lonely in the Black, but it's a good way to dodge the law when you're haulin' goods that might draw the wrong kind of attention.",
+    setupDescription: "Place 3 Contraband on each Supply Planet except Persephone and Space bazaar. Place a Goal Token on the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Do not deal Starting Jobs. Begin play at Londinium. Start with one random Alliance Alert Card in play.",
+    requiredExpansion: "tenth",
+    additionalRequirements: ["crime"],
+    isSolo: true,
+    sourceUrl: "https://boardgamegeek.com/image/8860503/sjliver",
+    rules: createStoryRules("The Lonely Smuggler's Blues", [
+      { type: 'addFlag', flag: 'soloGameTimer' },
+      { type: 'addFlag', flag: 'lonelySmugglerSetup' },
+      { type: 'setShipPlacement', location: 'londinium' },
+      { type: 'addFlag', flag: 'startWithAlertCard' },
+      { type: 'setJobMode', mode: 'no_jobs' }
+    ]),
+    advancedRule: {
+      id: "adv_lone_targets",
+      title: "Lone Targets"
+    }
+  },
+  {
+    title: "The Message",
+    intro: "Amnon Duul has a crate for Mal. Inside is the body of Tracey, a man Mal knew during the war. The crew take the crate aboard Serenity and plan to take it home for burial, but now corrupt police are in pursuit.",
+    setupDescription: "Continue with the crew and items you acquired after completing Trash. Start the Story at the Space Bazaar. Suggested: Fully Equipped Med Bay. Take Jayne's \"Cunning\" Hat.",
+    sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+    requiredExpansion: "community",
+    isSolo: true,
+    requiredFlag: 'isSolitaireFirefly',
+    sortOrder: 13,
+    campaignSetupNotes: ['START_AT_SPACE_BAZAAR', 'SUGGEST_MED_BAY_AND_HAT']
   },
   {
     title: "Objects in Space",
@@ -365,7 +463,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 7,
-    campaignSetupNotes: ['SUGGEST_BONNET_Vera']
+    campaignSetupNotes: ['SUGGEST_BONNET_VERA']
   },
   {
     title: "Out of Gas",
@@ -400,6 +498,24 @@ export const SOLO_STORIES: StoryCardDef[] = [
     advancedRule: {
       id: "adv_automated_movement",
       title: "Automated Movement"
+    }
+  },
+  {
+    title: "The Raggedy Edge",
+    intro: "It's a hard life out in the Black. See how long you can last before Reavers, the law, or bad luck catches up with you.",
+    setupDescription: "Do not use a Timer for this game. Start with one random Alliance Alert Card in play. Begin play with 1 Goal Token.",
+    requiredExpansion: "tenth",
+    additionalRequirements: ["crime"],
+    isSolo: true,
+    sourceUrl: "https://boardgamegeek.com/image/8860505/sjliver",
+    rules: createStoryRules("The Raggedy Edge", [
+      { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, description: "Begin play with 1 Goal Token." },
+      { type: 'addFlag', flag: 'disableSoloTimer' },
+      { type: 'addFlag', flag: 'startWithAlertCard' }
+    ]),
+    advancedRule: {
+      id: "adv_contact_quirks_deal",
+      title: "Contact Quirks - Deal"
     }
   },
   {
@@ -443,7 +559,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
   },
   {
     title: "Serenity Movie Part 2",
-    intro: "The crew are laying low at Haven when Inara calls from the Companion Training House on Sihnon requesting help. Mal realizes it's some kind of trap, but he decides to go anyway.",
+    intro: "On Miranda a weak distress beacon leads the crew to a research shuttle and a recording that shows Miranda was an Alliance population control experiment that went horribly wrong, killing millions and creating the Reavers!",
     setupDescription: "Continue with the crew and items you acquired after completing Serenity Movie Part 1. Remove Disgruntled Tokens from all crew. Inara rejoins the crew at this point.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
@@ -498,55 +614,6 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 5,
     campaignSetupNotes: ['SUGGEST_FANCY_DUDS']
-  },
-  {
-    title: "The Lonely Smuggler's Blues",
-    intro: "Sometimes, it gets lonely in the Black, but it's a good way to dodge the law when you're haulin' goods that might draw the wrong kind of attention.",
-    setupDescription: "Place 3 Contraband on each Supply Planet except Persephone and Space bazaar. Place a Goal Token on the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Do not deal Starting Jobs. Begin play at Londinium. Start with one random Alliance Alert Card in play.",
-    requiredExpansion: "tenth",
-    additionalRequirements: ["crime"],
-    isSolo: true,
-    sourceUrl: "https://boardgamegeek.com/image/8860503/sjliver",
-    rules: createStoryRules("The Lonely Smuggler's Blues", [
-      { type: 'addFlag', flag: 'soloGameTimer' },
-      { type: 'addFlag', flag: 'lonelySmugglerSetup' },
-      { type: 'setShipPlacement', location: 'londinium' },
-      { type: 'addFlag', flag: 'startWithAlertCard' },
-      { type: 'setJobMode', mode: 'no_jobs' }
-    ]),
-    advancedRule: {
-      id: "adv_lone_targets",
-      title: "Lone Targets"
-    }
-  },
-  {
-    title: "The Message",
-    intro: "Amnon Duul has a crate for Mal. Inside is the body of Tracey, a man Mal knew during the war. The crew take the crate aboard Serenity and plan to take it home for burial, but now corrupt police are in pursuit.",
-    setupDescription: "Continue with the crew and items you acquired after completing Trash. Start the Story at the Space Bazaar. Suggested: Fully Equipped Med Bay. Take Jayne's \"Cunning\" Hat.",
-    sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
-    requiredExpansion: "community",
-    isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
-    sortOrder: 13,
-    campaignSetupNotes: ['START_AT_SPACE_BAZAAR', 'SUGGEST_MED_BAY_AND_HAT']
-  },
-  {
-    title: "The Raggedy Edge",
-    intro: "It's a hard life out in the Black. See how long you can last before Reavers, the law, or bad luck catches up with you.",
-    setupDescription: "Do not use a Timer for this game. Start with one random Alliance Alert Card in play. Begin play with 1 Goal Token.",
-    requiredExpansion: "tenth",
-    additionalRequirements: ["crime"],
-    isSolo: true,
-    sourceUrl: "https://boardgamegeek.com/image/8860505/sjliver",
-    rules: createStoryRules("The Raggedy Edge", [
-      { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, description: "Begin play with 1 Goal Token." },
-      { type: 'addFlag', flag: 'disableSoloTimer' },
-      { type: 'addFlag', flag: 'startWithAlertCard' }
-    ]),
-    advancedRule: {
-      id: "adv_contact_quirks_deal",
-      title: "Contact Quirks - Deal"
-    }
   },
   {
     title: "They're Part Of My Crew",
