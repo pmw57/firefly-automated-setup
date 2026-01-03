@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { StoryCardDef, AddSpecialRule, RuleSourceType, SpecialRule } from '../../types';
+import { StoryCardDef, AddSpecialRule, RuleSourceType, SpecialRule, ChallengeOption } from '../../types';
 import { SpecialRuleBlock } from '../SpecialRuleBlock';
 import { useTheme } from '../ThemeContext';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
@@ -33,6 +33,10 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
 
   const handleGoalSelect = (goalTitle: string) => {
     dispatch({ type: ActionType.SET_GOAL, payload: goalTitle });
+  };
+  
+  const toggleChallengeOption = (id: string) => {
+    dispatch({ type: ActionType.TOGGLE_CHALLENGE_OPTION, payload: id });
   };
 
   const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
@@ -132,9 +136,58 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
         </div>
       )}
 
+      {/* Challenge Options */}
+      {activeStoryCard.challengeOptions && activeStoryCard.challengeOptions.length > 0 && (
+        <div className={`mb-6`}>
+          <div className={`flex items-center gap-2 mb-2`}>
+            <span className="text-xl">🔧</span>
+            <h5 className={`font-bold uppercase tracking-wide text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+              Story Options
+            </h5>
+          </div>
+          <div className={`border rounded-lg ${isDark ? 'border-zinc-700 bg-zinc-800/40' : 'border-gray-300 bg-white/50'}`}>
+            {activeStoryCard.challengeOptions.map((option: ChallengeOption) => {
+              const isChecked = !!gameState.challengeOptions[option.id];
+
+              let isDisabled = false;
+              let disabledText: string | null = null;
+              if (option.id === 'smugglers_blues_rim_variant') {
+                isDisabled = !(gameState.expansions.blue && gameState.expansions.kalidasa);
+                if (isDisabled) {
+                  disabledText = '(Requires Blue Sun & Kalidasa expansions)';
+                }
+              }
+              
+              return (
+                <label 
+                  key={option.id}
+                  className={`flex items-start p-3 border-b last:border-b-0 transition-colors ${isDark ? 'border-zinc-700' : 'border-gray-200'} ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-black/5 dark:hover:bg-white/5'}`}
+                >
+                  <div className="relative flex items-center mt-0.5">
+                    <input 
+                      type="checkbox" 
+                      className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      checked={isChecked}
+                      disabled={isDisabled}
+                      onChange={() => !isDisabled && toggleChallengeOption(option.id)}
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <span className={`font-medium ${isChecked ? (isDark ? 'text-green-300' : 'text-green-800') : (isDark ? 'text-gray-300' : 'text-gray-700')}`}>
+                      {option.label}
+                    </span>
+                    {disabledText && <span className="text-xs text-red-400 block">{disabledText}</span>}
+                  </div>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Detailed Setup Description Block */}
       {activeStoryCard.setupDescription && (
-        <SpecialRuleBlock source="story" title="Story-Specific Setup" content={[activeStoryCard.setupDescription]} />
+        <SpecialRuleBlock source="story" title="Seeding the 'Verse" content={[activeStoryCard.setupDescription]} />
       )}
 
       {/* Solo Adjustments */}

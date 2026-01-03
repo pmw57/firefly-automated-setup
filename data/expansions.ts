@@ -1,5 +1,5 @@
 
-import { ExpansionDef } from '../types';
+import { ExpansionDef } from '../types/index';
 import { createExpansionRules } from './storyCards/utils';
 
 // FIX: This type was defined locally, but now it's part of the main ExpansionDef to fix type errors.
