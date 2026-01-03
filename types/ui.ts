@@ -1,4 +1,4 @@
-import { JobMode, NavMode, AllianceSetupMode, PrimeMode, DraftMode, LeaderSetupMode } from './rules';
+import { JobMode, NavMode, AllianceSetupMode, PrimeMode, DraftMode, LeaderSetupMode, RuleSourceType } from './rules';
 import { StructuredContent, SpecialRule } from './core';
 
 export interface StepOverrides {
@@ -69,6 +69,12 @@ export interface ResourceDetails {
   conflict?: ResourceConflict;
   specialRules: SpecialRule[];
   smugglersBluesVariantAvailable?: boolean;
+  creditModificationSource?: RuleSourceType;
+  creditModificationDescription?: string;
+  fuelModificationSource?: RuleSourceType;
+  partsModificationSource?: RuleSourceType;
+  fuelModificationDescription?: string;
+  partsModificationDescription?: string;
 }
 
 
@@ -83,6 +89,11 @@ export interface PrimeDetails {
 
 export interface AllianceReaverDetails {
   specialRules: SpecialRule[];
+  standardAlliancePlacement: string;
+  standardReaverPlacement: string;
+  allianceOverride?: SpecialRule;
+  reaverOverride?: SpecialRule;
+  // FIX: Add final resolved placement strings to satisfy legacy tests.
   alliancePlacement: string;
   reaverPlacement: string;
 }

@@ -44,7 +44,9 @@ const _applyResourceRules = (
     let modifications: { description: string; value: string }[] = [];
 
     if (rulesForResource.some(r => r.method === 'disable')) {
-        return { value: 0, modifications: [] };
+        const disablingRule = rulesForResource.find(r => r.method === 'disable')!;
+        modifications.push({ description: disablingRule.description, value: '0' });
+        return { value: 0, modifications };
     }
 
     // Handle 'set' rules
@@ -126,6 +128,28 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     }
   });
   
+  const getModificationInfo = (resource: ResourceType): { source?: RuleSourceType; description?: string } => {
+    const rules = resourceRules.filter(r => r.resource === resource);
+    if (rules.length === 0) return {};
+
+    const hasModification = finalResources[resource] !== baseResources[resource] || rules.some(r => r.method === 'disable');
+    if (!hasModification) return {};
+
+    if (resource === 'credits' && creditConflictInfo.conflict && manualSelection) {
+        const selectedRule = manualSelection === 'story' ? creditConflictInfo.storyRule! : creditConflictInfo.setupRule!;
+        return { source: selectedRule.source, description: selectedRule.description };
+    }
+    
+    rules.sort((a, b) => PRIORITY_ORDER.indexOf(a.source) - PRIORITY_ORDER.indexOf(b.source));
+    const topRule = rules[0];
+
+    return { source: topRule.source, description: topRule.description };
+  };
+
+  const creditModInfo = getModificationInfo('credits');
+  const fuelModInfo = getModificationInfo('fuel');
+  const partsModInfo = getModificationInfo('parts');
+  
   const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
   let smugglersBluesVariantAvailable = false;
   if (smugglersBluesSetup) {
@@ -152,6 +176,12 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     creditModifications: finalCreditModifications,
     conflict: creditConflictInfo.conflict,
     specialRules,
-    smugglersBluesVariantAvailable
+    smugglersBluesVariantAvailable,
+    creditModificationSource: creditModInfo.source,
+    creditModificationDescription: creditModInfo.description,
+    fuelModificationSource: fuelModInfo.source,
+    partsModificationSource: partsModInfo.source,
+    fuelModificationDescription: fuelModInfo.description,
+    partsModificationDescription: partsModInfo.description
   };
 };

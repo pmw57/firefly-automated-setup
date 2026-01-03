@@ -5,7 +5,7 @@ export const STORIES_H_L: StoryCardDef[] = [
   {
     title: "Honorably Dishonorable Men",
     intro: "Care to press your luck? All them shiny things in the core sure could be of some use to folks out on the Rim.",
-    setupDescription: "Place 8 contraband tokens on each of the following sectors in Alliance Space: Londonium, Bernadette, Liann Jiun, Sihnon, Gonghe, and Bellerophon. Use 20 Disgruntled tokens as the game length timer. The player in first position discards 1 Disgruntled token at the start of each round. After the last timer token is discarded, all players take their final turn.",
+    setupDescription: "Follow the 'Special Setup' override for contraband placement and game timer.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/3602682/honorably-dishonorable-men",
     rules: createStoryRules("Honorably Dishonorable Men", [
@@ -72,18 +72,39 @@ export const STORIES_H_L: StoryCardDef[] = [
     additionalRequirements: ["local_color"],
     rating: 1,
     sourceUrl: "https://boardgamegeek.com/filepage/235439/storycard-a-jubilant-victory",
-    setupDescription: "Just anther day in the 'Verse: Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, and uses a D8 die for movement, starting from Meridian.",
+    setupDescription: "Follow the 'Special Setup' override for player ship and Jubal Early placement. Start with one Warrant.",
     rules: createStoryRules("A Jubilant Victory", [
-      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Story-Specific Warrant" }
+      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Story-Specific Warrant" },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Special Setup',
+          content: [
+            "Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant.",
+            { type: 'br' },
+            "Jubal Early uses the Interceptor, and uses a D8 die for movement, starting from Meridian."
+          ]
+        }
+      }
     ])
   },
   {
     title: "Laying Down the Law",
     intro: "Alliance brass has handed down some flush to the local magistrates to round up some old warrants and they're hiring new law men who can prove they can get the job done.",
-    setupDescription: "Laying Low: Wanted crew may not be hired.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1093761/article/14404723#14404723",
-    rating: 1
+    rating: 1,
+    rules: createStoryRules("Laying Down the Law", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Laying Low',
+          content: ["Wanted crew may not be hired."]
+        }
+      }
+    ])
   },
   {
     title: "The Long Haul",

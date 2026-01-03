@@ -119,10 +119,77 @@ export const STORIES_R_S: StoryCardDef[] = [
     title: "Scavengers",
     intro: "This game only uses dice, cash, Leader cards, Supply decks, cargo, and contraband. Everything else stays in the box. A scavengers goal is simple, Find a Crew, Attack Another Crew, Keep Trying.",
     isPvP: true,
-    setupDescription: "Shuffle all Supply decks and lay them face down in the middle of thet able with the banks cash. All players start with $10,000 and 10 cargo. Roll for first player. First player chooses a Leader card then passes the Leader deck to the next player until each player has a Leader card.",
+    setupDescription: "Setup Overrides: Start with $10,000 & 10 Cargo (no Fuel/Parts). Leader Draft Only (no ships). Other components not used.",
     sourceUrl: "https://boardgamegeek.com/thread/3114859/scavenger-card-game-story-card",
     requiredExpansion: "community",
-    rating: 1
+    rating: 1,
+    rules: createStoryRules("Scavengers", [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 10000, description: "Scavenger's Hoard" },
+      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No fuel used." },
+      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No parts used." },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Starting Cargo',
+          content: ['Each player begins with ', { type: 'strong', content: '10 Cargo' }, '.']
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Scavenger Draft Rules',
+          content: [
+            { type: 'paragraph', content: [{ type: 'strong', content: 'No ships are used in this scenario.' }] },
+            { type: 'list', items: [
+              ["Roll for first player."],
+              ["First player chooses a Leader card, then passes the Leader deck to the next player until each player has chosen one."]
+            ]}
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'nav',
+        rule: {
+          title: 'Component Not Used',
+          content: ['Nav Decks are not used in this scenario.']
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'allianceReaver',
+        rule: {
+          title: 'Component Not Used',
+          content: ['Alliance Cruiser and Reaver ships are not used in this scenario.']
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Goal Override',
+          content: ['The standard goal step is not used. The goal is described on the main Story Card intro.']
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Component Not Used',
+          content: ['Job cards are not used in this scenario.']
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Setup Step Skipped',
+          content: ['Do not "Prime the Pump". Shuffle all Supply Decks and place them face down near the bank.']
+        }
+      },
+    ])
   },
   {
     title: "Shadows Over Duul",

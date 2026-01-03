@@ -1,20 +1,47 @@
 import { StoryCardDef } from '../../../types';
 import { SETUP_CARD_IDS } from '../../ids';
+import { createStoryRules } from '../utils';
 
 export const STORIES_T_X: StoryCardDef[] = [
   {
     title: "They're Part Of My Crew",
     intro: "Mal's last job went south in a bad way. As a result, some of the crew was captured by the Alliance and sent to unknown prison camps all over the 'Verse. For a price, Badger might let you in on a little secret.",
     isSolo: true,
-    setupDescription: "Use the Standard Set Up card with Malcolm as your Leader and Serenity as your ship. Take Jayne, Kaylee, and River as your starting crew and an Expanded Crew Quarters from Osiris for your ship. Shuffle Zoe, Wash, Inara, Book, and Simon, together. Place them face down as the \"Prisoner Deck\". They are your goals for this game.",
+    setupDescription: "Follow the 'Fixed Assignment' and 'Rescue Mission' overrides.",
     sourceUrl: "https://boardgamegeek.com/thread/3282832/my-fellow-browncoats-remastered-into-a-solo-and-co",
     requiredExpansion: "community",
-    requiredSetupCardId: SETUP_CARD_IDS.STANDARD
+    requiredSetupCardId: SETUP_CARD_IDS.STANDARD,
+    rules: createStoryRules("They're Part Of My Crew", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Fixed Assignment',
+          content: [
+            {
+              type: 'list',
+              items: [
+                ["Use Malcolm as your Leader and Serenity as your ship."],
+                ["Take Jayne, Kaylee, and River as your starting crew."],
+                ["Take an Expanded Crew Quarters from Osiris for your ship."],
+              ]
+            }
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Rescue Mission',
+          content: ["Shuffle Zoe, Wash, Inara, Book, and Simon, together. Place them face down as the \"Prisoner Deck\". They are your goals for this game."]
+        }
+      }
+    ])
   },
   {
     title: "The Truth Will Out",
     intro: "For too long the tragic fate of the Miranda colony has been covered up by the Alliance, and Mr. Universe would like to correct that, but lacks the manpower to do so on his own. Helping him is bound to be dangerous, but who wouldn't enjoy giving the Alliance a black eye?",
-    setupDescription: "Requires Blue Sun Expansion.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/image/4894306/pmw57",
     additionalRequirements: ["blue"]

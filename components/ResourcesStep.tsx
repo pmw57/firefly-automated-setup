@@ -25,7 +25,14 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
     [gameState]
   );
   
-  const { credits, fuel, parts, warrants, goalTokens, isFuelDisabled, isPartsDisabled, creditModifications, specialRules, smugglersBluesVariantAvailable } = resourceDetails;
+  const { 
+    credits, fuel, parts, warrants, goalTokens, 
+    isFuelDisabled, isPartsDisabled, creditModifications, specialRules, 
+    smugglersBluesVariantAvailable, 
+    creditModificationSource, creditModificationDescription,
+    fuelModificationSource, partsModificationSource, 
+    fuelModificationDescription, partsModificationDescription 
+  } = resourceDetails;
 
   const useRimVariant = !!gameState.challengeOptions.smugglers_blues_rim_variant;
 
@@ -110,6 +117,14 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
 
       {specialRules.map((rule, i) => <SpecialRuleBlock key={`special-rule-${i}`} {...rule} />)}
       
+      {creditModificationSource && creditModificationDescription && (
+        <SpecialRuleBlock
+          source={creditModificationSource === 'setupCard' ? 'setupCard' : 'story'}
+          title="Starting Funds Override"
+          content={[{ type: 'paragraph', content: [creditModificationDescription] }]}
+        />
+      )}
+
       <div className={`${cardBg} p-4 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300`}>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
@@ -126,6 +141,21 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
           <div className={`text-3xl font-bold font-western drop-shadow-sm ${creditColor} flex-shrink-0`}>${credits.toLocaleString()}</div>
         </div>
       </div>
+
+      {fuelModificationSource && fuelModificationDescription && (
+        <SpecialRuleBlock
+          source={fuelModificationSource === 'setupCard' ? 'setupCard' : 'story'}
+          title="Fuel Supply Override"
+          content={[{ type: 'paragraph', content: [fuelModificationDescription] }]}
+        />
+      )}
+      {partsModificationSource && partsModificationDescription && (
+        <SpecialRuleBlock
+          source={partsModificationSource === 'setupCard' ? 'setupCard' : 'story'}
+          title="Parts Supply Override"
+          content={[{ type: 'paragraph', content: [partsModificationDescription] }]}
+        />
+      )}
       
       <div className={`p-4 rounded-lg border shadow-sm flex items-center justify-between transition-colors duration-300 ${isFuelDisabled || isPartsDisabled ? disabledBg : `${cardBg} ${cardBorder}`}`}>
         <div>

@@ -5,7 +5,7 @@ export const STORIES_F_G: StoryCardDef[] = [
   {
     title: "Fruity Oat Bar",
     intro: "One of your crew was once used in an experiment by the Alliance. After escaping and joining your crew, they are now wanted. Before you are caught, you decide to get to the bottom of things, and discover the secret that the Alliance wants kept secret.",
-    setupDescription: "After choosing your Leader, search for any Wanted crew from any deck and add them to your crew. You must start in Alliance Space.",
+    setupDescription: "Follow the 'Special Crew & Placement' override.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1045716/article/13603393#13603393",
     rating: 1,
@@ -42,7 +42,7 @@ export const STORIES_F_G: StoryCardDef[] = [
   {
     title: "Going Legit",
     intro: "With the strong arm of the Alliance growing ever string, there's gettin' to be less and less room for naughty men like us to slip about... I head Blue Sun's in need of a legitimate transport company that can get government goods to the people what need 'em.",
-    setupDescription: "A PORT OF OPERATION: While choosing starting positions, players must choose a planetary sector within the Blue Sun system that is not a Contact od Supply sector. Mark the sector with a Haven token. Leave unused ships out of the box as a \"For Sale\" pile.",
+    setupDescription: "Follow the 'Special Setup' override.",
     sourceUrl: "https://boardgamegeek.com/thread/3560944/going-legit-story-card",
     requiredExpansion: "community",
     rules: createStoryRules("Going Legit", [
@@ -64,11 +64,29 @@ export const STORIES_F_G: StoryCardDef[] = [
   {
     title: "The Good Guys",
     intro: " ",
-    setupDescription: "Only MORAL leaders can be chosen. Exclude Niska from Starting Jobs. Immoral Jobs cannot be accepted. Remove Crow from the game.",
+    setupDescription: "Follow the 'Moral Compass' override. Exclude Niska from Starting Jobs.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1624739/story-card-the-good-guys",
     rules: createStoryRules("The Good Guys", [
-      { type: 'forbidContact', contact: 'Niska' }
+      { type: 'forbidContact', contact: 'Niska' },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Moral Compass',
+          content: [
+            {
+              type: 'list',
+              // FIX: Each item in a list must be an array (StructuredContent) to satisfy the type definition.
+              items: [
+                ["Only MORAL leaders can be chosen."],
+                ["Immoral Jobs cannot be accepted."],
+                ["Remove Crow from the game."]
+              ]
+            }
+          ]
+        }
+      }
     ]),
     rating: 1
   },

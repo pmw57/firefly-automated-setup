@@ -23,7 +23,7 @@ export const STORIES_M_O: StoryCardDef[] = [
   {
     title: "Mark Of A Great Captain",
     intro: "If you don't much care for the wellbeing of your crew, your crew won't care much for you. Do what you can to keep your chosen family together. Without them, who's gonna keep you company when you're floating in the black?",
-    setupDescription: "Each player chooses a Moral Leader. After all players collect their Starting Supplies, each player pays for an Expanded Crew Quarters ($600) and can now hold 3 more crew. Hiring Crew: Starting with 1st player, each player searches for and hires a crew card from any supply deck of their choice. Continue rounds of hiring crew until all player ships have a full set of crew on their ship. Remove all other crew cards from play. You may only use the crew you start with. 7 Disgruntled tokens will be used as a timer that triggers the arrest of 4 crew members from each ship. First player will discard 1 token at the start of each round of play.",
+    setupDescription: "Follow the 'Special Draft & Hiring Rules', 'Mandatory Ship Upgrade', and 'Game Timer' overrides.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/286230/mark-of-a-great-captain-story-card",
     rating: 2,
@@ -63,17 +63,33 @@ export const STORIES_M_O: StoryCardDef[] = [
   {
     title: "Master Of All",
     intro: "The 'Verse is a profitable place for a crew that can rise to any occasion. Be the first to prove their crew is ready for anything... without attracting the law.",
-    setupDescription: "In turn order, choose an empty planet with a Contact as a starting point. Draw only 3 of that contact's jobs for your Starting Jobs. Start with an Alliance Alert in play and replace it whenever a Goal Token is won or when any RESHUFFLE card is drawn.",
+    setupDescription: "Follow the 'Special Placement' and 'Special Job Draw' overrides. Start with an Alliance Alert card.",
     sourceUrl: "https://boardgamegeek.com/thread/2941994/master-of-all-story-card",
     requiredExpansion: "community",
     rules: createStoryRules("Master Of All", [
-      { type: 'addFlag', flag: 'startWithAlertCard' }
+      { type: 'addFlag', flag: 'startWithAlertCard' },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Special Placement',
+          content: ["In turn order, choose an empty planet with a Contact as a starting point."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Special Job Draw',
+          content: ["Draw only 3 of that contact's jobs for your Starting Jobs."]
+        }
+      }
     ])
   },
   {
     title: "Miranda",
     intro: "You suspect that there is a hidden message in the Fruity Oaty Bars advertisement recently broadcast by the Alliance network. Decoding it may reveal something of value or maybe it's just a new form of subliminal advertising.",
-    setupDescription: "Place your Firefly on a supply world to begin the game. Draw 1 starting crew from any deck by flipping the draw pile and taking the first named character that is revealed.",
+    setupDescription: "Follow the 'Special Placement & Crew Draw' override.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1135128/article/1512332#1512332",
     rating: 2,
@@ -132,11 +148,18 @@ export const STORIES_M_O: StoryCardDef[] = [
     intro: " ",
     isPvP: true,
     sourceUrl: "https://boardgamegeek.com/thread/1076645/story-card-my-number-one-guy-player-vs-player",
-    setupDescription: "Draw three starting jobs from a single contact, and two other jobs from any other contacts. You may only keep 3 jobs.",
+    setupDescription: "Follow the 'Special Job Draw' override.",
     rating: 0,
     requiredExpansion: "community",
     rules: createStoryRules("My Number One Guy", [
-      { type: 'addFlag', flag: 'customJobDraw' }
+      { 
+        type: 'addSpecialRule', 
+        category: 'jobs',
+        rule: {
+          title: 'Special Job Draw',
+          content: ["Draw three starting jobs from a single contact, and two other jobs from any other contacts. You may only keep 3 jobs."]
+        }
+      }
     ])
   },
   {
@@ -159,7 +182,7 @@ export const STORIES_M_O: StoryCardDef[] = [
         description: "Use 17 Disgruntled tokens as the game timer."
       }
     ],
-    setupDescription: "Pull all Mudders from Supply decks. Shuffle together the Foreman plus 3 Mudders per player. Place them face up. If the Foreman is on top after a shuffle, reshuffle. ",
+    setupDescription: "Follow the 'Custom Mudder Deck' override.",
     sourceUrl: "https://boardgamegeek.com/filepage/294565/new-heroes-of-canton-co-op-story-card",
     requiredExpansion: "community",
     rules: createStoryRules("New Heroes of Canton", [

@@ -11,8 +11,10 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
 
   const {
     specialRules,
-    alliancePlacement,
-    reaverPlacement,
+    standardAlliancePlacement,
+    standardReaverPlacement,
+    allianceOverride,
+    reaverOverride
   } = React.useMemo(() => 
     getAllianceReaverDetails(gameState, overrides), 
     [gameState, overrides]
@@ -34,25 +36,35 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   const reaverTitle = isDark ? 'text-red-300' : 'text-red-900';
   const reaverText = isDark ? 'text-red-200' : 'text-red-800';
 
+  const showStandardSection = !allianceOverride || !reaverOverride;
+
   return (
     <div className="space-y-4">
       {specialRules.map((rule, index) => (
-        <SpecialRuleBlock key={index} source={rule.source} title={rule.title} content={rule.content} />
+        <SpecialRuleBlock key={`special-${index}`} {...rule} />
       ))}
+      {allianceOverride && <SpecialRuleBlock key="alliance-override" {...allianceOverride} />}
+      {reaverOverride && <SpecialRuleBlock key="reaver-override" {...reaverOverride} />}
 
-      <div className={`${standardContainerBg} p-4 rounded-lg border ${standardContainerBorder} shadow-sm mt-4 transition-colors duration-300`}>
-        <h3 className={`text-lg font-bold ${headerColor} mb-3 font-western tracking-wide border-b-2 ${headerBorder} pb-1`}>Standard Ship Placement</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className={`p-3 rounded border ${allianceBoxBg}`}>
-            <strong className={`block text-sm uppercase mb-1 ${allianceTitle}`}>Alliance Cruiser</strong>
-            <p className={`text-sm ${allianceText}`}>{alliancePlacement}</p>
-          </div>
-          <div className={`p-3 rounded border ${reaverBoxBg}`}>
-            <strong className={`block text-sm uppercase mb-1 ${reaverTitle}`}>Reaver Cutter</strong>
-            <p className={`text-sm ${reaverText}`}>{reaverPlacement}</p>
+      {showStandardSection && (
+        <div className={`${standardContainerBg} p-4 rounded-lg border ${standardContainerBorder} shadow-sm mt-4 transition-colors duration-300`}>
+          <h3 className={`text-lg font-bold ${headerColor} mb-3 font-western tracking-wide border-b-2 ${headerBorder} pb-1`}>Standard Ship Placement</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {!allianceOverride && (
+              <div className={`p-3 rounded border ${allianceBoxBg}`}>
+                <strong className={`block text-sm uppercase mb-1 ${allianceTitle}`}>Alliance Cruiser</strong>
+                <p className={`text-sm ${allianceText}`}>{standardAlliancePlacement}</p>
+              </div>
+            )}
+            {!reaverOverride && (
+              <div className={`p-3 rounded border ${reaverBoxBg}`}>
+                <strong className={`block text-sm uppercase mb-1 ${reaverTitle}`}>Reaver Cutter</strong>
+                <p className={`text-sm ${reaverText}`}>{standardReaverPlacement}</p>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
