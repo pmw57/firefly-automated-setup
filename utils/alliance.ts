@@ -4,14 +4,35 @@ import {
     AllianceReaverDetails, 
     SpecialRule, 
     SetAllianceModeRule,
-    AddFlagRule
+    AddFlagRule,
+    RuleSourceType
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
+
+// FIX: Added a helper function to safely map the broader RuleSourceType
+// to the narrower source type expected by SpecialRuleBlock. This resolves the
+// TypeScript error by explicitly handling 'challenge' and 'optionalRule' cases.
+const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source'] => {
+  if (source === 'challenge') {
+    return 'warning';
+  }
+  if (source === 'optionalRule') {
+    return 'info';
+  }
+  return source;
+};
 
 export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: StepOverrides): AllianceReaverDetails => {
   const allRules = getResolvedRules(gameState);
   const specialRules: SpecialRule[] = [];
   
+  let allianceOverride: SpecialRule | undefined;
+  let reaverOverride: SpecialRule | undefined;
+
+  const standardAlliancePlacement = "Place the Cruiser at Londinium.";
+  const standardReaverPlacement = "Place 1 Cutter at the Firefly logo (Regina/Osiris).";
+
+  // --- Process general alert token rules ---
   const allianceModeRule = allRules.find(r => r.type === 'setAllianceMode') as SetAllianceModeRule | undefined;
   const allianceMode = allianceModeRule?.mode || stepOverrides.allianceMode;
 
@@ -44,36 +65,68 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
   if (hasRuleFlag(allRules, 'placeMixedAlertTokens')) {
     specialRules.push({ source: 'story', title: 'Verse-Wide Tension', content: ['Place ', { type: 'strong', content: '3 Alliance Alert Tokens' }, " in the 'Verse:", { type: 'list', items: [['1 in ', { type: 'strong', content: 'Alliance Space' }], ['1 in ', { type: 'strong', content: 'Border Space' }], ['1 in ', { type: 'strong', content: 'Rim Space' }]] }] });
   }
-
-  const alliancePlacement = allianceMode === 'extra_cruisers' ? "Place a Cruiser at Regulus AND Persephone." : "Place the Cruiser at Londinium.";
   
+  // --- Process Alliance Cruiser placement ---
+  const finalAlliancePlacement = allianceMode === 'extra_cruisers' ? "Place a Cruiser at Regulus AND Persephone." : standardAlliancePlacement;
+  if (finalAlliancePlacement !== standardAlliancePlacement) {
+    allianceOverride = {
+        // FIX: Use mapping function to prevent type error.
+        source: mapRuleSourceToBlockSource(allianceModeRule?.source || 'setupCard'),
+        title: 'Alliance Cruiser Placement Override',
+        content: [finalAlliancePlacement]
+    };
+  }
+
+  // --- Process Reaver Cutter placement ---
   const huntForTheArcRule = allRules.find(
     (r): r is AddFlagRule => r.type === 'addFlag' && r.flag === 'huntForTheArcReaverPlacement'
   );
-
   const hasBlueSunReavers = hasRuleFlag(allRules, 'blueSunReaverPlacement');
-  const totalReavers = hasBlueSunReavers ? 3 : 1;
-  let reaverPlacement: string;
-
+  
+  let finalReaverPlacement: string;
+  let reaverOverrideSource: RuleSourceType = 'expansion';
+  let reaverOverrideTitle = 'Reaver Placement';
+  
   if (huntForTheArcRule) {
+      reaverOverrideSource = huntForTheArcRule.source;
+      reaverOverrideTitle = 'Special Reaver Placement';
       const storyReavers = huntForTheArcRule.reaverShipCount || 1;
+      const totalReavers = hasBlueSunReavers ? 3 : 1;
       const remainingReavers = totalReavers - storyReavers;
       
       const placementParts = [
-          `Hunt For The Arc Placement: Place ${storyReavers} Reaver ship in the Border Space sector directly below Valentine.`
+          `Place ${storyReavers} Reaver ship in the Border Space sector directly below Valentine.`
       ];
       
       if (remainingReavers > 0) {
-          // Standard Blue Sun rule for the rest
           placementParts.push(`Place the remaining ${remainingReavers} Cutter(s) in the border sectors closest to Miranda.`);
       }
-      reaverPlacement = placementParts.join(' ');
+      finalReaverPlacement = placementParts.join(' ');
 
+  } else if (hasBlueSunReavers) {
+      reaverOverrideTitle = 'Blue Sun Reavers';
+      finalReaverPlacement = "Place 3 Cutters in the border sectors closest to Miranda.";
   } else {
-      reaverPlacement = hasBlueSunReavers
-          ? "Place 3 Cutters in the border sectors closest to Miranda." 
-          : "Place 1 Cutter at the Firefly logo (Regina/Osiris).";
+      finalReaverPlacement = standardReaverPlacement;
   }
 
-  return { specialRules, alliancePlacement, reaverPlacement };
+  if (finalReaverPlacement !== standardReaverPlacement) {
+    reaverOverride = {
+        // FIX: Use mapping function to prevent type error.
+        source: mapRuleSourceToBlockSource(reaverOverrideSource),
+        title: reaverOverrideTitle,
+        content: [finalReaverPlacement]
+    };
+  }
+
+  return { 
+    specialRules, 
+    standardAlliancePlacement,
+    standardReaverPlacement,
+    allianceOverride,
+    reaverOverride,
+    // FIX: Add final resolved placement strings to the return object to satisfy legacy tests.
+    alliancePlacement: finalAlliancePlacement,
+    reaverPlacement: finalReaverPlacement,
+  };
 };
