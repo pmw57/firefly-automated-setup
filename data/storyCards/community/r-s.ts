@@ -81,6 +81,17 @@ export const STORIES_R_S: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/9306408/pmw57"
   },
   {
+    title: "Ruining It For Everyone",
+    maxPlayerCount: 2,
+    isPvP: true,
+    intro: "During the war you watched your twin get cut down in a hail of shrapnel. You've lived an empty existence since that day making ends meet and trying to keep flying as best you can. Then you get a message from your Ma out on the Rim. \"Come home right away.\"\n\nSo you fly to St. Albans, Red Sun to see your Mother.\n\nOnce there, your twin (Who wasn't dead!) steals your ship and sets about ruining your life. Your twin has the exact same abilities as you do. Your twin may not discard any of your inactive jobs.",
+    sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
+    setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship.",
+    rules: createStoryRules("Ruining It For Everyone", [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Funds" }
+    ])
+  },
+  {
     title: "Save River Tam",
     intro: "River Tam is being held in secure, secret government facility. Beloved sister, daughter of the ridiculously wealthy, and super useful government secret weapon. Whatever your reasons, you are on a mission to break River out.",
     requiredExpansion: "community",
