@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { GameState } from '../types';
+import { GameState } from '../types/index';
 import { getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../utils/ui';
 import { useTheme } from './ThemeContext';
 import { getActiveExpansions, getActiveAdvancedRules, getActiveStoryChallenges, getActiveStoryCard } from '../utils/selectors/story';

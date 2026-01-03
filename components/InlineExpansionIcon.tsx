@@ -1,7 +1,5 @@
-
-
 import React, { useState } from 'react';
-import { ExpansionId } from '../types';
+import { ExpansionId } from '../types/index';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { useTheme } from './ThemeContext';
 import { SPRITE_SHEET_URL } from '../data/constants';

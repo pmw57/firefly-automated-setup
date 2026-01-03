@@ -1,7 +1,15 @@
-import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule, Step } from '../../types';
+import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule, Step } from '../../types/index';
 import { STEP_IDS } from '../../data/ids';
 import { getResolvedRules, hasRuleFlag } from './rules';
 import { getSetupCardById } from './story';
+
+/**
+ * Determines if the "Flying Solo" setup card is a valid option.
+ * This requires solo mode and the 10th Anniversary expansion.
+ */
+export const isFlyingSoloEligible = (gameState: GameState): boolean => {
+  return gameState.gameMode === 'solo' && gameState.expansions.tenth;
+};
 
 export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     const rules = card.rules || [];

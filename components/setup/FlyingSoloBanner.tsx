@@ -1,7 +1,5 @@
-
-
 import React from 'react';
-import { SetupCardDef } from '../../types';
+import { SetupCardDef } from '../../types/index';
 import { ExpansionIcon } from '../ExpansionIcon';
 import { useTheme } from '../ThemeContext';
 import { PageReference } from '../PageReference';

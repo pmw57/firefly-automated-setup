@@ -64,7 +64,7 @@ describe('rules/prime', () => {
       const storyTitle = "A Friend In Every Port";
       const state: GameState = {
         ...stateForStandardPriming,
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
       };
       const details = getPrimeDetails(state, {});
       expect(details.effectiveMultiplier).toBe(2);
@@ -75,7 +75,7 @@ describe('rules/prime', () => {
       const storyTitle = "A Friend In Every Port";
       const state: GameState = {
         ...stateForStandardPriming,
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
       };
       const details = getPrimeDetails(state, { primeMode: 'blitz' });
       expect(details.effectiveMultiplier).toBe(2); // Blitz is 2x

@@ -1,4 +1,4 @@
-import { GameState, SetupRule } from '../../types';
+import { GameState, SetupRule } from '../../types/index';
 import { getSetupCardById } from './story';
 import { getActiveStoryCard } from './story';
 import { EXPANSIONS_METADATA } from '../../data/expansions';

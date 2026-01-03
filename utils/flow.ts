@@ -1,4 +1,4 @@
-import { StepOverrides, GameState, Step, SetupCardStep, SetupContentData } from '../types';
+import { StepOverrides, GameState, Step, SetupCardStep, SetupContentData } from '../types/index';
 import { SETUP_CONTENT } from '../data/steps';
 import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
 import { getSetupCardById } from './selectors/story';

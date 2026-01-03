@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import SetupWizard from './components/SetupWizard';
 import { InstallPWA } from './components/InstallPWA';
-import { GameStateProvider } from './components/GameStateContext';
 import { UpdatePrompt } from './components/UpdatePrompt';
 import { HelpModal } from './components/HelpModal';
 import { QrModal } from './components/QrModal';
@@ -132,9 +131,7 @@ const App = (): React.ReactElement => {
       </header>
 
       <main className="container mx-auto px-2 sm:px-4 relative z-10">
-        <GameStateProvider>
-          <SetupWizard isDevMode={isDevMode} />
-        </GameStateProvider>
+        <SetupWizard isDevMode={isDevMode} />
       </main>
 
       {isDevMode && <DevPanel />}

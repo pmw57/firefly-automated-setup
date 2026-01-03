@@ -1,5 +1,5 @@
 import React from 'react';
-import { DraftState } from '../types';
+import { DraftState } from '../types/index';
 import { useTheme } from './ThemeContext';
 
 interface DiceControlsProps {
