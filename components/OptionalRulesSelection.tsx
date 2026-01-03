@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { DisgruntledDieOption } from '../types/index';
 import { Button } from './Button';
@@ -104,7 +105,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
                 />
             )}
 
-            {isSolo && (
+            {isSolo && has10th && (
                 <SoloRulesSection 
                     soloOptions={gameState.soloOptions}
                     timerConfig={gameState.timerConfig}
