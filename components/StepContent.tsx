@@ -50,7 +50,6 @@ const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
   [STEP_IDS.C5]: ResourcesStep,
   [STEP_IDS.C6]: JobStep,
   [STEP_IDS.C_PRIME]: PrimePumpStep,
-  [STEP_IDS.D_FIRST_GOAL]: MissionDossierStep,
   [STEP_IDS.D_RIM_JOBS]: JobStep,
   [STEP_IDS.D_HAVEN_DRAFT]: DraftStep,
   [STEP_IDS.D_GAME_LENGTH_TOKENS]: GameLengthTokensStep,
@@ -103,7 +102,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode }: S
       );
   }
 
-  const isMissionDossier = step.id === STEP_IDS.C4 || step.id === STEP_IDS.D_FIRST_GOAL;
+  const isMissionDossier = step.id === STEP_IDS.C4;
   const showNav = !isMissionDossier;
   const displayTitle = step.data?.title || step.id;
   

@@ -1,5 +1,3 @@
-
-
 import { SetupContentTemplate } from '../types/index';
 
 export const SETUP_CONTENT: Record<string, SetupContentTemplate> = {
@@ -13,7 +11,6 @@ export const SETUP_CONTENT: Record<string, SetupContentTemplate> = {
   C_PRIME: { type: 'core' },
 
   // Distinct Dynamic Steps
-  D_FIRST_GOAL: { type: 'dynamic' },
   D_RIM_JOBS: { type: 'dynamic' },
   D_TIME_LIMIT: { type: 'dynamic' },
   D_SHUTTLE: { type: 'dynamic' },
@@ -34,7 +31,6 @@ export const STEP_QUOTES: { [key: string]: { text: string; author: string } } = 
   'C5': { text: "Ten percent of nothin' is... let me do the math here... nothin' into nothin', carry the nothin'...", author: "Jayne Cobb" },
   'C6': { text: "I do the job, and then I get paid.", author: "Mal Reynolds" },
   'C_PRIME': { text: "Everything's shiny, Cap'n. Not to fret.", author: "Kaylee Frye" },
-  'D_FIRST_GOAL': { text: "We have done the impossible, and that makes us mighty.", author: "Mal Reynolds" },
   'D_RIM_JOBS': { text: "We're in the raggedy edge. Don't push me, and I won't push you.", author: "Mal Reynolds" },
   'D_TIME_LIMIT': { text: "Time for some thrilling heroics.", author: "Jayne Cobb" },
   'D_SHUTTLE': { text: "It's a short range transport.", author: "Manual" },

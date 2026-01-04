@@ -48,7 +48,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   useEffect(() => {
     const storyCard = getActiveStoryCard(gameState);
     if (storyCard) {
-      const storyStepIndex = flow.findIndex(s => s.id === STEP_IDS.C4 || s.id === STEP_IDS.D_FIRST_GOAL);
+      const storyStepIndex = flow.findIndex(s => s.id === STEP_IDS.C4);
       const overriddenIds = detectOverrides(storyCard, flow, storyStepIndex);
       if (overriddenIds.length > 0 && overriddenIds.join(',') !== gameState.overriddenStepIds.join(',')) {
         dispatch({ type: ActionType.SET_STORY_OVERRIDES, payload: overriddenIds });
@@ -85,7 +85,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   }, [flow.length, setCurrentStepIndex]);
 
   const handleNext = useCallback(() => {
-    const isStoryStep = flow[currentStepIndex]?.id === STEP_IDS.C4 || flow[currentStepIndex]?.id === STEP_IDS.D_FIRST_GOAL;
+    const isStoryStep = flow[currentStepIndex]?.id === STEP_IDS.C4;
     
     if (isStoryStep && unacknowledgedOverrides.length > 0) {
       const affectedSteps = flow.filter(step => unacknowledgedOverrides.includes(step.id));

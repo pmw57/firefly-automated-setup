@@ -1,4 +1,4 @@
-import { StepOverrides, GameState, Step, SetupCardStep, SetupContentData } from '../types/index';
+import { GameState, Step, SetupCardStep, SetupContentData } from '../types/index';
 import { SETUP_CONTENT } from '../data/steps';
 import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
 import { getSetupCardById } from './selectors/story';
@@ -47,32 +47,34 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
 
     let steps = stepDefs
         .map(createStep)
-        .filter((step): step is Step => step !== null);
+        .filter((step: Step | null): step is Step => step !== null);
 
     // If a combinable card (like Flying Solo) is active, merge its specific overrides.
     if (isCombinable) {
         const combinableCard = getSetupCardById(state.setupCardId)!;
+        const combinableStepMap = new Map(combinableCard.steps.map(s => [s.id, s]));
         
-        const combinableOverrides = combinableCard.steps.reduce((acc, step) => {
-            if (step.overrides) {
-                acc[step.id] = step.overrides;
-            }
-            return acc;
-        }, {} as Record<string, StepOverrides>);
-        
-        steps = steps.map(step => {
-            if (combinableOverrides[step.id]) {
+        steps = steps.map((step: Step) => {
+            const combinableStepDef = combinableStepMap.get(step.id);
+            if (combinableStepDef && step.data) {
+                // A matching step was found. Override properties from the combinable card.
                 return {
                     ...step,
-                    overrides: { ...step.overrides, ...combinableOverrides[step.id] },
+                    data: {
+                        ...step.data,
+                        title: combinableStepDef.title // Use title from combinable card
+                    },
+                    overrides: { ...step.overrides, ...combinableStepDef.overrides },
+                    page: combinableStepDef.page || step.page,
+                    manual: combinableStepDef.manual || step.manual,
                 };
             }
             return step;
         });
 
         // Add any unique steps from the combinable card that don't exist in the base card's flow.
-        combinableCard.steps.forEach(combinableStepDef => {
-            if (!steps.some(s => s.id === combinableStepDef.id)) {
+        combinableCard.steps.forEach((combinableStepDef: SetupCardStep) => {
+            if (!steps.some((s: Step) => s.id === combinableStepDef.id)) {
                 const newStep = createStep(combinableStepDef);
                 if (newStep) steps.push(newStep);
             }

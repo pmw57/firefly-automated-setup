@@ -41,7 +41,6 @@ const getStepDisplay = (step: Step): { label: string; number?: string } => {
       [STEP_IDS.C3]: 'Draft',
       [STEP_IDS.D_HAVEN_DRAFT]: 'Havens',
       [STEP_IDS.C4]: 'Goal',
-      [STEP_IDS.D_FIRST_GOAL]: 'Goal',
       [STEP_IDS.C5]: 'Cash',
       [STEP_IDS.C6]: 'Jobs',
       [STEP_IDS.C_PRIME]: 'Prime',

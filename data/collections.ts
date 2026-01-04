@@ -2,13 +2,14 @@ import { CampaignSetupNote } from '../types/index';
 import { STEP_IDS } from './ids';
 
 export const SOLO_EXCLUDED_STORIES: string[] = [
-  "Awful Lonely In The Big Black",
-  "The Great Recession",
-  "The Well's Run Dry",
+  "Aces Up Your Sleeve",
   "It's All In Who You Know",
-  "The Scavenger's 'Verse",
   "Smuggler's Blues",
-  "Aces Up Your Sleeve"
+  "The Great Recession",
+  "The Scavenger's 'Verse",
+  "The Well's Run Dry",
+  // FIX: Add classic solo story to the exclusion list for Flying Solo mode.
+  "Awful Lonely In The Big Black",
 ];
 
 /**

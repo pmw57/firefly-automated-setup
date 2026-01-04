@@ -1,5 +1,3 @@
-
-
 import { SetupCardDef, SetupCardStep, SetupRule } from '../types/index';
 import { STEP_IDS, SETUP_CARD_IDS, CONTACT_NAMES } from './ids';
 
@@ -14,7 +12,6 @@ const BASE_TITLES = {
     C5: "Starting Supplies",
     C6: "Starting Jobs",
     C_PRIME: "Priming The Pump",
-    D_FIRST_GOAL: "Goal of the Game",
     D_RIM_JOBS: "Rim Space Jobs",
     D_TIME_LIMIT: "Only So Much Time",
     D_SHUTTLE: "Choose Shuttles",
@@ -127,7 +124,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setJobMode', mode: 'no_jobs' },
     ]),
     steps: [
-      { id: STEP_IDS.D_FIRST_GOAL, title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
+      { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}` },
       { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}`, page: 22, manual: 'Core' },
       { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
       { id: STEP_IDS.D_BC_CAPITOL, title: `4. ${BASE_TITLES.D_BC_CAPITOL}` },
@@ -146,7 +143,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setPrimeMode', mode: 'blitz' },
     ]),
     steps: [
-      { id: STEP_IDS.D_FIRST_GOAL, title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
+      { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}` },
       { id: STEP_IDS.C1, title: `2. Nav Setup` },
       { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
       { id: STEP_IDS.C3, title: `4. ${BASE_TITLES.C3}` },
@@ -205,7 +202,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setNavMode', mode: 'flying_solo' }
     ]),
     steps: [
-      { id: STEP_IDS.D_FIRST_GOAL, title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
+      { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}` },
       { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}` },
       { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
       { id: STEP_IDS.C3, title: `4. ${BASE_TITLES.C3}` },
@@ -230,7 +227,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       }
     ]),
     steps: [
-      { id: STEP_IDS.D_FIRST_GOAL, title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
+      { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}` },
       { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}` },
       { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
       { id: STEP_IDS.C3, title: `4. ${BASE_TITLES.C3}` },
@@ -249,7 +246,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setNavMode', mode: 'browncoat' },
     ]),
     steps: [
-      { id: STEP_IDS.D_FIRST_GOAL, title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
+      { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}` },
       { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}`, page: 54, manual: '10th AE'},
       { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
       { id: STEP_IDS.D_HAVEN_DRAFT, title: `4. ${BASE_TITLES.D_HAVEN_DRAFT}` },

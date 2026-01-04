@@ -1,18 +1,39 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
 import { ActionType } from '../../../state/actions';
-import { hasRuleFlag } from '../../../utils/selectors/rules';
+import { hasRuleFlag, getResolvedRules } from '../../../utils/selectors/rules';
 import { getActiveStoryCard } from '../../../utils/selectors/story';
-import { StandardTimerRules } from './timer/StandardTimerRules';
 import { UnpredictableTimerRules } from './timer/UnpredictableTimerRules';
+import { SpecialRule } from '../../../types';
 
 export const GameLengthTokensStep: React.FC = () => {
     const { state: gameState, dispatch } = useGameState();
     const activeStoryCard = getActiveStoryCard(gameState);
     const { theme } = useTheme();
     const isDark = theme === 'dark';
+    const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
+
+    const specialRules = useMemo(() => {
+        const rules: SpecialRule[] = [];
+        allRules.forEach(rule => {
+            if (rule.type === 'addSpecialRule' && rule.category === 'soloTimer') {
+                if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
+                    rules.push({
+                        source: rule.source as SpecialRule['source'],
+                        ...rule.rule
+                    });
+                }
+            }
+        });
+        return rules;
+    }, [allRules]);
+
+    // Check if a story card provides its own timer setup to replace the standard one.
+    const replacesTimerSetup = useMemo(() => 
+        hasRuleFlag(allRules, 'replacesSoloTimerSetup'), 
+    [allRules]);
 
     if (!dispatch || !activeStoryCard) return null;
 
@@ -23,13 +44,15 @@ export const GameLengthTokensStep: React.FC = () => {
     }
     
     const { shesTrouble, recipeForUnpleasantness } = gameState.soloOptions || {};
-    const { mode, unpredictableSelectedIndices, randomizeUnpredictable } = gameState.timerConfig;
 
     const toggleTimerMode = () => {
         dispatch({ type: ActionType.TOGGLE_TIMER_MODE });
     };
 
-    // FIX: Reverted to use `isCampaign` and `campaignStoriesCompleted` to match the updated GameState interface.
+    const toggleUnpredictableToken = (index: number) => {
+        dispatch({ type: ActionType.TOGGLE_UNPREDICTABLE_TOKEN, payload: index });
+    };
+
     const tokensToRemove = gameState.isCampaign ? gameState.campaignStoriesCompleted * 2 : 0;
     const totalTokens = Math.max(0, 20 - tokensToRemove);
     
@@ -38,8 +61,11 @@ export const GameLengthTokensStep: React.FC = () => {
 
     return (
         <div className="space-y-6">
+            {specialRules.map((rule, i) => (
+                <SpecialRuleBlock key={`special-${i}`} {...rule} />
+            ))}
+
             {tokensToRemove > 0 && (
-                // FIX: Updated to `campaignStoriesCompleted` and changed title to "Campaign Rule".
                 <SpecialRuleBlock source="setupCard" title="Campaign Rule: Time Catches Up" content={["Removing ", { type: 'strong', content: `${tokensToRemove} tokens` }, " from the timer for your ", { type: 'strong', content: `${gameState.campaignStoriesCompleted}` }, " completed stories."]} />
             )}
 
@@ -68,15 +94,13 @@ export const GameLengthTokensStep: React.FC = () => {
                     </div>
                 </div>
             )}
-
-            {mode === 'standard' ? (
-                <StandardTimerRules totalTokens={totalTokens} />
-            ) : (
+            
+            {!replacesTimerSetup && (
                 <UnpredictableTimerRules 
-                    unpredictableSelectedIndices={unpredictableSelectedIndices}
-                    randomizeUnpredictable={randomizeUnpredictable}
+                    timerConfig={gameState.timerConfig}
                     totalTokens={totalTokens}
                     onToggleTimerMode={toggleTimerMode}
+                    onToggleUnpredictableToken={toggleUnpredictableToken}
                 />
             )}
         </div>

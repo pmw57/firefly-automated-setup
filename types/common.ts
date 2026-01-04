@@ -27,7 +27,8 @@ export interface Expansions {
 export interface TimerConfig {
     mode: 'standard' | 'unpredictable';
     unpredictableSelectedIndices: number[];
-    randomizeUnpredictable: boolean;
+    // FIX: Added optional property to fix type errors in utils/ui.ts and related tests.
+    randomizeUnpredictable?: boolean;
 }
 
 export interface SoloOptions {
