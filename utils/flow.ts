@@ -80,6 +80,28 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
             }
         });
     }
+
+    // Dynamically adjust titles for solo mode to be singular.
+    if (state.playerCount === 1) {
+        steps = steps.map((step: Step) => {
+            if (step.id === STEP_IDS.C3 && step.data) {
+                // "Choose Ships & Leaders" -> "Choose Ship & Leader"
+                const newTitle = step.data.title.replace('Ships', 'Ship').replace('Leaders', 'Leader');
+                return { ...step, data: { ...step.data, title: newTitle } };
+            }
+            if (step.id === STEP_IDS.D_HAVEN_DRAFT && step.data) {
+                // "Choose Leaders, Havens & Ships" -> "Choose Leader, Haven & Ship"
+                const newTitle = step.data.title.replace('Leaders', 'Leader').replace('Havens', 'Haven').replace('Ships', 'Ship');
+                return { ...step, data: { ...step.data, title: newTitle } };
+            }
+            if (step.id === STEP_IDS.D_SHUTTLE && step.data) {
+                // "Choose Shuttles" -> "Choose Shuttle"
+                const newTitle = step.data.title.replace('Shuttles', 'Shuttle');
+                return { ...step, data: { ...step.data, title: newTitle } };
+            }
+            return step;
+        });
+    }
     
     return steps;
 };

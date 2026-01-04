@@ -202,13 +202,14 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setNavMode', mode: 'flying_solo' }
     ]),
     steps: [
-      { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}` },
-      { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}` },
-      { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}` },
-      { id: STEP_IDS.C3, title: `4. ${BASE_TITLES.C3}` },
-      { id: STEP_IDS.C5, title: `5. ${BASE_TITLES.C5}` },
-      { id: STEP_IDS.C6, title: `6. ${BASE_TITLES.C6}` },
-      { id: STEP_IDS.C_PRIME, title: `7. ${BASE_TITLES.C_PRIME}` },
+      // FIX: Add missing 'title' property to steps to conform to the SetupCardStep type.
+      { id: STEP_IDS.C4, title: BASE_TITLES.C4 },
+      { id: STEP_IDS.C1, title: BASE_TITLES.C1 },
+      { id: STEP_IDS.C2, title: BASE_TITLES.C2 },
+      { id: STEP_IDS.C3, title: BASE_TITLES.C3 },
+      { id: STEP_IDS.C5, title: BASE_TITLES.C5 },
+      { id: STEP_IDS.C6, title: BASE_TITLES.C6 },
+      { id: STEP_IDS.C_PRIME, title: BASE_TITLES.C_PRIME },
       { id: STEP_IDS.D_GAME_LENGTH_TOKENS, title: `8. ${BASE_TITLES.D_GAME_LENGTH_TOKENS}` }
     ]
   },
