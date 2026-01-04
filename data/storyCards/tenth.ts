@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../types';
 import { CONTACT_NAMES } from '../ids';
 import { createStoryRules } from './utils';
@@ -6,7 +7,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
   {
     title: "A Friend In Every Port",
     intro: "High places, low places... When you sail the Black for a living, best to have friends in ALL places.",
-    setupDescription: "Draft 3 specific contact decks for starting jobs. Priming the Pump discards 2x cards. Requires Blue Sun & Kalidasa.",
+    setupDescription: "Starting Jobs: Starting with the last player t choose a Leader, each player chooses 1 Job from 3 different Contacts. Mr. Universe cannot be chosen for starting Jobs. Priming the Pump: Reveal the top 5 cards of each Supply deck. Place the revealed cards in their discard piles.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     sourceUrl: "https://boardgamegeek.com/image/8103874/sjliver",
@@ -28,6 +29,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
   {
     title: "Aces Up Your Sleeve",
     intro: "Prove you're the best - or luckiest - crew around by collecting tales of your exploits.",
+    setupDescription: "Create a stack of Alliance Alert Tokens equal to four times the number of players.",
     requiredExpansion: "tenth",
     sourceUrl: "https://boardgamegeek.com/image/8103873/sjliver"
   },
@@ -41,7 +43,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
   {
     title: "It's a Mad, Mad, Mad, Mad 'Verse!",
     intro: "A mishap at Eavesdown Docks seriously injures a renowned swindler. Before passing, he shares clues that will lead to a hidden fortune. News spreads fast, igniting a frenzied race.",
-    setupDescription: "All ships start at Persephone. Requires Kalidasa.",
+    setupDescription: "Players begin at Persephone.",
     requiredExpansion: "tenth",
     additionalRequirements: ["kalidasa"],
     sourceUrl: "https://boardgamegeek.com/image/8103877",
@@ -52,7 +54,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
   {
     title: "Let's Be Bad Guys",
     intro: "It takes a particular kind of sinner to build lasting bridges with Adelai Niska. Are you that brand of renegade?",
-    setupDescription: "Niska is forbidden for Starting Jobs.",
+    setupDescription: "Players may not deal with Niska until they are Solid with at least one other Contact. Jobs for Niska are not dealt during Set Up.",
     requiredExpansion: "tenth",
     sourceUrl: "https://boardgamegeek.com/image/8103878/sjliver",
     rules: createStoryRules("Let's Be Bad Guys", [
@@ -62,6 +64,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
   {
     title: "Red Skies Over Ransom",
     intro: "Reavers are pushing out more and more, making delivery runs almost impossible. Keelhauler Transport & Trading Co. is hiring skilled pilots, madcap mercs, and crafty smugglers to haul needed goods to their Rim distributors.",
+    setupDescription: "Reaver Signting!: Treat New Canaan, Blue Sun as if there is a Reaver Cutter there at all times.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue"],
     sourceUrl: "https://boardgamegeek.com/image/8103879/sjliver"
@@ -69,7 +72,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
   {
     title: "Running On Empty",
     intro: "Dust Devil attacks on refineries have spiked fuel prices. Higher costs and shortages are squeezing the entire 'Verse, causing worlds of hurt. The perpetrators must be found!",
-    setupDescription: "Receive +$1200 Starting Credits. No Starting Fuel/Parts. Requires Blue Sun & Kalidasa.",
+    setupDescription: "Players do not receive free starting Fuel or Parts. Each player begins with an extra $1200.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     sourceUrl: "https://boardgamegeek.com/image/8103880/sjliver",

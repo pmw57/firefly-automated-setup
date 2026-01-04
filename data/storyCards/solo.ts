@@ -1,8 +1,41 @@
+
 import { StoryCardDef } from '../../types';
 import { SETUP_CARD_IDS, CONTACT_NAMES } from '../ids';
 import { createStoryRules } from './utils';
 
 export const SOLO_STORIES: StoryCardDef[] = [
+  {
+    title: "A Fistful Of Scoundrels",
+    intro: "A captain is only as good as his reputation. And you never know when the winds might change, so best to be on terms with as many folks as possible.",
+    setupDescription: "Starting Jobs: No Starting Jobs are dealt. Instead, prime the Contacts, revealing the top 3 cards of each. Place the revealed Job Cards in their discard piles.",
+    requiredExpansion: "tenth",
+    additionalRequirements: ["blue", "kalidasa"],
+    isSolo: true,
+    sourceUrl: "https://boardgamegeek.com/image/8860502/sjliver",
+    rules: createStoryRules("A Fistful Of Scoundrels", [
+      { type: 'addFlag', flag: 'soloGameTimer' },
+      { type: 'primeContacts' },
+      { type: 'setJobMode', mode: 'no_jobs' },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Story Override',
+          content: ["Roots In The Community: Each time you gain Solid with a Contact, recover 2 Game Length Tokens."]
+        }
+      }
+    ]),
+    challengeOptions: [
+      { id: 'dont_prime_contacts', label: "Don't prime the Contact decks." },
+      { id: 'illegal_jobs_only', label: "Work only Illegal Jobs." },
+      { id: 'recover_1_glt', label: "Only recover 1 Game Length Token each time you become Solid." },
+      { id: 'caper_first', label: "Complete a Caper before gaining any Solid Rep." }
+    ],
+    advancedRule: {
+      id: "adv_alt_alliance_contacts",
+      title: "Alternate Alliance Contacts"
+    }
+  },
   {
     title: "And That Makes Us Mighty",
     intro: "Feeling disrespected, broke, and in a bad mood, you finally decide to do something about it. But how many of your problems can you solve at once?",
@@ -47,17 +80,27 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Ariel",
     intro: "When River slashes Jayne's chest, Simon decides it's time to get serious about treating her. He hires the crew of Serenity to get him and River into a high-tech hospital on Ariel so he can see what the Alliance did to her.",
-    setupDescription: "Continue with the crew and items you acquired after completing Out of Gas. Requires EXPLOSIVES.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 10,
-    campaignSetupNotes: ['EXPLOSIVES_REQUIRED']
+    campaignSetupNotes: ['EXPLOSIVES_REQUIRED'],
+    rules: createStoryRules("Ariel", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Out of Gas. Requires EXPLOSIVES."]
+        }
+      }
+    ])
   },
   {
     title: "Awful Lonely In The Big Black",
     intro: "It takes a brave soul to sail the Big Black alone... Pick your goal and test your skills.",
+    setupDescription: "Setup follows the normal rules with the following exceptions: 1) In addition to selecting yout Leader, you may also select up to 4 crew cards from any deck - up to a total value of $1000. 2) Place a pile of exactly 20 Disgruntled Tokens to the side. These tokens will be used as Game Length Tokens.",
     sourceUrl: "https://web.archive.org/web/20220226163627/https://www.flamesofwar.com/Portals/0/all_images/GF9/Firefly/Rulebooks/StoryCards/AwfulLonelyStoryCard.png",
     rules: createStoryRules("Awful Lonely In The Big Black", [
       { type: 'addFlag', flag: 'removePiracyJobs' },
@@ -108,54 +151,47 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Bushwhacked",
     intro: "Serenity encounters a drifting spaceship of  a type which was converted to transport settlers to the Outer Planets. Mal decides to check out the derelict in order to either help survivors or loot the dead.",
-    setupDescription: "Continue with the crew and items you acquired after completing The Train Job.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
-    sortOrder: 4
+    sortOrder: 4,
+    rules: createStoryRules("Bushwhacked", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing The Train Job."]
+        }
+      }
+    ])
   },
   {
     title: "Christmas Delivery",
     intro: "The 'Verse is just too big for one man to provide joy for all of the good little boys and girls. He needs your help and you'd better not misbehave!",
     requiredExpansion: "community",
     isSolo: true,
-    setupDescription: "The same as Awful Lonely in the Big Black",
+    setupDescription: "Same as Awful Lonely in the Big Black",
     rules: createStoryRules("Christmas Delivery", [
       { type: 'addFlag', flag: 'removePiracyJobs' },
       { type: 'addFlag', flag: 'soloCrewDraft' },
-      { type: 'addFlag', flag: 'soloGameTimer' }
+      { type: 'addFlag', flag: 'soloGameTimer' },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["The same as Awful Lonely in the Big Black"]
+        }
+      }
     ]),
     sourceUrl: "https://boardgamegeek.com/thread/1076227/article/14229639#14229639"
   },
   {
-    title: "A Fistful Of Scoundrels",
-    intro: "A captain is only as good as his reputation. And you never know when the winds might change, so best to be on terms with as many folks as possible.",
-    setupDescription: "Roots In The Community: Each time you gain Solid with a Contact, recover 2 Game Length Tokens.",
-    requiredExpansion: "tenth",
-    additionalRequirements: ["blue", "kalidasa"],
-    isSolo: true,
-    sourceUrl: "https://boardgamegeek.com/image/8860502/sjliver",
-    rules: createStoryRules("A Fistful Of Scoundrels", [
-      { type: 'addFlag', flag: 'soloGameTimer' },
-      { type: 'primeContacts' },
-      { type: 'setJobMode', mode: 'no_jobs' }
-    ]),
-    challengeOptions: [
-      { id: 'dont_prime_contacts', label: "Don't prime the Contact decks." },
-      { id: 'illegal_jobs_only', label: "Work only Illegal Jobs." },
-      { id: 'recover_1_glt', label: "Only recover 1 Game Length Token each time you become Solid." },
-      { id: 'caper_first', label: "Complete a Caper before gaining any Solid Rep." }
-    ],
-    advancedRule: {
-      id: "adv_alt_alliance_contacts",
-      title: "Alternate Alliance Contacts"
-    }
-  },
-  {
     title: "For A Few Credits More",
     intro: "Money can't buy happiness, but empty pockets can't buy nothin'.",
-    setupDescription: "No Starting Jobs (Prime Contact Decks). Start with 1 random Alliance Alert.",
+    setupDescription: "Starting Jobs: No Starting Jobs are dealt. Instead, prime the Contact Decks, revealing the top 3 cards of each. Place the revealed Job Cards in their discard piles.",
     requiredExpansion: "tenth",
     additionalRequirements: ["crime"],
     isSolo: true,
@@ -180,7 +216,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Goin' Reaver",
     intro: "Captain ain't been the same since we pulled 'em out of that Alliance black ops site: cagey, paranoid... rageful. We can't figure it out soon, it's gonna get real bad.",
-    setupDescription: "Place Reaver Alert Tokens in Motherlode (Red Sun) and Uroboros Belt (Blue Sun).",
+    setupDescription: "Place Reaver Alert Tokens in every sector in Motherlode, Redsun, and the Uroboros Belt, Blue Sun.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
@@ -197,12 +233,21 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Heart of Gold",
     intro: "Aboard Serenity, a crew member receives a distress call from a friend, Nandi, owner of a border moon bordello. Nandi asks for help dealing with a landowner named Burgess, who is victimizing one of her employees.",
-    setupDescription: "Continue with the crew and items you acquired after completing The Message.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
-    sortOrder: 14
+    sortOrder: 14,
+    rules: createStoryRules("Heart of Gold", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing The Message."]
+        }
+      }
+    ])
   },
   {
     title: "The Hero of Canton",
@@ -251,7 +296,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Heroes & Misfits",
     intro: "Legends whisper the tales of the ship that could outrun Alliance Cruisers and Reavers alike. A ship that carried a rag-tag crew, each a misfit, each a hero. Now, it's time for you to make your own legacy.",
-    setupDescription: "Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000. Alliance Alerts: Start with one random Alliance Alert in play. Adventure Deck: Shuffle all 3-Goal story cards into a single deck.",
+    setupDescription: "Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000. Alliance Alerts: Start with one random Alliance Alert in play. Shuggle all 3-Goal Story Cards into a single deck.",
     requiredExpansion: "tenth",
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860504/sjliver",
@@ -260,7 +305,19 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'addFlag', flag: 'startWithAlertCard' },
       { type: 'setShipPlacement', location: 'persephone' },
-      { type: 'addFlag', flag: 'isHeroesAndMisfits' }
+      { type: 'addFlag', flag: 'isHeroesAndMisfits' },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Story Override',
+          content: [
+            { type: 'paragraph', content: [{ type: 'strong', content: 'Starting Resources:' }, ' Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000.'] },
+            { type: 'paragraph', content: [{ type: 'strong', content: 'Alliance Alerts:' }, ' Start with one random Alliance Alert in play.'] },
+            { type: 'paragraph', content: [{ type: 'strong', content: 'Adventure Deck:' }, ' Shuffle all 3-Goal story cards into a single deck.'] }
+          ]
+        }
+      }
     ]),
     challengeOptions: [
       { id: 'heroes_custom_setup', label: "Why should Mal have all the fun? Pick the Leader, Ship, and Supply Planet of your choice. Begin the game with $2000 and a full compliment of your favourite crew from the show or game." }
@@ -276,7 +333,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "community",
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/thread/1049419/hunt-for-the-arc-a-solo-adventure",
-    setupDescription: "Place a Reaver ship in the Border Space sector directly below Valentine, instead of its usual position.",
+    setupDescription: "Place 1 Reaver ship below Valentine. If Blue Sun is active, place 2 more Cutters near Miranda.",
     rules: createStoryRules("Hunt For The Arc", [
       { type: 'addFlag', flag: 'huntForTheArcReaverPlacement', reaverShipCount: 1 }
     ])
@@ -284,13 +341,22 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Jaynestown",
     intro: "On Higgins' Moon, Inara meets the son of Magistrate Higgins. The rest of the crew is in search of loot. Meanwhile, One of the crew worries that his past misdeeds on Higgins' Moon might catch up with him.",
-    setupDescription: "Continue with the crew and items you acquired after completing Our Mrs. Reynolds. You may want to get Jayne some negotiation gear, or things could go badly.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 8,
-    campaignSetupNotes: ['SUGGEST_NEGOTIATION_GEAR']
+    campaignSetupNotes: ['SUGGEST_NEGOTIATION_GEAR'],
+    rules: createStoryRules("Jaynestown", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Our Mrs. Reynolds. You may want to get Jayne some negotiation gear, or things could go badly."]
+        }
+      }
+    ])
   },
   {
     title: "Jubal's Early Years",
@@ -394,7 +460,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "The Lonely Smuggler's Blues",
     intro: "Sometimes, it gets lonely in the Black, but it's a good way to dodge the law when you're haulin' goods that might draw the wrong kind of attention.",
-    setupDescription: "Place 3 Contraband on each Supply Planet except Persephone and Space bazaar. Place a Goal Token on the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Do not deal Starting Jobs. Begin play at Londinium. Start with one random Alliance Alert Card in play.",
+    setupDescription: "Place 3 Contraband on each Supply Planet except Persephone and Space Bazaar. Place a Goal Token on the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Do not deal Starting Jobs. Begin play at Londinium. Start with one random Alliance Alert Card in play.",
     requiredExpansion: "tenth",
     additionalRequirements: ["crime"],
     isSolo: true,
@@ -414,72 +480,94 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "The Message",
     intro: "Amnon Duul has a crate for Mal. Inside is the body of Tracey, a man Mal knew during the war. The crew take the crate aboard Serenity and plan to take it home for burial, but now corrupt police are in pursuit.",
-    setupDescription: "Continue with the crew and items you acquired after completing Trash. Start the Story at the Space Bazaar. Suggested: Fully Equipped Med Bay. Take Jayne's \"Cunning\" Hat.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 13,
-    campaignSetupNotes: ['START_AT_SPACE_BAZAAR', 'SUGGEST_MED_BAY_AND_HAT']
+    campaignSetupNotes: ['START_AT_SPACE_BAZAAR', 'SUGGEST_MED_BAY_AND_HAT'],
+    rules: createStoryRules("The Message", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Trash. Start the Story at the Space Bazaar. Suggested: Fully Equipped Med Bay. Take Jayne's \"Cunning\" Hat."]
+        }
+      }
+    ])
   },
   {
     title: "Objects in Space",
     intro: "With the crew asleep, Jubel Early, a bounty hunter, sneaks aboard Serenity. He has been paid to abduct River Tam. He locks most of the crew in their cabins. However, River has disappeared.",
-    setupDescription: "Continue with the crew and items you acquired after completing Heart of Gold. This Story can take place in any sector. If a named Crew is missing, choose another Crew.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 15,
-    campaignSetupNotes: ['ANY_SECTOR_PLACEMENT_WITH_CREW_NOTE']
+    campaignSetupNotes: ['ANY_SECTOR_PLACEMENT_WITH_CREW_NOTE'],
+    rules: createStoryRules("Objects in Space", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Heart of Gold. This Story can take place in any sector. If a named Crew is missing, choose another Crew."]
+        }
+      }
+    ])
   },
   {
-    title: "Once Upon A Time In The Big Black",
-    intro: "Robin Hood, Ching Shih, Billy the Kid, Al Capone, Bori Khan. Test your mettle to tell a tale to match the legends.",
-    setupDescription: "Special Rules: Collect Misbehave cards from completed Jobs (sideboard). 'Alliance Operatives' cannot be collected. Action: Spend $6000 to recover 1 Game Length Token (once/turn).",
-    requiredExpansion: "tenth",
+    title: "Once Upon A Time In The Black",
+    intro: "Robin Hood. Ching Shih. Billy the Kid. Al Capone. Bori Khan. Test your mettle to tella  tale to match the legends.",
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860506/sjliver",
-    rules: createStoryRules("Once Upon A Time In The Big Black", [
-      { type: 'addFlag', flag: 'soloGameTimer' }
-    ]),
-    challengeOptions: [
-      { id: 'no_immoral', label: "Don't work Immoral Jobs." },
-      { id: 'no_capers', label: "No Capers allowed!" },
-      { id: 'no_aces', label: "Don't use Aces." },
-      { id: 'universe_challenge', label: "Attach a Mr. Universe Challenge Card to every Job." }
-    ],
-    advancedRule: {
-      id: "adv_alt_reaver_contacts",
-      title: "Alternate Reaver Contacts"
-    }
+    requiredExpansion: "tenth"
   },
   {
     title: "Our Mrs. Reynolds",
     intro: "The crew of Serenity have agrees to help rid a settlement on Triumph of its bandit problem. The community can't pay, but promises the crew a big party and whatever other presents they can give.",
-    setupDescription: "Continue with the crew and items you acquired after completing Safe Suggested: Mal's Pretty Floral Bonnet & Vera.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 7,
-    campaignSetupNotes: ['SUGGEST_BONNET_VERA']
+    campaignSetupNotes: ['SUGGEST_BONNET_VERA'],
+    rules: createStoryRules("Our Mrs. Reynolds", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Safe Suggested: Mal's Pretty Floral Bonnet & Vera."]
+        }
+      }
+    ])
   },
   {
     title: "Out of Gas",
     intro: "Something has gone terribly wrong on Serenity. Remember that compression coil that Kaylee's always going on about? Well it busted, and we are driftin'. And in deep space too. Can things get any worse?",
-    setupDescription: "Continue with the crew and items you acquired after completing Jaynestown. This Story can take place in any empty sector.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 9,
-    campaignSetupNotes: ['ANY_SECTOR_PLACEMENT']
+    campaignSetupNotes: ['ANY_SECTOR_PLACEMENT'],
+    rules: createStoryRules("Out of Gas", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Jaynestown. This Story can take place in any empty sector."]
+        }
+      }
+    ])
   },
   {
     title: "Racing A Pale Horse",
     intro: "The Operative has your scent. He's closing in on your home, and nothing can stop him. Well, maybe nothing except Glücklich Jiã's prototype next-gen artillery cannon...",
-    setupDescription: "Place your Haven at Deadwood, Blue Sun. If you end your turn at your Haven, remove Disgruntled from all Crew. Do not use a Timer for this game.",
+    setupDescription: "Place your Haven at Deadwood, Blue Sun. Do not use a Timer for this game.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
@@ -521,18 +609,27 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Safe",
     intro: "The crew of Serenity find themselves on Jiangyin, where Mal is selling livestock to the Grange Brothers. Just as business is about to be concluded, the law shows up. To complicate things more, Simon and River are missing.",
-    setupDescription: "Continue with the crew and items you acquired after completing Shindig. Requires FAKE ID.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 6,
-    campaignSetupNotes: ['FAKE_ID_REQUIRED']
+    campaignSetupNotes: ['FAKE_ID_REQUIRED'],
+    rules: createStoryRules("Safe", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Shindig. Requires FAKE ID."]
+        }
+      }
+    ])
   },
   {
     title: "Seeds Of Rebellion",
     intro: "The New Resistance is ready to open up some eyes and change a few hearts. They need a savvy captain to deliver key personnel to the heart of Alliance space.",
-    setupDescription: "Harken Forbidden: You may not deal with, or be Solid with Harken. Resistance Missions: Place Harken's 7 Immoral Transport Jobs in a separate discard pile to represent New Resistance Missions.",
+    setupDescription: "You may not deal with Harken. Place harken's 7 Immoral Transport Jobs in separate discard pile to represent New Resistance Missions. ",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
@@ -549,40 +646,66 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Serenity Movie Part 1",
     intro: "Against Simon's objections, Mal takes River along on a bank robbery because, in his words, \"She might see trouble before it's coming\". Just as the crew reach the vault, the town is attacked by Reavers.",
-    setupDescription: "Continue with the crew and items you acquired after completing Objects in Space. Remove Inara and Shepherd Book from the game. Requires Transport.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 16,
-    campaignSetupNotes: ['REMOVE_INARA_AND_BOOK', 'TRANSPORT_REQUIRED']
+    campaignSetupNotes: ['REMOVE_INARA_AND_BOOK', 'TRANSPORT_REQUIRED'],
+    rules: createStoryRules("Serenity Movie Part 1", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Objects in Space. Remove Inara and Shepherd Book from the game. Requires Transport."]
+        }
+      }
+    ])
   },
   {
     title: "Serenity Movie Part 2",
     intro: "On Miranda a weak distress beacon leads the crew to a research shuttle and a recording that shows Miranda was an Alliance population control experiment that went horribly wrong, killing millions and creating the Reavers!",
-    setupDescription: "Continue with the crew and items you acquired after completing Serenity Movie Part 1. Remove Disgruntled Tokens from all crew. Inara rejoins the crew at this point.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 17,
-    campaignSetupNotes: ['INARA_REJOINS', 'REMOVE_DISGRUNTLED']
+    campaignSetupNotes: ['INARA_REJOINS', 'REMOVE_DISGRUNTLED'],
+    rules: createStoryRules("Serenity Movie Part 2", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Serenity Movie Part 1. Remove Disgruntled Tokens from all crew. Inara rejoins the crew at this point."]
+        }
+      }
+    ])
   },
   {
     title: "Serenity Movie Part 3",
     intro: "On Miranda a weak distress beacon leads the crew to a research shuttle and a recording that shows Miranda was an Alliance population control experiment that went horribly wrong, killing millions and creating the Reavers!",
-    setupDescription: "Continue with the crew and items you acquired after completing Serenity Movie Part 2. Fully Equipped Med Bay may not be used. Suggested: Simon's Surgical Kit.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 18,
-    campaignSetupNotes: ['NO_MED_BAY_SUGGEST_KIT']
+    campaignSetupNotes: ['NO_MED_BAY_SUGGEST_KIT'],
+    rules: createStoryRules("Serenity Movie Part 3", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Serenity Movie Part 2. Fully Equipped Med Bay may not be used. Suggested: Simon's Surgical Kit."]
+        }
+      }
+    ])
   },
   {
     title: "Serenity Part 1",
     intro: "Mal Reynolds and the crew of the Firefly Class Transport Serenity are involved in illegally slavaging crates off an abandoned spaceship for Badger, a small-time crime boss on the planet persephone.",
-    setupDescription: "Set up Serenity at Valentine with Malcolm, Zoe, Wash, Kaylee, Jaune, 1 Fuel, $500, Cry Baby, Expanded Crew Quarters. Load 2 Contra, then turn over a Nav Card.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
@@ -592,28 +715,56 @@ export const SOLO_STORIES: StoryCardDef[] = [
       'SERENITY_PART_1_CREW',
       'SERENITY_PART_1_RESOURCES',
       'SERENITY_PART_1_JOBS'
-    ]
+    ],
+    rules: createStoryRules("Serenity Part 1", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Set up Serenity at Valentine with Malcolm, Zoe, Wash, Kaylee, Jaune, 1 Fuel, $500, Cry Baby, Expanded Crew Quarters. Load 2 Contra, then turn over a Nav Card."]
+        }
+      }
+    ])
   },
   {
     title: "Serenity Part 2",
     intro: "Mal Reynolds and the crew of the Firefly Class Transport Serenity are despereately trying to sell contraband they found on an abandoned spaceship. Arriving at Whitefall, they need to deal with Patience.",
-    setupDescription: "Continue with the crew and items you acquired after completing Serenity Part 1.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
-    sortOrder: 2
+    sortOrder: 2,
+    rules: createStoryRules("Serenity Part 2", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Serenity Part 1."]
+        }
+      }
+    ])
   },
   {
     title: "Shindig",
     intro: "The crew of Serenity attends a high society ball - a \"Shindig\" Badger wants Mal to deal with Sir Warrick Harrow. Everything goes smoothly until Mal inadvertently challenges someone to a duel.",
-    setupDescription: "Continue with the crew and items you acquired after completing Bushwhacked. Suggested: Kaylee's Fluffy Pink Dress. Required: Mal must wear FANCY DUDS throughout.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 5,
-    campaignSetupNotes: ['SUGGEST_FANCY_DUDS']
+    campaignSetupNotes: ['SUGGEST_FANCY_DUDS'],
+    rules: createStoryRules("Shindig", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Bushwhacked. Suggested: Kaylee's Fluffy Pink Dress. Required: Mal must wear FANCY DUDS throughout."]
+        }
+      }
+    ])
   },
   {
     title: "They're Part Of My Crew",
@@ -664,41 +815,68 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "The Train Job",
     intro: "Unification Day: six years since the Alliance won the war. The crew of Serenity are on a moon of Ariel in the White Sun system. Mal and the crew are relaxing in a local bar.",
-    setupDescription: "Continue with the crew and items you acquired after completing Serenity Part 2. If you have the credits, a Fully Equipped Med Bay might also come in handy.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 3,
-    campaignSetupNotes: ['SUGGEST_MED_BAY']
+    campaignSetupNotes: ['SUGGEST_MED_BAY'],
+    rules: createStoryRules("The Train Job", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Serenity Part 2. If you have the credits, a Fully Equipped Med Bay might also come in handy."]
+        }
+      }
+    ])
   },
   {
     title: "Trash",
     intro: "While overseeing a cargo transfer for a smuggling job, Mal runs into Saffron. Guns are drawn, but Saffron convinces Mal to get in on her plan t steal the Lassiter Laser Pistol - a priceless artifact.",
-    setupDescription: "Continue with the crew and items you acquired after completing War Stories. Before starting, pick up Saffron on Newhope. Requires HACKING RIG.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 12,
-    campaignSetupNotes: ['PICK_UP_SAFFRON', 'HACKING_RIG_REQUIRED']
+    campaignSetupNotes: ['PICK_UP_SAFFRON', 'HACKING_RIG_REQUIRED'],
+    rules: createStoryRules("Trash", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing War Stories. Before starting, pick up Saffron on Newhope. Requires HACKING RIG."]
+        }
+      }
+    ])
   },
   {
     title: "War Stories",
     intro: "After a simple business deal goes badly wrong, Mal and Wash find themselves in the hands of Adelai Niska, who is still holding a grudge from an earlier encounter. The rest of the crew must mount a rescue.",
-    setupDescription: "Continue with the crew and items you acquired after completing Ariel. Requires EXPLOSIVES.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 11,
-    campaignSetupNotes: ['EXPLOSIVES_REQUIRED']
+    campaignSetupNotes: ['EXPLOSIVES_REQUIRED'],
+    rules: createStoryRules("War Stories", [
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: ["Continue with the crew and items you acquired after completing Ariel. Requires EXPLOSIVES."]
+        }
+      }
+    ])
   },
   {
     title: "War Stories",
     intro: "Remember when Malcolm put Niska's man through an engine? Well, Niska remembers and now he's lookin' to kill some folk.",
     isSolo: true,
-    setupDescription: "Fixed Assignment: Serenity's Crew. Game Timer (15 Disgruntled tokens). No starting cash. Niska jobs unavailable. Uses Standard Setup.",
+    setupDescription: "Fixed assignment: Serenity's original crew. $0 starting cash. Game timer is 15 turns. Niska is unavailable.",
     sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards",
     requiredExpansion: "community",
     rules: createStoryRules("War Stories", [
