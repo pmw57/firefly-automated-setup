@@ -1,4 +1,3 @@
-
 import { 
     GameState, 
     ResourceDetails,
@@ -9,8 +8,7 @@ import {
     SpecialRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
-
-const PRIORITY_ORDER: RuleSourceType[] = ['story', 'challenge', 'setupCard', 'combinableSetupCard', 'optionalRule', 'expansion'];
+import { RULE_PRIORITY_ORDER } from '../data/constants';
 
 const _findCreditConflict = (resourceRules: ModifyResourceRule[], manualResolutionEnabled: boolean): {
     conflict?: ResourceConflict;
@@ -60,7 +58,7 @@ const _applyResourceRules = (
     } else {
         const setRules = rulesForResource.filter(r => r.method === 'set');
         if (setRules.length > 0) {
-            setRules.sort((a, b) => PRIORITY_ORDER.indexOf(a.source) - PRIORITY_ORDER.indexOf(b.source));
+            setRules.sort((a, b) => RULE_PRIORITY_ORDER.indexOf(a.source) - RULE_PRIORITY_ORDER.indexOf(b.source));
             const topRule = setRules[0];
             if (topRule.value !== undefined) {
                 finalValue = topRule.value;
@@ -141,7 +139,7 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
         return { source: selectedRule.source, description: selectedRule.description };
     }
     
-    rules.sort((a, b) => PRIORITY_ORDER.indexOf(a.source) - PRIORITY_ORDER.indexOf(b.source));
+    rules.sort((a, b) => RULE_PRIORITY_ORDER.indexOf(a.source) - RULE_PRIORITY_ORDER.indexOf(b.source));
     const topRule = rules[0];
 
     return { source: topRule.source, description: topRule.description };

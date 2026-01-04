@@ -1,15 +1,12 @@
-
 import { 
     GameState, 
     NavDeckSetupDetails,
     StepOverrides,
     SetNavModeRule,
-    SpecialRule,
-    RuleSourceType
+    SpecialRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
-
-const PRIORITY_ORDER: RuleSourceType[] = ['story', 'challenge', 'setupCard', 'combinableSetupCard', 'optionalRule', 'expansion'];
+import { RULE_PRIORITY_ORDER } from '../data/constants';
 
 export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides): NavDeckSetupDetails => {
     const allRules = getResolvedRules(gameState);
@@ -20,7 +17,7 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
     );
     
     if (navModeRules.length > 1) {
-        navModeRules.sort((a, b) => PRIORITY_ORDER.indexOf(a.source) - PRIORITY_ORDER.indexOf(b.source));
+        navModeRules.sort((a, b) => RULE_PRIORITY_ORDER.indexOf(a.source) - RULE_PRIORITY_ORDER.indexOf(b.source));
     }
     
     // The highest priority rule is the first one in the sorted list
