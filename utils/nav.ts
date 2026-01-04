@@ -1,18 +1,33 @@
+
 import { 
     GameState, 
     NavDeckSetupDetails,
     StepOverrides,
     SetNavModeRule,
-    SpecialRule
+    SpecialRule,
+    RuleSourceType
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
+const PRIORITY_ORDER: RuleSourceType[] = ['story', 'challenge', 'setupCard', 'combinableSetupCard', 'optionalRule', 'expansion'];
+
 export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides): NavDeckSetupDetails => {
     const allRules = getResolvedRules(gameState);
-    const navModeRule = allRules.find(r => r.type === 'setNavMode') as SetNavModeRule | undefined;
+
+    // Find all nav mode rules and sort them by priority
+    const navModeRules = allRules.filter(
+        (r): r is SetNavModeRule => r.type === 'setNavMode'
+    );
+    
+    if (navModeRules.length > 1) {
+        navModeRules.sort((a, b) => PRIORITY_ORDER.indexOf(a.source) - PRIORITY_ORDER.indexOf(b.source));
+    }
+    
+    // The highest priority rule is the first one in the sorted list
+    const navModeRule = navModeRules[0];
     const navMode = navModeRule?.mode || overrides.navMode;
     
-    const forceReshuffle = ['standard_reshuffle', 'browncoat', 'rim', 'flying_solo', 'clearer_skies'].includes(navMode || '');
+    const forceReshuffle = ['standard_reshuffle', 'browncoat', 'rim', 'clearer_skies'].includes(navMode || '');
     const showStandardRules = !forceReshuffle;
 
     const specialRules: SpecialRule[] = [];

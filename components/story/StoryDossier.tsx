@@ -1,4 +1,5 @@
 
+
 import React, { useMemo } from 'react';
 import { StoryCardDef, AddSpecialRule, RuleSourceType, SpecialRule, ChallengeOption } from '../../types';
 import { SpecialRuleBlock } from '../SpecialRuleBlock';
@@ -16,13 +17,16 @@ interface StoryDossierProps {
 
 // FIX: Added a helper function to safely map the broader RuleSourceType
 // to the narrower source type expected by SpecialRuleBlock. This resolves the
-// TypeScript error by explicitly handling 'challenge' and 'optionalRule' cases.
+// TypeScript error by explicitly handling 'challenge', 'optionalRule', and 'combinableSetupCard' cases.
 const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source'] => {
   if (source === 'challenge') {
     return 'warning';
   }
   if (source === 'optionalRule') {
     return 'info';
+  }
+  if (source === 'combinableSetupCard') {
+    return 'setupCard';
   }
   return source;
 };
@@ -198,7 +202,7 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
 
       {/* Solo Mode Information Block */}
       {gameState.setupCardId === 'FlyingSolo' && (
-        <SpecialRuleBlock source="expansion" title="10th AE Solo Rules" content={["You may play any Story Card in Expanded Solo Mode. Automated NPC movement and Variable Timer rules apply."]} />
+        <SpecialRuleBlock source="expansion" title="10th AE Solo Rules" content={["You may play any Story Card in Expanded Solo Mode. The Variable Timer rules apply."]} />
       )}
 
       {setupNote && !activeStoryCard.setupDescription && (
