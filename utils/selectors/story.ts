@@ -1,5 +1,6 @@
+
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
-import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption, CampaignSetupNote } from '../../types/index';
+import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption, CampaignSetupNote } from '../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { SETUP_CARD_IDS } from '../../data/ids';
@@ -136,11 +137,11 @@ export const getFilterableExpansions = (showHidden = false) => {
     });
 };
 
-export const getAvailableAdvancedRules = (gameState: GameState, activeStoryCard: StoryCardDef | undefined): AdvancedRuleDef[] => {
+export const getAllPotentialAdvancedRules = (gameState: GameState): AdvancedRuleDef[] => {
     const rules: AdvancedRuleDef[] = [];
-    if (gameState.gameMode === 'solo' && gameState.expansions.tenth && activeStoryCard) {
+    if (gameState.gameMode === 'solo' && gameState.expansions.tenth) {
       STORY_CARDS.forEach(card => {
-        if (card.advancedRule && card.title !== activeStoryCard.title) {
+        if (card.advancedRule) {
           const hasReq = !card.requiredExpansion || gameState.expansions[card.requiredExpansion];
           if (hasReq) rules.push(card.advancedRule);
         }

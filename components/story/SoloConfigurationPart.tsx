@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { Button } from '../Button';
@@ -11,7 +13,7 @@ interface SoloConfigurationPartProps {
 }
 
 export const SoloConfigurationPart: React.FC<SoloConfigurationPartProps> = ({ onNext, onBack, isNavigating }) => {
-  const { activeStoryCard, availableAdvancedRules, enablePart2 } = useMissionSelection();
+  const { activeStoryCard, enablePart2 } = useMissionSelection();
 
   const containerBg = 'bg-[#faf8ef]/80 dark:bg-zinc-900/70 backdrop-blur-md';
   const containerBorder = 'border-[#d6cbb0] dark:border-zinc-800';
@@ -31,27 +33,26 @@ export const SoloConfigurationPart: React.FC<SoloConfigurationPartProps> = ({ on
         <div className={`${headerBarBg} p-4 flex justify-between items-center border-b ${headerBarBorder} transition-colors duration-300`}>
           <div className="flex items-baseline gap-2">
             <h3 className={`font-bold text-lg font-western tracking-wider ${headerColor}`}>
-              Story Options
+              Flying Solo Options
             </h3>
             <PageReference page={55} manual="10th AE" />
           </div>
-          {enablePart2 && <span className={`text-xs uppercase tracking-widest ${badgeBg} ${badgeBorder} ${badgeText} px-2 py-1 rounded font-bold`}>Part 2 of 2</span>}
+          <span className={`text-xs uppercase tracking-widest ${badgeBg} ${badgeBorder} ${badgeText} px-2 py-1 rounded font-bold`}>Part 2 of 2</span>
         </div>
         
-        <SoloOptionsPart 
-          activeStoryCard={activeStoryCard}
-          availableAdvancedRules={availableAdvancedRules}
-        />
+        {enablePart2 && (
+          <SoloOptionsPart />
+        )}
       </div>
 
       <div className={`mt-8 flex justify-between clear-both pt-6 border-t ${navBorderTop}`}>
         <Button onClick={onBack} variant="secondary" className="shadow-sm" disabled={isNavigating}>
-          ← Back to Story
+          ← Previous
         </Button>
         <Button 
           onClick={onNext} 
           className="shadow-lg hover:translate-y-[-2px] transition-transform"
-          disabled={!activeStoryCard || isNavigating}
+          disabled={isNavigating}
         >
           Next Step →
         </Button>

@@ -1,9 +1,10 @@
+
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
 // FIX: Imported the MissionSelectionContextType interface to resolve the "Cannot find name" error.
 import { MissionSelectionContext, MissionSelectionContextType } from '../hooks/useMissionSelection';
-import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getAvailableAdvancedRules } from '../utils/selectors/story';
+import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getAllPotentialAdvancedRules } from '../utils/selectors/story';
 import { ActionType } from '../state/actions';
 import { STORY_CARDS } from '../data/storyCards';
 
@@ -77,9 +78,9 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   const filteredStories = useMemo(() => {
     return getFilteredStoryCards(gameState, { searchTerm, filterExpansion, filterCoOpOnly, sortMode });
   }, [gameState, searchTerm, filterExpansion, filterCoOpOnly, sortMode]);
-  const availableAdvancedRules: AdvancedRuleDef[] = useMemo(() => 
-    getAvailableAdvancedRules(gameState, activeStoryCard),
-    [gameState, activeStoryCard]
+  const allPotentialAdvancedRules: AdvancedRuleDef[] = useMemo(() =>
+    getAllPotentialAdvancedRules(gameState),
+    [gameState]
   );
   const enablePart2 = useMemo(() => 
     gameState.gameMode === 'solo' && gameState.expansions.tenth,
@@ -158,7 +159,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     selectedStoryCardIndex: gameState.selectedStoryCardIndex,
     validStories,
     filteredStories,
-    availableAdvancedRules,
+    allPotentialAdvancedRules,
     enablePart2,
     // Actions
     setSearchTerm,

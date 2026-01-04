@@ -1,5 +1,6 @@
 
-import { StoryCardDef } from '../../types';
+
+import { StoryCardDef } from '../../types/index';
 import { createStoryRules } from './utils';
 
 export const SOLO_STORIES: StoryCardDef[] = [
@@ -32,7 +33,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     ],
     advancedRule: {
       id: "adv_alt_alliance_contacts",
-      title: "Alternate Alliance Contacts"
+      title: "Alternate Alliance Contacts",
+      description: "Changes which contacts are considered Alliance contacts."
     }
   },
   {
@@ -102,7 +104,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     ],
     advancedRule: {
       id: "adv_alt_corvette_contacts",
-      title: "Alternate Corvette Contacts"
+      title: "Alternate Corvette Contacts",
+      description: "Changes which contacts are considered Corvette contacts."
     }
   },
   {
@@ -119,7 +122,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     ]),
     advancedRule: {
       id: "adv_wolf_at_your_door",
-      title: "Wolf At Your Door"
+      title: "Wolf At Your Door",
+      description: "An additional threat pursues you through the 'Verse."
     }
   },
   {
@@ -153,7 +157,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     ],
     advancedRule: {
       id: "adv_contact_quirks_work",
-      title: "Contact Quirks - Work"
+      title: "Contact Quirks - Work",
+      description: "Contacts have additional requirements or penalties when taking jobs from them."
     }
   },
   {
@@ -173,7 +178,20 @@ export const SOLO_STORIES: StoryCardDef[] = [
     ]),
     advancedRule: {
       id: "adv_lone_targets",
-      title: "Lone Targets"
+      title: "Lone Targets",
+      description: "You are more vulnerable to threats when flying alone."
+    }
+  },
+  {
+    title: "Once Upon A Time In The Black",
+    intro: "Robin Hood. Ching Shih. Billy the Kid. Al Capone. Bori Khan. Test your mettle to tell a tale to match the legends.",
+    requiredExpansion: "tenth",
+    isSolo: true,
+    sourceUrl: "https://boardgamegeek.com/image/8860506/sjliver",
+    advancedRule: {
+      id: "adv_alt_reaver_contacts",
+      title: "Alternate Reaver Contacts",
+      description: "Changes which contacts are associated with Reavers."
     }
   },
   {
@@ -197,7 +215,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     ]),
     advancedRule: {
       id: "adv_automated_movement",
-      title: "Automated Movement"
+      title: "Automated Movement",
+      description: "When you draw 'Keep Flying', move an NPC ship one sector instead of drawing again."
     }
   },
   {
@@ -215,7 +234,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     ]),
     advancedRule: {
       id: "adv_contact_quirks_deal",
-      title: "Contact Quirks - Deal"
+      title: "Contact Quirks - Deal",
+      description: "Contacts have special rules when dealing with them."
     }
   },
   {
@@ -232,7 +252,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     ]),
     advancedRule: {
       id: "adv_lost_little_lambs",
-      title: "Lost Little Lambs"
+      title: "Lost Little Lambs",
+      description: "Rescuing crew has additional complications and risks."
     }
   }
 ];

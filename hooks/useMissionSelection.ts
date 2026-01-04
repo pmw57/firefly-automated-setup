@@ -1,3 +1,4 @@
+
 import { createContext, useContext } from 'react';
 import { StoryCardDef, AdvancedRuleDef, GameState } from '../types/index';
 
@@ -13,7 +14,7 @@ export interface MissionSelectionContextType {
   selectedStoryCardIndex: number | null;
   validStories: StoryCardDef[];
   filteredStories: StoryCardDef[];
-  availableAdvancedRules: AdvancedRuleDef[];
+  allPotentialAdvancedRules: AdvancedRuleDef[];
   enablePart2: boolean;
   setSearchTerm: (term: string) => void;
   setFilterExpansion: (ids: string[]) => void;
