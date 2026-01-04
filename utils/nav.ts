@@ -27,7 +27,7 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
     const navModeRule = navModeRules[0];
     const navMode = navModeRule?.mode || overrides.navMode;
     
-    const forceReshuffle = ['standard_reshuffle', 'browncoat', 'rim', 'clearer_skies'].includes(navMode || '');
+    const forceReshuffle = ['standard_reshuffle', 'browncoat', 'rim', 'clearer_skies', 'flying_solo'].includes(navMode || '');
     const showStandardRules = !forceReshuffle;
 
     const specialRules: SpecialRule[] = [];

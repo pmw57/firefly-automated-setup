@@ -202,6 +202,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
     isCombinable: true,
     rules: createRules("Flying Solo", [
       { type: 'addFlag', flag: 'soloGameTimer' },
+      { type: 'setNavMode', mode: 'flying_solo' }
     ]),
     steps: [
       { id: STEP_IDS.D_FIRST_GOAL, title: `1. ${BASE_TITLES.D_FIRST_GOAL}` },
