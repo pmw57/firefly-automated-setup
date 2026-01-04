@@ -54,7 +54,7 @@ export const STORIES_M_O: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'goal',
+        category: 'resources',
         rule: {
           title: 'Game Timer',
           content: ["Use ", { type: 'strong', content: '7 Disgruntled tokens' }, " as a timer. The first player discards 1 token at the start of each round. When the timer runs out, a special game event occurs (arrest of 4 crew members from each ship)."]
@@ -225,7 +225,7 @@ export const STORIES_M_O: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'goal',
+        category: 'resources',
         rule: {
           title: 'Game Timer',
           content: ["Give the first player a pile of 20 Disgruntled tokens. At the start of each of that player's turns, discard one token. After the last token is discarded, all players get one last turn, then the game is over."]

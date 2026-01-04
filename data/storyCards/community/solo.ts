@@ -144,7 +144,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'goal',
+        category: 'resources',
         rule: {
           title: 'Game Timer',
           content: ["Use ", { type: 'strong', content: "20 Disgruntle tokens" }, " as the game length timer."]
@@ -296,7 +296,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'goal',
+        category: 'resources',
         rule: {
           title: "Disgruntled Timer",
           content: [
@@ -341,7 +341,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'goal',
+        category: 'resources',
         rule: {
           title: 'Game Timer',
           content: ["Use ", { type: 'strong', content: '15 Disgruntled tokens' }, " as the game length timer. Discard one at the start of your turn."]
