@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { StoryCardDef, AddSpecialRule, RuleSourceType, SpecialRule, ChallengeOption } from '../../types';
 import { SpecialRuleBlock } from '../SpecialRuleBlock';
@@ -187,7 +188,7 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
 
       {/* Detailed Setup Description Block */}
       {activeStoryCard.setupDescription && (
-        <SpecialRuleBlock source="story" title="Seeding the 'Verse" content={[activeStoryCard.setupDescription]} />
+        <SpecialRuleBlock source="story" content={[activeStoryCard.setupDescription]} />
       )}
 
       {/* Solo Adjustments */}
