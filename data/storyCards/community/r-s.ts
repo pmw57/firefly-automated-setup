@@ -145,14 +145,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1066622/story-card-save-river-tam",
     rules: createStoryRules("Save River Tam", [
-      {
-        type: 'addSpecialRule',
-        category: 'prime',
-        rule: {
-          title: 'Missing Person',
-          content: ['Remove ', { type: 'strong', content: 'River Tam' }, ' from play before shuffling the Supply Decks.']
-        }
-      }
+      { type: 'addFlag', flag: 'removeRiver' }
     ]),
     rating: 1
   },
@@ -256,7 +249,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     additionalRequirements: [
       "pirates"
     ],
-    setupDescription: "After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks.",
+    setupDescription: "Follow the 'Deck Modification' override.",
     sourceUrl: "https://boardgamegeek.com/thread/3405568/article/45332549#45332549",
     requiredExpansion: "community",
     rules: createStoryRules("Shiny New Year 25 - Protect Or Plunder", [
