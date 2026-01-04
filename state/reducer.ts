@@ -11,14 +11,20 @@ import { EXPANSION_SETTINGS_STORAGE_KEY } from '../data/constants';
  * This should be called when entering solo mode or when enabling the 10th Anniversary expansion.
  */
 const defaultToFlyingSoloIfNeeded = (state: GameState): GameState => {
-    // Conditions: in solo mode, 10th anniversary is enabled, and not already using Flying Solo.
-    if (state.gameMode === 'solo' && state.expansions.tenth && state.setupCardId !== SETUP_CARD_IDS.FLYING_SOLO) {
-        const flyingSoloDef = SETUP_CARDS.find(c => c.id === SETUP_CARD_IDS.FLYING_SOLO);
+    const isEligible = state.gameMode === 'solo' && state.expansions.tenth;
+    const isAlreadyFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
+
+    if (isEligible && !isAlreadyFlyingSolo) {
+        // If the current setup is a valid card, store it as secondary.
+        // If not (e.g., empty string), don't store it.
+        const secondarySetupId = SETUP_CARDS.some(c => c.id === state.setupCardId) ? state.setupCardId : undefined;
+
         return {
             ...state,
             setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
-            setupCardName: flyingSoloDef?.label || 'Flying Solo',
-            secondarySetupId: state.setupCardId,
+            setupCardName: 'Flying Solo',
+            secondarySetupId: secondarySetupId,
+            draft: { state: null, isManual: false },
         };
     }
     return state;
@@ -180,7 +186,6 @@ export const getDefaultGameState = (): GameState => {
         timerConfig: {
             mode: 'standard',
             unpredictableSelectedIndices: [0, 2, 4, 5],
-            randomizeUnpredictable: false,
         },
         soloOptions: {
             noSureThings: false,
@@ -242,6 +247,7 @@ const handlePlayerCountChange = (state: GameState, count: number): GameState => 
         draft: { state: null, isManual: false },
     };
 
+    // Automatically switch to Flying Solo if conditions are met.
     return defaultToFlyingSoloIfNeeded(intermediateState);
 };
 
@@ -261,8 +267,7 @@ const handleExpansionToggle = (state: GameState, expansionId: keyof GameState['e
     
     if (expansionId === 'tenth') {
         newState.gameEdition = nextExpansions.tenth ? 'tenth' : 'original';
-        
-        // Only apply the default if we are ENABLING the expansion
+        // Automatically switch to Flying Solo if conditions are met.
         if (nextExpansions.tenth) {
             newState = defaultToFlyingSoloIfNeeded(newState);
         }
@@ -381,6 +386,14 @@ export function gameReducer(state: GameState, action: Action): GameState {
     case ActionType.TOGGLE_TIMER_MODE:
       nextState = { ...state, timerConfig: { ...state.timerConfig, mode: state.timerConfig.mode === 'standard' ? 'unpredictable' : 'standard' } };
       break;
+
+    case ActionType.TOGGLE_UNPREDICTABLE_TOKEN: {
+      const newIndices = state.timerConfig.unpredictableSelectedIndices.includes(action.payload)
+          ? state.timerConfig.unpredictableSelectedIndices.filter(i => i !== action.payload)
+          : [...state.timerConfig.unpredictableSelectedIndices, action.payload];
+      nextState = { ...state, timerConfig: { ...state.timerConfig, unpredictableSelectedIndices: newIndices } };
+      break;
+    }
 
     case ActionType.RESET_GAME:
       nextState = getDefaultGameState();

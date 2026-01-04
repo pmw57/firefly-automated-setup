@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import { MissionSelectionProvider } from './MissionSelectionContext';
 import { useMissionSelection } from '../hooks/useMissionSelection';
@@ -27,15 +26,18 @@ const MissionDossierStepContent = (props: StepComponentProps): React.ReactElemen
       onNext();
     }
   };
+  
+  const isFirstStep = props.step.data?.title?.startsWith('1.');
+  const storySelectionTitle = isFirstStep ? "First, Choose a Story Card" : "Choose a Story Card";
 
   return (
     <div ref={dossierTopRef} className="scroll-mt-24">
       {subStep === 1 ? (
         <StorySelectionPart
-          step={props.step}
           onNext={handleNext}
           onPrev={onPrev}
           isNavigating={isNavigating}
+          title={storySelectionTitle}
         />
       ) : (
         <SoloConfigurationPart

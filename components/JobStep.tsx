@@ -1,5 +1,6 @@
 
 
+
 import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
@@ -7,7 +8,9 @@ import { useGameState } from '../hooks/useGameState';
 import { getJobSetupDetails } from '../utils/jobs';
 import { getActiveStoryCard, getCampaignNotesForStep } from '../utils/selectors/story';
 import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
+// FIX: StepComponentProps is defined in StepContent.tsx, not in the types directory.
 import { StepComponentProps } from './StepContent';
+import { ChallengeOption } from '../types';
 
 export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
@@ -39,7 +42,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   const activeChallenges = useMemo(() => 
     activeStoryCard?.challengeOptions?.filter(
-      opt => gameState.challengeOptions[opt.id]
+      (opt: ChallengeOption) => gameState.challengeOptions[opt.id]
     ) || [], 
   [activeStoryCard?.challengeOptions, gameState.challengeOptions]);
 
@@ -122,7 +125,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
 
       {isSelectedStory && activeChallenges.length > 0 && !messages.some(m => m.title === 'Challenge Active') && (
         <SpecialRuleBlock source="warning" title="Story Directives (Challenges)" content={[
-          { type: 'list', items: activeChallenges.map(opt => [opt.label]) },
+          { type: 'list', items: activeChallenges.map((opt: ChallengeOption) => [opt.label]) },
           { type: 'paragraph', content: ["These restrictions apply throughout the game."] }
         ]} />
       )}

@@ -1,3 +1,5 @@
+
+
 import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule, Step } from '../types/index';
 import { STEP_IDS } from '../data/ids';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
@@ -90,8 +92,6 @@ export const getSetupCardSelectionInfo = (gameState: GameState) => {
     const cardDef = getSetupCardById(setupCardId);
     const isFlyingSoloActive = !!cardDef?.isCombinable;
     
-    const flyingSoloEligible = isFlyingSoloEligible(gameState);
-    
     // The setup process has 3 parts: Captain/Expansions, Setup Card, and Optional Rules.
     const totalParts = 3;
 
@@ -99,7 +99,7 @@ export const getSetupCardSelectionInfo = (gameState: GameState) => {
 
     return {
         isFlyingSoloActive,
-        isFlyingSoloEligible: flyingSoloEligible,
+        isFlyingSoloEligible: isFlyingSoloEligible(gameState),
         totalParts,
         isNextDisabled
     };

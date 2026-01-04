@@ -19,6 +19,7 @@ export enum ActionType {
   SET_FINAL_STARTING_CREDITS = 'SET_FINAL_STARTING_CREDITS',
   TOGGLE_SOLO_OPTION = 'TOGGLE_SOLO_OPTION',
   TOGGLE_TIMER_MODE = 'TOGGLE_TIMER_MODE',
+  TOGGLE_UNPREDICTABLE_TOKEN = 'TOGGLE_UNPREDICTABLE_TOKEN',
   RESET_CHALLENGES = 'RESET_CHALLENGES',
   RESET_GAME = 'RESET_GAME',
   TOGGLE_STORY_RATING_FILTER = 'TOGGLE_STORY_RATING_FILTER',
@@ -47,6 +48,7 @@ export type Action =
   | { type: ActionType.SET_FINAL_STARTING_CREDITS; payload: number }
   | { type: ActionType.TOGGLE_SOLO_OPTION; payload: keyof GameState['soloOptions'] }
   | { type: ActionType.TOGGLE_TIMER_MODE }
+  | { type: ActionType.TOGGLE_UNPREDICTABLE_TOKEN; payload: number }
   | { type: ActionType.RESET_CHALLENGES }
   | { type: ActionType.RESET_GAME }
   | { type: ActionType.TOGGLE_STORY_RATING_FILTER; payload: number }

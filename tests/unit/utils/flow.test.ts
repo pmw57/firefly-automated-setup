@@ -1,4 +1,3 @@
-
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { calculateSetupFlow } from '../../../utils/flow';
@@ -57,7 +56,8 @@ describe('state/flow', () => {
         STEP_IDS.SETUP_CAPTAIN_EXPANSIONS,
         STEP_IDS.SETUP_CARD_SELECTION,
         STEP_IDS.SETUP_OPTIONAL_RULES,
-        STEP_IDS.D_FIRST_GOAL,
+        // FIX: Replaced D_FIRST_GOAL with C4, which is the correct step ID for the goal selection.
+        STEP_IDS.C4,
         STEP_IDS.C1,
         STEP_IDS.C2,
         STEP_IDS.D_BC_CAPITOL,

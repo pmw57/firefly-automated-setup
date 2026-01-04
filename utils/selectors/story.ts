@@ -1,6 +1,7 @@
 
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
-import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption, CampaignSetupNote } from '../types/index';
+
+// FIX: Changed import from '../types' to '../../types/index' to fix module resolution ambiguity.
+import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption, CampaignSetupNote } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { SETUP_CARD_IDS } from '../../data/ids';
@@ -110,8 +111,8 @@ export const getCampaignNotesForStep = (gameState: GameState, stepId: string): C
     }
     
     return activeStoryCard.campaignSetupNotes
-        .map(noteId => CAMPAIGN_SETUP_NOTES[noteId])
-        .filter((note): note is CampaignSetupNote => !!note && note.stepId === stepId);
+        .map((noteId: string) => CAMPAIGN_SETUP_NOTES[noteId])
+        .filter((note: CampaignSetupNote | undefined): note is CampaignSetupNote => !!note && note.stepId === stepId);
 };
 
 export const getCategorizedExpansions = (showHidden = false) => {
@@ -163,7 +164,7 @@ export const getActiveStoryChallenges = (gameState: GameState): ChallengeOption[
         return [];
     }
     return activeStoryCard.challengeOptions.filter(
-        option => gameState.challengeOptions[option.id]
+        (option: ChallengeOption) => gameState.challengeOptions[option.id]
     );
 };
 

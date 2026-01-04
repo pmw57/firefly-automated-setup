@@ -1,4 +1,3 @@
-
 export const SETUP_CARD_IDS = {
   STANDARD: 'Standard',
   FLYING_SOLO: 'FlyingSolo',
@@ -31,7 +30,6 @@ export const STEP_IDS = {
   C_PRIME: 'C_PRIME',
 
   // Distinct Dynamic Steps
-  D_FIRST_GOAL: 'D_FIRST_GOAL',
   D_RIM_JOBS: 'D_RIM_JOBS',
   D_TIME_LIMIT: 'D_TIME_LIMIT',
   D_SHUTTLE: 'D_SHUTTLE',

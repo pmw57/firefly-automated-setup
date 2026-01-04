@@ -1,4 +1,5 @@
 
+
 import { GameState, SetupRule, RuleSourceType } from '../../types/index';
 import { getSetupCardById } from './story';
 import { getActiveStoryCard } from './story';
@@ -32,7 +33,7 @@ export const getResolvedRules = (gameState: GameState): SetupRule[] => {
     if (primaryCard?.rules) {
         if (isCombinable) {
             // The combinable card's rules are assigned a lower-priority source.
-            const combinableRules = primaryCard.rules.map(rule => ({ ...rule, source: 'combinableSetupCard' as RuleSourceType }));
+            const combinableRules = primaryCard.rules.map((rule: SetupRule) => ({ ...rule, source: 'combinableSetupCard' as RuleSourceType }));
             rules.push(...combinableRules);
         } else {
             // If not a combinable setup, it's a standard setup card.

@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useGameState } from '../../hooks/useGameState';
@@ -9,18 +7,17 @@ import { PageReference } from '../PageReference';
 import { StoryDossier } from './StoryDossier';
 import { StoryRandomizer } from './StoryRandomizer';
 import { StoryCardGrid } from './StoryCardGrid';
-import { Step } from '../../types';
-import { STEP_IDS, SETUP_CARD_IDS } from '../../data/ids';
+import { SETUP_CARD_IDS } from '../../data/ids';
 import { SpecialRuleBlock } from '../SpecialRuleBlock';
 
 interface StorySelectionPartProps {
-  step: Step;
   onNext: () => void;
   onPrev: () => void;
   isNavigating: boolean;
+  title: string;
 }
 
-export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ step, onNext, onPrev, isNavigating }) => {
+export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, onPrev, isNavigating, title }) => {
   const { 
     activeStoryCard,
     handleStoryCardSelect,
@@ -29,8 +26,6 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ step, on
   const { state: gameState } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-
-  const titleOverride = step.id === STEP_IDS.D_FIRST_GOAL ? "First, Choose a Story Card" : undefined;
 
   const hasTenth = gameState.expansions.tenth;
   const storyPage = hasTenth ? 25 : 16;
@@ -75,7 +70,7 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ step, on
   return (
     <div className="space-y-6 animate-fade-in">
       <h4 className={`text-center font-bold text-sm uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-          {titleOverride || 'Choose a Story Card'}
+          {title}
       </h4>
       
       {setupOverrideMessage}
