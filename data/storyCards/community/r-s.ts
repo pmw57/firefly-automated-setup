@@ -14,7 +14,7 @@ export const STORIES_R_S: StoryCardDef[] = [
   {
     title: "Return to Sturges",
     intro: "The Barrle of Sturges was the shortest and bloodiest battle of the Unification War. Badger has broadcast news that there is a hoard of Alliance treasure left in the wreckage of this space battle to a few \"trusted friends\". The race is on to get the information, equipment and speed to get there first, find the goods and get clear before the Alliance shows up to claim its property!",
-    setupDescription: "Captains Nandi and Atherton may not be used by any player.",
+    setupDescription: "Follow the 'Leader Restriction' override.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/125866/return-to-sturges-a-firefly-mission",
     rules: createStoryRules("Return to Sturges", [
@@ -35,7 +35,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     additionalRequirements: [
       "blue"
     ],
-    setupDescription: "Player 1 will be the Captain of Serenity with Malcolm, Zoë, Wash, Kaylee, Jayne, Inara, Book, Simon, and River. Serenity starts with the Xùnsù Whisper X1 from Meridian, an Expanded Crew Quarters from Osiris, and an EVA Suit from Space Bazaar for River. No Starting Jobs. Player 2 is a Bounty Hunter and chooses the Setup card. No Starting Jobs. Remove all Serenity's crew from the Bounty deck, excluding River Tam. The Bounty deck is placed face up and all bounties are active.",
+    setupDescription: "Follow the 'Asymmetric Setup' and 'Bounty Deck Setup' overrides.",
     sourceUrl: "https://boardgamegeek.com/thread/3454248/rivers-run-1v1",
     requiredExpansion: "community",
     rules: createStoryRules("River's Run 1v1", [
@@ -86,9 +86,57 @@ export const STORIES_R_S: StoryCardDef[] = [
     isPvP: true,
     intro: "During the war you watched your twin get cut down in a hail of shrapnel. You've lived an empty existence since that day making ends meet and trying to keep flying as best you can. Then you get a message from your Ma out on the Rim. \"Come home right away.\"\n\nSo you fly to St. Albans, Red Sun to see your Mother.\n\nOnce there, your twin (Who wasn't dead!) steals your ship and sets about ruining your life. Your twin has the exact same abilities as you do. Your twin may not discard any of your inactive jobs.",
     sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
-    setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship.",
+    setupDescription: "Asymmetric PvP setup: Your twin steals your initial ship! Follow the special setup overrides.",
     rules: createStoryRules("Ruining It For Everyone", [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Funds" }
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 0, description: "Player starts with $0." },
+      { type: 'setJobMode', mode: 'no_jobs' },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: "The Twin's Heist",
+          content: [
+            { type: 'paragraph', content: ["First, perform a limited setup for your original ship, which your twin will steal:"] },
+            {
+              type: 'list', items: [
+                ["Choose your Ship and Leader."],
+                ["Hire up to 2 Crew with a combined value of no more than $500. Crew with a $0 cost may not be hired."],
+                ["Take $2000 in starting funds."],
+                ["If you have no Wanted Crew after hiring, take 1 Warrant token."],
+              ]
+            },
+            { type: 'paragraph', content: [{ type: 'strong', content: "This entire setup (Ship, Leader, Crew, money, etc.) now belongs to your twin." }] }
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: "Your Starting Conditions",
+          content: [
+            { type: 'paragraph', content: ["You begin play with a backup ship, 0 Crew, $0 Credits, and no Starting Jobs."] }
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Starting Location',
+          content: ["Both your ship and your twin's ship start at ", { type: 'strong', content: "St. Albans, Red Sun" }, "."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'goal',
+        rule: {
+          title: 'Game Timer',
+          content: [
+            { type: 'paragraph', content: ["Set 20 counters on this story card as timing counters."] }
+          ]
+        }
+      }
     ])
   },
   {
@@ -119,7 +167,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     title: "Scavengers",
     intro: "This game only uses dice, cash, Leader cards, Supply decks, cargo, and contraband. Everything else stays in the box. A scavengers goal is simple, Find a Crew, Attack Another Crew, Keep Trying.",
     isPvP: true,
-    setupDescription: "Setup Overrides: Start with $10,000 & 10 Cargo (no Fuel/Parts). Leader Draft Only (no ships). Other components not used.",
+    setupDescription: "Radical setup change: Follow the 'Scavenger Draft Rules' and other overrides.",
     sourceUrl: "https://boardgamegeek.com/thread/3114859/scavenger-card-game-story-card",
     requiredExpansion: "community",
     rating: 1,

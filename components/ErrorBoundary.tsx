@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ErrorFallback } from './ErrorFallback';
 
@@ -15,6 +16,8 @@ interface ErrorBoundaryState {
  */
 // FIX: The ErrorBoundary class must extend React.Component to be a valid class component
 // with access to `this.props` and `this.setState`.
+// FIX: Extended React.Component to make this a valid class component.
+// FIX: Class component must extend React.Component to have access to props and state methods.
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = {
     hasError: false,
@@ -31,6 +34,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 
   handleReset = () => {
+    // FIX: Access to `this.setState` is now available after extending React.Component.
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
@@ -45,6 +49,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
       );
     }
 
+    // FIX: Access to `this.props` is now available after extending React.Component.
     return this.props.children;
   }
 }
