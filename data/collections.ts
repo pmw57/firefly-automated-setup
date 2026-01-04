@@ -8,8 +8,6 @@ export const SOLO_EXCLUDED_STORIES: string[] = [
   "The Great Recession",
   "The Scavenger's 'Verse",
   "The Well's Run Dry",
-  // FIX: Add classic solo story to the exclusion list for Flying Solo mode.
-  "Awful Lonely In The Big Black",
 ];
 
 /**
