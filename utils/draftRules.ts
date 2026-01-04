@@ -1,3 +1,4 @@
+
 import { 
     GameState, 
     Step,
@@ -38,11 +39,27 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
     const shipPlacementRule = allRules.find(r => r.type === 'setShipPlacement') as (SetShipPlacementRule | undefined);
     
     let specialStartSector: string | null = null;
+    
+    // Check for machine-readable placement rules first
     if (shipPlacementRule) {
-      if (shipPlacementRule.location === 'persephone' && !isHeroesCustomSetup) specialStartSector = 'Persephone';
-      if (shipPlacementRule.location === 'londinium') specialStartSector = 'Londinium';
-      if (shipPlacementRule.location === 'border_of_murphy') specialStartSector = 'Border of Murphy';
+      switch (shipPlacementRule.location) {
+        case 'persephone':
+            if (!isHeroesCustomSetup) specialStartSector = 'Persephone';
+            break;
+        case 'londinium':
+            specialStartSector = 'Londinium';
+            break;
+        case 'border_of_murphy':
+            specialStartSector = 'Border of Murphy';
+            break;
+      }
     }
+
+    // Handle specific story cards that use SpecialRuleBlocks for placement
+    if (activeStoryCard?.title === "Ruining It For Everyone") {
+        specialStartSector = "St. Albans, Red Sun";
+    }
+
 
     const startOutsideAllianceSpace = shipPlacementRule?.location === 'outside_alliance';
 
