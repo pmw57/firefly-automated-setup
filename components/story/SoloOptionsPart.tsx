@@ -1,27 +1,27 @@
+
+
 import React from 'react';
-import { StoryCardDef, AdvancedRuleDef } from '../../types';
 import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionIcon } from '../ExpansionIcon';
 import { ActionType } from '../../state/actions';
+import { useMissionSelection } from '../../hooks/useMissionSelection';
+import { cls } from '../../utils/style';
 
-interface SoloOptionsPartProps {
-  activeStoryCard: StoryCardDef;
-  availableAdvancedRules: AdvancedRuleDef[];
-}
-
-export const SoloOptionsPart: React.FC<SoloOptionsPartProps> = ({
-  activeStoryCard,
-  availableAdvancedRules
-}) => {
+export const SoloOptionsPart: React.FC = () => {
   const { state: gameState, dispatch } = useGameState();
+  const { activeStoryCard, allPotentialAdvancedRules: availableAdvancedRules } = useMissionSelection();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  
+  if (!activeStoryCard) return null;
 
   const toggleChallengeOption = (id: string) => {
     dispatch({ type: ActionType.TOGGLE_CHALLENGE_OPTION, payload: id });
   };
+  
+  const disabledRuleId = activeStoryCard.advancedRule?.id;
 
   const bodyBg = isDark ? 'bg-zinc-900/50' : 'bg-paper-texture';
   const mainTitleColor = isDark ? 'text-gray-100' : 'text-[#292524]';
@@ -60,26 +60,38 @@ export const SoloOptionsPart: React.FC<SoloOptionsPartProps> = ({
             </div>
             {availableAdvancedRules.map((rule) => {
               const isChecked = !!gameState.challengeOptions[rule.id];
+              const isDisabled = rule.id === disabledRuleId;
+              
               return (
                 <label 
                   key={rule.id}
-                  className={`flex items-start p-3 border-b last:border-b-0 cursor-pointer hover:bg-black/5 transition-colors ${isDark ? 'border-zinc-700 hover:bg-white/5' : 'border-gray-200'}`}
+                  className={cls(
+                    "flex items-start p-3 border-b last:border-b-0 transition-colors", 
+                    isDark ? 'border-zinc-700' : 'border-gray-200',
+                    isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-black/5 dark:hover:bg-white/5'
+                  )}
                 >
                   <div className="relative flex items-center mt-0.5">
                     <input 
                       type="checkbox" 
                       className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                       checked={isChecked}
-                      onChange={() => toggleChallengeOption(rule.id)}
+                      disabled={isDisabled}
+                      onChange={() => !isDisabled && toggleChallengeOption(rule.id)}
                     />
                   </div>
                   <div className="ml-3 text-sm">
                     <span className={`font-medium ${isChecked ? (isDark ? 'text-purple-300' : 'text-purple-800') : (isDark ? 'text-gray-300' : 'text-gray-700')}`}>
                       {rule.title}
                     </span>
-                    {rule.description && (
+                    {rule.description && !isDisabled && (
                       <p className={`text-xs italic mt-1 ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>
                         {rule.description}
+                      </p>
+                    )}
+                    {isDisabled && (
+                      <p className="text-xs italic mt-1 text-amber-600 dark:text-amber-500">
+                        (Unavailable: This rule is on the back of the selected Story Card)
                       </p>
                     )}
                   </div>
