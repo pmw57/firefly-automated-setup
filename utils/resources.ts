@@ -1,3 +1,4 @@
+
 import { 
     GameState, 
     ResourceDetails,
@@ -9,7 +10,7 @@ import {
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
-const PRIORITY_ORDER: RuleSourceType[] = ['story', 'challenge', 'setupCard', 'optionalRule', 'expansion'];
+const PRIORITY_ORDER: RuleSourceType[] = ['story', 'challenge', 'setupCard', 'combinableSetupCard', 'optionalRule', 'expansion'];
 
 const _findCreditConflict = (resourceRules: ModifyResourceRule[], manualResolutionEnabled: boolean): {
     conflict?: ResourceConflict;

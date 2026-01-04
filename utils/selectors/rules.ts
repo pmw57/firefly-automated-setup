@@ -1,4 +1,5 @@
-import { GameState, SetupRule } from '../../types/index';
+
+import { GameState, SetupRule, RuleSourceType } from '../../types/index';
 import { getSetupCardById } from './story';
 import { getActiveStoryCard } from './story';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
@@ -16,18 +17,30 @@ export const getResolvedRules = (gameState: GameState): SetupRule[] => {
 
     // Rules from Setup Cards
     const primaryCard = getSetupCardById(gameState.setupCardId);
-    if (primaryCard?.rules) {
-        rules.push(...primaryCard.rules);
-    }
-    
-    if (primaryCard?.isCombinable && gameState.secondarySetupId) {
+    const isCombinable = !!primaryCard?.isCombinable;
+
+    // When a combinable card is active (e.g., Flying Solo), it acts as a modifier.
+    // The secondary card defines the main board state and should have higher priority.
+    if (isCombinable && gameState.secondarySetupId) {
         const secondaryCard = getSetupCardById(gameState.secondarySetupId);
         if (secondaryCard?.rules) {
+            // These rules retain the standard 'setupCard' source for high priority.
             rules.push(...secondaryCard.rules);
         }
     }
     
-    // Rules from Story Card
+    if (primaryCard?.rules) {
+        if (isCombinable) {
+            // The combinable card's rules are assigned a lower-priority source.
+            const combinableRules = primaryCard.rules.map(rule => ({ ...rule, source: 'combinableSetupCard' as RuleSourceType }));
+            rules.push(...combinableRules);
+        } else {
+            // If not a combinable setup, it's a standard setup card.
+            rules.push(...primaryCard.rules);
+        }
+    }
+    
+    // Rules from Story Card (Highest Priority)
     const storyCard = getActiveStoryCard(gameState);
     if (storyCard?.rules) {
         rules.push(...storyCard.rules);

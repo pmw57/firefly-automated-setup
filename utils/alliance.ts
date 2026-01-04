@@ -1,3 +1,4 @@
+
 import { 
     GameState, 
     StepOverrides, 
@@ -11,13 +12,16 @@ import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
 // FIX: Added a helper function to safely map the broader RuleSourceType
 // to the narrower source type expected by SpecialRuleBlock. This resolves the
-// TypeScript error by explicitly handling 'challenge' and 'optionalRule' cases.
+// TypeScript error by explicitly handling 'challenge', 'optionalRule', and 'combinableSetupCard' cases.
 const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source'] => {
   if (source === 'challenge') {
     return 'warning';
   }
   if (source === 'optionalRule') {
     return 'info';
+  }
+  if (source === 'combinableSetupCard') {
+    return 'setupCard';
   }
   return source;
 };

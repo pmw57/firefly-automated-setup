@@ -41,7 +41,7 @@ export interface ModifyResourceEffect extends Effect {
   value?: number;
 }
 
-export type RuleSourceType = 'story' | 'setupCard' | 'expansion' | 'optionalRule' | 'challenge';
+export type RuleSourceType = 'story' | 'setupCard' | 'expansion' | 'optionalRule' | 'challenge' | 'combinableSetupCard';
 
 export interface BaseRule {
   type: string;
