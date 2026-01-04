@@ -61,6 +61,16 @@ export const SOLO_STORIES: StoryCardDef[] = [
             }
           ]
         }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Game Length Timer',
+          content: [
+            { type: 'paragraph', content: ['Place a pile of exactly ', { type: 'strong', content: '20 Disgruntled Tokens' }, ' to the side. These tokens will be used as Game Length Tokens.'] }
+          ]
+        }
       }
     ]),
     goals: [
