@@ -41,9 +41,27 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupDescription: "Setup follows the normal rules with the following exceptions: 1) In addition to selecting yout Leader, you may also select up to 4 crew cards from any deck - up to a total value of $1000. 2) Place a pile of exactly 20 Disgruntled Tokens to the side. These tokens will be used as Game Length Tokens.",
     sourceUrl: "https://web.archive.org/web/20220226163627/https://www.flamesofwar.com/Portals/0/all_images/GF9/Firefly/Rulebooks/StoryCards/AwfulLonelyStoryCard.png",
     rules: createStoryRules("Awful Lonely In The Big Black", [
-      { type: 'addFlag', flag: 'removePiracyJobs' },
       { type: 'addFlag', flag: 'soloCrewDraft' },
-      { type: 'addFlag', flag: 'soloGameTimer' }
+      { type: 'addFlag', flag: 'soloGameTimer' },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Assembling a Rag-Tag Crew',
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                'In addition to selecting your Leader, you may also select up to ',
+                { type: 'strong', content: '4 Crew cards' },
+                ' from any deck, up to a total value of ',
+                { type: 'strong', content: '$1000' },
+                '.'
+              ]
+            }
+          ]
+        }
+      }
     ]),
     goals: [
       { title: "Goal 1: The Good", description: "Making Connections: End the game Solid with 5 different Contacts." },

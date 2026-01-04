@@ -86,15 +86,25 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     isSolo: true,
     setupDescription: "Same as Awful Lonely in the Big Black",
     rules: createStoryRules("Christmas Delivery", [
-      { type: 'addFlag', flag: 'removePiracyJobs' },
       { type: 'addFlag', flag: 'soloCrewDraft' },
       { type: 'addFlag', flag: 'soloGameTimer' },
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: 'Story Override',
-          content: ["The same as Awful Lonely in the Big Black"]
+          title: 'Assembling a Rag-Tag Crew',
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                'In addition to selecting your Leader, you may also select up to ',
+                { type: 'strong', content: '4 Crew cards' },
+                ' from any deck, up to a total value of ',
+                { type: 'strong', content: '$1000' },
+                '.'
+              ]
+            }
+          ]
         }
       }
     ]),
