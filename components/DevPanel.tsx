@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeContext';
 import { DevStoryAudit } from './DevStoryAudit';
 import { DevAddStoryCard } from './DevAddStoryCard';
+import { DevTestingMatrix } from './DevTestingMatrix';
 
 const DEFAULT_THEME_VALUES = {
   // Light Theme
@@ -56,6 +57,7 @@ export const DevPanel = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [showStoryAudit, setShowStoryAudit] = useState(false);
     const [showAddStory, setShowAddStory] = useState(false);
+    const [showTestingMatrix, setShowTestingMatrix] = useState(false);
     const [themeValues, setThemeValues] = useState(DEFAULT_THEME_VALUES);
     const { theme } = useTheme();
 
@@ -91,6 +93,10 @@ export const DevPanel = () => {
         return <DevAddStoryCard onClose={() => setShowAddStory(false)} />;
     }
 
+    if (showTestingMatrix) {
+        return <DevTestingMatrix onClose={() => setShowTestingMatrix(false)} />;
+    }
+
     if (!isOpen) {
         return (
             <button
@@ -122,6 +128,12 @@ export const DevPanel = () => {
                     className="w-full bg-green-600 hover:bg-green-500 text-white text-sm font-bold py-2 rounded"
                 >
                     Add Story Card
+                </button>
+                <button
+                    onClick={() => setShowTestingMatrix(true)}
+                    className="w-full bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold py-2 rounded"
+                >
+                    Generate Testing Matrix
                 </button>
             </div>
 
