@@ -78,7 +78,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     title: "Round the 'Verse in \"80 Days\"",
     intro: "Mr. Big Bucks, who lives next to the Tams in Sihnon, has two 19-year-old kids. They are finishing a semester of school at Osiris. Mr. Big Bucks wants the kids to experience the universe. He's looking for someone to show them around the universe and return them healthily. You can put the kids to work to some extent, but must return them healthy. He'll pay $20,000 when done.",
     requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/image/9306408/pmw57"
+    sourceUrl: "https://web.archive.org/web/20151227202622/http://notionnexus.com/index.php/ponderings-and-thoughts/247-playing-firefly"
   },
   {
     title: "Ruining It For Everyone",
