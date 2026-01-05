@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../types';
 import { CONTACT_NAMES } from '../ids';
 import { createStoryRules } from './utils';
@@ -31,7 +30,10 @@ export const TENTH_STORIES: StoryCardDef[] = [
     intro: "Prove you're the best - or luckiest - crew around by collecting tales of your exploits.",
     setupDescription: "Create a stack of Alliance Alert Tokens equal to four times the number of players.",
     requiredExpansion: "tenth",
-    sourceUrl: "https://boardgamegeek.com/image/8103873/sjliver"
+    sourceUrl: "https://boardgamegeek.com/image/8103873/sjliver",
+    rules: createStoryRules("Aces Up Your Sleeve", [
+      { type: 'createAlertTokenStack', multiplier: 4 }
+    ])
   },
   {
     title: "Dead Man's Hand",

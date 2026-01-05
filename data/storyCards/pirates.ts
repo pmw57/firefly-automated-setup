@@ -8,6 +8,7 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     intro: "Wealth can be measured in many ways. In some parts of the 'Verse Alliance credits ain't worth the paper they're printed on. For those regions, a more practical measure of wealth is required. Hoard a mountain of trade goods and spare parts, through any means necessary. Break contracts, steal from your rivals or just pick the bones. Anything goes!",
     requiredExpansion: "pirates",
     sourceUrl: "https://boardgamegeek.com/image/2785046/gerryrailbaron",
+    setupDescription: "Special Haven placement in Border Space. Piracy jobs are removed from play.",
     rules: createStoryRules("...Another Man's Treasure", [
       { type: 'addFlag', flag: 'addBorderHavens' },
       { type: 'addFlag', flag: 'removePiracyJobs' }

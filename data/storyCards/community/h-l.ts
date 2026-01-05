@@ -29,6 +29,7 @@ export const STORIES_H_L: StoryCardDef[] = [
     intro: "River is prisoner in a secure hospital at Londinium, and needs rescuing.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/103582/goal-hospital-rescue",
+    setupDescription: "Remove River Tam from play.",
     rules: createStoryRules("Hospital Rescue", [
       { type: 'addFlag', flag: 'removeRiver' }
     ]),
@@ -38,6 +39,7 @@ export const STORIES_H_L: StoryCardDef[] = [
     title: "How It All Started",
     intro: "You're low on funds, and need to get a job. Badger's hired you to scavenge a derelict ship dangerously close to an Alliance cruiser. Get the cargo, evade the Alliance, and sell it.",
     requiredExpansion: "community",
+    setupDescription: "Start with $500, 2 Fuel, and 2 Parts. Special hiring bonus for Nandi.",
     rules: createStoryRules("How It All Started", [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Story Funds" },
       { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, description: "Story-Specific Fuel" },
@@ -58,6 +60,7 @@ export const STORIES_H_L: StoryCardDef[] = [
     intro: "Your last run in with Harken turned South and you've got a boatload of warrants trailin' ya. Time to clean your ledger and get dirt on Harken instead.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/image/4434522/pmw57",
+    setupDescription: "Start with 2 Warrants. Alliance Space is off limits. Harken is unavailable for Jobs.",
     rules: createStoryRules("It Ain't Easy Goin' Legit", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, description: "Start with 2 Warrants." },
       { type: 'addFlag', flag: 'allianceSpaceOffLimits' },
@@ -94,6 +97,7 @@ export const STORIES_H_L: StoryCardDef[] = [
     intro: "Alliance brass has handed down some flush to the local magistrates to round up some old warrants and they're hiring new law men who can prove they can get the job done.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1093761/article/14404723#14404723",
+    setupDescription: "Wanted crew may not be hired.",
     rating: 1,
     rules: createStoryRules("Laying Down the Law", [
       {

@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../../types';
 import { CONTACT_NAMES } from '../../ids';
 import { createStoryRules } from '../utils';
@@ -9,6 +8,7 @@ export const STORIES_M_O: StoryCardDef[] = [
     intro: "On a backwater planet, an old friend sends out a plea. Marauders are bleeding their town dry. Suss out the trouble, assemble a crew, and eliminate the pesky varmints.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/image/2277037/upstarter",
+    setupDescription: "No starting jobs are dealt.",
     rules: createStoryRules("The Magnificent Crew", [
       { type: 'setJobMode', mode: 'no_jobs' },
       {
