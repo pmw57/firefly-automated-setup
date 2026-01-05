@@ -7,6 +7,7 @@ export const KALIDASA_STORIES: StoryCardDef[] = [
     intro: "Credits are all well and good, but a strong network of contacts will pay greater dividends in the future. That's a lesson every captain gets to learn early, or they're likely not to be around long enough to learn it at all.",
     requiredExpansion: "kalidasa",
     sourceUrl: "https://boardgamegeek.com/image/2785039/gerryrailbaron",
+    setupDescription: "Creates an Alliance Alert Token stack. No starting jobs are dealt.",
     rules: createStoryRules("It's All In Who You Know", [
       { type: 'createAlertTokenStack', multiplier: 3 },
       { type: 'setJobMode', mode: 'no_jobs' }

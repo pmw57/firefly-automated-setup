@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../../types';
 import { CONTACT_NAMES } from '../../ids';
 import { createStoryRules } from '../utils';
@@ -144,6 +143,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     intro: "River Tam is being held in secure, secret government facility. Beloved sister, daughter of the ridiculously wealthy, and super useful government secret weapon. Whatever your reasons, you are on a mission to break River out.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1066622/story-card-save-river-tam",
+    setupDescription: "Remove River Tam from play.",
     rules: createStoryRules("Save River Tam", [
       { type: 'addFlag', flag: 'removeRiver' }
     ]),
@@ -237,6 +237,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     intro: "The Silverhold-Hera route is usually a harmless uneventful run. Unless, of course, someone installs a beacon on the cargo which attracts a Reaver party.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/100497/shadows-over-duul-new-goal-reupload",
+    setupDescription: "Amnon Duul is unavailable. Start on the Border of Murphy.",
     rules: createStoryRules("Shadows Over Duul", [
       { type: 'forbidContact', contact: CONTACT_NAMES.AMNON_DUUL },
       { type: 'setShipPlacement', location: 'border_of_murphy' }
@@ -269,6 +270,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     isCoOp: true,
     intro: "Adelai Niska has been lord of the underworld for as long as anyone can remember. Shu-ki, the tong boss of Gonghe, has long suffered under Niska's yoke. After being publicly shamed by Niska at a meeting of crime-bosses, an enraged Shu-ki has decided to bring Niska down. He has a plan - Operation Dragon - but the job is so daunting that it requires two crews to have any hope of success. Can two Firefly captains bring down the most feared criminal boss in the 'Verse?",
     requiredExpansion: "community",
+    setupDescription: "Niska is unavailable. 'Prime the Pump' discards 2 additional cards.",
     rules: createStoryRules("Slaying The Dragon", [
       { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
       { type: 'modifyPrime', modifier: { add: 2 } },
