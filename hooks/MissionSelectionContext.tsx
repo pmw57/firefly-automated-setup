@@ -1,5 +1,3 @@
-
-
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types/index';
 import { useGameState } from '../hooks/useGameState';

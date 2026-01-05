@@ -7,7 +7,8 @@ import { ActionType } from '../state/actions';
 import { PlayerConfigSection } from './setup/PlayerConfigSection';
 import { CampaignConfigSection } from './setup/CampaignConfigSection';
 import { ExpansionListSection } from './setup/ExpansionListSection';
-import { getSetupCardSelectionInfo, isFlyingSoloEligible } from '../utils/ui';
+import { isFlyingSoloEligible } from '../utils/ui';
+import { calculateSetupFlow } from '../utils/flow';
 
 interface CaptainSetupProps {
   onNext: () => void;
@@ -22,7 +23,7 @@ export const CaptainSetup = ({ onNext, isDevMode }: CaptainSetupProps): React.Re
   const isSolo = gameState.gameMode === 'solo';
   const has10th = gameState.expansions.tenth;
   
-  const { totalParts } = useMemo(() => getSetupCardSelectionInfo(gameState), [gameState]);
+  const totalParts = useMemo(() => calculateSetupFlow(gameState).filter(s => s.type === 'setup').length, [gameState]);
 
   // Handlers - Dispatch actions
   const updatePlayerCount = (newCount: number) => {
@@ -64,6 +65,7 @@ export const CaptainSetup = ({ onNext, isDevMode }: CaptainSetupProps): React.Re
         playerCount={gameState.playerCount}
         playerNames={gameState.playerNames}
         isSolo={isSolo}
+        setupMode={gameState.setupMode}
         onCountChange={updatePlayerCount}
         onNameChange={handleNameChange}
       />

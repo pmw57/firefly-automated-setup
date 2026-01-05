@@ -61,7 +61,9 @@ export const GameLengthTokensStep: React.FC = () => {
 
     return (
         <div className="space-y-6">
-            {specialRules.map((rule, i) => (
+            {specialRules
+              .filter(rule => gameState.setupMode === 'advanced' || rule.source !== 'expansion')
+              .map((rule, i) => (
                 <SpecialRuleBlock key={`special-${i}`} {...rule} />
             ))}
 

@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { DisgruntledDieOption } from '../types/index';
 import { Button } from './Button';
 import { useTheme } from './ThemeContext';
@@ -7,6 +6,7 @@ import { useGameState } from '../hooks/useGameState';
 import { ActionType } from '../state/actions';
 import { TenthRulesSection } from './setup/TenthRulesSection';
 import { SoloRulesSection } from './setup/SoloRulesSection';
+import { calculateSetupFlow } from '../utils/flow';
 
 interface OptionalRulesSelectionProps {
   onStart: () => void;
@@ -29,6 +29,8 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
   const isDark = theme === 'dark';
   const isSolo = gameState.gameMode === 'solo';
   const has10th = gameState.expansions.tenth;
+
+  const totalParts = useMemo(() => calculateSetupFlow(gameState).filter(s => s.type === 'setup').length, [gameState]);
 
   const toggleSoloOption = (key: keyof typeof gameState.soloOptions) => {
     dispatch({ type: ActionType.TOGGLE_SOLO_OPTION, payload: key });
@@ -92,7 +94,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
     <div className={`${containerBg} rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in transition-all duration-300`}>
        <div className={`flex justify-between items-center mb-6 border-b ${containerBorder} pb-2`}>
            <h2 className={`text-2xl font-bold font-western ${headerColor}`}>Optional Settings</h2>
-           <span className={`text-xs font-bold ${badgeClass} border px-2 py-1 rounded`}>Part 3 of 3</span>
+           <span className={`text-xs font-bold ${badgeClass} border px-2 py-1 rounded`}>Part {totalParts} of {totalParts}</span>
         </div>
 
         <div className="space-y-8 mb-8">

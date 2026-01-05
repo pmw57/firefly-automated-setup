@@ -1,8 +1,5 @@
-
-
-
 // FIX: Changed import from '../types' to '../../types/index' to fix module resolution ambiguity.
-import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption, CampaignSetupNote } from '../../types/index';
+import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption, CampaignSetupNote, SetupMode } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { SETUP_CARD_IDS } from '../../data/ids';
@@ -58,7 +55,15 @@ export const getAvailableSetupCards = (gameState: GameState): SetupCardDef[] => 
 };
 
 export const getAvailableStoryCards = (gameState: GameState): StoryCardDef[] => {
-    return STORY_CARDS.filter(card => isStoryCompatible(card, gameState));
+    const stateWithBasicModeFilters: GameState = {
+        ...gameState,
+        expansions: {
+            ...gameState.expansions,
+            // In basic mode, always treat community expansions as disabled for filtering purposes
+            community: gameState.setupMode === 'basic' ? false : gameState.expansions.community,
+        }
+    };
+    return STORY_CARDS.filter(card => isStoryCompatible(card, stateWithBasicModeFilters));
 };
 
 export const getFilteredStoryCards = (
@@ -116,11 +121,13 @@ export const getCampaignNotesForStep = (gameState: GameState, stepId: string): C
         .filter((note: CampaignSetupNote | undefined): note is CampaignSetupNote => !!note && note.stepId === stepId);
 };
 
-export const getCategorizedExpansions = (showHidden = false) => {
+export const getCategorizedExpansions = (showHidden = false, setupMode: SetupMode = 'basic') => {
   const group = (category: string) => EXPANSIONS_METADATA.filter(e => {
     if (e.id === 'base') return false;
     if (e.category !== category) return false;
     if (e.hidden && !showHidden) return false;
+    // In basic mode, hide all independent content.
+    if (setupMode === 'basic' && e.category === 'independent') return false;
     return true;
   });
   return {

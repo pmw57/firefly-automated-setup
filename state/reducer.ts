@@ -1,10 +1,10 @@
-import { GameState, Expansions, GameMode } from '../types/index';
-import { Action, ActionType } from './actions';
+import { GameState, Expansions, GameMode, SetupMode } from '../types/index';
+import { Action, ActionType, ExpansionBundle } from './actions';
 import { STORY_CARDS } from '../data/storyCards';
 import { SETUP_CARDS } from '../data/setupCards';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { SETUP_CARD_IDS } from '../data/ids';
-import { EXPANSION_SETTINGS_STORAGE_KEY } from '../data/constants';
+import { EXPANSION_SETTINGS_STORAGE_KEY, SETUP_MODE_STORAGE_KEY } from '../data/constants';
 
 /**
  * A helper function to default to "Flying Solo" mode if the conditions are met.
@@ -170,11 +170,30 @@ const getPersistedExpansions = (): Expansions => {
     return defaultExpansions;
 };
 
+/**
+ * Retrieves the setup mode ('basic' or 'advanced') from local storage.
+ * Defaults to 'advanced' if no setting is found.
+ */
+const getPersistedSetupMode = (): SetupMode => {
+    try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+            const saved = localStorage.getItem(SETUP_MODE_STORAGE_KEY) as SetupMode;
+            if (saved === 'basic' || saved === 'advanced') {
+                return saved;
+            }
+        }
+    } catch (e) {
+        console.error("Could not load setup mode preference.", e);
+    }
+    return 'advanced';
+};
+
 
 export const getDefaultGameState = (): GameState => {
     return {
         gameEdition: 'tenth',
         gameMode: 'multiplayer',
+        setupMode: getPersistedSetupMode(),
         playerCount: 4,
         playerNames: ['', '', '', ''],
         setupCardId: '',
@@ -297,6 +316,30 @@ const handleToggleFlyingSolo = (state: GameState): GameState => {
             draft: { state: null, isManual: false },
         };
     }
+};
+
+const handleSetExpansionsBundle = (state: GameState, bundle: ExpansionBundle): GameState => {
+    const newExpansions = { ...state.expansions };
+    const allOfficial = EXPANSIONS_METADATA
+        .filter(e => e.category !== 'independent' && e.id !== 'base')
+        .map(e => e.id as keyof Expansions);
+        
+    // Turn off all official expansions first
+    allOfficial.forEach(id => {
+        newExpansions[id] = false;
+    });
+    
+    if (bundle === 'rim_worlds') {
+        newExpansions.blue = true;
+        newExpansions.kalidasa = true;
+    } else if (bundle === 'all_official') {
+        allOfficial.forEach(id => {
+            newExpansions[id] = true;
+        });
+    }
+    // 'core_only' is handled by the initial reset.
+
+    return { ...state, expansions: newExpansions };
 };
 
 export function gameReducer(state: GameState, action: Action): GameState {
@@ -436,6 +479,23 @@ export function gameReducer(state: GameState, action: Action): GameState {
       nextState = { ...state, showHiddenContent: showHidden, expansions: nextExpansions };
       break;
     }
+
+    case ActionType.SET_SETUP_MODE: {
+      const newMode = action.payload;
+      try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+          localStorage.setItem(SETUP_MODE_STORAGE_KEY, newMode);
+        }
+      } catch (e) {
+        console.error("Could not save setup mode preference.", e);
+      }
+      nextState = { ...state, setupMode: newMode };
+      break;
+    }
+      
+    case ActionType.SET_EXPANSIONS_BUNDLE:
+      nextState = handleSetExpansionsBundle(state, action.payload);
+      break;
 
     default:
       nextState = state;

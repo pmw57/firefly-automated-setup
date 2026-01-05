@@ -67,6 +67,8 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
   const badgeBorder = 'border border-[#450a0a] dark:border-0';
   const navBorderTop = 'border-[#d6cbb0] dark:border-zinc-800';
 
+  const nextButtonText = enablePart2 && gameState.setupMode === 'advanced' ? 'Next: Options →' : 'Next Step →';
+
   return (
     <div className="space-y-6 animate-fade-in">
       <h4 className={`text-center font-bold text-sm uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -112,7 +114,7 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
           className="shadow-lg hover:translate-y-[-2px] transition-transform"
           disabled={!activeStoryCard || isNavigating}
         >
-          {enablePart2 ? 'Next: Options →' : 'Next Step →'}
+          {nextButtonText}
         </Button>
       </div>
     </div>

@@ -72,8 +72,10 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
         </p>
       </div>
       
-      {specialRules.map((rule, i) => (
-        <SpecialRuleBlock key={i} {...rule} />
+      {specialRules
+        .filter(rule => gameState.setupMode === 'advanced' || rule.source !== 'expansion')
+        .map((rule, i) => (
+          <SpecialRuleBlock key={i} {...rule} />
       ))}
       
       {isSolitaireFirefly ? (

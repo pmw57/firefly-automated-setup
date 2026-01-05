@@ -154,7 +154,9 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
         />
       )}
 
-      {specialRules.map((rule, i) => <SpecialRuleBlock key={`special-rule-${i}`} {...rule} />)}
+      {specialRules
+        .filter(rule => gameState.setupMode === 'advanced' || rule.source !== 'expansion')
+        .map((rule, i) => <SpecialRuleBlock key={`special-rule-${i}`} {...rule} />)}
       
       {creditModificationSource === 'setupCard' && creditModificationDescription && !hasComplexCreditCalculation && (
         <SpecialRuleBlock
@@ -168,7 +170,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             <h4 className={`font-bold ${textColor}`}>Starting Credits</h4>
-            {hasComplexCreditCalculation ? (
+            {hasComplexCreditCalculation && gameState.setupMode === 'advanced' ? (
               <button
                 onClick={() => setShowBreakdown(s => !s)}
                 className={`text-xs mt-1 ${modsText} flex items-center gap-1.5 p-1 -ml-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors`}
@@ -183,7 +185,9 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
                 </svg>
               </button>
             ) : (
-              <p className={`text-xs mt-1 ${modsText} italic`}>Standard allocation.</p>
+              <p className={`text-xs mt-1 ${modsText} italic`}>
+                {hasComplexCreditCalculation ? 'Calculation based on story/setup cards.' : 'Standard allocation.'}
+              </p>
             )}
 
             {showBreakdown && hasComplexCreditCalculation && (

@@ -1,4 +1,4 @@
-import { GameState } from '../types/index';
+import { GameState, SetupMode } from '../types/index';
 
 // FIX: Reverted to 'Campaign' action types to align with state changes.
 export enum ActionType {
@@ -27,7 +27,11 @@ export enum ActionType {
   ACKNOWLEDGE_OVERRIDES = 'ACKNOWLEDGE_OVERRIDES',
   SET_DRAFT_CONFIG = 'SET_DRAFT_CONFIG',
   TOGGLE_SHOW_HIDDEN_CONTENT = 'TOGGLE_SHOW_HIDDEN_CONTENT',
+  SET_SETUP_MODE = 'SET_SETUP_MODE',
+  SET_EXPANSIONS_BUNDLE = 'SET_EXPANSIONS_BUNDLE',
 }
+
+export type ExpansionBundle = 'core_only' | 'rim_worlds' | 'all_official';
 
 // You can also define payload types here for more complex actions
 export type Action =
@@ -55,4 +59,6 @@ export type Action =
   | { type: ActionType.SET_STORY_OVERRIDES; payload: string[] }
   | { type: ActionType.ACKNOWLEDGE_OVERRIDES; payload: string[] }
   | { type: ActionType.SET_DRAFT_CONFIG; payload: GameState['draft'] }
-  | { type: ActionType.TOGGLE_SHOW_HIDDEN_CONTENT };
+  | { type: ActionType.TOGGLE_SHOW_HIDDEN_CONTENT }
+  | { type: ActionType.SET_SETUP_MODE; payload: SetupMode }
+  | { type: ActionType.SET_EXPANSIONS_BUNDLE; payload: ExpansionBundle };

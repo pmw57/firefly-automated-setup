@@ -69,6 +69,10 @@ The `.github/workflows/deploy.yml` pipeline will automatically:
 3.  Build the production assets.
 4.  Deploy to the `gh-pages` branch.
 
+## 🙏 Acknowledgements
+
+*   **Red Rocker Switch**: The slick, thematic toggle switch was adapted from a CodePen by [Yoav Kadosh](https://codepen.io/ykadosh/pen/ExNOmZx).
+
 ## 📝 License
 
 This is a fan-made project. *Firefly: The Game* is a trademark of Gale Force Nine. This project is not affiliated with or endorsed by GF9.

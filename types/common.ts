@@ -3,6 +3,7 @@
 
 export type GameEdition = 'original' | 'tenth';
 export type GameMode = 'multiplayer' | 'solo';
+export type SetupMode = 'basic' | 'advanced';
 
 export interface Expansions {
   base: boolean;
@@ -50,6 +51,7 @@ export interface OptionalRules {
 export interface GameState {
   gameEdition: GameEdition;
   gameMode: GameMode;
+  setupMode: SetupMode;
   playerCount: number;
   playerNames: string[];
   setupCardId: import('./data').SetupCardId | string;

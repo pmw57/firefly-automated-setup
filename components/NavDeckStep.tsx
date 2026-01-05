@@ -1,5 +1,3 @@
-
-
 import React, { useMemo } from 'react';
 import { StructuredContent } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
@@ -47,8 +45,10 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
 
   return (
     <div className="space-y-4">
-      {specialRules.map((rule, i) => (
-        <SpecialRuleBlock key={i} {...rule} />
+      {specialRules
+        .filter(rule => gameState.setupMode === 'advanced' || rule.source !== 'expansion')
+        .map((rule, i) => (
+          <SpecialRuleBlock key={i} {...rule} />
       ))}
 
       <div className={cls(panelBg, "p-6 rounded-lg border shadow-sm overflow-hidden transition-colors duration-300 space-y-4", panelBorder)}>

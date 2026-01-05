@@ -28,9 +28,6 @@ const getInitialSetupSteps = (): Step[] => [
 ];
 
 const getOptionalRulesStep = (): Step[] => {
-    // The optional rules step includes house rules that are always available,
-    // plus conditional rules for the 10th Anniversary expansion and solo mode.
-    // Therefore, this step should always be included in the flow.
     return [{ type: 'setup', id: STEP_IDS.SETUP_OPTIONAL_RULES }];
 };
 
@@ -109,9 +106,11 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
 const getFinalStep = (): Step => ({ type: 'final', id: STEP_IDS.FINAL });
 
 export const calculateSetupFlow = (state: GameState): Step[] => {
+    const optionalRulesStep = state.setupMode === 'advanced' ? getOptionalRulesStep() : [];
+
     return [
         ...getInitialSetupSteps(),
-        ...getOptionalRulesStep(),
+        ...optionalRulesStep,
         ...getCoreStepsFromSetupCard(state),
         getFinalStep(),
     ];

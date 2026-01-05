@@ -8,6 +8,7 @@ import { StepComponentProps } from './StepContent';
 export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState } = useGameState();
   const { overrides = {} } = step;
+  const { setupMode } = gameState;
 
   const {
     specialRules,
@@ -22,6 +23,11 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  
+  const showAllianceOverride = allianceOverride && (setupMode === 'advanced' || allianceOverride.source !== 'expansion');
+  const showReaverOverride = reaverOverride && (setupMode === 'advanced' || reaverOverride.source !== 'expansion');
+  
+  const showStandardSection = !showAllianceOverride || !showReaverOverride;
 
   const standardContainerBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const standardContainerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -36,27 +42,27 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   const reaverTitle = isDark ? 'text-red-300' : 'text-red-900';
   const reaverText = isDark ? 'text-red-200' : 'text-red-800';
 
-  const showStandardSection = !allianceOverride || !reaverOverride;
-
   return (
     <div className="space-y-4">
-      {specialRules.map((rule, index) => (
-        <SpecialRuleBlock key={`special-${index}`} {...rule} />
+      {specialRules
+        .filter(rule => setupMode === 'advanced' || rule.source !== 'expansion')
+        .map((rule, index) => (
+          <SpecialRuleBlock key={`special-${index}`} {...rule} />
       ))}
-      {allianceOverride && <SpecialRuleBlock key="alliance-override" {...allianceOverride} />}
-      {reaverOverride && <SpecialRuleBlock key="reaver-override" {...reaverOverride} />}
+      {showAllianceOverride && <SpecialRuleBlock key="alliance-override" {...allianceOverride!} />}
+      {showReaverOverride && <SpecialRuleBlock key="reaver-override" {...reaverOverride!} />}
 
       {showStandardSection && (
         <div className={`${standardContainerBg} p-4 rounded-lg border ${standardContainerBorder} shadow-sm mt-4 transition-colors duration-300`}>
           <h3 className={`text-lg font-bold ${headerColor} mb-3 font-western tracking-wide border-b-2 ${headerBorder} pb-1`}>Standard Ship Placement</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {!allianceOverride && (
+            {!showAllianceOverride && (
               <div className={`p-3 rounded border ${allianceBoxBg}`}>
                 <strong className={`block text-sm uppercase mb-1 ${allianceTitle}`}>Alliance Cruiser</strong>
                 <p className={`text-sm ${allianceText}`}>{standardAlliancePlacement}</p>
               </div>
             )}
-            {!reaverOverride && (
+            {!showReaverOverride && (
               <div className={`p-3 rounded border ${reaverBoxBg}`}>
                 <strong className={`block text-sm uppercase mb-1 ${reaverTitle}`}>Reaver Cutter</strong>
                 <p className={`text-sm ${reaverText}`}>{standardReaverPlacement}</p>
