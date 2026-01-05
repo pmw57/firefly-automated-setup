@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { useTheme } from './ThemeContext';
 import { Step } from '../types/index';
 import { STEP_IDS } from '../data/ids';
@@ -79,6 +79,29 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
+  const [newlyAddedSteps, setNewlyAddedSteps] = useState<string[]>([]);
+  const prevFlowIdsRef = useRef<string[]>([]);
+  
+  // Effect for visual feedback on flow changes
+  useEffect(() => {
+    const currentFlowIds = flow.map(step => step.id);
+    const prevFlowIds = prevFlowIdsRef.current;
+    
+    // Only run if the flow was already initialized and its length changes
+    if (prevFlowIds.length > 0 && currentFlowIds.length !== prevFlowIds.length) {
+        const added = currentFlowIds.filter(id => !prevFlowIds.includes(id));
+        if (added.length > 0) {
+            setNewlyAddedSteps(added);
+            // Clear the 'new' status after the animation duration
+            const timer = setTimeout(() => setNewlyAddedSteps([]), 2000);
+            return () => clearTimeout(timer);
+        }
+    }
+
+    prevFlowIdsRef.current = currentFlowIds;
+  }, [flow]);
+
+
   const separatorIndex = useMemo(() => flow.findIndex(s => s.type !== 'setup'), [flow]);
   const finishIndex = useMemo(() => flow.findIndex(s => s.type === 'final'), [flow]);
 
@@ -154,6 +177,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
             const isOverridden = isPast && overriddenStepIds.includes(step.id);
             const isDetermined = step.type === 'setup' || setupDetermined;
             const isFirstMainStep = separatorIndex !== -1 && index === separatorIndex;
+            const isNew = newlyAddedSteps.includes(step.id);
             
             const { label, number } = isDetermined ? getStepDisplay(step) : { label: '...', number: undefined };
             
@@ -212,7 +236,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
                       ? "bg-yellow-500 border-yellow-700 dark:bg-amber-500 dark:border-amber-700"
                       : isPast 
                       ? cls(nodeCompletedBg, "border-transparent")
-                      : cls(trackBg, "border-transparent")
+                      : cls(trackBg, "border-transparent"),
+                    isNew && 'animate-pulse-bg'
                   )}
                 >
                   {isOverridden ? (

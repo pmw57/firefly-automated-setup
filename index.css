@@ -20,6 +20,21 @@
   to   { background-position: -100px -100px, -30px -40px; }
 }
 
+@keyframes pulse-bg {
+  0%, 100% { background-color: var(--pulse-color); }
+  50% { background-color: transparent; }
+}
+
+.animate-pulse-bg {
+  --pulse-color: rgba(127, 29, 29, 0.3); /* Red pulse for light mode */
+  animation: pulse-bg 1.5s ease-in-out;
+}
+
+.dark .animate-pulse-bg {
+  --pulse-color: rgba(74, 222, 128, 0.5); /* Green pulse for dark mode */
+}
+
+
 .font-western {
   font-family: 'CIND', serif;
 }

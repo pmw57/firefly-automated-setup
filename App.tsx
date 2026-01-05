@@ -13,6 +13,7 @@ import { SHOW_FOOTER_QR_KEY } from './data/constants';
 import SetupWizard from './components/SetupWizard';
 import { useGameState } from './hooks/useGameState';
 import { SetupModeToggle } from './components/SetupModeToggle';
+import { OnboardingTooltip } from './components/OnboardingTooltip';
 
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
@@ -139,6 +140,8 @@ const App = (): React.ReactElement => {
         <SetupWizard isDevMode={isDevMode} />
       </main>
 
+      <OnboardingTooltip />
+      
       {isDevMode && <DevPanel />}
 
       <InstallPWA isModalOpen={isAnyModalOpen} />
