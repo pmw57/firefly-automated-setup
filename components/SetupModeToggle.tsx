@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useGameState } from '../hooks/useGameState';
 import { ActionType } from '../state/actions';
@@ -47,11 +46,16 @@ export const SetupModeToggle: React.FC = () => {
         };
     }, []);
 
+    const titleText = isAdvanced 
+        ? "A comprehensive checklist including all optional rules and details for enthusiasts."
+        : "A streamlined guide to get you playing faster.";
+
     return (
         <div 
             className="flex items-center gap-2 pointer-events-auto"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            title={titleText}
         >
             <div className={cls(
                 "flex flex-col items-end space-y-0.5 transition-opacity duration-500",
@@ -63,7 +67,7 @@ export const SetupModeToggle: React.FC = () => {
                         ? "text-white"
                         : "text-gray-400"
                 )}>
-                    Advanced
+                    Detailed
                 </span>
                 <span className={cls(
                     "font-bold uppercase text-xs tracking-wider transition-all duration-200 px-2 py-0.5 rounded bg-black/25 backdrop-blur-sm [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]",
@@ -71,7 +75,7 @@ export const SetupModeToggle: React.FC = () => {
                         ? "text-white"
                         : "text-gray-400"
                 )}>
-                    Basic
+                    Quick
                 </span>
             </div>
             <label className="rocker-switch">
@@ -79,7 +83,7 @@ export const SetupModeToggle: React.FC = () => {
                     type="checkbox"
                     checked={isAdvanced}
                     onChange={handleToggle}
-                    aria-label={`Current mode: ${state.setupMode}. Click to switch to ${isAdvanced ? 'basic' : 'advanced'}.`}
+                    aria-label={`Current mode: ${isAdvanced ? 'Detailed' : 'Quick'}. Click to switch.`}
                 />
                 <div className="button">
                     <div className="light"></div>
