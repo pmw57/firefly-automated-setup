@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+
+
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useGameState } from '../hooks/useGameState';
 import { useSetupFlow } from '../hooks/useSetupFlow';
@@ -15,6 +17,7 @@ import { ActionType } from '../state/actions';
 import { STEP_IDS } from '../data/ids';
 import { cls } from '../utils/style';
 import { isSetupDetermined } from '../utils/ui';
+import { calculateSetupFlow } from '../utils/flow';
 
 interface SetupWizardProps {
   isDevMode: boolean;
@@ -31,6 +34,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
     isWizardInitialized
   } = useGameState();
   const { flow } = useSetupFlow();
+  const prevSetupModeRef = useRef(gameState.setupMode);
 
   const [resetKey, setResetKey] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
@@ -39,10 +43,27 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  // Calculate overrides that have been detected but not yet shown to the user in the modal.
   const unacknowledgedOverrides = useMemo(() => {
       return gameState.overriddenStepIds.filter(id => !gameState.acknowledgedOverrides.includes(id));
   }, [gameState.overriddenStepIds, gameState.acknowledgedOverrides]);
+
+  // Effect to handle setup mode changes and maintain the current conceptual step
+  useEffect(() => {
+    if (prevSetupModeRef.current !== gameState.setupMode) {
+      // The mode has changed. Find our place in the new flow.
+      const oldState = { ...gameState, setupMode: prevSetupModeRef.current };
+      const oldFlow = calculateSetupFlow(oldState);
+      const oldStepId = oldFlow[currentStepIndex]?.id;
+
+      if (oldStepId) {
+        const newIndex = flow.findIndex(step => step.id === oldStepId);
+        if (newIndex !== -1 && newIndex !== currentStepIndex) {
+          setCurrentStepIndex(newIndex);
+        }
+      }
+      prevSetupModeRef.current = gameState.setupMode;
+    }
+  }, [gameState.setupMode, flow, currentStepIndex, setCurrentStepIndex, gameState]);
 
   // Effect to detect and set story overrides in global state
   useEffect(() => {
@@ -157,7 +178,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
           <h2 className={cls("text-3xl font-bold font-western mb-4", isDark ? 'text-gray-100' : 'text-[#292524]')}>You are ready to fly!</h2>
           <p className={cls("mb-8 text-lg", isDark ? 'text-gray-300' : 'text-[#57534e]')}>Setup is complete. Good luck, Captain.</p>
           
-          <FinalSummary gameState={gameState} />
+          {gameState.setupMode === 'advanced' && <FinalSummary gameState={gameState} />}
 
           <div className="flex justify-center gap-4">
             <Button onClick={handlePrev} variant="secondary">Back</Button>

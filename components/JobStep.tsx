@@ -1,6 +1,3 @@
-
-
-
 import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
@@ -84,7 +81,9 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
         ]} />
       )}
 
-      {messages.map((msg, idx) => {
+      {messages
+        .filter(msg => gameState.setupMode === 'advanced' || msg.source !== 'expansion')
+        .map((msg, idx) => {
           if (msg.source === 'story' && !isSelectedStory) return null;
           return <SpecialRuleBlock key={idx} source={msg.source} title={msg.title} content={msg.content} />;
       })}

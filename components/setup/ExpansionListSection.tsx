@@ -6,6 +6,7 @@ import { cls } from '../../utils/style';
 import { getCategorizedExpansions } from '../../utils/selectors/story';
 import { useGameState } from '../../hooks/useGameState';
 import { ActionType } from '../../state/actions';
+import { ExpansionBundles } from './ExpansionBundles';
 
 interface ExpansionListSectionProps {
     expansions: Expansions;
@@ -25,7 +26,7 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
         map,
         variants,
         independent
-    } = useMemo(() => getCategorizedExpansions(state.showHiddenContent), [state.showHiddenContent]);
+    } = useMemo(() => getCategorizedExpansions(state.showHiddenContent || state.setupMode === 'advanced'), [state.showHiddenContent, state.setupMode]);
 
     const handleToggleGroup = (group: typeof core_mechanics, enable: boolean) => {
         group.forEach(exp => {
@@ -90,13 +91,18 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
 
     return (
         <div className="mb-8">
-            <div className="space-y-8 relative z-10">
-                {core_mechanics.length > 0 && renderGroup('Core Mechanics', core_mechanics)}
-                {map.length > 0 && renderGroup('Map Expansions', map)}
-                {variants.length > 0 && renderGroup('Game Variants', variants)}
-                {independent.length > 0 && renderGroup('Independent Content', independent)}
-            </div>
-            {isDevMode && (
+            {state.setupMode === 'basic' ? (
+                <ExpansionBundles expansions={expansions} />
+            ) : (
+                <div className="space-y-8 relative z-10">
+                    {core_mechanics.length > 0 && renderGroup('Core Mechanics', core_mechanics)}
+                    {map.length > 0 && renderGroup('Map Expansions', map)}
+                    {variants.length > 0 && renderGroup('Game Variants', variants)}
+                    {independent.length > 0 && renderGroup('Independent Content', independent)}
+                </div>
+            )}
+            
+            {(isDevMode || state.setupMode === 'advanced') && (
                 <div className="mt-8 pt-6 border-t border-dashed border-gray-300 dark:border-zinc-700">
                     <div 
                         role="switch"
@@ -107,7 +113,7 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
                         className="flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-colors border-gray-300 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800/50"
                     >
                         <div>
-                            <h3 className="font-bold text-base text-gray-900 dark:text-gray-200">Show Unreleased Content</h3>
+                            <h3 className="font-bold text-base text-gray-900 dark:text-gray-200">Show Unreleased/Community Content</h3>
                             <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">Includes fan-made expansions and promotional content.</p>
                         </div>
                         <div className={cls(

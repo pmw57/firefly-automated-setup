@@ -4,6 +4,7 @@ import { StoryCardGridItem } from './StoryCardGridItem';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useTheme } from '../ThemeContext';
 import { STORY_CARDS } from '../../data/storyCards';
+import { useGameState } from '../../hooks/useGameState';
 
 interface StoryRandomizerProps {
   onSelect: (index: number) => void;
@@ -11,6 +12,7 @@ interface StoryRandomizerProps {
 
 export const StoryRandomizer: React.FC<StoryRandomizerProps> = ({ onSelect }) => {
   const { theme } = useTheme();
+  const { state: gameState } = useGameState();
   const isDark = theme === 'dark';
 
   const {
@@ -24,7 +26,7 @@ export const StoryRandomizer: React.FC<StoryRandomizerProps> = ({ onSelect }) =>
   } = useMissionSelection();
 
   const showRandomOption = validStories.length > 1;
-  const showDraftOption = validStories.length > 3;
+  const showDraftOption = validStories.length > 3 && gameState.setupMode === 'advanced';
 
   const draftButtonClass = isDark
     ? 'bg-blue-900/50 border-blue-800 hover:bg-blue-800/60 text-blue-100'

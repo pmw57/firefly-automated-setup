@@ -4,6 +4,7 @@ import { ExpansionIcon } from '../ExpansionIcon';
 import { useTheme } from '../ThemeContext';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { cls } from '../../utils/style';
+import { useGameState } from '../../hooks/useGameState';
 
 interface SetupCardListProps {
     cards: SetupCardDef[];
@@ -19,6 +20,7 @@ export const SetupCardList: React.FC<SetupCardListProps> = ({
     onSelect 
 }) => {
     const { theme } = useTheme();
+    const { state: gameState } = useGameState();
     const isDark = theme === 'dark';
     const selectedRef = useRef<HTMLButtonElement>(null);
 
@@ -69,6 +71,8 @@ export const SetupCardList: React.FC<SetupCardListProps> = ({
                     const descColor = isSelected 
                         ? (isDark ? 'text-emerald-200/70' : 'text-[#991b1b]') 
                         : (isDark ? 'text-zinc-400' : 'text-[#57534e]');
+                    
+                    const isRecommended = gameState.setupMode === 'basic' && card.id === 'Standard';
 
                     return (
                         <React.Fragment key={card.id}>
@@ -95,12 +99,15 @@ export const SetupCardList: React.FC<SetupCardListProps> = ({
 
                                 <div className="flex-1 p-4 flex flex-col justify-center relative">
                                     <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-2">
                                         <span className={`text-lg ${isSelected ? 'font-bold' : 'font-medium'} ${titleColor}`}>
                                             {card.label}
                                         </span>
-                                        {isSelected && <span className={`${isDark ? 'text-emerald-400' : 'text-[#7f1d1d]'} font-bold text-xl`}>✓</span>}
+                                        {isRecommended && <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">Recommended</span>}
+                                      </div>
+                                      {isSelected && <span className={`${isDark ? 'text-emerald-400' : 'text-[#7f1d1d]'} font-bold text-xl`}>✓</span>}
                                     </div>
-                                    {card.description && (
+                                    {gameState.setupMode === 'advanced' && card.description && (
                                         <p className={`text-sm ${descColor} line-clamp-2`}>
                                             {card.description}
                                         </p>

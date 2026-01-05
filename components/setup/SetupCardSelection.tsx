@@ -8,6 +8,7 @@ import { getAvailableSetupCards, getSetupCardById } from '../../utils/selectors/
 import { FlyingSoloBanner } from './FlyingSoloBanner';
 import { SetupCardList } from './SetupCardList';
 import { getSetupCardSelectionInfo } from '../../utils/ui';
+import { calculateSetupFlow } from '../../utils/flow';
 
 interface SetupCardSelectionProps {
   onNext: () => void;
@@ -19,10 +20,11 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
+  const totalParts = useMemo(() => calculateSetupFlow(gameState).filter(s => s.type === 'setup').length, [gameState]);
+
   const {
     isFlyingSoloActive,
     isFlyingSoloEligible,
-    totalParts,
     isNextDisabled
   } = useMemo(() => getSetupCardSelectionInfo(gameState), [gameState]);
 
@@ -44,7 +46,8 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
   const containerBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
   const headerColor = isDark ? 'text-amber-500' : 'text-[#292524]';
   const badgeClass = isDark ? 'bg-emerald-900/40 text-emerald-300 border-emerald-800' : 'bg-[#e6ddc5] text-[#7f1d1d] border-[#d6cbb0]';
-  const showOptionalRules = totalParts === 3;
+  
+  const nextButtonText = totalParts > 2 ? 'Next: Optional Settings →' : 'Begin Setup →';
 
   return (
     <div className={`${containerBg} rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in transition-all duration-300`}>
@@ -79,7 +82,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
           className="w-2/3 text-lg py-4 border-b-4 border-[#450a0a]"
           disabled={isNextDisabled}
         >
-          {showOptionalRules ? "Next: Optional Settings →" : "Begin Setup →"}
+          {nextButtonText}
         </Button>
       </div>
     </div>

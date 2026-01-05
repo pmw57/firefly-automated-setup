@@ -81,6 +81,7 @@ export const DiceControls = ({ draftState, onRollChange, onSetWinner, allowManua
               onChange={(e) => onRollChange(i, e.target.value)}
               aria-label={`Dice roll for ${r.player}`}
               className={`w-16 font-bold text-lg rounded border focus:outline-none focus:ring-2 transition-colors appearance-none pl-5 ${inputStyle}`}
+              disabled={!allowManualOverride}
             >
                 {[1,2,3,4,5,6].map(v => <option key={v} value={v}>{v}</option>)}
             </select>
@@ -101,9 +102,11 @@ export const DiceControls = ({ draftState, onRollChange, onSetWinner, allowManua
           )}
         </div>
       )})}
-      <div className="w-full text-center mt-2">
-         <span className={`text-xs italic ${hintColor}`}>Adjust values to match physical dice. Tap a player's name to resolve ties.</span>
-      </div>
+      {allowManualOverride && (
+        <div className="w-full text-center mt-2">
+           <span className={`text-xs italic ${hintColor}`}>Adjust values to match physical dice. Tap a player's name to resolve ties.</span>
+        </div>
+      )}
     </div>
   );
 };

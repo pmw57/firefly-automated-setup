@@ -1,7 +1,7 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import SetupWizard from './components/SetupWizard';
 import { InstallPWA } from './components/InstallPWA';
 import { UpdatePrompt } from './components/UpdatePrompt';
 import { HelpModal } from './components/HelpModal';
@@ -10,6 +10,9 @@ import { DevPanel } from './components/DevPanel';
 import { HeaderActions } from './components/HeaderActions';
 import { FooterQrCode } from './components/FooterQrCode';
 import { SHOW_FOOTER_QR_KEY } from './data/constants';
+import SetupWizard from './components/SetupWizard';
+import { useGameState } from './hooks/useGameState';
+import { SetupModeToggle } from './components/SetupModeToggle';
 
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
@@ -17,6 +20,7 @@ declare const __APP_VERSION__: string;
 const App = (): React.ReactElement => {
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  const { isStateInitialized, isWizardInitialized } = useGameState();
   
   const [showFooterQr, setShowFooterQr] = useState(() => {
     if (typeof window === 'undefined') return true;
@@ -106,6 +110,7 @@ const App = (): React.ReactElement => {
   const isDevMode = !isPreview && import.meta.env.DEV;
   const baseUrl = !isPreview ? import.meta.env.BASE_URL : '/';
   const isAnyModalOpen = isHelpModalOpen || isQrModalOpen;
+  const showWizard = isStateInitialized && isWizardInitialized;
 
   const headerImageUrl = isPreview
     ? 'https://cf.geekdo-images.com/FtTleN6TrwDz378_TQ2NFw__imagepage/img/kytwle1zmoWYFCYtr1cq6EPnRHc=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7565930.jpg'
@@ -178,7 +183,8 @@ const App = (): React.ReactElement => {
       </footer>
 
       {createPortal(
-        <div className="fixed top-2 right-2 z-[9999] pointer-events-none flex items-center gap-2">
+        <div className="fixed top-2 right-2 z-[9999] pointer-events-auto flex flex-col items-end gap-2">
+           {showWizard && <SetupModeToggle />}
            <HeaderActions 
              onOpenHelp={() => setIsHelpModalOpen(true)}
              onOpenQr={() => setIsQrModalOpen(true)}

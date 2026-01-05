@@ -1,6 +1,4 @@
-
-
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/draft';
 import { getDraftDetails } from '../utils/draftRules';
 import { Button } from './Button';
@@ -160,6 +158,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const isSolo = gameState.playerCount === 1;
+  const isBasicMode = gameState.setupMode === 'basic';
   
   const {
       specialRules,
@@ -177,20 +176,23 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
     const notes = campaignNotes.map((note, i) => (
       <SpecialRuleBlock key={`campaign-${i}`} source="story" title="Campaign Setup Note" content={note.content} />
     ));
-    const rules = specialRules.map((rule, i) => <SpecialRuleBlock key={`special-${i}`} {...rule} />);
+    const rules = specialRules
+      .filter(rule => gameState.setupMode === 'advanced' || rule.source !== 'expansion')
+      .map((rule, i) => <SpecialRuleBlock key={`special-${i}`} {...rule} />);
     return [...notes, ...rules];
-  }, [campaignNotes, specialRules]);
+  }, [campaignNotes, specialRules, gameState.setupMode]);
 
+  const handleDetermineOrder = useCallback(() => {
+    dispatch({ type: ActionType.SET_DRAFT_CONFIG, payload: { state: runAutomatedDraft(gameState.playerNames), isManual: false } });
+  }, [dispatch, gameState.playerNames]);
 
   useEffect(() => {
     if (isSolo && !draftState) {
         dispatch({ type: ActionType.SET_DRAFT_CONFIG, payload: { state: getInitialSoloDraftState(gameState.playerNames[0]), isManual: false } });
+    } else if (!isSolo && !draftState && isBasicMode) {
+        handleDetermineOrder();
     }
-  }, [isSolo, gameState.playerNames, draftState, dispatch]);
-
-  const handleDetermineOrder = () => {
-    dispatch({ type: ActionType.SET_DRAFT_CONFIG, payload: { state: runAutomatedDraft(gameState.playerNames), isManual: false } });
-  };
+  }, [isSolo, gameState.playerNames, draftState, dispatch, isBasicMode, handleDetermineOrder]);
 
   const handleRollChange = (index: number, newValue: string) => {
     if (!draftState) return;
@@ -219,7 +221,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
         </div>
       )}
       
-      {!isSolo && !draftState && (
+      {!isSolo && !draftState && !isBasicMode && (
         <p className={cls("italic text-center", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>
       )}
 
@@ -234,7 +236,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 draftState={draftState} 
                 onRollChange={handleRollChange} 
                 onSetWinner={handleSetWinner}
-                allowManualOverride={isManualEntry}
+                allowManualOverride={isManualEntry && !isBasicMode}
             />
           )}
           

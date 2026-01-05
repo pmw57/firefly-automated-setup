@@ -147,3 +147,147 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Red Rocker Switch from CodePen */
+.rocker-switch {
+  --rocker-color: #ff1818;
+  --rocker-rotation: 25deg;
+  --rocker-pivot-distance: 5px;
+  --rocker-width: 38px;
+  --rocker-height: calc(1.3 * var(--rocker-width));
+
+  background-color: black;
+  width: var(--rocker-width);
+  height: var(--rocker-height);
+  box-shadow: 
+    0 0 3px 1px rgba(0, 0, 0, 0.2),
+    0 0 1px 1px black,
+    inset 0 1px 1px -1px white,
+    inset 0 0 1px 4px #47434c,
+    inset 0 0 1px 6px black;
+  border-radius: 3px;
+  padding: 5px;
+  perspective: 700px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.rocker-switch input {
+  display: none;
+}
+
+.rocker-switch input:checked + .button {
+  transform: translateZ(var(--rocker-pivot-distance)) rotateX(var(--rocker-rotation));
+  box-shadow: 0 -3px 5px var(--rocker-color);
+}
+
+.rocker-switch input:checked + .button .light {
+  animation: rocker-flicker 0.2s infinite 0.3s;
+}
+
+.rocker-switch input:checked + .button .shine {
+  opacity: 1;
+}
+
+.rocker-switch input:checked + .button .shadow {
+  opacity: 0;
+}
+
+.rocker-switch .button {
+  transition: all 0.3s cubic-bezier(1, 0, 1, 1);
+  transform-origin: center center calc(-1 * var(--rocker-pivot-distance));
+  transform: translateZ(var(--rocker-pivot-distance)) rotateX(calc(-1 * var(--rocker-rotation)));
+  transform-style: preserve-3d;
+  background-color: #9b0621;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  background: linear-gradient(#9b0606 0%, #870404 30%, #870404 70%, #9b0606 100%);
+  background-repeat: no-repeat;
+}
+
+.rocker-switch .button::before {
+  content: "";
+  background: linear-gradient(rgba(255, 255, 255, 0.8) 10%, rgba(255, 255, 255, 0.3) 30%, #820404 75%, #6e0303) 50% 50% / 97% 97%, #b50d0d;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 12px;
+  transform-origin: top;
+  transform: rotateX(-90deg);
+  position: absolute;
+  top: 0;
+}
+
+.rocker-switch .button::after {
+  content: "";
+  background-image: linear-gradient(#820404, #6e0303);
+  width: 100%;
+  height: 12px;
+  transform-origin: top;
+  transform: translateY(12px) rotateX(-90deg);
+  position: absolute;
+  bottom: 0;
+  box-shadow: 0 12px 2px 0px black, 0 20px 5px 0px rgba(0, 0, 0, 0.5);
+}
+
+.rocker-switch .light {
+  opacity: 0;
+  animation: rocker-light-off 1s;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(#ffd27d, var(--rocker-color) 40%, transparent 70%);
+}
+
+.rocker-switch .dots {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(transparent 30%, rgba(130, 4, 4, 0.7) 70%);
+  background-size: 10px 10px;
+}
+
+.rocker-switch .characters {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(white, white) 50% 20% / 5% 20%,
+    radial-gradient(circle, transparent 50%, white 52%, white 70%, transparent 72%) 50% 80% / 33% 25%;
+  background-repeat: no-repeat;
+}
+
+.rocker-switch .shine {
+  transition: all 0.3s cubic-bezier(1, 0, 1, 1);
+  opacity: 0.3;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(white, transparent 3%) 50% 50% / 97% 97%,
+    linear-gradient(rgba(255, 255, 255, 0.5), transparent 50%, transparent 80%, rgba(255, 255, 255, 0.5)) 50% 50% / 97% 97%;
+  background-repeat: no-repeat;
+}
+
+.rocker-switch .shadow {
+  transition: all 0.3s cubic-bezier(1, 0, 1, 1);
+  opacity: 1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(transparent 70%, rgba(0, 0, 0, 0.8));
+  background-repeat: no-repeat;
+}
+
+@keyframes rocker-flicker {
+  0% {opacity: 1}
+  80% {opacity: 0.8}
+  100% {opacity: 1}
+}
+
+@keyframes rocker-light-off {
+  0% {opacity: 1}
+  80% {opacity: 0}
+}
