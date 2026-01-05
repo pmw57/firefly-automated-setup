@@ -1,10 +1,9 @@
 import React, { useRef } from 'react';
-import { MissionSelectionProvider } from './MissionSelectionContext';
-import { useMissionSelection } from '../hooks/useMissionSelection';
-import { StepComponentProps } from './StepContent';
-import { StorySelectionPart } from './story/StorySelectionPart';
-// FIX: Renamed component to match what is exported from SoloConfigurationPart.tsx
-import { AdvancedRulesConfigurationPart } from './story/SoloConfigurationPart';
+import { MissionSelectionProvider } from '../MissionSelectionContext';
+import { useMissionSelection } from '../../hooks/useMissionSelection';
+import { StepComponentProps } from '../StepContent';
+import { StorySelectionPart } from './StorySelectionPart';
+import { AdvancedRulesConfigurationPart } from './SoloConfigurationPart';
 
 const MissionDossierStepContent = (props: StepComponentProps): React.ReactElement => {
   const { onNext, onPrev, isNavigating } = props;
@@ -51,7 +50,7 @@ const MissionDossierStepContent = (props: StepComponentProps): React.ReactElemen
   );
 };
 
-export const MissionSelectionStep = (props: StepComponentProps): React.ReactElement => {
+export const MissionDossierStep = (props: StepComponentProps): React.ReactElement => {
   return (
     <MissionSelectionProvider>
       <MissionDossierStepContent {...props} />

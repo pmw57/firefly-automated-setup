@@ -1,4 +1,3 @@
-
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getAvailableStoryCards, getAvailableSetupCards } from '../../../utils/selectors/story';
@@ -86,8 +85,8 @@ describe('selectors/story', () => {
              const flyingSoloState: GameState = { ...baseGameState, gameMode: 'solo', setupCardId: SETUP_CARD_IDS.FLYING_SOLO };
              const cards = getAvailableStoryCards(flyingSoloState);
              expect(cards.length).toBeGreaterThan(1);
-             // Should not contain the classic solo story, as that's in the excluded list
-             expect(cards.find(c => c.title === "Awful Lonely In The Big Black")).toBeUndefined();
+             // It is the classic solo story, but should still be playable in Flying Solo mode.
+             expect(cards.find(c => c.title === "Awful Lonely In The Big Black")).toBeDefined();
         });
     });
 });

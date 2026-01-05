@@ -2,7 +2,7 @@
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
-// FIX: Imported the MissionSelectionContextType interface to resolve the "Cannot find name" error.
+// FIX: Correctly import context and types from the dedicated hook file to prevent circular dependencies.
 import { MissionSelectionContext, MissionSelectionContextType } from '../hooks/useMissionSelection';
 import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getAllPotentialAdvancedRules } from '../utils/selectors/story';
 import { ActionType } from '../state/actions';
@@ -83,8 +83,8 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     [gameState]
   );
   const enablePart2 = useMemo(() => 
-    gameState.gameMode === 'solo' && gameState.expansions.tenth,
-    [gameState.gameMode, gameState.expansions.tenth]
+    gameState.expansions.tenth,
+    [gameState.expansions.tenth]
   );
 
   // When valid stories change, sanitize the expansion filter to remove any

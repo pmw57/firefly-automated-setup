@@ -25,7 +25,8 @@ const StepLoading = () => (
 const NavDeckStep = lazy(() => import('./NavDeckStep').then(m => ({ default: m.NavDeckStep })));
 const AllianceReaverStep = lazy(() => import('./AllianceReaverStep').then(m => ({ default: m.AllianceReaverStep })));
 const DraftStep = lazy(() => import('./DraftStep').then(m => ({ default: m.DraftStep })));
-const MissionDossierStep = lazy(() => import('./MissionDossierStep').then(m => ({ default: m.MissionDossierStep })));
+// FIX: Corrected lazy import to use the exported component name 'MissionSelectionStep'.
+const MissionDossierStep = lazy(() => import('./MissionDossierStep').then(m => ({ default: m.MissionSelectionStep })));
 const ResourcesStep = lazy(() => import('./ResourcesStep').then(m => ({ default: m.ResourcesStep })));
 const JobStep = lazy(() => import('./JobStep').then(m => ({ default: m.JobStep })));
 const PrimePumpStep = lazy(() => import('./PrimePumpStep').then(m => ({ default: m.PrimePumpStep })));

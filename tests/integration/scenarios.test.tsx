@@ -33,8 +33,10 @@ describe('Integration Scenarios', () => {
     const harkensFollyCard = getStory("Harken's Folly");
 
     const clickNext = async () => {
-      const nextButtons = await screen.findAllByRole('button', { name: /Next Step/i });
+      // Use a more generic regex to find any 'Next' or 'Begin' button
+      const nextButtons = await screen.findAllByRole('button', { name: /(^Next|Begin Setup)/i });
       expect(nextButtons.length).toBeGreaterThan(0);
+      // Click the first one found, assuming it's the main progression button
       await user.click(nextButtons[0]);
     };
 
@@ -43,22 +45,26 @@ describe('Integration Scenarios', () => {
 
       // --- Step 1: Captain Setup ---
       await screen.findByRole('heading', { name: /Config/i });
-      await user.click(await screen.findByRole('button', { name: /Next: Choose Setup →/i }));
+      await clickNext();
 
       // --- Step 2: Setup Card Selection ---
       await screen.findByRole('heading', { name: /Select Setup Card/i });
       await user.click(await screen.findByRole('button', { name: new RegExp(browncoatCard.label) }));
-      await user.click(await screen.findByRole('button', { name: /Next: Optional Settings/i }));
+      await clickNext();
 
       // --- Step 3: Optional Settings ---
       await screen.findByRole('heading', { name: /Optional Settings/i });
-      await user.click(await screen.findByRole('button', { name: /Begin Setup →/i }));
+      await clickNext();
       
       // --- Navigate to first "real" step to select a story ---
       await screen.findByRole('heading', { name: /Goal of the Game/i });
       await user.click(await screen.findByRole('button', { name: new RegExp(harkensFollyCard.title) }));
       await clickNext();
       
+      // --- Part 2: Advanced Rules (since 10th AE is on by default) ---
+      await screen.findByRole('heading', { name: /^Advanced Rules$/i, level: 3 });
+      await clickNext();
+
       await screen.findByRole('heading', { name: /Nav Decks/i });
     });
 
@@ -77,13 +83,13 @@ describe('Integration Scenarios', () => {
     });
     
     it('shows the special Browncoat draft rules', async () => {
-      await clickNext();
+      await clickNext(); // Nav -> A&R
       await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i });
       
-      await clickNext();
+      await clickNext(); // A&R -> Capitol
       await screen.findByRole('heading', { name: /Starting Capitol/i });
 
-      await clickNext();
+      await clickNext(); // Capitol -> Draft
       await screen.findByRole('heading', { name: /Choose Ships & Leaders/i });
 
       expect(await screen.findByText('Browncoat Market')).toBeInTheDocument();

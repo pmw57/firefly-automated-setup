@@ -1,5 +1,3 @@
-
-
 import React, { useMemo } from 'react';
 import { StoryCardDef, AddSpecialRule, RuleSourceType, SpecialRule, ChallengeOption } from '../../types';
 import { SpecialRuleBlock } from '../SpecialRuleBlock';
