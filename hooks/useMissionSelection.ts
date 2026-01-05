@@ -1,8 +1,6 @@
-
 import { createContext, useContext } from 'react';
-import { StoryCardDef, AdvancedRuleDef, GameState } from '../types/index';
+import { StoryCardDef, AdvancedRuleDef, GameState } from '../types';
 
-// Define the shape of the context data
 export interface MissionSelectionContextType {
   searchTerm: string;
   filterExpansion: string[];
@@ -30,11 +28,8 @@ export interface MissionSelectionContextType {
   gameState: GameState;
 }
 
-// Create and export the context object. The initial value is undefined
-// because the provider will supply the real value.
 export const MissionSelectionContext = createContext<MissionSelectionContextType | undefined>(undefined);
 
-// Create and export the custom hook for consuming the context.
 export const useMissionSelection = (): MissionSelectionContextType => {
   const context = useContext(MissionSelectionContext);
   if (context === undefined) {
