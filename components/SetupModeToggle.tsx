@@ -17,7 +17,7 @@ export const SetupModeToggle: React.FC = () => {
         }
         timerRef.current = window.setTimeout(() => {
             setLabelsVisible(false);
-        }, 10000);
+        }, 5000);
     };
 
     const handleMouseEnter = () => {
