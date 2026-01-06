@@ -1,4 +1,5 @@
 
+
 import { StoryCardDef } from '../../types';
 import { createStoryRules } from './utils';
 
@@ -11,15 +12,7 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     requiredExpansion: "still_flying",
     sourceUrl: "https://boardgamegeek.com/image/8103875/sjliver",
     rules: createStoryRules("A Rare Specimen Indeed", [
-      { type: 'setJobMode', mode: 'no_jobs' },
-      {
-        type: 'addSpecialRule',
-        category: 'jobs',
-        rule: {
-            title: "Saffron's Scheme",
-            content: ["Each player begins the game with one Caper Card."]
-        }
-      }
+      { type: 'setJobMode', mode: 'caper_start' },
     ])
   },
   {

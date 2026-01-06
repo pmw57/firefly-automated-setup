@@ -34,6 +34,7 @@ export interface JobSetupDetails {
   messages: JobSetupMessage[];
   showStandardContactList: boolean;
   totalJobCards: number;
+  caperDrawCount?: number;
 }
 
 export interface NavDeckSetupDetails {

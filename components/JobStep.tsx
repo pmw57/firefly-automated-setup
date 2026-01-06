@@ -28,6 +28,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     isSingleContactChoice,
     cardsToDraw,
     totalJobCards,
+    caperDrawCount,
   } = useMemo(() => 
     getJobSetupDetails(gameState, overrides),
     [gameState, overrides]
@@ -91,12 +92,20 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
-  const textColor = isDark ? 'text-gray-200' : 'text-gray-800';
+  const textColor = isDark ? 'text-gray-200' : 'text-gray-700';
   const pillBg = isDark ? 'bg-zinc-800' : 'bg-gray-100';
   const pillText = isDark ? 'text-gray-300' : 'text-gray-900';
   const pillBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
   const dividerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const noteText = isDark ? 'text-gray-400' : 'text-gray-700';
+
+  const CaperDeck = ({ count }: { count: number }) => (
+    <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300 text-center`}>
+        <div className="text-5xl mb-4" role="img" aria-label="Deck of cards icon">🗃️</div>
+        <h4 className={`font-bold text-xl font-western mb-2 ${textColor}`}>Caper Deck</h4>
+        <p className={`${noteText}`}>Each player draws {count} Caper Card{count > 1 ? 's' : ''}.</p>
+    </div>
+  );
 
   return (
     <div className="space-y-4">
@@ -104,37 +113,47 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
 
       {showStandardContactList && !isRimDeckBuild && (
         <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300`}>
-          {isSingleContactChoice ? (
+          {contacts.length > 0 ? (
             <>
-              <p className={`mb-4 font-bold ${textColor} text-lg`}>Choose 1 Contact from the available list:</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {contacts.map(contact => (
-                  <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
-                    {contact}
-                  </span>
-                ))}
-              </div>
-              <p className={`text-lg font-bold ${isDark ? 'text-amber-400' : 'text-amber-800'} mb-2`}>
-                Draw {cardsToDraw || 3} Job Cards from your chosen contact.
+              {isSingleContactChoice ? (
+                <>
+                  <p className={`mb-4 font-bold ${textColor} text-lg`}>Choose 1 Contact from the available list:</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {contacts.map(contact => (
+                      <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
+                        {contact}
+                      </span>
+                    ))}
+                  </div>
+                  <p className={`text-lg font-bold ${isDark ? 'text-amber-400' : 'text-amber-800'} mb-2`}>
+                    Draw {cardsToDraw || 3} Job Cards from your chosen contact.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className={`mb-4 font-bold ${textColor} text-lg`}>Draw 1 Job Card from each:</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {contacts.map(contact => (
+                      <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
+                        {contact}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
+              <p className={`text-sm ${noteText} border-t ${dividerBorder} pt-3 mt-2 italic`}>
+                Discard any unwanted jobs. {totalJobCards > 3 && !isSingleContactChoice && <span>Keep a hand of <strong>up to three</strong> Job Cards.</span>}
               </p>
             </>
           ) : (
-            <>
-              <p className={`mb-4 font-bold ${textColor} text-lg`}>Draw 1 Job Card from each:</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {contacts.map(contact => (
-                  <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
-                    {contact}
-                  </span>
-                ))}
-              </div>
-            </>
+            <p className={`text-lg font-bold ${textColor} text-center`}>
+              No starting jobs are dealt.
+            </p>
           )}
-          <p className={`text-sm ${noteText} border-t ${dividerBorder} pt-3 mt-2 italic`}>
-            Discard any unwanted jobs. {totalJobCards > 3 && !isSingleContactChoice && <span>Keep a hand of <strong>up to three</strong> Job Cards.</span>}
-          </p>
         </div>
       )}
+
+      {caperDrawCount && caperDrawCount > 0 && <CaperDeck count={caperDrawCount} />}
     </div>
   );
 };
