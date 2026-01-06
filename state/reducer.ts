@@ -143,23 +143,25 @@ const validateState = (state: GameState): GameState => {
 
 /**
  * Retrieves expansion settings from dedicated local storage.
- * Defaults to all 'true' if no settings are found.
- * Merges with defaults to ensure new expansions are enabled.
+ * Defaults to all official content being enabled, and independent content disabled.
+ * Merges with user-saved settings to ensure new expansions are handled gracefully.
  */
 const getPersistedExpansions = (): Expansions => {
     const defaultExpansions = EXPANSIONS_METADATA.reduce((acc, exp) => {
         if (exp.id !== 'base') {
-            (acc as Record<keyof Expansions, boolean>)[exp.id] = true;
+            const isIndependent = exp.category === 'independent';
+            (acc as Record<keyof Expansions, boolean>)[exp.id] = !isIndependent;
         }
         return acc;
     }, {} as Expansions);
 
     try {
-        // FIX: Use a more robust check for browser environment to prevent test errors.
         if (typeof window !== 'undefined' && window.localStorage) {
             const saved = localStorage.getItem(EXPANSION_SETTINGS_STORAGE_KEY);
             if (saved) {
                 const savedExpansions = JSON.parse(saved);
+                // Merge defaults with saved, so new expansions get the default
+                // state while respecting the user's saved choices.
                 return { ...defaultExpansions, ...savedExpansions };
             }
         }
@@ -169,6 +171,7 @@ const getPersistedExpansions = (): Expansions => {
 
     return defaultExpansions;
 };
+
 
 /**
  * Retrieves the setup mode ('quick' or 'detailed') from local storage.
@@ -254,8 +257,6 @@ const adjustPlayerNames = (currentNames: string[], targetCount: number): string[
 
 const handlePlayerCountChange = (state: GameState, count: number): GameState => {
     const safeCount = Math.max(1, Math.min(9, count));
-    // FIX: Explicitly type `newMode` as `GameMode` to prevent TypeScript from widening it to `string`.
-    // This resolves an incompatibility with the `GameState` type when constructing `intermediateState`.
     const newMode: GameMode = safeCount === 1 ? 'solo' : 'multiplayer';
     
     const intermediateState = {
@@ -275,7 +276,6 @@ const handleExpansionToggle = (state: GameState, expansionId: keyof GameState['e
     const nextExpansions = { ...state.expansions, [expansionId]: !state.expansions[expansionId] };
 
     try {
-        // FIX: Use a more robust check for browser environment to prevent test errors.
         if (typeof window !== 'undefined' && window.localStorage) {
             localStorage.setItem(EXPANSION_SETTINGS_STORAGE_KEY, JSON.stringify(nextExpansions));
         }

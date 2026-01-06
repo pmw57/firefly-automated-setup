@@ -1,4 +1,3 @@
-
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { isStoryCompatible } from '../../../utils/filters';
@@ -59,9 +58,11 @@ describe('selectors/filters', () => {
     });
     
     it.concurrent('returns true for "Slaying the Dragon" only with 2 players', () => {
-      expect(isStoryCompatible(slayStory, { ...baseGameState, playerCount: 2 })).toBe(true);
-      expect(isStoryCompatible(slayStory, { ...baseGameState, playerCount: 3 })).toBe(false);
-      expect(isStoryCompatible(slayStory, { ...baseGameState, playerCount: 1 })).toBe(false);
+      // "Slaying The Dragon" requires the 'community' expansion, which is off by default.
+      const stateWithCommunity = { ...baseGameState, expansions: { ...baseGameState.expansions, community: true } };
+      expect(isStoryCompatible(slayStory, { ...stateWithCommunity, playerCount: 2 })).toBe(true);
+      expect(isStoryCompatible(slayStory, { ...stateWithCommunity, playerCount: 3 })).toBe(false);
+      expect(isStoryCompatible(slayStory, { ...stateWithCommunity, playerCount: 1 })).toBe(false);
     });
     
     // Solo Modes
