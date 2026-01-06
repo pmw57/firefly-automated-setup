@@ -71,8 +71,19 @@ const _getInitialContacts = (allRules: SetupRule[]): string[] => {
     if (jobContactsRule) {
         return jobContactsRule.contacts;
     }
-    const STANDARD_CONTACTS = [CONTACT_NAMES.HARKEN, CONTACT_NAMES.BADGER, CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.PATIENCE, CONTACT_NAMES.NISKA];
-    return STANDARD_CONTACTS;
+    
+    // Standard setup only uses the five core contacts for the initial job draw,
+    // regardless of which expansions are enabled. Expansion contacts are only
+    // added if a Setup or Story Card explicitly dictates it via a `setJobContacts` rule.
+    const availableContacts = [
+        CONTACT_NAMES.HARKEN, 
+        CONTACT_NAMES.BADGER, 
+        CONTACT_NAMES.AMNON_DUUL, 
+        CONTACT_NAMES.PATIENCE, 
+        CONTACT_NAMES.NISKA
+    ];
+    
+    return availableContacts;
 };
 
 const _filterContacts = (contacts: string[], allRules: SetupRule[]): string[] => {
@@ -195,6 +206,43 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     
     const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
     const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
+
+    if (jobDrawMode === 'draft_choice') {
+        const jobDraftInstructions: StructuredContent = [
+            { type: 'paragraph', content: ["Starting with the last player to choose a Leader, each player chooses 1 Job from 3 different Contacts. Mr. Universe cannot be chosen for these starting Jobs."] }
+        ];
+    
+        const messages: JobSetupMessage[] = [{
+            source: 'story',
+            title: "Friends in Low Places",
+            content: jobDraftInstructions,
+        }];
+        
+        // Note: _getInitialContacts will now correctly return only the base 5.
+        // We still need to manually add the expansion contacts for this specific draft mode,
+        // as they are explicitly allowed by the story card rule text.
+        const baseContacts = _getInitialContacts(allRules);
+        const allAvailableContacts = [...baseContacts];
+
+        if (gameState.expansions.kalidasa) {
+            allAvailableContacts.push(
+                CONTACT_NAMES.LORD_HARROW,
+                CONTACT_NAMES.MR_UNIVERSE,
+                CONTACT_NAMES.FANTY_MINGO,
+                CONTACT_NAMES.MAGISTRATE_HIGGINS
+            );
+        }
+
+        const finalContacts = allAvailableContacts.filter(c => c !== CONTACT_NAMES.MR_UNIVERSE);
+        
+        return {
+            contacts: finalContacts,
+            messages,
+            showStandardContactList: true,
+            isSingleContactChoice: false,
+            totalJobCards: 0,
+        };
+    }
 
     if (jobDrawMode === 'caper_start') {
         const messages: JobSetupMessage[] = [];

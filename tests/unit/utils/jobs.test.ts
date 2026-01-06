@@ -11,7 +11,11 @@ describe('rules/jobs', () => {
 
   describe('getJobSetupDetails', () => {
     it.concurrent('returns a standard set of contacts', () => {
-      const { contacts, showStandardContactList, totalJobCards } = getJobSetupDetails(baseGameState, {});
+      const stateWithoutKalidasa: GameState = {
+        ...baseGameState,
+        expansions: { ...baseGameState.expansions, kalidasa: false },
+      };
+      const { contacts, showStandardContactList, totalJobCards } = getJobSetupDetails(stateWithoutKalidasa, {});
       expect(contacts).toEqual(['Harken', 'Badger', 'Amnon Duul', 'Patience', 'Niska']);
       expect(showStandardContactList).toBe(true);
       expect(totalJobCards).toBe(5);
