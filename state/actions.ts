@@ -25,6 +25,7 @@ export enum ActionType {
   TOGGLE_STORY_RATING_FILTER = 'TOGGLE_STORY_RATING_FILTER',
   SET_STORY_OVERRIDES = 'SET_STORY_OVERRIDES',
   ACKNOWLEDGE_OVERRIDES = 'ACKNOWLEDGE_OVERRIDES',
+  VISIT_OVERRIDDEN_STEP = 'VISIT_OVERRIDDEN_STEP',
   SET_DRAFT_CONFIG = 'SET_DRAFT_CONFIG',
   TOGGLE_SHOW_HIDDEN_CONTENT = 'TOGGLE_SHOW_HIDDEN_CONTENT',
   SET_SETUP_MODE = 'SET_SETUP_MODE',
@@ -58,6 +59,7 @@ export type Action =
   | { type: ActionType.TOGGLE_STORY_RATING_FILTER; payload: number }
   | { type: ActionType.SET_STORY_OVERRIDES; payload: string[] }
   | { type: ActionType.ACKNOWLEDGE_OVERRIDES; payload: string[] }
+  | { type: ActionType.VISIT_OVERRIDDEN_STEP; payload: string }
   | { type: ActionType.SET_DRAFT_CONFIG; payload: GameState['draft'] }
   | { type: ActionType.TOGGLE_SHOW_HIDDEN_CONTENT }
   | { type: ActionType.SET_SETUP_MODE; payload: SetupMode }

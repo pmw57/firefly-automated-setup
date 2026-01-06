@@ -10,6 +10,7 @@ interface ProgressBarProps {
   onJump: (index: number) => void;
   setupDetermined: boolean;
   overriddenStepIds: string[];
+  visitedStepOverrides: string[];
 }
 
 const getStepDisplay = (step: Step): { label: string; number?: string } => {
@@ -73,7 +74,7 @@ const toRoman = (num: number): string => {
 };
 
 
-export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, onJump, setupDetermined, overriddenStepIds }) => {
+export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, onJump, setupDetermined, overriddenStepIds, visitedStepOverrides }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const containerRef = useRef<HTMLDivElement>(null);
@@ -174,7 +175,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ flow, currentIndex, on
           {flow.map((step, index) => {
             const isCurrent = index === currentIndex;
             const isPast = index < currentIndex;
-            const isOverridden = isPast && overriddenStepIds.includes(step.id);
+            const isOverridden = isPast && overriddenStepIds.includes(step.id) && !visitedStepOverrides.includes(step.id);
             const isDetermined = step.type === 'setup' || setupDetermined;
             const isFirstMainStep = separatorIndex !== -1 && index === separatorIndex;
             const isNew = newlyAddedSteps.includes(step.id);

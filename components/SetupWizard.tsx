@@ -77,6 +77,24 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
     }
   }, [gameState.selectedStoryCardIndex, flow, dispatch, gameState.overriddenStepIds, gameState]);
 
+  // Effect to mark overridden steps as "visited" when the user navigates to them.
+  // This is used to clear the warning indicator on the progress bar.
+  useEffect(() => {
+    const currentStepId = flow[currentStepIndex]?.id;
+    if (
+      currentStepId &&
+      gameState.overriddenStepIds.includes(currentStepId) &&
+      !gameState.visitedStepOverrides.includes(currentStepId)
+    ) {
+      dispatch({ type: ActionType.VISIT_OVERRIDDEN_STEP, payload: currentStepId });
+    }
+  }, [
+    currentStepIndex,
+    flow,
+    gameState.overriddenStepIds,
+    gameState.visitedStepOverrides,
+    dispatch,
+  ]);
 
   useEffect(() => {
     if (currentStepIndex >= flow.length && flow.length > 0) {
@@ -170,6 +188,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
         onJump={handleJump} 
         setupDetermined={setupDetermined}
         overriddenStepIds={gameState.overriddenStepIds}
+        visitedStepOverrides={gameState.visitedStepOverrides}
       />
 
       {isFinal ? (
