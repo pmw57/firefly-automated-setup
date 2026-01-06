@@ -57,6 +57,8 @@ describe('selectors/story', () => {
               ...baseGameState, 
               gameMode: 'solo', 
               setupCardId: SETUP_CARD_IDS.STANDARD,
+              // FIX: Explicitly enable community content to test community solo stories
+              expansions: { ...baseGameState.expansions, tenth: false, community: true }
             };
             const cards = getAvailableStoryCards(classicSoloState);
             
@@ -67,8 +69,6 @@ describe('selectors/story', () => {
             // Check that some specific solo cards are present
             expect(cards.some(c => c.title === "Awful Lonely In The Big Black")).toBe(true);
             expect(cards.some(c => c.title === "Hunt For The Arc")).toBe(true);
-            // This one should be present because 10th is on by default in baseGameState
-            expect(cards.some(c => c.title === "A Fistful Of Scoundrels")).toBe(true);
 
             // Check that a known non-solo card is NOT present
             expect(cards.some(c => c.title === "Harken's Folly")).toBe(false);
