@@ -20,4 +20,7 @@ export interface SpecialRule {
     source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
     title?: string;
     content: StructuredContent;
+    // FIX: Add optional 'page' and 'manual' properties to align with SpecialRuleBlockProps
+    page?: string | number;
+    manual?: string;
 }

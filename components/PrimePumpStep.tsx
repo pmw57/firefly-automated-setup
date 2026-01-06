@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { getPrimeDetails } from '../utils/prime';
 import { StepComponentProps } from './StepContent';
 import { SETUP_CARD_IDS } from '../data/ids';
+import { SpecialRule } from '../types';
 
 export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState } = useGameState();
@@ -13,6 +14,7 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   const isDark = theme === 'dark';
   
   const isFlyingSolo = gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
+  const isSolitaireFirefly = gameState.setupCardId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY;
   
   const {
     baseDiscard,
@@ -26,10 +28,47 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     [gameState, overrides]
   );
   
-  // FIX: This rule block is specific to the "Solitaire Firefly" fan campaign.
-  // The condition has been corrected to check for that specific setup card,
-  // preventing it from incorrectly appearing for the "Flying Solo" continuity mode.
-  const isSolitaireFirefly = gameState.setupCardId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY;
+  const allInfoBlocks = useMemo(() => {
+    const blocks: SpecialRule[] = [...specialRules];
+
+    if (isHighSupplyVolume && gameState.optionalRules.highVolumeSupply) {
+      blocks.push({ source: 'info', title: 'House Rule Active: High Volume Supply', content: ["Due to the number of large supply expansions, the base discard count for Priming the Pump is increased to ", { type: 'strong', content: '4 cards' }, "."] });
+    }
+
+    if (isBlitz) {
+      blocks.push({ source: 'setupCard', title: 'The Blitz: Double Dip', page: 22, manual: 'Core', content: ['"Double Dip" rules are in effect. Discard the top ', { type: 'strong', content: `${baseDiscard * 2} cards` }, ' (2x Base) from each deck.'] });
+    }
+
+    if (effectiveMultiplier > 1 && !isBlitz) {
+      blocks.push({ source: 'story', title: 'Market Instability', content: [{ type: 'strong', content: `Prime counts are increased by ${effectiveMultiplier}x.` }] });
+    }
+    
+    if (isSolitaireFirefly) {
+      blocks.push({ source: 'story', title: 'Solitaire Firefly: Supplies', content: [
+        { type: 'paragraph', content: ['You receive your standard starting credits. ', { type: 'strong', content: 'Remember to add any money you saved from the last game.' }] },
+        { type: 'paragraph', content: ['After priming, you may spend up to ', { type: 'strong', content: '$1000 (plus your saved money)' }, ' to repurchase any Supply Cards you set aside at the end of the last game.'] },
+        { type: 'paragraph', content: ["Place any unpurchased cards into their discard piles."] }
+      ]});
+    } else if (isFlyingSolo) {
+      blocks.push({ source: 'setupCard', title: 'Flying Solo', content: [
+        { type: 'paragraph', content: ['After priming, you may ', { type: 'strong', content: 'spend up to $1000' }, ' to buy ', { type: 'strong', content: 'up to 4 Supply Cards' }, ' that were revealed.'] },
+        { type: 'paragraph', content: ['Discounts from special abilities apply. ', { type: 'strong', content: 'Replace any purchased cards.' }] }
+      ]});
+    }
+
+    const order: Record<SpecialRule['source'], number> = {
+        expansion: 1, setupCard: 2, story: 3, warning: 3, info: 4,
+    };
+
+    return blocks
+      .sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99))
+      .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
+      .map((rule, i) => <SpecialRuleBlock key={`rule-${i}`} {...rule} />);
+  }, [
+    isHighSupplyVolume, gameState.optionalRules.highVolumeSupply, isBlitz, 
+    effectiveMultiplier, specialRules, isSolitaireFirefly, isFlyingSolo, 
+    gameState.setupMode, baseDiscard
+  ]);
 
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-[#faf8ef]/70 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
@@ -44,19 +83,8 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
 
   return (
     <div className="space-y-4">
+      {allInfoBlocks}
       
-      {isHighSupplyVolume && gameState.optionalRules.highVolumeSupply && (
-        <SpecialRuleBlock source="info" title="House Rule Active: High Volume Supply" content={["Due to the number of large supply expansions, the base discard count for Priming the Pump is increased to ", { type: 'strong', content: '4 cards' }, "."]} />
-      )}
-
-      {isBlitz && (
-        <SpecialRuleBlock source="setupCard" title="The Blitz: Double Dip" page={22} manual="Core" content={['"Double Dip" rules are in effect. Discard the top ', { type: 'strong', content: `${baseDiscard * 2} cards` }, ' (2x Base) from each deck.']} />
-      )}
-
-      {effectiveMultiplier > 1 && !isBlitz && (
-        <SpecialRuleBlock source="story" title="Market Instability" content={[{ type: 'strong', content: `Prime counts are increased by ${effectiveMultiplier}x.` }]} />
-      )}
-
       <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm text-center transition-colors duration-300`}>
         <h4 className={`font-bold text-xl font-western mb-4 ${titleColor}`}>Priming The Pump</h4>
         <div className={`text-5xl font-bold mb-4 ${iconColor}`}>🃏</div>
@@ -71,25 +99,6 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
           (From the top of each Supply Deck)
         </p>
       </div>
-      
-      {specialRules
-        .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
-        .map((rule, i) => (
-          <SpecialRuleBlock key={i} {...rule} />
-      ))}
-      
-      {isSolitaireFirefly ? (
-        <SpecialRuleBlock source="story" title="Solitaire Firefly: Supplies" content={[
-          { type: 'paragraph', content: ['You receive your standard starting credits. ', { type: 'strong', content: 'Remember to add any money you saved from the last game.' }] },
-          { type: 'paragraph', content: ['After priming, you may spend up to ', { type: 'strong', content: '$1000 (plus your saved money)' }, ' to repurchase any Supply Cards you set aside at the end of the last game.'] },
-          { type: 'paragraph', content: ["Place any unpurchased cards into their discard piles."] }
-        ]} />
-      ) : isFlyingSolo ? (
-        <SpecialRuleBlock source="setupCard" title="Flying Solo" content={[
-          { type: 'paragraph', content: ['After priming, you may ', { type: 'strong', content: 'spend up to $1000' }, ' to buy ', { type: 'strong', content: 'up to 4 Supply Cards' }, ' that were revealed.'] },
-          { type: 'paragraph', content: ['Discounts from special abilities apply. ', { type: 'strong', content: 'Replace any purchased cards.' }] }
-        ]} />
-      ) : null}
     </div>
   );
 };

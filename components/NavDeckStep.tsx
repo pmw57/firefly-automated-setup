@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { StructuredContent } from '../types';
+import { StructuredContent, SpecialRule } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
@@ -19,6 +19,17 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
     specialRules,
     hasRimDecks,
   } = useMemo(() => getNavDeckDetails(gameState, overrides), [gameState, overrides]);
+
+  const sortedSpecialRules = useMemo(() => {
+    const order: Record<SpecialRule['source'], number> = {
+        expansion: 1,
+        setupCard: 2,
+        story: 3,
+        warning: 3,
+        info: 4,
+    };
+    return [...specialRules].sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+  }, [specialRules]);
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -45,7 +56,7 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
 
   return (
     <div className="space-y-4">
-      {specialRules
+      {sortedSpecialRules
         .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
         .map((rule, i) => (
           <SpecialRuleBlock key={i} {...rule} />
