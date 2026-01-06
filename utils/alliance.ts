@@ -64,7 +64,7 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
   if (hasRuleFlag(allRules, 'placeMixedAlertTokens')) {
     specialRules.push({ source: 'story', title: 'Verse-Wide Tension', content: ['Place ', { type: 'strong', content: '3 Alliance Alert Tokens' }, " in the 'Verse:", { type: 'list', items: [['1 in ', { type: 'strong', content: 'Alliance Space' }], ['1 in ', { type: 'strong', content: 'Border Space' }], ['1 in ', { type: 'strong', content: 'Rim Space' }]] }] });
   }
-  
+
   // --- Process Alliance Cruiser placement ---
   const finalAlliancePlacement = allianceMode === 'extra_cruisers' ? "Place a Cruiser at Regulus AND Persephone." : standardAlliancePlacement;
   if (finalAlliancePlacement !== standardAlliancePlacement) {

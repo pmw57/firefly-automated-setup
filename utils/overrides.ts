@@ -1,4 +1,4 @@
-import { GameState, SetupRule, Step, AddSpecialRule, AddFlagRule } from '../types/index';
+import { GameState, SetupRule, Step, AddSpecialRule, AddFlagRule, StepOverrides } from '../types/index';
 import { STEP_IDS } from '../data/ids';
 import { getNavDeckDetails } from './nav';
 import { getAllianceReaverDetails } from './alliance';
@@ -8,7 +8,10 @@ import { getJobSetupDetails } from './jobs';
 import { getPrimeDetails } from './prime';
 import { STORY_CARDS } from '../data/storyCards';
 
-type DetailsFn = (gameState: GameState, ...args: any[]) => object;
+type DetailsFn =
+  | ((gameState: GameState, overrides: StepOverrides) => object)
+  | ((gameState: GameState, step: Step) => object)
+  | ((gameState: GameState, manualSelection?: 'story' | 'setupCard') => object);
 
 // A map of Step IDs to the function that calculates their details.
 // This allows us to dynamically re-calculate and compare step data.
@@ -76,7 +79,7 @@ const RULE_TYPE_TO_STEP_ID: { [key in SetupRule['type']]?: string | ((rule: Setu
         case 'smugglersBluesSetup':
         case 'lonelySmugglerSetup':
         case 'removeRiver':
-        case 'placeAllianceAlertsInAllianceSpace': // Moved from C2 to C5 (Resources)
+        case 'placeAllianceAlertsInAllianceSpace':
             return STEP_IDS.C5;
 
         case 'removePiracyJobs':
@@ -130,9 +133,38 @@ export function detectOverrides(gameState: GameState, flow: Step[], currentStepI
       const detailsFn = STEP_ID_TO_DETAILS_FN[step.id];
   
       if (detailsFn) {
-        // Compare the data generated for the step before and after applying the story.
-        const detailsBefore = detailsFn(stateWithoutStory, step);
-        const detailsAfter = detailsFn(stateWithStory, step);
+        // Different detail functions have different signatures. We must call them correctly.
+        let detailsBefore: object;
+        let detailsAfter: object;
+
+        switch (step.id) {
+            case STEP_IDS.C5: // getResourceDetails
+                detailsBefore = (detailsFn as (gs: GameState) => object)(stateWithoutStory);
+                detailsAfter = (detailsFn as (gs: GameState) => object)(stateWithStory);
+                break;
+            
+            case STEP_IDS.C3: // getDraftDetails
+            case STEP_IDS.D_HAVEN_DRAFT:
+                detailsBefore = (detailsFn as (gs: GameState, s: Step) => object)(stateWithoutStory, step);
+                detailsAfter = (detailsFn as (gs: GameState, s: Step) => object)(stateWithStory, step);
+                break;
+
+            case STEP_IDS.C1: // getNavDeckDetails
+            case STEP_IDS.C2: // getAllianceReaverDetails
+            case STEP_IDS.C6: // getJobSetupDetails
+            case STEP_IDS.D_RIM_JOBS:
+            case STEP_IDS.C_PRIME: // getPrimeDetails
+                detailsBefore = (detailsFn as (gs: GameState, o: StepOverrides) => object)(stateWithoutStory, step.overrides || {});
+                detailsAfter = (detailsFn as (gs: GameState, o: StepOverrides) => object)(stateWithStory, step.overrides || {});
+                break;
+            
+            // This case should not be reached if STEP_ID_TO_DETAILS_FN is exhaustive.
+            // But as a fallback, we assume the (state, step) signature.
+            default:
+                detailsBefore = (detailsFn as (gs: GameState, s: Step) => object)(stateWithoutStory, step);
+                detailsAfter = (detailsFn as (gs: GameState, s: Step) => object)(stateWithStory, step);
+                break;
+        }
         
         // Use JSON.stringify for a simple but effective deep comparison.
         if (JSON.stringify(detailsBefore) !== JSON.stringify(detailsAfter)) {
@@ -140,10 +172,9 @@ export function detectOverrides(gameState: GameState, flow: Step[], currentStepI
         }
       } else {
         // Fallback for rules without a dedicated details function.
-        // This is less accurate but covers edge cases.
-        const storyCard = stateWithStory.selectedStoryCardIndex !== null ? flow[stateWithStory.selectedStoryCardIndex] : null;
-        if(storyCard?.data?.title){
-            const rules = STORY_CARDS.find(c => c.title === storyCard.data?.title)?.rules || [];
+        const storyCard = stateWithStory.selectedStoryCardIndex !== null ? STORY_CARDS[stateWithStory.selectedStoryCardIndex] : null;
+        if(storyCard){
+            const rules = storyCard.rules || [];
             for (const rule of rules) {
                 const affectedStepIdOrFn = RULE_TYPE_TO_STEP_ID[rule.type];
                 let affectedStepId = '';
@@ -162,8 +193,4 @@ export function detectOverrides(gameState: GameState, flow: Step[], currentStepI
     }
   
     return Array.from(overriddenStepIds);
-  }
-  
-// FIX: This erroneous line was shadowing the imported `STORY_CARDS` array with the number 0, causing a type error. It has been removed.
-// Keep a reference to the old function signature for rules that don't have a details function
-// const STORY_CARDS =- [];
+}
