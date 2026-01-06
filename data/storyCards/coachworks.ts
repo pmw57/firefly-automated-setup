@@ -7,10 +7,21 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
     intro: "Once your reputation's been blemished, it's hard to get right with the right people. Compete with the other riffraff for what scraps your employers are willing to risk on the likes of you. Nothing to do but suck it up and try to prove yourself worthy.",
     requiredExpansion: "coachworks",
     sourceUrl: "https://boardgamegeek.com/image/2785043/gerryrailbaron",
-    setupDescription: "Start with 1 Warrant. Special 'shared hand' setup rules.",
+    setupDescription: "Start with 1 Warrant. No jobs are dealt; instead, a shared hand is created on top of the Contact Decks.",
     rules: createStoryRules("Down And Out", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
-      { type: 'addFlag', flag: 'sharedHandSetup' }
+      { type: 'setJobMode', mode: 'no_jobs' },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Shared Hand Setup',
+          content: [
+            { type: 'paragraph', content: [{ type: 'strong', content: "No Starting Jobs are dealt." }, " Instead, place one Job from each Contact face up on top of its deck."] },
+            { type: 'paragraph', content: ["These face-up Jobs form a shared hand of inactive Jobs that all players may access."] }
+          ]
+        }
+      }
     ])
   },
   {
