@@ -84,10 +84,11 @@ export const STORIES_R_S: StoryCardDef[] = [
     maxPlayerCount: 2,
     isPvP: true,
     intro: "During the war you watched your twin get cut down in a hail of shrapnel. You've lived an empty existence since that day making ends meet and trying to keep flying as best you can. Then you get a message from your Ma out on the Rim. \"Come home right away.\"\n\nSo you fly to St. Albans, Red Sun to see your Mother.\n\nOnce there, your twin (Who wasn't dead!) steals your ship and sets about ruining your life. Your twin has the exact same abilities as you do. Your twin may not discard any of your inactive jobs.",
-    sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
+    sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card/ruining-it-for-everyone",
     setupDescription: "Asymmetric PvP setup: Your twin steals your initial ship! Follow the special setup overrides.",
     rules: createStoryRules("Ruining It For Everyone", [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 0, description: "Player starts with $0." },
+      { type: 'addFlag', flag: 'isRuiningItForEveryone' },
+      { type: 'modifyResource', resource: 'credits', method: 'add', value: -3000, description: "Your twin stole your starting funds." },
       { type: 'setJobMode', mode: 'no_jobs' },
       {
         type: 'addSpecialRule',
@@ -114,7 +115,17 @@ export const STORIES_R_S: StoryCardDef[] = [
         rule: {
           title: "Your Starting Conditions",
           content: [
-            { type: 'paragraph', content: ["You begin play with a backup ship, 0 Crew, $0 Credits, and no Starting Jobs."] }
+            { type: 'paragraph', content: ["You begin play with a backup ship and 0 Crew."] }
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: "Your Starting Conditions",
+          content: [
+            { type: 'paragraph', content: ["Your twin stole your starting funds. You begin with $0 Credits."] }
           ]
         }
       },
@@ -128,7 +139,7 @@ export const STORIES_R_S: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'goal',
+        category: 'resources',
         rule: {
           title: 'Game Timer',
           content: [
