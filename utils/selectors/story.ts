@@ -131,6 +131,7 @@ export const getCategorizedExpansions = (showHidden = false, setupMode: SetupMod
     if (e.category !== category) return false;
     if (e.hidden && !showHidden) return false;
     // In basic mode, hide all independent content.
+    // In advanced mode, show independent content that is not explicitly hidden.
     if (setupMode === 'basic' && e.category === 'independent') return false;
     return true;
   });

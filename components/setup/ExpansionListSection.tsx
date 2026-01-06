@@ -26,7 +26,7 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
         map,
         variants,
         independent
-    } = useMemo(() => getCategorizedExpansions(state.showHiddenContent || state.setupMode === 'advanced'), [state.showHiddenContent, state.setupMode]);
+    } = useMemo(() => getCategorizedExpansions(state.showHiddenContent, state.setupMode), [state.showHiddenContent, state.setupMode]);
 
     const handleToggleGroup = (group: typeof core_mechanics, enable: boolean) => {
         group.forEach(exp => {
@@ -102,7 +102,7 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
                 </div>
             )}
             
-            {(isDevMode || state.setupMode === 'advanced') && (
+            {isDevMode && (
                 <div className="mt-8 pt-6 border-t border-dashed border-gray-300 dark:border-zinc-700">
                     <div 
                         role="switch"
@@ -113,8 +113,8 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
                         className="flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-colors border-gray-300 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800/50"
                     >
                         <div>
-                            <h3 className="font-bold text-base text-gray-900 dark:text-gray-200">Show Unreleased/Community Content</h3>
-                            <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">Includes fan-made expansions and promotional content.</p>
+                            <h3 className="font-bold text-base text-gray-900 dark:text-gray-200">Show Unreleased Content</h3>
+                            <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">Includes hidden promotional and in-development expansions.</p>
                         </div>
                         <div className={cls(
                             "w-14 h-8 rounded-full p-1 transition-colors duration-300 ease-in-out flex items-center shrink-0",
