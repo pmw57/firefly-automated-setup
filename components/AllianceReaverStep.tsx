@@ -4,7 +4,24 @@ import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { getAllianceReaverDetails } from '../utils/alliance';
 import { StepComponentProps } from './StepContent';
-import { SpecialRule } from '../types';
+import { SpecialRule, StructuredContentPart } from '../types';
+import { cls } from '../utils/style';
+
+// Simple renderer for the override content to avoid duplicating the full SpecialRuleBlock.
+const renderContent = (content: StructuredContentPart[]): React.ReactNode => {
+    return content.map((part, index) => {
+      if (typeof part === 'string') {
+        return <React.Fragment key={index}>{part}</React.Fragment>;
+      }
+      if (part.type === 'strong' || part.type === 'action') {
+        return <strong key={index}>{part.content}</strong>;
+      }
+      if (part.type === 'br') {
+        return <br key={index} />;
+      }
+      return null;
+    });
+};
 
 export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState } = useGameState();
@@ -25,18 +42,18 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  const showAllianceOverride = allianceOverride && (setupMode === 'detailed' || allianceOverride.source !== 'expansion');
-  const showReaverOverride = reaverOverride && (setupMode === 'detailed' || reaverOverride.source !== 'expansion');
-  
-  const showStandardSection = !showAllianceOverride || !showReaverOverride;
-
   const allSortedOverrides = useMemo(() => {
     const rules: SpecialRule[] = [...specialRules];
-    if (showAllianceOverride && allianceOverride) {
+    
+    // For detailed mode, show the override blocks to provide context, even though the
+    // rule is also rendered inline. In quick mode, these blocks are hidden.
+    if (setupMode === 'detailed') {
+      if (allianceOverride) {
         rules.push(allianceOverride);
-    }
-    if (showReaverOverride && reaverOverride) {
+      }
+      if (reaverOverride) {
         rules.push(reaverOverride);
+      }
     }
     
     const order: Record<SpecialRule['source'], number> = {
@@ -48,7 +65,7 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
     };
     
     return rules.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
-  }, [specialRules, allianceOverride, reaverOverride, showAllianceOverride, showReaverOverride]);
+  }, [specialRules, allianceOverride, reaverOverride, setupMode]);
 
   const standardContainerBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const standardContainerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -71,25 +88,24 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
           <SpecialRuleBlock key={`rule-${index}`} {...rule} />
       ))}
 
-      {showStandardSection && (
-        <div className={`${standardContainerBg} p-4 rounded-lg border ${standardContainerBorder} shadow-sm mt-4 transition-colors duration-300`}>
-          <h3 className={`text-lg font-bold ${headerColor} mb-3 font-western tracking-wide border-b-2 ${headerBorder} pb-1`}>Standard Ship Placement</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {!showAllianceOverride && (
-              <div className={`p-3 rounded border ${allianceBoxBg}`}>
-                <strong className={`block text-sm uppercase mb-1 ${allianceTitle}`}>Alliance Cruiser</strong>
-                <p className={`text-sm ${allianceText}`}>{standardAlliancePlacement}</p>
-              </div>
-            )}
-            {!showReaverOverride && (
-              <div className={`p-3 rounded border ${reaverBoxBg}`}>
-                <strong className={`block text-sm uppercase mb-1 ${reaverTitle}`}>Reaver Cutter</strong>
-                <p className={`text-sm ${reaverText}`}>{standardReaverPlacement}</p>
-              </div>
-            )}
+      <div className={`${standardContainerBg} p-4 rounded-lg border ${standardContainerBorder} shadow-sm mt-4 transition-colors duration-300`}>
+        <h3 className={`text-lg font-bold ${headerColor} mb-3 font-western tracking-wide border-b-2 ${headerBorder} pb-1`}>Ship Placement</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className={cls('p-3 rounded border', allianceBoxBg)}>
+            <strong className={cls('block text-sm uppercase mb-1', allianceTitle)}>{allianceOverride?.title || 'Alliance Cruiser'}</strong>
+            <p className={cls('text-sm', allianceText)}>
+              {allianceOverride ? renderContent(allianceOverride.content) : standardAlliancePlacement}
+            </p>
+          </div>
+          
+          <div className={cls('p-3 rounded border', reaverBoxBg)}>
+            <strong className={cls('block text-sm uppercase mb-1', reaverTitle)}>{reaverOverride?.title || 'Reaver Cutter'}</strong>
+            <p className={cls('text-sm', reaverText)}>
+              {reaverOverride ? renderContent(reaverOverride.content) : standardReaverPlacement}
+            </p>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
