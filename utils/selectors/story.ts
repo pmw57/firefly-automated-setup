@@ -68,10 +68,10 @@ export const getAvailableStoryCards = (gameState: GameState): StoryCardDef[] => 
 
 export const getFilteredStoryCards = (
     gameState: GameState, 
-    filters: { searchTerm: string; filterExpansion: string[]; filterCoOpOnly: boolean; sortMode: 'expansion' | 'name' | 'rating' }
+    filters: { searchTerm: string; filterExpansion: string[]; filterGameType: 'all' | 'solo' | 'co-op' | 'pvp'; sortMode: 'expansion' | 'name' | 'rating' }
 ): StoryCardDef[] => {
     const validStories = getAvailableStoryCards(gameState);
-    const { searchTerm, filterExpansion, filterCoOpOnly, sortMode } = filters;
+    const { searchTerm, filterExpansion, filterGameType, sortMode } = filters;
     
     const stories = validStories.filter(card => {
         const matchesSearch = searchTerm === '' || 
@@ -82,9 +82,13 @@ export const getFilteredStoryCards = (
             (filterExpansion.includes('base') && !card.requiredExpansion) ||
             (card.requiredExpansion && filterExpansion.includes(card.requiredExpansion));
 
-        const matchesCoOp = !filterCoOpOnly || card.isCoOp;
+        const matchesGameType =
+            filterGameType === 'all' ||
+            (filterGameType === 'solo' && card.isSolo) ||
+            (filterGameType === 'co-op' && card.isCoOp) ||
+            (filterGameType === 'pvp' && card.isPvP);
 
-        return matchesSearch && matchesExpansion && matchesCoOp;
+        return matchesSearch && matchesExpansion && matchesGameType;
     });
     
     const getSortableTitle = (str: string) => str.replace(/^[^a-zA-Z0-9]+/, '').replace(/^The\s+/i, '');

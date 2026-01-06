@@ -10,7 +10,8 @@ import { STORY_CARDS } from '../data/storyCards';
 interface LocalState {
   searchTerm: string;
   filterExpansion: string[];
-  filterCoOpOnly: boolean;
+  // FIX: Replaced `filterCoOpOnly` with the more flexible `filterGameType` to support multiple game modes.
+  filterGameType: 'all' | 'solo' | 'co-op' | 'pvp';
   shortList: StoryCardDef[];
   subStep: number;
   sortMode: 'expansion' | 'name' | 'rating';
@@ -20,7 +21,8 @@ type LocalAction =
   | { type: 'SET_SEARCH_TERM'; payload: string }
   | { type: 'SET_FILTER_EXPANSION'; payload: string[] }
   | { type: 'TOGGLE_FILTER_EXPANSION'; payload: string }
-  | { type: 'TOGGLE_FILTER_CO_OP' }
+  // FIX: Replaced `TOGGLE_FILTER_CO_OP` with an action to set the specific game type filter.
+  | { type: 'SET_FILTER_GAME_TYPE'; payload: 'all' | 'solo' | 'co-op' | 'pvp' }
   | { type: 'SET_SHORT_LIST'; payload: StoryCardDef[] }
   | { type: 'SET_SUB_STEP'; payload: number }
   | { type: 'TOGGLE_SORT_MODE' };
@@ -28,7 +30,8 @@ type LocalAction =
 const initialState: LocalState = {
   searchTerm: '',
   filterExpansion: [],
-  filterCoOpOnly: false,
+  // FIX: Updated initial state to use `filterGameType` instead of `filterCoOpOnly`.
+  filterGameType: 'all',
   shortList: [],
   subStep: 1,
   sortMode: 'expansion',
@@ -47,8 +50,9 @@ function reducer(state: LocalState, action: LocalAction): LocalState {
         : [...state.filterExpansion, id];
       return { ...state, filterExpansion: newFilter };
     }
-    case 'TOGGLE_FILTER_CO_OP':
-      return { ...state, filterCoOpOnly: !state.filterCoOpOnly };
+    // FIX: Updated reducer to handle setting the game type filter.
+    case 'SET_FILTER_GAME_TYPE':
+      return { ...state, filterGameType: action.payload };
     case 'SET_SHORT_LIST':
       return { ...state, shortList: action.payload };
     case 'SET_SUB_STEP':
@@ -69,14 +73,16 @@ function reducer(state: LocalState, action: LocalAction): LocalState {
 export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { state: gameState, dispatch: gameDispatch } = useGameState();
   const [localState, localDispatch] = useReducer(reducer, initialState);
-  const { searchTerm, filterExpansion, filterCoOpOnly, shortList, subStep, sortMode } = localState;
+  // FIX: Destructure `filterGameType` from local state instead of `filterCoOpOnly`.
+  const { searchTerm, filterExpansion, filterGameType, shortList, subStep, sortMode } = localState;
   
   // Memoized derived data
   const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
   const validStories = useMemo(() => getAvailableStoryCards(gameState), [gameState]);
   const filteredStories = useMemo(() => {
-    return getFilteredStoryCards(gameState, { searchTerm, filterExpansion, filterCoOpOnly, sortMode });
-  }, [gameState, searchTerm, filterExpansion, filterCoOpOnly, sortMode]);
+    // FIX: Pass `filterGameType` to `getFilteredStoryCards` to match its expected signature.
+    return getFilteredStoryCards(gameState, { searchTerm, filterExpansion, filterGameType, sortMode });
+  }, [gameState, searchTerm, filterExpansion, filterGameType, sortMode]);
   const allPotentialAdvancedRules: AdvancedRuleDef[] = useMemo(() =>
     getAllPotentialAdvancedRules(gameState),
     [gameState]
@@ -107,7 +113,8 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   const setSubStep = useCallback((step: number) => localDispatch({ type: 'SET_SUB_STEP', payload: step }), []);
   const toggleSortMode = useCallback(() => localDispatch({ type: 'TOGGLE_SORT_MODE' }), []);
   const toggleFilterExpansion = useCallback((id: string) => localDispatch({ type: 'TOGGLE_FILTER_EXPANSION', payload: id }), []);
-  const toggleFilterCoOp = useCallback(() => localDispatch({ type: 'TOGGLE_FILTER_CO_OP' }), []);
+  // FIX: Replaced `toggleFilterCoOp` with a function to set the game type filter.
+  const setFilterGameType = useCallback((type: 'all' | 'solo' | 'co-op' | 'pvp') => localDispatch({ type: 'SET_FILTER_GAME_TYPE', payload: type }), []);
   const handleCancelShortList = useCallback(() => localDispatch({ type: 'SET_SHORT_LIST', payload: [] }), []);
 
   // --- Handlers with Logic ---
@@ -149,7 +156,8 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     // State
     searchTerm,
     filterExpansion,
-    filterCoOpOnly,
+    // FIX: Provide `filterGameType` instead of `filterCoOpOnly` to match the context type.
+    filterGameType,
     shortList,
     subStep,
     sortMode,
@@ -164,7 +172,8 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     setSearchTerm,
     setFilterExpansion,
     toggleFilterExpansion,
-    toggleFilterCoOp,
+    // FIX: Provide `setFilterGameType` instead of `toggleFilterCoOp` to match the context type.
+    setFilterGameType,
     setSubStep,
     toggleSortMode,
     // Handlers
