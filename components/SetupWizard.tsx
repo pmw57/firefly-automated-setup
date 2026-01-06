@@ -178,7 +178,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
           <h2 className={cls("text-3xl font-bold font-western mb-4", isDark ? 'text-gray-100' : 'text-[#292524]')}>You are ready to fly!</h2>
           <p className={cls("mb-8 text-lg", isDark ? 'text-gray-300' : 'text-[#57534e]')}>Setup is complete. Good luck, Captain.</p>
           
-          {gameState.setupMode === 'advanced' && <FinalSummary gameState={gameState} />}
+          {gameState.setupMode === 'detailed' && <FinalSummary gameState={gameState} />}
 
           <div className="flex justify-center gap-4">
             <Button onClick={handlePrev} variant="secondary">Back</Button>

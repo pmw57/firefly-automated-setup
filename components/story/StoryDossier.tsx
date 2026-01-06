@@ -84,7 +84,8 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
       <p className={`${italicTextColor} italic font-serif text-lg leading-relaxed border-l-4 ${quoteBorder} pl-4 mb-4`}>"{activeStoryCard.intro}"</p>
       
       {goalRules
-        .filter(rule => gameState.setupMode === 'advanced' || rule.source !== 'expansion')
+        // FIX: Changed 'advanced' to 'detailed' to match SetupMode type.
+        .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
         .map((rule, index) => (
           <SpecialRuleBlock
               key={`goal-rule-${index}`}

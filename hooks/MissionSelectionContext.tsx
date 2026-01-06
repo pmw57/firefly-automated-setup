@@ -88,7 +88,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     [gameState]
   );
   const enablePart2 = useMemo(() => 
-    gameState.expansions.tenth && gameState.setupMode === 'advanced',
+    gameState.expansions.tenth && gameState.setupMode === 'detailed',
     [gameState.expansions.tenth, gameState.setupMode]
   );
 

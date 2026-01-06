@@ -171,21 +171,21 @@ const getPersistedExpansions = (): Expansions => {
 };
 
 /**
- * Retrieves the setup mode ('basic' or 'advanced') from local storage.
- * Defaults to 'advanced' if no setting is found.
+ * Retrieves the setup mode ('quick' or 'detailed') from local storage.
+ * Defaults to 'detailed' if no setting is found.
  */
 const getPersistedSetupMode = (): SetupMode => {
     try {
         if (typeof window !== 'undefined' && window.localStorage) {
             const saved = localStorage.getItem(SETUP_MODE_STORAGE_KEY) as SetupMode;
-            if (saved === 'basic' || saved === 'advanced') {
+            if (saved === 'quick' || saved === 'detailed') {
                 return saved;
             }
         }
     } catch (e) {
         console.error("Could not load setup mode preference.", e);
     }
-    return 'advanced';
+    return 'detailed';
 };
 
 

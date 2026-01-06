@@ -106,7 +106,7 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
 const getFinalStep = (): Step => ({ type: 'final', id: STEP_IDS.FINAL });
 
 export const calculateSetupFlow = (state: GameState): Step[] => {
-    const optionalRulesStep = state.setupMode === 'advanced' ? getOptionalRulesStep() : [];
+    const optionalRulesStep = state.setupMode === 'detailed' ? getOptionalRulesStep() : [];
 
     return [
         ...getInitialSetupSteps(),

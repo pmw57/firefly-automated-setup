@@ -91,7 +91,7 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
 
     return (
         <div className="mb-8">
-            {state.setupMode === 'basic' ? (
+            {state.setupMode === 'quick' ? (
                 <ExpansionBundles expansions={expansions} />
             ) : (
                 <div className="space-y-8 relative z-10">

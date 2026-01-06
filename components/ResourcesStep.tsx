@@ -155,7 +155,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
       )}
 
       {specialRules
-        .filter(rule => gameState.setupMode === 'advanced' || rule.source !== 'expansion')
+        .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
         .map((rule, i) => <SpecialRuleBlock key={`special-rule-${i}`} {...rule} />)}
       
       {creditModificationSource === 'setupCard' && creditModificationDescription && !hasComplexCreditCalculation && (
@@ -170,7 +170,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             <h4 className={`font-bold ${textColor}`}>Starting Credits</h4>
-            {hasComplexCreditCalculation && gameState.setupMode === 'advanced' ? (
+            {hasComplexCreditCalculation && gameState.setupMode === 'detailed' ? (
               <button
                 onClick={() => setShowBreakdown(s => !s)}
                 className={`text-xs mt-1 ${modsText} flex items-center gap-1.5 p-1 -ml-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors`}
