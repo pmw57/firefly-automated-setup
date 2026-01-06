@@ -11,6 +11,7 @@ import { StepComponentProps } from './StepContent';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
 import { ActionType } from '../state/actions';
 import { SpecialRule } from '../types';
+import { getResolvedRules, hasRuleFlag } from '../utils/selectors/rules';
 
 // Sub-component for Draft Order
 const DraftOrderPanel = ({ 
@@ -161,6 +162,9 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const isSolo = gameState.playerCount === 1;
   const isQuickMode = gameState.setupMode === 'quick';
   
+  const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
+  const isRuiningIt = useMemo(() => hasRuleFlag(allRules, 'isRuiningItForEveryone'), [allRules]);
+
   const {
       specialRules,
       isHavenDraft,
@@ -234,50 +238,72 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   return (
     <div className="space-y-6">
-      {allInfoBlocks.length > 0 && (
-        <div className="space-y-4">
-          {allInfoBlocks}
-        </div>
-      )}
-      
-      {!isSolo && !draftState && !isQuickMode && (
-        <p className={cls("italic text-center", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>
-      )}
-
-      {!draftState ? (
-        <Button onClick={handleDetermineOrder} variant="secondary" fullWidth className="my-4">
-           🎲 Roll for {isHavenDraft ? 'Haven Draft' : 'Command'}
-        </Button>
-      ) : (
-        <div className="animate-fade-in space-y-6">
-          {!isSolo && (
-            <DiceControls 
-                draftState={draftState} 
-                onRollChange={handleRollChange} 
-                onSetWinner={handleSetWinner}
-                allowManualOverride={isManualEntry && !isQuickMode}
-            />
-          )}
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <DraftOrderPanel 
-                draftOrder={draftState.draftOrder}
-                isSolo={isSolo}
-                isHavenDraft={isHavenDraft}
-                isBrowncoatDraft={isBrowncoatDraft}
-                stepBadgeClass={stepBadgeBlueBg}
-            />
-
-            <PlacementOrderPanel 
-                placementOrder={draftState.placementOrder}
-                isSolo={isSolo}
-                isHavenDraft={isHavenDraft}
-                isBrowncoatDraft={isBrowncoatDraft}
-                specialStartSector={specialStartSector}
-                stepBadgeClass={stepBadgeAmberBg}
-            />
+      {isRuiningIt ? (
+        <div className={`p-4 rounded-lg border transition-colors ${isDark ? 'bg-zinc-900/50 border-zinc-700' : 'bg-white/70 border-gray-200'}`}>
+          <h3 className={`text-lg font-bold font-western mb-3 pb-2 border-b ${isDark ? 'text-amber-400 border-amber-400/20' : 'text-amber-800 border-amber-800/20'}`}>
+            Asymmetric Setup: Ruining It For Everyone
+          </h3>
+          <div className="space-y-4">
+            {allInfoBlocks.map((block, index) => (
+              <div key={index} className="flex items-start gap-4">
+                <div className={`mt-1 flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg ${isDark ? 'bg-zinc-800 text-amber-400' : 'bg-amber-100 text-amber-800'}`}>
+                  {index + 1}
+                </div>
+                <div className="flex-1">
+                  {block}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+      ) : (
+        <>
+          {allInfoBlocks.length > 0 && (
+            <div className="space-y-4">
+              {allInfoBlocks}
+            </div>
+          )}
+          
+          {!isSolo && !draftState && !isQuickMode && (
+            <p className={cls("italic text-center", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>
+          )}
+
+          {!draftState ? (
+            <Button onClick={handleDetermineOrder} variant="secondary" fullWidth className="my-4">
+               🎲 Roll for {isHavenDraft ? 'Haven Draft' : 'Command'}
+            </Button>
+          ) : (
+            <div className="animate-fade-in space-y-6">
+              {!isSolo && (
+                <DiceControls 
+                    draftState={draftState} 
+                    onRollChange={handleRollChange} 
+                    onSetWinner={handleSetWinner}
+                    allowManualOverride={isManualEntry && !isQuickMode}
+                />
+              )}
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <DraftOrderPanel 
+                    draftOrder={draftState.draftOrder}
+                    isSolo={isSolo}
+                    isHavenDraft={isHavenDraft}
+                    isBrowncoatDraft={isBrowncoatDraft}
+                    stepBadgeClass={stepBadgeBlueBg}
+                />
+
+                <PlacementOrderPanel 
+                    placementOrder={draftState.placementOrder}
+                    isSolo={isSolo}
+                    isHavenDraft={isHavenDraft}
+                    isBrowncoatDraft={isBrowncoatDraft}
+                    specialStartSector={specialStartSector}
+                    stepBadgeClass={stepBadgeAmberBg}
+                />
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

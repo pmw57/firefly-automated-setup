@@ -78,7 +78,9 @@ const _applyResourceRules = (
                 if (modifications.length === 0) {
                      modifications.push({ description: "Base Allocation", value: `$${baseValue.toLocaleString()}` });
                 }
-                modifications.push({ description: rule.description, value: `+$${rule.value.toLocaleString()}` });
+                const sign = rule.value >= 0 ? '+' : '-';
+                const displayValue = Math.abs(rule.value).toLocaleString();
+                modifications.push({ description: rule.description, value: `${sign}$${displayValue}` });
             }
         }
     });
