@@ -109,6 +109,10 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     }
   });
   
+  if (hasRuleFlag(allRules, 'placeAllianceAlertsInAllianceSpace')) {
+    specialRules.push({ source: 'story', title: 'Alliance Space Lockdown', content: ['Place an ', { type: 'action', content: 'Alliance Alert Token' }, ' on ', { type: 'strong', content: 'every planetary sector in Alliance Space' }, '.'] });
+  }
+
   const baseResources: Record<ResourceType, number> = { credits: 3000, fuel: 6, parts: 2, warrants: 0, goalTokens: 0 };
   const finalResources: Partial<Record<ResourceType, number>> = {};
   let finalCreditModifications: { description: string; value: string }[] = [];

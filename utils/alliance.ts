@@ -61,10 +61,6 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
       break;
   }
   
-  if (hasRuleFlag(allRules, 'placeAllianceAlertsInAllianceSpace')) {
-    specialRules.push({ source: 'story', title: 'Alliance Space Lockdown', content: ['Place an ', { type: 'action', content: 'Alliance Alert Token' }, ' on ', { type: 'strong', content: 'every planetary sector in Alliance Space' }, '.'] });
-  }
-  
   if (hasRuleFlag(allRules, 'placeMixedAlertTokens')) {
     specialRules.push({ source: 'story', title: 'Verse-Wide Tension', content: ['Place ', { type: 'strong', content: '3 Alliance Alert Tokens' }, " in the 'Verse:", { type: 'list', items: [['1 in ', { type: 'strong', content: 'Alliance Space' }], ['1 in ', { type: 'strong', content: 'Border Space' }], ['1 in ', { type: 'strong', content: 'Rim Space' }]] }] });
   }
