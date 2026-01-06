@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import { SETUP_CARD_IDS } from '../../data/ids';
 import { Button } from '../Button';
 import { useTheme } from '../ThemeContext';
@@ -41,6 +41,19 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
   const toggleFlyingSolo = () => {
     dispatch({ type: ActionType.TOGGLE_FLYING_SOLO });
   };
+  
+  // Auto-select the first available setup card if none is selected
+  useEffect(() => {
+    const shouldAutoSelect = isFlyingSoloActive
+      ? !gameState.secondarySetupId
+      : !gameState.setupCardId;
+
+    if (shouldAutoSelect && availableSetups.length > 0) {
+      const firstCard = availableSetups[0];
+      handleSetupCardSelect(firstCard.id, firstCard.label);
+    }
+  }, [availableSetups, isFlyingSoloActive, gameState.setupCardId, gameState.secondarySetupId, handleSetupCardSelect]);
+
 
   const containerBg = isDark ? 'bg-black/60 backdrop-blur-sm' : 'bg-[#faf8ef]/80 backdrop-blur-sm';
   const containerBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
