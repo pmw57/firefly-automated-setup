@@ -152,6 +152,29 @@ const _generateJobMessages = (
     return messages;
 };
 
+// Helper to recursively flatten structured content to a searchable string
+const getTextFromContent = (content: StructuredContent): string => {
+    return content.map(part => {
+        if (typeof part === 'string') {
+            return part;
+        }
+        if ('content' in part && part.content) { // for strong, action, paragraph, warning-box
+            if (typeof part.content === 'string') {
+                return part.content;
+            }
+            if (Array.isArray(part.content)) {
+                return getTextFromContent(part.content);
+            }
+        }
+        if ('items' in part && part.items && Array.isArray(part.items)) { // for list, numbered-list, sub-list
+            if (part.type !== 'sub-list') { // list, numbered-list
+                return (part.items as StructuredContent[]).map(item => getTextFromContent(item)).join(' ');
+            }
+        }
+        return '';
+    }).join('');
+};
+
 export const getJobSetupDetails = (gameState: GameState, overrides: StepOverrides): JobSetupDetails => {
     const allRules = getResolvedRules(gameState);
     const activeStoryCard = getActiveStoryCard(gameState);
@@ -252,6 +275,19 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         isSingleContactChallenge
     );
     
-    // FIX: `isSingleContactChoice` was used as a variable but was not defined. It should be assigned the value of `isSingleContactChallenge`.
-    return { contacts, messages, showStandardContactList: true, isSingleContactChoice: isSingleContactChallenge, cardsToDraw: 3, totalJobCards: contacts.length };
+    // Find Caper Bonus rule to set count for the dedicated UI component.
+    // The original rule is preserved in the 'messages' array.
+    let caperDrawCount: number | undefined;
+    const caperBonusRule = messages.find(msg => msg.title === 'Caper Bonus');
+    if (caperBonusRule) {
+        const contentText = getTextFromContent(caperBonusRule.content);
+        const match = contentText.match(/Draw (\d+)/i);
+        if (match && match[1]) {
+            caperDrawCount = parseInt(match[1], 10);
+        } else {
+            caperDrawCount = 1; // Default to 1 if parsing fails
+        }
+    }
+    
+    return { contacts, messages, showStandardContactList: true, isSingleContactChoice: isSingleContactChallenge, cardsToDraw: 3, totalJobCards: contacts.length, caperDrawCount };
 };

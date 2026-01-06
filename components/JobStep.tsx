@@ -7,6 +7,7 @@ import { getActiveStoryCard, getCampaignNotesForStep } from '../utils/selectors/
 import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
 import { StepComponentProps } from './StepContent';
 import { ChallengeOption, SpecialRule } from '../types';
+import { cls } from '../utils/style';
 
 export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
@@ -69,6 +70,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     }
 
     // Messages from rule engine (mixed sources)
+    // The override block is important for context and must always be shown.
     blocks.push(...messages.filter(msg => !(msg.source === 'story' && !isSelectedStory)));
     
     // Active Challenges (Story/Warning)
