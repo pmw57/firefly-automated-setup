@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTheme } from './ThemeContext';
+import { cls } from '../utils/style';
 
 interface ConflictOptionDetails {
   value: number | string;
@@ -22,9 +23,10 @@ export const ConflictResolver: React.FC<ConflictResolverProps> = ({ title, confl
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const containerBg = isDark ? 'bg-amber-950/40' : 'bg-amber-50';
-  const containerBorder = isDark ? 'border-amber-800' : 'border-amber-200';
-  const headerText = isDark ? 'text-amber-300' : 'text-amber-800';
+  const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
+  const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
+  const sectionHeaderColor = isDark ? 'text-gray-200' : 'text-gray-800';
+  const sectionHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
 
   const buttonBase = 'flex-1 p-3 rounded-lg border-2 text-left transition-all shadow-sm';
   const selectedClass = isDark ? 'bg-green-900/30 border-green-600' : 'bg-green-50 border-green-500';
@@ -35,15 +37,20 @@ export const ConflictResolver: React.FC<ConflictResolverProps> = ({ title, confl
   const checkClass = isDark ? 'text-green-400' : 'text-green-600';
 
   return (
-    <div className={`p-4 rounded-lg border-l-4 ${containerBg} ${containerBorder} mb-6 animate-fade-in`}>
-      <h4 className={`font-bold text-base mb-3 ${headerText}`}>{title}</h4>
+    <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-4 md:p-6 animate-fade-in")}>
+      <h4 className={`font-bold text-lg mb-3 pb-2 border-b ${sectionHeaderColor} ${sectionHeaderBorder}`}>
+        {title}
+      </h4>
+      <p className={`text-sm mb-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+        Your <strong>Setup Card</strong> and <strong>Story Card</strong> have conflicting rules for starting funds. Please choose which rule to follow:
+      </p>
       <div className="flex flex-col sm:flex-row gap-4">
         {/* Story Card Option */}
         <button onClick={() => onSelect('story')} className={`${buttonBase} ${selection === 'story' ? selectedClass : unselectedClass}`}>
           <div className="flex justify-between items-start">
             <div>
               <div className={sourceLabelClass}>Story Card Rule</div>
-              <div className={valueClass}>{conflict.story.value}</div>
+              <div className={valueClass}>${Number(conflict.story.value).toLocaleString()}</div>
             </div>
             {selection === 'story' && <div className={`text-2xl font-bold ${checkClass}`}>✓</div>}
           </div>
@@ -55,7 +62,7 @@ export const ConflictResolver: React.FC<ConflictResolverProps> = ({ title, confl
           <div className="flex justify-between items-start">
             <div>
               <div className={sourceLabelClass}>Setup Card Rule</div>
-              <div className={valueClass}>{conflict.setupCard.value}</div>
+              <div className={valueClass}>${Number(conflict.setupCard.value).toLocaleString()}</div>
             </div>
             {selection === 'setupCard' && <div className={`text-2xl font-bold ${checkClass}`}>✓</div>}
           </div>

@@ -96,7 +96,10 @@ const _applyResourceRules = (
 export const getResourceDetails = (gameState: GameState, manualSelection?: 'story' | 'setupCard'): ResourceDetails => {
   const allRules = getResolvedRules(gameState);
   const resourceRules = allRules.filter(r => r.type === 'modifyResource') as ModifyResourceRule[];
+  
   const specialRules: SpecialRule[] = [];
+  const boardSetupRules: SpecialRule[] = [];
+  const componentAdjustmentRules: SpecialRule[] = [];
   
   allRules.forEach(rule => {
     if (rule.type === 'addSpecialRule' && rule.category === 'resources') {
@@ -110,7 +113,28 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
   });
   
   if (hasRuleFlag(allRules, 'placeAllianceAlertsInAllianceSpace')) {
-    specialRules.push({ source: 'story', title: 'Alliance Space Lockdown', content: ['Place an ', { type: 'action', content: 'Alliance Alert Token' }, ' on ', { type: 'strong', content: 'every planetary sector in Alliance Space' }, '.'] });
+    const ruleContent: SpecialRule['content'] = ['Place an ', { type: 'action', content: 'Alliance Alert Token' }, ' on ', { type: 'strong', content: 'every planetary sector in Alliance Space' }, '.'];
+    specialRules.push({ source: 'story', title: 'Alliance Space Lockdown', content: ruleContent });
+    boardSetupRules.push({ source: 'story', title: 'Alliance Space Lockdown', content: ruleContent });
+  }
+
+  const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
+  if (smugglersBluesSetup && !(gameState.expansions.blue && gameState.expansions.kalidasa)) {
+    specialRules.push({
+        source: 'story',
+        title: "Smuggler's Blues Contraband",
+        content: ["Place 3 Contraband on each planetary sector in Alliance Space."]
+    });
+  }
+  
+  if (hasRuleFlag(allRules, 'lonelySmugglerSetup')) {
+    const ruleContent: SpecialRule['content'] = ['Place ', { type: 'strong', content: '3 Contraband' }, ' on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.'];
+    specialRules.push({ source: 'story', title: "Lonely Smuggler's Stash", content: ruleContent });
+    boardSetupRules.push({ source: 'story', title: "Lonely Smuggler's Stash", content: ruleContent });
+  }
+
+  if (hasRuleFlag(allRules, 'removeRiver')) {
+    componentAdjustmentRules.push({ source: 'story', title: "Missing Person", content: ["Remove ", { type: 'strong', content: "River Tam" }, " from play."] });
   }
 
   const baseResources: Record<ResourceType, number> = { credits: 3000, fuel: 6, parts: 2, warrants: 0, goalTokens: 0 };
@@ -154,21 +178,6 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
   const creditModInfo = getModificationInfo('credits');
   const fuelModInfo = getModificationInfo('fuel');
   const partsModInfo = getModificationInfo('parts');
-  
-  const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
-  let smugglersBluesVariantAvailable = false;
-  if (smugglersBluesSetup) {
-    const canUseRimRule = gameState.expansions.blue && gameState.expansions.kalidasa;
-    if (canUseRimRule) {
-      smugglersBluesVariantAvailable = true;
-    } else {
-      specialRules.push({ source: 'story', title: "Smuggler's Blues Contraband", content: ['Place ', { type: 'strong', content: '3 Contraband' }, ' on each Planetary Sector in ', { type: 'strong', content: 'Alliance Space' }, '.'] });
-    }
-  }
-  
-  if (hasRuleFlag(allRules, 'lonelySmugglerSetup')) {
-    specialRules.push({ source: 'story', title: "Lonely Smuggler's Stash", content: ['Place ', { type: 'strong', content: '3 Contraband' }, ' on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.'] });
-  }
 
   return {
     credits: finalResources.credits!,
@@ -181,12 +190,14 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     creditModifications: finalCreditModifications,
     conflict: creditConflictInfo.conflict,
     specialRules,
-    smugglersBluesVariantAvailable,
+    boardSetupRules,
+    componentAdjustmentRules,
     creditModificationSource: creditModInfo.source,
     creditModificationDescription: creditModInfo.description,
     fuelModificationSource: fuelModInfo.source,
     partsModificationSource: partsModInfo.source,
     fuelModificationDescription: fuelModInfo.description,
-    partsModificationDescription: partsModInfo.description
+    partsModificationDescription: partsModInfo.description,
+    smugglersBluesVariantAvailable: hasRuleFlag(allRules, 'smugglersBluesSetup') && gameState.expansions.blue && gameState.expansions.kalidasa,
   };
 };

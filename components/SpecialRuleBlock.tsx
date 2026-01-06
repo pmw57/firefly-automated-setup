@@ -11,9 +11,10 @@ export interface SpecialRuleBlockProps {
   content: StructuredContent;
   page?: string | number;
   manual?: string;
+  className?: string;
 }
 
-export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, title, content, page, manual }) => {
+export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, title, content, page, manual, className }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -102,7 +103,7 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
 
   return (
     <section 
-      className={cls("border-l-4 p-4 rounded-r-xl shadow-sm mb-4 transition-all hover:shadow-md backdrop-blur-sm animate-fade-in-up", s.border, s.bg)}
+      className={cls("border-l-4 p-4 rounded-r-xl shadow-sm mb-4 transition-all hover:shadow-md backdrop-blur-sm animate-fade-in-up", s.border, s.bg, className)}
       aria-labelledby={labelledby}
     >
       <div className="flex items-start mb-2">

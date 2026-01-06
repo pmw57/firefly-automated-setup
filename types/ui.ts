@@ -69,13 +69,15 @@ export interface ResourceDetails {
   creditModifications: { description: string; value: string }[];
   conflict?: ResourceConflict;
   specialRules: SpecialRule[];
-  smugglersBluesVariantAvailable?: boolean;
+  boardSetupRules: SpecialRule[];
+  componentAdjustmentRules: SpecialRule[];
   creditModificationSource?: RuleSourceType;
   creditModificationDescription?: string;
   fuelModificationSource?: RuleSourceType;
   partsModificationSource?: RuleSourceType;
   fuelModificationDescription?: string;
   partsModificationDescription?: string;
+  smugglersBluesVariantAvailable: boolean;
 }
 
 
