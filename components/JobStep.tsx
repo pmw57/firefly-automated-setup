@@ -6,8 +6,8 @@ import { getJobSetupDetails } from '../utils/jobs';
 import { getActiveStoryCard, getCampaignNotesForStep } from '../utils/selectors/story';
 import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
 import { StepComponentProps } from './StepContent';
-import { ChallengeOption, SpecialRule } from '../types';
-import { cls } from '../utils/style';
+import { ChallengeOption, SpecialRule, SetJobModeRule } from '../types';
+import { getResolvedRules } from '../utils/selectors/rules';
 
 export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
@@ -16,6 +16,14 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const stepId = step.id;
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  
+  const jobDrawMode = useMemo(() => {
+    const allRules = getResolvedRules(gameState);
+    const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
+    return jobModeRule?.mode || overrides.jobMode || 'standard';
+  }, [gameState, overrides]);
+  
+  const isDraftChoice = jobDrawMode === 'draft_choice';
   
   const campaignNotes = useMemo(
     () => getCampaignNotesForStep(gameState, step.id), 
@@ -117,35 +125,58 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
         <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300`}>
           {contacts.length > 0 ? (
             <>
-              {isSingleContactChoice ? (
+              {isDraftChoice ? (
                 <>
-                  <p className={`mb-4 font-bold ${textColor} text-lg`}>Choose 1 Contact from the available list:</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {contacts.map(contact => (
-                      <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
-                        {contact}
-                      </span>
-                    ))}
+                  <p className={`mb-4 font-bold ${textColor} text-lg`}>Job Draft Procedure</p>
+                  <ol className={`list-decimal list-inside space-y-2 mb-4 text-sm ${noteText}`}>
+                    <li>Starting with the <strong>last player</strong> who chose a Leader, each player takes a turn.</li>
+                    <li>On your turn, choose <strong>1 Job Card from 3 different Contacts</strong>.</li>
+                  </ol>
+                  
+                  <div className={`border-t ${dividerBorder} pt-4`}>
+                      <p className={`mb-4 font-bold ${textColor} text-lg`}>Available Contacts for Draft:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {contacts.map(contact => (
+                          <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
+                            {contact}
+                          </span>
+                        ))}
+                      </div>
                   </div>
-                  <p className={`text-lg font-bold ${isDark ? 'text-amber-400' : 'text-amber-800'} mb-2`}>
-                    Draw {cardsToDraw || 3} Job Cards from your chosen contact.
-                  </p>
                 </>
               ) : (
                 <>
-                  <p className={`mb-4 font-bold ${textColor} text-lg`}>Draw 1 Job Card from each:</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {contacts.map(contact => (
-                      <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
-                        {contact}
-                      </span>
-                    ))}
-                  </div>
+                  {isSingleContactChoice ? (
+                    <>
+                      <p className={`mb-4 font-bold ${textColor} text-lg`}>Choose 1 Contact from the available list:</p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {contacts.map(contact => (
+                          <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
+                            {contact}
+                          </span>
+                        ))}
+                      </div>
+                      <p className={`text-lg font-bold ${isDark ? 'text-amber-400' : 'text-amber-800'} mb-2`}>
+                        Draw {cardsToDraw || 3} Job Cards from your chosen contact.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className={`mb-4 font-bold ${textColor} text-lg`}>Draw 1 Job Card from each:</p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {contacts.map(contact => (
+                          <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
+                            {contact}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                  <p className={`text-sm ${noteText} border-t ${dividerBorder} pt-3 mt-2 italic`}>
+                    Discard any unwanted jobs. {totalJobCards > 3 && !isSingleContactChoice && <span>Keep a hand of <strong>up to three</strong> Job Cards.</span>}
+                  </p>
                 </>
               )}
-              <p className={`text-sm ${noteText} border-t ${dividerBorder} pt-3 mt-2 italic`}>
-                Discard any unwanted jobs. {totalJobCards > 3 && !isSingleContactChoice && <span>Keep a hand of <strong>up to three</strong> Job Cards.</span>}
-              </p>
             </>
           ) : (
             <p className={`text-lg font-bold ${textColor} text-center`}>

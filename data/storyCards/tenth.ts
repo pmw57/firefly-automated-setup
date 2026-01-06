@@ -6,7 +6,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
   {
     title: "A Friend In Every Port",
     intro: "High places, low places... When you sail the Black for a living, best to have friends in ALL places.",
-    setupDescription: "Starting Jobs: Starting with the last player to choose a Leader, each player chooses 1 Job from 3 different Contacts. Mr. Universe cannot be chosen for starting Jobs. Priming the Pump: Reveal the top 5 cards of each Supply deck. Place the revealed cards in their discard piles.",
+    setupDescription: "Starting Jobs: Starting with the last player to choose a Leader, each player chooses 1 Job from 3 different Contacts. Mr. Universe cannot be chosen for starting Jobs. Priming the Pump: Reveal the top 6 cards of each Supply deck. Place the revealed cards in their discard piles.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     sourceUrl: "https://boardgamegeek.com/image/8103874/sjliver",
@@ -15,12 +15,16 @@ export const TENTH_STORIES: StoryCardDef[] = [
       { type: 'modifyPrime', multiplier: 2, source: 'story', sourceName: "A Friend In Every Port" },
       {
         type: 'addSpecialRule',
-        category: 'jobs',
+        category: 'prime',
         source: 'story',
         sourceName: "A Friend In Every Port",
         rule: {
-          title: "Job Draft Rules",
-          content: ["Draft 3 specific contact decks for starting jobs."]
+          title: "Priming the Pump Override",
+          content: [
+            "Reveal the top ",
+            { type: 'strong', content: '6 cards' },
+            " of each Supply deck. Place the revealed cards in their discard piles."
+          ]
         }
       }
     ],
