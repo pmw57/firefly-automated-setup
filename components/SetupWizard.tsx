@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useGameState } from '../hooks/useGameState';
@@ -12,9 +10,7 @@ import { FinalSummary } from './FinalSummary';
 import { WizardHeader } from './WizardHeader';
 import { OverrideModal } from './OverrideModal';
 import { detectOverrides } from '../utils/overrides';
-import { getActiveStoryCard } from '../utils/selectors/story';
 import { ActionType } from '../state/actions';
-import { STEP_IDS } from '../data/ids';
 import { cls } from '../utils/style';
 import { isSetupDetermined } from '../utils/ui';
 import { calculateSetupFlow } from '../utils/flow';
@@ -69,15 +65,14 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
 
   // Effect to detect and set story overrides in global state
   useEffect(() => {
-    const storyCard = getActiveStoryCard(gameState);
-    if (storyCard) {
-      const storyStepIndex = flow.findIndex(s => s.id === STEP_IDS.C4);
-      const overriddenIds = detectOverrides(storyCard, flow, storyStepIndex);
+    if (gameState.selectedStoryCardIndex !== null) {
+      const overriddenIds = detectOverrides(gameState, flow, currentStepIndex);
       if (overriddenIds.length > 0 && overriddenIds.join(',') !== gameState.overriddenStepIds.join(',')) {
         dispatch({ type: ActionType.SET_STORY_OVERRIDES, payload: overriddenIds });
       }
     }
-  }, [gameState.selectedStoryCardIndex, flow, dispatch, gameState.overriddenStepIds, gameState]);
+  }, [gameState.selectedStoryCardIndex, flow, dispatch, gameState.overriddenStepIds, gameState, currentStepIndex]);
+
 
   // Effect to mark overridden steps as "visited" when the user navigates to them.
   // This is used to clear the warning indicator on the progress bar.
@@ -126,7 +121,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   }, [flow.length, setCurrentStepIndex]);
 
   const handleNext = useCallback(() => {
-    const isStoryStep = flow[currentStepIndex]?.id === STEP_IDS.C4;
+    const isStoryStep = flow[currentStepIndex]?.data?.title === '4. Goal of the Game';
     
     if (isStoryStep && unacknowledgedOverrides.length > 0) {
       const affectedSteps = flow.filter(step => unacknowledgedOverrides.includes(step.id));
