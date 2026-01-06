@@ -173,6 +173,26 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
     const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
 
+    if (jobDrawMode === 'caper_start') {
+        const messages: JobSetupMessage[] = [];
+        if (activeStoryCard?.setupDescription) {
+            messages.push({
+                source: 'story',
+                title: activeStoryCard.title,
+                content: [{ type: 'paragraph', content: [activeStoryCard.setupDescription] }],
+            });
+        }
+
+        return {
+            contacts: [],
+            messages,
+            showStandardContactList: true,
+            isSingleContactChoice: false,
+            totalJobCards: 0,
+            caperDrawCount: 1,
+        };
+    }
+
     if (jobDrawMode === 'wind_takes_us') {
         const { playerCount } = gameState;
         const isLowPlayerCount = playerCount <= 3;
@@ -232,5 +252,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         isSingleContactChallenge
     );
     
+    // FIX: `isSingleContactChoice` was used as a variable but was not defined. It should be assigned the value of `isSingleContactChallenge`.
     return { contacts, messages, showStandardContactList: true, isSingleContactChoice: isSingleContactChallenge, cardsToDraw: 3, totalJobCards: contacts.length };
 };
