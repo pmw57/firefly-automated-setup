@@ -8,7 +8,7 @@ import { ActionType } from '../state/actions';
 import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
-import { StructuredContent } from '../types';
+import { StructuredContent, SpecialRule } from '../types';
 
 export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState, dispatch } = useGameState();
@@ -62,6 +62,53 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
       partsModificationSource, partsModificationDescription
   ]);
 
+  const removeRiver = hasRuleFlag(allRules, 'removeRiver');
+  
+  const allInfoBlocks = useMemo(() => {
+    const blocks: SpecialRule[] = [];
+
+    blocks.push(...campaignNotes.map(note => ({
+      source: 'story' as const, title: 'Campaign Setup Note', content: note.content
+    })));
+
+    if (storyOverrideContent) {
+        blocks.push({ source: 'story', title: "Starting Resource Override", content: storyOverrideContent });
+    }
+
+    blocks.push(...specialRules);
+
+    if (creditModificationSource === 'setupCard' && creditModificationDescription && !hasComplexCreditCalculation) {
+        blocks.push({ source: 'setupCard', title: "Starting Funds Override", content: [{ type: 'paragraph', content: [creditModificationDescription] }] });
+    }
+
+    if (warrants > 0) {
+        blocks.push({ source: 'story', title: "Warrant Issued", content: ["Each player begins the game with ", { type: 'strong', content: `${warrants} Warrant Token${warrants > 1 ? 's' : ''}` }, "."] });
+    }
+    if (goalTokens > 0) {
+        blocks.push({ source: 'story', title: "Starting Goal Tokens", content: ["Begin play with ", { type: 'strong', content: `${goalTokens} Goal Token${goalTokens > 1 ? 's' : ''}` }, "."] });
+    }
+    if (removeRiver) {
+        blocks.push({ source: 'story', title: "Missing Person", content: ["Remove ", { type: 'strong', content: "River Tam" }, " from play."] });
+    }
+
+    const order: Record<SpecialRule['source'], number> = {
+        expansion: 1, setupCard: 2, story: 3, warning: 3, info: 4,
+    };
+    
+    const sortedBlocks = blocks.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+    
+    const uniqueBlocks = sortedBlocks.filter((block, index, self) => 
+        index === self.findIndex((b) => (b.title === block.title && JSON.stringify(b.content) === JSON.stringify(block.content)))
+    );
+
+    return uniqueBlocks
+        .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
+        .map((rule, i) => <SpecialRuleBlock key={`rule-${i}`} {...rule} />);
+  }, [
+      campaignNotes, storyOverrideContent, specialRules, creditModificationSource, creditModificationDescription,
+      hasComplexCreditCalculation, warrants, goalTokens, removeRiver, gameState.setupMode
+  ]);
+
   const setupCardFuelMod = fuelModificationDescription && fuelModificationSource !== 'story';
   const setupCardPartsMod = partsModificationDescription && partsModificationSource !== 'story';
 
@@ -78,8 +125,6 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
         dispatch({ type: ActionType.SET_FINAL_STARTING_CREDITS, payload: credits });
     }
   }, [credits, dispatch, gameState.finalStartingCredits]);
-  
-  const removeRiver = hasRuleFlag(allRules, 'removeRiver');
   
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -98,15 +143,8 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
 
   return (
     <div className="space-y-4">
-      {campaignNotes.map((note, i) => (
-        <SpecialRuleBlock 
-          key={i}
-          source="story" 
-          title="Campaign Setup Note" 
-          content={note.content} 
-        />
-      ))}
-
+      {allInfoBlocks}
+      
       {smugglersBluesVariantAvailable && (
         <section className={cls("border-l-4 p-4 rounded-r-xl shadow-sm mb-4 transition-all hover:shadow-md backdrop-blur-sm animate-fade-in-up", isDark ? 'border-amber-700 bg-amber-900/20' : 'border-[#b45309] bg-[#fffbeb]')}>
           <div className="flex items-start mb-2">
@@ -144,26 +182,6 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
             </div>
           </div>
         </section>
-      )}
-
-      {storyOverrideContent && (
-        <SpecialRuleBlock
-          source="story"
-          title="Starting Resource Override"
-          content={storyOverrideContent}
-        />
-      )}
-
-      {specialRules
-        .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
-        .map((rule, i) => <SpecialRuleBlock key={`special-rule-${i}`} {...rule} />)}
-      
-      {creditModificationSource === 'setupCard' && creditModificationDescription && !hasComplexCreditCalculation && (
-        <SpecialRuleBlock
-          source='setupCard'
-          title="Starting Funds Override"
-          content={[{ type: 'paragraph', content: [creditModificationDescription] }]}
-        />
       )}
 
       <div className={`${cardBg} p-4 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300`}>
@@ -235,18 +253,6 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
           </div>
         )}
       </div>
-      
-      {warrants > 0 && (
-        <SpecialRuleBlock source="story" title="Warrant Issued" content={["Each player begins the game with ", { type: 'strong', content: `${warrants} Warrant Token${warrants > 1 ? 's' : ''}` }, "."]} />
-      )}
-
-      {goalTokens > 0 && (
-        <SpecialRuleBlock source="story" title="Starting Goal Tokens" content={["Begin play with ", { type: 'strong', content: `${goalTokens} Goal Token${goalTokens > 1 ? 's' : ''}` }, "."]} />
-      )}
-
-      {removeRiver && (
-        <SpecialRuleBlock source="story" title="Missing Person" content={["Remove ", { type: 'strong', content: "River Tam" }, " from play."]} />
-      )}
     </div>
   );
 };

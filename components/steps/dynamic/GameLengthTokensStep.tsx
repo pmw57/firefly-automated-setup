@@ -1,21 +1,18 @@
 import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
-import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
 import { ActionType } from '../../../state/actions';
 import { hasRuleFlag, getResolvedRules } from '../../../utils/selectors/rules';
 import { getActiveStoryCard } from '../../../utils/selectors/story';
 import { UnpredictableTimerRules } from './timer/UnpredictableTimerRules';
-import { SpecialRule } from '../../../types';
+import { SpecialRule, StructuredContent } from '../../../types';
 
 export const GameLengthTokensStep: React.FC = () => {
     const { state: gameState, dispatch } = useGameState();
     const activeStoryCard = getActiveStoryCard(gameState);
-    const { theme } = useTheme();
-    const isDark = theme === 'dark';
     const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
 
-    const specialRules = useMemo(() => {
+    const specialRulesFromEngine = useMemo(() => {
         const rules: SpecialRule[] = [];
         allRules.forEach(rule => {
             if (rule.type === 'addSpecialRule' && rule.category === 'soloTimer') {
@@ -30,11 +27,63 @@ export const GameLengthTokensStep: React.FC = () => {
         return rules;
     }, [allRules]);
 
-    // Check if a story card provides its own timer setup to replace the standard one.
     const replacesTimerSetup = useMemo(() => 
         hasRuleFlag(allRules, 'replacesSoloTimerSetup'), 
     [allRules]);
 
+    const { shesTrouble, recipeForUnpleasantness } = gameState.soloOptions || {};
+    const tokensToRemove = gameState.isCampaign ? gameState.campaignStoriesCompleted * 2 : 0;
+
+    const allInfoBlocks = useMemo(() => {
+      const blocks: SpecialRule[] = [...specialRulesFromEngine];
+  
+      if (tokensToRemove > 0) {
+        blocks.push({
+          source: 'setupCard',
+          title: 'Campaign Rule: Time Catches Up',
+          content: ["Removing ", { type: 'strong', content: `${tokensToRemove} tokens` }, " from the timer for your ", { type: 'strong', content: `${gameState.campaignStoriesCompleted}` }, " completed stories."]
+        });
+      }
+  
+      const activeSoloRules: StructuredContent = [];
+      if (shesTrouble) {
+        activeSoloRules.push({
+          type: 'paragraph',
+          content: [
+            { type: 'strong', content: "She's Trouble:" },
+            " Whenever you begin a turn with a ", { type: 'strong', content: "Deceptive Crew" }, " on your ship and deceptive crew cards in a discard pile, roll a die. If you roll a 1, disgruntle your deceptive crew.",
+            { type: 'br' },
+            { type: 'warning-box', content: ["Note: If a deceptive crew is part of your crew and you hire another, you may remove one from play."] }
+          ]
+        });
+      }
+      if (recipeForUnpleasantness) {
+        activeSoloRules.push({
+          type: 'paragraph',
+          content: [
+            { type: 'strong', content: "Recipe For Unpleasantness:" },
+            " Whenever you begin a turn with ", { type: 'strong', content: "1 or more disgruntled crew" }, " (including your leader), roll a die. If you roll equal to or lower than the number of disgruntled crew on your ship, add a disgruntled token to the crew of your choice.",
+            { type: 'br' },
+            { type: 'warning-box', content: ["Crew who jump ship or are fired as a result are removed from play."] }
+          ]
+        });
+      }
+
+      if (activeSoloRules.length > 0) {
+        blocks.push({ source: 'info', title: 'Active Optional Rules', content: activeSoloRules });
+      }
+      
+      const order: Record<SpecialRule['source'], number> = {
+        expansion: 1, setupCard: 2, story: 3, warning: 3, info: 4,
+      };
+      
+      return blocks
+        .sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99))
+        .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
+        .map((rule, i) => <SpecialRuleBlock key={`rule-${i}`} {...rule} />);
+
+    }, [specialRulesFromEngine, tokensToRemove, gameState.campaignStoriesCompleted, shesTrouble, recipeForUnpleasantness, gameState.setupMode]);
+    
     if (!dispatch || !activeStoryCard) return null;
 
     if (activeStoryCard.rules && hasRuleFlag(activeStoryCard.rules, 'disableSoloTimer')) {
@@ -43,8 +92,6 @@ export const GameLengthTokensStep: React.FC = () => {
         );
     }
     
-    const { shesTrouble, recipeForUnpleasantness } = gameState.soloOptions || {};
-
     const toggleTimerMode = () => {
         dispatch({ type: ActionType.TOGGLE_TIMER_MODE });
     };
@@ -53,50 +100,11 @@ export const GameLengthTokensStep: React.FC = () => {
         dispatch({ type: ActionType.TOGGLE_UNPREDICTABLE_TOKEN, payload: index });
     };
 
-    const tokensToRemove = gameState.isCampaign ? gameState.campaignStoriesCompleted * 2 : 0;
     const totalTokens = Math.max(0, 20 - tokensToRemove);
-    
-    const warningBg = isDark ? 'bg-amber-900/30' : 'bg-amber-50';
-    const warningBorder = isDark ? 'border-amber-700/50' : 'border-amber-200';
 
     return (
         <div className="space-y-6">
-            {specialRules
-              // FIX: Changed 'advanced' to 'detailed' to match SetupMode type.
-              .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
-              .map((rule, i) => (
-                <SpecialRuleBlock key={`special-${i}`} {...rule} />
-            ))}
-
-            {tokensToRemove > 0 && (
-                <SpecialRuleBlock source="setupCard" title="Campaign Rule: Time Catches Up" content={["Removing ", { type: 'strong', content: `${tokensToRemove} tokens` }, " from the timer for your ", { type: 'strong', content: `${gameState.campaignStoriesCompleted}` }, " completed stories."]} />
-            )}
-
-            {(shesTrouble || recipeForUnpleasantness) && (
-                <div className={`p-4 rounded-lg border ${warningBorder} ${warningBg} mb-4`}>
-                    <h4 className={`font-bold text-sm uppercase tracking-wide mb-3 ${isDark ? 'text-amber-400' : 'text-amber-800'}`}>Active Solo Rules</h4>
-                    <div className="space-y-3">
-                        {shesTrouble && (
-                            <div>
-                                <strong className={`block text-xs ${isDark ? 'text-amber-200' : 'text-amber-900'}`}>She's Trouble</strong>
-                                <p className={`text-xs mt-1 ${isDark ? 'text-amber-200/80' : 'text-amber-800'}`}>
-                                    Whenever you begin a turn with a <strong>Deceptive Crew</strong> on your ship and deceptive crew cards in a discard pile, roll a die. If you roll a 1, disgruntle your deceptive crew.
-                                    <br/><em className="opacity-80">Note: If a deceptive crew is part of your crew and you hire another, you may remove one from play.</em>
-                                </p>
-                            </div>
-                        )}
-                        {recipeForUnpleasantness && (
-                            <div className={shesTrouble ? `pt-3 border-t ${warningBorder}` : ''}>
-                                <strong className={`block text-xs ${isDark ? 'text-amber-200' : 'text-amber-900'}`}>Recipe For Unpleasantness</strong>
-                                <p className={`text-xs mt-1 ${isDark ? 'text-amber-200/80' : 'text-amber-800'}`}>
-                                    Whenever you begin a turn with <strong>1 or more disgruntled crew</strong> (including your leader), roll a die. If you roll equal to or lower than the number of disgruntled crew on your ship, add a disgruntled token to the crew of your choice.
-                                    <br/><em className="opacity-80">Crew who jump ship or are fired as a result are removed from play.</em>
-                                </p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
+            {allInfoBlocks}
             
             {!replacesTimerSetup && (
                 <UnpredictableTimerRules 

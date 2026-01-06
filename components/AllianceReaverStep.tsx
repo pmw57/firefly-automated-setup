@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { getAllianceReaverDetails } from '../utils/alliance';
 import { StepComponentProps } from './StepContent';
+import { SpecialRule } from '../types';
 
 export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState } = useGameState();
@@ -29,6 +30,26 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   
   const showStandardSection = !showAllianceOverride || !showReaverOverride;
 
+  const allSortedOverrides = useMemo(() => {
+    const rules: SpecialRule[] = [...specialRules];
+    if (showAllianceOverride && allianceOverride) {
+        rules.push(allianceOverride);
+    }
+    if (showReaverOverride && reaverOverride) {
+        rules.push(reaverOverride);
+    }
+    
+    const order: Record<SpecialRule['source'], number> = {
+        expansion: 1,
+        setupCard: 2,
+        story: 3,
+        warning: 3,
+        info: 4,
+    };
+    
+    return rules.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+  }, [specialRules, allianceOverride, reaverOverride, showAllianceOverride, showReaverOverride]);
+
   const standardContainerBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const standardContainerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const headerColor = isDark ? 'text-gray-200' : 'text-gray-800';
@@ -44,13 +65,11 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
 
   return (
     <div className="space-y-4">
-      {specialRules
+      {allSortedOverrides
         .filter(rule => setupMode === 'detailed' || rule.source !== 'expansion')
         .map((rule, index) => (
-          <SpecialRuleBlock key={`special-${index}`} {...rule} />
+          <SpecialRuleBlock key={`rule-${index}`} {...rule} />
       ))}
-      {showAllianceOverride && <SpecialRuleBlock key="alliance-override" {...allianceOverride!} />}
-      {showReaverOverride && <SpecialRuleBlock key="reaver-override" {...reaverOverride!} />}
 
       {showStandardSection && (
         <div className={`${standardContainerBg} p-4 rounded-lg border ${standardContainerBorder} shadow-sm mt-4 transition-colors duration-300`}>

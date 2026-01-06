@@ -10,6 +10,7 @@ import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
 import { ActionType } from '../state/actions';
+import { SpecialRule } from '../types';
 
 // Sub-component for Draft Order
 const DraftOrderPanel = ({ 
@@ -173,13 +174,31 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   );
 
   const allInfoBlocks = useMemo(() => {
-    const notes = campaignNotes.map((note, i) => (
-      <SpecialRuleBlock key={`campaign-${i}`} source="story" title="Campaign Setup Note" content={note.content} />
-    ));
-    const rules = specialRules
+    const notesAsRules: SpecialRule[] = campaignNotes.map(note => ({
+      source: 'story',
+      title: 'Campaign Setup Note',
+      content: note.content
+    }));
+    
+    const allRules: SpecialRule[] = [
+        ...specialRules,
+        ...notesAsRules
+    ];
+
+    const sortedRules = allRules.sort((a, b) => {
+      const order: Record<SpecialRule['source'], number> = {
+        expansion: 1,
+        setupCard: 2,
+        story: 3,
+        warning: 3, // Treat warnings like story overrides
+        info: 4,
+      };
+      return (order[a.source] || 99) - (order[b.source] || 99);
+    });
+
+    return sortedRules
       .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
-      .map((rule, i) => <SpecialRuleBlock key={`special-${i}`} {...rule} />);
-    return [...notes, ...rules];
+      .map((rule, i) => <SpecialRuleBlock key={`rule-${i}`} {...rule} />);
   }, [campaignNotes, specialRules, gameState.setupMode]);
 
   const handleDetermineOrder = useCallback(() => {
