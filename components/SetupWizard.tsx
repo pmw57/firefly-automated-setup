@@ -44,8 +44,10 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   const isDark = theme === 'dark';
   
   const unacknowledgedOverrides = useMemo(() => {
-      return gameState.overriddenStepIds.filter(id => !gameState.acknowledgedOverrides.includes(id));
-  }, [gameState.overriddenStepIds, gameState.acknowledgedOverrides]);
+      return gameState.overriddenStepIds.filter(
+        id => !gameState.acknowledgedOverrides.includes(id) && !gameState.visitedStepOverrides.includes(id)
+      );
+  }, [gameState.overriddenStepIds, gameState.acknowledgedOverrides, gameState.visitedStepOverrides]);
 
   // Effect to handle setup mode changes and maintain the current conceptual step
   useEffect(() => {
