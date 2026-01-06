@@ -384,9 +384,31 @@ export function gameReducer(state: GameState, action: Action): GameState {
       nextState = handleToggleFlyingSolo(state);
       break;
 
-    case ActionType.SET_STORY_CARD:
-      nextState = { ...state, selectedStoryCardIndex: action.payload.index, selectedGoal: action.payload.goal, challengeOptions: {}, overriddenStepIds: [], acknowledgedOverrides: [], visitedStepOverrides: [] };
+    case ActionType.SET_STORY_CARD: {
+      const { index, goal } = action.payload;
+      const card = index !== null ? STORY_CARDS[index] : undefined;
+      
+      const newChallengeOptions: Record<string, boolean> = {};
+
+      // If Smuggler's Blues is selected, check if we should default the variant.
+      if (card?.title === "Smuggler's Blues") {
+        const canUseRimRule = state.expansions.blue && state.expansions.kalidasa;
+        if (canUseRimRule) {
+          newChallengeOptions.smugglers_blues_rim_variant = true;
+        }
+      }
+
+      nextState = { 
+        ...state, 
+        selectedStoryCardIndex: index, 
+        selectedGoal: goal, 
+        challengeOptions: newChallengeOptions, 
+        overriddenStepIds: [], 
+        acknowledgedOverrides: [], 
+        visitedStepOverrides: [] 
+      };
       break;
+    }
       
     case ActionType.SET_GOAL:
       nextState = { ...state, selectedGoal: action.payload };
