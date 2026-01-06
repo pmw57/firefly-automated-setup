@@ -19,6 +19,23 @@ import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
 const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): JobSetupDetails | null => {
+    const specialRules: SpecialRule[] = [];
+    allRules.forEach(rule => {
+        if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
+            if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
+                specialRules.push({
+                    source: rule.source as SpecialRule['source'],
+                    ...rule.rule
+                });
+            }
+        }
+    });
+
+    if (specialRules.length > 0) {
+        return { contacts: [], messages: specialRules, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+    }
+
+    // Original logic if no special rule found
     let content: StructuredContent;
     let messageSource: JobSetupMessage['source'] = 'info';
     let messageTitle = 'Information';
