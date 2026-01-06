@@ -58,7 +58,7 @@ export const PlayerConfigSection: React.FC<PlayerConfigSectionProps> = ({
                 </span>
             </div>
             
-            {setupMode === 'advanced' && (
+            {setupMode === 'detailed' && (
               <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 ${isDark ? 'bg-black/30' : 'bg-[#e7e5e4]/30'} p-4 rounded-lg border ${isDark ? 'border-zinc-800' : 'border-[#d6cbb0]'} shadow-inner`}>
                   {playerNames.map((name, index) => (
                       <div key={index} className="flex items-center">

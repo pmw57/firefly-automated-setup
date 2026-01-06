@@ -46,7 +46,7 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
   return (
     <div className="space-y-4">
       {specialRules
-        .filter(rule => gameState.setupMode === 'advanced' || rule.source !== 'expansion')
+        .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
         .map((rule, i) => (
           <SpecialRuleBlock key={i} {...rule} />
       ))}

@@ -24,8 +24,8 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  const showAllianceOverride = allianceOverride && (setupMode === 'advanced' || allianceOverride.source !== 'expansion');
-  const showReaverOverride = reaverOverride && (setupMode === 'advanced' || reaverOverride.source !== 'expansion');
+  const showAllianceOverride = allianceOverride && (setupMode === 'detailed' || allianceOverride.source !== 'expansion');
+  const showReaverOverride = reaverOverride && (setupMode === 'detailed' || reaverOverride.source !== 'expansion');
   
   const showStandardSection = !showAllianceOverride || !showReaverOverride;
 
@@ -45,7 +45,7 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   return (
     <div className="space-y-4">
       {specialRules
-        .filter(rule => setupMode === 'advanced' || rule.source !== 'expansion')
+        .filter(rule => setupMode === 'detailed' || rule.source !== 'expansion')
         .map((rule, index) => (
           <SpecialRuleBlock key={`special-${index}`} {...rule} />
       ))}

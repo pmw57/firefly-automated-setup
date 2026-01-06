@@ -158,7 +158,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const isSolo = gameState.playerCount === 1;
-  const isBasicMode = gameState.setupMode === 'basic';
+  const isQuickMode = gameState.setupMode === 'quick';
   
   const {
       specialRules,
@@ -177,7 +177,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       <SpecialRuleBlock key={`campaign-${i}`} source="story" title="Campaign Setup Note" content={note.content} />
     ));
     const rules = specialRules
-      .filter(rule => gameState.setupMode === 'advanced' || rule.source !== 'expansion')
+      .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
       .map((rule, i) => <SpecialRuleBlock key={`special-${i}`} {...rule} />);
     return [...notes, ...rules];
   }, [campaignNotes, specialRules, gameState.setupMode]);
@@ -189,10 +189,10 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   useEffect(() => {
     if (isSolo && !draftState) {
         dispatch({ type: ActionType.SET_DRAFT_CONFIG, payload: { state: getInitialSoloDraftState(gameState.playerNames[0]), isManual: false } });
-    } else if (!isSolo && !draftState && isBasicMode) {
+    } else if (!isSolo && !draftState && isQuickMode) {
         handleDetermineOrder();
     }
-  }, [isSolo, gameState.playerNames, draftState, dispatch, isBasicMode, handleDetermineOrder]);
+  }, [isSolo, gameState.playerNames, draftState, dispatch, isQuickMode, handleDetermineOrder]);
 
   const handleRollChange = (index: number, newValue: string) => {
     if (!draftState) return;
@@ -221,7 +221,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
         </div>
       )}
       
-      {!isSolo && !draftState && !isBasicMode && (
+      {!isSolo && !draftState && !isQuickMode && (
         <p className={cls("italic text-center", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>
       )}
 
@@ -236,7 +236,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 draftState={draftState} 
                 onRollChange={handleRollChange} 
                 onSetWinner={handleSetWinner}
-                allowManualOverride={isManualEntry && !isBasicMode}
+                allowManualOverride={isManualEntry && !isQuickMode}
             />
           )}
           

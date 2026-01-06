@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useGameState } from '../hooks/useGameState';
 import { ActionType } from '../state/actions';
@@ -6,7 +7,7 @@ import { cls } from '../utils/style';
 
 export const SetupModeToggle: React.FC = () => {
     const { state, dispatch } = useGameState();
-    const isAdvanced = state.setupMode === 'advanced';
+    const isDetailed = state.setupMode === 'detailed';
 
     const [labelsVisible, setLabelsVisible] = useState(true);
     const timerRef = useRef<number | null>(null);
@@ -32,7 +33,7 @@ export const SetupModeToggle: React.FC = () => {
     };
 
     const handleToggle = () => {
-        dispatch({ type: ActionType.SET_SETUP_MODE, payload: isAdvanced ? 'basic' : 'advanced' });
+        dispatch({ type: ActionType.SET_SETUP_MODE, payload: isDetailed ? 'quick' : 'detailed' });
         handleMouseEnter(); 
     };
 
@@ -46,7 +47,7 @@ export const SetupModeToggle: React.FC = () => {
         };
     }, []);
 
-    const titleText = isAdvanced 
+    const titleText = isDetailed 
         ? "A comprehensive checklist including all optional rules and details for enthusiasts."
         : "A streamlined guide to get you playing faster.";
 
@@ -63,7 +64,7 @@ export const SetupModeToggle: React.FC = () => {
             )}>
                 <span className={cls(
                     "font-bold uppercase text-xs tracking-wider transition-all duration-200 px-2 py-0.5 rounded bg-black/25 backdrop-blur-sm [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]",
-                    isAdvanced
+                    isDetailed
                         ? "text-white"
                         : "text-gray-400"
                 )}>
@@ -71,7 +72,7 @@ export const SetupModeToggle: React.FC = () => {
                 </span>
                 <span className={cls(
                     "font-bold uppercase text-xs tracking-wider transition-all duration-200 px-2 py-0.5 rounded bg-black/25 backdrop-blur-sm [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]",
-                    !isAdvanced
+                    !isDetailed
                         ? "text-white"
                         : "text-gray-400"
                 )}>
@@ -81,9 +82,9 @@ export const SetupModeToggle: React.FC = () => {
             <label className="rocker-switch">
                 <input
                     type="checkbox"
-                    checked={isAdvanced}
+                    checked={isDetailed}
                     onChange={handleToggle}
-                    aria-label={`Current mode: ${isAdvanced ? 'Detailed' : 'Quick'}. Click to switch.`}
+                    aria-label={`Current mode: ${isDetailed ? 'Detailed' : 'Quick'}. Click to switch.`}
                 />
                 <div className="button">
                     <div className="light"></div>

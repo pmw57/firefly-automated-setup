@@ -72,7 +72,7 @@ export const SetupCardList: React.FC<SetupCardListProps> = ({
                         ? (isDark ? 'text-emerald-200/70' : 'text-[#991b1b]') 
                         : (isDark ? 'text-zinc-400' : 'text-[#57534e]');
                     
-                    const isRecommended = gameState.setupMode === 'basic' && card.id === 'Standard';
+                    const isRecommended = gameState.setupMode === 'quick' && card.id === 'Standard';
 
                     return (
                         <React.Fragment key={card.id}>
@@ -107,7 +107,7 @@ export const SetupCardList: React.FC<SetupCardListProps> = ({
                                       </div>
                                       {isSelected && <span className={`${isDark ? 'text-emerald-400' : 'text-[#7f1d1d]'} font-bold text-xl`}>✓</span>}
                                     </div>
-                                    {gameState.setupMode === 'advanced' && card.description && (
+                                    {gameState.setupMode === 'detailed' && card.description && (
                                         <p className={`text-sm ${descColor} line-clamp-2`}>
                                             {card.description}
                                         </p>

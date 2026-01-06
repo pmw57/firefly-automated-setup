@@ -3,7 +3,7 @@
 
 export type GameEdition = 'original' | 'tenth';
 export type GameMode = 'multiplayer' | 'solo';
-export type SetupMode = 'basic' | 'advanced';
+export type SetupMode = 'quick' | 'detailed';
 
 export interface Expansions {
   base: boolean;

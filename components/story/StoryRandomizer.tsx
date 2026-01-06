@@ -26,7 +26,8 @@ export const StoryRandomizer: React.FC<StoryRandomizerProps> = ({ onSelect }) =>
   } = useMissionSelection();
 
   const showRandomOption = validStories.length > 1;
-  const showDraftOption = validStories.length > 3 && gameState.setupMode === 'advanced';
+  // FIX: Changed 'advanced' to 'detailed' to match SetupMode type.
+  const showDraftOption = validStories.length > 3 && gameState.setupMode === 'detailed';
 
   const draftButtonClass = isDark
     ? 'bg-blue-900/50 border-blue-800 hover:bg-blue-800/60 text-blue-100'

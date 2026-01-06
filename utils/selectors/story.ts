@@ -55,15 +55,15 @@ export const getAvailableSetupCards = (gameState: GameState): SetupCardDef[] => 
 };
 
 export const getAvailableStoryCards = (gameState: GameState): StoryCardDef[] => {
-    const stateWithBasicModeFilters: GameState = {
+    const stateWithQuickModeFilters: GameState = {
         ...gameState,
         expansions: {
             ...gameState.expansions,
-            // In basic mode, always treat community expansions as disabled for filtering purposes
-            community: gameState.setupMode === 'basic' ? false : gameState.expansions.community,
+            // In quick mode, always treat community expansions as disabled for filtering purposes
+            community: gameState.setupMode === 'quick' ? false : gameState.expansions.community,
         }
     };
-    return STORY_CARDS.filter(card => isStoryCompatible(card, stateWithBasicModeFilters));
+    return STORY_CARDS.filter(card => isStoryCompatible(card, stateWithQuickModeFilters));
 };
 
 export const getFilteredStoryCards = (
@@ -125,14 +125,14 @@ export const getCampaignNotesForStep = (gameState: GameState, stepId: string): C
         .filter((note: CampaignSetupNote | undefined): note is CampaignSetupNote => !!note && note.stepId === stepId);
 };
 
-export const getCategorizedExpansions = (showHidden = false, setupMode: SetupMode = 'basic') => {
+export const getCategorizedExpansions = (showHidden = false, setupMode: SetupMode = 'quick') => {
   const group = (category: string) => EXPANSIONS_METADATA.filter(e => {
     if (e.id === 'base') return false;
     if (e.category !== category) return false;
     if (e.hidden && !showHidden) return false;
-    // In basic mode, hide all independent content.
-    // In advanced mode, show independent content that is not explicitly hidden.
-    if (setupMode === 'basic' && e.category === 'independent') return false;
+    // In quick mode, hide all independent content.
+    // In detailed mode, show independent content that is not explicitly hidden.
+    if (setupMode === 'quick' && e.category === 'independent') return false;
     return true;
   });
   return {
