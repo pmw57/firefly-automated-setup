@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../types';
 import { CONTACT_NAMES } from '../ids';
 import { createStoryRules } from './utils';
@@ -26,6 +25,16 @@ export const CRIME_STORIES: StoryCardDef[] = [
       {
         type: "setShipPlacement",
         location: "londinium",
+        source: "story",
+        sourceName: "Smuggler's Blues"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft",
+        rule: {
+          title: "Story Override: Starting Location",
+          content: [{ type: 'paragraph', content: ['All players begin the game at ', { type: 'strong', content: 'Londinium' }, '. The standard draft for ship/leader selection still occurs, but placement is fixed.'] }]
+        },
         source: "story",
         sourceName: "Smuggler's Blues"
       },
