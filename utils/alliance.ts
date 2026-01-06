@@ -1,4 +1,3 @@
-
 import { 
     GameState, 
     StepOverrides, 
@@ -34,7 +33,7 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
   let reaverOverride: SpecialRule | undefined;
 
   const standardAlliancePlacement = "Place the Cruiser at Londinium.";
-  const standardReaverPlacement = "Place 1 Cutter at the Firefly logo (Regina/Osiris).";
+  const standardReaverPlacement = "Place 1 Cutter at the Firefly logo.";
 
   // --- Process general alert token rules ---
   const allianceModeRule = allRules.find(r => r.type === 'setAllianceMode') as SetAllianceModeRule | undefined;
