@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { InstallPWA } from './components/InstallPWA';
@@ -109,10 +107,13 @@ const App = (): React.ReactElement => {
 
   const isPreview = typeof import.meta.env === 'undefined';
   const isDevMode = !isPreview && import.meta.env.DEV;
-  const baseUrl = !isPreview ? import.meta.env.BASE_URL : '/';
+  // "Production" is defined as not dev, not a static preview, and not running on localhost.
+  const isProdDeployment = !isDevMode && !isPreview && (typeof window !== 'undefined' && !['localhost', '127.0.0.1'].includes(window.location.hostname));
   const isAnyModalOpen = isHelpModalOpen || isQrModalOpen;
   const showWizard = isStateInitialized && isWizardInitialized;
 
+  // FIX: Define `baseUrl` to resolve the path for the header image.
+  const baseUrl = !isPreview ? import.meta.env.BASE_URL : '/';
   const headerImageUrl = isPreview
     ? 'https://cf.geekdo-images.com/FtTleN6TrwDz378_TQ2NFw__imagepage/img/kytwle1zmoWYFCYtr1cq6EPnRHc=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7565930.jpg'
     : `${baseUrl}assets/images/game/firefly-cover.png`;
@@ -140,7 +141,7 @@ const App = (): React.ReactElement => {
         <SetupWizard isDevMode={isDevMode} />
       </main>
 
-      <OnboardingTooltip />
+      {isProdDeployment && <OnboardingTooltip />}
       
       {isDevMode && <DevPanel />}
 
