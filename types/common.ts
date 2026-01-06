@@ -70,6 +70,7 @@ export interface GameState {
   storyRatingFilters: Record<number, boolean>;
   overriddenStepIds: string[];
   acknowledgedOverrides: string[];
+  visitedStepOverrides: string[];
   draft: {
     state: import('./state').DraftState | null;
     isManual: boolean;

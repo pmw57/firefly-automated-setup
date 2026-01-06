@@ -93,7 +93,7 @@ const validateGameMode = (state: GameState): GameState => {
     }
 
     return newState;
-}
+};
 
 /**
  * Validates and resets optional rules if their required expansion (10th Anniversary) is disabled.
@@ -231,6 +231,7 @@ export const getDefaultGameState = (): GameState => {
         },
         overriddenStepIds: [],
         acknowledgedOverrides: [],
+        visitedStepOverrides: [],
         draft: {
             state: null,
             isManual: false,
@@ -384,7 +385,7 @@ export function gameReducer(state: GameState, action: Action): GameState {
       break;
 
     case ActionType.SET_STORY_CARD:
-      nextState = { ...state, selectedStoryCardIndex: action.payload.index, selectedGoal: action.payload.goal, challengeOptions: {}, overriddenStepIds: [], acknowledgedOverrides: [] };
+      nextState = { ...state, selectedStoryCardIndex: action.payload.index, selectedGoal: action.payload.goal, challengeOptions: {}, overriddenStepIds: [], acknowledgedOverrides: [], visitedStepOverrides: [] };
       break;
       
     case ActionType.SET_GOAL:
@@ -460,6 +461,15 @@ export function gameReducer(state: GameState, action: Action): GameState {
       nextState = { ...state, acknowledgedOverrides: action.payload };
       break;
       
+    case ActionType.VISIT_OVERRIDDEN_STEP:
+      if (state.visitedStepOverrides.includes(action.payload)) {
+        return state;
+      }
+      nextState = {
+        ...state,
+        visitedStepOverrides: [...state.visitedStepOverrides, action.payload],
+      };
+      break;
     case ActionType.SET_DRAFT_CONFIG:
       nextState = { ...state, draft: action.payload };
       break;
