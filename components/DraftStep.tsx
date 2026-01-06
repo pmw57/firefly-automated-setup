@@ -75,6 +75,7 @@ const PlacementOrderPanel = ({
     isHavenDraft,
     isBrowncoatDraft,
     specialStartSector,
+    startOutsideAllianceSpace,
     stepBadgeClass,
 }: {
     placementOrder: string[];
@@ -82,6 +83,7 @@ const PlacementOrderPanel = ({
     isHavenDraft: boolean;
     isBrowncoatDraft: boolean;
     specialStartSector: string | null;
+    startOutsideAllianceSpace: boolean;
     stepBadgeClass: string;
 }) => {
     const { theme } = useTheme();
@@ -101,6 +103,8 @@ const PlacementOrderPanel = ({
     let description: string;
     let placementTitle = isHavenDraft ? 'Haven Placement' : 'Placement';
     let content: React.ReactNode;
+
+    const restrictionTextColor = isDark ? 'text-yellow-400' : 'text-yellow-700';
 
     if (specialStartSector) {
         placementTitle = 'Special Placement';
@@ -129,6 +133,13 @@ const PlacementOrderPanel = ({
                 <p className={cls("text-xs mb-3 italic", descriptionColor)}>
                     {description}
                 </p>
+
+                {startOutsideAllianceSpace && (
+                    <p className={cls("text-xs mb-3 font-bold", restrictionTextColor)}>
+                        ⚠️ Restriction: Starting locations may not be within Alliance Space.
+                    </p>
+                )}
+                
                 <ul className="space-y-2">
                     {placementOrder.map((player, i) => (
                     <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
@@ -170,6 +181,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       isHavenDraft,
       isBrowncoatDraft,
       specialStartSector,
+      startOutsideAllianceSpace,
   } = React.useMemo(() => getDraftDetails(gameState, step), [gameState, step]);
   
   const campaignNotes = useMemo(
@@ -298,6 +310,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                     isHavenDraft={isHavenDraft}
                     isBrowncoatDraft={isBrowncoatDraft}
                     specialStartSector={specialStartSector}
+                    startOutsideAllianceSpace={!!startOutsideAllianceSpace}
                     stepBadgeClass={stepBadgeAmberBg}
                 />
               </div>

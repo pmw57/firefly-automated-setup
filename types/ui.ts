@@ -104,6 +104,7 @@ export interface DraftRuleDetails {
   isBrowncoatDraft: boolean;
   specialStartSector: string | null;
   conflictMessage: StructuredContent | null;
+  startOutsideAllianceSpace?: boolean;
 }
 
 export interface HeaderDetails {
