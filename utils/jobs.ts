@@ -173,6 +173,46 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
     const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
 
+    if (jobDrawMode === 'wind_takes_us') {
+        const { playerCount } = gameState;
+        const isLowPlayerCount = playerCount <= 3;
+
+        const lowPlayerCountInstruction: StructuredContent = [
+            { type: 'strong', content: 'For 3 or fewer players, draw 4 Job Cards each.' }
+        ];
+        const plainLowPlayerCountInstruction: StructuredContent = [
+            'For 3 or fewer players, draw 4 Job Cards each.'
+        ];
+        const highPlayerCountInstruction: StructuredContent = [
+            { type: 'strong', content: 'For 4 or more players, draw 3 Job Cards each.' }
+        ];
+        const plainHighPlayerCountInstruction: StructuredContent = [
+            'For 4 or more players, draw 3 Job Cards each.'
+        ];
+
+        const content: StructuredContent = [
+            { type: 'paragraph', content: ["Each player draws jobs from a single Contact Deck of their choice:"] },
+            {
+              type: 'list',
+              items: [
+                isLowPlayerCount ? lowPlayerCountInstruction : plainLowPlayerCountInstruction,
+                !isLowPlayerCount ? highPlayerCountInstruction : plainHighPlayerCountInstruction
+              ]
+            },
+            { type: 'paragraph', content: ['Place a ', { type: 'strong', content: 'Goal Token' }, ' at each Job\'s Drop Off / Target / Destination Sector.'] },
+            { type: 'paragraph', content: ['After placing tokens, return all drawn Job cards to their Contact Decks and reshuffle the decks.'] },
+            { type: 'paragraph', content: [{ type: 'strong', content: 'Do not deal any other Starting Jobs.' }] }
+        ];
+
+        const message: JobSetupMessage = {
+            source: 'story',
+            title: "The Winds of Fate",
+            content: content,
+        };
+
+        return { contacts: [], messages: [message], showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+    }
+
     if (jobDrawMode === 'no_jobs') {
         const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
         const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];

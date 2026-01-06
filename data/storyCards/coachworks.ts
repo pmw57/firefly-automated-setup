@@ -29,9 +29,9 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
     intro: "The winds of fate can be fickle, blowing this way and that with no regard whatsoever for a captain's plans... Now, you might could rage through the storm and buck those headwinds, trying to hold true to your intended course. The wise captain knows to ride the currents and take opportunities as they come. After the storm, will you be the broken ginkgo tree or the leaf blown to new and greener pastures?",
     requiredExpansion: "coachworks",
     sourceUrl: "https://boardgamegeek.com/image/2785042/gerryrailbaron",
-    setupDescription: "Special 'winds of fate' job draw rules.",
+    setupDescription: "Special 'winds of fate' rules for placing Goal tokens. No Starting Jobs are dealt.",
     rules: createStoryRules("Where The Wind Takes Us", [
-      { type: 'setJobMode', mode: 'wind_takes_us' }
+      { type: 'setJobMode', mode: 'wind_takes_us' },
     ])
   },
 ];
