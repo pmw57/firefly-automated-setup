@@ -29,15 +29,18 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
     selectedStoryCardIndex,
     sortMode,
     toggleSortMode,
-    filterCoOpOnly,
-    toggleFilterCoOp,
+    filterGameType,
+    setFilterGameType,
     gameState,
   } = useMissionSelection();
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
 
+  const hasSoloStories = useMemo(() => validStories.some(s => s.isSolo), [validStories]);
   const hasCoOpStories = useMemo(() => validStories.some(s => s.isCoOp), [validStories]);
+  const hasPvPStories = useMemo(() => validStories.some(s => s.isPvP), [validStories]);
+  const showGameTypeFilter = hasSoloStories || hasCoOpStories || hasPvPStories;
 
   const expansionsForFilter = useMemo(() => {
     // 1. Get all unique expansion IDs present in the currently valid stories.
@@ -95,20 +98,23 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         
-        {hasCoOpStories && (
-          <label className={cls(
-            `flex items-center gap-2 p-3 border rounded-lg shadow-sm transition-colors cursor-pointer`,
-            inputBorder, inputBg, inputText,
-            isDark ? 'hover:border-zinc-500' : 'hover:border-stone-400'
-          )}>
-            <input
-              type="checkbox"
-              checked={filterCoOpOnly}
-              onChange={toggleFilterCoOp}
-              className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 dark:bg-zinc-700 dark:border-zinc-600"
-            />
-            <span className="text-sm font-medium whitespace-nowrap">Co-op Only</span>
-          </label>
+        {showGameTypeFilter && (
+            <div className="relative w-full sm:w-auto sm:flex-1 md:flex-none md:w-48">
+                <select
+                    value={filterGameType}
+                    onChange={(e) => setFilterGameType(e.target.value as 'all' | 'solo' | 'co-op' | 'pvp')}
+                    className={`w-full h-full p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none ${inputBg} ${inputText} transition-colors text-left appearance-none pr-8`}
+                    aria-label="Filter by game type"
+                >
+                    <option value="all">All Game Types</option>
+                    {hasSoloStories && <option value="solo">Solo Only</option>}
+                    {hasCoOpStories && <option value="co-op">Co-op Only</option>}
+                    {hasPvPStories && <option value="pvp">PvP Only</option>}
+                </select>
+                <div className={`pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>
+                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
+            </div>
         )}
 
         <div ref={filterRef} className="relative w-full sm:w-auto sm:flex-1 md:flex-none md:w-56">

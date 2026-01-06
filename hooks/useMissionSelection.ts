@@ -4,7 +4,7 @@ import { StoryCardDef, AdvancedRuleDef, GameState } from '../types';
 export interface MissionSelectionContextType {
   searchTerm: string;
   filterExpansion: string[];
-  filterCoOpOnly: boolean;
+  filterGameType: 'all' | 'solo' | 'co-op' | 'pvp';
   shortList: StoryCardDef[];
   subStep: number;
   sortMode: 'expansion' | 'name' | 'rating';
@@ -17,7 +17,7 @@ export interface MissionSelectionContextType {
   setSearchTerm: (term: string) => void;
   setFilterExpansion: (ids: string[]) => void;
   toggleFilterExpansion: (id: string) => void;
-  toggleFilterCoOp: () => void;
+  setFilterGameType: (type: 'all' | 'solo' | 'co-op' | 'pvp') => void;
   setSubStep: (step: number) => void;
   toggleSortMode: () => void;
   handleStoryCardSelect: (index: number | null) => void;
