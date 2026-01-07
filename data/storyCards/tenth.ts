@@ -64,7 +64,15 @@ export const TENTH_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     sourceUrl: "https://boardgamegeek.com/image/8103878/sjliver",
     rules: createStoryRules("Let's Be Bad Guys", [
-      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA }
+      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Earning Trust',
+          content: ["Jobs for Niska are not dealt during Set Up."]
+        }
+      }
     ])
   },
   {
