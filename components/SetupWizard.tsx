@@ -14,6 +14,7 @@ import { ActionType } from '../state/actions';
 import { cls } from '../utils/style';
 import { isSetupDetermined } from '../utils/ui';
 import { calculateSetupFlow } from '../utils/flow';
+import { STEP_IDS } from '../data/ids';
 
 interface SetupWizardProps {
   isDevMode: boolean;
@@ -134,7 +135,22 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
     }
   }, [handleNavigation, currentStepIndex, flow, unacknowledgedOverrides]);
 
-  const handlePrev = useCallback(() => handleNavigation('prev'), [handleNavigation]);
+  const handlePrev = useCallback(() => {
+    const fromStep = flow[currentStepIndex];
+    const toStep = flow[currentStepIndex - 1];
+
+    // When navigating back from Starting Supplies to the Mission Dossier...
+    if (fromStep?.id === STEP_IDS.C5 && toStep?.id === STEP_IDS.C4) {
+      const advancedRulesAvailable = gameState.expansions.tenth && gameState.setupMode === 'detailed';
+      // ...if advanced rules are available, ensure we land on that sub-step.
+      if (advancedRulesAvailable) {
+        dispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: 2 });
+      }
+    }
+    
+    handleNavigation('prev');
+  }, [handleNavigation, currentStepIndex, flow, gameState.expansions.tenth, gameState.setupMode, dispatch]);
+  
   const handleJump = useCallback((index: number) => handleNavigation(index), [handleNavigation]);
 
   const performReset = useCallback(() => {

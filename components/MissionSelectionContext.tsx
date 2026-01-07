@@ -11,7 +11,6 @@ interface LocalState {
   filterExpansion: string[];
   filterGameType: 'all' | 'solo' | 'co-op' | 'pvp';
   shortList: StoryCardDef[];
-  subStep: number;
   sortMode: 'expansion' | 'name' | 'rating';
 }
 
@@ -21,7 +20,6 @@ type LocalAction =
   | { type: 'TOGGLE_FILTER_EXPANSION'; payload: string }
   | { type: 'SET_FILTER_GAME_TYPE'; payload: 'all' | 'solo' | 'co-op' | 'pvp' }
   | { type: 'SET_SHORT_LIST'; payload: StoryCardDef[] }
-  | { type: 'SET_SUB_STEP'; payload: number }
   | { type: 'TOGGLE_SORT_MODE' };
 
 const initialState: LocalState = {
@@ -29,7 +27,6 @@ const initialState: LocalState = {
   filterExpansion: [],
   filterGameType: 'all',
   shortList: [],
-  subStep: 1,
   sortMode: 'expansion',
 };
 
@@ -50,8 +47,6 @@ function reducer(state: LocalState, action: LocalAction): LocalState {
       return { ...state, filterGameType: action.payload };
     case 'SET_SHORT_LIST':
       return { ...state, shortList: action.payload };
-    case 'SET_SUB_STEP':
-      return { ...state, subStep: action.payload };
     case 'TOGGLE_SORT_MODE': {
       const nextMode = state.sortMode === 'expansion' 
         ? 'name' 
@@ -68,7 +63,8 @@ function reducer(state: LocalState, action: LocalAction): LocalState {
 export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { state: gameState, dispatch: gameDispatch } = useGameState();
   const [localState, localDispatch] = useReducer(reducer, initialState);
-  const { searchTerm, filterExpansion, filterGameType, shortList, subStep, sortMode } = localState;
+  const { searchTerm, filterExpansion, filterGameType, shortList, sortMode } = localState;
+  const subStep = gameState.missionDossierSubStep;
   
   // Memoized derived data
   const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
@@ -103,7 +99,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   // --- Action Dispatchers ---
   const setSearchTerm = useCallback((term: string) => localDispatch({ type: 'SET_SEARCH_TERM', payload: term }), []);
   const setFilterExpansion = useCallback((ids: string[]) => localDispatch({ type: 'SET_FILTER_EXPANSION', payload: ids }), []);
-  const setSubStep = useCallback((step: number) => localDispatch({ type: 'SET_SUB_STEP', payload: step }), []);
+  const setSubStep = useCallback((step: number) => gameDispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: step }), [gameDispatch]);
   const toggleSortMode = useCallback(() => localDispatch({ type: 'TOGGLE_SORT_MODE' }), []);
   const toggleFilterExpansion = useCallback((id: string) => localDispatch({ type: 'TOGGLE_FILTER_EXPANSION', payload: id }), []);
   const setFilterGameType = useCallback((type: 'all' | 'solo' | 'co-op' | 'pvp') => localDispatch({ type: 'SET_FILTER_GAME_TYPE', payload: type }), []);
