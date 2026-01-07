@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../../types';
 import { createStoryRules } from '../utils';
 
@@ -43,20 +42,18 @@ export const STORIES_F_G: StoryCardDef[] = [
   {
     title: "Going Legit",
     intro: "With the strong arm of the Alliance growing ever string, there's gettin' to be less and less room for naughty men like us to slip about... I head Blue Sun's in need of a legitimate transport company that can get government goods to the people what need 'em.",
-    setupDescription: "Follow the 'Special Setup' override.",
+    setupDescription: "A Port of Operation: While choosing starting positions, players must choose a planetary sector within Blue Sun system that is not a Contact or Supply sector. Mark the sector with a Haven Token. Leave unused ships out of the box as a \"For Sale\" pile.",
     sourceUrl: "https://boardgamegeek.com/thread/3560944/going-legit-story-card",
     requiredExpansion: "community",
     rules: createStoryRules("Going Legit", [
+      { type: 'addFlag', flag: 'isGoingLegit' },
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: 'Special Setup: Going Legit',
+          title: 'A Port of Operation',
           content: [
-            { type: 'list', items: [
-              [{ type: 'strong', content: 'A Port of Operation:' }, " When choosing starting positions, players must choose a planetary sector within the Blue Sun system that is not a Contact or Supply sector. Mark the sector with a Haven token."],
-              [{ type: 'strong', content: 'For Sale:' }, " Leave unused ships out of the box to form a 'For Sale' pile for in-game purchases."]
-            ]}
+            "While choosing starting positions, players must choose a planetary sector within Blue Sun system that is not a Contact or Supply sector. Mark the sector with a Haven Token. Leave unused ships out of the box as a \"For Sale\" pile."
           ]
         }
       }
