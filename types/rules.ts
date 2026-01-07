@@ -1,5 +1,3 @@
-
-
 import { SpecialRule } from './core';
 
 export type JobMode = 
@@ -55,7 +53,14 @@ export interface SetJobContactsRule extends BaseRule { type: 'setJobContacts'; c
 export interface ForbidContactRule extends BaseRule { type: 'forbidContact'; contact: string; }
 export interface AllowContactsRule extends BaseRule { type: 'allowContacts'; contacts: string[]; }
 export interface PrimeContactsRule extends BaseRule { type: 'primeContacts'; }
-export interface CreateAlertTokenStackRule extends BaseRule { type: 'createAlertTokenStack'; multiplier: number; title?: string; }
+export interface CreateAlertTokenStackRule extends BaseRule {
+  type: 'createAlertTokenStack';
+  multiplier?: number;
+  fixedValue?: number;
+  tokenName?: string;
+  title?: string;
+  description?: string;
+}
 export interface SetAllianceModeRule extends BaseRule { type: 'setAllianceMode'; mode: AllianceSetupMode; }
 export interface SetNavModeRule extends BaseRule { type: 'setNavMode'; mode: NavMode; }
 export interface SetPrimeModeRule extends BaseRule { type: 'setPrimeMode'; mode: PrimeMode; }

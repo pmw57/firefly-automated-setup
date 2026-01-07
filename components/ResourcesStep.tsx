@@ -64,7 +64,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
     smugglersBluesVariantAvailable,
     creditModificationDescription, creditModificationSource,
     fuelModificationDescription, partsModificationDescription,
-    alertTokenStackCount, alertTokenStackRule
+    tokenStacks,
   } = resourceDetails;
 
   useEffect(() => {
@@ -267,18 +267,23 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
           ) : null}
         </div>
 
-        {/* Individual section for Alliance Alert Token Stack */}
-        {typeof alertTokenStackCount === 'number' && alertTokenStackCount > 0 && (
-          <div className={cls("p-4 md:p-6 border-t", cardBorder)}>
-              <div className="flex justify-between items-center">
-                  <h4 className={`font-bold text-lg ${textColor}`}>Alliance Alert Tokens</h4>
-                  <div className={`text-right text-sm ${modsText} ml-4`}>
-                      Stack of <strong>{alertTokenStackCount}</strong>
-                      {alertTokenStackRule && <span className="text-xs block">({alertTokenStackRule.multiplier} per player)</span>}
+        {/* Individual section for token stacks */}
+        {tokenStacks.map((stack, i) => (
+            <div key={`token-stack-${i}`} className={cls("p-4 md:p-6 border-t", cardBorder)}>
+                <div className="flex justify-between items-center">
+                    <h4 className={`font-bold text-lg ${textColor}`}>{stack.title}</h4>
+                    <div className={`text-right text-sm ${modsText} ml-4`}>
+                        Stack of <strong>{stack.count}</strong>
+                        {stack.rule.multiplier && <span className="text-xs block">({stack.rule.multiplier} per player)</span>}
+                    </div>
+                </div>
+                {stack.description && (
+                  <div className={cls("text-xs pt-2 border-t space-y-1 mt-2", modsBorder, modsText)}>
+                      <p>{stack.description}</p>
                   </div>
-              </div>
-          </div>
-        )}
+                )}
+            </div>
+        ))}
 
         {/* Board Setup Sections - Render one for each rule */}
         {boardSetupRules.map((rule, i) => {

@@ -78,10 +78,35 @@ export const TENTH_STORIES: StoryCardDef[] = [
   {
     title: "Red Skies Over Ransom",
     intro: "Reavers are pushing out more and more, making delivery runs almost impossible. Keelhauler Transport & Trading Co. is hiring skilled pilots, madcap mercs, and crafty smugglers to haul needed goods to their Rim distributors.",
-    setupDescription: "Reaver Signting!: Treat New Canaan, Blue Sun as if there is a Reaver Cutter there at all times.",
+    setupDescription: "Reaver Sighting!: Treat New Canaan, Blue Sun as if there is a Reaver Cutter there at all times. Put a stack of Reaver Alert Tokens there as a reminder. These tokens are never cleared.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue"],
-    sourceUrl: "https://boardgamegeek.com/image/8103879/sjliver"
+    sourceUrl: "https://boardgamegeek.com/image/8103879/sjliver",
+    rules: createStoryRules("Red Skies Over Ransom", [
+      { type: 'addFlag', flag: 'excludeNewCanaanPlacement' },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: "Reaver Sighting!",
+          content: ["Treat New Canaan, Blue Sun as if there is a Reaver Cutter there at all times. Put a stack of Reaver Alert Tokens there as a reminder. These tokens are never cleared."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: "Reaver Sighting!",
+          content: ["Treat New Canaan, Blue Sun as if there is a Reaver Cutter there at all times."]
+        }
+      },
+      {
+        type: 'createAlertTokenStack',
+        fixedValue: 6,
+        tokenName: 'Reaver Alert Tokens',
+        description: 'Place this stack on New Canaan. These tokens are never cleared.'
+      }
+    ])
   },
   {
     title: "Running On Empty",
