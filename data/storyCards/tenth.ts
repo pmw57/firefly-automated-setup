@@ -117,8 +117,16 @@ export const TENTH_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/8103880/sjliver",
     rules: createStoryRules("Running On Empty", [
       { type: 'modifyResource', resource: 'credits', method: 'add', value: 1200, description: "Story Bonus" },
-      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No Starting Fuel/Parts" },
-      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No Starting Fuel/Parts" }
+      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No Starting Fuel" },
+      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No Starting Parts" },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Fuel Shortage',
+          content: ["Players do not receive free starting Fuel or Parts. Each player begins with an extra $1200."]
+        }
+      }
     ])
   },
   {

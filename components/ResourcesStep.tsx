@@ -40,7 +40,6 @@ const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source
   return source;
 };
 
-
 export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
@@ -130,10 +129,10 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   const creditColor = isDark ? 'text-green-400' : 'text-green-700';
   const modsBorder = isDark ? 'border-zinc-700/50' : 'border-gray-200';
   const modsText = isDark ? 'text-gray-400' : 'text-gray-600';
-  const disabledBg = isDark ? 'bg-red-900/20 border-red-800' : 'bg-red-50 border-red-200';
-  const disabledTitle = isDark ? 'text-red-300' : 'text-red-800';
-  const disabledSub = isDark ? 'text-red-400' : 'text-red-600';
-  const disabledValue = isDark ? 'text-red-400' : 'text-red-800';
+  const disabledBg = isDark ? 'bg-zinc-900/50 border-zinc-800' : 'bg-stone-100 border-stone-300';
+  const disabledText = isDark ? 'text-zinc-500' : 'text-stone-500';
+  const disabledTitle = cls(disabledText, 'line-through');
+  const disabledBorder = isDark ? 'border-zinc-800' : 'border-stone-300';
   const fuelBadgeBg = isDark ? 'bg-yellow-900/40 text-yellow-200 border-yellow-800' : 'bg-yellow-100 text-yellow-900 border-yellow-200';
   const partsBadgeBg = isDark ? 'bg-zinc-800 text-gray-200 border-zinc-700' : 'bg-gray-200 text-gray-800 border-gray-300';
   
@@ -238,13 +237,10 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
         {/* Fuel & Parts section */}
         <div className={cls("p-4 md:p-6 border-t", cardBorder, isFuelDisabled || isPartsDisabled ? disabledBg : '')}>
           <div className="flex items-start justify-between">
-              <div>
-                <h4 className={`font-bold text-lg ${isFuelDisabled || isPartsDisabled ? disabledTitle : textColor}`}>Fuel & Parts</h4>
-                {(isFuelDisabled || isPartsDisabled) && <p className={`text-xs font-bold mt-1 ${disabledSub}`}>DISABLED</p>}
-              </div>
+              <h4 className={`font-bold text-lg ${isFuelDisabled || isPartsDisabled ? disabledTitle : textColor}`}>Fuel & Parts</h4>
               <div className="text-right">
                 {(isFuelDisabled || isPartsDisabled) ? (
-                  <span className={`text-xl font-bold ${disabledValue}`}>None</span>
+                  <span className={`text-3xl font-bold ${disabledText}`}>0</span>
                 ) : (
                   <div className={`text-sm font-bold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
                     <div className={cls("px-2 py-1 rounded mb-1 border", fuel > 6 ? 'font-black' : '', fuelBadgeBg)}>{fuel} Fuel Tokens</div>
@@ -258,7 +254,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
             <div className={cls(
                 "text-xs pt-2 border-t space-y-1 mt-2",
                 isFuelDisabled || isPartsDisabled 
-                    ? `${isDark ? 'border-red-800/50' : 'border-red-200'} ${disabledSub}` 
+                    ? `${disabledBorder} ${disabledText}`
                     : `${modsBorder} ${modsText}`
             )}>
               {fuelModificationDescription && <p><strong>Fuel:</strong> {fuelModificationDescription}</p>}
