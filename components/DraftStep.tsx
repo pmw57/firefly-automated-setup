@@ -74,6 +74,7 @@ const PlacementOrderPanel = ({
     isSolo,
     isHavenDraft,
     isBrowncoatDraft,
+    isGoingLegit,
     specialStartSector,
     startOutsideAllianceSpace,
     excludeNewCanaanPlacement,
@@ -83,6 +84,7 @@ const PlacementOrderPanel = ({
     isSolo: boolean;
     isHavenDraft: boolean;
     isBrowncoatDraft: boolean;
+    isGoingLegit: boolean;
     specialStartSector: string | null;
     startOutsideAllianceSpace: boolean;
     excludeNewCanaanPlacement: boolean;
@@ -116,6 +118,30 @@ const PlacementOrderPanel = ({
                 <p className={cls("text-sm", specialPlacementText)}>All ships start at <strong>{specialStartSector}</strong>.</p>
                 <p className={cls("text-xs italic mt-1", specialPlacementSub)}>(Do not place in separate sectors)</p>
             </div>
+        );
+    } else if (isGoingLegit) {
+        placementTitle = 'A Port of Operation';
+        const descriptionColor = isDark ? 'text-green-300' : 'text-green-800';
+        content = (
+            <>
+                <p className={cls("text-xs mb-3 italic", isDark ? 'text-gray-400' : 'text-gray-500')}>
+                    The last player to choose a Leader places first. Remaining players in reverse order.
+                </p>
+                <ul className="space-y-2">
+                    {placementOrder.map((player, i) => (
+                    <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
+                        <span className={`w-6 h-6 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm`}>{i + 1}</span>
+                        <span className={cls("text-sm font-medium", itemText)}>{player}</span>
+                        {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-green-400' : 'text-green-600')}>Placement 1</span>}
+                    </li>
+                    ))}
+                </ul>
+                <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
+                     <p className={cls("text-sm", descriptionColor)}>
+                        While choosing starting positions, mark your Blue Sun Haven in a non-Contact and non-Supply planetary sector.
+                    </p>
+                </div>
+            </>
         );
     } else {
         if (isHavenDraft) {
@@ -182,6 +208,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   
   const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
   const isRuiningIt = useMemo(() => hasRuleFlag(allRules, 'isRuiningItForEveryone'), [allRules]);
+  const isGoingLegit = useMemo(() => hasRuleFlag(allRules, 'isGoingLegit'), [allRules]);
 
   const {
       specialRules,
@@ -317,12 +344,22 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                     isSolo={isSolo}
                     isHavenDraft={isHavenDraft}
                     isBrowncoatDraft={isBrowncoatDraft}
+                    isGoingLegit={isGoingLegit}
                     specialStartSector={specialStartSector}
                     startOutsideAllianceSpace={!!startOutsideAllianceSpace}
                     excludeNewCanaanPlacement={!!excludeNewCanaanPlacement}
                     stepBadgeClass={stepBadgeAmberBg}
                 />
               </div>
+
+              {isGoingLegit && (
+                <SpecialRuleBlock
+                  source="info"
+                  title="For Sale Pile"
+                  content={["Leave unused ships out of the box as a \"For Sale\" pile."]}
+                  className="mt-6"
+                />
+              )}
             </div>
           )}
         </>
