@@ -56,6 +56,13 @@ export interface ResourceConflict {
   setupCard: ConflictOptionDetails;
 }
 
+export interface TokenStack {
+  count: number;
+  title: string;
+  description?: string;
+  rule: CreateAlertTokenStackRule;
+}
+
 export interface ResourceDetails {
   credits: number;
   fuel: number;
@@ -66,9 +73,7 @@ export interface ResourceDetails {
   isFuelDisabled: boolean;
   isPartsDisabled: boolean;
 
-  alertTokenStackCount?: number;
-  alertTokenStackRule?: CreateAlertTokenStackRule;
-  alertTokenStackTitle?: string;
+  tokenStacks: TokenStack[];
 
   creditModifications: { description: string; value: string }[];
   conflict?: ResourceConflict;
@@ -112,6 +117,7 @@ export interface DraftRuleDetails {
   specialStartSector: string | null;
   conflictMessage: StructuredContent | null;
   startOutsideAllianceSpace?: boolean;
+  excludeNewCanaanPlacement?: boolean;
 }
 
 export interface HeaderDetails {

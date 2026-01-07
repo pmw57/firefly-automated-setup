@@ -63,6 +63,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
 
 
     const startOutsideAllianceSpace = hasRuleFlag(allRules, 'startOutsideAllianceSpace');
+    const excludeNewCanaanPlacement = hasRuleFlag(allRules, 'excludeNewCanaanPlacement');
 
     const allianceSpaceOffLimits = hasRuleFlag(allRules, 'allianceSpaceOffLimits');
     const addBorderHavens = hasRuleFlag(allRules, 'addBorderHavens');
@@ -138,5 +139,5 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
         ]});
     }
 
-    return { specialRules, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, conflictMessage, startOutsideAllianceSpace };
+    return { specialRules, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement };
 };

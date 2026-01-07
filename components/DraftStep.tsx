@@ -76,6 +76,7 @@ const PlacementOrderPanel = ({
     isBrowncoatDraft,
     specialStartSector,
     startOutsideAllianceSpace,
+    excludeNewCanaanPlacement,
     stepBadgeClass,
 }: {
     placementOrder: string[];
@@ -84,6 +85,7 @@ const PlacementOrderPanel = ({
     isBrowncoatDraft: boolean;
     specialStartSector: string | null;
     startOutsideAllianceSpace: boolean;
+    excludeNewCanaanPlacement: boolean;
     stepBadgeClass: string;
 }) => {
     const { theme } = useTheme();
@@ -139,6 +141,11 @@ const PlacementOrderPanel = ({
                         ⚠️ Restriction: Starting locations may not be within Alliance Space.
                     </p>
                 )}
+                {excludeNewCanaanPlacement && (
+                    <p className={cls("text-xs mb-3 font-bold", restrictionTextColor)}>
+                        ⚠️ Restriction: New Canaan may not be chosen as a starting location.
+                    </p>
+                )}
                 
                 <ul className="space-y-2">
                     {placementOrder.map((player, i) => (
@@ -182,6 +189,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       isBrowncoatDraft,
       specialStartSector,
       startOutsideAllianceSpace,
+      excludeNewCanaanPlacement,
   } = React.useMemo(() => getDraftDetails(gameState, step), [gameState, step]);
   
   const campaignNotes = useMemo(
@@ -311,6 +319,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                     isBrowncoatDraft={isBrowncoatDraft}
                     specialStartSector={specialStartSector}
                     startOutsideAllianceSpace={!!startOutsideAllianceSpace}
+                    excludeNewCanaanPlacement={!!excludeNewCanaanPlacement}
                     stepBadgeClass={stepBadgeAmberBg}
                 />
               </div>
