@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../../types';
 import { SETUP_CARD_IDS } from '../../ids';
 import { createStoryRules } from '../utils';
@@ -6,39 +5,49 @@ import { createStoryRules } from '../utils';
 export const STORIES_T_X: StoryCardDef[] = [
   {
     title: "They're Part Of My Crew",
-    intro: "Mal's last job went south in a bad way. As a result, some of the crew was captured by the Alliance and sent to unknown prison camps all over the 'Verse. For a price, Badger might let you in on a little secret.",
+    intro: "We all know Mal's got a good aim when it comes to misnehavin'. We also know Mal's stepped on quite a few tows with his misbehavin'. There's more than a few folk like to see him and his crew behind bars or six feet under. Regardless of who or what comes at Serenity, Mal's gonna do what he's always done. Protect his crew.",
     isSolo: true,
-    setupDescription: "Follow the 'Fixed Assignment' and 'Rescue Mission' overrides.",
-    sourceUrl: "https://boardgamegeek.com/thread/3282832/my-fellow-browncoats-remastered-into-a-solo-and-co",
-    requiredExpansion: "community",
-    requiredSetupCardId: SETUP_CARD_IDS.STANDARD,
+    goals: [
+      {
+        title: "Free Your Crew",
+        description: "Once the 7-turn timer is up, you must immediately fly to Londinium and proceed past 5 negotiation skill checks to free your crew from the Alliance prison. If you are successful, you have won the game."
+      }
+    ],
     rules: createStoryRules("They're Part Of My Crew", [
+      { 
+        type: 'modifyResource', 
+        resource: 'credits', 
+        method: 'set', 
+        value: 1000, 
+        description: "Story Funds" 
+      },
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: 'Fixed Assignment',
+          title: "Story Setup",
           content: [
-            {
-              type: 'list',
-              items: [
-                ["Use Malcolm as your Leader and Serenity as your ship."],
-                ["Take Jayne, Kaylee, and River as your starting crew."],
-                ["Take an Expanded Crew Quarters from Osiris for your ship."],
-              ]
-            }
+            { type: 'paragraph', content: ['Use ', { type: 'strong', content: 'Malcolm' }, ' as your Leader and ', { type: 'strong', content: 'Serenity' }, ' as your ship.'] },
+            { type: 'paragraph', content: ['Your starting crew is: ', { type: 'strong', content: 'Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River' }, '.'] },
+            { type: 'paragraph', content: ['Take 1 ', { type: 'strong', content: 'Expanded Crew Quarters' }, ' from the Osiris Supply Deck.'] }
           ]
         }
       },
       {
         type: 'addSpecialRule',
-        category: 'goal',
+        category: 'resources',
         rule: {
-          title: 'Rescue Mission',
-          content: ["Shuffle Zoe, Wash, Inara, Book, and Simon, together. Place them face down as the \"Prisoner Deck\". They are your goals for this game."]
+          title: "Disgruntled Timer",
+          content: [
+            { type: 'paragraph', content: ['Collect ', { type: 'strong', content: '7 Disgruntled tokens' }, '. These will be used as a special game timer.'] },
+            { type: 'paragraph', content: ['Discard 1 token at the start of each of your turns.'] },
+          ]
         }
       }
-    ])
+    ]),
+    sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
+    requiredExpansion: "community",
+    requiredSetupCardId: SETUP_CARD_IDS.STANDARD,
   },
   {
     title: "The Truth Will Out",
@@ -62,7 +71,7 @@ export const STORIES_T_X: StoryCardDef[] = [
   },
   {
     title: "Wild Cards",
-    intro: "Prove you're the best - r luckiest - crew around by collecting tales of your exploits.",
+    intro: "Prove you're the best - or luckiest - crew around by collecting tales of your exploits.",
     requiredExpansion: "aces_eights",
     sourceUrl: "https://boardgamegeek.com/thread/3281169/article/47090467#47090467",
     rating: 3
