@@ -99,7 +99,7 @@ export const HeaderActions: React.FC<HeaderActionsProps> = ({ onOpenHelp, onOpen
           <div className="py-1" role="none">
             <button role="menuitem" onClick={() => handleAction(toggleTheme)} className={cls("w-full text-left flex items-center gap-3 px-4 py-2 text-sm", menuItemHover, menuItemText)}>
                 <span className={menuItemIcon}>{isDark ? <SunIcon /> : <MoonIcon />}</span>
-                <span>Switch to {isDark ? 'Light' : 'Dark'} Mode</span>
+                <span>Change to {isDark ? 'Light' : 'Dark'} Mode</span>
             </button>
             <button role="menuitem" onClick={() => handleAction(onOpenQr)} className={cls("w-full text-left flex items-center gap-3 px-4 py-2 text-sm", menuItemHover, menuItemText)}>
                 <span className={menuItemIcon}><QrIcon /></span>
