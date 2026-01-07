@@ -1,4 +1,4 @@
-import { GameState, Expansions, GameMode, SetupMode } from '../types/index';
+import { GameState, Expansions, GameMode, SetupMode, AddFlagRule } from '../types/index';
 import { Action, ActionType, ExpansionBundle } from './actions';
 import { STORY_CARDS } from '../data/storyCards';
 import { SETUP_CARDS } from '../data/setupCards';
@@ -391,7 +391,8 @@ export function gameReducer(state: GameState, action: Action): GameState {
       const newChallengeOptions: Record<string, boolean> = {};
 
       // If Smuggler's Blues is selected, check if we should default the variant.
-      if (card?.title === "Smuggler's Blues") {
+      const hasSmugglersBluesFlag = card?.rules?.some(r => r.type === 'addFlag' && (r as AddFlagRule).flag === 'smugglersBluesSetup');
+      if (hasSmugglersBluesFlag) {
         const canUseRimRule = state.expansions.blue && state.expansions.kalidasa;
         if (canUseRimRule) {
           newChallengeOptions.smugglers_blues_rim_variant = true;

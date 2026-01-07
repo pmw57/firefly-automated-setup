@@ -57,7 +57,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
     }
 
     // Handle specific story cards that use SpecialRuleBlocks for placement
-    if (activeStoryCard?.title === "Ruining It For Everyone") {
+    if (hasRuleFlag(allRules, 'isRuiningItForEveryone')) {
         specialStartSector = "St. Albans, Red Sun";
     }
 
