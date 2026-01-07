@@ -1,6 +1,5 @@
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { SETUP_CARD_IDS } from '../../data/ids';
-import { Button } from '../Button';
 import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
 import { ActionType } from '../../state/actions';
@@ -11,11 +10,9 @@ import { getSetupCardSelectionInfo } from '../../utils/ui';
 import { calculateSetupFlow } from '../../utils/flow';
 
 interface SetupCardSelectionProps {
-  onNext: () => void;
-  onBack: () => void;
 }
 
-export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, onBack }) => {
+export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
   const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -25,7 +22,6 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
   const {
     isFlyingSoloActive,
     isFlyingSoloEligible,
-    isNextDisabled
   } = useMemo(() => getSetupCardSelectionInfo(gameState), [gameState]);
 
   const flyingSoloCard = useMemo(() => getSetupCardById(SETUP_CARD_IDS.FLYING_SOLO), []);
@@ -60,8 +56,6 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
   const headerColor = isDark ? 'text-amber-500' : 'text-[#292524]';
   const badgeClass = isDark ? 'bg-emerald-900/40 text-emerald-300 border-emerald-800' : 'bg-[#e6ddc5] text-[#7f1d1d] border-[#d6cbb0]';
   
-  const nextButtonText = totalParts > 2 ? 'Next: Optional Settings →' : 'Begin Setup →';
-
   return (
     <div className={`${containerBg} rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in transition-all duration-300`}>
        <div className={`flex justify-between items-center mb-6 border-b ${containerBorder} pb-2`}>
@@ -83,20 +77,6 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = ({ onNext, 
             isFlyingSoloActive={isFlyingSoloActive}
             onSelect={handleSetupCardSelect}
         />
-      </div>
-
-      <div className="flex gap-4">
-        <Button onClick={onBack} variant="secondary" className="w-1/3">
-          ← Back
-        </Button>
-        <Button 
-          onClick={onNext} 
-          fullWidth 
-          className="w-2/3 text-lg py-4 border-b-4 border-[#450a0a]"
-          disabled={isNextDisabled}
-        >
-          {nextButtonText}
-        </Button>
       </div>
     </div>
   );

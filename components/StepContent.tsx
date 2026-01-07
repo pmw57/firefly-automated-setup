@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, lazy, Suspense } from 'react';
+import React, { useRef, useEffect, lazy, Suspense, useMemo } from 'react';
 import { Step } from '../types/index';
 import { Button } from './Button';
 import { QuotePanel } from './QuotePanel';
@@ -6,6 +6,9 @@ import { useTheme } from './ThemeContext';
 import { STEP_IDS } from '../data/ids';
 import { cls } from '../utils/style';
 import { PageReference } from './PageReference';
+import { useGameState } from '../hooks/useGameState';
+import { calculateSetupFlow } from '../utils/flow';
+import { getSetupCardSelectionInfo } from '../utils/ui';
 
 export interface StepComponentProps {
   step: Step;
@@ -67,6 +70,8 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode }: S
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const { state: gameState } = useGameState();
+  const totalSetupParts = useMemo(() => calculateSetupFlow(gameState).filter(s => s.type === 'setup').length, [gameState]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -79,9 +84,9 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode }: S
 
   const renderStepBody = () => {
     if (step.type === 'setup') {
-      if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) return <CaptainSetup onNext={onNext} isDevMode={isDevMode} />;
-      if (step.id === STEP_IDS.SETUP_CARD_SELECTION) return <SetupCardSelection onNext={onNext} onBack={onPrev} />;
-      if (step.id === STEP_IDS.SETUP_OPTIONAL_RULES) return <OptionalRulesSelection onStart={onNext} onBack={onPrev} />;
+      if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) return <CaptainSetup isDevMode={isDevMode} />;
+      if (step.id === STEP_IDS.SETUP_CARD_SELECTION) return <SetupCardSelection />;
+      if (step.id === STEP_IDS.SETUP_OPTIONAL_RULES) return <OptionalRulesSelection />;
       return <div className="text-red-500">Unknown Setup Step: {step.id}</div>;
     }
 
@@ -92,13 +97,65 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode }: S
 
     return <div className="text-red-500">Content for step '{step.id}' not found.</div>;
   };
+  
+  const footerBg = isDark ? 'bg-zinc-950/90' : 'bg-[#faf8ef]/95';
+  const footerBorder = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
 
   if (step.type === 'setup') {
+      const isFirstSetupStep = step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS;
+      
+      const nextButtonTextMap: Record<string, string> = {
+          [STEP_IDS.SETUP_CAPTAIN_EXPANSIONS]: 'Next: Choose Setup →',
+          [STEP_IDS.SETUP_CARD_SELECTION]: totalSetupParts > 2 ? 'Next: Options →' : 'Begin Setup →',
+          [STEP_IDS.SETUP_OPTIONAL_RULES]: 'Begin Setup →'
+      };
+      
+      const finalNextText = nextButtonTextMap[step.id] || 'Next →';
+      
+      const { isNextDisabled } = getSetupCardSelectionInfo(gameState);
+      const isButtonDisabled = step.id === STEP_IDS.SETUP_CARD_SELECTION && isNextDisabled;
+      
       return (
           <div className="animate-fade-in-up pb-24 sm:pb-0">
             <Suspense fallback={<StepLoading />}>
               {renderStepBody()}
             </Suspense>
+
+            {/* Desktop Nav */}
+            <div className={cls("hidden sm:flex mt-8 pt-6 border-t", isFirstSetupStep ? 'justify-end' : 'justify-between', isDark ? 'border-zinc-800' : 'border-stone-200')}>
+                {!isFirstSetupStep && (
+                    <Button onClick={onPrev} variant="secondary" disabled={isNavigating}>
+                        ← Back
+                    </Button>
+                )}
+                <Button onClick={onNext} disabled={isNavigating || isButtonDisabled}>
+                    {finalNextText}
+                </Button>
+            </div>
+            
+            {/* Sticky Mobile Nav */}
+            <div className={cls(
+              "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex sm:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
+              footerBg, footerBorder
+            )}>
+                {!isFirstSetupStep && (
+                  <Button 
+                    onClick={onPrev} 
+                    variant="secondary"
+                    disabled={isNavigating}
+                    className="flex-1 text-xs uppercase tracking-wider !py-3"
+                  >
+                    ← Back
+                  </Button>
+                )}
+                <Button 
+                  onClick={onNext} 
+                  disabled={isNavigating || isButtonDisabled}
+                  className={cls(isFirstSetupStep ? 'w-full' : 'flex-[2]', "text-xs uppercase tracking-[0.1em] !py-3")}
+                >
+                  {finalNextText}
+                </Button>
+            </div>
           </div>
       );
   }
@@ -115,9 +172,6 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode }: S
   const tagColor = isSpecial
     ? (isDark ? 'text-emerald-400' : 'text-emerald-200')
     : (isDark ? 'text-amber-400' : 'text-amber-200');
-
-  const footerBg = isDark ? 'bg-zinc-950/90' : 'bg-[#faf8ef]/95';
-  const footerBorder = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
 
   return (
     <div className="animate-fade-in-up pb-32 sm:pb-8">

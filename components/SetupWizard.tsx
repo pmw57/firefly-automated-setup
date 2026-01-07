@@ -136,15 +136,17 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   }, [handleNavigation, currentStepIndex, flow, unacknowledgedOverrides]);
 
   const handlePrev = useCallback(() => {
-    const fromStep = flow[currentStepIndex];
     const toStep = flow[currentStepIndex - 1];
 
-    // When navigating back from Starting Supplies to the Mission Dossier...
-    if (fromStep?.id === STEP_IDS.C5 && toStep?.id === STEP_IDS.C4) {
+    // When navigating back to the Mission Dossier step (which contains Story & Advanced Rules)...
+    if (toStep?.id === STEP_IDS.C4) {
       const advancedRulesAvailable = gameState.expansions.tenth && gameState.setupMode === 'detailed';
-      // ...if advanced rules are available, ensure we land on that sub-step.
+      // ...if advanced rules are available, go to the "Advanced Rules" sub-step (part 2).
+      // Otherwise, ensure we land on the "Story Selection" sub-step (part 1).
       if (advancedRulesAvailable) {
         dispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: 2 });
+      } else {
+        dispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: 1 });
       }
     }
     
@@ -196,10 +198,13 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   if (!currentStep) return null;
   
   const isFinal = currentStep.type === 'final';
+  
+  const footerBg = isDark ? 'bg-zinc-950/90' : 'bg-[#faf8ef]/95';
+  const footerBorder = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
 
   return (
     <div 
-      className="max-w-2xl mx-auto"
+      className="max-w-2xl mx-auto pb-24 sm:pb-0"
       key={resetKey}
     >
       <WizardHeader gameState={gameState} onReset={performReset} flow={flow} currentStepIndex={currentStepIndex} />
@@ -221,9 +226,30 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
           
           {gameState.setupMode === 'detailed' && <FinalSummary gameState={gameState} />}
 
-          <div className="flex justify-center gap-4">
+          {/* Desktop Nav */}
+          <div className="hidden sm:flex justify-center gap-4">
             <Button onClick={handlePrev} variant="secondary">← Back</Button>
             <Button onClick={performReset}>Start New Game Setup</Button>
+          </div>
+          
+           {/* Sticky Mobile Nav */}
+           <div className={cls(
+            "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex sm:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
+            footerBg, footerBorder
+          )}>
+            <Button 
+              onClick={handlePrev} 
+              variant="secondary"
+              className="flex-1 text-xs uppercase tracking-wider !py-3"
+            >
+              ← Back
+            </Button>
+            <Button 
+              onClick={performReset}
+              className="flex-[2] text-xs uppercase tracking-[0.1em] !py-3"
+            >
+              Start New Setup
+            </Button>
           </div>
         </div>
       ) : (

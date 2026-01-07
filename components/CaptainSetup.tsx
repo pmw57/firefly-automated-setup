@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { Expansions } from '../types/index';
-import { Button } from './Button';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { ActionType } from '../state/actions';
@@ -11,11 +10,10 @@ import { isFlyingSoloEligible } from '../utils/ui';
 import { calculateSetupFlow } from '../utils/flow';
 
 interface CaptainSetupProps {
-  onNext: () => void;
   isDevMode?: boolean;
 }
 
-export const CaptainSetup = ({ onNext, isDevMode }: CaptainSetupProps): React.ReactElement => {
+export const CaptainSetup = ({ isDevMode }: CaptainSetupProps): React.ReactElement => {
   const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -85,12 +83,6 @@ export const CaptainSetup = ({ onNext, isDevMode }: CaptainSetupProps): React.Re
         has10th={has10th}
         isDevMode={isDevMode}
       />
-
-      <div className="flex gap-4 relative z-10">
-        <Button onClick={onNext} fullWidth className={'w-full text-lg py-4 border-b-4 border-[#450a0a]'}>
-          Next: Choose Setup →
-        </Button>
-      </div>
     </div>
   );
 };

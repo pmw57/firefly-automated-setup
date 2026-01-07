@@ -38,6 +38,8 @@ export const AdvancedRulesConfigurationPart: React.FC<AdvancedRulesConfiguration
   const badgeText = 'text-[#fef3c7] dark:text-gray-400';
   const badgeBorder = 'border border-[#450a0a] dark:border-0';
   const navBorderTop = 'border-[#d6cbb0] dark:border-zinc-800';
+  const footerBg = isDark ? 'bg-zinc-950/90' : 'bg-[#faf8ef]/95';
+  const footerBorder = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
   
   const bodyBg = isDark ? 'bg-zinc-900/50' : 'bg-paper-texture';
   const mainTitleColor = isDark ? 'text-gray-100' : 'text-[#292524]';
@@ -131,7 +133,8 @@ export const AdvancedRulesConfigurationPart: React.FC<AdvancedRulesConfiguration
         </div>
       </div>
 
-      <div className={`mt-8 flex justify-between clear-both pt-6 border-t ${navBorderTop}`}>
+      {/* Desktop Nav */}
+      <div className={`hidden sm:flex mt-8 justify-between clear-both pt-6 border-t ${navBorderTop}`}>
         <Button onClick={onBack} variant="secondary" className="shadow-sm" disabled={isNavigating}>
           ← Back
         </Button>
@@ -139,6 +142,28 @@ export const AdvancedRulesConfigurationPart: React.FC<AdvancedRulesConfiguration
           onClick={onNext} 
           className="shadow-lg hover:translate-y-[-2px] transition-transform"
           disabled={isNavigating}
+        >
+          Next Step →
+        </Button>
+      </div>
+
+      {/* Sticky Mobile Nav */}
+      <div className={cls(
+        "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex sm:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
+        footerBg, footerBorder
+      )}>
+        <Button 
+          onClick={onBack} 
+          variant="secondary"
+          disabled={isNavigating}
+          className="flex-1 text-xs uppercase tracking-wider !py-3"
+        >
+          ← Back
+        </Button>
+        <Button 
+          onClick={onNext} 
+          disabled={isNavigating}
+          className="flex-[2] text-xs uppercase tracking-[0.1em] !py-3"
         >
           Next Step →
         </Button>

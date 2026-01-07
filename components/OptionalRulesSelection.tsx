@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { DisgruntledDieOption } from '../types/index';
-import { Button } from './Button';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { ActionType } from '../state/actions';
@@ -9,8 +8,6 @@ import { SoloRulesSection } from './setup/SoloRulesSection';
 import { calculateSetupFlow } from '../utils/flow';
 
 interface OptionalRulesSelectionProps {
-  onStart: () => void;
-  onBack: () => void;
 }
 
 const ratingLabels = [
@@ -22,7 +19,7 @@ const ratingLabels = [
     "5 stars: Essential"
 ];
 
-export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ onStart, onBack }) => {
+export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () => {
   const { state: gameState, dispatch } = useGameState();
   const { theme } = useTheme();
   const [showRatingFilters, setShowRatingFilters] = useState(false);
@@ -93,7 +90,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
   return (
     <div className={`${containerBg} rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in transition-all duration-300`}>
        <div className={`flex justify-between items-center mb-6 border-b ${containerBorder} pb-2`}>
-           <h2 className={`text-2xl font-bold font-western ${headerColor}`}>Optional Settings</h2>
+           <h2 className={`text-2xl font-bold font-western ${headerColor}`}>Options</h2>
            <span className={`text-xs font-bold ${badgeClass} border px-2 py-1 rounded`}>Part {totalParts} of {totalParts}</span>
         </div>
 
@@ -204,15 +201,6 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = ({ 
                   </div>
                 </section>
             )}
-        </div>
-
-        <div className="flex gap-4 mt-8 pt-6 border-t border-dashed border-gray-300 dark:border-zinc-700">
-            <Button onClick={onBack} variant="secondary" className="w-1/3">
-            ← Back
-            </Button>
-            <Button onClick={onStart} fullWidth className="w-2/3 text-lg py-4 border-b-4 border-[#450a0a]">
-            Begin Setup →
-            </Button>
         </div>
     </div>
   );
