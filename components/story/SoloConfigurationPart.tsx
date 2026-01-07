@@ -133,7 +133,7 @@ export const AdvancedRulesConfigurationPart: React.FC<AdvancedRulesConfiguration
 
       <div className={`mt-8 flex justify-between clear-both pt-6 border-t ${navBorderTop}`}>
         <Button onClick={onBack} variant="secondary" className="shadow-sm" disabled={isNavigating}>
-          ← Previous
+          ← Back
         </Button>
         <Button 
           onClick={onNext} 
