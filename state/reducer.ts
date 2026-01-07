@@ -240,6 +240,7 @@ export const getDefaultGameState = (): GameState => {
             isManual: false,
         },
         showHiddenContent: false,
+        missionDossierSubStep: 1,
     };
 };
 
@@ -406,7 +407,8 @@ export function gameReducer(state: GameState, action: Action): GameState {
         challengeOptions: newChallengeOptions, 
         overriddenStepIds: [], 
         acknowledgedOverrides: [], 
-        visitedStepOverrides: [] 
+        visitedStepOverrides: [],
+        missionDossierSubStep: 1,
       };
       break;
     }
@@ -529,6 +531,10 @@ export function gameReducer(state: GameState, action: Action): GameState {
     case ActionType.SET_EXPANSIONS_BUNDLE:
       nextState = handleSetExpansionsBundle(state, action.payload);
       break;
+
+    case ActionType.SET_MISSION_DOSSIER_SUBSTEP:
+        nextState = { ...state, missionDossierSubStep: action.payload };
+        break;
 
     default:
       nextState = state;

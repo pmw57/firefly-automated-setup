@@ -76,4 +76,5 @@ export interface GameState {
     isManual: boolean;
   };
   showHiddenContent: boolean;
+  missionDossierSubStep: number;
 }
