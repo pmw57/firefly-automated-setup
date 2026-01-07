@@ -7,8 +7,11 @@ interface DevTestingMatrixProps {
 
 export const DevTestingMatrix: React.FC<DevTestingMatrixProps> = ({ onClose }) => {
     const [copyButtonText, setCopyButtonText] = useState('Copy to Clipboard');
+    const [excludeNoSetupDescription, setExcludeNoSetupDescription] = useState(false);
 
-    const csvData = useMemo(() => generateTestingMatrixCsv(), []);
+    const csvData = useMemo(() => {
+        return generateTestingMatrixCsv({ excludeNoSetupDescription });
+    }, [excludeNoSetupDescription]);
 
     const handleCopy = () => {
         navigator.clipboard.writeText(csvData).then(() => {
@@ -28,9 +31,20 @@ export const DevTestingMatrix: React.FC<DevTestingMatrixProps> = ({ onClose }) =
                     <h2 className="text-2xl font-bold">Setup/Story Compatibility Matrix</h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-white text-3xl font-bold">&times;</button>
                 </div>
-                <p className="text-sm text-gray-400 mb-4">
-                    This CSV lists every possible combination of Setup and Story cards. The 'Compatibility' column shows if the combination is valid (1) or not (0). Two empty columns, 'Test Status' and 'Notes', are included for you to track your testing progress.
+                <p className="text-sm text-gray-400 mb-2">
+                    This generates a CSV spreadsheet of all <strong className="text-green-400">compatible</strong> combinations of Setup and Story cards. Two empty columns, 'Test Status' and 'Notes', are included for you to track your testing progress.
                 </p>
+                <div className="mb-4">
+                    <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            checked={excludeNoSetupDescription}
+                            onChange={(e) => setExcludeNoSetupDescription(e.target.checked)}
+                            className="w-4 h-4 rounded bg-gray-700 border-gray-500 text-blue-500 focus:ring-blue-600"
+                        />
+                        Exclude story cards that have no setup description
+                    </label>
+                </div>
                 <textarea
                     readOnly
                     value={csvData}

@@ -15,12 +15,11 @@ const escapeCsvField = (field: string | number): string => {
     return stringField;
 };
 
-export const generateTestingMatrixCsv = (): string => {
+export const generateTestingMatrixCsv = (options: { excludeNoSetupDescription: boolean }): string => {
     // Header row
     const header = [
         "Setup Card",
         "Story Card",
-        "Compatibility",
         "Test Status",
         "Notes"
     ].map(escapeCsvField).join(',');
@@ -36,6 +35,11 @@ export const generateTestingMatrixCsv = (): string => {
     // Iterate through every combination
     SETUP_CARDS.forEach(setupCard => {
         STORY_CARDS.forEach(storyCard => {
+            // Filter 1: Optional exclusion of stories with no setup description
+            if (options.excludeNoSetupDescription && !storyCard.setupDescription) {
+                return; // Equivalent to 'continue' in a forEach loop
+            }
+
             const baseStateForSetup: GameState = {
                 ...allExpansionsState,
                 setupCardId: setupCard.id,
@@ -50,12 +54,15 @@ export const generateTestingMatrixCsv = (): string => {
                 baseStateForSetup.playerCount = 2; // Use 2 for multiplayer checks
             }
 
+            // Filter 2: Only include compatible combinations
             const compatible = isStoryCompatible(storyCard, baseStateForSetup);
+            if (!compatible) {
+                return; // Equivalent to 'continue' in a forEach loop
+            }
 
             const row = [
                 escapeCsvField(setupCard.label),
                 escapeCsvField(storyCard.title),
-                compatible ? 1 : 0,
                 "", // Empty field for Test Status
                 ""  // Empty field for Notes
             ].join(',');
