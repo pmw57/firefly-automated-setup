@@ -79,7 +79,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
               <li>
                 <strong>Thematic Interface</strong>
                 <span className="block mt-1 opacity-90">
-                  Choose your look. Switch between a <strong>light parchment theme</strong> and a <strong>dark starfield theme</strong> using the button at the top-right.
+                  Choose your look. Change between a <strong>light parchment theme</strong> and a <strong>dark starfield theme</strong> using the button at the top-right.
                 </span>
               </li>
               <li>
