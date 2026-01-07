@@ -105,23 +105,5 @@ describe('rules/prime', () => {
         const details = getPrimeDetails(state, { primeMode: 'blitz' });
         expect(details.finalCount).toBe(8); // (3 * 2) + 2
     });
-
-    it.concurrent('generates a rule for alertStackCount from "It\'s All In Who You Know"', () => {
-      const storyTitle = "It's All In Who You Know";
-      const state: GameState = { 
-        ...baseGameState, 
-        playerCount: 4, 
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
-      };
-      
-      const details = getPrimeDetails(state, {});
-      const rule = details.specialRules.find(r => r.title === 'Increased Alliance Presence');
-      expect(rule).toBeDefined();
-      expect(rule?.source).toBe('story');
-      
-      const contentString = JSON.stringify(rule?.content);
-      expect(contentString).toContain('12 Alliance Alert Tokens');
-      expect(contentString).toContain('(3 per player)');
-    });
   });
 });

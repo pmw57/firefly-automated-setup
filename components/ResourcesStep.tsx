@@ -58,12 +58,13 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   );
   
   const { 
-    credits, fuel, parts, warrants, goalTokens, 
+    credits, fuel, parts, warrants, goalTokens,
     isFuelDisabled, isPartsDisabled, creditModifications, specialRules,
     boardSetupRules, componentAdjustmentRules,
     smugglersBluesVariantAvailable,
     creditModificationDescription, creditModificationSource,
-    fuelModificationDescription, partsModificationDescription 
+    fuelModificationDescription, partsModificationDescription,
+    alertTokenStackCount, alertTokenStackRule
   } = resourceDetails;
 
   useEffect(() => {
@@ -265,6 +266,19 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
             </div>
           ) : null}
         </div>
+
+        {/* Individual section for Alliance Alert Token Stack */}
+        {typeof alertTokenStackCount === 'number' && alertTokenStackCount > 0 && (
+          <div className={cls("p-4 md:p-6 border-t", cardBorder)}>
+              <div className="flex justify-between items-center">
+                  <h4 className={`font-bold text-lg ${textColor}`}>Alliance Alert Tokens</h4>
+                  <div className={`text-right text-sm ${modsText} ml-4`}>
+                      Stack of <strong>{alertTokenStackCount}</strong>
+                      {alertTokenStackRule && <span className="text-xs block">({alertTokenStackRule.multiplier} per player)</span>}
+                  </div>
+              </div>
+          </div>
+        )}
 
         {/* Board Setup Sections - Render one for each rule */}
         {boardSetupRules.map((rule, i) => {

@@ -5,7 +5,8 @@ import {
     ModifyResourceRule,
     RuleSourceType,
     ResourceConflict,
-    SpecialRule
+    SpecialRule,
+    CreateAlertTokenStackRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { RULE_PRIORITY_ORDER } from '../data/constants';
@@ -112,6 +113,23 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     }
   });
   
+  let alertTokenStackCount: number | undefined;
+  let alertTokenStackTitle: string | undefined;
+  const createAlertTokenStackRule = allRules.find(r => r.type === 'createAlertTokenStack') as CreateAlertTokenStackRule | undefined;
+  if (createAlertTokenStackRule) {
+    alertTokenStackCount = createAlertTokenStackRule.multiplier * gameState.playerCount;
+    
+    // Use the title from the rule itself, with a fallback. This is more robust.
+    const title = createAlertTokenStackRule.title || "Increased Alliance Presence";
+    alertTokenStackTitle = title;
+
+    specialRules.push({
+        source: 'story',
+        title: title,
+        content: ['Create a stack of ', { type: 'strong', content: `${alertTokenStackCount} Alliance Alert Tokens` }, ` (${createAlertTokenStackRule.multiplier} per player).`]
+    });
+  }
+
   if (hasRuleFlag(allRules, 'placeAllianceAlertsInAllianceSpace')) {
     const ruleContent: SpecialRule['content'] = ['Place an ', { type: 'action', content: 'Alliance Alert Token' }, ' on ', { type: 'strong', content: 'every planetary sector in Alliance Space' }, '.'];
     specialRules.push({ source: 'story', title: 'Alliance Space Lockdown', content: ruleContent });
@@ -185,6 +203,9 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     parts: finalResources.parts!,
     warrants: finalResources.warrants!,
     goalTokens: finalResources.goalTokens!,
+    alertTokenStackCount,
+    alertTokenStackTitle,
+    alertTokenStackRule: createAlertTokenStackRule,
     isFuelDisabled: resourceRules.some(e => e.resource === 'fuel' && e.method === 'disable'),
     isPartsDisabled: resourceRules.some(e => e.resource === 'parts' && e.method === 'disable'),
     creditModifications: finalCreditModifications,

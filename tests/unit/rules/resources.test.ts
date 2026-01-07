@@ -131,6 +131,24 @@ describe('rules/resources', () => {
       expect(storySelectionDetails.credits).toBe(500);
     });
 
+    it.concurrent('generates a rule for alertStackCount from "It\'s All In Who You Know"', () => {
+      const storyTitle = "It's All In Who You Know";
+      const state: GameState = {
+        ...baseGameState,
+        playerCount: 4,
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+      };
+
+      const details = getResourceDetails(state);
+      const rule = details.specialRules.find(r => r.title === 'Word Gets Around');
+      expect(rule).toBeDefined();
+      expect(rule?.source).toBe('story');
+
+      const contentString = JSON.stringify(rule?.content);
+      expect(contentString).toContain('12 Alliance Alert Tokens');
+      expect(contentString).toContain('(3 per player)');
+    });
+
     describe("for Smuggler's Blues", () => {
       const storyTitle = "Smuggler's Blues";
       const storyIndex = STORY_CARDS.findIndex(c => c.title === storyTitle);
