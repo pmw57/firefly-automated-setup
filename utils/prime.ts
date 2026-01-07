@@ -4,8 +4,7 @@ import {
     StepOverrides,
     ModifyPrimeRule,
     SpecialRule,
-    SetPrimeModeRule,
-    CreateAlertTokenStackRule
+    SetPrimeModeRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { EXPANSIONS_METADATA } from '../data/expansions';
@@ -33,12 +32,6 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
       }
   });
   
-  const createAlertTokenStackRule = allRules.find(r => r.type === 'createAlertTokenStack') as CreateAlertTokenStackRule | undefined;
-  if (createAlertTokenStackRule) {
-    const alertStackCount = createAlertTokenStackRule.multiplier * gameState.playerCount;
-    specialRules.push({ source: 'story', title: 'Increased Alliance Presence', content: ['Create a stack of ', { type: 'strong', content: `${alertStackCount} Alliance Alert Tokens` }, ` (${createAlertTokenStackRule.multiplier} per player).`] });
-  }
-
   if (hasRuleFlag(allRules, 'startWithAlertCard')) {
     specialRules.push({ source: 'story', title: 'Alliance High Alert', content: ['Begin the game with one random Alliance Alert Card in play.'] });
   }

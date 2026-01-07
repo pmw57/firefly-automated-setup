@@ -36,7 +36,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     sourceUrl: "https://boardgamegeek.com/image/8103873/sjliver",
     rules: createStoryRules("Aces Up Your Sleeve", [
-      { type: 'createAlertTokenStack', multiplier: 4 }
+      { type: 'createAlertTokenStack', multiplier: 4, title: "Making a Name" }
     ])
   },
   {

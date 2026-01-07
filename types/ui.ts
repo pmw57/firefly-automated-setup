@@ -1,4 +1,4 @@
-import { JobMode, NavMode, AllianceSetupMode, PrimeMode, DraftMode, LeaderSetupMode, RuleSourceType } from './rules';
+import { JobMode, NavMode, AllianceSetupMode, PrimeMode, DraftMode, LeaderSetupMode, RuleSourceType, CreateAlertTokenStackRule } from './rules';
 import { StructuredContent, SpecialRule } from './core';
 
 export interface StepOverrides {
@@ -65,6 +65,10 @@ export interface ResourceDetails {
   
   isFuelDisabled: boolean;
   isPartsDisabled: boolean;
+
+  alertTokenStackCount?: number;
+  alertTokenStackRule?: CreateAlertTokenStackRule;
+  alertTokenStackTitle?: string;
 
   creditModifications: { description: string; value: string }[];
   conflict?: ResourceConflict;
