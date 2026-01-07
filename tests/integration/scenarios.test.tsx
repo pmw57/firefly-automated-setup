@@ -53,7 +53,7 @@ describe('Integration Scenarios', () => {
       await clickNext();
 
       // --- Step 3: Optional Settings ---
-      await screen.findByRole('heading', { name: /Optional Settings/i });
+      await screen.findByRole('heading', { name: /Options/i });
       await clickNext();
       
       // --- Navigate to first "real" step to select a story ---

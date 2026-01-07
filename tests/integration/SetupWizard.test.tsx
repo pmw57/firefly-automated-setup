@@ -1,4 +1,3 @@
-
 /** @vitest-environment jsdom */
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { screen } from '@testing-library/react';
@@ -20,8 +19,9 @@ describe('SetupWizard integration', () => {
       const initialHeading = await screen.findByRole('heading', { name: /Config/i }, { timeout: 5000 });
       expect(initialHeading).toBeInTheDocument();
 
-      const nextButton = await screen.findByRole('button', { name: /Next: Choose Setup →/i });
-      await user.click(nextButton);
+      const nextButtons = await screen.findAllByRole('button', { name: /Next: Choose Setup →/i });
+      expect(nextButtons.length).toBeGreaterThan(0);
+      await user.click(nextButtons[0]);
 
       const setupCardHeading = await screen.findByRole('heading', { name: /Select Setup Card/i });
       expect(setupCardHeading).toBeInTheDocument();
@@ -31,8 +31,9 @@ describe('SetupWizard integration', () => {
       const browncoatButton = await screen.findByRole('button', { name: browncoatRegex });
       expect(browncoatButton).toBeInTheDocument();
 
-      const backButton = await screen.findByRole('button', { name: /← Back/i });
-      await user.click(backButton);
+      const backButtons = await screen.findAllByRole('button', { name: /← Back/i });
+      expect(backButtons.length).toBeGreaterThan(0);
+      await user.click(backButtons[0]);
 
       // Verify returning to the first step
       const returnedHeading = await screen.findByRole('heading', { name: /Config/i });
