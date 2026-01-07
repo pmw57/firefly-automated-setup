@@ -107,7 +107,7 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
 
       <div className={`mt-8 flex justify-between clear-both pt-6 border-t ${navBorderTop}`}>
         <Button onClick={onPrev} variant="secondary" className="shadow-sm" disabled={isNavigating}>
-          ← Previous
+          ← Back
         </Button>
         <Button 
           onClick={onNext} 

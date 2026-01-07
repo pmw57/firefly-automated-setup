@@ -222,7 +222,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
           {gameState.setupMode === 'detailed' && <FinalSummary gameState={gameState} />}
 
           <div className="flex justify-center gap-4">
-            <Button onClick={handlePrev} variant="secondary">Back</Button>
+            <Button onClick={handlePrev} variant="secondary">← Back</Button>
             <Button onClick={performReset}>Start New Game Setup</Button>
           </div>
         </div>
