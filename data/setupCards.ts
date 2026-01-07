@@ -117,8 +117,8 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'coachworks',
     rules: createRules("The Browncoat Way", [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 12000, description: "Setup Card Allocation" },
-      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No free starting fuel." },
-      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No free starting parts." },
+      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No Starting Fuel" },
+      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No Starting Parts" },
       { type: 'setNavMode', mode: 'browncoat' },
       { type: 'setDraftMode', mode: 'browncoat' },
       { type: 'setJobMode', mode: 'no_jobs' },
