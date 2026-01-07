@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../types';
 import { CONTACT_NAMES } from '../ids';
 import { createStoryRules } from './utils';
@@ -12,6 +11,14 @@ export const CORE_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/2785050/gerryrailbaron",
     rules: createStoryRules("Desperadoes", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
+      { 
+        type: 'addSpecialRule', 
+        category: 'resources',
+        rule: {
+          title: "Wanted Captains",
+          content: ["All players start with one Warrant token."]
+        }
+      },
       { type: 'forbidContact', contact: CONTACT_NAMES.HARKEN },
       { 
         type: 'addSpecialRule', 
