@@ -151,7 +151,16 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
     handleNavigation('prev');
   }, [handleNavigation, currentStepIndex, flow, gameState.expansions.tenth, gameState.setupMode, dispatch]);
   
-  const handleJump = useCallback((index: number) => handleNavigation(index), [handleNavigation]);
+  const handleJump = useCallback((index: number) => {
+    // If jumping to the Mission Dossier step, always reset its internal state to the first page.
+    // This prevents landing on the "Advanced Rules" sub-step when the user just wants to re-select a story.
+    const targetStepId = flow[index]?.id;
+    if (targetStepId === STEP_IDS.C4) {
+      dispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: 1 });
+    }
+    
+    handleNavigation(index);
+  }, [handleNavigation, flow, dispatch]);
 
   const performReset = useCallback(() => {
     resetGameState();
