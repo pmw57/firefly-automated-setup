@@ -13,6 +13,50 @@ import { getCampaignNotesForStep } from '../utils/selectors/story';
 import { SpecialRule } from '../types';
 import { getResolvedRules, hasRuleFlag } from '../utils/selectors/rules';
 
+// Sub-component specifically for the "Ruining It For Everyone" story
+const RuiningItSetupPanel = ({ stepBadgeClass }: { stepBadgeClass: string }) => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
+    const panelBg = isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm';
+    const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
+    const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
+    const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
+    const textColor = isDark ? 'text-gray-300' : 'text-gray-700';
+    const subTextColor = isDark ? 'text-gray-400' : 'text-gray-500';
+    const strongColor = isDark ? 'text-amber-400' : 'text-amber-700';
+
+    return (
+        <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
+            <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Phase 1</div>
+            <h4 className={cls("font-bold mb-3 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
+                Asymmetric Setup: A Tale of Two Twins
+            </h4>
+            <ol className={cls("list-decimal list-inside space-y-4 text-sm", textColor)}>
+                <li>
+                    <strong className={strongColor}>Player 2 (You): Prepare the "Stolen" Ship</strong>
+                    <ul className={cls("list-disc list-inside ml-4 text-xs mt-1 space-y-1", subTextColor)}>
+                        <li>Choose one Ship and one Leader.</li>
+                        <li>Then, hire two Crew members.</li>
+                        <li className="italic">Refer to the 'Special Setup' override for details on crew cost, warrants, and starting money.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong className={strongColor}>Player 1 (The Twin): Steal the Ship</strong>
+                    <p className={cls("text-xs mt-1 pl-4", subTextColor)}>
+                        Player 1 takes the completed setup (Ship, Leader, and Crew) prepared by Player 2.
+                    </p>
+                </li>
+                <li>
+                    <strong className={strongColor}>Player 2 (You): Get a "Backup" Ship</strong>
+                    <p className={cls("text-xs mt-1 pl-4", subTextColor)}>
+                        Choose a new Ship and a Leader for yourself. You will start with no crew or money.
+                    </p>
+                </li>
+            </ol>
+        </div>
+    );
+};
+
 // Sub-component for Draft Order
 const DraftOrderPanel = ({ 
     draftOrder, 
@@ -59,7 +103,9 @@ const DraftOrderPanel = ({
                 {draftOrder.map((player, i) => (
                   <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
                     <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
-                    <span className={cls("text-sm font-medium", itemText)}>{player}</span>
+                    <span className={cls("text-sm font-medium", itemText)}>
+                        {player}
+                    </span>
                     {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-blue-400' : 'text-blue-600')}>Pick 1</span>}
                   </li>
                 ))}
@@ -79,6 +125,7 @@ const PlacementOrderPanel = ({
     startOutsideAllianceSpace,
     excludeNewCanaanPlacement,
     stepBadgeClass,
+    isRuiningIt,
 }: {
     placementOrder: string[];
     isSolo: boolean;
@@ -89,6 +136,7 @@ const PlacementOrderPanel = ({
     startOutsideAllianceSpace: boolean;
     excludeNewCanaanPlacement: boolean;
     stepBadgeClass: string;
+    isRuiningIt: boolean;
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -112,13 +160,25 @@ const PlacementOrderPanel = ({
 
     if (specialStartSector) {
         placementTitle = 'Special Placement';
-        content = (
-            <div className={cls("p-4 rounded text-center border", specialPlacementBg)}>
-                <p className={cls("font-bold mb-1", specialPlacementTitle)}>{placementTitle}</p>
-                <p className={cls("text-sm", specialPlacementText)}>All ships start at <strong>{specialStartSector}</strong>.</p>
-                <p className={cls("text-xs italic mt-1", specialPlacementSub)}>(Do not place in separate sectors)</p>
-            </div>
-        );
+        if (isRuiningIt) {
+             content = (
+                <div className={cls("p-4 rounded text-center border", specialPlacementBg)}>
+                    <p className={cls("font-bold mb-1", specialPlacementTitle)}>Starting Location</p>
+                    <p className={cls("text-sm", specialPlacementText)}>Both ships start at <strong>{specialStartSector}</strong>.</p>
+                    <p className={cls("text-xs italic mt-2", specialPlacementSub)}>
+                        Player 2 (You) places their new ship first, followed by Player 1 (The Twin) with the stolen ship.
+                    </p>
+                </div>
+            );
+        } else {
+            content = (
+                <div className={cls("p-4 rounded text-center border", specialPlacementBg)}>
+                    <p className={cls("font-bold mb-1", specialPlacementTitle)}>{placementTitle}</p>
+                    <p className={cls("text-sm", specialPlacementText)}>All ships start at <strong>{specialStartSector}</strong>.</p>
+                    <p className={cls("text-xs italic mt-1", specialPlacementSub)}>(Do not place in separate sectors)</p>
+                </div>
+            );
+        }
     } else if (isGoingLegit) {
         placementTitle = 'A Port of Operation';
         const descriptionColor = isDark ? 'text-green-300' : 'text-green-800';
@@ -240,7 +300,6 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const isQuickMode = gameState.setupMode === 'quick';
   
   const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
-  const isRuiningIt = useMemo(() => hasRuleFlag(allRules, 'isRuiningItForEveryone'), [allRules]);
   const isGoingLegit = useMemo(() => hasRuleFlag(allRules, 'isGoingLegit'), [allRules]);
 
   const {
@@ -250,8 +309,9 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       specialStartSector,
       startOutsideAllianceSpace,
       excludeNewCanaanPlacement,
+      isRuiningIt,
   } = useDraftDetails(step);
-  
+
   const campaignNotes = useMemo(
     () => getCampaignNotesForStep(gameState, step.id), 
     [gameState, step.id]
@@ -297,6 +357,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
     }
   }, [isSolo, gameState.playerNames, draftState, isQuickMode, handleDetermineOrder, setDraftConfig]);
 
+
   const handleRollChange = (index: number, newValue: string) => {
     if (!draftState) return;
     const val = parseInt(newValue) || 0;
@@ -318,86 +379,86 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   return (
     <div className="space-y-6">
-      {isRuiningIt ? (
-        <div className={`p-4 rounded-lg border transition-colors ${isDark ? 'bg-zinc-900/50 border-zinc-700' : 'bg-white/70 border-gray-200'}`}>
-          <h3 className={`text-lg font-bold font-western mb-3 pb-2 border-b ${isDark ? 'text-amber-400 border-amber-400/20' : 'text-amber-800 border-amber-800/20'}`}>
-            Asymmetric Setup: Ruining It For Everyone
-          </h3>
-          <div className="space-y-4">
-            {allInfoBlocks.map((block, index) => (
-              <div key={index} className="flex items-start gap-4">
-                <div className={`mt-1 flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg ${isDark ? 'bg-zinc-800 text-amber-400' : 'bg-amber-100 text-amber-800'}`}>
-                  {index + 1}
-                </div>
-                <div className="flex-1">
-                  {block}
-                </div>
-              </div>
-            ))}
-          </div>
+      {allInfoBlocks.length > 0 && (
+        <div className="space-y-4">
+          {allInfoBlocks}
         </div>
-      ) : (
-        <>
-          {allInfoBlocks.length > 0 && (
-            <div className="space-y-4">
-              {allInfoBlocks}
-            </div>
-          )}
-          
-          {!isSolo && !draftState && !isQuickMode && (
-            <p className={cls("italic text-center", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>
-          )}
+      )}
+      
+      {!isSolo && !draftState && !isQuickMode && (
+        <p className={cls("italic text-center", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>
+      )}
 
-          {!draftState ? (
+      {!draftState ? (
+        <>
+          {!isSolo && (
             <Button onClick={handleDetermineOrder} variant="secondary" fullWidth className="my-4">
                🎲 Roll for {isHavenDraft ? 'Haven Draft' : 'Command'}
             </Button>
-          ) : (
-            <div className="animate-fade-in space-y-6">
-              {!isSolo && (
-                <DiceControls 
-                    draftState={draftState} 
-                    onRollChange={handleRollChange} 
-                    onSetWinner={handleSetWinner}
-                    allowManualOverride={isManualEntry && !isQuickMode}
-                />
-              )}
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <DraftOrderPanel 
-                    draftOrder={draftState.draftOrder}
-                    isSolo={isSolo}
-                    isHavenDraft={isHavenDraft}
-                    isBrowncoatDraft={isBrowncoatDraft}
-                    stepBadgeClass={stepBadgeBlueBg}
-                />
-
-                <PlacementOrderPanel 
-                    placementOrder={draftState.placementOrder}
-                    isSolo={isSolo}
-                    isHavenDraft={isHavenDraft}
-                    isBrowncoatDraft={isBrowncoatDraft}
-                    isGoingLegit={isGoingLegit}
-                    specialStartSector={specialStartSector}
-                    startOutsideAllianceSpace={!!startOutsideAllianceSpace}
-                    excludeNewCanaanPlacement={!!excludeNewCanaanPlacement}
-                    stepBadgeClass={stepBadgeAmberBg}
-                />
-              </div>
-
-              {isBrowncoatDraft && <BrowncoatMarketPanel />}
-
-              {isGoingLegit && (
-                <OverrideNotificationBlock
-                  source="info"
-                  title="For Sale Pile"
-                  content={["Leave unused ships out of the box as a \"For Sale\" pile."]}
-                  className="mt-6"
-                />
-              )}
-            </div>
           )}
         </>
+      ) : (
+        <div className="animate-fade-in space-y-6">
+          {!isSolo && (
+            <DiceControls 
+                draftState={draftState} 
+                onRollChange={handleRollChange} 
+                onSetWinner={handleSetWinner}
+                allowManualOverride={isManualEntry && !isQuickMode}
+            />
+          )}
+          
+          {isRuiningIt ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <RuiningItSetupPanel stepBadgeClass={stepBadgeBlueBg} />
+              <PlacementOrderPanel 
+                  placementOrder={draftState.placementOrder}
+                  isSolo={isSolo}
+                  isHavenDraft={isHavenDraft}
+                  isBrowncoatDraft={isBrowncoatDraft}
+                  isGoingLegit={isGoingLegit}
+                  specialStartSector={specialStartSector}
+                  startOutsideAllianceSpace={!!startOutsideAllianceSpace}
+                  excludeNewCanaanPlacement={!!excludeNewCanaanPlacement}
+                  stepBadgeClass={stepBadgeAmberBg}
+                  isRuiningIt={isRuiningIt}
+              />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <DraftOrderPanel 
+                  draftOrder={draftState.draftOrder}
+                  isSolo={isSolo}
+                  isHavenDraft={isHavenDraft}
+                  isBrowncoatDraft={isBrowncoatDraft}
+                  stepBadgeClass={stepBadgeBlueBg}
+              />
+              <PlacementOrderPanel 
+                  placementOrder={draftState.placementOrder}
+                  isSolo={isSolo}
+                  isHavenDraft={isHavenDraft}
+                  isBrowncoatDraft={isBrowncoatDraft}
+                  isGoingLegit={isGoingLegit}
+                  specialStartSector={specialStartSector}
+                  startOutsideAllianceSpace={!!startOutsideAllianceSpace}
+                  excludeNewCanaanPlacement={!!excludeNewCanaanPlacement}
+                  stepBadgeClass={stepBadgeAmberBg}
+                  isRuiningIt={isRuiningIt}
+              />
+            </div>
+          )}
+
+          {isBrowncoatDraft && <BrowncoatMarketPanel />}
+
+          {isGoingLegit && (
+            <OverrideNotificationBlock
+              source="info"
+              title="For Sale Pile"
+              content={["Leave unused ships out of the box as a \"For Sale\" pile."]}
+              className="mt-6"
+            />
+          )}
+        </div>
       )}
     </div>
   );

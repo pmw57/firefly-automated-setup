@@ -1,5 +1,3 @@
-
-
 import { 
     GameState, 
     Step,
@@ -56,8 +54,8 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
       }
     }
 
-    // Handle specific story cards that use SpecialRuleBlocks for placement
-    if (hasRuleFlag(allRules, 'isRuiningItForEveryone')) {
+    const isRuiningIt = hasRuleFlag(allRules, 'isRuiningItForEveryone');
+    if (isRuiningIt) {
         specialStartSector = "St. Albans, Red Sun";
     }
 
@@ -136,5 +134,5 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
         ]});
     }
 
-    return { specialRules, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement };
+    return { specialRules, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement, isRuiningIt };
 };
