@@ -7,12 +7,24 @@ import { AdvancedRulesConfigurationPart } from './story/SoloConfigurationPart';
 
 const MissionDossierStepContent = (props: StepComponentProps): React.ReactElement => {
   const { onNext, onPrev, isNavigating } = props;
-  const { subStep, setSubStep } = useMissionSelection();
+  const { subStep, setSubStep, enablePart2 } = useMissionSelection();
   const dossierTopRef = useRef<HTMLDivElement>(null);
 
+  const handleGoToOptions = () => {
+    setSubStep(2);
+    dossierTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
   const handleGoToSelection = () => {
     setSubStep(1);
     dossierTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleNext = () => {
+    if (subStep === 1 && enablePart2) {
+      handleGoToOptions();
+    } else {
+      onNext();
+    }
   };
   
   const isFirstStep = props.step.data?.title?.startsWith('1.');
@@ -22,7 +34,7 @@ const MissionDossierStepContent = (props: StepComponentProps): React.ReactElemen
     <div ref={dossierTopRef} className="scroll-mt-24">
       {subStep === 1 ? (
         <StorySelectionPart
-          onNext={onNext}
+          onNext={handleNext}
           onPrev={onPrev}
           isNavigating={isNavigating}
           title={storySelectionTitle}

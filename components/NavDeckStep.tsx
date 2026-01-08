@@ -3,7 +3,7 @@ import { StructuredContent, SpecialRule } from '../types';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { getNavDeckDetails } from '../utils/nav';
+import { useNavDeckDetails } from '../hooks/useNavDeckDetails';
 import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
 
@@ -18,7 +18,7 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
     isHighPlayerCount,
     specialRules,
     hasRimDecks,
-  } = useMemo(() => getNavDeckDetails(gameState, overrides), [gameState, overrides]);
+  } = useNavDeckDetails(overrides);
 
   const sortedSpecialRules = useMemo(() => {
     const order: Record<SpecialRule['source'], number> = {

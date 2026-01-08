@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { getPrimeDetails } from '../utils/prime';
+import { usePrimeDetails } from '../hooks/usePrimeDetails';
 import { StepComponentProps } from './StepContent';
 import { SETUP_CARD_IDS } from '../data/ids';
 import { SpecialRule } from '../types';
@@ -23,10 +23,7 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     isHighSupplyVolume,
     isBlitz,
     specialRules,
-  } = React.useMemo(() => 
-    getPrimeDetails(gameState, overrides),
-    [gameState, overrides]
-  );
+  } = usePrimeDetails(overrides);
   
   const allInfoBlocks = useMemo(() => {
     const blocks: SpecialRule[] = [...specialRules];
@@ -60,7 +57,11 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     }
 
     const order: Record<SpecialRule['source'], number> = {
-        expansion: 1, setupCard: 2, story: 3, warning: 3, info: 4,
+        expansion: 1,
+        setupCard: 2,
+        story: 3,
+        warning: 3,
+        info: 4,
     };
 
     return blocks

@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 import { Expansions } from '../types/index';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { ActionType } from '../state/actions';
+// FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
+import { useGameDispatch } from '../hooks/useGameDispatch';
 import { PlayerConfigSection } from './setup/PlayerConfigSection';
 import { CampaignConfigSection } from './setup/CampaignConfigSection';
 import { ExpansionListSection } from './setup/ExpansionListSection';
@@ -14,7 +15,16 @@ interface CaptainSetupProps {
 }
 
 export const CaptainSetup = ({ isDevMode }: CaptainSetupProps): React.ReactElement => {
-  const { state: gameState, dispatch } = useGameState();
+  // FIX: Destructure only the relevant state properties from `useGameState`.
+  const { state: gameState } = useGameState();
+  // FIX: Get the dispatch function and action creators from `useGameDispatch`.
+  const {
+    setPlayerCount,
+    setPlayerName,
+    toggleExpansion,
+    setCampaignMode,
+    setCampaignStories,
+  } = useGameDispatch();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
@@ -25,23 +35,23 @@ export const CaptainSetup = ({ isDevMode }: CaptainSetupProps): React.ReactEleme
 
   // Handlers - Dispatch actions
   const updatePlayerCount = (newCount: number) => {
-    dispatch({ type: ActionType.SET_PLAYER_COUNT, payload: newCount });
+    setPlayerCount(newCount);
   };
 
   const handleNameChange = (index: number, value: string) => {
-    dispatch({ type: ActionType.SET_PLAYER_NAME, payload: { index, name: value } });
+    setPlayerName(index, value);
   };
 
   const handleExpansionChange = (key: keyof Expansions) => {
-    dispatch({ type: ActionType.TOGGLE_EXPANSION, payload: key });
+    toggleExpansion(key);
   };
 
   const handleCampaignToggle = () => {
-    dispatch({ type: ActionType.SET_CAMPAIGN_MODE, payload: !gameState.isCampaign });
+    setCampaignMode(!gameState.isCampaign);
   };
 
   const updateCampaignStories = (newCount: number) => {
-    dispatch({ type: ActionType.SET_CAMPAIGN_STORIES, payload: newCount });
+    setCampaignStories(newCount);
   };
 
   // Styles

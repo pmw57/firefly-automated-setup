@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme } from '../ThemeContext';
-import { useGameState } from '../../hooks/useGameState';
-import { ActionType, ExpansionBundle } from '../../state/actions';
+import { useGameDispatch } from '../../hooks/useGameDispatch';
+import { ExpansionBundle } from '../../state/actions';
 import { Expansions } from '../../types';
 
 interface ExpansionBundlesProps {
@@ -15,7 +15,7 @@ const BUNDLES = [
 ];
 
 export const ExpansionBundles: React.FC<ExpansionBundlesProps> = ({ expansions }) => {
-    const { dispatch } = useGameState();
+    const { setExpansionsBundle } = useGameDispatch();
     const { theme } = useTheme();
     const isDark = theme === 'dark';
 
@@ -35,7 +35,7 @@ export const ExpansionBundles: React.FC<ExpansionBundlesProps> = ({ expansions }
     const activeBundle = getActiveBundle();
 
     const handleSelectBundle = (bundleId: ExpansionBundle) => {
-        dispatch({ type: ActionType.SET_EXPANSIONS_BUNDLE, payload: bundleId });
+        setExpansionsBundle(bundleId);
     };
 
     const labelColor = isDark ? 'text-zinc-400' : 'text-[#78350f]';

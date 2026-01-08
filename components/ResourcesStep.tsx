@@ -3,7 +3,8 @@ import { getResourceDetails } from '../utils/resources';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { ActionType } from '../state/actions';
+// FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
+import { useGameDispatch } from '../hooks/useGameDispatch';
 import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
@@ -41,7 +42,10 @@ const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source
 };
 
 export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
-  const { state: gameState, dispatch } = useGameState();
+  // FIX: Destructure only the relevant state properties from `useGameState`.
+  const { state: gameState } = useGameState();
+  // FIX: Get the dispatch function and action creators from `useGameDispatch`.
+  const { setFinalStartingCredits, toggleChallengeOption } = useGameDispatch();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -69,9 +73,9 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
 
   useEffect(() => {
     if (credits !== gameState.finalStartingCredits) {
-        dispatch({ type: ActionType.SET_FINAL_STARTING_CREDITS, payload: credits });
+        setFinalStartingCredits(credits);
     }
-  }, [credits, dispatch, gameState.finalStartingCredits]);
+  }, [credits, setFinalStartingCredits, gameState.finalStartingCredits]);
   
   const hasComplexCreditCalculation = creditModifications.length > 1;
   const hasCreditModification = creditModificationDescription && creditModificationDescription !== 'Standard Allocation';
@@ -118,7 +122,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
 
   const handleVariantChange = (useRim: boolean) => {
       if (useRim !== useRimVariant) {
-          dispatch({ type: ActionType.TOGGLE_CHALLENGE_OPTION, payload: 'smugglers_blues_rim_variant' });
+          toggleChallengeOption('smugglers_blues_rim_variant');
       }
   };
   

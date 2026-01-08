@@ -5,7 +5,7 @@ import { useTheme } from '../ThemeContext';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionIcon } from '../ExpansionIcon';
 import { useGameState } from '../../hooks/useGameState';
-import { ActionType } from '../../state/actions';
+import { useGameDispatch } from '../../hooks/useGameDispatch';
 import { hasRuleFlag, getResolvedRules } from '../../utils/selectors/rules';
 import { getSoloTimerAdjustmentText } from '../../utils/selectors/story';
 
@@ -30,16 +30,13 @@ const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source
 };
 
 export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) => {
-  const { state: gameState, dispatch } = useGameState();
+  const { state: gameState } = useGameState();
+  const { setGoal, toggleChallengeOption } = useGameDispatch();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   const handleGoalSelect = (goalTitle: string) => {
-    dispatch({ type: ActionType.SET_GOAL, payload: goalTitle });
-  };
-  
-  const toggleChallengeOption = (id: string) => {
-    dispatch({ type: ActionType.TOGGLE_CHALLENGE_OPTION, payload: id });
+    setGoal(goalTitle);
   };
 
   const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);

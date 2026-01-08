@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo, useCallback } from 'react';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/draft';
-import { getDraftDetails } from '../utils/draftRules';
+import { useDraftDetails } from '../hooks/useDraftDetails';
 import { Button } from './Button';
 import { DiceControls } from './DiceControls';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
+import { useGameDispatch } from '../hooks/useGameDispatch';
 import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
-import { ActionType } from '../state/actions';
 import { SpecialRule } from '../types';
 import { getResolvedRules, hasRuleFlag } from '../utils/selectors/rules';
 
@@ -198,7 +198,8 @@ const PlacementOrderPanel = ({
 };
 
 export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
-  const { state: gameState, dispatch } = useGameState();
+  const { state: gameState } = useGameState();
+  const { setDraftConfig } = useGameDispatch();
   const { state: draftState, isManual: isManualEntry } = gameState.draft;
   
   const { theme } = useTheme();
@@ -217,7 +218,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       specialStartSector,
       startOutsideAllianceSpace,
       excludeNewCanaanPlacement,
-  } = React.useMemo(() => getDraftDetails(gameState, step), [gameState, step]);
+  } = useDraftDetails(step);
   
   const campaignNotes = useMemo(
     () => getCampaignNotesForStep(gameState, step.id), 
@@ -253,16 +254,16 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   }, [campaignNotes, specialRules, gameState.setupMode]);
 
   const handleDetermineOrder = useCallback(() => {
-    dispatch({ type: ActionType.SET_DRAFT_CONFIG, payload: { state: runAutomatedDraft(gameState.playerNames), isManual: false } });
-  }, [dispatch, gameState.playerNames]);
+    setDraftConfig({ state: runAutomatedDraft(gameState.playerNames), isManual: false });
+  }, [setDraftConfig, gameState.playerNames]);
 
   useEffect(() => {
     if (isSolo && !draftState) {
-        dispatch({ type: ActionType.SET_DRAFT_CONFIG, payload: { state: getInitialSoloDraftState(gameState.playerNames[0]), isManual: false } });
+        setDraftConfig({ state: getInitialSoloDraftState(gameState.playerNames[0]), isManual: false });
     } else if (!isSolo && !draftState && isQuickMode) {
         handleDetermineOrder();
     }
-  }, [isSolo, gameState.playerNames, draftState, dispatch, isQuickMode, handleDetermineOrder]);
+  }, [isSolo, gameState.playerNames, draftState, isQuickMode, handleDetermineOrder, setDraftConfig]);
 
   const handleRollChange = (index: number, newValue: string) => {
     if (!draftState) return;
@@ -270,13 +271,13 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
     const newRolls = [...draftState.rolls];
     newRolls[index] = { ...newRolls[index], roll: val };
     const newState = calculateDraftOutcome(newRolls, gameState.playerCount);
-    dispatch({ type: ActionType.SET_DRAFT_CONFIG, payload: { state: newState, isManual: true } });
+    setDraftConfig({ state: newState, isManual: true });
   };
 
   const handleSetWinner = (index: number) => {
     if (!draftState) return;
     const newState = calculateDraftOutcome(draftState.rolls, gameState.playerCount, index);
-    dispatch({ type: ActionType.SET_DRAFT_CONFIG, payload: { state: newState, isManual: true } });
+    setDraftConfig({ state: newState, isManual: true });
   };
 
   const introText = isDark ? 'text-gray-400' : 'text-gray-600';

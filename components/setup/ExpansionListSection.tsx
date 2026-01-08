@@ -5,8 +5,11 @@ import { useTheme } from '../ThemeContext';
 import { cls } from '../../utils/style';
 import { getCategorizedExpansions } from '../../utils/selectors/story';
 import { useGameState } from '../../hooks/useGameState';
-import { ActionType } from '../../state/actions';
+// FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
+import { useGameDispatch } from '../../hooks/useGameDispatch';
 import { ExpansionBundles } from './ExpansionBundles';
+// FIX: Import `ActionType` to resolve reference errors in dispatch calls.
+import { ActionType } from '../../state/actions';
 
 interface ExpansionListSectionProps {
     expansions: Expansions;
@@ -50,7 +53,10 @@ const GroupHeader: React.FC<GroupHeaderProps> = ({ title, expansionsInGroup, all
 };
 
 export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expansions, onToggle, has10th, isDevMode }) => {
-    const { state, dispatch } = useGameState();
+    // FIX: Destructure only the relevant state properties from `useGameState`.
+    const { state } = useGameState();
+    // FIX: Get the dispatch function and action creators from `useGameDispatch`.
+    const { dispatch } = useGameDispatch();
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     const labelColor = isDark ? 'text-zinc-400' : 'text-[#78350f]';

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { getAllianceReaverDetails } from '../utils/alliance';
+import { useAllianceReaverDetails } from '../hooks/useAllianceReaverDetails';
 import { StepComponentProps } from './StepContent';
 import { SpecialRule, StructuredContentPart } from '../types';
 import { cls } from '../utils/style';
@@ -34,10 +34,7 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
     standardReaverPlacement,
     allianceOverride,
     reaverOverride
-  } = React.useMemo(() => 
-    getAllianceReaverDetails(gameState, overrides), 
-    [gameState, overrides]
-  );
+  } = useAllianceReaverDetails(overrides);
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';

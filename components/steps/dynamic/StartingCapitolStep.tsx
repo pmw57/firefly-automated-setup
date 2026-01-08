@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { getResourceDetails } from '../../../utils/resources';
+import { useResourceDetails } from '../../../hooks/useResourceDetails';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
+import { useGameDispatch } from '../../../hooks/useGameDispatch';
 import { ConflictResolver } from '../../ConflictResolver';
-import { ActionType } from '../../../state/actions';
 import { StepComponentProps } from '../../StepContent';
 
 export const StartingCapitolStep: React.FC<StepComponentProps> = () => {
-  const { state: gameState, dispatch } = useGameState();
+  const { state: gameState } = useGameState();
+  const { setFinalStartingCredits } = useGameDispatch();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   const [manualSelection, setManualSelection] = useState<'story' | 'setupCard'>('story');
 
-  const resourceDetails = getResourceDetails(gameState, manualSelection);
+  const resourceDetails = useResourceDetails(manualSelection);
   const { credits, conflict, creditModifications } = resourceDetails;
 
   useEffect(() => {
     if (credits !== gameState.finalStartingCredits) {
-        dispatch({ type: ActionType.SET_FINAL_STARTING_CREDITS, payload: credits });
+        setFinalStartingCredits(credits);
     }
-  }, [credits, dispatch, gameState.finalStartingCredits]);
+  }, [credits, setFinalStartingCredits, gameState.finalStartingCredits]);
   
   const showConflictUI = conflict && gameState.optionalRules.resolveConflictsManually;
   
