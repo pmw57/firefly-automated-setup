@@ -200,6 +200,16 @@ const VisualRuleBuilder: React.FC<{ rules: Partial<SetupRule>[], onRulesChange: 
   );
 };
 
+const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
+    <input {...props} className="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+);
+const Textarea = (props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
+    <textarea {...props} className="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+);
+const Select = (props: React.SelectHTMLAttributes<HTMLSelectElement>) => (
+    <select {...props} className="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+);
+
 // --- Main Component ---
 interface DevAddStoryCardProps {
     onClose: () => void;
@@ -214,16 +224,6 @@ const ratingLabels = [
     "4 stars: Highly Recommended",
     "5 stars: Essential"
 ];
-
-const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => (
-    <input {...props} className="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-);
-const Textarea = (props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
-    <textarea {...props} className="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-);
-const Select = (props: React.SelectHTMLAttributes<HTMLSelectElement>) => (
-    <select {...props} className="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-);
 
 const getInitialState = () => ({
     story: {
@@ -553,7 +553,7 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
                     <div className="space-y-4">
                         <h3 className="font-bold text-lg text-green-400">Generated Object Literal</h3>
                         <div className="relative">
-                            <pre className="w-full h-[600px] overflow-auto bg-black p-4 rounded text-xs border border-gray-600 custom-scrollbar">
+                            <pre className="w-full h-[600px] overflow-auto bg-black p-4 rounded text-xs border border-gray-600 custom-scrollbar whitespace-pre">
                                 <code>{generatedJson}</code>
                             </pre>
                             {!generatedJson.startsWith('//') && (
