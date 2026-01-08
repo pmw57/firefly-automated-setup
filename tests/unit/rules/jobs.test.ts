@@ -75,16 +75,7 @@ describe('rules/jobs', () => {
             "content": [
               {
                 "content": [
-                  {
-                    "content": "No Starting Jobs.",
-                    "type": "strong",
-                  },
-                ],
-                "type": "paragraph",
-              },
-              {
-                "content": [
-                  "Instead, ",
+                  "Instead of taking Starting Jobs, ",
                   {
                     "content": "prime the Contact Decks",
                     "type": "strong",
@@ -111,7 +102,7 @@ describe('rules/jobs', () => {
               },
             ],
             "source": "story",
-            "title": "No Starting Jobs",
+            "title": "Prime Contact Decks",
           },
         ]
       `);

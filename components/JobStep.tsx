@@ -4,10 +4,10 @@ import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { useJobSetupDetails } from '../hooks/useJobSetupDetails';
 import { getActiveStoryCard, getCampaignNotesForStep } from '../utils/selectors/story';
-import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
+import { STEP_IDS } from '../data/ids';
 import { StepComponentProps } from './StepContent';
-import { ChallengeOption, SpecialRule, SetJobModeRule } from '../types';
-import { getResolvedRules } from '../utils/selectors/rules';
+import { ChallengeOption, SpecialRule } from '../types';
+import { cls } from '../utils/style';
 
 export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
@@ -23,26 +23,15 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     showStandardContactList, 
     isSingleContactChoice,
     cardsToDraw,
-    totalJobCards,
     caperDrawCount,
+    isContactListOverridden,
+    jobDrawMode,
   } = useJobSetupDetails(overrides);
   
-  const jobDrawMode = useMemo(() => {
-    const allRules = getResolvedRules(gameState);
-    const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
-    return jobModeRule?.mode || overrides.jobMode || 'standard';
-  }, [gameState, overrides]);
-  
-  const isDraftChoice = jobDrawMode === 'draft_choice';
-  
-  const campaignNotes = useMemo(
-    () => getCampaignNotesForStep(gameState, step.id), 
-    [gameState, step.id]
-  );
+  const isNoJobsMode = jobDrawMode === 'no_jobs';
   
   const isSelectedStory = gameState.selectedStoryCardIndex !== null;
   const isRimDeckBuild = stepId.includes(STEP_IDS.D_RIM_JOBS);
-  const isSolitaireFirefly = gameState.setupCardId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY;
 
   const activeChallenges = useMemo(() => 
     activeStoryCard?.challengeOptions?.filter(
@@ -53,20 +42,12 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const sortedInfoBlocks = useMemo(() => {
     const blocks: SpecialRule[] = [];
 
-    // Campaign notes (Story)
+    const campaignNotes = getCampaignNotesForStep(gameState, step.id);
     blocks.push(...campaignNotes.map(note => ({
       source: 'story' as const,
       title: 'Campaign Setup Note',
       content: note.content
     })));
-
-    // Specific Setup Overrides
-    if (isSolitaireFirefly) {
-      blocks.push({ source: 'story', title: 'Solitaire Firefly: Jobs & Contacts', content: [
-          { type: 'paragraph', content: ["For each Contact you were Solid with at the end of the last game, remove 2 of your completed Jobs from play."] },
-          { type: 'paragraph', content: ["Keep any remaining completed Jobs; you begin the game Solid with those Contacts."] }
-        ]});
-    }
 
     if (isRimDeckBuild) {
         blocks.push({ source: 'setupCard', title: 'Rim Space Jobs', content: [
@@ -74,116 +55,87 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
         ]});
     }
 
-    // Messages from rule engine (mixed sources)
-    // The override block is important for context and must always be shown.
-    blocks.push(...messages.filter(msg => !(msg.source === 'story' && !isSelectedStory)));
+    // Filter out Caper Bonus as it's handled by a dedicated component.
+    blocks.push(...messages.filter(msg => 
+      !(msg.source === 'story' && !isSelectedStory) && 
+      msg.title !== 'Caper Bonus'
+    ));
     
-    // Active Challenges (Story/Warning)
     if (isSelectedStory && activeChallenges.length > 0 && !messages.some(m => m.title === 'Challenge Active')) {
-        blocks.push({ source: 'warning', title: 'Story Directives (Challenges)', content: [
-          { type: 'list', items: activeChallenges.map((opt: ChallengeOption) => [opt.label]) },
-          { type: 'paragraph', content: ["These restrictions apply throughout the game."] }
-        ]});
+        activeChallenges.forEach(challenge => {
+            blocks.push({
+                source: 'warning',
+                title: 'Challenge Active',
+                content: [{ type: 'strong', content: challenge.label }]
+            });
+        });
     }
-    
+
     const order: Record<SpecialRule['source'], number> = {
         expansion: 1, setupCard: 2, story: 3, warning: 3, info: 4,
     };
-    
-    return blocks
-      .sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99))
-      .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
-      .map((rule, i) => <SpecialRuleBlock key={`rule-${i}`} {...rule} />);
-  }, [campaignNotes, isSolitaireFirefly, isRimDeckBuild, messages, isSelectedStory, activeChallenges, gameState.setupMode]);
 
-
+    return blocks.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+  }, [messages, gameState, step.id, isRimDeckBuild, isSelectedStory, activeChallenges]);
+  
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
-  const textColor = isDark ? 'text-gray-200' : 'text-gray-700';
-  const pillBg = isDark ? 'bg-zinc-800' : 'bg-gray-100';
-  const pillText = isDark ? 'text-gray-300' : 'text-gray-900';
-  const pillBorder = isDark ? 'border-zinc-700' : 'border-gray-300';
-  const dividerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
-  const noteText = isDark ? 'text-gray-400' : 'text-gray-700';
-
-  const CaperDeck = ({ count }: { count: number }) => (
-    <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300 text-center`}>
-        <div className="text-5xl mb-4" role="img" aria-label="Deck of cards icon">🗃️</div>
-        <h4 className={`font-bold text-xl font-western mb-2 ${textColor}`}>Caper Deck</h4>
-        <p className={`${noteText}`}>Each player draws {count} Caper Card{count > 1 ? 's' : ''}.</p>
-    </div>
-  );
+  const sectionHeaderColor = isDark ? 'text-gray-200' : 'text-gray-800';
+  const sectionHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
+  const textColor = isDark ? 'text-gray-300' : 'text-gray-700';
+  const contactColor = isDark ? 'text-amber-400' : 'text-firefly-brown';
 
   return (
-    <div className="space-y-4">
-      {sortedInfoBlocks}
+    <div className="space-y-6">
+      {sortedInfoBlocks.map((block, i) => <SpecialRuleBlock key={`info-${i}`} {...block} />)}
 
-      {showStandardContactList && !isRimDeckBuild && (
-        <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300`}>
-          {contacts.length > 0 ? (
-            <>
-              {isDraftChoice ? (
-                <>
-                  <p className={`mb-4 font-bold ${textColor} text-lg`}>Job Draft Procedure</p>
-                  <ol className={`list-decimal list-inside space-y-2 mb-4 text-sm ${noteText}`}>
-                    <li>Starting with the <strong>last player</strong> who chose a Leader, each player takes a turn.</li>
-                    <li>On your turn, choose <strong>1 Job Card from 3 different Contacts</strong>.</li>
-                  </ol>
-                  
-                  <div className={`border-t ${dividerBorder} pt-4`}>
-                      <p className={`mb-4 font-bold ${textColor} text-lg`}>Available Contacts for Draft:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {contacts.map(contact => (
-                          <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
-                            {contact}
-                          </span>
-                        ))}
-                      </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {isSingleContactChoice ? (
-                    <>
-                      <p className={`mb-4 font-bold ${textColor} text-lg`}>Choose 1 Contact from the available list:</p>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {contacts.map(contact => (
-                          <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
-                            {contact}
-                          </span>
-                        ))}
-                      </div>
-                      <p className={`text-lg font-bold ${isDark ? 'text-amber-400' : 'text-amber-800'} mb-2`}>
-                        Draw {cardsToDraw || 3} Job Cards from your chosen contact.
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <p className={`mb-4 font-bold ${textColor} text-lg`}>Draw 1 Job Card from each:</p>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {contacts.map(contact => (
-                          <span key={contact} className={`px-3 py-1 ${pillBg} ${pillText} rounded-full text-sm border ${pillBorder} shadow-sm font-bold`}>
-                            {contact}
-                          </span>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                  <p className={`text-sm ${noteText} border-t ${dividerBorder} pt-3 mt-2 italic`}>
-                    Discard any unwanted jobs. {totalJobCards > 3 && !isSingleContactChoice && <span>Keep a hand of <strong>up to three</strong> Job Cards.</span>}
-                  </p>
-                </>
-              )}
-            </>
-          ) : (
-            <p className={`text-lg font-bold ${textColor} text-center`}>
-              No starting jobs are dealt.
-            </p>
-          )}
-        </div>
+      {caperDrawCount && (
+        <SpecialRuleBlock 
+            source="story" 
+            title="Caper Bonus" 
+            content={[`Draw ${caperDrawCount} Caper Card${caperDrawCount > 1 ? 's' : ''}.`]} 
+        />
       )}
 
-      {caperDrawCount && caperDrawCount > 0 && <CaperDeck count={caperDrawCount} />}
+      {showStandardContactList && (
+        <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm transition-colors duration-300 overflow-hidden")}>
+          <div className="p-4 md:p-6">
+            <h4 className={cls("font-bold text-lg mb-3 pb-2 border-b", sectionHeaderColor, sectionHeaderBorder)}>Starting Job Draw</h4>
+            <p className={cls("text-sm mb-4", textColor)}>
+              {isSingleContactChoice
+                ? `Choose ONE contact deck below.`
+                : `Draw one Job Card from each Contact Deck listed below.`
+              }
+              {` You may keep up to ${cardsToDraw} Job Cards.`}
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {contacts.map(contact => (
+                <div key={contact} className={cls("text-center font-western p-3 rounded border font-bold", isDark ? 'bg-zinc-800 border-zinc-700' : 'bg-gray-50 border-gray-200', contactColor)}>
+                  {contact}
+                </div>
+              ))}
+            </div>
+
+            {isContactListOverridden && (
+              <p className={cls("text-xs mt-4 italic", isDark ? 'text-gray-500' : 'text-gray-600')}>
+                Note: The list of available contacts has been modified by the current setup.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+      
+      {isNoJobsMode && (
+          <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm transition-colors duration-300 overflow-hidden")}>
+            <div className="p-4 md:p-6 text-center">
+              <h4 className={cls("font-bold text-lg mb-2", sectionHeaderColor)}>No Starting Jobs</h4>
+              <p className={cls("text-sm", textColor)}>
+                  No starting jobs are dealt for this setup.
+              </p>
+            </div>
+          </div>
+        )}
     </div>
   );
 };

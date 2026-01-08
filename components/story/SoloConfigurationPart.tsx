@@ -1,7 +1,6 @@
 import React from 'react';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useGameState } from '../../hooks/useGameState';
-// FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
 import { useGameDispatch } from '../../hooks/useGameDispatch';
 import { Button } from '../Button';
 import { PageReference } from '../PageReference';
@@ -18,9 +17,7 @@ interface AdvancedRulesConfigurationPartProps {
 
 export const AdvancedRulesConfigurationPart: React.FC<AdvancedRulesConfigurationPartProps> = ({ onNext, onBack, isNavigating }) => {
   const { activeStoryCard, allPotentialAdvancedRules } = useMissionSelection();
-  // FIX: Destructure only the relevant state properties from `useGameState`.
   const { state: gameState } = useGameState();
-  // FIX: Get the dispatch function and action creators from `useGameDispatch`.
   const { toggleChallengeOption } = useGameDispatch();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -83,12 +80,12 @@ export const AdvancedRulesConfigurationPart: React.FC<AdvancedRulesConfiguration
               <div className={`flex items-center gap-2 mb-2`}>
                 <span className="text-xl">⚡</span>
                 <h5 className={`font-bold uppercase tracking-wide text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Advanced Rules (From Other Stories)
+                  Advanced Rules (From Solo Story Cards)
                 </h5>
               </div>
               <div className={`border rounded-lg ${isDark ? 'border-zinc-700 bg-zinc-800/40' : 'border-gray-300 bg-white/50'}`}>
                 <div className={`p-3 border-b ${isDark ? 'border-zinc-700' : 'border-gray-200'} text-xs italic ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>
-                  You may enable Advanced Rules from other story cards to increase difficulty or variety.
+                  You may enable Advanced Rules from other solo story cards to increase difficulty or variety.
                 </div>
                 {allPotentialAdvancedRules.map((rule) => {
                   const isChecked = !!gameState.challengeOptions[rule.id];
@@ -121,9 +118,9 @@ export const AdvancedRulesConfigurationPart: React.FC<AdvancedRulesConfiguration
                             {rule.description}
                           </p>
                         )}
-                        {isDisabled && (
+                        {isDisabled && activeStoryCard.advancedRule?.disabledDescription && (
                           <p className="text-xs italic mt-1 text-amber-600 dark:text-amber-500">
-                            (Unavailable: This rule is on the back of the selected Story Card)
+                            ({activeStoryCard.advancedRule.disabledDescription})
                           </p>
                         )}
                       </div>

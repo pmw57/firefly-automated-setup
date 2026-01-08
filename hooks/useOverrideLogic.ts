@@ -26,12 +26,16 @@ export const useOverrideLogic = ({ flow, currentStepIndex, handleJump }: UseOver
   // Effect to detect and set story overrides in global state
   useEffect(() => {
     if (gameState.selectedStoryCardIndex !== null) {
-      const overriddenIds = detectOverrides(gameState, flow, currentStepIndex);
-      if (overriddenIds.length > 0 && overriddenIds.join(',') !== gameState.overriddenStepIds.join(',')) {
+      const overriddenIds = detectOverrides(gameState, flow);
+      // Use a more robust comparison that is not order-dependent
+      if (JSON.stringify(overriddenIds.sort()) !== JSON.stringify(gameState.overriddenStepIds.sort())) {
         dispatch({ type: ActionType.SET_STORY_OVERRIDES, payload: overriddenIds });
       }
+    } else if (gameState.overriddenStepIds.length > 0) {
+      // If no story is selected, clear any existing overrides
+      dispatch({ type: ActionType.SET_STORY_OVERRIDES, payload: [] });
     }
-  }, [gameState.selectedStoryCardIndex, flow, dispatch, gameState.overriddenStepIds, gameState, currentStepIndex]);
+  }, [gameState, flow, dispatch]);
 
   // Effect to mark overridden steps as "visited" when the user navigates to them.
   useEffect(() => {
@@ -60,12 +64,21 @@ export const useOverrideLogic = ({ flow, currentStepIndex, handleJump }: UseOver
   }, [acknowledgeOverrides, gameState.overriddenStepIds, handleJump, modalData]);
 
   const openOverrideModal = useCallback(() => {
-    const affectedSteps = flow.filter(step => unacknowledgedOverrides.includes(step.id));
-    const firstAffectedIndex = Math.min(...affectedSteps.map(step => flow.indexOf(step)));
-    const stepLabels = affectedSteps.map(step => step.data?.title.replace(/^\d+\.\s+/, '') || step.id);
+    const pastStepIds = flow.slice(0, currentStepIndex).map(s => s.id);
+    const affectedPastSteps = flow.filter(step => 
+        pastStepIds.includes(step.id) &&
+        gameState.overriddenStepIds.includes(step.id) &&
+        !gameState.acknowledgedOverrides.includes(step.id) &&
+        !gameState.visitedStepOverrides.includes(step.id)
+    );
+
+    if (affectedPastSteps.length === 0) return;
+
+    const firstAffectedIndex = Math.min(...affectedPastSteps.map(step => flow.indexOf(step)));
+    const stepLabels = affectedPastSteps.map(step => step.data?.title.replace(/^\d+\.\s+/, '') || step.id);
     setModalData({ firstAffectedIndex, stepLabels });
     setIsOverrideModalOpen(true);
-  }, [flow, unacknowledgedOverrides]);
+  }, [flow, currentStepIndex, gameState.overriddenStepIds, gameState.acknowledgedOverrides, gameState.visitedStepOverrides]);
 
   return {
     unacknowledgedOverrides,

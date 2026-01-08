@@ -9,25 +9,10 @@ export const CRIME_STORIES: StoryCardDef[] = [
     requiredExpansion: "crime",
     sourceUrl: "https://boardgamegeek.com/image/3464668/firefly-the-game-crime-and-punishment",
     setupDescription: "Place 3 Contraband on each planetary sector in Alliance space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead. Place a $2000 bill under Amnon Duul, Patience, Badger, and Niska's Contact Decks. Players do not receive Starting Jobs and begin at Londinium. Start with one random Alliance Alert Card in play.",
-    rules: [
-      {
-        type: "addFlag",
-        flag: "smugglersBluesSetup",
-        source: "story",
-        sourceName: "Smuggler's Blues"
-      },
-      {
-        type: "addFlag",
-        flag: "startWithAlertCard",
-        source: "story",
-        sourceName: "Smuggler's Blues"
-      },
-      {
-        type: "setShipPlacement",
-        location: "londinium",
-        source: "story",
-        sourceName: "Smuggler's Blues"
-      },
+    rules: createStoryRules("Smuggler's Blues", [
+      { type: "addFlag", flag: "smugglersBluesSetup" },
+      { type: "addFlag", flag: "startWithAlertCard" },
+      { type: "setShipPlacement", location: "londinium" },
       {
         type: "addSpecialRule",
         category: "draft",
@@ -35,15 +20,8 @@ export const CRIME_STORIES: StoryCardDef[] = [
           title: "Story Override: Starting Location",
           content: [{ type: 'paragraph', content: ['All players begin the game at ', { type: 'strong', content: 'Londinium' }, '. The standard draft for ship/leader selection still occurs, but placement is fixed.'] }]
         },
-        source: "story",
-        sourceName: "Smuggler's Blues"
       },
-      {
-        type: "setJobMode",
-        mode: "no_jobs",
-        source: "story",
-        sourceName: "Smuggler's Blues"
-      },
+      { type: "setJobMode", mode: "no_jobs" },
       {
         type: "addSpecialRule",
         category: "jobs",
@@ -51,10 +29,16 @@ export const CRIME_STORIES: StoryCardDef[] = [
           title: "Contact Deck Bonus",
           content: [{ type: 'paragraph', content: ['Place a ', { type: 'strong', content: '$2000 Bill' }, ' under the Contact Decks for ', { type: 'strong', content: 'Amnon Duul, Patience, Badger, and Niska' }, '.'] }]
         },
-        source: "story",
-        sourceName: "Smuggler's Blues"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Alliance High Alert',
+          content: ['Begin the game with one random Alliance Alert Card in play.']
+        }
       }
-    ]
+    ])
   },
   {
     title: "Wanted Men",
@@ -73,6 +57,14 @@ export const CRIME_STORIES: StoryCardDef[] = [
         rule: {
           title: "Limited Job Contacts",
           content: ["Job contacts are limited. Draw one Job Card from each Contact listed below."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Alliance High Alert',
+          content: ['Begin the game with one random Alliance Alert Card in play.']
         }
       }
     ])
