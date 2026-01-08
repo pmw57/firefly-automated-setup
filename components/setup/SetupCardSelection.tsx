@@ -7,7 +7,7 @@ import { useGameDispatch } from '../../hooks/useGameDispatch';
 import { getAvailableSetupCards, getSetupCardById } from '../../utils/selectors/story';
 import { FlyingSoloBanner } from './FlyingSoloBanner';
 import { SetupCardList } from './SetupCardList';
-import { getSetupCardSelectionInfo } from '../../utils/ui';
+import { getSetupCardSelectionInfo } from '../../utils/selectors/ui';
 import { calculateSetupFlow } from '../../utils/flow';
 
 interface SetupCardSelectionProps {

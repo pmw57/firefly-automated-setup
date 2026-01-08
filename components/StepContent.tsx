@@ -8,7 +8,7 @@ import { cls } from '../utils/style';
 import { PageReference } from './PageReference';
 import { useGameState } from '../hooks/useGameState';
 import { calculateSetupFlow } from '../utils/flow';
-import { getSetupCardSelectionInfo } from '../utils/ui';
+import { getSetupCardSelectionInfo } from '../utils/selectors/ui';
 
 export interface StepComponentProps {
   step: Step;
