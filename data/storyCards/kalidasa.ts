@@ -8,13 +8,17 @@ export const KALIDASA_STORIES: StoryCardDef[] = [
     requiredExpansion: "kalidasa",
     sourceUrl: "https://boardgamegeek.com/image/2785039/gerryrailbaron",
     setupDescription: "Creates an Alliance Alert Token stack. No starting jobs are dealt.",
-    noJobsMessage: {
-      title: "Building A Network",
-      description: "No starting jobs are dealt. You must build your network from scratch."
-    },
     rules: createStoryRules("It's All In Who You Know", [
       { type: 'createAlertTokenStack', multiplier: 3, title: "Word Gets Around" },
-      { type: 'setJobMode', mode: 'no_jobs' }
+      { type: 'setJobMode', mode: 'no_jobs' },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Building A Network',
+          content: [{ type: 'paragraph', content: ["No starting jobs are dealt. You must build your network from scratch."]}]
+        }
+      }
     ])
   },
   {

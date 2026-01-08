@@ -7,27 +7,25 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
     intro: "Once your reputation's been blemished, it's hard to get right with the right people. Compete with the other riffraff for what scraps your employers are willing to risk on the likes of you. Nothing to do but suck it up and try to prove yourself worthy.",
     requiredExpansion: "coachworks",
     sourceUrl: "https://boardgamegeek.com/image/2785043/gerryrailbaron",
-    setupDescription: "Start with 1 Warrant. No jobs are dealt; instead, a shared hand is created on top of the Contact Decks.",
-    rules: createStoryRules("Down And Out", [
+    setupDescription: "Place one job from each Contact face up on top of its deck. These face up Jobs form a shared hand of Inactive Jobs that everyone may use. All Players start with a Warrant token.",
+    rules: createStoryRules("Down and Out", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
-          title: 'Down And Out',
-          content: ["Start with 1 Warrant."]
+          title: 'A Checkered Past',
+          content: ["All Players start with a Warrant token."]
         }
       },
       { type: 'setJobMode', mode: 'no_jobs' },
+      { type: 'addFlag', flag: 'sharedHandSetup' },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
-          title: 'Shared Hand Setup',
-          content: [
-            { type: 'paragraph', content: [{ type: 'strong', content: "No Starting Jobs are dealt." }, " Instead, place one Job from each Contact face up on top of its deck."] },
-            { type: 'paragraph', content: ["These face-up Jobs form a shared hand of inactive Jobs that all players may access."] }
-          ]
+          title: 'Competing for Scraps',
+          content: [{ type: 'paragraph', content: ["Place one job from each Contact face up on top of its deck. These face up Jobs form a shared hand of Inactive Jobs that everyone may use."]}]
         }
       }
     ])
