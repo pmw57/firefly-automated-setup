@@ -112,6 +112,13 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
                 ? Math.min(prev + 1, flow.length - 1)
                 : Math.max(prev - 1, 0);
             
+            // If navigating forward into the Mission Dossier step, always reset to its first sub-step.
+            const isMovingForward = nextIndex > prev;
+            const targetStepId = flow[nextIndex]?.id;
+            if (isMovingForward && targetStepId === STEP_IDS.C4) {
+              dispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: 1 });
+            }
+
             if (nextIndex !== prev) {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
@@ -119,7 +126,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
         });
         setIsNavigating(false);
     }, 50);
-  }, [flow.length, setCurrentStepIndex]);
+  }, [flow, setCurrentStepIndex, dispatch]);
 
   const handleNext = useCallback(() => {
     const isStoryStep = flow[currentStepIndex]?.data?.title === '4. Goal of the Game';
