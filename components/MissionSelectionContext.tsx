@@ -1,11 +1,9 @@
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { StoryCardDef, AdvancedRuleDef } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
-// FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { MissionSelectionContext, MissionSelectionContextType } from '../hooks/useMissionSelection';
 import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getAllPotentialAdvancedRules } from '../utils/selectors/story';
-import { ActionType } from '../state/actions';
 import { STORY_CARDS } from '../data/storyCards';
 
 interface LocalState {
@@ -63,10 +61,8 @@ function reducer(state: LocalState, action: LocalAction): LocalState {
 }
 
 export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // FIX: Destructure only the relevant state properties from `useGameState`.
   const { state: gameState } = useGameState();
-  // FIX: Get the dispatch function and action creators from `useGameDispatch`.
-  const gameDispatch = useGameDispatch();
+  const { setStoryCard, setMissionDossierSubstep } = useGameDispatch();
   const [localState, localDispatch] = useReducer(reducer, initialState);
   const { searchTerm, filterExpansion, filterGameType, shortList, sortMode } = localState;
   const subStep = gameState.missionDossierSubStep;
@@ -104,7 +100,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   // --- Action Dispatchers ---
   const setSearchTerm = useCallback((term: string) => localDispatch({ type: 'SET_SEARCH_TERM', payload: term }), []);
   const setFilterExpansion = useCallback((ids: string[]) => localDispatch({ type: 'SET_FILTER_EXPANSION', payload: ids }), []);
-  const setSubStep = useCallback((step: number) => gameDispatch.dispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: step }), [gameDispatch]);
+  const setSubStep = useCallback((step: number) => setMissionDossierSubstep(step), [setMissionDossierSubstep]);
   const toggleSortMode = useCallback(() => localDispatch({ type: 'TOGGLE_SORT_MODE' }), []);
   const toggleFilterExpansion = useCallback((id: string) => localDispatch({ type: 'TOGGLE_FILTER_EXPANSION', payload: id }), []);
   const setFilterGameType = useCallback((type: 'all' | 'solo' | 'co-op' | 'pvp') => localDispatch({ type: 'SET_FILTER_GAME_TYPE', payload: type }), []);
@@ -113,14 +109,8 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   // --- Handlers with Logic ---
   const handleStoryCardSelect = useCallback((index: number | null) => {
     const card = index !== null ? STORY_CARDS[index] : undefined;
-    gameDispatch.dispatch({ 
-      type: ActionType.SET_STORY_CARD, 
-      payload: { 
-        index, 
-        goal: card?.goals?.[0]?.title 
-      } 
-    });
-  }, [gameDispatch]);
+    setStoryCard(index, card?.goals?.[0]?.title);
+  }, [setStoryCard]);
 
   const handleRandomPick = useCallback(() => {
     if (validStories.length === 0) return;
