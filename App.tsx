@@ -10,6 +10,8 @@ import { FooterQrCode } from './components/FooterQrCode';
 import { SHOW_FOOTER_QR_KEY } from './data/constants';
 import SetupWizard from './components/SetupWizard';
 import { useGameState } from './hooks/useGameState';
+// FIX: Import `useWizardState` to correctly access wizard-specific UI state like `isWizardInitialized`.
+import { useWizardState } from './hooks/useWizardState';
 import { SetupModeToggle } from './components/SetupModeToggle';
 import { OnboardingTooltip } from './components/OnboardingTooltip';
 
@@ -19,7 +21,10 @@ declare const __APP_VERSION__: string;
 const App = (): React.ReactElement => {
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
-  const { isStateInitialized, isWizardInitialized } = useGameState();
+  // FIX: Destructure only the relevant state properties from `useGameState`.
+  const { isStateInitialized } = useGameState();
+  // FIX: Get wizard-specific state from the `useWizardState` hook.
+  const { isWizardInitialized } = useWizardState();
   
   const [showFooterQr, setShowFooterQr] = useState(() => {
     if (typeof window === 'undefined') return true;
@@ -108,7 +113,7 @@ const App = (): React.ReactElement => {
   const isPreview = typeof import.meta.env === 'undefined';
   const isDevMode = !isPreview && import.meta.env.DEV;
   // "Production" is defined as not dev, not a static preview, and not running on localhost.
-  const isProdDeployment = !isDevMode && !isPreview && (typeof window !== 'undefined' && !['localhost', '127.0.0.1'].includes(window.location.hostname));
+  const isProdDeployment = !isDevMode && !isPreview && (typeof window !== 'undefined' && !['localhost', '1227.0.0.1'].includes(window.location.hostname));
   
   // FIX: Show dev features (like the unreleased content toggle) in both dev and preview modes,
   // but hide them in a live production deployment.

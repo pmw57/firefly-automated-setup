@@ -2,10 +2,13 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { DisgruntledDieOption } from '../types/index';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { ActionType } from '../state/actions';
+// FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
+import { useGameDispatch } from '../hooks/useGameDispatch';
 import { TenthRulesSection } from './setup/TenthRulesSection';
 import { SoloRulesSection } from './setup/SoloRulesSection';
 import { calculateSetupFlow } from '../utils/flow';
+// FIX: Import `ActionType` to resolve reference errors in dispatch calls.
+import { ActionType } from '../state/actions';
 
 interface OptionalRulesSelectionProps {
 }
@@ -26,7 +29,19 @@ const Checkbox = ({ checked }: { checked: boolean }) => (
 );
 
 export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () => {
-  const { state: gameState, dispatch } = useGameState();
+  // FIX: Destructure only the relevant state properties from `useGameState`.
+  const { state: gameState } = useGameState();
+  // FIX: Get the dispatch function and action creators from `useGameDispatch`.
+  const {
+    initializeOptionalRules,
+    toggleSoloOption,
+    toggleTimerMode,
+    setDisgruntledDie,
+    toggleShipUpgrades,
+    toggleConflictResolution,
+    toggleHighVolumeSupply,
+    dispatch, // For raw dispatch
+  } = useGameDispatch();
   const { theme } = useTheme();
   const [showRatingFilters, setShowRatingFilters] = useState(false);
   const isDark = theme === 'dark';
@@ -41,20 +56,20 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () 
     // to their defaults. This prevents them from being active in 'quick' mode
     // if this page is never visited.
     if (gameState.optionalRules.highVolumeSupply === undefined) {
-      dispatch({ type: ActionType.INITIALIZE_OPTIONAL_RULES });
+      initializeOptionalRules();
     }
-  }, [dispatch, gameState.optionalRules.highVolumeSupply]);
+  }, [initializeOptionalRules, gameState.optionalRules.highVolumeSupply]);
 
-  const toggleSoloOption = (key: keyof typeof gameState.soloOptions) => {
-    dispatch({ type: ActionType.TOGGLE_SOLO_OPTION, payload: key });
+  const handleToggleSoloOption = (key: keyof typeof gameState.soloOptions) => {
+    toggleSoloOption(key);
   };
 
-  const toggleTimer = () => {
-    dispatch({ type: ActionType.TOGGLE_TIMER_MODE });
+  const handleToggleTimer = () => {
+    toggleTimerMode();
   };
 
-  const setDisgruntledDie = (mode: DisgruntledDieOption) => {
-    dispatch({ type: ActionType.SET_DISGRUNTLED_DIE, payload: mode });
+  const handleSetDisgruntledDie = (mode: DisgruntledDieOption) => {
+    setDisgruntledDie(mode);
   };
 
   const toggleGorrammit = () => {
@@ -62,22 +77,22 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () 
       // An "on" state is anything that is not 'standard' and not undefined.
       const isOn = current && current !== 'standard';
       if (isOn) {
-          setDisgruntledDie('standard'); // Turn it off
+          handleSetDisgruntledDie('standard'); // Turn it off
       } else {
-          setDisgruntledDie('disgruntle'); // Turn it on
+          handleSetDisgruntledDie('disgruntle'); // Turn it on
       }
   };
 
-  const toggleShipUpgrades = () => {
-    dispatch({ type: ActionType.TOGGLE_SHIP_UPGRADES });
+  const handleToggleShipUpgrades = () => {
+    toggleShipUpgrades();
   };
 
-  const toggleConflictResolution = () => {
-    dispatch({ type: ActionType.TOGGLE_CONFLICT_RESOLUTION });
+  const handleToggleConflictResolution = () => {
+    toggleConflictResolution();
   };
 
-  const toggleHighVolumeSupply = () => {
-    dispatch({ type: ActionType.TOGGLE_HIGH_VOLUME_SUPPLY });
+  const handleToggleHighVolumeSupply = () => {
+    toggleHighVolumeSupply();
   };
   
   const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
@@ -116,8 +131,8 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () 
                 <TenthRulesSection 
                     optionalRules={gameState.optionalRules}
                     onToggleGorrammit={toggleGorrammit}
-                    onSetDisgruntledDie={setDisgruntledDie}
-                    onToggleShipUpgrades={toggleShipUpgrades}
+                    onSetDisgruntledDie={handleSetDisgruntledDie}
+                    onToggleShipUpgrades={handleToggleShipUpgrades}
                 />
             )}
 
@@ -125,8 +140,8 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () 
                 <SoloRulesSection 
                     soloOptions={gameState.soloOptions}
                     timerConfig={gameState.timerConfig}
-                    onToggleOption={toggleSoloOption}
-                    onToggleTimer={toggleTimer}
+                    onToggleOption={handleToggleSoloOption}
+                    onToggleTimer={handleToggleTimer}
                 />
             )}
 
@@ -140,8 +155,8 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () 
                     role="checkbox"
                     aria-checked={gameState.optionalRules.highVolumeSupply}
                     tabIndex={0}
-                    onClick={toggleHighVolumeSupply} 
-                    onKeyDown={(e) => handleKeyDown(e, toggleHighVolumeSupply)}
+                    onClick={handleToggleHighVolumeSupply} 
+                    onKeyDown={(e) => handleKeyDown(e, handleToggleHighVolumeSupply)}
                     className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
                 >
                     <div className="mt-1 mr-4 shrink-0"><Checkbox checked={!!gameState.optionalRules.highVolumeSupply} /></div>
@@ -156,8 +171,8 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () 
                     role="checkbox"
                     aria-checked={gameState.optionalRules.resolveConflictsManually}
                     tabIndex={0}
-                    onClick={toggleConflictResolution} 
-                    onKeyDown={(e) => handleKeyDown(e, toggleConflictResolution)}
+                    onClick={handleToggleConflictResolution} 
+                    onKeyDown={(e) => handleKeyDown(e, handleToggleConflictResolution)}
                     className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
                 >
                     <div className="mt-1 mr-4 shrink-0"><Checkbox checked={!!gameState.optionalRules.resolveConflictsManually} /></div>

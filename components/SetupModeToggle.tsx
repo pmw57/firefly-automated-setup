@@ -2,11 +2,15 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useGameState } from '../hooks/useGameState';
-import { ActionType } from '../state/actions';
+// FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
+import { useGameDispatch } from '../hooks/useGameDispatch';
 import { cls } from '../utils/style';
 
 export const SetupModeToggle: React.FC = () => {
-    const { state, dispatch } = useGameState();
+    // FIX: Destructure only the relevant state properties from `useGameState`.
+    const { state } = useGameState();
+    // FIX: Get the dispatch function and action creators from `useGameDispatch`.
+    const { setSetupMode } = useGameDispatch();
     const isDetailed = state.setupMode === 'detailed';
 
     const [labelsVisible, setLabelsVisible] = useState(true);
@@ -33,7 +37,7 @@ export const SetupModeToggle: React.FC = () => {
     };
 
     const handleToggle = () => {
-        dispatch({ type: ActionType.SET_SETUP_MODE, payload: isDetailed ? 'quick' : 'detailed' });
+        setSetupMode(isDetailed ? 'quick' : 'detailed');
         handleMouseEnter(); 
     };
 

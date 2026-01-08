@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
-import { getJobSetupDetails } from '../utils/jobs';
+import { useJobSetupDetails } from '../hooks/useJobSetupDetails';
 import { getActiveStoryCard, getCampaignNotesForStep } from '../utils/selectors/story';
 import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
 import { StepComponentProps } from './StepContent';
@@ -17,6 +17,16 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
+  const { 
+    contacts, 
+    messages, 
+    showStandardContactList, 
+    isSingleContactChoice,
+    cardsToDraw,
+    totalJobCards,
+    caperDrawCount,
+  } = useJobSetupDetails(overrides);
+  
   const jobDrawMode = useMemo(() => {
     const allRules = getResolvedRules(gameState);
     const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
@@ -28,19 +38,6 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const campaignNotes = useMemo(
     () => getCampaignNotesForStep(gameState, step.id), 
     [gameState, step.id]
-  );
-  
-  const { 
-    contacts, 
-    messages, 
-    showStandardContactList, 
-    isSingleContactChoice,
-    cardsToDraw,
-    totalJobCards,
-    caperDrawCount,
-  } = useMemo(() => 
-    getJobSetupDetails(gameState, overrides),
-    [gameState, overrides]
   );
   
   const isSelectedStory = gameState.selectedStoryCardIndex !== null;

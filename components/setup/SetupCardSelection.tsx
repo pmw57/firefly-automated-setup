@@ -2,7 +2,8 @@ import React, { useMemo, useCallback, useEffect } from 'react';
 import { SETUP_CARD_IDS } from '../../data/ids';
 import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
-import { ActionType } from '../../state/actions';
+// FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
+import { useGameDispatch } from '../../hooks/useGameDispatch';
 import { getAvailableSetupCards, getSetupCardById } from '../../utils/selectors/story';
 import { FlyingSoloBanner } from './FlyingSoloBanner';
 import { SetupCardList } from './SetupCardList';
@@ -13,7 +14,10 @@ interface SetupCardSelectionProps {
 }
 
 export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
-  const { state: gameState, dispatch } = useGameState();
+  // FIX: Destructure only the relevant state properties from `useGameState`.
+  const { state: gameState } = useGameState();
+  // FIX: Get the dispatch function and action creators from `useGameDispatch`.
+  const { setSetupCard, toggleFlyingSolo } = useGameDispatch();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
@@ -31,11 +35,11 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
   [gameState]);
 
   const handleSetupCardSelect = useCallback((id: string, label: string) => {
-    dispatch({ type: ActionType.SET_SETUP_CARD, payload: { id, name: label } });
-  }, [dispatch]);
+    setSetupCard(id, label);
+  }, [setSetupCard]);
 
-  const toggleFlyingSolo = () => {
-    dispatch({ type: ActionType.TOGGLE_FLYING_SOLO });
+  const handleToggleFlyingSolo = () => {
+    toggleFlyingSolo();
   };
   
   // Auto-select the first available setup card if none is selected
@@ -68,7 +72,7 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
             isActive={isFlyingSoloActive}
             isEligible={isFlyingSoloEligible}
             cardDef={flyingSoloCard}
-            onToggle={toggleFlyingSolo}
+            onToggle={handleToggleFlyingSolo}
         />
 
         <SetupCardList 

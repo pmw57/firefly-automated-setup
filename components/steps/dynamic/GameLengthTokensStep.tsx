@@ -1,14 +1,15 @@
 import React, { useMemo } from 'react';
 import { SpecialRuleBlock } from '../../SpecialRuleBlock';
 import { useGameState } from '../../../hooks/useGameState';
-import { ActionType } from '../../../state/actions';
+import { useGameDispatch } from '../../../hooks/useGameDispatch';
 import { hasRuleFlag, getResolvedRules } from '../../../utils/selectors/rules';
 import { getActiveStoryCard } from '../../../utils/selectors/story';
 import { UnpredictableTimerRules } from './timer/UnpredictableTimerRules';
 import { SpecialRule, StructuredContent } from '../../../types';
 
 export const GameLengthTokensStep: React.FC = () => {
-    const { state: gameState, dispatch } = useGameState();
+    const { state: gameState } = useGameState();
+    const { toggleTimerMode, toggleUnpredictableToken } = useGameDispatch();
     const activeStoryCard = getActiveStoryCard(gameState);
     const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
 
@@ -84,7 +85,7 @@ export const GameLengthTokensStep: React.FC = () => {
 
     }, [specialRulesFromEngine, tokensToRemove, gameState.campaignStoriesCompleted, shesTrouble, recipeForUnpleasantness, gameState.setupMode]);
     
-    if (!dispatch || !activeStoryCard) return null;
+    if (!activeStoryCard) return null;
 
     if (activeStoryCard.rules && hasRuleFlag(activeStoryCard.rules, 'disableSoloTimer')) {
         return (
@@ -92,14 +93,6 @@ export const GameLengthTokensStep: React.FC = () => {
         );
     }
     
-    const toggleTimerMode = () => {
-        dispatch({ type: ActionType.TOGGLE_TIMER_MODE });
-    };
-
-    const toggleUnpredictableToken = (index: number) => {
-        dispatch({ type: ActionType.TOGGLE_UNPREDICTABLE_TOKEN, payload: index });
-    };
-
     const totalTokens = Math.max(0, 20 - tokensToRemove);
 
     return (
