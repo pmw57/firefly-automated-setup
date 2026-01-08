@@ -38,6 +38,7 @@ export interface JobSetupDetails {
   isContactListOverridden?: boolean;
   jobDrawMode: JobMode;
   isSharedHandMode?: boolean;
+  isRuiningItForEveryone?: boolean;
 }
 
 export interface NavDeckSetupDetails {
@@ -121,6 +122,7 @@ export interface DraftRuleDetails {
   conflictMessage: StructuredContent | null;
   startOutsideAllianceSpace?: boolean;
   excludeNewCanaanPlacement?: boolean;
+  isRuiningIt: boolean;
 }
 
 export interface HeaderDetails {

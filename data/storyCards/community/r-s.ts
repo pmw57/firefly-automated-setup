@@ -84,67 +84,37 @@ export const STORIES_R_S: StoryCardDef[] = [
     maxPlayerCount: 2,
     isPvP: true,
     intro: "During the war you watched your twin get cut down in a hail of shrapnel. You've lived an empty existence since that day making ends meet and trying to keep flying as best you can. Then you get a message from your Ma out on the Rim. \"Come home right away.\"\n\nSo you fly to St. Albans, Red Sun to see your Mother.\n\nOnce there, your twin (Who wasn't dead!) steals your ship and sets about ruining your life. Your twin has the exact same abilities as you do. Your twin may not discard any of your inactive jobs.",
-    sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card/ruining-it-for-everyone",
-    setupDescription: "Asymmetric PvP setup: Your twin steals your initial ship! Follow the special setup overrides.",
+    sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
+    setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship. Both ships starts on St. Albans, Red Sun. Set 20 counters on this card as timing counters.",
     rules: createStoryRules("Ruining It For Everyone", [
       { type: 'addFlag', flag: 'isRuiningItForEveryone' },
       { type: 'modifyResource', resource: 'credits', method: 'add', value: -3000, description: "Your twin stole your starting funds." },
-      { type: 'setJobMode', mode: 'no_jobs' },
+      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "Your twin stole your starting fuel." },
+      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "Your twin stole your starting parts." },
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: "The Twin's Heist",
+          title: 'Special Setup: A Tale of Two Twins',
           content: [
-            { type: 'paragraph', content: ["First, perform a limited setup for your original ship, which your twin will steal:"] },
-            {
-              type: 'list', items: [
-                ["Choose your Ship and Leader."],
-                ["Hire up to 2 Crew with a combined value of no more than $500. Crew with a $0 cost may not be hired."],
-                ["Take $2000 in starting funds."],
-                ["If you have no Wanted Crew after hiring, take 1 Warrant token."],
-              ]
-            },
-            { type: 'paragraph', content: [{ type: 'strong', content: "This entire setup (Ship, Leader, Crew, money, etc.) now belongs to your twin." }] }
+            "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship. Both ships starts on St. Albans, Red Sun."
           ]
         }
       },
       {
         type: 'addSpecialRule',
-        category: 'draft',
+        category: 'jobs',
         rule: {
-          title: "Your Starting Conditions",
-          content: [
-            { type: 'paragraph', content: ["You begin play with a backup ship and 0 Crew."] }
-          ]
+          title: 'A Raw Deal',
+          content: ["Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship."]
         }
       },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
-          title: "Your Starting Conditions",
-          content: [
-            { type: 'paragraph', content: ["Your twin stole your starting funds. You begin with $0 Credits."] }
-          ]
-        }
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'draft',
-        rule: {
-          title: 'Starting Location',
-          content: ["Both your ship and your twin's ship start at ", { type: 'strong', content: "St. Albans, Red Sun" }, "."]
-        }
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'resources',
-        rule: {
-          title: 'Game Timer',
-          content: [
-            { type: 'paragraph', content: ["Set 20 counters on this story card as timing counters."] }
-          ]
+          title: "The Twin's Head Start",
+          content: ["Set 20 counters on this card as timing counters."]
         }
       }
     ])
