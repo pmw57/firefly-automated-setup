@@ -8,17 +8,24 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     intro: "Wealth can be measured in many ways. In some parts of the 'Verse Alliance credits ain't worth the paper they're printed on. For those regions, a more practical measure of wealth is required. Hoard a mountain of trade goods and spare parts, through any means necessary. Break contracts, steal from your rivals or just pick the bones. Anything goes!",
     requiredExpansion: "pirates",
     sourceUrl: "https://boardgamegeek.com/image/2785046/gerryrailbaron",
-    setupDescription: "Special Haven placement in Border Space. Piracy jobs are removed from play.",
+    setupDescription: "Choose Havens. Havens must be in Border Space. After taking starting Jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks.",
     rules: createStoryRules("...Another Man's Treasure", [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: "...Another Man's Treasure",
-          content: [{ type: 'strong', content: `Choose Havens:` }, ` Each player chooses a Haven token. Havens `, { type: 'strong', content: `must be in Border Space` }, `.`]
+          title: "Salvager's Stash",
+          content: ['Choose Havens. Havens ', { type: 'strong', content: 'must be in Border Space' }, '.']
         }
       },
-      { type: 'addFlag', flag: 'removePiracyJobs' }
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Remove Piracy Jobs',
+          content: ['After taking starting Jobs, pull all remaining ', { type: 'strong', content: 'Piracy Jobs' }, ' from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks.']
+        }
+      }
     ])
   },
   {
