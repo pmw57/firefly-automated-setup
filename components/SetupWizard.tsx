@@ -36,6 +36,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   const [resetKey, setResetKey] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
   const [overrideModalState, setOverrideModalState] = useState<{ firstAffectedIndex: number; stepLabels: string[] } | null>(null);
+  const [lastNavDirection, setLastNavDirection] = useState<'next' | 'prev'>('next');
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -45,6 +46,35 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
         id => !gameState.acknowledgedOverrides.includes(id) && !gameState.visitedStepOverrides.includes(id)
       );
   }, [gameState.overriddenStepIds, gameState.acknowledgedOverrides, gameState.visitedStepOverrides]);
+  
+  const handleNavigation = useCallback((direction: 'next' | 'prev' | number) => {
+    setIsNavigating(true);
+    if (typeof direction === 'string') {
+      setLastNavDirection(direction);
+    }
+    setTimeout(() => {
+        setCurrentStepIndex(prev => {
+            const nextIndex = typeof direction === 'number' 
+              ? direction 
+              : direction === 'next'
+                ? Math.min(prev + 1, flow.length - 1)
+                : Math.max(prev - 1, 0);
+            
+            // If navigating forward into the Mission Dossier step, always reset to its first sub-step.
+            const isMovingForward = nextIndex > prev;
+            const targetStepId = flow[nextIndex]?.id;
+            if (isMovingForward && targetStepId === STEP_IDS.C4) {
+              dispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: 1 });
+            }
+
+            if (nextIndex !== prev) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            return nextIndex;
+        });
+        setIsNavigating(false);
+    }, 50);
+  }, [flow, setCurrentStepIndex, dispatch]);
 
   // Effect to handle setup mode changes and maintain the current conceptual step
   useEffect(() => {
@@ -53,16 +83,54 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
       const oldState = { ...gameState, setupMode: prevSetupModeRef.current };
       const oldFlow = calculateSetupFlow(oldState);
       const oldStepId = oldFlow[currentStepIndex]?.id;
+      
+      const wasOnAdvancedRules = oldState.missionDossierSubStep === 2;
+      const advancedRulesBecameInvalid = gameState.setupMode === 'quick';
+
+      if (oldStepId === STEP_IDS.C4 && wasOnAdvancedRules && advancedRulesBecameInvalid) {
+        // The "Advanced Rules" sub-step was removed. Use last travel direction to determine new position.
+        if (lastNavDirection === 'next') {
+          // User was moving forward, so navigate to the next MAIN step.
+          handleNavigation('next');
+        } else { // 'prev'
+          // User was moving backward, so navigate to the previous SUB-step (Goal page 1).
+          dispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: 1 });
+        }
+        prevSetupModeRef.current = gameState.setupMode;
+        return; // Exit early as navigation is handled
+      }
 
       if (oldStepId) {
         const newIndex = flow.findIndex(step => step.id === oldStepId);
-        if (newIndex !== -1 && newIndex !== currentStepIndex) {
-          setCurrentStepIndex(newIndex);
+        if (newIndex !== -1) {
+          // Step still exists, just update index if it moved
+          if (newIndex !== currentStepIndex) {
+            setCurrentStepIndex(newIndex);
+          }
+        } else {
+          // Step was removed. Use last travel direction to determine new position.
+          const prevStepIdInOldFlow = oldFlow[currentStepIndex - 1]?.id;
+          if (prevStepIdInOldFlow) {
+            const newIndexOfPrevStep = flow.findIndex(step => step.id === prevStepIdInOldFlow);
+            if (newIndexOfPrevStep !== -1) {
+              if (lastNavDirection === 'next') {
+                // Land on the step that conceptually replaces the removed one.
+                const targetIndex = newIndexOfPrevStep + 1;
+                setCurrentStepIndex(Math.min(targetIndex, flow.length - 1));
+              } else { // 'prev'
+                // Land on the previous step.
+                setCurrentStepIndex(newIndexOfPrevStep);
+              }
+            } else {
+              // Fallback if the previous step also disappeared somehow.
+              setCurrentStepIndex(0);
+            }
+          }
         }
       }
       prevSetupModeRef.current = gameState.setupMode;
     }
-  }, [gameState.setupMode, flow, currentStepIndex, setCurrentStepIndex, gameState]);
+  }, [gameState.setupMode, flow, currentStepIndex, setCurrentStepIndex, gameState, lastNavDirection, handleNavigation, dispatch]);
 
   // Effect to detect and set story overrides in global state
   useEffect(() => {
@@ -102,31 +170,6 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
 
   const setupDetermined = useMemo(() => isSetupDetermined(flow, currentStepIndex), [flow, currentStepIndex]);
 
-  const handleNavigation = useCallback((direction: 'next' | 'prev' | number) => {
-    setIsNavigating(true);
-    setTimeout(() => {
-        setCurrentStepIndex(prev => {
-            const nextIndex = typeof direction === 'number' 
-              ? direction 
-              : direction === 'next'
-                ? Math.min(prev + 1, flow.length - 1)
-                : Math.max(prev - 1, 0);
-            
-            // If navigating forward into the Mission Dossier step, always reset to its first sub-step.
-            const isMovingForward = nextIndex > prev;
-            const targetStepId = flow[nextIndex]?.id;
-            if (isMovingForward && targetStepId === STEP_IDS.C4) {
-              dispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: 1 });
-            }
-
-            if (nextIndex !== prev) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-            return nextIndex;
-        });
-        setIsNavigating(false);
-    }, 50);
-  }, [flow, setCurrentStepIndex, dispatch]);
 
   const handleNext = useCallback(() => {
     const currentStep = flow[currentStepIndex];
@@ -170,7 +213,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
     if (toStep?.id === STEP_IDS.C4) {
       const advancedRulesAvailable = gameState.expansions.tenth && gameState.setupMode === 'detailed';
       // ...if advanced rules are available, go to the "Advanced Rules" sub-step (part 2).
-      // Otherwise, ensure we land on the "Story Selection" sub-step (part 1).
+      // This creates the desired sequential back-navigation: Supplies -> Goal Pt 2 -> Goal Pt 1.
       if (advancedRulesAvailable) {
         dispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: 2 });
       } else {
