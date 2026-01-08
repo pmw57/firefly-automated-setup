@@ -210,15 +210,15 @@ export const getDefaultGameState = (): GameState => {
             unpredictableSelectedIndices: [0, 2, 4, 5],
         },
         soloOptions: {
-            noSureThings: false,
-            shesTrouble: false,
-            recipeForUnpleasantness: false,
+            noSureThings: undefined,
+            shesTrouble: undefined,
+            recipeForUnpleasantness: undefined,
         },
         optionalRules: {
-            disgruntledDie: 'standard',
-            optionalShipUpgrades: true,
-            resolveConflictsManually: false,
-            highVolumeSupply: true,
+            disgruntledDie: undefined,
+            optionalShipUpgrades: undefined,
+            resolveConflictsManually: undefined,
+            highVolumeSupply: undefined,
         },
         expansions: getPersistedExpansions(),
         isCampaign: false,
@@ -535,6 +535,22 @@ export function gameReducer(state: GameState, action: Action): GameState {
     case ActionType.SET_MISSION_DOSSIER_SUBSTEP:
         nextState = { ...state, missionDossierSubStep: action.payload };
         break;
+
+    case ActionType.INITIALIZE_OPTIONAL_RULES:
+      return {
+        ...state,
+        soloOptions: {
+            noSureThings: false,
+            shesTrouble: false,
+            recipeForUnpleasantness: false,
+        },
+        optionalRules: {
+            disgruntledDie: 'standard',
+            optionalShipUpgrades: true,
+            resolveConflictsManually: false,
+            highVolumeSupply: true,
+        },
+      };
 
     default:
       nextState = state;

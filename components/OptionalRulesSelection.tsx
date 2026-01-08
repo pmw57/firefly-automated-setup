@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { DisgruntledDieOption } from '../types/index';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
@@ -29,6 +29,16 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () 
 
   const totalParts = useMemo(() => calculateSetupFlow(gameState).filter(s => s.type === 'setup').length, [gameState]);
 
+  useEffect(() => {
+    // On the first visit to this page, if the rules haven't been initialized
+    // (we check one of them being undefined), dispatch an action to set them
+    // to their defaults. This prevents them from being active in 'quick' mode
+    // if this page is never visited.
+    if (gameState.optionalRules.highVolumeSupply === undefined) {
+      dispatch({ type: ActionType.INITIALIZE_OPTIONAL_RULES });
+    }
+  }, [dispatch, gameState.optionalRules.highVolumeSupply]);
+
   const toggleSoloOption = (key: keyof typeof gameState.soloOptions) => {
     dispatch({ type: ActionType.TOGGLE_SOLO_OPTION, payload: key });
   };
@@ -43,10 +53,12 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () 
 
   const toggleGorrammit = () => {
       const current = gameState.optionalRules.disgruntledDie;
-      if (current !== 'standard') {
-          setDisgruntledDie('standard');
+      // An "on" state is anything that is not 'standard' and not undefined.
+      const isOn = current && current !== 'standard';
+      if (isOn) {
+          setDisgruntledDie('standard'); // Turn it off
       } else {
-          setDisgruntledDie('disgruntle');
+          setDisgruntledDie('disgruntle'); // Turn it on
       }
   };
 
@@ -86,6 +98,11 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () 
         {checked && <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
     </div>
   );
+
+  // If rules are not initialized yet, render nothing to avoid flicker
+  if (gameState.optionalRules.highVolumeSupply === undefined) {
+    return null;
+  }
 
   return (
     <div className={`${containerBg} rounded-xl shadow-xl p-6 md:p-8 border ${containerBorder} animate-fade-in transition-all duration-300`}>
@@ -127,7 +144,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () 
                     onKeyDown={(e) => handleKeyDown(e, toggleHighVolumeSupply)}
                     className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
                 >
-                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={gameState.optionalRules.highVolumeSupply} /></div>
+                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={!!gameState.optionalRules.highVolumeSupply} /></div>
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>High Volume Supply</h3>
                         <p className={`text-xs italic ${isDark ? 'text-amber-500/80' : 'text-firefly-brown'} opacity-90 -mt-0.5 mb-2`}>"Every port's got a surplus."</p>
@@ -143,7 +160,7 @@ export const OptionalRulesSelection: React.FC<OptionalRulesSelectionProps> = () 
                     onKeyDown={(e) => handleKeyDown(e, toggleConflictResolution)}
                     className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
                 >
-                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={gameState.optionalRules.resolveConflictsManually} /></div>
+                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={!!gameState.optionalRules.resolveConflictsManually} /></div>
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>Manual Conflict Resolution</h3>
                         <p className={`text-xs italic ${isDark ? 'text-amber-500/80' : 'text-firefly-brown'} opacity-90 -mt-0.5 mb-2`}>"The Darkerspire Maneouver"</p>

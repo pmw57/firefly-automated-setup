@@ -178,7 +178,7 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
   const finalResources: Partial<Record<ResourceType, number>> = {};
   let finalCreditModifications: { description: string; value: string }[] = [];
 
-  const creditConflictInfo = _findCreditConflict(resourceRules, gameState.optionalRules.resolveConflictsManually);
+  const creditConflictInfo = _findCreditConflict(resourceRules, !!gameState.optionalRules.resolveConflictsManually);
   
   (Object.keys(baseResources) as ResourceType[]).forEach(resource => {
     const { value, modifications } = _applyResourceRules(

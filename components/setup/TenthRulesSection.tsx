@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { GameState, DisgruntledDieOption } from '../../types';
 import { useTheme } from '../ThemeContext';
@@ -30,7 +28,7 @@ export const TenthRulesSection: React.FC<TenthRulesSectionProps> = ({
     const headerText = isDark ? 'text-amber-500' : 'text-amber-800';
 
 
-    const isGorrammitActive = optionalRules.disgruntledDie !== 'standard';
+    const isGorrammitActive = optionalRules.disgruntledDie ? optionalRules.disgruntledDie !== 'standard' : false;
 
     const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -106,7 +104,7 @@ export const TenthRulesSection: React.FC<TenthRulesSectionProps> = ({
                 onKeyDown={(e) => handleKeyDown(e, onToggleShipUpgrades)}
                 className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
             >
-                <div className="mt-1 mr-4 shrink-0"><Checkbox checked={optionalRules.optionalShipUpgrades} /></div>
+                <div className="mt-1 mr-4 shrink-0"><Checkbox checked={!!optionalRules.optionalShipUpgrades} /></div>
                 <div>
                     <h3 className={`font-bold text-base ${textMain}`}>Optional Ship Upgrades</h3>
                     <p className={`text-sm leading-relaxed ${textSub}`}>
