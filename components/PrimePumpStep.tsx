@@ -4,7 +4,6 @@ import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { usePrimeDetails } from '../hooks/usePrimeDetails';
 import { StepComponentProps } from './StepContent';
-import { SETUP_CARD_IDS } from '../data/ids';
 import { SpecialRule } from '../types';
 
 export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
@@ -12,9 +11,6 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   const overrides = React.useMemo(() => step.overrides || {}, [step.overrides]);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  
-  const isFlyingSolo = gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
-  const isSolitaireFirefly = gameState.setupCardId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY;
   
   const {
     baseDiscard,
@@ -43,19 +39,6 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
       blocks.push({ source: 'story', title: 'Market Instability', content: [{ type: 'strong', content: `Prime counts are increased by ${effectiveMultiplier}x.` }] });
     }
     
-    if (isSolitaireFirefly) {
-      blocks.push({ source: 'story', title: 'Solitaire Firefly: Supplies', content: [
-        { type: 'paragraph', content: ['You receive your standard starting credits. ', { type: 'strong', content: 'Remember to add any money you saved from the last game.' }] },
-        { type: 'paragraph', content: ['After priming, you may spend up to ', { type: 'strong', content: '$1000 (plus your saved money)' }, ' to repurchase any Supply Cards you set aside at the end of the last game.'] },
-        { type: 'paragraph', content: ["Place any unpurchased cards into their discard piles."] }
-      ]});
-    } else if (isFlyingSolo) {
-      blocks.push({ source: 'setupCard', title: 'Flying Solo', content: [
-        { type: 'paragraph', content: ['After priming, you may ', { type: 'strong', content: 'spend up to $1000' }, ' to buy ', { type: 'strong', content: 'up to 4 Supply Cards' }, ' that were revealed.'] },
-        { type: 'paragraph', content: ['Discounts from special abilities apply. ', { type: 'strong', content: 'Replace any purchased cards.' }] }
-      ]});
-    }
-
     const order: Record<SpecialRule['source'], number> = {
         expansion: 1,
         setupCard: 2,
@@ -70,8 +53,7 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
       .map((rule, i) => <SpecialRuleBlock key={`rule-${i}`} {...rule} />);
   }, [
     isHighSupplyVolume, gameState.optionalRules.highVolumeSupply, isBlitz, 
-    effectiveMultiplier, specialRules, isSolitaireFirefly, isFlyingSolo, 
-    gameState.setupMode, baseDiscard
+    effectiveMultiplier, specialRules, gameState.setupMode, baseDiscard
   ]);
 
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-[#faf8ef]/70 backdrop-blur-sm';

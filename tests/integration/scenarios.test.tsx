@@ -57,7 +57,7 @@ describe('Integration Scenarios', () => {
       await clickNext();
       
       // --- Navigate to first "real" step to select a story ---
-      await screen.findByRole('heading', { name: /Goal of the Game/i });
+      await screen.findByRole('heading', { name: /Goal of the Game/i, level: 2 });
       await user.click(await screen.findByRole('button', { name: new RegExp(harkensFollyCard.title) }));
       await clickNext();
       
@@ -65,7 +65,7 @@ describe('Integration Scenarios', () => {
       await screen.findByRole('heading', { name: /^Advanced Rules$/i, level: 3 });
       await clickNext();
 
-      await screen.findByRole('heading', { name: /Nav Decks/i });
+      await screen.findByRole('heading', { name: /Nav Decks/i, level: 2 });
     });
 
     it('shows the browncoat nav rules', async () => {
@@ -74,61 +74,61 @@ describe('Integration Scenarios', () => {
     
     it('shows the correct starting capitol', async () => {
       await clickNext();
-      await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i });
+      await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i, level: 2 });
 
       await clickNext();
-      await screen.findByRole('heading', { name: /Starting Capitol/i });
+      await screen.findByRole('heading', { name: /Starting Capitol/i, level: 2 });
 
       expect(await screen.findByText('$12,000')).toBeInTheDocument();
     });
     
     it('shows the special Browncoat draft rules', async () => {
       await clickNext(); // Nav -> A&R
-      await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i });
+      await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i, level: 2 });
       
       await clickNext(); // A&R -> Capitol
-      await screen.findByRole('heading', { name: /Starting Capitol/i });
+      await screen.findByRole('heading', { name: /Starting Capitol/i, level: 2 });
 
       await clickNext(); // Capitol -> Draft
-      await screen.findByRole('heading', { name: /Choose Ships & Leaders/i });
+      await screen.findByRole('heading', { name: /Choose Ships & Leaders/i, level: 2 });
 
       expect(await screen.findByText('Browncoat Market')).toBeInTheDocument();
     });
 
     it('shows the "no jobs" rule', async () => {
       await clickNext(); // Nav -> A&R
-      await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i });
+      await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i, level: 2 });
       
       await clickNext(); // A&R -> Capitol
-      await screen.findByRole('heading', { name: /Starting Capitol/i });
+      await screen.findByRole('heading', { name: /Starting Capitol/i, level: 2 });
       
       await clickNext(); // Capitol -> Draft
-      await screen.findByRole('heading', { name: /Choose Ships & Leaders/i });
+      await screen.findByRole('heading', { name: /Choose Ships & Leaders/i, level: 2 });
       
       await clickNext(); // Draft -> Jobs
-      await screen.findByRole('heading', { name: /Starting Jobs/i });
+      await screen.findByRole('heading', { name: /Starting Jobs/i, level: 2 });
 
-      expect(await screen.findByText('No Starting Jobs.')).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: 'No Starting Jobs' })).toBeInTheDocument();
     });
 
     it('shows the correct final summary', async () => {
       await clickNext(); // Nav -> A&R
-      await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i });
+      await screen.findByRole('heading', { name: /Alliance & Reaver Ships/i, level: 2 });
       
       await clickNext(); // A&R -> Capitol
-      await screen.findByRole('heading', { name: /Starting Capitol/i });
+      await screen.findByRole('heading', { name: /Starting Capitol/i, level: 2 });
       
       await clickNext(); // Capitol -> Draft
-      await screen.findByRole('heading', { name: /Choose Ships & Leaders/i });
+      await screen.findByRole('heading', { name: /Choose Ships & Leaders/i, level: 2 });
       
       await clickNext(); // Draft -> Jobs
-      await screen.findByRole('heading', { name: /Starting Jobs/i });
+      await screen.findByRole('heading', { name: /Starting Jobs/i, level: 2 });
       
       await clickNext(); // Jobs -> Prime
-      await screen.findByRole('heading', { name: /Priming The Pump/i });
+      await screen.findByRole('heading', { name: /Priming The Pump/i, level: 2 });
       
       await clickNext(); // Prime -> Final
-      await screen.findByRole('heading', { name: /You are ready to fly!/i });
+      await screen.findByRole('heading', { name: /You are ready to fly!/i, level: 2 });
       
       const flightManifest = await screen.findByRole('heading', { name: /Flight Manifest/i });
       const summaryContainer = flightManifest.parentElement;
@@ -152,6 +152,6 @@ describe('Integration Scenarios', () => {
     render(<App />);
 
     const ruleBlock = await screen.findByRole('region', { name: "Story Override Smuggler's Blues Contraband" });
-    expect(ruleBlock).toHaveTextContent(/Place 3 Contraband on each Planetary Sector in Alliance Space/i);
+    expect(ruleBlock).toHaveTextContent(/Place 3 Contraband on each planetary sector in Alliance Space/i);
   });
 });

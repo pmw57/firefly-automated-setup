@@ -6,7 +6,7 @@ import {
     SpecialRule,
     SetPrimeModeRule
 } from '../types/index';
-import { getResolvedRules, hasRuleFlag } from './selectors/rules';
+import { getResolvedRules } from './selectors/rules';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 
 export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides): PrimeDetails => {
@@ -31,10 +31,6 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
           }
       }
   });
-  
-  if (hasRuleFlag(allRules, 'startWithAlertCard')) {
-    specialRules.push({ source: 'story', title: 'Alliance High Alert', content: ['Begin the game with one random Alliance Alert Card in play.'] });
-  }
   
   const primeMultiplierRule = allRules.find(r => r.type === 'modifyPrime' && r.multiplier !== undefined) as ModifyPrimeRule | undefined;
   const storyMultiplier = primeMultiplierRule?.multiplier ?? 1;

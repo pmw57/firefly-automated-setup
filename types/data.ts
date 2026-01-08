@@ -61,6 +61,7 @@ export interface AdvancedRuleDef {
   id: string;
   title: string;
   description?: string;
+  disabledDescription?: string;
 }
 
 export interface CampaignSetupNote {
@@ -91,4 +92,5 @@ export interface StoryCardDef {
   sortOrder?: number;
   campaignSetupNotes?: string[];
   rating?: number;
+  noJobsMessage?: { title: string; description: string; };
 }

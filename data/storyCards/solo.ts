@@ -34,7 +34,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     advancedRule: {
       id: "adv_alt_alliance_contacts",
       title: "Alternate Alliance Contacts",
-      description: "Changes which contacts are considered Alliance contacts."
+      description: "Changes which contacts are considered Alliance contacts.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
     }
   },
   {
@@ -84,7 +85,15 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'addFlag', flag: 'startWithAlertCard' },
       { type: 'primeContacts' },
-      { type: 'setJobMode', mode: 'no_jobs' }
+      { type: 'setJobMode', mode: 'no_jobs' },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Alliance High Alert',
+          content: ['Begin the game with one random Alliance Alert Card in play.']
+        }
+      }
     ]),
     challengeOptions: [
       { id: 'one_job_per_contact', label: "Work no more than one Job per Contact." },
@@ -95,7 +104,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     advancedRule: {
       id: "adv_alt_corvette_contacts",
       title: "Alternate Corvette Contacts",
-      description: "Changes which contacts are considered Corvette contacts."
+      description: "Changes which contacts are considered Corvette contacts.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
     }
   },
   {
@@ -113,7 +123,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     advancedRule: {
       id: "adv_wolf_at_your_door",
       title: "Wolf At Your Door",
-      description: "An additional threat pursues you through the 'Verse."
+      description: "An additional threat pursues you through the 'Verse.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
     }
   },
   {
@@ -140,6 +151,14 @@ export const SOLO_STORIES: StoryCardDef[] = [
             { type: 'paragraph', content: [{ type: 'strong', content: 'Adventure Deck:' }, ' Shuffle all 3-Goal story cards into a single deck.'] }
           ]
         }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Alliance High Alert',
+          content: ['Begin the game with one random Alliance Alert Card in play.']
+        }
       }
     ]),
     challengeOptions: [
@@ -148,7 +167,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     advancedRule: {
       id: "adv_contact_quirks_work",
       title: "Contact Quirks - Work",
-      description: "Contacts have additional requirements or penalties when taking jobs from them."
+      description: "Contacts have additional requirements or penalties when taking jobs from them.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
     }
   },
   {
@@ -164,12 +184,21 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'addFlag', flag: 'lonelySmugglerSetup' },
       { type: 'setShipPlacement', location: 'londinium' },
       { type: 'addFlag', flag: 'startWithAlertCard' },
-      { type: 'setJobMode', mode: 'no_jobs' }
+      { type: 'setJobMode', mode: 'no_jobs' },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Alliance High Alert',
+          content: ['Begin the game with one random Alliance Alert Card in play.']
+        }
+      }
     ]),
     advancedRule: {
       id: "adv_lone_targets",
       title: "Lone Targets",
-      description: "You are more vulnerable to threats when flying alone."
+      description: "You are more vulnerable to threats when flying alone.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
     }
   },
   {
@@ -181,7 +210,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     advancedRule: {
       id: "adv_alt_reaver_contacts",
       title: "Alternate Reaver Contacts",
-      description: "Changes which contacts are associated with Reavers."
+      description: "Changes which contacts are associated with Reavers.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
     }
   },
   {
@@ -206,7 +236,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     advancedRule: {
       id: "adv_automated_movement",
       title: "Automated Movement",
-      description: "When you draw 'Keep Flying', move an NPC ship one sector instead of drawing again."
+      description: "When you draw 'Keep Flying', move an NPC ship one sector instead of drawing again.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
     }
   },
   {
@@ -220,12 +251,21 @@ export const SOLO_STORIES: StoryCardDef[] = [
     rules: createStoryRules("The Raggedy Edge", [
       { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, description: "Begin play with 1 Goal Token." },
       { type: 'addFlag', flag: 'disableSoloTimer' },
-      { type: 'addFlag', flag: 'startWithAlertCard' }
+      { type: 'addFlag', flag: 'startWithAlertCard' },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Alliance High Alert',
+          content: ['Begin the game with one random Alliance Alert Card in play.']
+        }
+      }
     ]),
     advancedRule: {
       id: "adv_contact_quirks_deal",
       title: "Contact Quirks - Deal",
-      description: "Contacts have special rules when dealing with them."
+      description: "Contacts have special rules when dealing with them.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
     }
   },
   {
@@ -243,7 +283,8 @@ export const SOLO_STORIES: StoryCardDef[] = [
     advancedRule: {
       id: "adv_lost_little_lambs",
       title: "Lost Little Lambs",
-      description: "Rescuing crew has additional complications and risks."
+      description: "Rescuing crew has additional complications and risks.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
     }
   }
 ];

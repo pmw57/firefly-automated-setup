@@ -35,6 +35,8 @@ export interface JobSetupDetails {
   showStandardContactList: boolean;
   totalJobCards: number;
   caperDrawCount?: number;
+  isContactListOverridden?: boolean;
+  jobDrawMode: JobMode;
 }
 
 export interface NavDeckSetupDetails {

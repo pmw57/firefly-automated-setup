@@ -45,7 +45,7 @@ const RULE_TYPE_TO_STEP_ID: { [key in SetupRule['type']]?: string | ((rule: Setu
   setDraftMode: STEP_IDS.C3,
   setLeaderSetup: STEP_IDS.C3,
   setAllianceMode: STEP_IDS.C2,
-  createAlertTokenStack: STEP_IDS.C_PRIME,
+  createAlertTokenStack: STEP_IDS.C5,
   setShipPlacement: STEP_IDS.C3,
   modifyResource: STEP_IDS.C5,
   addSpecialRule: (rule: SetupRule): string => {
@@ -103,15 +103,13 @@ const RULE_TYPE_TO_STEP_ID: { [key in SetupRule['type']]?: string | ((rule: Setu
  *
  * @param gameState The full current game state.
  * @param flow The current setup flow.
- * @param currentStepIndex The user's current position in the flow.
  * @returns An array of step IDs that have been tangibly overridden.
  */
-export function detectOverrides(gameState: GameState, flow: Step[], currentStepIndex: number): string[] {
+export function detectOverrides(gameState: GameState, flow: Step[]): string[] {
     if (gameState.selectedStoryCardIndex === null) {
       return [];
     }
   
-    const pastSteps = flow.slice(0, currentStepIndex);
     const overriddenStepIds = new Set<string>();
 
     // The "after" state is the current state.
@@ -129,7 +127,7 @@ export function detectOverrides(gameState: GameState, flow: Step[], currentStepI
         visitedStepOverrides: [],
     };
   
-    for (const step of pastSteps) {
+    for (const step of flow) {
       const detailsFn = STEP_ID_TO_DETAILS_FN[step.id];
   
       if (detailsFn) {

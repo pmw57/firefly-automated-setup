@@ -18,52 +18,50 @@ import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
-const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): JobSetupDetails | null => {
-    const specialRules: SpecialRule[] = [];
+const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean, activeStoryCard: StoryCardDef | undefined): Omit<JobSetupDetails, 'jobDrawMode'> => {
+    const messages: JobSetupMessage[] = [];
+    
+    // Add any generic special rules for this step
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
             if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
-                specialRules.push({
-                    source: rule.source as SpecialRule['source'],
-                    ...rule.rule
-                });
+                messages.push({ source: rule.source as SpecialRule['source'], ...rule.rule });
             }
         }
     });
 
-    if (specialRules.length > 0) {
-        return { contacts: [], messages: specialRules, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+    if (dontPrimeContactsChallenge) {
+        messages.push({
+            source: 'warning',
+            title: 'Challenge Active',
+            content: [{ type: 'paragraph', content: [{ type: 'strong', content: 'Do not prime the Contact Decks.' }, ' (Challenge Override)'] }]
+        });
+    } else if (allRules.some(r => r.type === 'primeContacts')) {
+        messages.push({
+            source: 'story',
+            title: 'Prime Contact Decks',
+            content: [
+              { type: 'paragraph', content: ['Instead of taking Starting Jobs, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
+              { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
+            ]
+        });
+    } else if (jobModeSource === 'story') {
+        const title = activeStoryCard?.noJobsMessage?.title || 'Story Card Override';
+        const description = activeStoryCard?.noJobsMessage?.description || "No starting jobs are dealt for this setup.";
+        messages.push({
+            source: 'story',
+            title: title,
+            content: [{ type: 'paragraph', content: [description] }]
+        });
+    } else if (jobModeSource === 'setupCard') {
+        messages.push({
+            source: 'setupCard',
+            title: 'Setup Card Override',
+            content: [{ type: 'paragraph', content: ["Crews must find work on their own out in the black."] }]
+        });
     }
 
-    // Original logic if no special rule found
-    let content: StructuredContent;
-    let messageSource: JobSetupMessage['source'] = 'info';
-    let messageTitle = 'Information';
-    
-    if (dontPrimeContactsChallenge) {
-        content = [{ type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] }, { type: 'paragraph', content: [{ type: 'strong', content: 'Do not prime the Contact Decks.' }, ' (Challenge Override)'] }];
-        messageSource = 'warning';
-        messageTitle = 'Challenge Active';
-    } else if (allRules.some(r => r.type === 'primeContacts')) {
-        content = [
-          { type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] },
-          { type: 'paragraph', content: ['Instead, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
-          { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
-        ];
-        messageSource = 'story';
-        messageTitle = 'No Starting Jobs';
-    } else {
-        content = (jobModeSource === 'setupCard')
-          ? [{ type: 'paragraph', content: [{ type: 'strong', content: 'No Starting Jobs.' }] }, { type: 'paragraph', content: ["Crews must find work on their own out in the black."] }]
-          : [{ type: 'paragraph', content: [{ type: 'strong', content: 'Do not take Starting Jobs.' }] }];
-        
-        switch (jobModeSource) {
-            case 'story': messageSource = 'story'; messageTitle = 'No Starting Jobs'; break;
-            case 'setupCard': messageSource = 'setupCard'; messageTitle = 'Setup Card Override'; break;
-            case 'challenge': messageSource = 'warning'; messageTitle = 'Challenge Restriction'; break;
-        }
-    }
-    return { contacts: [], messages: [{ source: messageSource, title: messageTitle, content }], showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+    return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
 };
 
 const _getInitialContacts = (allRules: SetupRule[]): string[] => {
@@ -190,6 +188,9 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     const allRules = getResolvedRules(gameState);
     const activeStoryCard = getActiveStoryCard(gameState);
 
+    const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
+    const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
+
     if (hasRuleFlag(allRules, 'customJobDraw')) {
         const messages: JobSetupMessage[] = [];
         if (activeStoryCard?.setupDescription) {
@@ -200,13 +201,11 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             messages,
             showStandardContactList: false, 
             isSingleContactChoice: false, 
-            totalJobCards: 0 
+            totalJobCards: 0,
+            jobDrawMode,
         };
     }
     
-    const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
-    const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
-
     if (jobDrawMode === 'draft_choice') {
         const jobDraftInstructions: StructuredContent = [
             { type: 'paragraph', content: ["Starting with the last player to choose a Leader, each player chooses 1 Job from 3 different Contacts. Mr. Universe cannot be chosen for these starting Jobs."] }
@@ -241,6 +240,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             showStandardContactList: true,
             isSingleContactChoice: false,
             totalJobCards: 0,
+            jobDrawMode,
         };
     }
 
@@ -257,10 +257,11 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         return {
             contacts: [],
             messages,
-            showStandardContactList: true,
+            showStandardContactList: false,
             isSingleContactChoice: false,
             totalJobCards: 0,
             caperDrawCount: 1,
+            jobDrawMode,
         };
     }
 
@@ -301,15 +302,15 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             content: content,
         };
 
-        return { contacts: [], messages: [message], showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+        return { contacts: [], messages: [message], showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, jobDrawMode };
     }
 
     if (jobDrawMode === 'no_jobs') {
         const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
         const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
-        const details = _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge)!;
+        const details = _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge, activeStoryCard);
         
-        return details;
+        return { ...details, jobDrawMode };
     }
     
     const initialContacts = _getInitialContacts(allRules);
@@ -337,5 +338,13 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         }
     }
     
-    return { contacts, messages, showStandardContactList: true, isSingleContactChoice: isSingleContactChallenge, cardsToDraw: 3, totalJobCards: contacts.length, caperDrawCount };
+    // An override has occurred if the final contact list is different from the 5 standard contacts,
+    // or if the initial list was already different due to a 'setJobContacts' rule.
+    const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
+    const standardContacts = [CONTACT_NAMES.HARKEN, CONTACT_NAMES.BADGER, CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.PATIENCE, CONTACT_NAMES.NISKA];
+    const isContactListOverridden = 
+        !!jobContactsRule || 
+        JSON.stringify(contacts.slice().sort()) !== JSON.stringify(standardContacts.slice().sort());
+
+    return { contacts, messages, showStandardContactList: true, isSingleContactChoice: isSingleContactChallenge, cardsToDraw: 3, totalJobCards: contacts.length, caperDrawCount, isContactListOverridden, jobDrawMode };
 };

@@ -199,7 +199,18 @@ export const SETUP_CARDS: SetupCardDef[] = [
     isCombinable: true,
     rules: createRules("Flying Solo", [
       { type: 'addFlag', flag: 'soloGameTimer' },
-      { type: 'setNavMode', mode: 'flying_solo' }
+      { type: 'setNavMode', mode: 'flying_solo' },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Flying Solo',
+          content: [
+            { type: 'paragraph', content: ['After priming, you may ', { type: 'strong', content: 'spend up to $1000' }, ' to buy ', { type: 'strong', content: 'up to 4 Supply Cards' }, ' that were revealed.'] },
+            { type: 'paragraph', content: ['Discounts from special abilities apply. ', { type: 'strong', content: 'Replace any purchased cards.' }] }
+          ]
+        }
+      }
     ]),
     steps: [
       // FIX: Add missing 'title' property to steps to conform to the SetupCardStep type.
@@ -290,6 +301,29 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'addFlag', flag: 'removePiracyJobs' },
       { type: 'addFlag', flag: 'soloCrewDraft' },
       { type: 'addFlag', flag: 'soloGameTimer' },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Solitaire Firefly: Jobs & Contacts',
+          content: [
+            { type: 'paragraph', content: ["For each Contact you were Solid with at the end of the last game, remove 2 of your completed Jobs from play."] },
+            { type: 'paragraph', content: ["Keep any remaining completed Jobs; you begin the game Solid with those Contacts."] }
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Solitaire Firefly: Supplies',
+          content: [
+            { type: 'paragraph', content: ['You receive your standard starting credits. ', { type: 'strong', content: 'Remember to add any money you saved from the last game.' }] },
+            { type: 'paragraph', content: ['After priming, you may spend up to ', { type: 'strong', content: '$1000 (plus your saved money)' }, ' to repurchase any Supply Cards you set aside at the end of the last game.'] },
+            { type: 'paragraph', content: ["Place any unpurchased cards into their discard piles."] }
+          ]
+        }
+      }
     ]),
     steps: [
       { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}`, page: 4, manual: 'Core' },
