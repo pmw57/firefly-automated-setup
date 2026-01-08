@@ -31,6 +31,7 @@ export enum ActionType {
   SET_SETUP_MODE = 'SET_SETUP_MODE',
   SET_EXPANSIONS_BUNDLE = 'SET_EXPANSIONS_BUNDLE',
   SET_MISSION_DOSSIER_SUBSTEP = 'SET_MISSION_DOSSIER_SUBSTEP',
+  INITIALIZE_OPTIONAL_RULES = 'INITIALIZE_OPTIONAL_RULES',
 }
 
 export type ExpansionBundle = 'core_only' | 'rim_worlds' | 'all_official';
@@ -65,4 +66,5 @@ export type Action =
   | { type: ActionType.TOGGLE_SHOW_HIDDEN_CONTENT }
   | { type: ActionType.SET_SETUP_MODE; payload: SetupMode }
   | { type: ActionType.SET_EXPANSIONS_BUNDLE; payload: ExpansionBundle }
-  | { type: ActionType.SET_MISSION_DOSSIER_SUBSTEP; payload: number };
+  | { type: ActionType.SET_MISSION_DOSSIER_SUBSTEP; payload: number }
+  | { type: ActionType.INITIALIZE_OPTIONAL_RULES };

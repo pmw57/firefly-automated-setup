@@ -33,18 +33,18 @@ export interface TimerConfig {
 }
 
 export interface SoloOptions {
-  noSureThings: boolean;
-  shesTrouble: boolean;
-  recipeForUnpleasantness: boolean;
+  noSureThings: boolean | undefined;
+  shesTrouble: boolean | undefined;
+  recipeForUnpleasantness: boolean | undefined;
 }
 
 export type DisgruntledDieOption = 'standard' | 'disgruntle' | 'auto_fail' | 'success_at_cost';
 
 export interface OptionalRules {
-    disgruntledDie: DisgruntledDieOption;
-    optionalShipUpgrades: boolean;
-    resolveConflictsManually: boolean;
-    highVolumeSupply: boolean;
+    disgruntledDie: DisgruntledDieOption | undefined;
+    optionalShipUpgrades: boolean | undefined;
+    resolveConflictsManually: boolean | undefined;
+    highVolumeSupply: boolean | undefined;
 }
 
 // FIX: Reverted to 'Campaign' terminology as requested to match the rulebook.

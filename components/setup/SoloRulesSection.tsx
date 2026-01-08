@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { GameState } from '../../types';
 import { useTheme } from '../ThemeContext';
@@ -72,7 +70,7 @@ export const SoloRulesSection: React.FC<SoloRulesSectionProps> = ({
                     onKeyDown={(e) => handleKeyDown(e, () => onToggleOption('noSureThings'))}
                     className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
                 >
-                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={soloOptions.noSureThings} /></div>
+                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={!!soloOptions.noSureThings} /></div>
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>No Sure Things In Life</h3>
                         <p className={`text-sm leading-relaxed ${textSub}`}>Remove 5 cards from every Supply/Contact deck during setup to simulate a lived-in 'Verse.</p>
@@ -86,7 +84,7 @@ export const SoloRulesSection: React.FC<SoloRulesSectionProps> = ({
                     onKeyDown={(e) => handleKeyDown(e, () => onToggleOption('shesTrouble'))}
                     className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
                 >
-                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={soloOptions.shesTrouble} /></div>
+                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={!!soloOptions.shesTrouble} /></div>
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>She's Trouble</h3>
                         <p className={`text-sm leading-relaxed ${textSub}`}>Whenever you begin a turn with a <strong>Deceptive Crew</strong> on your ship and deceptive crew cards in a discard pile, roll a die. On a 1, they become Disgruntled.</p>
@@ -100,7 +98,7 @@ export const SoloRulesSection: React.FC<SoloRulesSectionProps> = ({
                     onKeyDown={(e) => handleKeyDown(e, () => onToggleOption('recipeForUnpleasantness'))}
                     className={`flex items-start p-4 rounded-lg border cursor-pointer transition-colors ${optionBorder} ${optionHover} focus:outline-none focus:ring-2 focus:ring-green-500`}
                 >
-                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={soloOptions.recipeForUnpleasantness} /></div>
+                    <div className="mt-1 mr-4 shrink-0"><Checkbox checked={!!soloOptions.recipeForUnpleasantness} /></div>
                     <div>
                         <h3 className={`font-bold text-base ${textMain}`}>Recipe For Unpleasantness</h3>
                         <p className={`text-sm leading-relaxed ${textSub}`}>Start of turn: Roll a die against the number of Disgruntled crew. If equal/lower, add a Disgruntled token to a crew member.</p>
