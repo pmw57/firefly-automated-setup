@@ -129,18 +129,39 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   }, [flow, setCurrentStepIndex, dispatch]);
 
   const handleNext = useCallback(() => {
-    const isStoryStep = flow[currentStepIndex]?.data?.title === '4. Goal of the Game';
-    
-    if (isStoryStep && unacknowledgedOverrides.length > 0) {
+    const currentStep = flow[currentStepIndex];
+    if (!currentStep) return;
+
+    const isC4 = currentStep.id === STEP_IDS.C4;
+    const isStorySelectionSubStep = gameState.missionDossierSubStep === 1;
+    const hasAdvancedRules = gameState.expansions.tenth && gameState.setupMode === 'detailed';
+
+    // If we are on the story selection part of C4 and there are unacknowledged overrides, show the modal.
+    if (isC4 && isStorySelectionSubStep && unacknowledgedOverrides.length > 0) {
       const affectedSteps = flow.filter(step => unacknowledgedOverrides.includes(step.id));
       const firstAffectedIndex = Math.min(...affectedSteps.map(step => flow.indexOf(step)));
       const stepLabels = affectedSteps.map(step => step.data?.title.replace(/^\d+\.\s+/, '') || step.id);
-
       setOverrideModalState({ firstAffectedIndex, stepLabels });
-    } else {
+    } 
+    // If we are on story selection, have no overrides, and advanced rules are available, move to that sub-step.
+    else if (isC4 && isStorySelectionSubStep && hasAdvancedRules) {
+      dispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: 2 });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } 
+    // In all other cases (leaving Advanced Rules, or any other step), navigate to the next main step.
+    else {
       handleNavigation('next');
     }
-  }, [handleNavigation, currentStepIndex, flow, unacknowledgedOverrides]);
+  }, [
+    handleNavigation, 
+    currentStepIndex, 
+    flow, 
+    unacknowledgedOverrides, 
+    gameState.missionDossierSubStep, 
+    gameState.expansions.tenth, 
+    gameState.setupMode, 
+    dispatch
+  ]);
 
   const handlePrev = useCallback(() => {
     const toStep = flow[currentStepIndex - 1];
@@ -180,7 +201,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   const handleModalContinue = () => {
     dispatch({ type: ActionType.ACKNOWLEDGE_OVERRIDES, payload: gameState.overriddenStepIds });
     setOverrideModalState(null);
-    handleNavigation('next');
+    handleNext(); // Re-run handleNext logic, which will now proceed to advanced rules or the next step
   };
   
   const handleModalJump = () => {
