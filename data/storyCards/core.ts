@@ -1,4 +1,4 @@
-import { StoryCardDef } from '../../types';
+import { StoryCardDef } from '../../types/index';
 import { CONTACT_NAMES } from '../ids';
 import { createStoryRules } from './utils';
 
@@ -33,7 +33,7 @@ export const CORE_STORIES: StoryCardDef[] = [
   {
     title: "First Time in the Captain's Chair",
     intro: "So you finally took the plunge and borrowed enough credits for a ship to call your own. You're in debt up to your eyeballs with a creditor that's not the sort of man to be trifled with.",
-    setupDescription: "When taking Starting Jobs, only take a job from harken and Amnon Duul. These Jobs may be discarded, as normal.",
+    setupDescription: "When taking Starting Jobs, only take a job from Harken and Amnon Duul. These Jobs may be discarded, as normal.",
     sourceUrl: "https://boardgamegeek.com/image/2785053/gerryrailbaron",
     rules: createStoryRules("First Time in the Captain's Chair", [
       { type: 'allowContacts', contacts: [CONTACT_NAMES.HARKEN, CONTACT_NAMES.AMNON_DUUL] },
