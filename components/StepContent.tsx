@@ -28,8 +28,7 @@ const StepLoading: React.FC = () => (
 const NavDeckStep = lazy(() => import('./NavDeckStep').then(m => ({ default: m.NavDeckStep })));
 const AllianceReaverStep = lazy(() => import('./AllianceReaverStep').then(m => ({ default: m.AllianceReaverStep })));
 const DraftStep = lazy(() => import('./DraftStep').then(m => ({ default: m.DraftStep })));
-// FIX: The imported component from MissionDossierStep is `MissionSelectionStep`, not `MissionDossierStep`.
-const MissionDossierStep = lazy(() => import('./MissionDossierStep').then(m => ({ default: m.MissionSelectionStep })));
+const MissionSelectionStep = lazy(() => import('./MissionDossierStep').then(m => ({ default: m.MissionSelectionStep })));
 const ResourcesStep = lazy(() => import('./ResourcesStep').then(m => ({ default: m.ResourcesStep })));
 const JobStep = lazy(() => import('./JobStep').then(m => ({ default: m.JobStep })));
 const PrimePumpStep = lazy(() => import('./PrimePumpStep').then(m => ({ default: m.PrimePumpStep })));
@@ -50,7 +49,7 @@ const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
   [STEP_IDS.C1]: NavDeckStep,
   [STEP_IDS.C2]: AllianceReaverStep,
   [STEP_IDS.C3]: DraftStep,
-  [STEP_IDS.C4]: MissionDossierStep,
+  [STEP_IDS.C4]: MissionSelectionStep,
   [STEP_IDS.C5]: ResourcesStep,
   [STEP_IDS.C6]: JobStep,
   [STEP_IDS.C_PRIME]: PrimePumpStep,
