@@ -121,6 +121,8 @@ export interface DraftRuleDetails {
   conflictMessage: StructuredContent | null;
   startOutsideAllianceSpace?: boolean;
   excludeNewCanaanPlacement?: boolean;
+  isWantedLeaderMode?: boolean;
+  havenPlacementRules?: SpecialRule | null;
 }
 
 export interface HeaderDetails {

@@ -10,8 +10,34 @@ import { useGameDispatch } from '../hooks/useGameDispatch';
 import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
-import { SpecialRule } from '../types';
+import { SpecialRule, StructuredContent } from '../types';
 import { getResolvedRules, hasRuleFlag } from '../utils/selectors/rules';
+import { PageReference } from './PageReference';
+
+// A recursive renderer for StructuredContent
+const renderStructuredContent = (content: StructuredContent): React.ReactNode => {
+  return content.map((part, index) => {
+    if (typeof part === 'string') {
+      return <React.Fragment key={index}>{part}</React.Fragment>;
+    }
+
+    switch (part.type) {
+      case 'strong':
+      case 'action':
+        return <strong key={index}>{part.content}</strong>;
+      case 'br':
+        return <br key={index} />;
+      case 'list':
+        return (
+          <ul key={index} className="list-disc list-inside space-y-1">
+            {part.items.map((item, i) => <li key={i}>{renderStructuredContent(item)}</li>)}
+          </ul>
+        );
+      default:
+        return null;
+    }
+  });
+};
 
 // Sub-component for Draft Order
 const DraftOrderPanel = ({ 
@@ -19,12 +45,14 @@ const DraftOrderPanel = ({
     isSolo, 
     isHavenDraft, 
     isBrowncoatDraft,
+    isWantedLeaderMode,
     stepBadgeClass,
 }: { 
     draftOrder: string[]; 
     isSolo: boolean; 
     isHavenDraft: boolean; 
     isBrowncoatDraft: boolean;
+    isWantedLeaderMode?: boolean;
     stepBadgeClass: string; 
 }) => {
     const { theme } = useTheme();
@@ -36,6 +64,7 @@ const DraftOrderPanel = ({
     const panelSubColor = isDark ? 'text-gray-400' : 'text-gray-500';
     const itemBg = isDark ? 'bg-zinc-800 border-zinc-700' : 'bg-gray-50 border-gray-100';
     const itemText = isDark ? 'text-gray-200' : 'text-gray-800';
+    const restrictionTextColor = isDark ? 'text-yellow-400' : 'text-yellow-700';
 
     const description = isSolo
         ? (isHavenDraft ? "Choose a Leader & Ship." : "Choose a Leader & Ship.")
@@ -66,6 +95,14 @@ const DraftOrderPanel = ({
                   </li>
                 ))}
               </ul>
+
+              {isWantedLeaderMode && (
+                <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
+                    <p className={cls("text-xs font-bold", restrictionTextColor)}>
+                        ⚠️ Restriction: Each Leader begins play with a <strong>Warrant</strong> token.
+                    </p>
+                </div>
+            )}
         </div>
     );
 };
@@ -75,21 +112,25 @@ const PlacementOrderPanel = ({
     placementOrder,
     isSolo,
     isHavenDraft,
+    havenPlacementRules,
     isBrowncoatDraft,
     isGoingLegit,
     specialStartSector,
     startOutsideAllianceSpace,
     excludeNewCanaanPlacement,
+    mustBeInBorderSpace,
     stepBadgeClass,
 }: {
     placementOrder: string[];
     isSolo: boolean;
     isHavenDraft: boolean;
+    havenPlacementRules?: SpecialRule | null;
     isBrowncoatDraft: boolean;
     isGoingLegit: boolean;
     specialStartSector: string | null;
     startOutsideAllianceSpace: boolean;
     excludeNewCanaanPlacement: boolean;
+    mustBeInBorderSpace: boolean;
     stepBadgeClass: string;
 }) => {
     const { theme } = useTheme();
@@ -174,6 +215,11 @@ const PlacementOrderPanel = ({
                         ⚠️ Restriction: New Canaan may not be chosen as a starting location.
                     </p>
                 )}
+                {mustBeInBorderSpace && (
+                    <p className={cls("text-xs mb-3 font-bold", restrictionTextColor)}>
+                        ⚠️ Restriction: Havens must be placed in Border Space.
+                    </p>
+                )}
                 
                 <ul className="space-y-2">
                     {placementOrder.map((player, i) => (
@@ -184,6 +230,15 @@ const PlacementOrderPanel = ({
                     </li>
                     ))}
                 </ul>
+
+                {isHavenDraft && havenPlacementRules && havenPlacementRules.title !== "Salvager's Stash" && (
+                    <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
+                         <h5 className={cls("font-bold uppercase tracking-wide text-xs mb-1", isDark ? 'text-gray-300' : 'text-gray-700')}>{havenPlacementRules.title || 'Haven Placement Rules'}:</h5>
+                         <div className={cls("space-y-1 text-xs", isDark ? 'text-gray-400' : 'text-gray-600')}>
+                             {renderStructuredContent(havenPlacementRules.content)}
+                         </div>
+                    </div>
+                )}
             </>
         );
     }
@@ -191,9 +246,14 @@ const PlacementOrderPanel = ({
     return (
         <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
             <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Phase 2</div>
-            <h4 className={cls("font-bold mb-2 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
-                {placementTitle}
-            </h4>
+            <div className={cls("flex justify-between items-baseline mb-2 border-b pb-1", panelHeaderBorder)}>
+                <h4 className={cls("font-bold", panelHeaderColor)}>
+                    {placementTitle}
+                </h4>
+                {isHavenDraft && havenPlacementRules?.page && (
+                    <PageReference page={havenPlacementRules.page} manual={havenPlacementRules.manual} />
+                )}
+            </div>
             {content}
         </div>
     );
@@ -248,14 +308,38 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       specialRules,
       isHavenDraft,
       isBrowncoatDraft,
+      isWantedLeaderMode,
       specialStartSector,
       startOutsideAllianceSpace,
       excludeNewCanaanPlacement,
+      havenPlacementRules,
   } = useDraftDetails(step);
 
   const campaignNotes = useMemo(
     () => getCampaignNotesForStep(gameState, step.id), 
     [gameState, step.id]
+  );
+  
+  const mustBeInBorderSpace = useMemo(() => 
+    specialRules.some(rule => {
+      const contentString = JSON.stringify(rule.content);
+      if (!contentString.includes("Border Space")) {
+        return false;
+      }
+      
+      const title = rule.title || '';
+      // Explicitly check for the story-specific rule title.
+      if (title === "Salvager's Stash") {
+        return true;
+      }
+      // Keep the old logic as a fallback for other potential rules.
+      if (title.toLowerCase().includes('placement')) {
+        return true;
+      }
+
+      return false;
+    }),
+    [specialRules]
   );
 
   const allInfoBlocks = useMemo(() => {
@@ -355,17 +439,20 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 isSolo={isSolo}
                 isHavenDraft={isHavenDraft}
                 isBrowncoatDraft={isBrowncoatDraft}
+                isWantedLeaderMode={isWantedLeaderMode}
                 stepBadgeClass={stepBadgeBlueBg}
             />
             <PlacementOrderPanel 
                 placementOrder={draftState.placementOrder}
                 isSolo={isSolo}
                 isHavenDraft={isHavenDraft}
+                havenPlacementRules={havenPlacementRules}
                 isBrowncoatDraft={isBrowncoatDraft}
                 isGoingLegit={isGoingLegit}
                 specialStartSector={specialStartSector}
                 startOutsideAllianceSpace={!!startOutsideAllianceSpace}
                 excludeNewCanaanPlacement={!!excludeNewCanaanPlacement}
+                mustBeInBorderSpace={mustBeInBorderSpace}
                 stepBadgeClass={stepBadgeAmberBg}
             />
           </div>

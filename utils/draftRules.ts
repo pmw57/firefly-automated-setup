@@ -30,8 +30,46 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
             }
         }
     });
+    
+    // Special handling for "...Another Man's Treasure" page references
+    if (activeStoryCard?.title === "...Another Man's Treasure") {
+        const havenRule = specialRules.find(r => r.title === "Salvager's Stash");
+        if (havenRule) {
+            havenRule.page = gameState.expansions.tenth ? 35 : 13;
+            havenRule.manual = gameState.expansions.tenth ? '10th AE' : 'Core';
+        }
+    }
 
-    const isHavenDraft = step.id.includes(STEP_IDS.D_HAVEN_DRAFT);
+    const isSetupCardHavenDraft = step.id.includes(STEP_IDS.D_HAVEN_DRAFT);
+    const storyHavenRule = specialRules.find(r => r.source === 'story' && r.title === "Salvager's Stash");
+    
+    let havenPlacementRules: SpecialRule | null = null;
+    
+    // Story rule takes priority.
+    if (storyHavenRule) {
+        havenPlacementRules = storyHavenRule;
+    } else if (isSetupCardHavenDraft) {
+        // Setup card rule is the fallback.
+        const setupHavenRule: SpecialRule = {
+            source: 'setupCard', 
+            title: 'Home Sweet Haven: Placement Rules', 
+            page: 35,
+            manual: '10th AE',
+            content: [
+                { type: 'list', items: [
+                    [`Each Haven must be placed in an unoccupied `, { type: 'strong', content: `Planetary Sector adjacent to a Supply Planet` }, `.` ],
+                    [`Havens may not be placed in a Sector with a `, { type: 'strong', content: `Contact` }, `.` ],
+                    [`Remaining players place their Havens in `, { type: 'strong', content: `reverse order` }, `.` ],
+                    [{ type: 'strong', content: `Players' ships start at their Havens.` }],
+                ]}
+            ]
+        };
+        // Add to both specialRules (for top block) and havenPlacementRules (for panel)
+        specialRules.push(setupHavenRule);
+        havenPlacementRules = setupHavenRule;
+    }
+    
+    const isHavenDraft = !!havenPlacementRules;
     const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
     const isHeroesAndMisfits = hasRuleFlag(allRules, 'isHeroesAndMisfits');
 
@@ -72,10 +110,22 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
   
     if (isHavenDraft && specialStartSector) {
         resolvedHavenDraft = false;
+        
+        // Remove the original haven rule, as it's being overridden by a special start sector.
+        const ruleToRemove = havenPlacementRules;
+        if (ruleToRemove) {
+            const index = specialRules.indexOf(ruleToRemove);
+            if (index > -1) {
+                specialRules.splice(index, 1);
+            }
+        }
+        
+        havenPlacementRules = null;
         conflictMessage = [{ type: 'strong', content: 'Story Priority:' }, ` Ships start at `, { type: 'strong', content: specialStartSector }, `, overriding Haven placement rules.`];
     }
     
     if (conflictMessage) specialRules.push({ source: 'info', title: 'Conflict Resolved', content: conflictMessage });
+
     if (isWantedLeaderMode) specialRules.push({ source: 'setupCard', title: 'The Heat Is On', content: ['Choose Ships & Leaders normally, but each Leader begins play with a ', { type: 'strong', content: 'Warrant' }, ' token.'] });
     if (isBrowncoatDraft) specialRules.push({ source: 'setupCard', title: 'Browncoat Market', content: ['Once all players have purchased a ship and chosen a leader, everyone may buy supplies. ', { type: 'strong', content: 'Fuel: $100, Parts: $300' }, '.'] });
     
@@ -117,16 +167,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
 
     if (allianceSpaceOffLimits) specialRules.push({ source: 'warning', title: 'Restricted Airspace', content: [{ type: 'strong', content: `Alliance Space is Off Limits` }, ` until Goal 3.`] });
     
-    if (resolvedHavenDraft) {
-        specialRules.push({ source: 'setupCard', title: 'Home Sweet Haven: Placement Rules', content: [
-            { type: 'list', items: [
-                [`Each Haven must be placed in an unoccupied `, { type: 'strong', content: `Planetary Sector adjacent to a Supply Planet` }, `.`],
-                [`Havens may not be placed in a Sector with a `, { type: 'strong', content: `Contact` }, `.`],
-                [`Remaining players place their Havens in `, { type: 'strong', content: `reverse order` }, `.`],
-                [{ type: 'strong', content: `Players' ships start at their Havens.` }],
-            ]}
-        ]});
-    }
+    if (startOutsideAllianceSpace) specialRules.push({ source: 'warning', title: 'Placement Restriction', content: ['Starting locations may not be within Alliance Space.'] });
 
-    return { specialRules, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement };
+    return { specialRules, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement, isWantedLeaderMode, havenPlacementRules };
 };
