@@ -8,6 +8,31 @@ import { StepComponentProps } from './StepContent';
 import { SpecialRule } from '../types';
 import { cls } from '../utils/style';
 
+const SharedHandInstructions: React.FC = () => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
+    const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
+    const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
+    const headerColor = isDark ? 'text-blue-300' : 'text-blue-800';
+    const textColor = isDark ? 'text-gray-300' : 'text-gray-700';
+
+    return (
+        <div className={cls(cardBg, "p-4 md:p-6 rounded-lg border", cardBorder, "shadow-sm transition-colors duration-300 overflow-hidden animate-fade-in-up")}>
+            <h4 className={cls("font-bold text-lg mb-3 pb-2 border-b", headerColor, isDark ? 'border-zinc-800' : 'border-gray-100')}>
+                Shared Hand of Inactive Jobs
+            </h4>
+            <p className={cls("text-sm mb-4", textColor)}>
+                No Starting Jobs are dealt. Instead, a shared pool of jobs is available to all players from the start of the game.
+            </p>
+            <ul className={cls("list-disc list-inside space-y-2 text-sm", textColor)}>
+                <li>One <strong>face-up Job Card</strong> is placed on top of each Contact's deck. These form the shared hand of <strong>Inactive Jobs</strong>.</li>
+                <li>Players may take a face-up Job from this shared hand by using a <strong>Deal Action</strong> at the Contact's location.</li>
+                <li>When a shared Job is taken, it is immediately replaced with the next card from that Contact's deck.</li>
+            </ul>
+        </div>
+    );
+}
+
 export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
   const { overrides = {} } = step;
@@ -22,6 +47,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     cardsToDraw,
     caperDrawCount,
     isContactListOverridden,
+    isSharedHandMode,
   } = useJobSetupDetails(overrides);
 
   const sortedInfoBlocks = useMemo(() => {
@@ -54,6 +80,8 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   return (
     <div className="space-y-6">
       {sortedInfoBlocks.map((block, i) => <OverrideNotificationBlock key={`info-${i}`} {...block} />)}
+
+      {isSharedHandMode && <SharedHandInstructions />}
 
       {caperDrawCount && (
         <OverrideNotificationBlock 
