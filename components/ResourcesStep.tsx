@@ -45,6 +45,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const isQuickMode = gameState.setupMode === 'quick';
   
   const campaignNotes = useMemo(
     () => getCampaignNotesForStep(gameState, step.id), 
@@ -199,27 +200,30 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
               <h4 className={`font-bold text-lg ${textColor}`}>Starting Capitol</h4>
-              {hasComplexCreditCalculation && gameState.setupMode === 'detailed' ? (
-                <button
-                  onClick={() => setShowBreakdown(s => !s)}
-                  className={`text-xs mt-1 ${modsText} flex items-center gap-1.5 p-1 -ml-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors`}
-                  aria-expanded={showBreakdown}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                  <span>{showBreakdown ? 'Hide' : 'Show'} Calculation Breakdown</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-3 w-3 transform transition-transform ${showBreakdown ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </button>
-              ) : (
-                <p className={`text-xs mt-1 ${modsText} italic`}>
-                  {hasCreditModification ? creditModifications[0].description : 'Standard Allocation'}
-                </p>
+              
+              {!isQuickMode && (
+                  hasComplexCreditCalculation ? (
+                    <button
+                      onClick={() => setShowBreakdown(s => !s)}
+                      className={`text-xs mt-1 ${modsText} flex items-center gap-1.5 p-1 -ml-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors`}
+                      aria-expanded={showBreakdown}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                      </svg>
+                      <span>{showBreakdown ? 'Hide' : 'Show'} Calculation Breakdown</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-3 w-3 transform transition-transform ${showBreakdown ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  ) : (
+                    <p className={`text-xs mt-1 ${modsText} italic`}>
+                      {hasCreditModification ? creditModifications[0].description : 'Standard Allocation'}
+                    </p>
+                  )
               )}
 
-              {showBreakdown && hasComplexCreditCalculation && (
+              {showBreakdown && hasComplexCreditCalculation && !isQuickMode && (
                 <div className={`grid grid-cols-1 xs:grid-cols-[1fr_auto] gap-x-4 text-xs mt-2 border-t ${modsBorder} pt-2 ${modsText} animate-fade-in`}>
                   {creditModifications.map((mod, i) => (
                     <React.Fragment key={i}>
@@ -234,54 +238,103 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
           </div>
         </div>
         
-        {/* Fuel & Parts section */}
-        <div className={cls("p-4 md:p-6 border-t", cardBorder, isFuelDisabled || isPartsDisabled ? disabledBg : '')}>
-          <div className="flex items-start justify-between">
-              <h4 className={`font-bold text-lg ${isFuelDisabled || isPartsDisabled ? disabledTitle : textColor}`}>Fuel & Parts</h4>
+        {isQuickMode ? (
+          // QUICK MODE: Combined Supplies Section
+          <div className={cls("p-4 md:p-6 border-t", cardBorder)}>
+            <div className="flex items-start justify-between">
+              <h4 className={`font-bold text-lg ${textColor}`}>Starting Supplies</h4>
               <div className="text-right">
-                {(isFuelDisabled || isPartsDisabled) ? (
-                  <span className={`text-3xl font-bold ${disabledText}`}>0</span>
-                ) : (
-                  <div className={`text-sm font-bold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
-                    <div className={cls("px-2 py-1 rounded mb-1 border", fuel > 6 ? 'font-black' : '', fuelBadgeBg)}>{fuel} Fuel Tokens</div>
-                    <div className={cls("px-2 py-1 rounded border", parts > 2 ? 'font-black' : '', partsBadgeBg)}>{parts} Part Tokens</div>
-                  </div>
-                )}
-              </div>
-          </div>
-          
-          {(fuelModificationDescription || partsModificationDescription) ? (
-            <div className={cls(
-                "text-xs pt-2 border-t space-y-1 mt-2",
-                isFuelDisabled || isPartsDisabled 
-                    ? `${disabledBorder} ${disabledText}`
-                    : `${modsBorder} ${modsText}`
-            )}>
-              {fuelModificationDescription && <p><strong>Fuel:</strong> {fuelModificationDescription}</p>}
-              {partsModificationDescription && <p><strong>Parts:</strong> {partsModificationDescription}</p>}
-            </div>
-          ) : null}
-        </div>
-
-        {/* Individual section for token stacks */}
-        {tokenStacks.map((stack, i) => (
-            <div key={`token-stack-${i}`} className={cls("p-4 md:p-6 border-t", cardBorder)}>
-                <div className="flex justify-between items-center">
-                    <h4 className={`font-bold text-lg ${textColor}`}>{stack.title}</h4>
-                    <div className={`text-right text-sm ${modsText} ml-4`}>
-                        Stack of <strong>{stack.count}</strong>
-                        {stack.rule.multiplier && <span className="text-xs block">({stack.rule.multiplier} per player)</span>}
+                <div className={`text-sm font-bold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                  <div className="py-0.5">{fuel} Fuel Tokens</div>
+                  <div className="py-0.5">{parts} Parts</div>
+                  {warrants > 0 && <div className="py-0.5">{warrants} Warrant Token{warrants > 1 ? 's' : ''}</div>}
+                  {goalTokens > 0 && <div className="py-0.5">{goalTokens} Goal Token{goalTokens > 1 ? 's' : ''}</div>}
+                  {tokenStacks.map((stack, i) => (
+                    <div key={`token-stack-q-${i}`} className="py-0.5">
+                      {stack.count} {stack.title}
                     </div>
+                  ))}
                 </div>
-                {stack.description && (
-                  <div className={cls("text-xs pt-2 border-t space-y-1 mt-2", modsBorder, modsText)}>
-                      <p>{stack.description}</p>
-                  </div>
-                )}
+              </div>
             </div>
-        ))}
+          </div>
+        ) : (
+          // DETAILED MODE: Existing separate sections
+          <>
+            {/* Fuel & Parts section */}
+            <div className={cls("p-4 md:p-6 border-t", cardBorder, isFuelDisabled || isPartsDisabled ? disabledBg : '')}>
+              <div className="flex items-start justify-between">
+                  <h4 className={`font-bold text-lg ${isFuelDisabled || isPartsDisabled ? disabledTitle : textColor}`}>Fuel & Parts</h4>
+                  <div className="text-right">
+                    {(isFuelDisabled || isPartsDisabled) ? (
+                      <span className={`text-3xl font-bold ${disabledText}`}>0</span>
+                    ) : (
+                      <div className={`text-sm font-bold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                        <div className={cls("px-2 py-1 rounded mb-1 border", fuel > 6 ? 'font-black' : '', fuelBadgeBg)}>{fuel} Fuel Tokens</div>
+                        <div className={cls("px-2 py-1 rounded border", parts > 2 ? 'font-black' : '', partsBadgeBg)}>{parts} Part Tokens</div>
+                      </div>
+                    )}
+                  </div>
+              </div>
+              
+              {(fuelModificationDescription || partsModificationDescription) ? (
+                <div className={cls(
+                    "text-xs pt-2 border-t space-y-1 mt-2",
+                    isFuelDisabled || isPartsDisabled 
+                        ? `${disabledBorder} ${disabledText}`
+                        : `${modsBorder} ${modsText}`
+                )}>
+                  {fuelModificationDescription && <p><strong>Fuel:</strong> {fuelModificationDescription}</p>}
+                  {partsModificationDescription && <p><strong>Parts:</strong> {partsModificationDescription}</p>}
+                </div>
+              ) : null}
+            </div>
 
-        {/* Board Setup Sections - Render one for each rule */}
+            {/* Individual section for token stacks */}
+            {tokenStacks.map((stack, i) => (
+                <div key={`token-stack-${i}`} className={cls("p-4 md:p-6 border-t", cardBorder)}>
+                    <div className="flex justify-between items-center">
+                        <h4 className={`font-bold text-lg ${textColor}`}>{stack.title}</h4>
+                        <div className={`text-right text-sm ${modsText} ml-4`}>
+                            Stack of <strong>{stack.count}</strong>
+                            {stack.rule.multiplier && <span className="text-xs block">({stack.rule.multiplier} per player)</span>}
+                        </div>
+                    </div>
+                    {stack.description && (
+                      <div className={cls("text-xs pt-2 border-t space-y-1 mt-2", modsBorder, modsText)}>
+                          <p>{stack.description}</p>
+                      </div>
+                    )}
+                </div>
+            ))}
+            
+            {/* Individual section for Warrants */}
+            {warrants > 0 && (
+              <div className={cls("p-4 md:p-6 border-t", cardBorder)}>
+                  <div className="flex justify-between items-center">
+                      <h4 className={`font-bold text-lg ${textColor}`}>Warrant Tokens</h4>
+                      <div className={`text-right text-sm ${modsText} ml-4`}>
+                          Each player begins with <strong>{warrants}</strong>
+                      </div>
+                  </div>
+              </div>
+            )}
+    
+            {/* Individual section for Goal Tokens */}
+            {goalTokens > 0 && (
+              <div className={cls("p-4 md:p-6 border-t", cardBorder)}>
+                  <div className="flex justify-between items-center">
+                      <h4 className={`font-bold text-lg ${textColor}`}>Goal Tokens</h4>
+                      <div className={`text-right text-sm ${modsText} ml-4`}>
+                          Begin play with <strong>{goalTokens}</strong>
+                      </div>
+                  </div>
+              </div>
+            )}
+          </>
+        )}
+        
+        {/* Instructional sections - always visible */}
         {boardSetupRules.map((rule, i) => {
             const mapping = boardRuleMappings[rule.title || ''];
             if (!mapping) return null;
@@ -299,31 +352,6 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
             );
         })}
         
-        {/* Individual section for Warrants */}
-        {warrants > 0 && (
-          <div className={cls("p-4 md:p-6 border-t", cardBorder)}>
-              <div className="flex justify-between items-center">
-                  <h4 className={`font-bold text-lg ${textColor}`}>Warrant Tokens</h4>
-                  <div className={`text-right text-sm ${modsText} ml-4`}>
-                      Each player begins with <strong>{warrants}</strong>
-                  </div>
-              </div>
-          </div>
-        )}
-
-        {/* Individual section for Goal Tokens */}
-        {goalTokens > 0 && (
-          <div className={cls("p-4 md:p-6 border-t", cardBorder)}>
-              <div className="flex justify-between items-center">
-                  <h4 className={`font-bold text-lg ${textColor}`}>Goal Tokens</h4>
-                  <div className={`text-right text-sm ${modsText} ml-4`}>
-                      Begin play with <strong>{goalTokens}</strong>
-                  </div>
-              </div>
-          </div>
-        )}
-        
-        {/* Individual sections for each Component Adjustment */}
         {componentAdjustmentRules.map((rule, i) => (
             <div key={`comp-rule-${i}`} className={cls("p-4 md:p-6 border-t", cardBorder)}>
                 <div className="flex justify-between items-center">
