@@ -61,8 +61,8 @@ export const CONTACT_NAMES = {
   BADGER: 'Badger',
   AMNON_DUUL: 'Amnon Duul',
   PATIENCE: 'Patience',
-  LORD_HARROW: 'Lord Harrow',
+  LORD_HARROW: 'Harrow',
   MR_UNIVERSE: 'Mr. Universe',
   FANTY_MINGO: 'Fanty & Mingo',
-  MAGISTRATE_HIGGINS: 'Magistrate Higgins',
+  MAGISTRATE_HIGGINS: 'Higgins',
 };
