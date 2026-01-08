@@ -1,5 +1,5 @@
 import { StoryCardDef } from '../../../types';
-import { CONTACT_NAMES } from '../../ids';
+import { CONTACT_NAMES, STEP_IDS } from '../../ids';
 import { createStoryRules } from '../utils';
 
 export const STORIES_R_S: StoryCardDef[] = [
@@ -87,10 +87,14 @@ export const STORIES_R_S: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
     setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship. Both ships starts on St. Albans, Red Sun. Set 20 counters on this card as timing counters.",
     rules: createStoryRules("Ruining It For Everyone", [
-      { type: 'addFlag', flag: 'isRuiningItForEveryone' },
-      { type: 'modifyResource', resource: 'credits', method: 'add', value: -3000, description: "Your twin stole your starting funds." },
+      { type: 'setComponent', stepId: STEP_IDS.C3, component: 'RuiningItDraftStep' },
+      { type: 'setComponent', stepId: STEP_IDS.C5, component: 'RuiningItResourcesStep' },
+      { type: 'setComponent', stepId: STEP_IDS.C6, component: 'RuiningItJobsStep' },
+      { type: 'setShipPlacement', location: 'border_of_murphy' }, // Placeholder for special start
+      { type: 'modifyResource', resource: 'credits', method: 'add', value: -1000, description: "Base funds adjusted for story." },
       { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "Your twin stole your starting fuel." },
       { type: 'modifyResource', resource: 'parts', method: 'disable', description: "Your twin stole your starting parts." },
+      { type: 'setJobMode', mode: 'no_jobs' },
       {
         type: 'addSpecialRule',
         category: 'draft',

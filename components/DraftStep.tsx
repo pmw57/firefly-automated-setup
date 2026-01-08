@@ -13,50 +13,6 @@ import { getCampaignNotesForStep } from '../utils/selectors/story';
 import { SpecialRule } from '../types';
 import { getResolvedRules, hasRuleFlag } from '../utils/selectors/rules';
 
-// Sub-component specifically for the "Ruining It For Everyone" story
-const RuiningItSetupPanel = ({ stepBadgeClass }: { stepBadgeClass: string }) => {
-    const { theme } = useTheme();
-    const isDark = theme === 'dark';
-    const panelBg = isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm';
-    const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
-    const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
-    const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
-    const textColor = isDark ? 'text-gray-300' : 'text-gray-700';
-    const subTextColor = isDark ? 'text-gray-400' : 'text-gray-500';
-    const strongColor = isDark ? 'text-amber-400' : 'text-amber-700';
-
-    return (
-        <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
-            <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Phase 1</div>
-            <h4 className={cls("font-bold mb-3 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
-                Asymmetric Setup: A Tale of Two Twins
-            </h4>
-            <ol className={cls("list-decimal list-inside space-y-4 text-sm", textColor)}>
-                <li>
-                    <strong className={strongColor}>Player 2 (You): Prepare the "Stolen" Ship</strong>
-                    <ul className={cls("list-disc list-inside ml-4 text-xs mt-1 space-y-1", subTextColor)}>
-                        <li>Choose one Ship and one Leader.</li>
-                        <li>Then, hire two Crew members.</li>
-                        <li className="italic">Refer to the 'Special Setup' override for details on crew cost, warrants, and starting money.</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong className={strongColor}>Player 1 (The Twin): Steal the Ship</strong>
-                    <p className={cls("text-xs mt-1 pl-4", subTextColor)}>
-                        Player 1 takes the completed setup (Ship, Leader, and Crew) prepared by Player 2.
-                    </p>
-                </li>
-                <li>
-                    <strong className={strongColor}>Player 2 (You): Get a "Backup" Ship</strong>
-                    <p className={cls("text-xs mt-1 pl-4", subTextColor)}>
-                        Choose a new Ship and a Leader for yourself. You will start with no crew or money.
-                    </p>
-                </li>
-            </ol>
-        </div>
-    );
-};
-
 // Sub-component for Draft Order
 const DraftOrderPanel = ({ 
     draftOrder, 
@@ -125,7 +81,6 @@ const PlacementOrderPanel = ({
     startOutsideAllianceSpace,
     excludeNewCanaanPlacement,
     stepBadgeClass,
-    isRuiningIt,
 }: {
     placementOrder: string[];
     isSolo: boolean;
@@ -136,7 +91,6 @@ const PlacementOrderPanel = ({
     startOutsideAllianceSpace: boolean;
     excludeNewCanaanPlacement: boolean;
     stepBadgeClass: string;
-    isRuiningIt: boolean;
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -160,25 +114,13 @@ const PlacementOrderPanel = ({
 
     if (specialStartSector) {
         placementTitle = 'Special Placement';
-        if (isRuiningIt) {
-             content = (
-                <div className={cls("p-4 rounded text-center border", specialPlacementBg)}>
-                    <p className={cls("font-bold mb-1", specialPlacementTitle)}>Starting Location</p>
-                    <p className={cls("text-sm", specialPlacementText)}>Both ships start at <strong>{specialStartSector}</strong>.</p>
-                    <p className={cls("text-xs italic mt-2", specialPlacementSub)}>
-                        Player 2 (You) places their new ship first, followed by Player 1 (The Twin) with the stolen ship.
-                    </p>
-                </div>
-            );
-        } else {
-            content = (
-                <div className={cls("p-4 rounded text-center border", specialPlacementBg)}>
-                    <p className={cls("font-bold mb-1", specialPlacementTitle)}>{placementTitle}</p>
-                    <p className={cls("text-sm", specialPlacementText)}>All ships start at <strong>{specialStartSector}</strong>.</p>
-                    <p className={cls("text-xs italic mt-1", specialPlacementSub)}>(Do not place in separate sectors)</p>
-                </div>
-            );
-        }
+        content = (
+            <div className={cls("p-4 rounded text-center border", specialPlacementBg)}>
+                <p className={cls("font-bold mb-1", specialPlacementTitle)}>{placementTitle}</p>
+                <p className={cls("text-sm", specialPlacementText)}>All ships start at <strong>{specialStartSector}</strong>.</p>
+                <p className={cls("text-xs italic mt-1", specialPlacementSub)}>(Do not place in separate sectors)</p>
+            </div>
+        );
     } else if (isGoingLegit) {
         placementTitle = 'A Port of Operation';
         const descriptionColor = isDark ? 'text-green-300' : 'text-green-800';
@@ -309,7 +251,6 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       specialStartSector,
       startOutsideAllianceSpace,
       excludeNewCanaanPlacement,
-      isRuiningIt,
   } = useDraftDetails(step);
 
   const campaignNotes = useMemo(
@@ -408,45 +349,26 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
             />
           )}
           
-          {isRuiningIt ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <RuiningItSetupPanel stepBadgeClass={stepBadgeBlueBg} />
-              <PlacementOrderPanel 
-                  placementOrder={draftState.placementOrder}
-                  isSolo={isSolo}
-                  isHavenDraft={isHavenDraft}
-                  isBrowncoatDraft={isBrowncoatDraft}
-                  isGoingLegit={isGoingLegit}
-                  specialStartSector={specialStartSector}
-                  startOutsideAllianceSpace={!!startOutsideAllianceSpace}
-                  excludeNewCanaanPlacement={!!excludeNewCanaanPlacement}
-                  stepBadgeClass={stepBadgeAmberBg}
-                  isRuiningIt={isRuiningIt}
-              />
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <DraftOrderPanel 
-                  draftOrder={draftState.draftOrder}
-                  isSolo={isSolo}
-                  isHavenDraft={isHavenDraft}
-                  isBrowncoatDraft={isBrowncoatDraft}
-                  stepBadgeClass={stepBadgeBlueBg}
-              />
-              <PlacementOrderPanel 
-                  placementOrder={draftState.placementOrder}
-                  isSolo={isSolo}
-                  isHavenDraft={isHavenDraft}
-                  isBrowncoatDraft={isBrowncoatDraft}
-                  isGoingLegit={isGoingLegit}
-                  specialStartSector={specialStartSector}
-                  startOutsideAllianceSpace={!!startOutsideAllianceSpace}
-                  excludeNewCanaanPlacement={!!excludeNewCanaanPlacement}
-                  stepBadgeClass={stepBadgeAmberBg}
-                  isRuiningIt={isRuiningIt}
-              />
-            </div>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <DraftOrderPanel 
+                draftOrder={draftState.draftOrder}
+                isSolo={isSolo}
+                isHavenDraft={isHavenDraft}
+                isBrowncoatDraft={isBrowncoatDraft}
+                stepBadgeClass={stepBadgeBlueBg}
+            />
+            <PlacementOrderPanel 
+                placementOrder={draftState.placementOrder}
+                isSolo={isSolo}
+                isHavenDraft={isHavenDraft}
+                isBrowncoatDraft={isBrowncoatDraft}
+                isGoingLegit={isGoingLegit}
+                specialStartSector={specialStartSector}
+                startOutsideAllianceSpace={!!startOutsideAllianceSpace}
+                excludeNewCanaanPlacement={!!excludeNewCanaanPlacement}
+                stepBadgeClass={stepBadgeAmberBg}
+            />
+          </div>
 
           {isBrowncoatDraft && <BrowncoatMarketPanel />}
 

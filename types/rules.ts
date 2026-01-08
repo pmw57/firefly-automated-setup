@@ -89,6 +89,12 @@ export interface ModifyResourceRule extends BaseRule {
   description: string;
 }
 
+export interface SetComponentRule extends BaseRule {
+  type: 'setComponent';
+  stepId: string;
+  component: string;
+}
+
 export type SetupRule = 
   | SetJobModeRule
   | SetJobContactsRule
@@ -105,4 +111,5 @@ export type SetupRule =
   | AddSpecialRule
   | AddFlagRule
   | ModifyPrimeRule
-  | ModifyResourceRule;
+  | ModifyResourceRule
+  | SetComponentRule;

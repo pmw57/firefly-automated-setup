@@ -13,7 +13,7 @@ import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CHALLENGE_IDS, STEP_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
-export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDetails => {
+export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRuleDetails, 'isRuiningIt'> => {
     const specialRules: SpecialRule[] = [];
     const { overrides = {} } = step;
     const allRules = getResolvedRules(gameState);
@@ -49,20 +49,14 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
             specialStartSector = 'Londinium';
             break;
         case 'border_of_murphy':
-            specialStartSector = 'Border of Murphy';
+            // This is now the placeholder for Ruining It For Everyone's special start
+            specialStartSector = "St. Albans, Red Sun";
             break;
       }
     }
 
-    const isRuiningIt = hasRuleFlag(allRules, 'isRuiningItForEveryone');
-    if (isRuiningIt) {
-        specialStartSector = "St. Albans, Red Sun";
-    }
-
-
     const startOutsideAllianceSpace = hasRuleFlag(allRules, 'startOutsideAllianceSpace');
     const excludeNewCanaanPlacement = hasRuleFlag(allRules, 'excludeNewCanaanPlacement');
-
     const allianceSpaceOffLimits = hasRuleFlag(allRules, 'allianceSpaceOffLimits');
     
     const draftModeRule = allRules.find(r => r.type === 'setDraftMode') as SetDraftModeRule | undefined;
@@ -134,5 +128,5 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
         ]});
     }
 
-    return { specialRules, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement, isRuiningIt };
+    return { specialRules, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement };
 };
