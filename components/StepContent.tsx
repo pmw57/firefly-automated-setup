@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, lazy, Suspense, useMemo } from 'react';
-import { Step } from '../types/index';
+import { Step, SetComponentRule } from '../types/index';
 import { Button } from './Button';
 import { QuotePanel } from './QuotePanel';
 import { useTheme } from './ThemeContext';
@@ -9,6 +9,7 @@ import { PageReference } from './PageReference';
 import { useGameState } from '../hooks/useGameState';
 import { calculateSetupFlow } from '../utils/flow';
 import { getSetupCardSelectionInfo } from '../utils/selectors/ui';
+import { getResolvedRules } from '../utils/selectors/rules';
 
 export interface StepComponentProps {
   step: Step;
@@ -24,11 +25,10 @@ const StepLoading: React.FC = () => (
     </div>
 );
 
-// Lazy load step components
+// Standard step components
 const NavDeckStep = lazy(() => import('./NavDeckStep').then(m => ({ default: m.NavDeckStep })));
 const AllianceReaverStep = lazy(() => import('./AllianceReaverStep').then(m => ({ default: m.AllianceReaverStep })));
 const DraftStep = lazy(() => import('./DraftStep').then(m => ({ default: m.DraftStep })));
-// FIX: Corrected the dynamic import to load `MissionDossierStep`, which is the actual exported component name.
 const MissionSelectionStep = lazy(() => import('./MissionDossierStep').then(m => ({ default: m.MissionDossierStep })));
 const ResourcesStep = lazy(() => import('./ResourcesStep').then(m => ({ default: m.ResourcesStep })));
 const JobStep = lazy(() => import('./JobStep').then(m => ({ default: m.JobStep })));
@@ -41,10 +41,15 @@ const LocalHeroesStep = lazy(() => import('./steps/dynamic/LocalHeroesStep').the
 const AllianceAlertStep = lazy(() => import('./steps/dynamic/AllianceAlertStep').then(m => ({ default: m.AllianceAlertStep })));
 const PressuresHighStep = lazy(() => import('./steps/dynamic/PressuresHighStep').then(m => ({ default: m.PressuresHighStep })));
 const StripMiningStep = lazy(() => import('./steps/dynamic/StripMiningStep').then(m => ({ default: m.StripMiningStep })));
-
 const CaptainSetup = lazy(() => import('./CaptainSetup').then(m => ({ default: m.CaptainSetup })));
 const SetupCardSelection = lazy(() => import('./setup/SetupCardSelection').then(m => ({ default: m.SetupCardSelection })));
 const OptionalRulesSelection = lazy(() => import('./OptionalRulesSelection').then(m => ({ default: m.OptionalRulesSelection })));
+
+// Story-specific override components
+const RuiningItDraftStep = lazy(() => import('./steps/story/RuiningItDraftStep').then(m => ({ default: m.RuiningItDraftStep })));
+const RuiningItResourcesStep = lazy(() => import('./steps/story/RuiningItResourcesStep').then(m => ({ default: m.RuiningItResourcesStep })));
+const RuiningItJobsStep = lazy(() => import('./steps/story/RuiningItJobsStep').then(m => ({ default: m.RuiningItJobsStep })));
+
 
 const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
   [STEP_IDS.C1]: NavDeckStep,
@@ -66,12 +71,19 @@ const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
   [STEP_IDS.D_STRIP_MINING]: StripMiningStep,
 };
 
+const STORY_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
+    RuiningItDraftStep,
+    RuiningItResourcesStep,
+    RuiningItJobsStep,
+};
+
 export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode }: StepComponentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const titleRef = useRef<HTMLHeadingElement>(null);
   const { state: gameState } = useGameState();
   const totalSetupParts = useMemo(() => calculateSetupFlow(gameState).filter(s => s.type === 'setup').length, [gameState]);
+  const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -83,6 +95,16 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode }: S
   const isSpecial = step.id.startsWith('D_');
 
   const renderStepBody = () => {
+    // Check for a story-specific component override first
+    const componentRule = allRules.find(
+      (r): r is SetComponentRule => r.type === 'setComponent' && r.stepId === step.id
+    );
+    if (componentRule && STORY_COMPONENT_REGISTRY[componentRule.component]) {
+        const StoryComponent = STORY_COMPONENT_REGISTRY[componentRule.component];
+        return <StoryComponent step={step} onNext={onNext} onPrev={onPrev} isNavigating={isNavigating} />;
+    }
+    
+    // Fallback to standard component rendering
     if (step.type === 'setup') {
       if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) return <CaptainSetup isDevMode={isDevMode} />;
       if (step.id === STEP_IDS.SETUP_CARD_SELECTION) return <SetupCardSelection />;

@@ -19,7 +19,7 @@ import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
-const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): Omit<JobSetupDetails, 'jobDrawMode'> => {
+const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): Omit<JobSetupDetails, 'jobDrawMode' | 'isSharedHandMode'> => {
     const messages: JobSetupMessage[] = [];
     
     // 1. Add any specific "addSpecialRule" rules for the jobs step.
@@ -220,7 +220,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
     const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
     const isSharedHandMode = hasRuleFlag(allRules, 'sharedHandSetup');
-    const isRuiningItForEveryone = hasRuleFlag(allRules, 'isRuiningItForEveryone');
 
     if (hasRuleFlag(allRules, 'customJobDraw')) {
         const messages: JobSetupMessage[] = [];
@@ -235,7 +234,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             totalJobCards: 0,
             jobDrawMode,
             isSharedHandMode,
-            isRuiningItForEveryone,
         };
     }
     
@@ -275,7 +273,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             totalJobCards: 0,
             jobDrawMode,
             isSharedHandMode,
-            isRuiningItForEveryone,
         };
     }
 
@@ -298,7 +295,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             caperDrawCount: 1,
             jobDrawMode,
             isSharedHandMode,
-            isRuiningItForEveryone,
         };
     }
 
@@ -339,15 +335,15 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             content: content,
         };
 
-        return { contacts: [], messages: [message], showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, jobDrawMode, isSharedHandMode, isRuiningItForEveryone };
+        return { contacts: [], messages: [message], showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, jobDrawMode, isSharedHandMode };
     }
 
-    if (jobDrawMode === 'no_jobs' && !isRuiningItForEveryone) {
+    if (jobDrawMode === 'no_jobs') {
         const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
         const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
         const details = _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge);
         
-        return { ...details, jobDrawMode, isSharedHandMode, isRuiningItForEveryone };
+        return { ...details, jobDrawMode, isSharedHandMode };
     }
     
     const initialContacts = _getInitialContacts(allRules);
@@ -401,5 +397,5 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     // You can't keep more cards than you draw.
     const finalKeepCount = Math.min(baseKeepCount, actualDrawCount);
 
-    return { contacts, messages, showStandardContactList: true, isSingleContactChoice, cardsToDraw: finalKeepCount, totalJobCards: contacts.length, caperDrawCount, isContactListOverridden, jobDrawMode, isSharedHandMode, isRuiningItForEveryone };
+    return { contacts, messages, showStandardContactList: true, isSingleContactChoice, cardsToDraw: finalKeepCount, totalJobCards: contacts.length, caperDrawCount, isContactListOverridden, jobDrawMode, isSharedHandMode };
 };

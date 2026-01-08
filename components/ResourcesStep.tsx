@@ -8,7 +8,6 @@ import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
 import { SpecialRule, StructuredContent, StructuredContentPart, RuleSourceType } from '../types';
-import { getResolvedRules, hasRuleFlag } from '../utils/selectors/rules';
 
 const renderSimpleContent = (content: StructuredContent): React.ReactNode => {
   return content.map((part: StructuredContentPart, index: number) => {
@@ -46,13 +45,6 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   const [showBreakdown, setShowBreakdown] = useState(false);
   const isQuickMode = gameState.setupMode === 'quick';
   
-  const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
-  const isRuiningIt = useMemo(() => hasRuleFlag(allRules, 'isRuiningItForEveryone'), [allRules]);
-
-  const { state: draftState } = gameState.draft;
-  const player1Name = draftState?.draftOrder[0] || 'Player 1';
-  const player2Name = draftState?.draftOrder[1] || 'Player 2';
-
   const campaignNotes = useMemo(
     () => getCampaignNotesForStep(gameState, step.id), 
     [gameState, step.id]
@@ -144,49 +136,6 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
     'Alliance Space Lockdown': { tokenName: 'Alliance Alert Tokens', locationLine1: 'Planetary Sectors', locationLine2: 'Alliance Space', icon: '🗺️' },
     "Lonely Smuggler's Stash": { tokenName: 'Contraband Tokens', locationLine1: '3 on each Supply Planet', locationLine2: '(except Persephone/Bazaar)', icon: '📦' }
   };
-
-  if (isRuiningIt) {
-    return (
-      <div className="space-y-6">
-        {allInfoBlocks}
-        <div className={`${cardBg} rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300 overflow-hidden`}>
-          {/* Twin's section */}
-          <div className="p-4 md:p-6">
-            <h4 className={`font-bold text-lg mb-2 ${sectionHeaderColor}`}>{player1Name} (Your Twin)</h4>
-            <p className={`text-sm mb-4 ${textColor}`}>The Twin takes {player2Name}'s ship and outfits it with:</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-              <div className="p-4 bg-black/5 dark:bg-black/20 rounded-lg">
-                <div className={`text-3xl font-bold font-western ${creditColor}`}>$2,000</div>
-                <div className={`text-xs uppercase tracking-wider mt-1 ${modsText}`}>Credits</div>
-              </div>
-              <div className="p-4 bg-black/5 dark:bg-black/20 rounded-lg space-y-2">
-                <div className={`font-bold text-sm ${textColor}`}>6 Fuel</div>
-                <div className={`font-bold text-sm ${textColor}`}>2 Parts</div>
-              </div>
-            </div>
-            <p className={`text-xs mt-4 italic ${modsText}`}>
-              This setup also includes the 2 Crew (max $500 value) and a Warrant if no crew are Wanted.
-            </p>
-          </div>
-          {/* Your section */}
-          <div className={`p-4 md:p-6 border-t ${cardBorder} ${disabledBg}`}>
-            <h4 className={`font-bold text-lg mb-2 ${disabledText}`}>{player2Name} (You)</h4>
-            <p className={`text-sm mb-4 ${disabledText}`}>You are left with a new, empty ship of the same class and no starting resources (your resources below will be $0):</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-              <div className="p-4 bg-black/5 dark:bg-black/20 rounded-lg">
-                <div className={`text-3xl font-bold font-western ${disabledText}`}>$0</div>
-                <div className={`text-xs uppercase tracking-wider mt-1 ${disabledText}`}>Credits</div>
-              </div>
-              <div className="p-4 bg-black/5 dark:bg-black/20 rounded-lg space-y-2">
-                <div className={`font-bold text-sm ${disabledText}`}>0 Fuel</div>
-                <div className={`font-bold text-sm ${disabledText}`}>0 Parts</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
