@@ -21,7 +21,8 @@ import { getActiveStoryCard } from './selectors/story';
 const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean, activeStoryCard: StoryCardDef | undefined): Omit<JobSetupDetails, 'jobDrawMode'> => {
     const messages: JobSetupMessage[] = [];
     
-    // Add any generic special rules for this step
+    // 1. Add any specific "addSpecialRule" rules for the jobs step.
+    // For "Down And Out", this adds the "Shared Hand Setup" block.
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
             if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
@@ -30,6 +31,7 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
         }
     });
 
+    // 2. Handle priming rules if they exist
     if (dontPrimeContactsChallenge) {
         messages.push({
             source: 'warning',
@@ -45,23 +47,49 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
               { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
             ]
         });
-    } else if (jobModeSource === 'story') {
-        const title = activeStoryCard?.noJobsMessage?.title || 'Story Card Override';
-        const description = activeStoryCard?.noJobsMessage?.description || "No starting jobs are dealt for this setup.";
-        messages.push({
-            source: 'story',
-            title: title,
-            content: [{ type: 'paragraph', content: [description] }]
-        });
+    }
+
+    // 3. Add the main override message from the story or setup card.
+    if (jobModeSource === 'story' && activeStoryCard) {
+        // "Down and Out" has a setupDescription. This is the primary override text.
+        if (activeStoryCard.setupDescription) {
+             messages.push({
+                source: 'story',
+                title: activeStoryCard.title,
+                content: [activeStoryCard.setupDescription]
+             });
+        } 
+        // Some older story cards might use noJobsMessage instead.
+        else if (activeStoryCard.noJobsMessage) {
+            messages.push({
+                source: 'story',
+                title: activeStoryCard.noJobsMessage.title || activeStoryCard.title,
+                content: [{ type: 'paragraph', content: [activeStoryCard.noJobsMessage.description] }]
+            });
+        }
     } else if (jobModeSource === 'setupCard') {
+        // Fallback for setup cards like Browncoat Way
         messages.push({
             source: 'setupCard',
             title: 'Setup Card Override',
             content: [{ type: 'paragraph', content: ["Crews must find work on their own out in the black."] }]
         });
     }
+    
+    // 4. Deduplicate messages. This is a safeguard in case a specific rule and the 
+    // setup description contain identical text.
+    const uniqueMessages = messages.reduce((acc, current) => {
+        const isDuplicate = acc.some(item => 
+            item.title === current.title && 
+            JSON.stringify(item.content) === JSON.stringify(current.content)
+        );
+        if (!isDuplicate) {
+            acc.push(current);
+        }
+        return acc;
+    }, [] as JobSetupMessage[]);
 
-    return { contacts: [], messages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+    return { contacts: [], messages: uniqueMessages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
 };
 
 const _getInitialContacts = (allRules: SetupRule[]): string[] => {

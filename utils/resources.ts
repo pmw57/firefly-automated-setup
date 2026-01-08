@@ -138,41 +138,32 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     }
   }
 
+  const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
+  const smugglersBluesVariantAvailable = smugglersBluesSetup && gameState.expansions.blue && gameState.expansions.kalidasa;
+
   allRules.forEach(rule => {
     if (rule.type === 'addSpecialRule' && rule.category === 'resources') {
         if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
-            specialRules.push({
-                source: rule.source as SpecialRule['source'],
-                ...rule.rule
-            });
+            const newRule = { source: rule.source as SpecialRule['source'], ...rule.rule };
+            
+            // Special handling for Smuggler's Blues: Don't show the override block
+            // if the interactive radio button UI is being shown instead.
+            if (newRule.title === "Smuggler's Blues Contraband" && smugglersBluesVariantAvailable) {
+                return; // skip pushing to specialRules
+            }
+            
+            specialRules.push(newRule);
+            
+            // Check if this rule should also be displayed inside the resource card
+            if (newRule.title === 'Alliance Space Lockdown' || newRule.title === "Lonely Smuggler's Stash") {
+              boardSetupRules.push(newRule);
+            }
+            if (newRule.title === 'Missing Person') {
+              componentAdjustmentRules.push(newRule);
+            }
         }
     }
   });
-
-  if (hasRuleFlag(allRules, 'placeAllianceAlertsInAllianceSpace')) {
-    const ruleContent: SpecialRule['content'] = ['Place an ', { type: 'action', content: 'Alliance Alert Token' }, ' on ', { type: 'strong', content: 'every planetary sector in Alliance Space' }, '.'];
-    specialRules.push({ source: 'story', title: 'Alliance Space Lockdown', content: ruleContent });
-    boardSetupRules.push({ source: 'story', title: 'Alliance Space Lockdown', content: ruleContent });
-  }
-
-  const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
-  if (smugglersBluesSetup && !(gameState.expansions.blue && gameState.expansions.kalidasa)) {
-    specialRules.push({
-        source: 'story',
-        title: "Smuggler's Blues Contraband",
-        content: ["Place 3 Contraband on each planetary sector in Alliance Space."]
-    });
-  }
-  
-  if (hasRuleFlag(allRules, 'lonelySmugglerSetup')) {
-    const ruleContent: SpecialRule['content'] = ['Place ', { type: 'strong', content: '3 Contraband' }, ' on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.'];
-    specialRules.push({ source: 'story', title: "Lonely Smuggler's Stash", content: ruleContent });
-    boardSetupRules.push({ source: 'story', title: "Lonely Smuggler's Stash", content: ruleContent });
-  }
-
-  if (hasRuleFlag(allRules, 'removeRiver')) {
-    componentAdjustmentRules.push({ source: 'story', title: "Missing Person", content: ["Remove ", { type: 'strong', content: "River Tam" }, " from play."] });
-  }
 
   const baseResources: Record<ResourceType, number> = { credits: 3000, fuel: 6, parts: 2, warrants: 0, goalTokens: 0 };
   const finalResources: Partial<Record<ResourceType, number>> = {};
@@ -236,6 +227,6 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     partsModificationSource: partsModInfo.source,
     fuelModificationDescription: fuelModInfo.description,
     partsModificationDescription: partsModInfo.description,
-    smugglersBluesVariantAvailable: hasRuleFlag(allRules, 'smugglersBluesSetup') && gameState.expansions.blue && gameState.expansions.kalidasa,
+    smugglersBluesVariantAvailable,
   };
 };

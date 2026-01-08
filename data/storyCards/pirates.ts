@@ -10,7 +10,14 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/2785046/gerryrailbaron",
     setupDescription: "Special Haven placement in Border Space. Piracy jobs are removed from play.",
     rules: createStoryRules("...Another Man's Treasure", [
-      { type: 'addFlag', flag: 'addBorderHavens' },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: "...Another Man's Treasure",
+          content: [{ type: 'strong', content: `Choose Havens:` }, ` Each player chooses a Haven token. Havens `, { type: 'strong', content: `must be in Border Space` }, `.`]
+        }
+      },
       { type: 'addFlag', flag: 'removePiracyJobs' }
     ])
   },

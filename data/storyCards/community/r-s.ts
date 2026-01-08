@@ -156,7 +156,15 @@ export const STORIES_R_S: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1066622/story-card-save-river-tam",
     setupDescription: "Remove River Tam from play.",
     rules: createStoryRules("Save River Tam", [
-      { type: 'addFlag', flag: 'removeRiver' }
+      { type: 'addFlag', flag: 'removeRiver' },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: "Missing Person",
+          content: ["Remove ", { type: 'strong', content: "River Tam" }, " from play."]
+        }
+      }
     ]),
     rating: 1
   },
