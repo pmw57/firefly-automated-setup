@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { SpecialRuleBlock } from '../../../SpecialRuleBlock';
+import { OverrideNotificationBlock } from '../../../SpecialRuleBlock';
 import { useTheme } from '../../../ThemeContext';
 import { GameState } from '../../../../types';
 import { cls } from '../../../../utils/style';
@@ -55,7 +54,7 @@ export const UnpredictableTimerRules: React.FC<TimerRulesProps> = ({
       
       {mode === 'unpredictable' ? (
         <div className="mt-4 pt-4 border-t border-dashed border-zinc-700/50 animate-fade-in space-y-4">
-          <SpecialRuleBlock source="expansion" title="Pirates & Bounty Hunters Rule" content={[
+          <OverrideNotificationBlock source="expansion" title="Pirates & Bounty Hunters Rule" content={[
             { type: 'paragraph', content: ["Replace the bottom Game Length Tokens with numbered Destination Tokens."] },
             { type: 'paragraph', content: [{ type: 'strong', content: 'The Mechanic:' }, " Whenever you discard a numbered Game Length Token, ", { type: 'strong', content: 'roll a die' }, ". If you roll ", { type: 'strong', content: 'equal to or lower' }, " than the number, discard all remaining Game Length Tokens. Take one final turn."] }
           ]}/>

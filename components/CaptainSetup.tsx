@@ -7,7 +7,7 @@ import { useGameDispatch } from '../hooks/useGameDispatch';
 import { PlayerConfigSection } from './setup/PlayerConfigSection';
 import { CampaignConfigSection } from './setup/CampaignConfigSection';
 import { ExpansionListSection } from './setup/ExpansionListSection';
-import { isFlyingSoloEligible } from '../utils/ui';
+import { isFlyingSoloEligible } from '../utils/selectors/ui';
 import { calculateSetupFlow } from '../utils/flow';
 
 interface CaptainSetupProps {

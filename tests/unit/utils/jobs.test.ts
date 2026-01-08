@@ -60,7 +60,7 @@ describe('rules/jobs', () => {
       expect(messages.some(m => m.source === 'setupCard')).toBe(true);
     });
     
-    it.concurrent('handles story card "no_jobs" mode with priming', () => {
+    it('handles story card "no_jobs" mode with priming', () => {
       const storyTitle = "A Fistful Of Scoundrels";
       const state: GameState = {
         ...baseGameState,
@@ -120,7 +120,7 @@ describe('rules/jobs', () => {
         expect(messages[0].title).toBe('Challenge Active');
     });
 
-    it.concurrent('should correctly filter contacts and generate a warning for a jobMode/forbidContact conflict', () => {
+    it('should correctly filter contacts and generate a warning for a jobMode/forbidContact conflict', () => {
       const storyTitle = "Desperadoes";
       const state: GameState = {
         ...baseGameState,

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { SpecialRuleBlock } from './SpecialRuleBlock';
+import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { useAllianceReaverDetails } from '../hooks/useAllianceReaverDetails';
@@ -7,7 +7,7 @@ import { StepComponentProps } from './StepContent';
 import { SpecialRule, StructuredContentPart } from '../types';
 import { cls } from '../utils/style';
 
-// Simple renderer for the override content to avoid duplicating the full SpecialRuleBlock.
+// Simple renderer for the override content to avoid duplicating the full OverrideNotificationBlock.
 const renderContent = (content: StructuredContentPart[]): React.ReactNode => {
     return content.map((part, index) => {
       if (typeof part === 'string') {
@@ -82,7 +82,7 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
       {allSortedOverrides
         .filter(rule => setupMode === 'detailed' || rule.source !== 'expansion')
         .map((rule, index) => (
-          <SpecialRuleBlock key={`rule-${index}`} {...rule} />
+          <OverrideNotificationBlock key={`rule-${index}`} {...rule} />
       ))}
 
       <div className={`${standardContainerBg} p-4 rounded-lg border ${standardContainerBorder} shadow-sm mt-4 transition-colors duration-300`}>

@@ -85,6 +85,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
     
     if (conflictMessage) specialRules.push({ source: 'info', title: 'Conflict Resolved', content: conflictMessage });
     if (isWantedLeaderMode) specialRules.push({ source: 'setupCard', title: 'The Heat Is On', content: ['Choose Ships & Leaders normally, but each Leader begins play with a ', { type: 'strong', content: 'Warrant' }, ' token.'] });
+    if (isBrowncoatDraft) specialRules.push({ source: 'setupCard', title: 'Browncoat Market', content: ['Once all players have purchased a ship and chosen a leader, everyone may buy supplies. ', { type: 'strong', content: 'Fuel: $100, Parts: $300' }, '.'] });
     
     if (showBrowncoatHeroesWarning) {
         specialRules.push({
@@ -123,7 +124,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
     }
 
     if (allianceSpaceOffLimits) specialRules.push({ source: 'warning', title: 'Restricted Airspace', content: [{ type: 'strong', content: `Alliance Space is Off Limits` }, ` until Goal 3.`] });
-    if (isBrowncoatDraft) specialRules.push({ source: 'setupCard', title: 'Browncoat Market', content: [{ type: 'strong', content: `Market Phase:` }, ` Once all players have purchased a ship and chosen a leader, everyone may buy fuel ($100) and parts ($300).`, { type: 'br' }, `(Reminder: Free starting fuel/parts are disabled in this mode.)`] });
     
     if (resolvedHavenDraft) {
         specialRules.push({ source: 'setupCard', title: 'Home Sweet Haven: Placement Rules', content: [

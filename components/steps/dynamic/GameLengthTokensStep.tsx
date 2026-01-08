@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { SpecialRuleBlock } from '../../SpecialRuleBlock';
+import { OverrideNotificationBlock } from '../../SpecialRuleBlock';
 import { useGameState } from '../../../hooks/useGameState';
 import { useGameDispatch } from '../../../hooks/useGameDispatch';
 import { hasRuleFlag, getResolvedRules } from '../../../utils/selectors/rules';
@@ -81,7 +81,7 @@ export const GameLengthTokensStep: React.FC = () => {
       return blocks
         .sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99))
         .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
-        .map((rule, i) => <SpecialRuleBlock key={`rule-${i}`} {...rule} />);
+        .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
 
     }, [specialRulesFromEngine, tokensToRemove, gameState.campaignStoriesCompleted, shesTrouble, recipeForUnpleasantness, gameState.setupMode]);
     
@@ -89,7 +89,7 @@ export const GameLengthTokensStep: React.FC = () => {
 
     if (activeStoryCard.rules && hasRuleFlag(activeStoryCard.rules, 'disableSoloTimer')) {
         return (
-            <SpecialRuleBlock source="story" title="Timer Disabled" content={[{ type: 'strong', content: "No Timer:" }, " Do not use a Game Timer for this game."]} />
+            <OverrideNotificationBlock source="story" title="Timer Disabled" content={[{ type: 'strong', content: "No Timer:" }, " Do not use a Game Timer for this game."]} />
         );
     }
     

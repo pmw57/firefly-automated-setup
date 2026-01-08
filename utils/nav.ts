@@ -40,6 +40,16 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
             }
         }
     });
+
+    if (navMode === 'browncoat') {
+        specialRules.push({
+            source: 'setupCard',
+            title: 'Forced Reshuffle',
+            page: 22,
+            manual: 'Core',
+            content: ["Place the 'RESHUFFLE' cards in their Nav Decks."],
+        });
+    }
     
     const hasRimDecks = hasRuleFlag(allRules, 'activatesRimDecks');
 

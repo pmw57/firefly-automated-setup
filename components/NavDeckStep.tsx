@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { StructuredContent, SpecialRule } from '../types';
-import { SpecialRuleBlock } from './SpecialRuleBlock';
+import { SpecialRule } from '../types';
+import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { useNavDeckDetails } from '../hooks/useNavDeckDetails';
@@ -37,20 +37,15 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
   const panelBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const panelBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const panelText = isDark ? 'text-gray-300' : 'text-gray-800';
+  
+  const forcedReshuffleInstruction = `Place the "RESHUFFLE" cards in their Nav Decks.${hasRimDecks ? " This applies to all active decks (including Rim Space)." : ""}`;
 
-  const forcedReshuffleContent: StructuredContent = [
-    { type: 'paragraph', content: ['Place the ', { type: 'action', content: '"RESHUFFLE"' }, ' cards in their Nav Decks.'] }
-  ];
-  if (hasRimDecks) {
-    forcedReshuffleContent.push({ type: 'paragraph', content: ["This applies to all active decks (including Rim Space)."] });
-  }
-
-  let reshuffleInstruction = '';
+  let standardReshuffleInstruction = '';
   if (showStandardRules) {
     if (isHighPlayerCount) {
-      reshuffleInstruction = 'Place the "RESHUFFLE" card in the Discard Pile of each Nav Deck.';
+      standardReshuffleInstruction = 'Place the "RESHUFFLE" card in the Discard Pile of each Nav Deck.';
     } else {
-      reshuffleInstruction = 'Shuffle the "RESHUFFLE" cards directly into each Nav Deck.';
+      standardReshuffleInstruction = 'Shuffle the "RESHUFFLE" cards directly into each Nav Deck.';
     }
   }
 
@@ -59,33 +54,40 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
       {sortedSpecialRules
         .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
         .map((rule, i) => (
-          <SpecialRuleBlock key={i} {...rule} />
+          <OverrideNotificationBlock key={i} {...rule} />
       ))}
 
       <div className={cls(panelBg, "p-6 rounded-lg border shadow-sm overflow-hidden transition-colors duration-300 space-y-4", panelBorder)}>
-        {showStandardRules && (
-          <div className={cls(panelText, "space-y-2")}>
-            <p>Shuffle the Alliance and Border Nav Decks separately.</p>
+        <div className={cls(panelText, "space-y-2")}>
+          <p>Shuffle the Alliance and Border Nav Decks separately.</p>
+          
+          {showStandardRules && (
             <p>
               <span className={cls("font-bold border-b border-dotted", isDark ? 'border-zinc-500' : 'border-gray-400')}>
                 For {gameState.playerCount} player{gameState.playerCount > 1 ? 's' : ''}:
               </span>
               {' '}
-              {reshuffleInstruction}
+              {standardReshuffleInstruction}
+            </p>
+          )}
+          
+          {forceReshuffle && (
+            <p className="font-bold">
+              {forcedReshuffleInstruction}
+            </p>
+          )}
+        </div>
+        
+        {clearerSkies && (
+          <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-stone-200')}>
+            <h4 className="font-bold text-lg text-sky-800 dark:text-sky-300">Clearer Skies Rule</h4>
+            <p className={cls("text-sm mt-1", panelText)}>
+              When initiating a <strong className="font-semibold">Full Burn</strong>, roll a die. The result is how many sectors you may move before you start drawing Nav Cards.
+            </p>
+            <p className="text-xs mt-2 italic text-gray-500 dark:text-gray-400">
+              Note: You may not move farther than your Drive Core's range, regardless of the die roll.
             </p>
           </div>
-        )}
-        
-        {forceReshuffle && (
-          <SpecialRuleBlock source="setupCard" title="Forced Reshuffle" content={forcedReshuffleContent} />
-        )}
-
-        {clearerSkies && (
-          <SpecialRuleBlock source="setupCard" title="Clearer Skies" page={6} manual="C&P" content={[
-            { type: 'strong', content: 'Clearer Skies Rule:' }, ' When initiating a ', { type: 'action', content: 'Full Burn' }, ', roll a die. The result is how many sectors you may move before you start drawing Nav Cards.',
-            { type: 'br' },
-            "Note: You may not move farther than your Drive Core's range, regardless of the die roll."
-          ]} />
         )}
       </div>
     </div>

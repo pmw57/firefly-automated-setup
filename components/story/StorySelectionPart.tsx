@@ -8,7 +8,7 @@ import { StoryDossier } from './StoryDossier';
 import { StoryRandomizer } from './StoryRandomizer';
 import { StoryCardGrid } from './StoryCardGrid';
 import { SETUP_CARD_IDS } from '../../data/ids';
-import { SpecialRuleBlock } from '../SpecialRuleBlock';
+import { OverrideNotificationBlock } from '../SpecialRuleBlock';
 import { cls } from '../../utils/style';
 
 interface StorySelectionPartProps {
@@ -35,7 +35,7 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
   const setupOverrideMessage = React.useMemo(() => {
     if (gameState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
       return (
-        <SpecialRuleBlock
+        <OverrideNotificationBlock
           source="setupCard"
           title="Flying Solo Mode Active"
           content={[
@@ -46,7 +46,7 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
     }
     if (gameState.setupCardId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY) {
       return (
-        <SpecialRuleBlock
+        <OverrideNotificationBlock
           source="setupCard"
           title="Solitaire Firefly Mode Active"
           content={[
@@ -71,6 +71,9 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
   const footerBorder = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
 
   const nextButtonText = enablePart2 && gameState.setupMode === 'detailed' ? 'Next: Advanced →' : 'Next Step →';
+
+  // FIX: Defined 'isFirstStep' based on the title prop to correctly handle conditional rendering of navigation buttons, resolving the 'isFirstSetupStep is not defined' error and fixing inconsistent UI logic.
+  const isFirstStep = title.startsWith("First,");
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -127,18 +130,20 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
         "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex sm:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
         footerBg, footerBorder
       )}>
-        <Button 
-          onClick={onPrev} 
-          variant="secondary"
-          disabled={isNavigating}
-          className="flex-1 text-xs uppercase tracking-wider !py-3"
-        >
-          ← Back
-        </Button>
+        {!isFirstStep && (
+          <Button 
+            onClick={onPrev} 
+            variant="secondary"
+            disabled={isNavigating}
+            className="flex-1 text-xs uppercase tracking-wider !py-3"
+          >
+            ← Back
+          </Button>
+        )}
         <Button 
           onClick={onNext} 
           disabled={!activeStoryCard || isNavigating}
-          className="flex-[2] text-xs uppercase tracking-[0.1em] !py-3"
+          className={cls(isFirstStep ? 'w-full' : 'flex-[2]', "text-xs uppercase tracking-[0.1em] !py-3")}
         >
           {nextButtonText}
         </Button>

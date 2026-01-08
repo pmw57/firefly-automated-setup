@@ -5,7 +5,7 @@ import { StepComponentProps } from './StepContent';
 import { StorySelectionPart } from './story/StorySelectionPart';
 import { AdvancedRulesConfigurationPart } from './story/AdvancedRulesConfigurationPart';
 
-const MissionSelectionStepContent = (props: StepComponentProps): React.ReactElement => {
+const MissionDossierStepContent = (props: StepComponentProps): React.ReactElement => {
   const { onNext, onPrev, isNavigating } = props;
   const { subStep, setSubStep, enablePart2 } = useMissionSelection();
   const dossierTopRef = useRef<HTMLDivElement>(null);
@@ -50,10 +50,10 @@ const MissionSelectionStepContent = (props: StepComponentProps): React.ReactElem
   );
 };
 
-export const MissionSelectionStep = (props: StepComponentProps): React.ReactElement => {
+export const MissionDossierStep = (props: StepComponentProps): React.ReactElement => {
   return (
     <MissionSelectionProvider>
-      <MissionSelectionStepContent {...props} />
+      <MissionDossierStepContent {...props} />
     </MissionSelectionProvider>
   );
 };
