@@ -12,9 +12,10 @@ import { OverrideModal } from './OverrideModal';
 import { detectOverrides } from '../utils/overrides';
 import { ActionType } from '../state/actions';
 import { cls } from '../utils/style';
-import { isSetupDetermined } from '../utils/ui';
+import { getSetupCardSelectionInfo, isSetupDetermined } from '../utils/ui';
 import { calculateSetupFlow } from '../utils/flow';
 import { STEP_IDS } from '../data/ids';
+import { getActiveStoryCard } from '../utils/selectors/story';
 
 interface SetupWizardProps {
   isDevMode: boolean;
@@ -37,6 +38,11 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   const [isNavigating, setIsNavigating] = useState(false);
   const [overrideModalState, setOverrideModalState] = useState<{ firstAffectedIndex: number; stepLabels: string[] } | null>(null);
   const [lastNavDirection, setLastNavDirection] = useState<'next' | 'prev'>('next');
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
+  const [touchEndY, setTouchEndY] = useState<number | null>(null);
+
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -241,19 +247,48 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
     window.scrollTo(0, 0);
   }, [resetGameState]);
   
-  const handleModalContinue = () => {
+  const handleModalContinue = useCallback(() => {
     dispatch({ type: ActionType.ACKNOWLEDGE_OVERRIDES, payload: gameState.overriddenStepIds });
     setOverrideModalState(null);
-    handleNext(); // Re-run handleNext logic, which will now proceed to advanced rules or the next step
-  };
+    handleNext();
+  }, [dispatch, gameState.overriddenStepIds, handleNext]);
   
-  const handleModalJump = () => {
+  const handleModalJump = useCallback(() => {
     if (overrideModalState) {
       dispatch({ type: ActionType.ACKNOWLEDGE_OVERRIDES, payload: gameState.overriddenStepIds });
       handleJump(overrideModalState.firstAffectedIndex);
       setOverrideModalState(null);
     }
-  };
+  }, [dispatch, gameState.overriddenStepIds, handleJump, overrideModalState]);
+
+  const currentStep = flow[currentStepIndex];
+
+  const isNextDisabled = useMemo(() => {
+      if (!currentStep || isNavigating) return true;
+
+      if (currentStep.type === 'final' || currentStepIndex >= flow.length - 1) {
+          return true;
+      }
+
+      if (currentStep.id === STEP_IDS.SETUP_CARD_SELECTION) {
+          return getSetupCardSelectionInfo(gameState).isNextDisabled;
+      }
+
+      if (currentStep.id === STEP_IDS.C4) {
+          if (gameState.missionDossierSubStep === 1) {
+              const activeStoryCard = getActiveStoryCard(gameState);
+              if (!activeStoryCard) {
+                  return true;
+              }
+          }
+      }
+      
+      return false;
+  }, [currentStep, currentStepIndex, flow.length, gameState, isNavigating]);
+
+  const isPrevDisabled = useMemo(() => {
+      return currentStepIndex <= 0 || isNavigating;
+  }, [currentStepIndex, isNavigating]);
 
 
   if (!isStateInitialized || !isWizardInitialized || flow.length === 0) {
@@ -265,18 +300,66 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
     );
   }
 
-  const currentStep = flow[currentStepIndex];
   if (!currentStep) return null;
   
   const isFinal = currentStep.type === 'final';
   
   const footerBg = isDark ? 'bg-zinc-950/90' : 'bg-[#faf8ef]/95';
   const footerBorder = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
+  
+  // --- Swipe Navigation Logic ---
+  const MIN_SWIPE_DISTANCE = 50;
+  
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEndX(null);
+    setTouchEndY(null);
+    setTouchStartX(e.targetTouches[0].clientX);
+    setTouchStartY(e.targetTouches[0].clientY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+    setTouchEndY(e.targetTouches[0].clientY);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX || !touchStartY || !touchEndY) return;
+
+    const distanceX = touchStartX - touchEndX;
+    const distanceY = touchStartY - touchEndY;
+
+    // Only trigger swipe if horizontal movement is greater than vertical to avoid conflicting with scrolling
+    if (Math.abs(distanceX) < Math.abs(distanceY)) {
+        setTouchStartX(null);
+        setTouchStartY(null);
+        setTouchEndX(null);
+        setTouchEndY(null);
+        return;
+    }
+
+    const isLeftSwipe = distanceX > MIN_SWIPE_DISTANCE;
+    const isRightSwipe = distanceX < -MIN_SWIPE_DISTANCE;
+
+    if (isLeftSwipe && !isNextDisabled) {
+        handleNext();
+    } else if (isRightSwipe && !isPrevDisabled) {
+        handlePrev();
+    }
+
+    setTouchStartX(null);
+    setTouchStartY(null);
+    setTouchEndX(null);
+    setTouchEndY(null);
+  };
+  // --- End Swipe Navigation ---
 
   return (
     <div 
       className="max-w-2xl mx-auto pb-24 sm:pb-0"
       key={resetKey}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       <WizardHeader gameState={gameState} onReset={performReset} flow={flow} currentStepIndex={currentStepIndex} />
 

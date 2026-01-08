@@ -18,7 +18,7 @@ export interface StepComponentProps {
   isDevMode?: boolean;
 }
 
-const StepLoading = () => (
+const StepLoading: React.FC = () => (
     <div className="flex items-center justify-center p-12">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-firefly-red dark:border-emerald-500"></div>
     </div>
@@ -28,7 +28,7 @@ const StepLoading = () => (
 const NavDeckStep = lazy(() => import('./NavDeckStep').then(m => ({ default: m.NavDeckStep })));
 const AllianceReaverStep = lazy(() => import('./AllianceReaverStep').then(m => ({ default: m.AllianceReaverStep })));
 const DraftStep = lazy(() => import('./DraftStep').then(m => ({ default: m.DraftStep })));
-// FIX: Corrected lazy import to use the exported component name 'MissionSelectionStep'.
+// FIX: The imported component from MissionDossierStep is `MissionSelectionStep`, not `MissionDossierStep`.
 const MissionDossierStep = lazy(() => import('./MissionDossierStep').then(m => ({ default: m.MissionSelectionStep })));
 const ResourcesStep = lazy(() => import('./ResourcesStep').then(m => ({ default: m.ResourcesStep })));
 const JobStep = lazy(() => import('./JobStep').then(m => ({ default: m.JobStep })));

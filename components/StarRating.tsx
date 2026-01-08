@@ -8,8 +8,6 @@ interface StarRatingProps {
   className?: string;
 }
 
-// FIX: Define a props interface and explicitly type `Star` as a React.FC
-// This resolves the type error by helping TypeScript correctly handle the special `key` prop.
 interface StarProps {
   filled: boolean;
   color: string;
