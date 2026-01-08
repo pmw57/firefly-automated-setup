@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { StoryCardDef, AddSpecialRule, RuleSourceType, SpecialRule, ChallengeOption } from '../../types';
-import { SpecialRuleBlock } from '../SpecialRuleBlock';
+import { OverrideNotificationBlock } from '../SpecialRuleBlock';
 import { useTheme } from '../ThemeContext';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionIcon } from '../ExpansionIcon';
@@ -84,7 +84,7 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
         // FIX: Changed 'advanced' to 'detailed' to match SetupMode type.
         .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
         .map((rule, index) => (
-          <SpecialRuleBlock
+          <OverrideNotificationBlock
               key={`goal-rule-${index}`}
               source={mapRuleSourceToBlockSource(rule.source)}
               title={rule.rule.title}
@@ -190,21 +190,21 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
 
       {/* Detailed Setup Description Block */}
       {activeStoryCard.setupDescription && (
-        <SpecialRuleBlock source="story" content={[activeStoryCard.setupDescription]} />
+        <OverrideNotificationBlock source="story" content={[activeStoryCard.setupDescription]} />
       )}
 
       {/* Solo Adjustments */}
       {gameState.gameMode === 'solo' && soloTimerAdjustment && (
-        <SpecialRuleBlock source="expansion" title="Solo Adjustment" content={[soloTimerAdjustment]} />
+        <OverrideNotificationBlock source="expansion" title="Solo Adjustment" content={[soloTimerAdjustment]} />
       )}
 
       {/* Solo Mode Information Block */}
       {gameState.setupCardId === 'FlyingSolo' && (
-        <SpecialRuleBlock source="expansion" title="10th AE Solo Rules" content={["You may play any Story Card in Expanded Solo Mode. The Variable Timer rules apply."]} />
+        <OverrideNotificationBlock source="expansion" title="10th AE Solo Rules" content={["You may play any Story Card in Expanded Solo Mode. The Variable Timer rules apply."]} />
       )}
 
       {setupNote && !activeStoryCard.setupDescription && (
-        <SpecialRuleBlock source="warning" title="Location Override" content={[setupNote]} />
+        <OverrideNotificationBlock source="warning" title="Location Override" content={[setupNote]} />
       )}
 
       {activeStoryCard.sourceUrl && (

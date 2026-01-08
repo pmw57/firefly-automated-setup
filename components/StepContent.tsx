@@ -28,7 +28,8 @@ const StepLoading: React.FC = () => (
 const NavDeckStep = lazy(() => import('./NavDeckStep').then(m => ({ default: m.NavDeckStep })));
 const AllianceReaverStep = lazy(() => import('./AllianceReaverStep').then(m => ({ default: m.AllianceReaverStep })));
 const DraftStep = lazy(() => import('./DraftStep').then(m => ({ default: m.DraftStep })));
-const MissionSelectionStep = lazy(() => import('./MissionDossierStep').then(m => ({ default: m.MissionSelectionStep })));
+// FIX: Corrected the dynamic import to load `MissionDossierStep`, which is the actual exported component name.
+const MissionSelectionStep = lazy(() => import('./MissionDossierStep').then(m => ({ default: m.MissionDossierStep })));
 const ResourcesStep = lazy(() => import('./ResourcesStep').then(m => ({ default: m.ResourcesStep })));
 const JobStep = lazy(() => import('./JobStep').then(m => ({ default: m.JobStep })));
 const PrimePumpStep = lazy(() => import('./PrimePumpStep').then(m => ({ default: m.PrimePumpStep })));

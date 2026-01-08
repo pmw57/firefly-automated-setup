@@ -5,7 +5,7 @@ import { PageReference } from './PageReference';
 import { StructuredContent, StructuredContentPart } from '../types';
 import { expansionColorConfig, specialColorConfig } from '../data/themeColors';
 
-export interface SpecialRuleBlockProps {
+export interface OverrideNotificationBlockProps {
   source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
   title?: string;
   content: StructuredContent;
@@ -14,7 +14,7 @@ export interface SpecialRuleBlockProps {
   className?: string;
 }
 
-export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, title, content, page, manual, className }) => {
+export const OverrideNotificationBlock: React.FC<OverrideNotificationBlockProps> = ({ source, title, content, page, manual, className }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -91,7 +91,7 @@ export const SpecialRuleBlock: React.FC<SpecialRuleBlockProps> = ({ source, titl
   };
 
   const icons = { story: '📜', setupCard: '⚙️', expansion: '🧩', warning: '⚠️', info: 'ℹ️' };
-  const labels = { story: 'Story Override', setupCard: 'Setup Override', expansion: 'Expansion Rule', warning: 'Restriction', info: 'Information' };
+  const labels = { story: 'Story Override', setupCard: 'Setup Card Rule', expansion: 'Expansion Rule', warning: 'Restriction', info: 'Information' };
   const s = getStyles();
 
   // Generate unique IDs for ARIA labelling

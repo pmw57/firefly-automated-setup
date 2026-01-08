@@ -7,7 +7,7 @@ import { useSetupFlow } from '../hooks/useSetupFlow';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';
 import { STEP_IDS } from '../data/ids';
-import { getSetupCardSelectionInfo, isSetupDetermined } from '../utils/ui';
+import { getSetupCardSelectionInfo, isSetupDetermined } from '../utils/selectors/ui';
 import { getActiveStoryCard } from '../utils/selectors/story';
 import { StepContent } from './StepContent';
 import { ProgressBar } from './ProgressBar';

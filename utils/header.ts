@@ -1,6 +1,6 @@
 // FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
 import { GameState, Step, HeaderDetails } from '../types/index';
-import { getDisplaySetupName } from './ui';
+import { getDisplaySetupName } from './selectors/ui';
 import { SETUP_CARD_IDS } from '../data/ids';
 import { getActiveStoryCard, getSetupCardById } from './selectors/story';
 

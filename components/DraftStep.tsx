@@ -3,7 +3,7 @@ import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } fr
 import { useDraftDetails } from '../hooks/useDraftDetails';
 import { Button } from './Button';
 import { DiceControls } from './DiceControls';
-import { SpecialRuleBlock } from './SpecialRuleBlock';
+import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { useGameDispatch } from '../hooks/useGameDispatch';
@@ -197,6 +197,38 @@ const PlacementOrderPanel = ({
     );
 };
 
+const BrowncoatMarketPanel = () => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
+
+    const panelBg = isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm';
+    const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
+    const stepBadgeClass = isDark ? 'bg-lime-900/50 text-lime-200' : 'bg-lime-100 text-lime-800';
+    const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
+    const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
+    const textColor = isDark ? 'text-gray-300' : 'text-gray-700';
+    const priceColor = isDark ? 'text-lime-400' : 'text-lime-700';
+
+    return (
+        <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
+            <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Phase 3</div>
+            <h4 className={cls("font-bold mb-2 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
+                Browncoat Market
+            </h4>
+            <p className={cls("text-sm", textColor)}>
+                Once all players have purchased a ship and chosen a leader, everyone may buy supplies.
+            </p>
+            <ul className={cls("text-sm mt-2 font-bold", priceColor)}>
+                <li>Fuel: $100</li>
+                <li>Parts: $300</li>
+            </ul>
+            <p className={cls("text-xs mt-3 italic", isDark ? 'text-gray-500' : 'text-gray-600')}>
+                (Reminder: Free starting fuel/parts are disabled in this mode.)
+            </p>
+        </div>
+    );
+};
+
 export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
   const { setDraftConfig } = useGameDispatch();
@@ -250,7 +282,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
 
     return sortedRules
       .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
-      .map((rule, i) => <SpecialRuleBlock key={`rule-${i}`} {...rule} />);
+      .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
   }, [campaignNotes, specialRules, gameState.setupMode]);
 
   const handleDetermineOrder = useCallback(() => {
@@ -353,8 +385,10 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 />
               </div>
 
+              {isBrowncoatDraft && <BrowncoatMarketPanel />}
+
               {isGoingLegit && (
-                <SpecialRuleBlock
+                <OverrideNotificationBlock
                   source="info"
                   title="For Sale Pile"
                   content={["Leave unused ships out of the box as a \"For Sale\" pile."]}

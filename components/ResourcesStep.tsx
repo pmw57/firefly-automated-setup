@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { getResourceDetails } from '../utils/resources';
-import { SpecialRuleBlock } from './SpecialRuleBlock';
+import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 // FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
@@ -112,7 +112,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
 
     return uniqueBlocks
         .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
-        .map((rule, i) => <SpecialRuleBlock key={`rule-${i}`} {...rule} />);
+        .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
   }, [
       hasCreditModification, hasComplexCreditCalculation, creditModificationSource,
       creditModificationDescription, campaignNotes, specialRules, gameState.setupMode

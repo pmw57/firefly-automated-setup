@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { SpecialRuleBlock } from './SpecialRuleBlock';
+import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { usePrimeDetails } from '../hooks/usePrimeDetails';
@@ -50,7 +50,7 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     return blocks
       .sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99))
       .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
-      .map((rule, i) => <SpecialRuleBlock key={`rule-${i}`} {...rule} />);
+      .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
   }, [
     isHighSupplyVolume, gameState.optionalRules.highVolumeSupply, isBlitz, 
     effectiveMultiplier, specialRules, gameState.setupMode, baseDiscard

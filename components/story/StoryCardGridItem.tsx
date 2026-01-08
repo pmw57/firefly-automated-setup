@@ -1,7 +1,7 @@
 import React from 'react';
 import { StoryCardDef } from '../../types';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
-import { getStoryCardSetupSummary } from '../../utils/ui';
+import { getStoryCardSetupSummary } from '../../utils/selectors/ui';
 import { useTheme } from '../ThemeContext';
 import { ExpansionIcon } from '../ExpansionIcon';
 import { StarRating } from '../StarRating';

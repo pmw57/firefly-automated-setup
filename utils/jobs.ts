@@ -12,7 +12,8 @@ import {
     SetupRule,
     StoryCardDef,
     SetJobContactsRule,
-    SpecialRule
+    SpecialRule,
+    ChallengeOption
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
@@ -51,8 +52,11 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
 
     // 3. Add the main override message from the story or setup card.
     if (jobModeSource === 'story' && activeStoryCard) {
+        // If a specific priming message was already added, don't also add the setupDescription as it's likely redundant.
+        const hasPrimingMessage = messages.some(m => m.title === 'Prime Contact Decks');
+
         // "Down and Out" has a setupDescription. This is the primary override text.
-        if (activeStoryCard.setupDescription) {
+        if (activeStoryCard.setupDescription && !hasPrimingMessage) {
              messages.push({
                 source: 'story',
                 title: activeStoryCard.title,
@@ -71,7 +75,7 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
         // Fallback for setup cards like Browncoat Way
         messages.push({
             source: 'setupCard',
-            title: 'Setup Card Override',
+            title: 'No Starting Jobs',
             content: [{ type: 'paragraph', content: ["Crews must find work on their own out in the black."] }]
         });
     }
@@ -81,7 +85,7 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
     const uniqueMessages = messages.reduce((acc, current) => {
         const isDuplicate = acc.some(item => 
             item.title === current.title && 
-            JSON.stringify(item.content) === JSON.stringify(current.content)
+            JSON.stringify(item.content) === JSON.stringify(item.content)
         );
         if (!isDuplicate) {
             acc.push(current);
@@ -130,10 +134,11 @@ const _generateJobMessages = (
     allRules: SetupRule[],
     initialContacts: string[],
     activeStoryCard: StoryCardDef | undefined,
-    isSingleContactChallenge: boolean
+    gameState: GameState
 ): JobSetupMessage[] => {
     const messages: JobSetupMessage[] = [];
     const specialRules: SpecialRule[] = [];
+    const processedChallenges = new Set<string>();
 
     // Process generic special rules for this step category
     allRules.forEach(rule => {
@@ -175,15 +180,31 @@ const _generateJobMessages = (
                 { type: 'strong', content: 'Limited Contacts.' },
                 ` Starting Jobs are drawn only from ${initialContacts.join(', ')}.`
             ];
-            messages.push({ source: 'setupCard', title: 'Setup Card Override', content });
+            messages.push({ source: 'setupCard', title: 'Limited Contacts', content });
         }
     }
     
     // Add the specific special rules to the messages list
     specialRules.forEach(rule => messages.push(rule));
     
-    if (isSingleContactChallenge) {
+    // Handle "Single Contact" first because it has custom text
+    if (gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT]) {
         messages.push({ source: 'warning', title: 'Challenge Active', content: [{ type: 'strong', content: 'Single Contact Only:' }, ' You may only work for one contact.'] });
+        processedChallenges.add(CHALLENGE_IDS.SINGLE_CONTACT);
+    }
+    
+    // Handle other active story challenges
+    if (activeStoryCard?.challengeOptions) {
+        const activeStoryChallenges = activeStoryCard.challengeOptions.filter(
+            (opt: ChallengeOption) => gameState.challengeOptions[opt.id] && !processedChallenges.has(opt.id)
+        );
+        activeStoryChallenges.forEach(challenge => {
+            messages.push({
+                source: 'warning',
+                title: 'Challenge Active',
+                content: [{ type: 'strong', content: challenge.label }]
+            });
+        });
     }
 
     return messages;
@@ -344,13 +365,22 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     const initialContacts = _getInitialContacts(allRules);
     const contacts = _filterContacts(initialContacts, allRules);
 
-    const isSingleContactChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
     const messages = _generateJobMessages(
         allRules,
         initialContacts,
         activeStoryCard,
-        isSingleContactChallenge
+        gameState
     );
+
+    if (jobDrawMode === 'rim_jobs') {
+        messages.unshift({
+            source: 'setupCard', 
+            title: 'Rim Space Jobs', 
+            content: [
+                { type: 'paragraph', content: [{ type: 'strong', content: "Rebuild the Contact Decks" }, " using ", { type: 'strong', content: "only" }, " cards from the Blue Sun and Kalidasa expansions."] }
+            ]
+        });
+    }
     
     // Find Caper Bonus rule to set count for the dedicated UI component.
     // The original rule is preserved in the 'messages' array.
@@ -374,5 +404,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         !!jobContactsRule || 
         JSON.stringify(contacts.slice().sort()) !== JSON.stringify(standardContacts.slice().sort());
 
-    return { contacts, messages, showStandardContactList: true, isSingleContactChoice: isSingleContactChallenge, cardsToDraw: 3, totalJobCards: contacts.length, caperDrawCount, isContactListOverridden, jobDrawMode };
+    const isSingleContactChoice = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
+
+    return { contacts, messages, showStandardContactList: true, isSingleContactChoice, cardsToDraw: 3, totalJobCards: contacts.length, caperDrawCount, isContactListOverridden, jobDrawMode };
 };

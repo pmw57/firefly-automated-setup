@@ -1,19 +1,16 @@
 import React, { useMemo } from 'react';
-import { SpecialRuleBlock } from './SpecialRuleBlock';
+import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { useJobSetupDetails } from '../hooks/useJobSetupDetails';
-import { getActiveStoryCard, getCampaignNotesForStep } from '../utils/selectors/story';
-import { STEP_IDS } from '../data/ids';
+import { getCampaignNotesForStep } from '../utils/selectors/story';
 import { StepComponentProps } from './StepContent';
-import { ChallengeOption, SpecialRule } from '../types';
+import { SpecialRule } from '../types';
 import { cls } from '../utils/style';
 
 export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
   const { overrides = {} } = step;
-  const activeStoryCard = getActiveStoryCard(gameState);
-  const stepId = step.id;
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
@@ -26,15 +23,6 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     caperDrawCount,
     isContactListOverridden,
   } = useJobSetupDetails(overrides);
-  
-  const isSelectedStory = gameState.selectedStoryCardIndex !== null;
-  const isRimDeckBuild = stepId.includes(STEP_IDS.D_RIM_JOBS);
-
-  const activeChallenges = useMemo(() => 
-    activeStoryCard?.challengeOptions?.filter(
-      (opt: ChallengeOption) => gameState.challengeOptions[opt.id]
-    ) || [], 
-  [activeStoryCard?.challengeOptions, gameState.challengeOptions]);
 
   const sortedInfoBlocks = useMemo(() => {
     const blocks: SpecialRule[] = [];
@@ -46,34 +34,15 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
       content: note.content
     })));
 
-    if (isRimDeckBuild) {
-        blocks.push({ source: 'setupCard', title: 'Rim Space Jobs', content: [
-          { type: 'paragraph', content: [{ type: 'strong', content: "Rebuild the Contact Decks" }, " using ", { type: 'strong', content: "only" }, " cards from the Blue Sun and Kalidasa expansions."] }
-        ]});
-    }
-
     // Filter out Caper Bonus as it's handled by a dedicated component.
-    blocks.push(...messages.filter(msg => 
-      !(msg.source === 'story' && !isSelectedStory) && 
-      msg.title !== 'Caper Bonus'
-    ));
+    blocks.push(...messages.filter(msg => msg.title !== 'Caper Bonus'));
     
-    if (isSelectedStory && activeChallenges.length > 0 && !messages.some(m => m.title === 'Challenge Active')) {
-        activeChallenges.forEach(challenge => {
-            blocks.push({
-                source: 'warning',
-                title: 'Challenge Active',
-                content: [{ type: 'strong', content: challenge.label }]
-            });
-        });
-    }
-
     const order: Record<SpecialRule['source'], number> = {
         expansion: 1, setupCard: 2, story: 3, warning: 3, info: 4,
     };
 
     return blocks.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
-  }, [messages, gameState, step.id, isRimDeckBuild, isSelectedStory, activeChallenges]);
+  }, [messages, gameState, step.id]);
   
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -84,10 +53,10 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   return (
     <div className="space-y-6">
-      {sortedInfoBlocks.map((block, i) => <SpecialRuleBlock key={`info-${i}`} {...block} />)}
+      {sortedInfoBlocks.map((block, i) => <OverrideNotificationBlock key={`info-${i}`} {...block} />)}
 
       {caperDrawCount && (
-        <SpecialRuleBlock 
+        <OverrideNotificationBlock 
             source="story" 
             title="Caper Bonus" 
             content={[`Draw ${caperDrawCount} Caper Card${caperDrawCount > 1 ? 's' : ''}.`]} 
