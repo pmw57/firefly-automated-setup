@@ -41,7 +41,7 @@ export const CORE_STORIES: StoryCardDef[] = [
         type: 'addSpecialRule', 
         category: 'jobs',
         rule: {
-          title: "Limited Job Contacts",
+          title: "The Creditor's Leash",
           content: ["Starting Jobs are drawn only from Harken and Amnon Duul."]
         }
       }

@@ -1,6 +1,6 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
-import { getStoryCardSetupSummary, getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../../../utils/ui';
+import { getStoryCardSetupSummary, getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../../../utils/selectors/ui';
 import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
@@ -13,7 +13,7 @@ const getSetupCard = (id: string): SetupCardDef => {
     return card;
 }
 
-describe('utils/ui', () => {
+describe('selectors/ui', () => {
     const baseGameState = getDefaultGameState();
 
     describe('getStoryCardSetupSummary', () => {

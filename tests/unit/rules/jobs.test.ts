@@ -48,7 +48,7 @@ describe('rules/jobs', () => {
       };
       const { messages, isSingleContactChoice, cardsToDraw } = getJobSetupDetails(state, {});
       expect(isSingleContactChoice).toBe(true);
-      expect(cardsToDraw).toBe(3);
+      expect(cardsToDraw).toBe(1);
       expect(messages.some(m => m.source === 'warning')).toBe(true);
     });
 

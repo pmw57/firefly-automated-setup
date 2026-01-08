@@ -19,11 +19,10 @@ import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
-const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean, activeStoryCard: StoryCardDef | undefined): Omit<JobSetupDetails, 'jobDrawMode'> => {
+const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): Omit<JobSetupDetails, 'jobDrawMode'> => {
     const messages: JobSetupMessage[] = [];
     
     // 1. Add any specific "addSpecialRule" rules for the jobs step.
-    // For "Down And Out", this adds the "Shared Hand Setup" block.
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
             if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
@@ -50,28 +49,9 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
         });
     }
 
-    // 3. Add the main override message from the story or setup card.
-    if (jobModeSource === 'story' && activeStoryCard) {
-        // If a specific priming message was already added, don't also add the setupDescription as it's likely redundant.
-        const hasPrimingMessage = messages.some(m => m.title === 'Prime Contact Decks');
-
-        // "Down and Out" has a setupDescription. This is the primary override text.
-        if (activeStoryCard.setupDescription && !hasPrimingMessage) {
-             messages.push({
-                source: 'story',
-                title: activeStoryCard.title,
-                content: [activeStoryCard.setupDescription]
-             });
-        } 
-        // Some older story cards might use noJobsMessage instead.
-        else if (activeStoryCard.noJobsMessage) {
-            messages.push({
-                source: 'story',
-                title: activeStoryCard.noJobsMessage.title || activeStoryCard.title,
-                content: [{ type: 'paragraph', content: [activeStoryCard.noJobsMessage.description] }]
-            });
-        }
-    } else if (jobModeSource === 'setupCard') {
+    // 3. Add a generic override message if the source was a setup card.
+    // Story cards are now expected to provide their own explicit `addSpecialRule` message.
+    if (jobModeSource === 'setupCard') {
         // Fallback for setup cards like Browncoat Way
         messages.push({
             source: 'setupCard',
@@ -239,6 +219,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
 
     const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
     const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
+    const isSharedHandMode = hasRuleFlag(allRules, 'sharedHandSetup');
 
     if (hasRuleFlag(allRules, 'customJobDraw')) {
         const messages: JobSetupMessage[] = [];
@@ -252,6 +233,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             isSingleContactChoice: false, 
             totalJobCards: 0,
             jobDrawMode,
+            isSharedHandMode,
         };
     }
     
@@ -290,6 +272,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             isSingleContactChoice: false,
             totalJobCards: 0,
             jobDrawMode,
+            isSharedHandMode,
         };
     }
 
@@ -311,6 +294,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             totalJobCards: 0,
             caperDrawCount: 1,
             jobDrawMode,
+            isSharedHandMode,
         };
     }
 
@@ -351,15 +335,15 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             content: content,
         };
 
-        return { contacts: [], messages: [message], showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, jobDrawMode };
+        return { contacts: [], messages: [message], showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, jobDrawMode, isSharedHandMode };
     }
 
     if (jobDrawMode === 'no_jobs') {
         const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
         const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
-        const details = _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge, activeStoryCard);
+        const details = _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge);
         
-        return { ...details, jobDrawMode };
+        return { ...details, jobDrawMode, isSharedHandMode };
     }
     
     const initialContacts = _getInitialContacts(allRules);
@@ -405,6 +389,13 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         JSON.stringify(contacts.slice().sort()) !== JSON.stringify(standardContacts.slice().sort());
 
     const isSingleContactChoice = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
+    
+    // Determine how many cards are actually drawn by the player.
+    const actualDrawCount = isSingleContactChoice ? 1 : contacts.length;
+    // The base rule allows keeping up to 3 cards.
+    const baseKeepCount = 3;
+    // You can't keep more cards than you draw.
+    const finalKeepCount = Math.min(baseKeepCount, actualDrawCount);
 
-    return { contacts, messages, showStandardContactList: true, isSingleContactChoice, cardsToDraw: 3, totalJobCards: contacts.length, caperDrawCount, isContactListOverridden, jobDrawMode };
+    return { contacts, messages, showStandardContactList: true, isSingleContactChoice, cardsToDraw: finalKeepCount, totalJobCards: contacts.length, caperDrawCount, isContactListOverridden, jobDrawMode, isSharedHandMode };
 };
