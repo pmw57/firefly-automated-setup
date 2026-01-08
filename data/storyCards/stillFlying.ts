@@ -28,7 +28,14 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     setupDescription: "Place an Alliance Alert Token on every planetary sector in Alliance Space.",
     sourceUrl: "https://boardgamegeek.com/image/8103882/sjliver",
     rules: createStoryRules("The Smuggly Bustle", [
-      { type: 'addFlag', flag: 'placeAllianceAlertsInAllianceSpace' }
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Alliance Space Lockdown',
+          content: ['Place an ', { type: 'action', content: 'Alliance Alert Token' }, ' on ', { type: 'strong', content: 'every planetary sector in Alliance Space' }, '.']
+        }
+      }
     ])
   },
 ];

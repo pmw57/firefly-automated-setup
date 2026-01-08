@@ -182,6 +182,14 @@ export const SOLO_STORIES: StoryCardDef[] = [
     rules: createStoryRules("The Lonely Smuggler's Blues", [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'addFlag', flag: 'lonelySmugglerSetup' },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: "Lonely Smuggler's Stash",
+          content: ['Place ', { type: 'strong', content: '3 Contraband' }, ' on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.']
+        }
+      },
       { type: 'setShipPlacement', location: 'londinium' },
       { type: 'addFlag', flag: 'startWithAlertCard' },
       { type: 'setJobMode', mode: 'no_jobs' },

@@ -11,6 +11,14 @@ export const CRIME_STORIES: StoryCardDef[] = [
     setupDescription: "Place 3 Contraband on each planetary sector in Alliance space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead. Place a $2000 bill under Amnon Duul, Patience, Badger, and Niska's Contact Decks. Players do not receive Starting Jobs and begin at Londinium. Start with one random Alliance Alert Card in play.",
     rules: createStoryRules("Smuggler's Blues", [
       { type: "addFlag", flag: "smugglersBluesSetup" },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: "Smuggler's Blues Contraband",
+          content: ["Place 3 Contraband on each planetary sector in Alliance Space."]
+        }
+      },
       { type: "addFlag", flag: "startWithAlertCard" },
       { type: "setShipPlacement", location: "londinium" },
       {
@@ -49,6 +57,14 @@ export const CRIME_STORIES: StoryCardDef[] = [
     rules: createStoryRules("Wanted Men", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
       { type: 'addFlag', flag: 'startOutsideAllianceSpace' },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Placement Restriction',
+          content: [`Players' starting locations `, { type: 'strong', content: `may not be within Alliance Space` }, `.`]
+        }
+      },
       { type: 'addFlag', flag: 'startWithAlertCard' },
       { type: 'allowContacts', contacts: [CONTACT_NAMES.PATIENCE, CONTACT_NAMES.BADGER, CONTACT_NAMES.NISKA, CONTACT_NAMES.MR_UNIVERSE, CONTACT_NAMES.FANTY_MINGO] },
       {

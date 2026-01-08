@@ -66,7 +66,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
     const excludeNewCanaanPlacement = hasRuleFlag(allRules, 'excludeNewCanaanPlacement');
 
     const allianceSpaceOffLimits = hasRuleFlag(allRules, 'allianceSpaceOffLimits');
-    const addBorderHavens = hasRuleFlag(allRules, 'addBorderHavens');
     
     const draftModeRule = allRules.find(r => r.type === 'setDraftMode') as SetDraftModeRule | undefined;
     const isBrowncoatDraft = draftModeRule?.mode === 'browncoat' || overrides.draftMode === 'browncoat';
@@ -123,8 +122,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): DraftRuleDeta
         });
     }
 
-    if (addBorderHavens) specialRules.push({ source: 'story', title: activeStoryCard?.title || '', content: [{ type: 'strong', content: `Choose Havens:` }, ` Each player chooses a Haven token. Havens `, { type: 'strong', content: `must be in Border Space` }, `.`] });
-    if (startOutsideAllianceSpace) specialRules.push({ source: 'story', title: 'Placement Restriction', content: [`Players' starting locations `, { type: 'strong', content: `may not be within Alliance Space` }, `.`] });
     if (allianceSpaceOffLimits) specialRules.push({ source: 'warning', title: 'Restricted Airspace', content: [{ type: 'strong', content: `Alliance Space is Off Limits` }, ` until Goal 3.`] });
     if (isBrowncoatDraft) specialRules.push({ source: 'setupCard', title: 'Browncoat Market', content: [{ type: 'strong', content: `Market Phase:` }, ` Once all players have purchased a ship and chosen a leader, everyone may buy fuel ($100) and parts ($300).`, { type: 'br' }, `(Reminder: Free starting fuel/parts are disabled in this mode.)`] });
     

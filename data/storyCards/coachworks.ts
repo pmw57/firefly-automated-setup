@@ -10,6 +10,14 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
     setupDescription: "Start with 1 Warrant. No jobs are dealt; instead, a shared hand is created on top of the Contact Decks.",
     rules: createStoryRules("Down And Out", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Down And Out',
+          content: ["Start with 1 Warrant."]
+        }
+      },
       { type: 'setJobMode', mode: 'no_jobs' },
       {
         type: 'addSpecialRule',

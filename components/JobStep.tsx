@@ -25,10 +25,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     cardsToDraw,
     caperDrawCount,
     isContactListOverridden,
-    jobDrawMode,
   } = useJobSetupDetails(overrides);
-  
-  const isNoJobsMode = jobDrawMode === 'no_jobs';
   
   const isSelectedStory = gameState.selectedStoryCardIndex !== null;
   const isRimDeckBuild = stepId.includes(STEP_IDS.D_RIM_JOBS);
@@ -125,17 +122,6 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
           </div>
         </div>
       )}
-      
-      {isNoJobsMode && (
-          <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm transition-colors duration-300 overflow-hidden")}>
-            <div className="p-4 md:p-6 text-center">
-              <h4 className={cls("font-bold text-lg mb-2", sectionHeaderColor)}>No Starting Jobs</h4>
-              <p className={cls("text-sm", textColor)}>
-                  No starting jobs are dealt for this setup.
-              </p>
-            </div>
-          </div>
-        )}
     </div>
   );
 };
