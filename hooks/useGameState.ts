@@ -36,7 +36,6 @@ export interface GameDispatchContextType {
   toggleShipUpgrades: () => void;
   toggleConflictResolution: () => void;
   toggleHighVolumeSupply: () => void;
-  // FIX: Add missing function to the type definition.
   setFinalStartingCredits: (credits: number) => void;
   toggleSoloOption: (key: keyof GameState['soloOptions']) => void;
   toggleTimerMode: () => void;
