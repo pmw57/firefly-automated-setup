@@ -5,11 +5,13 @@ import { useGameState } from '../hooks/useGameState';
 import { useJobSetupDetails } from '../hooks/useJobSetupDetails';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
 import { StepComponentProps } from './StepContent';
-import { SpecialRule } from '../types';
+import { SpecialRule, StructuredContent, StructuredContentPart } from '../types';
 import { cls } from '../utils/style';
+import { StructuredContentRenderer } from './StructuredContentRenderer';
 
 export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
+  const { playerCount } = gameState;
   const { overrides = {} } = step;
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -23,7 +25,51 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     caperDrawCount,
     isContactListOverridden,
     jobDrawMode,
+    mainContent,
+    mainContentPosition,
   } = useJobSetupDetails(overrides);
+
+  const processedMainContent = useMemo(() => {
+    if (!mainContent) {
+      return undefined;
+    }
+
+    const process = (content: StructuredContent): StructuredContent => {
+      // FIX: Replaced chained `if` statements with a `switch` on `part.type` for robust type narrowing.
+      // This resolves a TypeScript error where the compiler couldn't correctly infer the type of `part.content`,
+      // leading to a type mismatch when recursively processing nested content.
+      return content.flatMap((part: StructuredContentPart): StructuredContentPart | StructuredContentPart[] => {
+        if (typeof part === 'string') {
+          return part;
+        }
+
+        switch (part.type) {
+          case 'placeholder':
+            if (part.id === 'wind-takes-us-draw-count') {
+              return playerCount <= 3
+                ? 'Draw 4 Job Cards each.'
+                : 'Draw 3 Job Cards each.';
+            }
+            return part;
+
+          case 'paragraph':
+          case 'warning-box':
+            return { ...part, content: process(part.content) };
+
+          case 'list':
+          case 'numbered-list':
+            return { ...part, items: part.items.map(item => process(item)) };
+
+          default:
+            // For types like 'strong', 'action', 'br', 'sub-list' which don't have
+            // nested StructuredContent that can contain placeholders, we can return them as-is.
+            return part;
+        }
+      });
+    };
+
+    return process(mainContent);
+  }, [mainContent, playerCount]);
 
   const sortedInfoBlocks = useMemo(() => {
     const blocks: SpecialRule[] = [];
@@ -58,23 +104,17 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     ? 'any of the Job Cards drawn.'
     : `up to ${cardsToDraw} Job Cards.`;
 
-  // The generic "No Starting Jobs" message is only hidden if there are explicit
-  // job instructions (a contact list or caper draw). It ignores all other informational blocks.
-  const hasContentToDisplay = showStandardContactList || caperDrawCount;
   const isSharedHand = jobDrawMode === 'shared_hand';
+  const showNoJobsMessage = !showStandardContactList && (jobDrawMode === 'no_jobs' || jobDrawMode === 'caper_start');
 
-  return (
-    <div className="space-y-6">
-      {sortedInfoBlocks.map((block, i) => <OverrideNotificationBlock key={`info-${i}`} {...block} />)}
+  const MainContentBlock = processedMainContent && (
+    <div className={cls(cardBg, "rounded-lg border p-4 md:p-6", cardBorder, "shadow-sm transition-colors duration-300 text-sm", textColor)}>
+      <StructuredContentRenderer content={processedMainContent} />
+    </div>
+  );
 
-      {caperDrawCount && (
-          <OverrideNotificationBlock 
-              source="story" 
-              title="Caper Bonus" 
-              content={[`Draw ${caperDrawCount} Caper Card${caperDrawCount > 1 ? 's' : ''}.`]} 
-          />
-      )}
-
+  const StandardContentBlock = (
+    <>
       {showStandardContactList && (
           <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm transition-colors duration-300 overflow-hidden")}>
           <div className="p-4 md:p-6">
@@ -111,11 +151,36 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
           </div>
           </div>
       )}
-
-      {!hasContentToDisplay && (
+      {showNoJobsMessage && (
         <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-6 text-center", textColor)}>
           <p className="font-semibold">No Starting Jobs are dealt for this setup.</p>
         </div>
+      )}
+    </>
+  );
+
+  return (
+    <div className="space-y-6">
+      {sortedInfoBlocks.map((block, i) => <OverrideNotificationBlock key={`info-${i}`} {...block} />)}
+
+      {caperDrawCount && (
+          <OverrideNotificationBlock 
+              source="story" 
+              title="Caper Bonus" 
+              content={[`Draw ${caperDrawCount} Caper Card${caperDrawCount > 1 ? 's' : ''}.`]} 
+          />
+      )}
+
+      {mainContentPosition === 'after' ? (
+        <>
+          {StandardContentBlock}
+          {MainContentBlock}
+        </>
+      ) : (
+        <>
+          {MainContentBlock}
+          {StandardContentBlock}
+        </>
       )}
     </div>
   );

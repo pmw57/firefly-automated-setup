@@ -12,7 +12,8 @@ export type StructuredContentPart =
   | { type: 'numbered-list'; items: StructuredContent[] }
   | { type: 'paragraph'; content: StructuredContent }
   | { type: 'warning-box'; content: StructuredContent }
-  | { type: 'sub-list'; items: { ship: string; color: ThemeColor }[] };
+  | { type: 'sub-list'; items: { ship: string; color: ThemeColor }[] }
+  | { type: 'placeholder'; id: string };
 
 export type StructuredContent = StructuredContentPart[];
 
