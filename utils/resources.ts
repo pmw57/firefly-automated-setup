@@ -7,8 +7,7 @@ import {
     ResourceConflict,
     SpecialRule,
     CreateAlertTokenStackRule,
-    TokenStack,
-    StructuredContent
+    TokenStack
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { RULE_PRIORITY_ORDER } from '../data/constants';
@@ -124,18 +123,6 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
       description,
       rule
     });
-
-    if (rule.title) {
-      const content: StructuredContent = ['Create a stack of ', { type: 'strong', content: `${count} ${tokenName}` }];
-      if (rule.multiplier) {
-        content.push(` (${rule.multiplier} per player).`);
-      }
-      specialRules.push({
-        source: 'story',
-        title: rule.title,
-        content
-      });
-    }
   }
 
   const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
