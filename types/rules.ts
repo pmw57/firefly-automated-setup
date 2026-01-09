@@ -66,7 +66,15 @@ export interface SetNavModeRule extends BaseRule { type: 'setNavMode'; mode: Nav
 export interface SetPrimeModeRule extends BaseRule { type: 'setPrimeMode'; mode: PrimeMode; }
 export interface SetDraftModeRule extends BaseRule { type: 'setDraftMode'; mode: DraftMode; }
 export interface SetLeaderSetupRule extends BaseRule { type: 'setLeaderSetup'; mode: LeaderSetupMode; }
-export interface SetShipPlacementRule extends BaseRule { type: 'setShipPlacement'; location: 'persephone' | 'londinium' | 'outside_alliance' | { custom: string }; }
+export interface SetShipPlacementRule extends BaseRule {
+  type: 'setShipPlacement';
+  location:
+    | 'persephone'
+    | 'londinium'
+    | 'outside_alliance'
+    | { sector: string }
+    | { region: string };
+}
 export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer' | 'goal'; rule: Omit<SpecialRule, 'source'>; }
 
 export interface AddFlagRule extends BaseRule { 
