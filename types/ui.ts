@@ -118,6 +118,7 @@ export interface DraftRuleDetails {
   isHavenDraft: boolean;
   isBrowncoatDraft: boolean;
   specialStartSector: string | null;
+  placementRegionRestriction: string | null;
   conflictMessage: StructuredContent | null;
   startOutsideAllianceSpace?: boolean;
   excludeNewCanaanPlacement?: boolean;

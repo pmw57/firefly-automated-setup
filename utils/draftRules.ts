@@ -19,6 +19,8 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const allRules = getResolvedRules(gameState);
     const activeStoryCard = getActiveStoryCard(gameState);
 
+    const REGIONS = ['border of Murphy'];
+
     // Process generic special rules for this step category
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule' && rule.category === 'draft') {
@@ -76,6 +78,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const shipPlacementRule = allRules.find(r => r.type === 'setShipPlacement') as (SetShipPlacementRule | undefined);
     
     let specialStartSector: string | null = null;
+    let placementRegionRestriction: string | null = null;
     
     if (shipPlacementRule) {
       if (typeof shipPlacementRule.location === 'string') {
@@ -88,7 +91,12 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
               break;
         }
       } else if (typeof shipPlacementRule.location === 'object' && shipPlacementRule.location.custom) {
-        specialStartSector = shipPlacementRule.location.custom;
+        const locationName = shipPlacementRule.location.custom;
+        if (REGIONS.includes(locationName)) {
+            placementRegionRestriction = locationName;
+        } else {
+            specialStartSector = locationName;
+        }
       }
     }
 
@@ -168,5 +176,5 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     
     if (startOutsideAllianceSpace) specialRules.push({ source: 'warning', title: 'Placement Restriction', content: ['Starting locations may not be within Alliance Space.'] });
 
-    return { specialRules, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement, isWantedLeaderMode, havenPlacementRules };
+    return { specialRules, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, placementRegionRestriction, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement, isWantedLeaderMode, havenPlacementRules };
 };

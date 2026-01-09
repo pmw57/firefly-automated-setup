@@ -116,6 +116,7 @@ const PlacementOrderPanel = ({
     isBrowncoatDraft,
     isGoingLegit,
     specialStartSector,
+    placementRegionRestriction,
     startOutsideAllianceSpace,
     excludeNewCanaanPlacement,
     mustBeInBorderSpace,
@@ -128,6 +129,7 @@ const PlacementOrderPanel = ({
     isBrowncoatDraft: boolean;
     isGoingLegit: boolean;
     specialStartSector: string | null;
+    placementRegionRestriction: string | null;
     startOutsideAllianceSpace: boolean;
     excludeNewCanaanPlacement: boolean;
     mustBeInBorderSpace: boolean;
@@ -145,7 +147,6 @@ const PlacementOrderPanel = ({
     const specialPlacementBg = isDark ? 'bg-amber-950/40 border-amber-800' : 'bg-amber-50 border-amber-200';
     const specialPlacementTitle = isDark ? 'text-amber-100' : 'text-amber-900';
     const specialPlacementText = isDark ? 'text-amber-300' : 'text-amber-800';
-    const specialPlacementSub = isDark ? 'text-amber-400' : 'text-amber-700';
 
     let description: string;
     let placementTitle = isHavenDraft ? 'Haven Placement' : 'Placement';
@@ -157,9 +158,8 @@ const PlacementOrderPanel = ({
         placementTitle = 'Special Placement';
         content = (
             <div className={cls("p-4 rounded text-center border", specialPlacementBg)}>
-                <p className={cls("font-bold mb-1", specialPlacementTitle)}>{placementTitle}</p>
-                <p className={cls("text-sm", specialPlacementText)}>All ships start at <strong>{specialStartSector}</strong>.</p>
-                <p className={cls("text-xs italic mt-1", specialPlacementSub)}>(Do not place in separate sectors)</p>
+                <p className={cls("font-bold mb-1", specialPlacementTitle)}>Fixed Starting Sector</p>
+                <p className={cls("text-sm", specialPlacementText)}>All ships start in <strong>{specialStartSector}</strong>.</p>
             </div>
         );
     } else if (isGoingLegit) {
@@ -218,6 +218,11 @@ const PlacementOrderPanel = ({
                 {mustBeInBorderSpace && (
                     <p className={cls("text-xs mb-3 font-bold", restrictionTextColor)}>
                         ⚠️ Restriction: Havens must be placed in Border Space.
+                    </p>
+                )}
+                {placementRegionRestriction && (
+                    <p className={cls("text-xs mb-3 font-bold", restrictionTextColor)}>
+                        ⚠️ Restriction: All ships must start in the <strong>{placementRegionRestriction}</strong>.
                     </p>
                 )}
                 
@@ -310,6 +315,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       isBrowncoatDraft,
       isWantedLeaderMode,
       specialStartSector,
+      placementRegionRestriction,
       startOutsideAllianceSpace,
       excludeNewCanaanPlacement,
       havenPlacementRules,
@@ -433,6 +439,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 isBrowncoatDraft={isBrowncoatDraft}
                 isGoingLegit={isGoingLegit}
                 specialStartSector={specialStartSector}
+                placementRegionRestriction={placementRegionRestriction}
                 startOutsideAllianceSpace={!!startOutsideAllianceSpace}
                 excludeNewCanaanPlacement={!!excludeNewCanaanPlacement}
                 mustBeInBorderSpace={mustBeInBorderSpace}
