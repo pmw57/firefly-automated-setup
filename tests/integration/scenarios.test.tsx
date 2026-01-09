@@ -151,7 +151,7 @@ describe('Integration Scenarios', () => {
     localStorage.setItem('firefly_gameState_v3', JSON.stringify(initialState));
     render(<App />);
 
-    const ruleBlock = await screen.findByRole('region', { name: "Story Override Smuggler's Blues Contraband" });
+    const ruleBlock = await screen.findByRole('region', { name: "Story Override A Lucrative Opportunity" });
     expect(ruleBlock).toHaveTextContent(/Place 3 Contraband on each planetary sector in Alliance Space/i);
   });
 });

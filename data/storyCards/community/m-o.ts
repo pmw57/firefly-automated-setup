@@ -216,4 +216,23 @@ export const STORIES_M_O: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1119976/story-card-old-friends-and-new",
     rating: 2
   },
+  {
+    title: "Seeds Of Rebellion",
+    intro: "The New Resistance is ready to open up some eyes and change a few hearts. They need a savvy captain to deliver key personnel to the heart of Alliance Space.",
+    setupDescription: "You may not deal with Harken. Place harken's 7 Immoral Transport Jobs in separate discard pile to represent New Resistance Missions. ",
+    requiredExpansion: "tenth",
+    additionalRequirements: ["blue", "kalidasa"],
+    isSolo: true,
+    sourceUrl: "https://boardgamegeek.com/image/8860507/sjliver",
+    rules: createStoryRules("Seeds Of Rebellion", [
+      { type: 'addFlag', flag: 'soloGameTimer' },
+      { type: 'forbidContact', contact: 'Harken' }
+    ]),
+    advancedRule: {
+      id: "adv_lost_little_lambs",
+      title: "Lost Little Lambs",
+      description: "Rescuing crew has additional complications and risks.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
+    }
+  }
 ];
