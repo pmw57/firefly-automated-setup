@@ -321,24 +321,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   );
   
   const mustBeInBorderSpace = useMemo(() => 
-    specialRules.some(rule => {
-      const contentString = JSON.stringify(rule.content);
-      if (!contentString.includes("Border Space")) {
-        return false;
-      }
-      
-      const title = rule.title || '';
-      // Explicitly check for the story-specific rule title.
-      if (title === "Salvager's Stash") {
-        return true;
-      }
-      // Keep the old logic as a fallback for other potential rules.
-      if (title.toLowerCase().includes('placement')) {
-        return true;
-      }
-
-      return false;
-    }),
+    specialRules.some(rule => rule.flags?.includes('havensInBorderSpace')),
     [specialRules]
   );
 

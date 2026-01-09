@@ -23,4 +23,5 @@ export interface SpecialRule {
     // FIX: Add optional 'page' and 'manual' properties to align with SpecialRuleBlockProps
     page?: string | number;
     manual?: string;
+    flags?: string[];
 }

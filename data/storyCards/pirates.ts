@@ -15,9 +15,11 @@ export const PIRATES_STORIES: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: "Salvager's Stash",
-          content: ['Choose Havens. Havens ', { type: 'strong', content: 'must be in Border Space' }, '.']
+          content: ['Choose Havens. Havens ', { type: 'strong', content: 'must be in Border Space' }, '.'],
+          flags: ['havensInBorderSpace']
         }
       },
+      { type: 'addFlag', flag: 'hasConditionalHavenPageReference' },
       {
         type: 'addSpecialRule',
         category: 'jobs',

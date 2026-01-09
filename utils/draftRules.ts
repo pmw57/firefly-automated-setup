@@ -31,8 +31,8 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
         }
     });
     
-    // Special handling for "...Another Man's Treasure" page references
-    if (activeStoryCard?.title === "...Another Man's Treasure") {
+    // Dynamically add page reference for stories that require it based on game state
+    if (hasRuleFlag(allRules, 'hasConditionalHavenPageReference')) {
         const havenRule = specialRules.find(r => r.title === "Salvager's Stash");
         if (havenRule) {
             havenRule.page = gameState.expansions.tenth ? 35 : 13;
@@ -77,19 +77,18 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     
     let specialStartSector: string | null = null;
     
-    // Check for machine-readable placement rules first
     if (shipPlacementRule) {
-      switch (shipPlacementRule.location) {
-        case 'persephone':
-            if (!isHeroesCustomSetup) specialStartSector = 'Persephone';
-            break;
-        case 'londinium':
-            specialStartSector = 'Londinium';
-            break;
-        case 'border_of_murphy':
-            // This is now the placeholder for Ruining It For Everyone's special start
-            specialStartSector = "St. Albans, Red Sun";
-            break;
+      if (typeof shipPlacementRule.location === 'string') {
+        switch (shipPlacementRule.location) {
+          case 'persephone':
+              if (!isHeroesCustomSetup) specialStartSector = 'Persephone';
+              break;
+          case 'londinium':
+              specialStartSector = 'Londinium';
+              break;
+        }
+      } else if (typeof shipPlacementRule.location === 'object' && shipPlacementRule.location.custom) {
+        specialStartSector = shipPlacementRule.location.custom;
       }
     }
 

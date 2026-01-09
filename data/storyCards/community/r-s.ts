@@ -90,7 +90,7 @@ export const STORIES_R_S: StoryCardDef[] = [
       { type: 'setComponent', stepId: STEP_IDS.C3, component: 'RuiningItDraftStep' },
       { type: 'setComponent', stepId: STEP_IDS.C5, component: 'RuiningItResourcesStep' },
       { type: 'setComponent', stepId: STEP_IDS.C6, component: 'RuiningItJobsStep' },
-      { type: 'setShipPlacement', location: 'border_of_murphy' }, // Placeholder for special start
+      { type: 'setShipPlacement', location: { custom: 'St. Albans, Red Sun' } },
       { type: 'modifyResource', resource: 'credits', method: 'add', value: -1000, description: "Base funds adjusted for story." },
       { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "Your twin stole your starting fuel." },
       { type: 'modifyResource', resource: 'parts', method: 'disable', description: "Your twin stole your starting parts." },
@@ -233,7 +233,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     setupDescription: "Amnon Duul is unavailable. Start on the Border of Murphy.",
     rules: createStoryRules("Shadows Over Duul", [
       { type: 'forbidContact', contact: CONTACT_NAMES.AMNON_DUUL },
-      { type: 'setShipPlacement', location: 'border_of_murphy' }
+      { type: 'setShipPlacement', location: { custom: 'Border of Murphy' } }
     ]),
     rating: 2,
   },
