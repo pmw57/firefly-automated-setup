@@ -18,8 +18,7 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
           content: ["All Players start with a Warrant token."]
         }
       },
-      { type: 'setJobMode', mode: 'no_jobs' },
-      { type: 'addFlag', flag: 'sharedHandSetup' },
+      { type: 'setJobMode', mode: 'shared_hand' },
       {
         type: 'addSpecialRule',
         category: 'jobs',

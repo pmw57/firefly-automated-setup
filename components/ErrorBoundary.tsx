@@ -31,7 +31,6 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
   handleReset = () => {
     this.setState({ hasError: false, error: null });
-    window.location.reload();
   };
 
   render(): React.ReactNode {
