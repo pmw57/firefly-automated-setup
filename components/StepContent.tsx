@@ -17,6 +17,9 @@ export interface StepComponentProps {
   onPrev: () => void;
   isNavigating: boolean;
   isDevMode?: boolean;
+  // New props for MissionDossierStep
+  openOverrideModal?: (onContinue: () => void) => void;
+  hasUnacknowledgedPastOverrides?: boolean;
 }
 
 const StepLoading: React.FC = () => (
@@ -77,7 +80,7 @@ const STORY_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
     RuiningItJobsStep,
 };
 
-export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode }: StepComponentProps): React.ReactElement => {
+export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, openOverrideModal, hasUnacknowledgedPastOverrides }: StepComponentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -114,7 +117,15 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode }: S
 
     const Component = STEP_COMPONENT_REGISTRY[step.id];
     if (Component) {
-      return <Component step={step} onNext={onNext} onPrev={onPrev} isNavigating={isNavigating} />;
+      return <Component 
+        step={step} 
+        onNext={onNext} 
+        onPrev={onPrev} 
+        isNavigating={isNavigating}
+        isDevMode={isDevMode}
+        openOverrideModal={openOverrideModal}
+        hasUnacknowledgedPastOverrides={hasUnacknowledgedPastOverrides}
+      />;
     }
 
     return <div className="text-red-500">Content for step '{step.id}' not found.</div>;
