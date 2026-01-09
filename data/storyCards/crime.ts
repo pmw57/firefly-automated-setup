@@ -34,8 +34,8 @@ export const CRIME_STORIES: StoryCardDef[] = [
         type: "addSpecialRule",
         category: "jobs",
         rule: {
-          title: "Contact Deck Bonus",
-          content: ["Place a $2000 Bill under the Contact Decks for Amnon Duul, Patience, Badger, and Niska."]
+          title: "A Reliable Fence",
+          content: ["Place a $2000 Bill under the Contact Decks for Amnon Duul, Patience, Badger, and Niska. The first player to sell 3 Contraband to any one of these Contacts claims that Contact's bonus."]
         },
       },
       {
