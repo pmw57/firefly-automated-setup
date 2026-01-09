@@ -65,7 +65,15 @@ export const TENTH_STORIES: StoryCardDef[] = [
     additionalRequirements: ["kalidasa"],
     sourceUrl: "https://boardgamegeek.com/image/8103877",
     rules: createStoryRules("It's a Mad, Mad, Mad, Mad 'Verse!", [
-      { type: 'setShipPlacement', location: 'persephone' }
+      { type: 'setShipPlacement', location: 'persephone' },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: "A Frenzied Race",
+          content: ["Players begin at Persephone."]
+        }
+      }
     ])
   },
   {
