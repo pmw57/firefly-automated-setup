@@ -19,14 +19,22 @@ export const CRIME_STORIES: StoryCardDef[] = [
           content: ["Place 3 Contraband on each planetary sector in Alliance Space."]
         }
       },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: "A Lucrative Opportunity",
+          content: ["Place 3 Contraband on each planetary sector in Alliance space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead."]
+        }
+      },
       { type: "addFlag", flag: "startWithAlertCard" },
       { type: "setShipPlacement", location: "londinium" },
       {
         type: "addSpecialRule",
         category: "draft",
         rule: {
-          title: "Story Override: Starting Location",
-          content: ["All players begin the game at Londinium. The standard draft for ship/leader selection still occurs, but placement is fixed."]
+          title: "In the Belly of the Beast",
+          content: ["Players begin at Londinium."]
         },
       },
       { type: "setJobMode", mode: "no_jobs" },

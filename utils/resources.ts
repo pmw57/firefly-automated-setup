@@ -146,12 +146,6 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
         if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
             const newRule = { source: rule.source as SpecialRule['source'], ...rule.rule };
             
-            // Special handling for Smuggler's Blues: Don't show the override block
-            // if the interactive radio button UI is being shown instead.
-            if (newRule.title === "Smuggler's Blues Contraband" && smugglersBluesVariantAvailable) {
-                return; // skip pushing to specialRules
-            }
-            
             specialRules.push(newRule);
             
             // Check if this rule should also be displayed inside the resource card
