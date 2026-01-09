@@ -171,7 +171,5 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
 
     if (allianceSpaceOffLimits) specialRules.push({ source: 'warning', title: 'Restricted Airspace', content: [{ type: 'strong', content: `Alliance Space is Off Limits` }, ` until Goal 3.`] });
     
-    if (startOutsideAllianceSpace) specialRules.push({ source: 'warning', title: 'Placement Restriction', content: ['Starting locations may not be within Alliance Space.'] });
-
     return { specialRules, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, placementRegionRestriction, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement, isWantedLeaderMode, havenPlacementRules };
 };

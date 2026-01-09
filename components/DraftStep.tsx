@@ -206,8 +206,8 @@ const PlacementOrderPanel = ({
                 </p>
 
                 {startOutsideAllianceSpace && (
-                    <p className={cls("text-xs mb-3 font-bold", restrictionTextColor)}>
-                        ⚠️ Restriction: Starting locations may not be within Alliance Space.
+                    <p className={cls("text-sm mb-3 font-bold text-center", restrictionTextColor)}>
+                        ⚠️ Not within Alliance Space
                     </p>
                 )}
                 {excludeNewCanaanPlacement && (

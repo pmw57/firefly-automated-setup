@@ -56,12 +56,20 @@ export const CRIME_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/3524452",
     rules: createStoryRules("Wanted Men", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'A Price on Your Head',
+          content: ["Each player starts the game with 1 Warrant."]
+        }
+      },
       { type: 'addFlag', flag: 'startOutsideAllianceSpace' },
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: 'Placement Restriction',
+          title: 'Laying Low',
           content: ["Players' starting locations may not be within Alliance Space."]
         }
       },
@@ -71,15 +79,15 @@ export const CRIME_STORIES: StoryCardDef[] = [
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
-          title: "Limited Job Contacts",
-          content: ["Job contacts are limited. Draw one Job Card from each Contact listed below."]
+          title: "Known Associates",
+          content: ["Starting Jobs may only be drawn from Patience, Badger, Niska, Mr. Universe and Fanty & Mingo."]
         }
       },
       {
         type: 'addSpecialRule',
         category: 'prime',
         rule: {
-          title: 'Alliance High Alert',
+          title: 'Feeling the Heat',
           content: ["Begin the game with one random Alliance Alert Card in play."]
         }
       }
