@@ -23,7 +23,7 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
-          title: 'Shared Hand of Inactive Jobs',
+          title: "Employer's Scraps",
           content: ["No Starting Jobs are dealt. Instead, a shared pool of jobs is available to all players from the start of the game. One face-up Job Card is placed on top of each Contact's deck. These form the shared hand of Inactive Jobs. Players may take a face-up Job from this shared hand by using a Deal Action at the Contact's location. When a shared Job is taken, it is immediately replaced with the next card from that Contact's deck."]
         }
       }
