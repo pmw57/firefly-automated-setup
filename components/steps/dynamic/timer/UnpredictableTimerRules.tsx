@@ -54,10 +54,7 @@ export const UnpredictableTimerRules: React.FC<TimerRulesProps> = ({
       
       {mode === 'unpredictable' ? (
         <div className="mt-4 pt-4 border-t border-dashed border-zinc-700/50 animate-fade-in space-y-4">
-          <OverrideNotificationBlock source="expansion" title="Pirates & Bounty Hunters Rule" content={[
-            { type: 'paragraph', content: ["Replace the bottom Game Length Tokens with numbered Destination Tokens."] },
-            { type: 'paragraph', content: [{ type: 'strong', content: 'The Mechanic:' }, " Whenever you discard a numbered Game Length Token, ", { type: 'strong', content: 'roll a die' }, ". If you roll ", { type: 'strong', content: 'equal to or lower' }, " than the number, discard all remaining Game Length Tokens. Take one final turn."] }
-          ]}/>
+          <OverrideNotificationBlock source="expansion" title="Pirates & Bounty Hunters Rule" content={[{ type: 'paragraph', content: ["Replace the bottom Game Length Tokens with numbered Destination Tokens."] }, { type: 'paragraph', content: [{ type: 'strong', content: "The Mechanic:" }, " Whenever you discard a numbered Game Length Token, roll a die. If you roll equal to or lower than the number, discard all remaining Game Length Tokens. Take one final turn."] }]}/>
 
           <div className={cls("p-4 rounded-lg border", isDark ? 'bg-zinc-800/30 border-zinc-700' : 'bg-gray-50 border-gray-200')}>
             <h4 className={`font-bold text-sm uppercase tracking-wide mb-3 ${isDark ? 'text-amber-400' : 'text-amber-800'}`}>

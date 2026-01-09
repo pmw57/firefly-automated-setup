@@ -25,14 +25,7 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
         category: 'jobs',
         rule: {
           title: 'Shared Hand of Inactive Jobs',
-          content: [
-            { type: 'paragraph', content: ["No Starting Jobs are dealt. Instead, a shared pool of jobs is available to all players from the start of the game."] },
-            { type: 'list', items: [
-              ["One ", { type: 'strong', content: 'face-up Job Card' }, " is placed on top of each Contact's deck. These form the shared hand of ", { type: 'strong', content: 'Inactive Jobs' }, "."],
-              ["Players may take a face-up Job from this shared hand by using a ", { type: 'strong', content: 'Deal Action' }, " at the Contact's location."],
-              ["When a shared Job is taken, it is immediately replaced with the next card from that Contact's deck."]
-            ]}
-          ]
+          content: ["No Starting Jobs are dealt. Instead, a shared pool of jobs is available to all players from the start of the game. One face-up Job Card is placed on top of each Contact's deck. These form the shared hand of Inactive Jobs. Players may take a face-up Job from this shared hand by using a Deal Action at the Contact's location. When a shared Job is taken, it is immediately replaced with the next card from that Contact's deck."]
         }
       }
     ])
@@ -50,16 +43,7 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
         category: 'jobs',
         rule: {
           title: "The Winds of Fate",
-          content: [
-            { type: 'paragraph', content: ["Each player draws jobs from a single Contact Deck of their choice:"] },
-            { type: 'list', items: [
-              ["Draw ", { type: 'strong', content: "4 Job Cards" }, " each (for 3 or fewer players)."],
-              ["Draw ", { type: 'strong', content: "3 Job Cards" }, " each (for 4 or more players)."]
-            ]},
-            { type: 'paragraph', content: ['Place a ', { type: 'strong', content: 'Goal Token' }, ' at each Job\'s Drop Off / Target / Destination Sector.'] },
-            { type: 'paragraph', content: ['After placing tokens, return all drawn Job cards to their Contact Decks and reshuffle the decks.'] },
-            { type: 'paragraph', content: [{ type: 'strong', content: 'Do not deal any other Starting Jobs.' }] }
-          ]
+          content: ["Each player draws jobs from a single Contact Deck of their choice: Draw 4 Job Cards each (for 3 or fewer players). Draw 3 Job Cards each (for 4 or more players). Place a Goal Token at each Job's Drop Off / Target / Destination Sector. After placing tokens, return all drawn Job cards to their Contact Decks and reshuffle the decks. Do not deal any other Starting Jobs."]
         }
       }
     ])

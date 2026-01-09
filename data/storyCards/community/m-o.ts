@@ -16,7 +16,7 @@ export const STORIES_M_O: StoryCardDef[] = [
         category: 'goal',
         rule: {
           title: 'Gameplay Note',
-          content: ['This story features special high-value cargo sales rules that apply during gameplay.']
+          content: ["This story features special high-value cargo sales rules that apply during gameplay."]
         }
       }
     ]),
@@ -35,13 +35,7 @@ export const STORIES_M_O: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Special Draft & Hiring Rules',
-          content: [
-            { type: 'list', items: [
-              ['Each player must choose a ', { type: 'strong', content: 'Moral Leader' }, '.'],
-              [{ type: 'strong', content: 'Special Hiring Round:' }, ' Starting with the 1st player, each player searches for and hires one crew card from any supply deck. Continue hiring rounds until all ships are full.'],
-              [{ type: 'strong', content: 'Fixed Crew:' }, ' Remove all other crew cards from play. You may only use the crew you start with.'],
-            ]}
-          ]
+          content: ["Each player must choose a Moral Leader. Special Hiring Round: Starting with the 1st player, each player searches for and hires one crew card from any supply deck. Continue hiring rounds until all ships are full. Fixed Crew: Remove all other crew cards from play. You may only use the crew you start with."]
         }
       },
       {
@@ -49,7 +43,7 @@ export const STORIES_M_O: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: 'Mandatory Ship Upgrade',
-          content: ["After collecting Starting Supplies, each player must pay ", { type: 'strong', content: '$600' }, " for an ", { type: 'strong', content: 'Expanded Crew Quarters' }, ", increasing crew capacity by 3."]
+          content: ["After collecting Starting Supplies, each player must pay $600 for an Expanded Crew Quarters, increasing crew capacity by 3."]
         }
       },
       {
@@ -57,7 +51,7 @@ export const STORIES_M_O: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: 'Game Timer',
-          content: ["Use ", { type: 'strong', content: '7 Disgruntled tokens' }, " as a timer. The first player discards 1 token at the start of each round. When the timer runs out, a special game event occurs (arrest of 4 crew members from each ship)."]
+          content: ["Use 7 Disgruntled tokens as a timer. The first player discards 1 token at the start of each round. When the timer runs out, a special game event occurs (arrest of 4 crew members from each ship)."]
         }
       }
     ])
@@ -101,12 +95,7 @@ export const STORIES_M_O: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Special Placement & Crew Draw',
-          content: [
-            { type: 'list', items: [
-              ["Place your Firefly on a supply world to begin the game."],
-              ["Draw 1 starting crew from any deck by flipping the draw pile and taking the first named character that is revealed."]
-            ]}
-          ]
+          content: ["Place your Firefly on a supply world to begin the game. Draw 1 starting crew from any deck by flipping the draw pile and taking the first named character that is revealed."]
         }
       }
     ])
@@ -133,13 +122,7 @@ export const STORIES_M_O: StoryCardDef[] = [
         category: 'goal',
         rule: {
           title: 'Rescue Mission Setup',
-          content: [
-            { type: 'list', items: [
-              ['Place ', { type: 'strong', content: 'Serenity' }, ' on Shadow, Murphy as the drop-off point for rescued crew.'],
-              ['Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together.'],
-              ['Place them face down as the ', { type: 'strong', content: '"Prisoner Deck"' }, '. They are your goals for this game.']
-            ]}
-          ]
+          content: ["Place Serenity on Shadow, Murphy as the drop-off point for rescued crew. Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together. Place them face down as the \"Prisoner Deck\". They are your goals for this game."]
         }
       }
     ]),
@@ -194,14 +177,7 @@ export const STORIES_M_O: StoryCardDef[] = [
         category: 'prime',
         rule: {
           title: 'Custom Mudder Deck',
-          content: [
-            { type: 'list', items: [
-              ['Pull all ', { type: 'strong', content: 'Mudders' }, ' from Supply decks.'],
-              ['Shuffle together the ', { type: 'strong', content: 'Foreman' }, ' plus ', { type: 'strong', content: '3 Mudders per player' }, '.'],
-              ['Place this new deck face up.'],
-              ['If the Foreman is on top after a shuffle, reshuffle.']
-            ]}
-          ]
+          content: ["Pull all Mudders from Supply decks. Shuffle together the Foreman plus 3 Mudders per player. Place this new deck face up. If the Foreman is on top after a shuffle, reshuffle."]
         }
       }
     ])

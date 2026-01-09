@@ -205,10 +205,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
         category: 'prime',
         rule: {
           title: 'Flying Solo',
-          content: [
-            { type: 'paragraph', content: ['After priming, you may ', { type: 'strong', content: 'spend up to $1000' }, ' to buy ', { type: 'strong', content: 'up to 4 Supply Cards' }, ' that were revealed.'] },
-            { type: 'paragraph', content: ['Discounts from special abilities apply. ', { type: 'strong', content: 'Replace any purchased cards.' }] }
-          ]
+          content: ["After priming, you may spend up to $1000 to buy up to 4 Supply Cards that were revealed. Discounts from special abilities apply. Replace any purchased cards."]
         }
       }
     ]),
@@ -235,7 +232,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { 
         type: 'addSpecialRule', 
         category: 'jobs',
-        rule: { title: 'Caper Bonus', content: ['Draw 1 Caper Card.'] }
+        rule: { title: 'Caper Bonus', content: ["Draw 1 Caper Card."] }
       }
     ]),
     steps: [
@@ -306,10 +303,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
         category: 'jobs',
         rule: {
           title: 'Solitaire Firefly: Jobs & Contacts',
-          content: [
-            { type: 'paragraph', content: ["For each Contact you were Solid with at the end of the last game, remove 2 of your completed Jobs from play."] },
-            { type: 'paragraph', content: ["Keep any remaining completed Jobs; you begin the game Solid with those Contacts."] }
-          ]
+          content: ["For each Contact you were Solid with at the end of the last game, remove 2 of your completed Jobs from play. Keep any remaining completed Jobs; you begin the game Solid with those Contacts."]
         }
       },
       {
@@ -317,11 +311,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
         category: 'prime',
         rule: {
           title: 'Solitaire Firefly: Supplies',
-          content: [
-            { type: 'paragraph', content: ['You receive your standard starting credits. ', { type: 'strong', content: 'Remember to add any money you saved from the last game.' }] },
-            { type: 'paragraph', content: ['After priming, you may spend up to ', { type: 'strong', content: '$1000 (plus your saved money)' }, ' to repurchase any Supply Cards you set aside at the end of the last game.'] },
-            { type: 'paragraph', content: ["Place any unpurchased cards into their discard piles."] }
-          ]
+          content: ["You receive your standard starting credits. Remember to add any money you saved from the last game. After priming, you may spend up to $1000 (plus your saved money) to repurchase any Supply Cards you set aside at the end of the last game. Place any unpurchased cards into their discard piles."]
         }
       }
     ]),

@@ -1,5 +1,3 @@
-
-
 import { StoryCardDef } from '../../types/index';
 import { createStoryRules } from './utils';
 
@@ -239,6 +237,14 @@ export const SOLO_STORIES: StoryCardDef[] = [
           title: 'Story Setup: Haven',
           content: [{ type: 'strong', content: `Place your Haven at Deadwood (Blue Sun).` }, { type: 'br' }, `If you end your turn at your Haven, remove Disgruntled from all Crew.`]
         }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'soloTimer',
+        rule: {
+          title: 'Timer Disabled',
+          content: [{ type: 'paragraph', content: ["No Timer: Do not use a Game Timer for this game."] }]
+        }
       }
     ]),
     advancedRule: {
@@ -266,6 +272,14 @@ export const SOLO_STORIES: StoryCardDef[] = [
         rule: {
           title: 'Alliance High Alert',
           content: ['Begin the game with one random Alliance Alert Card in play.']
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'soloTimer',
+        rule: {
+          title: 'Timer Disabled',
+          content: [{ type: 'paragraph', content: ["No Timer: Do not use a Game Timer for this game."] }]
         }
       }
     ]),

@@ -14,12 +14,7 @@ export const STORIES_H_L: StoryCardDef[] = [
         category: 'goal',
         rule: {
           title: 'Special Setup: Contraband & Timer',
-          content: [
-            { type: 'list', items: [
-              ["Place 8 contraband tokens on each of the following sectors in Alliance Space: Londonium, Bernadette, Liann Jiun, Sihnon, Gonghe, and Bellerophon."],
-              ["Use 20 Disgruntled tokens as the game length timer. The player in first position discards 1 token at the start of each round. After the last token is discarded, all players take one final turn."]
-            ]}
-          ]
+          content: ["Place 8 contraband tokens on each of the following sectors in Alliance Space: Londonium, Bernadette, Liann Jiun, Sihnon, Gonghe, and Bellerophon. Use 20 Disgruntled tokens as the game length timer. The player in first position discards 1 token at the start of each round. After the last token is discarded, all players take one final turn."]
         }
       }
     ])
@@ -37,7 +32,7 @@ export const STORIES_H_L: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: "Missing Person",
-          content: ["Remove ", { type: 'strong', content: "River Tam" }, " from play."]
+          content: ["Remove River Tam from play."]
         }
       }
     ]),
@@ -91,11 +86,7 @@ export const STORIES_H_L: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Special Setup',
-          content: [
-            "Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant.",
-            { type: 'br' },
-            "Jubal Early uses the Interceptor, and uses a D8 die for movement, starting from Meridian."
-          ]
+          content: ["Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, and uses a D8 die for movement, starting from Meridian."]
         }
       }
     ])

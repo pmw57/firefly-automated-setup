@@ -15,12 +15,7 @@ export const STORIES_F_G: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Special Crew & Placement',
-          content: [
-            { type: 'list', items: [
-              ["After choosing your Leader, search for any ", { type: 'strong', content: 'Wanted crew' }, " from any deck and add them to your crew."],
-              ["You must start in Alliance Space."]
-            ]}
-          ]
+          content: ["After choosing your Leader, search for any Wanted crew from any deck and add them to your crew. You must start in Alliance Space."]
         }
       }
     ])
@@ -52,9 +47,7 @@ export const STORIES_F_G: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'A Port of Operation',
-          content: [
-            "While choosing starting positions, players must choose a planetary sector within Blue Sun system that is not a Contact or Supply sector. Mark the sector with a Haven Token. Leave unused ships out of the box as a \"For Sale\" pile."
-          ]
+          content: ["While choosing starting positions, players must choose a planetary sector within Blue Sun system that is not a Contact or Supply sector. Mark the sector with a Haven Token. Leave unused ships out of the box as a \"For Sale\" pile."]
         }
       }
     ])
@@ -72,17 +65,7 @@ export const STORIES_F_G: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Moral Compass',
-          content: [
-            {
-              type: 'list',
-              // FIX: Each item in a list must be an array (StructuredContent) to satisfy the type definition.
-              items: [
-                ["Only MORAL leaders can be chosen."],
-                ["Immoral Jobs cannot be accepted."],
-                ["Remove Crow from the game."]
-              ]
-            }
-          ]
+          content: ["Only MORAL leaders can be chosen. Immoral Jobs cannot be accepted. Remove Crow from the game."]
         }
       }
     ]),

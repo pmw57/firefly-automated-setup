@@ -26,7 +26,7 @@ export const CRIME_STORIES: StoryCardDef[] = [
         category: "draft",
         rule: {
           title: "Story Override: Starting Location",
-          content: [{ type: 'paragraph', content: ['All players begin the game at ', { type: 'strong', content: 'Londinium' }, '. The standard draft for ship/leader selection still occurs, but placement is fixed.'] }]
+          content: ["All players begin the game at Londinium. The standard draft for ship/leader selection still occurs, but placement is fixed."]
         },
       },
       { type: "setJobMode", mode: "no_jobs" },
@@ -35,7 +35,7 @@ export const CRIME_STORIES: StoryCardDef[] = [
         category: "jobs",
         rule: {
           title: "Contact Deck Bonus",
-          content: [{ type: 'paragraph', content: ['Place a ', { type: 'strong', content: '$2000 Bill' }, ' under the Contact Decks for ', { type: 'strong', content: 'Amnon Duul, Patience, Badger, and Niska' }, '.'] }]
+          content: ["Place a $2000 Bill under the Contact Decks for Amnon Duul, Patience, Badger, and Niska."]
         },
       },
       {
@@ -43,7 +43,7 @@ export const CRIME_STORIES: StoryCardDef[] = [
         category: 'prime',
         rule: {
           title: 'Alliance High Alert',
-          content: ['Begin the game with one random Alliance Alert Card in play.']
+          content: ["Begin the game with one random Alliance Alert Card in play."]
         }
       }
     ])
@@ -62,7 +62,7 @@ export const CRIME_STORIES: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Placement Restriction',
-          content: [`Players' starting locations `, { type: 'strong', content: `may not be within Alliance Space` }, `.`]
+          content: ["Players' starting locations may not be within Alliance Space."]
         }
       },
       { type: 'addFlag', flag: 'startWithAlertCard' },
@@ -80,7 +80,7 @@ export const CRIME_STORIES: StoryCardDef[] = [
         category: 'prime',
         rule: {
           title: 'Alliance High Alert',
-          content: ['Begin the game with one random Alliance Alert Card in play.']
+          content: ["Begin the game with one random Alliance Alert Card in play."]
         }
       }
     ])

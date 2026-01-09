@@ -41,7 +41,7 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: 'Alliance Space Lockdown',
-          content: ['Place an ', { type: 'action', content: 'Alliance Alert Token' }, ' on ', { type: 'strong', content: 'every planetary sector in Alliance Space' }, '.']
+          content: ["Place an Alliance Alert Token on every planetary sector in Alliance Space."]
         }
       }
     ])

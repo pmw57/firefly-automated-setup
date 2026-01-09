@@ -21,16 +21,7 @@ export const STORIES_A_D: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Land Grant & Outfitting',
-          content: [
-            {
-              type: 'list',
-              items: [
-                ["When placing ships, each player also places a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet."],
-                ["Players must buy a small ship (less than 10 cargo hold)."],
-                ["Buy parts/fuel at listed price."]
-              ]
-            }
-          ]
+          content: ["When placing ships, each player also places a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Players must buy a small ship (less than 10 cargo hold). Buy parts/fuel at listed price."]
         }
       }
     ])
@@ -73,18 +64,7 @@ export const STORIES_A_D: StoryCardDef[] = [
         category: 'prime',
         rule: {
           title: 'War Materiel Setup',
-          content: [
-            {
-              type: 'list',
-              items: [
-                ["Take all Crew cards with \"Fight\" skill and all gear cards with \"Fight\" skill, add crew compartment ship upgrades and put them all in one deck; Shuffle."],
-                ["Take all Misbehave cards with \"Fight\" skill checks; Shuffle."],
-                ["Remove half \"Keep Flying\" cards from Alliance and Border decks. Other cards won't be used."],
-                ["Players evenly pick Alliance or Independents (Browncoats). Deal 3 crew/gear to each player (disregard warrants)."],
-                ["Place ships in appropriate space. Alliance to inner planets, Browncoats to Border Planets."]
-              ]
-            }
-          ]
+          content: ["Take all Crew cards with \"Fight\" skill and all gear cards with \"Fight\" skill, add crew compartment ship upgrades and put them all in one deck; Shuffle. Take all Misbehave cards with \"Fight\" skill checks; Shuffle. Remove half \"Keep Flying\" cards from Alliance and Border decks. Other cards won't be used. Players evenly pick Alliance or Independents (Browncoats). Deal 3 crew/gear to each player (disregard warrants). Place ships in appropriate space. Alliance to inner planets, Browncoats to Border Planets."]
         }
       }
     ])
@@ -102,7 +82,7 @@ export const STORIES_A_D: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Starting Gear',
-          content: ["Each player begins the game with 1 ", { type: 'strong', content: 'Cry Baby' }, " on their ship."]
+          content: ["Each player begins the game with 1 Cry Baby on their ship."]
         }
       }
     ])
@@ -127,15 +107,7 @@ export const STORIES_A_D: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Special Starting Procedure',
-          content: [
-            { type: 'list', items: [
-              ["Players starting on a Supply world may choose three cards from that Supply deck."],
-              ["Crew are hired for free. Other cards must be paid for at half price from the player's starting cash."],
-              ["Corbin and Marco's half-price abilities apply (round up to nearest $100)."],
-              ["More than one player may start on the same world."],
-              ["Additional players must wait for the previous player to finish before selecting their cards."]
-            ]}
-          ]
+          content: ["Players starting on a Supply world may choose three cards from that Supply deck. Crew are hired for free. Other cards must be paid for at half price from the player's starting cash. Corbin and Marco's half-price abilities apply (round up to nearest $100). More than one player may start on the same world. Additional players must wait for the previous player to finish before selecting their cards."]
         }
       }
     ])

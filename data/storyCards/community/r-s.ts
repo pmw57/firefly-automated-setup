@@ -44,18 +44,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Asymmetric Setup',
-          content: [
-            { type: 'paragraph', content: [{ type: 'strong', content: 'Player 1 (Serenity):' }] },
-            { type: 'list', items: [
-              ['Leader: ', { type: 'strong', content: 'Malcolm' }, ', Ship: ', { type: 'strong', content: 'Serenity' }, '.'],
-              ['Crew: Zoë, Wash, Kaylee, Jayne, Inara, Book, Simon, and River.'],
-              ['Upgrades: Xùnsù Whisper X1 (Meridian), Expanded Crew Quarters (Osiris), EVA Suit (Space Bazaar for River).']
-            ]},
-            { type: 'paragraph', content: [{ type: 'strong', content: 'Player 2 (Bounty Hunter):' }] },
-            { type: 'list', items: [
-                ["Choose any Setup Card to determine starting conditions."]
-            ]}
-          ]
+          content: ["Player 1 (Serenity): Leader: Malcolm, Ship: Serenity. Crew: Zoë, Wash, Kaylee, Jayne, Inara, Book, Simon, and River. Upgrades: Xùnsù Whisper X1 (Meridian), Expanded Crew Quarters (Osiris), EVA Suit (Space Bazaar for River). Player 2 (Bounty Hunter): Choose any Setup Card to determine starting conditions."]
         }
       },
       {
@@ -63,12 +52,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'prime',
         rule: {
           title: 'Bounty Deck Setup',
-          content: [
-            { type: 'list', items: [
-              ["Remove all of Serenity's crew from the Bounty deck, ", { type: 'strong', content: 'excluding River Tam' }, "."],
-              ["The Bounty deck is placed face up and all bounties are active."]
-            ]}
-          ]
+          content: ["Remove all of Serenity's crew from the Bounty deck, excluding River Tam. The Bounty deck is placed face up and all bounties are active."]
         }
       }
     ])
@@ -100,9 +84,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: "Nothin' Left But The Hurt",
-          content: [
-            "Start with 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew. This is your new ship. Both ships starts on St. Albans, Red Sun."
-          ]
+          content: ["Start with 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew. This is your new ship. Both ships starts on St. Albans, Red Sun."]
         }
       },
       {
@@ -136,7 +118,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: "Missing Person",
-          content: ["Remove ", { type: 'strong', content: "River Tam" }, " from play."]
+          content: ["Remove River Tam from play."]
         }
       }
     ]),
@@ -166,7 +148,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: 'Starting Cargo',
-          content: ['Each player begins with ', { type: 'strong', content: '10 Cargo' }, '.']
+          content: ["Each player begins with 10 Cargo."]
         }
       },
       {
@@ -174,13 +156,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Scavenger Draft Rules',
-          content: [
-            { type: 'paragraph', content: [{ type: 'strong', content: 'No ships are used in this scenario.' }] },
-            { type: 'list', items: [
-              ["Roll for first player."],
-              ["First player chooses a Leader card, then passes the Leader deck to the next player until each player has chosen one."]
-            ]}
-          ]
+          content: ["No ships are used in this scenario. Roll for first player. First player chooses a Leader card, then passes the Leader deck to the next player until each player has chosen one."]
         }
       },
       {
@@ -188,7 +164,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'nav',
         rule: {
           title: 'Component Not Used',
-          content: ['Nav Decks are not used in this scenario.']
+          content: ["Nav Decks are not used in this scenario."]
         }
       },
       {
@@ -196,7 +172,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'allianceReaver',
         rule: {
           title: 'Component Not Used',
-          content: ['Alliance Cruiser and Reaver ships are not used in this scenario.']
+          content: ["Alliance Cruiser and Reaver ships are not used in this scenario."]
         }
       },
       {
@@ -204,7 +180,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'goal',
         rule: {
           title: 'Goal Override',
-          content: ['The standard goal step is not used. The goal is described on the main Story Card intro.']
+          content: ["The standard goal step is not used. The goal is described on the main Story Card intro."]
         }
       },
       {
@@ -212,7 +188,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'jobs',
         rule: {
           title: 'Component Not Used',
-          content: ['Job cards are not used in this scenario.']
+          content: ["Job cards are not used in this scenario."]
         }
       },
       {
@@ -220,7 +196,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'prime',
         rule: {
           title: 'Setup Step Skipped',
-          content: ['Do not "Prime the Pump". Shuffle all Supply Decks and place them face down near the bank.']
+          content: ["Do not \"Prime the Pump\". Shuffle all Supply Decks and place them face down near the bank."]
         }
       },
     ])
@@ -288,7 +264,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'prime',
         rule: {
           title: 'Priming Bonus',
-          content: [{ type: 'strong', content: 'Shu-ki is greasing the rails:' }, ' Turn up ', { type: 'strong', content: '2 additional cards' }, ' from each deck when Priming the Pump.']
+          content: ["Shu-ki is greasing the rails: Turn up 2 additional cards from each deck when Priming the Pump."]
         }
       },
       {
@@ -296,10 +272,7 @@ export const STORIES_R_S: StoryCardDef[] = [
         category: 'goal',
         rule: {
           title: 'Co-Op & Countdown',
-          content: [
-            { type: 'paragraph', content: [{ type: 'strong', content: '2-Player Co-Op:' }, " Both players win or lose together."] },
-            { type: 'paragraph', content: [{ type: 'strong', content: 'Countdown:' }, " Stack ", { type: 'strong', content: '16 Disgruntled Tokens' }, ". At the start of each player's turn, discard one token. The game ends when the last token is discarded."] },
-          ]
+          content: ["2-Player Co-Op: Both players win or lose together. Countdown: Stack 16 Disgruntled Tokens. At the start of each player's turn, discard one token. The game ends when the last token is discarded."]
         }
       }
     ]),
