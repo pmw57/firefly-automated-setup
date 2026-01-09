@@ -161,8 +161,6 @@ describe('rules/resources', () => {
           };
           const details = getResourceDetails(state);
           expect(details.smugglersBluesVariantAvailable).toBe(true);
-          // It should NOT add a special rule directly in this case
-          expect(details.specialRules.some(r => r.title?.includes("Smuggler's Blues"))).toBe(false);
       });
   
       it.concurrent('adds a special rule for standard placement when only Blue Sun is active', () => {
@@ -173,8 +171,8 @@ describe('rules/resources', () => {
           };
           const details = getResourceDetails(state);
           expect(details.smugglersBluesVariantAvailable).toBe(false);
-          const rule = details.specialRules.find(r => r.title === "Smuggler's Blues Contraband");
-          expect(rule).toBeDefined();
+          const rule = details.specialRules.find(r => r.title === "A Lucrative Opportunity");
+          expect(rule).not.toBeUndefined();
           const contentString = JSON.stringify(rule?.content);
           expect(contentString).toContain("3 Contraband");
           expect(contentString).toContain("Alliance Space");

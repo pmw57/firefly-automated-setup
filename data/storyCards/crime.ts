@@ -8,23 +8,15 @@ export const CRIME_STORIES: StoryCardDef[] = [
     intro: "Bringin' goods to folk who want 'em is an old-fashioned way to make a living... 'cept, sometimes, a law or two gets in the way.",
     requiredExpansion: "crime",
     sourceUrl: "https://boardgamegeek.com/image/3464668/firefly-the-game-crime-and-punishment",
-    setupDescription: "Place 3 Contraband on each planetary sector in Alliance space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead. Place a $2000 bill under Amnon Duul, Patience, Badger, and Niska's Contact Decks. Players do not receive Starting Jobs and begin at Londinium. Start with one random Alliance Alert Card in play.",
+    setupDescription: "Place 3 Contraband on each planetary sector in Alliance Space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead. Place a $2000 bill under Amnon Duul, Patience, Badger, and Niska's Contact Decks. Players do not receive Starting Jobs and begin at Londinium. Start with one random Alliance Alert Card in play.",
     rules: createStoryRules("Smuggler's Blues", [
       { type: "addFlag", flag: "smugglersBluesSetup" },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
-          title: "Smuggler's Blues Contraband",
-          content: ["Place 3 Contraband on each planetary sector in Alliance Space."]
-        }
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'resources',
-        rule: {
           title: "A Lucrative Opportunity",
-          content: ["Place 3 Contraband on each planetary sector in Alliance space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead."]
+          content: ["Place 3 Contraband on each planetary sector in Alliance Space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead."]
         }
       },
       { type: "addFlag", flag: "startWithAlertCard" },
