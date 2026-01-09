@@ -99,9 +99,9 @@ export const STORIES_R_S: StoryCardDef[] = [
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: 'Special Setup: A Tale of Two Twins',
+          title: "Nothin' Left But The Hurt",
           content: [
-            "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship. Both ships starts on St. Albans, Red Sun."
+            "Start with 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew. This is your new ship. Both ships starts on St. Albans, Red Sun."
           ]
         }
       },

@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTheme } from '../../ThemeContext';
 import { useDraftDetails } from '../../../hooks/useDraftDetails';
 import { cls } from '../../../utils/style';
 import { StepComponentProps } from '../../StepContent';
+import { OverrideNotificationBlock } from '../../SpecialRuleBlock';
+import { useGameState } from '../../../hooks/useGameState';
+import { SpecialRule } from '../../../types';
 
 // This component was moved from DraftStep.tsx
 const RuiningItSetupPanel = ({ stepBadgeClass }: { stepBadgeClass: string }) => {
@@ -92,22 +95,50 @@ const PlacementOrderPanel = ({
 
 export const RuiningItDraftStep = ({ step }: StepComponentProps): React.ReactElement => {
     const { theme } = useTheme();
+    const { state: gameState } = useGameState();
     const {
         specialStartSector,
+        specialRules,
     } = useDraftDetails(step);
     
+    const allInfoBlocks = useMemo(() => {
+        const allRules: SpecialRule[] = [...specialRules];
+        
+        const sortedRules = allRules.sort((a, b) => {
+            const order: Record<SpecialRule['source'], number> = {
+                expansion: 1,
+                setupCard: 2,
+                story: 3,
+                warning: 3,
+                info: 4,
+            };
+            return (order[a.source] || 99) - (order[b.source] || 99);
+        });
+
+        return sortedRules
+            .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
+            .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
+    }, [specialRules, gameState.setupMode]);
+
     const isDark = theme === 'dark';
     
     const stepBadgeBlueBg = isDark ? 'bg-blue-900/50 text-blue-200' : 'bg-blue-100 text-blue-800';
     const stepBadgeAmberBg = isDark ? 'bg-amber-900/50 text-amber-200' : 'bg-amber-100 text-amber-800';
     
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <RuiningItSetupPanel stepBadgeClass={stepBadgeBlueBg} />
-            <PlacementOrderPanel 
-                specialStartSector={specialStartSector}
-                stepBadgeClass={stepBadgeAmberBg}
-            />
+        <div className="space-y-6">
+            {allInfoBlocks.length > 0 && (
+                <div className="space-y-4">
+                    {allInfoBlocks}
+                </div>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <RuiningItSetupPanel stepBadgeClass={stepBadgeBlueBg} />
+                <PlacementOrderPanel 
+                    specialStartSector={specialStartSector}
+                    stepBadgeClass={stepBadgeAmberBg}
+                />
+            </div>
         </div>
     );
 };
