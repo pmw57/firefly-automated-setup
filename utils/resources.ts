@@ -141,6 +141,13 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
   const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
   const smugglersBluesVariantAvailable = smugglersBluesSetup && gameState.expansions.blue && gameState.expansions.kalidasa;
 
+  // DESIGN NOTE: Preserving Rule Source Duplication
+  // The logic here intentionally avoids de-duplicating 'addSpecialRule' entries
+  // that may seem redundant (e.g., a base rule and an optional variant of it).
+  // The UI is designed to show each rule block with its specific source to give
+  // the user clear context for each setup step. Merging or filtering these rules
+  // here would break that design principle. Duplication in the data layer is
+  // preferred to maintain clarity in the presentation layer.
   allRules.forEach(rule => {
     if (rule.type === 'addSpecialRule' && rule.category === 'resources') {
         if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
