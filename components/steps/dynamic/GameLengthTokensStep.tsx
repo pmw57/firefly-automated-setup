@@ -5,7 +5,7 @@ import { useGameDispatch } from '../../../hooks/useGameDispatch';
 import { hasRuleFlag, getResolvedRules } from '../../../utils/selectors/rules';
 import { getActiveStoryCard } from '../../../utils/selectors/story';
 import { UnpredictableTimerRules } from './timer/UnpredictableTimerRules';
-import { SpecialRule, StructuredContent } from '../../../types';
+import { SpecialRule } from '../../../types';
 
 export const GameLengthTokensStep: React.FC = () => {
     const { state: gameState } = useGameState();
@@ -42,36 +42,26 @@ export const GameLengthTokensStep: React.FC = () => {
         blocks.push({
           source: 'setupCard',
           title: 'Campaign Rule: Time Catches Up',
-          content: ["Removing ", { type: 'strong', content: `${tokensToRemove} tokens` }, " from the timer for your ", { type: 'strong', content: `${gameState.campaignStoriesCompleted}` }, " completed stories."]
+          content: [{ type: 'paragraph', content: [`Removing ${tokensToRemove} tokens from the timer for your ${gameState.campaignStoriesCompleted} completed stories.`] }]
         });
       }
   
-      const activeSoloRules: StructuredContent = [];
       if (shesTrouble) {
-        activeSoloRules.push({
-          type: 'paragraph',
-          content: [
-            { type: 'strong', content: "She's Trouble:" },
-            " Whenever you begin a turn with a ", { type: 'strong', content: "Deceptive Crew" }, " on your ship and deceptive crew cards in a discard pile, roll a die. If you roll a 1, disgruntle your deceptive crew.",
-            { type: 'br' },
-            { type: 'warning-box', content: ["Note: If a deceptive crew is part of your crew and you hire another, you may remove one from play."] }
-          ]
+        blocks.push({ 
+            source: 'info', 
+            title: "Active Optional Rule: She's Trouble", 
+            content: [
+              { type: 'paragraph', content: ["Whenever you begin a turn with a Deceptive Crew on your ship and deceptive crew cards in a discard pile, roll a die. If you roll a 1, disgruntle your deceptive crew."] },
+              { type: 'paragraph', content: [{ type: 'strong', content: "Note:" }, " If a deceptive crew is part of your crew and you hire another, you may remove one from play."] }
+            ] 
         });
       }
       if (recipeForUnpleasantness) {
-        activeSoloRules.push({
-          type: 'paragraph',
-          content: [
-            { type: 'strong', content: "Recipe For Unpleasantness:" },
-            " Whenever you begin a turn with ", { type: 'strong', content: "1 or more disgruntled crew" }, " (including your leader), roll a die. If you roll equal to or lower than the number of disgruntled crew on your ship, add a disgruntled token to the crew of your choice.",
-            { type: 'br' },
-            { type: 'warning-box', content: ["Crew who jump ship or are fired as a result are removed from play."] }
-          ]
+        blocks.push({ 
+            source: 'info', 
+            title: "Active Optional Rule: Recipe For Unpleasantness", 
+            content: [{ type: 'paragraph', content: ["Whenever you begin a turn with 1 or more disgruntled crew (including your leader), roll a die. If you roll equal to or lower than the number of disgruntled crew on your ship, add a disgruntled token to the crew of your choice. Crew who jump ship or are fired as a result are removed from play."] }] 
         });
-      }
-
-      if (activeSoloRules.length > 0) {
-        blocks.push({ source: 'info', title: 'Active Optional Rules', content: activeSoloRules });
       }
       
       const order: Record<SpecialRule['source'], number> = {
@@ -87,9 +77,11 @@ export const GameLengthTokensStep: React.FC = () => {
     
     if (!activeStoryCard) return null;
 
-    if (activeStoryCard.rules && hasRuleFlag(activeStoryCard.rules, 'disableSoloTimer')) {
+    if (hasRuleFlag(allRules, 'disableSoloTimer')) {
         return (
-            <OverrideNotificationBlock source="story" title="Timer Disabled" content={[{ type: 'strong', content: "No Timer:" }, " Do not use a Game Timer for this game."]} />
+            <div className="space-y-6">
+                {allInfoBlocks}
+            </div>
         );
     }
     

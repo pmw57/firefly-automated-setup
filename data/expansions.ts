@@ -1,4 +1,5 @@
 
+
 import { ExpansionDef } from '../types/index';
 import { createExpansionRules } from './storyCards/utils';
 
@@ -97,12 +98,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
         category: 'nav',
         rule: {
           title: 'Additional Components',
-          content: [
-            { type: 'list', items: [
-              ['Shuffle the Alliance Priority Alert cards and place them as a face-down deck.'],
-              ['Add the new Misbehave cards to the Misbehave deck.'],
-            ]}
-          ]
+          content: ["Shuffle the Alliance Priority Alert cards and place them as a face-down deck. Add the new Misbehave cards to the Misbehave deck."]
         }
       }
     ])
@@ -176,7 +172,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
         category: 'prime',
         rule: {
           title: 'Local Color Deck',
-          content: [{ type: 'paragraph', content: ['Place the Local Color deck near the map, close to the Nav Decks.'] }]
+          content: ["Place the Local Color deck near the map, close to the Nav Decks."]
         }
       }
     ])
@@ -194,7 +190,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
         category: 'prime',
         rule: {
           title: 'Black Market Deck',
-          content: [{ type: 'paragraph', content: ['Place the Black Market deck near the Supply Planets.'] }]
+          content: ["Place the Black Market deck near the Supply Planets."]
         }
       }
     ])

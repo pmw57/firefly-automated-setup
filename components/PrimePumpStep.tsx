@@ -14,7 +14,6 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   
   const {
     baseDiscard,
-    effectiveMultiplier,
     finalCount,
     isHighSupplyVolume,
     isBlitz,
@@ -24,19 +23,15 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   const allInfoBlocks = useMemo(() => {
     const blocks: SpecialRule[] = [...specialRules];
 
-    // Check if the story already provides a custom 'prime' rule, to avoid redundant messages.
+    // Check if a story already provides a custom 'prime' rule to avoid redundant messages.
     const hasStoryPrimeOverride = specialRules.some(r => r.source === 'story');
 
     if (isHighSupplyVolume && gameState.optionalRules.highVolumeSupply) {
-      blocks.push({ source: 'info', title: 'House Rule Active: High Volume Supply', content: ["Due to the number of large supply expansions, the base discard count for Priming the Pump is increased to ", { type: 'strong', content: '4 cards' }, "."] });
+      blocks.push({ source: 'info', title: 'House Rule Active: High Volume Supply', content: [{ type: 'paragraph', content: ["Due to the number of large supply expansions, the base discard count for Priming the Pump is increased to 4 cards."] }] });
     }
 
     if (isBlitz && !hasStoryPrimeOverride) {
-      blocks.push({ source: 'setupCard', title: 'The Blitz: Double Dip', page: 22, manual: 'Core', content: ['"Double Dip" rules are in effect. Discard the top ', { type: 'strong', content: `${baseDiscard * 2} cards` }, ' (2x Base) from each deck.'] });
-    }
-
-    if (effectiveMultiplier > 1 && !isBlitz && !hasStoryPrimeOverride) {
-      blocks.push({ source: 'story', title: 'Market Instability', content: [{ type: 'strong', content: `Prime counts are increased by ${effectiveMultiplier}x.` }] });
+      blocks.push({ source: 'setupCard', title: 'The Blitz: Double Dip', page: 22, manual: 'Core', content: [{ type: 'paragraph', content: [`"Double Dip" rules are in effect. Discard the top ${baseDiscard * 2} cards (2x Base) from each deck.`] }] });
     }
     
     const order: Record<SpecialRule['source'], number> = {
@@ -53,7 +48,7 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
       .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
   }, [
     isHighSupplyVolume, gameState.optionalRules.highVolumeSupply, isBlitz, 
-    effectiveMultiplier, specialRules, gameState.setupMode, baseDiscard
+    specialRules, gameState.setupMode, baseDiscard
   ]);
 
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-[#faf8ef]/70 backdrop-blur-sm';

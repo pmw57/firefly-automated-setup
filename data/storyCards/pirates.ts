@@ -15,7 +15,7 @@ export const PIRATES_STORIES: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: "Salvager's Stash",
-          content: ['Choose Havens. Havens ', { type: 'strong', content: 'must be in Border Space' }, '.'],
+          content: ["Choose Havens. Havens must be in Border Space."],
           flags: ['havensInBorderSpace']
         }
       },
@@ -25,7 +25,7 @@ export const PIRATES_STORIES: StoryCardDef[] = [
         category: 'jobs',
         rule: {
           title: 'Remove Piracy Jobs',
-          content: ['After taking starting Jobs, pull all remaining ', { type: 'strong', content: 'Piracy Jobs' }, ' from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks.']
+          content: ["After taking starting Jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks."]
         }
       }
     ])

@@ -16,7 +16,7 @@ export const KALIDASA_STORIES: StoryCardDef[] = [
         category: 'jobs',
         rule: {
           title: 'Building A Network',
-          content: [{ type: 'paragraph', content: ["No starting jobs are dealt. You must build your network from scratch."]}]
+          content: ["No starting jobs are dealt. You must build your network from scratch."]
         }
       }
     ])

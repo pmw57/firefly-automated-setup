@@ -1,4 +1,5 @@
 
+
 import { StoryCardDef } from '../../../types';
 import { SETUP_CARD_IDS, CONTACT_NAMES } from '../../ids';
 import { createStoryRules } from '../utils';
@@ -28,9 +29,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'prime',
         rule: {
           title: 'Post-Priming Draft',
-          content: [
-            { type: 'paragraph', content: ["After Priming the Pump, you may select up to ", { type: 'strong', content: '4 Crew cards' }, " that were revealed, up to a total value of ", { type: 'strong', content: '$1000' }, "."] },
-          ]
+          content: ["After Priming the Pump, you may select up to 4 Crew cards that were revealed, up to a total value of $1000."]
         }
       },
       {
@@ -38,7 +37,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'goal',
         rule: {
           title: 'Multiple Goals',
-          content: [ "In addition to selecting one Goal, you must try to complete as many Goals as possible by the end of the game." ]
+          content: ["In addition to selecting one Goal, you must try to complete as many Goals as possible by the end of the game."]
         }
       }
     ]),
@@ -55,7 +54,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'goal',
         rule: {
           title: 'Game Timer',
-          content: ["Game lasts for ", { type: 'strong', content: '30 turns' }, " (plus a final \"No Fly Action\" turn)."]
+          content: ["Game lasts for 30 turns (plus a final \"No Fly Action\" turn)."]
         }
       },
       {
@@ -63,7 +62,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Start Location',
-          content: ["Start at the ", { type: 'strong', content: 'Osiris ShipWorks' }, " with a Leader and a Ship."]
+          content: ["Start at the Osiris ShipWorks with a Leader and a Ship."]
         }
       },
       { type: 'setJobMode', mode: 'no_jobs' },
@@ -72,7 +71,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'prime',
         rule: {
           title: 'No Priming',
-          content: [{ type: 'strong', content: 'Do not "Prime the Pump"' }, " during setup."]
+          content: ["Do not \"Prime the Pump\" during setup."]
         }
       }
     ]),
@@ -93,18 +92,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Assembling a Rag-Tag Crew',
-          content: [
-            {
-              type: 'paragraph',
-              content: [
-                'In addition to selecting your Leader, you may also select up to ',
-                { type: 'strong', content: '4 Crew cards' },
-                ' from any deck, up to a total value of ',
-                { type: 'strong', content: '$1000' },
-                '.'
-              ]
-            }
-          ]
+          content: ["In addition to selecting your Leader, you may also select up to 4 Crew cards from any deck, up to a total value of $1000."]
         }
       }
     ]),
@@ -120,7 +108,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Hero Assignment',
-          content: ["Start play with ", { type: 'strong', content: "Cap'n Jayne" }, " as your Leader, ", { type: 'strong', content: "Jayne's Cunning Hat" }, ", and ", { type: 'strong', content: "Vera" }, "."]
+          content: ["Start play with Cap'n Jayne as your Leader, Jayne's Cunning Hat, and Vera."]
         }
       },
       {
@@ -136,10 +124,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'prime',
         rule: {
           title: 'Mudder Deck',
-          content: [
-            { type: 'paragraph', content: ["Pull all Mudders and Stitch from the Supply decks."] },
-            { type: 'paragraph', content: ["Shuffle them all together and place them face up as the Mudder deck. If the Foreman or Stitch is the top card after a shuffle, reshuffle the deck."] },
-          ]
+          content: ["Pull all Mudders and Stitch from the Supply decks. Shuffle them all together and place them face up as the Mudder deck. If the Foreman or Stitch is the top card after a shuffle, reshuffle the deck."]
         }
       },
       {
@@ -147,7 +132,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: 'Game Timer',
-          content: ["Use ", { type: 'strong', content: "20 Disgruntle tokens" }, " as the game length timer."]
+          content: ["Use 20 Disgruntle tokens as the game length timer."]
         }
       }
     ]),
@@ -181,7 +166,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Leader Assignment',
-          content: ["Start play with ", { type: 'strong', content: "Jubal Early" }, " as your Leader. Remove Serenity's crew from the Bounty and Supply Decks."]
+          content: ["Start play with Jubal Early as your Leader. Remove Serenity's crew from the Bounty and Supply Decks."]
         }
       },
       {
@@ -208,20 +193,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Fixed Assignment',
-          content: [
-            {
-              type: 'paragraph',
-              content: ['Start play with the following fixed assignment:']
-            },
-            {
-              type: 'list',
-              items: [
-                ['Leader: ', { type: 'strong', content: 'Jubal Early' }],
-                ['Ship: ', { type: 'strong', content: 'The Interceptor' }],
-                ['Gear: ', { type: 'strong', content: "Early's Pistol & Early's Combat Armor" }],
-              ]
-            }
-          ]
+          content: ["Start play with the following fixed assignment: Leader: Jubal Early Ship: The Interceptor Gear: Early's Pistol & Early's Combat Armor"]
         }
       },
       {
@@ -236,13 +208,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'allianceReaver',
         rule: {
           title: 'Special Token Placement',
-          content: [
-            'Place the ',
-            { type: 'strong', content: 'Serenity ship token' },
-            ' on any non-planetary sector within the ',
-            { type: 'strong', content: 'Georgia system' },
-            '.'
-          ]
+          content: ["Place the Serenity ship token on any non-planetary sector within the Georgia system."]
         }
       },
       {
@@ -250,15 +216,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'prime',
         rule: {
           title: 'Deck Preparation Overrides',
-          content: [
-            {
-              type: 'list',
-              items: [
-                ['Find and remove all of ', { type: 'strong', content: "Serenity's crew cards" }, ' from the various Supply Decks and set them aside.'],
-                ['The Bounty Deck is placed ', { type: 'strong', content: 'face up' }, ', and ', { type: 'strong', content: 'all Bounties are considered active' }, ' from the start of the game.'],
-              ]
-            }
-          ]
+          content: ["Find and remove all of Serenity's crew cards from the various Supply Decks and set them aside. The Bounty Deck is placed face up, and all Bounties are considered active from the start of the game."]
         }
       }
     ]),
@@ -287,11 +245,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: "Story Setup",
-          content: [
-            { type: 'paragraph', content: ['Use ', { type: 'strong', content: 'Malcolm' }, ' as your Leader and ', { type: 'strong', content: 'Serenity' }, ' as your ship.'] },
-            { type: 'paragraph', content: ['Your starting crew is: ', { type: 'strong', content: 'Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River' }, '.'] },
-            { type: 'paragraph', content: ['Take 1 ', { type: 'strong', content: 'Expanded Crew Quarters' }, ' from the Osiris Supply Deck.'] }
-          ]
+          content: ["Use Malcolm as your Leader and Serenity as your ship. Your starting crew is: Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River. Take 1 Expanded Crew Quarters from the Osiris Supply Deck."]
         }
       },
       {
@@ -299,10 +253,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: "Disgruntled Timer",
-          content: [
-            { type: 'paragraph', content: ['Collect ', { type: 'strong', content: '7 Disgruntled tokens' }, '. These will be used as a special game timer.'] },
-            { type: 'paragraph', content: ['Discard 1 token at the start of each of your turns.'] },
-          ]
+          content: ["Collect 7 Disgruntled tokens. These will be used as a special game timer. Discard 1 token at the start of each of your turns."]
         }
       }
     ]),
@@ -325,18 +276,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: "Fixed Assignment: Serenity's Crew",
-          content: [
-            { type: 'paragraph', content: ["Your assignment for this story is fixed. You do not perform the standard draft."] },
-            {
-              type: 'list',
-              items: [
-                ['Ship: ', { type: 'strong', content: 'Serenity' }],
-                ['Leader: ', { type: 'strong', content: 'Malcolm Reynolds' }],
-                ['Ship Upgrade: Equip one ', { type: 'strong', content: 'Expanded Crew Quarters' }, ' from the Osiris Supply Deck.'],
-                ['Crew: Start play with the 9 original Serenity crew members.'],
-              ]
-            }
-          ]
+          content: ["Your assignment for this story is fixed. You do not perform the standard draft. Ship: Serenity Leader: Malcolm Reynolds Ship Upgrade: Equip one Expanded Crew Quarters from the Osiris Supply Deck. Crew: Start play with the 9 original Serenity crew members."]
         }
       },
       {
@@ -344,7 +284,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: 'Game Timer',
-          content: ["Use ", { type: 'strong', content: '15 Disgruntled tokens' }, " as the game length timer. Discard one at the start of your turn."]
+          content: ["Use 15 Disgruntled tokens as the game length timer. Discard one at the start of your turn."]
         }
       }
     ]),

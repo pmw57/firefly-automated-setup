@@ -26,11 +26,7 @@ export const STORIES_T_X: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: "Story Setup",
-          content: [
-            { type: 'paragraph', content: ['Use ', { type: 'strong', content: 'Malcolm' }, ' as your Leader and ', { type: 'strong', content: 'Serenity' }, ' as your ship.'] },
-            { type: 'paragraph', content: ['Your starting crew is: ', { type: 'strong', content: 'Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River' }, '.'] },
-            { type: 'paragraph', content: ['Take 1 ', { type: 'strong', content: 'Expanded Crew Quarters' }, ' from the Osiris Supply Deck.'] }
-          ]
+          content: ["Use Malcolm as your Leader and Serenity as your ship. Your starting crew is: Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River. Take 1 Expanded Crew Quarters from the Osiris Supply Deck."]
         }
       },
       {
@@ -38,10 +34,7 @@ export const STORIES_T_X: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: "Disgruntled Timer",
-          content: [
-            { type: 'paragraph', content: ['Collect ', { type: 'strong', content: '7 Disgruntled tokens' }, '. These will be used as a special game timer.'] },
-            { type: 'paragraph', content: ['Discard 1 token at the start of each of your turns.'] },
-          ]
+          content: ["Collect 7 Disgruntled tokens. These will be used as a special game timer. Discard 1 token at the start of each of your turns."]
         }
       }
     ]),
