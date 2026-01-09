@@ -36,13 +36,32 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/2785042/gerryrailbaron",
     setupDescription: "Special 'winds of fate' rules for placing Goal tokens. No Starting Jobs are dealt.",
     rules: createStoryRules("Where The Wind Takes Us", [
-      { type: 'setJobMode', mode: 'wind_takes_us' },
+      { type: 'setJobMode', mode: 'no_jobs' },
+      { 
+        type: 'setJobStepContent', 
+        position: 'before',
+        content: [
+          { type: 'paragraph', content: ["Instead of a standard job draw, follow these steps to determine the game's objectives:"] },
+          {
+            type: 'numbered-list',
+            items: [
+              ['Each player chooses to draw from a single Contact Deck of their choice.'],
+              [{ type: 'placeholder', id: 'wind-takes-us-draw-count' }],
+              ['Place a Goal Token at each Job\'s Drop Off / Target / Destination Sector.'],
+              ['After placing all tokens, return the drawn Job Cards to their respective Contact Decks and reshuffle the decks.'],
+              [{ type: 'strong', content: 'Do not deal any other Starting Jobs.' }]
+            ]
+          }
+        ]
+      },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
-          title: "The Winds of Fate",
-          content: ["Each player draws jobs from a single Contact Deck of their choice: Draw 4 Job Cards each (for 3 or fewer players). Draw 3 Job Cards each (for 4 or more players). Place a Goal Token at each Job's Drop Off / Target / Destination Sector. After placing tokens, return all drawn Job cards to their Contact Decks and reshuffle the decks. Do not deal any other Starting Jobs."]
+          title: "Employer's Scraps",
+          content: [
+            "Each player draws jobs from a single Contact Deck of their choice: Draw 4 Job Cards each (for 3 or fewer players). Draw 3 Job Cards each (for 4 or more players). Place a Goal Token at each Job's Drop Off / Target / Destination Sector. After placing tokens, return all drawn Job cards to their Contact Decks and reshuffle the decks. Do not deal any other Starting Jobs."
+          ]
         }
       }
     ])

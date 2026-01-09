@@ -1,4 +1,4 @@
-import { SpecialRule } from './core';
+import { SpecialRule, StructuredContent } from './core';
 
 export type JobMode = 
   | 'shared_hand'
@@ -104,6 +104,12 @@ export interface SetComponentRule extends BaseRule {
   component: string;
 }
 
+export interface SetJobStepContentRule extends BaseRule {
+  type: 'setJobStepContent';
+  content: StructuredContent;
+  position: 'before' | 'after';
+}
+
 export type SetupRule = 
   | SetJobModeRule
   | SetJobContactsRule
@@ -121,4 +127,5 @@ export type SetupRule =
   | AddFlagRule
   | ModifyPrimeRule
   | ModifyResourceRule
-  | SetComponentRule;
+  | SetComponentRule
+  | SetJobStepContentRule;

@@ -37,6 +37,8 @@ export interface JobSetupDetails {
   caperDrawCount?: number;
   isContactListOverridden?: boolean;
   jobDrawMode: JobMode;
+  mainContent?: StructuredContent;
+  mainContentPosition?: 'before' | 'after';
 }
 
 export interface NavDeckSetupDetails {
