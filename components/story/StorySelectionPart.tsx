@@ -112,10 +112,16 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
       </div>
       
       {/* Desktop Nav */}
-      <div className={`hidden sm:flex mt-8 justify-between clear-both pt-6 border-t ${navBorderTop}`}>
-        <Button onClick={onPrev} variant="secondary" className="shadow-sm" disabled={isNavigating}>
-          ← Back
-        </Button>
+      <div className={cls(
+          "hidden sm:flex mt-8 clear-both pt-6 border-t",
+          isFirstStep ? 'justify-end' : 'justify-between',
+          navBorderTop
+      )}>
+        {!isFirstStep && (
+          <Button onClick={onPrev} variant="secondary" className="shadow-sm" disabled={isNavigating}>
+            ← Back
+          </Button>
+        )}
         <Button 
           onClick={onNext} 
           className="shadow-lg hover:translate-y-[-2px] transition-transform"

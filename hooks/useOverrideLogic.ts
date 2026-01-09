@@ -16,6 +16,7 @@ export const useOverrideLogic = ({ flow, currentStepIndex, handleJump }: UseOver
   const { dispatch, acknowledgeOverrides, visitOverriddenStep } = useGameDispatch();
   const [isOverrideModalOpen, setIsOverrideModalOpen] = useState(false);
   const [modalData, setModalData] = useState<{ firstAffectedIndex: number; stepLabels: string[] } | null>(null);
+  const [continueAction, setContinueAction] = useState<(() => void) | null>(null);
 
   const unacknowledgedOverrides = useMemo(() => {
     return gameState.overriddenStepIds.filter(
@@ -53,7 +54,10 @@ export const useOverrideLogic = ({ flow, currentStepIndex, handleJump }: UseOver
   const handleModalContinue = useCallback(() => {
     acknowledgeOverrides(gameState.overriddenStepIds);
     setIsOverrideModalOpen(false);
-  }, [acknowledgeOverrides, gameState.overriddenStepIds]);
+    if (continueAction) {
+      continueAction();
+    }
+  }, [acknowledgeOverrides, gameState.overriddenStepIds, continueAction]);
 
   const handleModalJump = useCallback(() => {
     if (modalData) {
@@ -63,7 +67,7 @@ export const useOverrideLogic = ({ flow, currentStepIndex, handleJump }: UseOver
     }
   }, [acknowledgeOverrides, gameState.overriddenStepIds, handleJump, modalData]);
 
-  const openOverrideModal = useCallback(() => {
+  const openOverrideModal = useCallback((onContinue: () => void) => {
     const pastStepIds = flow.slice(0, currentStepIndex).map(s => s.id);
     const affectedPastSteps = flow.filter(step => 
         pastStepIds.includes(step.id) &&
@@ -77,6 +81,7 @@ export const useOverrideLogic = ({ flow, currentStepIndex, handleJump }: UseOver
     const firstAffectedIndex = Math.min(...affectedPastSteps.map(step => flow.indexOf(step)));
     const stepLabels = affectedPastSteps.map(step => step.data?.title.replace(/^\d+\.\s+/, '') || step.id);
     setModalData({ firstAffectedIndex, stepLabels });
+    setContinueAction(() => onContinue);
     setIsOverrideModalOpen(true);
   }, [flow, currentStepIndex, gameState.overriddenStepIds, gameState.acknowledgedOverrides, gameState.visitedStepOverrides]);
 
