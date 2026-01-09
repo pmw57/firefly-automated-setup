@@ -39,7 +39,15 @@ export const TENTH_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     sourceUrl: "https://boardgamegeek.com/image/8103873/sjliver",
     rules: createStoryRules("Aces Up Your Sleeve", [
-      { type: 'createAlertTokenStack', multiplier: 4, title: "Making a Name" }
+      { type: 'createAlertTokenStack', multiplier: 4 },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Making a Name',
+          content: ['Create a stack of Alliance Alert Tokens equal to four times the number of players.']
+        }
+      }
     ])
   },
   {

@@ -9,7 +9,15 @@ export const KALIDASA_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/2785039/gerryrailbaron",
     setupDescription: "Creates an Alliance Alert Token stack. No starting jobs are dealt.",
     rules: createStoryRules("It's All In Who You Know", [
-      { type: 'createAlertTokenStack', multiplier: 3, title: "Word Gets Around" },
+      { type: 'createAlertTokenStack', multiplier: 3 },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Word Gets Around',
+          content: ['Create a stack of Alliance Alert Tokens equal to three times the number of players.']
+        }
+      },
       { type: 'setJobMode', mode: 'no_jobs' },
       {
         type: 'addSpecialRule',
