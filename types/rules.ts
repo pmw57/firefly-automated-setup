@@ -1,6 +1,7 @@
 import { SpecialRule } from './core';
 
 export type JobMode = 
+  | 'shared_hand'
   | 'standard' 
   | 'no_jobs' 
   | 'times_jobs' 
