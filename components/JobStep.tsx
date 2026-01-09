@@ -81,8 +81,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
       content: note.content
     })));
 
-    // Filter out Caper Bonus as it's handled by a dedicated component.
-    blocks.push(...messages.filter(msg => msg.title !== 'Caper Bonus'));
+    blocks.push(...messages);
     
     const order: Record<SpecialRule['source'], number> = {
         expansion: 1, setupCard: 2, story: 3, warning: 3, info: 4,
@@ -158,28 +157,28 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
       )}
     </>
   );
+  
+  const CaperMessageBlock = (jobDrawMode === 'caper_start' && caperDrawCount && caperDrawCount > 0) ? (
+    <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-6 text-center", textColor)}>
+        <p className="font-semibold">Draw {caperDrawCount} Caper{caperDrawCount > 1 ? 's' : ''}</p>
+    </div>
+  ) : null;
 
   return (
     <div className="space-y-6">
       {sortedInfoBlocks.map((block, i) => <OverrideNotificationBlock key={`info-${i}`} {...block} />)}
 
-      {caperDrawCount && (
-          <OverrideNotificationBlock 
-              source="story" 
-              title="Caper Bonus" 
-              content={[`Draw ${caperDrawCount} Caper Card${caperDrawCount > 1 ? 's' : ''}.`]} 
-          />
-      )}
-
       {mainContentPosition === 'after' ? (
         <>
           {StandardContentBlock}
+          {CaperMessageBlock}
           {MainContentBlock}
         </>
       ) : (
         <>
           {MainContentBlock}
           {StandardContentBlock}
+          {CaperMessageBlock}
         </>
       )}
     </div>
