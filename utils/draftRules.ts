@@ -19,8 +19,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const allRules = getResolvedRules(gameState);
     const activeStoryCard = getActiveStoryCard(gameState);
 
-    const REGIONS = ['border of Murphy'];
-
     // Process generic special rules for this step category
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule' && rule.category === 'draft') {
@@ -90,12 +88,11 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
               specialStartSector = 'Londinium';
               break;
         }
-      } else if (typeof shipPlacementRule.location === 'object' && shipPlacementRule.location.custom) {
-        const locationName = shipPlacementRule.location.custom;
-        if (REGIONS.includes(locationName)) {
-            placementRegionRestriction = locationName;
-        } else {
-            specialStartSector = locationName;
+      } else if (typeof shipPlacementRule.location === 'object') {
+        if ('region' in shipPlacementRule.location) {
+            placementRegionRestriction = shipPlacementRule.location.region;
+        } else if ('sector' in shipPlacementRule.location) {
+            specialStartSector = shipPlacementRule.location.sector;
         }
       }
     }

@@ -11,6 +11,14 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/8103875/sjliver",
     rules: createStoryRules("A Rare Specimen Indeed", [
       { type: 'setJobMode', mode: 'caper_start' },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Caper Bonus',
+          content: ["Each player begins the game with one Caper card."]
+        }
+      }
     ])
   },
   {

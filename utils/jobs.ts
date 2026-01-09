@@ -19,7 +19,7 @@ import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
-const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): Omit<JobSetupDetails, 'jobDrawMode' | 'isSharedHandMode'> => {
+const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): Omit<JobSetupDetails, 'jobDrawMode'> => {
     const messages: JobSetupMessage[] = [];
     
     // 1. Add any specific "addSpecialRule" rules for the jobs step.
@@ -51,7 +51,7 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
 
     // 3. Add a generic override message if the source was a setup card.
     // Story cards are now expected to provide their own explicit `addSpecialRule` message.
-    if (jobModeSource === 'setupCard') {
+    if (jobModeSource === 'setupCard' && !messages.some(m => m.source === 'setupCard')) {
         // Fallback for setup cards like Browncoat Way
         messages.push({
             source: 'setupCard',
@@ -76,7 +76,7 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
     return { contacts: [], messages: uniqueMessages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
 };
 
-const _getInitialContacts = (allRules: SetupRule[]): string[] => {
+const _getInitialContacts = (allRules: SetupRule[], gameState: GameState): string[] => {
     const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
     if (jobContactsRule) {
         return jobContactsRule.contacts;
@@ -84,7 +84,7 @@ const _getInitialContacts = (allRules: SetupRule[]): string[] => {
     
     // Standard setup only uses the five core contacts for the initial job draw,
     // regardless of which expansions are enabled. Expansion contacts are only
-    // added if a Setup or Story Card explicitly dictates it via a `setJobContacts` rule.
+    // added if a Setup or Story Card explicitly dictates it.
     const availableContacts = [
         CONTACT_NAMES.HARKEN, 
         CONTACT_NAMES.BADGER, 
@@ -92,6 +92,18 @@ const _getInitialContacts = (allRules: SetupRule[]): string[] => {
         CONTACT_NAMES.PATIENCE, 
         CONTACT_NAMES.NISKA
     ];
+
+    // Specific story flag to add all contacts for the job draft
+    if (hasRuleFlag(allRules, 'useAllContactsForJobDraft')) {
+        if (gameState.expansions.kalidasa) {
+            availableContacts.push(
+                CONTACT_NAMES.LORD_HARROW,
+                CONTACT_NAMES.MR_UNIVERSE,
+                CONTACT_NAMES.FANTY_MINGO,
+                CONTACT_NAMES.MAGISTRATE_HIGGINS
+            );
+        }
+    }
     
     return availableContacts;
 };
@@ -107,6 +119,12 @@ const _filterContacts = (contacts: string[], allRules: SetupRule[]): string[] =>
     if (allowedContactsRule?.contacts?.length) {
         filtered = allowedContactsRule.contacts;
     }
+    
+    // Story-specific filter for 'Friends in Low Places'
+    if (hasRuleFlag(allRules, 'useAllContactsForJobDraft')) {
+        filtered = filtered.filter(c => c !== CONTACT_NAMES.MR_UNIVERSE);
+    }
+    
     return filtered;
 };
 
@@ -117,20 +135,6 @@ const _generateJobMessages = (
     gameState: GameState
 ): JobSetupMessage[] => {
     const messages: JobSetupMessage[] = [];
-    const specialRules: SpecialRule[] = [];
-    const processedChallenges = new Set<string>();
-
-    // Process generic special rules for this step category
-    allRules.forEach(rule => {
-        if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
-            if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
-                specialRules.push({
-                    source: rule.source as SpecialRule['source'],
-                    ...rule.rule
-                });
-            }
-        }
-    });
     
     // Generate a generic "Limited Contacts" message if a specific contact list is defined by a rule.
     const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
@@ -164,10 +168,20 @@ const _generateJobMessages = (
         }
     }
     
-    // Add the specific special rules to the messages list
-    specialRules.forEach(rule => messages.push(rule));
+    // Process generic special rules for this step category
+    allRules.forEach(rule => {
+        if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
+            if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
+                messages.push({
+                    source: rule.source as SpecialRule['source'],
+                    ...rule.rule
+                });
+            }
+        }
+    });
     
     // Handle "Single Contact" first because it has custom text
+    const processedChallenges = new Set<string>();
     if (gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT]) {
         messages.push({ source: 'warning', title: 'Challenge Active', content: [{ type: 'strong', content: 'Single Contact Only:' }, ' You may only work for one contact.'] });
         processedChallenges.add(CHALLENGE_IDS.SINGLE_CONTACT);
@@ -219,8 +233,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
 
     const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
     const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
-    const isSharedHandMode = hasRuleFlag(allRules, 'sharedHandSetup');
-
+    
     if (hasRuleFlag(allRules, 'customJobDraw')) {
         const messages: JobSetupMessage[] = [];
         if (activeStoryCard?.setupDescription) {
@@ -233,120 +246,26 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             isSingleContactChoice: false, 
             totalJobCards: 0,
             jobDrawMode,
-            isSharedHandMode,
         };
     }
     
-    if (jobDrawMode === 'draft_choice') {
-        const jobDraftInstructions: StructuredContent = [
-            { type: 'paragraph', content: ["Starting with the last player to choose a Leader, each player chooses 1 Job from 3 different Contacts. Mr. Universe cannot be chosen for these starting Jobs."] }
-        ];
-    
-        const messages: JobSetupMessage[] = [{
-            source: 'story',
-            title: "Friends in Low Places",
-            content: jobDraftInstructions,
-        }];
-        
-        // Note: _getInitialContacts will now correctly return only the base 5.
-        // We still need to manually add the expansion contacts for this specific draft mode,
-        // as they are explicitly allowed by the story card rule text.
-        const baseContacts = _getInitialContacts(allRules);
-        const allAvailableContacts = [...baseContacts];
-
-        if (gameState.expansions.kalidasa) {
-            allAvailableContacts.push(
-                CONTACT_NAMES.LORD_HARROW,
-                CONTACT_NAMES.MR_UNIVERSE,
-                CONTACT_NAMES.FANTY_MINGO,
-                CONTACT_NAMES.MAGISTRATE_HIGGINS
-            );
-        }
-
-        const finalContacts = allAvailableContacts.filter(c => c !== CONTACT_NAMES.MR_UNIVERSE);
-        
-        return {
-            contacts: finalContacts,
-            messages,
-            showStandardContactList: true,
-            isSingleContactChoice: false,
-            totalJobCards: 0,
-            jobDrawMode,
-            isSharedHandMode,
-        };
-    }
-
-    if (jobDrawMode === 'caper_start') {
-        const messages: JobSetupMessage[] = [];
-        if (activeStoryCard?.setupDescription) {
-            messages.push({
-                source: 'story',
-                title: activeStoryCard.title,
-                content: [{ type: 'paragraph', content: [activeStoryCard.setupDescription] }],
-            });
-        }
-
-        return {
-            contacts: [],
-            messages,
-            showStandardContactList: false,
-            isSingleContactChoice: false,
-            totalJobCards: 0,
-            caperDrawCount: 1,
-            jobDrawMode,
-            isSharedHandMode,
-        };
-    }
-
-    if (jobDrawMode === 'wind_takes_us') {
-        const { playerCount } = gameState;
-        const isLowPlayerCount = playerCount <= 3;
-
-        const lowPlayerCountInstruction: StructuredContent = [
-            { type: 'strong', content: 'For 3 or fewer players, draw 4 Job Cards each.' }
-        ];
-        const plainLowPlayerCountInstruction: StructuredContent = [
-            'For 3 or fewer players, draw 4 Job Cards each.'
-        ];
-        const highPlayerCountInstruction: StructuredContent = [
-            { type: 'strong', content: 'For 4 or more players, draw 3 Job Cards each.' }
-        ];
-        const plainHighPlayerCountInstruction: StructuredContent = [
-            'For 4 or more players, draw 3 Job Cards each.'
-        ];
-
-        const content: StructuredContent = [
-            { type: 'paragraph', content: ["Each player draws jobs from a single Contact Deck of their choice:"] },
-            {
-              type: 'list',
-              items: [
-                isLowPlayerCount ? lowPlayerCountInstruction : plainLowPlayerCountInstruction,
-                !isLowPlayerCount ? highPlayerCountInstruction : plainHighPlayerCountInstruction
-              ]
-            },
-            { type: 'paragraph', content: ['Place a ', { type: 'strong', content: 'Goal Token' }, ' at each Job\'s Drop Off / Target / Destination Sector.'] },
-            { type: 'paragraph', content: ['After placing tokens, return all drawn Job cards to their Contact Decks and reshuffle the decks.'] },
-            { type: 'paragraph', content: [{ type: 'strong', content: 'Do not deal any other Starting Jobs.' }] }
-        ];
-
-        const message: JobSetupMessage = {
-            source: 'story',
-            title: "The Winds of Fate",
-            content: content,
-        };
-
-        return { contacts: [], messages: [message], showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0, jobDrawMode, isSharedHandMode };
-    }
-
-    if (jobDrawMode === 'no_jobs') {
+    if (jobDrawMode === 'no_jobs' || jobDrawMode === 'wind_takes_us' || jobDrawMode === 'caper_start') {
         const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
         const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
         const details = _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge);
         
-        return { ...details, jobDrawMode, isSharedHandMode };
+        let caperDrawCount: number | undefined;
+        if (jobDrawMode === 'caper_start') {
+             const caperBonusRule = details.messages.find(msg => msg.title === 'Caper Bonus');
+             if (caperBonusRule) {
+                caperDrawCount = 1; // Assume 1 if rule exists
+             }
+        }
+        
+        return { ...details, jobDrawMode, caperDrawCount };
     }
     
-    const initialContacts = _getInitialContacts(allRules);
+    const initialContacts = _getInitialContacts(allRules, gameState);
     const contacts = _filterContacts(initialContacts, allRules);
 
     const messages = _generateJobMessages(
@@ -367,7 +286,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     }
     
     // Find Caper Bonus rule to set count for the dedicated UI component.
-    // The original rule is preserved in the 'messages' array.
     let caperDrawCount: number | undefined;
     const caperBonusRule = messages.find(msg => msg.title === 'Caper Bonus');
     if (caperBonusRule) {
@@ -389,6 +307,9 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         JSON.stringify(contacts.slice().sort()) !== JSON.stringify(standardContacts.slice().sort());
 
     const isSingleContactChoice = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
+    // FIX: The `jobDrawMode` is narrowed by the preceding `if` block, so this check is redundant and causes a type error.
+    // The logic is correct: if we've reached this point, we are not in 'no_jobs' mode.
+    const showStandardContactList = true;
     
     // Determine how many cards are actually drawn by the player.
     const actualDrawCount = isSingleContactChoice ? 1 : contacts.length;
@@ -397,5 +318,5 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     // You can't keep more cards than you draw.
     const finalKeepCount = Math.min(baseKeepCount, actualDrawCount);
 
-    return { contacts, messages, showStandardContactList: true, isSingleContactChoice, cardsToDraw: finalKeepCount, totalJobCards: contacts.length, caperDrawCount, isContactListOverridden, jobDrawMode, isSharedHandMode };
+    return { contacts, messages, showStandardContactList, isSingleContactChoice, cardsToDraw: finalKeepCount, totalJobCards: contacts.length, caperDrawCount, isContactListOverridden, jobDrawMode };
 };

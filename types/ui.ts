@@ -37,7 +37,6 @@ export interface JobSetupDetails {
   caperDrawCount?: number;
   isContactListOverridden?: boolean;
   jobDrawMode: JobMode;
-  isSharedHandMode?: boolean;
 }
 
 export interface NavDeckSetupDetails {

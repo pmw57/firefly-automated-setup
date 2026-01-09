@@ -10,14 +10,23 @@ export const TENTH_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     sourceUrl: "https://boardgamegeek.com/image/8103874/sjliver",
-    rules: [
-      { type: 'setJobMode', mode: 'draft_choice', source: 'story', sourceName: "A Friend In Every Port" },
-      { type: 'modifyPrime', multiplier: 2, source: 'story', sourceName: "A Friend In Every Port" },
+    rules: createStoryRules("A Friend In Every Port", [
+      { type: 'setJobMode', mode: 'draft_choice' },
+      { type: 'addFlag', flag: 'useAllContactsForJobDraft' },
+      { type: 'modifyPrime', multiplier: 2 },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: "Friends in Low Places",
+          content: [
+            { type: 'paragraph', content: ["Starting with the last player to choose a Leader, each player chooses 1 Job from 3 different Contacts. Mr. Universe cannot be chosen for these starting Jobs."] }
+          ]
+        }
+      },
       {
         type: 'addSpecialRule',
         category: 'prime',
-        source: 'story',
-        sourceName: "A Friend In Every Port",
         rule: {
           title: "Priming the Pump Override",
           content: [
@@ -27,7 +36,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
           ]
         }
       }
-    ],
+    ]),
   },
   {
     title: "Aces Up Your Sleeve",
