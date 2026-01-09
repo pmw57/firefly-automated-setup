@@ -230,10 +230,26 @@ export const STORIES_R_S: StoryCardDef[] = [
     intro: "The Silverhold-Hera route is usually a harmless uneventful run. Unless, of course, someone installs a beacon on the cargo which attracts a Reaver party.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/100497/shadows-over-duul-new-goal-reupload",
-    setupDescription: "Amnon Duul is unavailable. Start on the Border of Murphy.",
+    setupDescription: "Remove jobs from Amnon Duul during Set Up. Start in the border of Murphy.",
     rules: createStoryRules("Shadows Over Duul", [
       { type: 'forbidContact', contact: CONTACT_NAMES.AMNON_DUUL },
-      { type: 'setShipPlacement', location: { custom: 'Border of Murphy' } }
+      { type: 'setShipPlacement', location: { custom: 'border of Murphy' } },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'A Tense Start',
+          content: ["Start in the border of Murphy."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Unsavory Business',
+          content: ["Remove jobs from Amnon Duul during Set Up."]
+        }
+      }
     ]),
     rating: 2,
   },
