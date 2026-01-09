@@ -16,9 +16,10 @@ interface StorySelectionPartProps {
   onPrev: () => void;
   isNavigating: boolean;
   title: string;
+  isFirstStep: boolean;
 }
 
-export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, onPrev, isNavigating, title }) => {
+export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, onPrev, isNavigating, title, isFirstStep }) => {
   const { 
     activeStoryCard,
     handleStoryCardSelect,
@@ -72,9 +73,6 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
 
   const nextButtonText = enablePart2 && gameState.setupMode === 'detailed' ? 'Next: Advanced →' : 'Next Step →';
 
-  // FIX: Defined 'isFirstStep' based on the title prop to correctly handle conditional rendering of navigation buttons, resolving the 'isFirstSetupStep is not defined' error and fixing inconsistent UI logic.
-  const isFirstStep = title.startsWith("First,");
-
   return (
     <div className="space-y-6 animate-fade-in">
       <h4 className={`text-center font-bold text-sm uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -112,10 +110,16 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
       </div>
       
       {/* Desktop Nav */}
-      <div className={`hidden sm:flex mt-8 justify-between clear-both pt-6 border-t ${navBorderTop}`}>
-        <Button onClick={onPrev} variant="secondary" className="shadow-sm" disabled={isNavigating}>
-          ← Back
-        </Button>
+      <div className={cls(
+          "hidden sm:flex mt-8 clear-both pt-6 border-t",
+          isFirstStep ? 'justify-end' : 'justify-between',
+          navBorderTop
+      )}>
+        {!isFirstStep && (
+          <Button onClick={onPrev} variant="secondary" className="shadow-sm" disabled={isNavigating}>
+            ← Back
+          </Button>
+        )}
         <Button 
           onClick={onNext} 
           className="shadow-lg hover:translate-y-[-2px] transition-transform"

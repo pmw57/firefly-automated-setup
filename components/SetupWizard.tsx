@@ -37,12 +37,12 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   const { isNavigating, handleNavigation, handleJump } = useWizardNavigation({ flow });
 
   const {
-    unacknowledgedOverrides,
     openOverrideModal,
     isOverrideModalOpen,
     affectedStepLabels,
     handleModalContinue,
     handleModalJump,
+    hasUnacknowledgedPastOverrides,
   } = useOverrideLogic({
     flow,
     currentStepIndex,
@@ -71,22 +71,8 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
 
   // --- Navigation Event Handlers ---
   const handleNext = useCallback(() => {
-    const currentStep = flow[currentStepIndex];
-    if (!currentStep) return;
-
-    const isC4 = currentStep.id === STEP_IDS.C4;
-    const isStorySelectionSubStep = gameState.missionDossierSubStep === 1;
-    const hasAdvancedRules = gameState.expansions.tenth && gameState.setupMode === 'detailed';
-
-    if (isC4 && isStorySelectionSubStep && unacknowledgedOverrides.length > 0) {
-      openOverrideModal();
-    } else if (isC4 && isStorySelectionSubStep && hasAdvancedRules) {
-      setMissionDossierSubstep(2);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      handleNavigation('next');
-    }
-  }, [handleNavigation, currentStepIndex, flow, unacknowledgedOverrides, gameState, openOverrideModal, setMissionDossierSubstep]);
+    handleNavigation('next');
+  }, [handleNavigation]);
 
   const handlePrev = useCallback(() => {
     const toStep = flow[currentStepIndex - 1];
@@ -155,7 +141,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
       />
 
       {isFinal ? (
-        <div className={cls(isDark ? 'bg-zinc-900/70 backdrop-blur-md border-zinc-800' : 'bg-[#faf8ef]/80 backdrop-blur-md border-[#d6cbb0]', "rounded-xl shadow-xl p-8 text-center border-t-8 animate-fade-in-up border-x border-b transition-colors duration-300", isDark ? 'border-t-green-800' : 'border-t-[#7f1d1d]')}>
+        <div className={cls(isDark ? 'bg-zinc-900/70 backdrop-blur-md border-zinc-800' : 'bg-[#faf8ef]/80 backdrop-blur-md border-[#d6cbb0]', "rounded-xl shadow-xl p-8 text-center border-t-8 animate-fade-in-up transition-colors duration-300", isDark ? 'border-t-green-800' : 'border-t-[#7f1d1d]')}>
           <div className="text-6xl mb-4">🚀</div>
           <h2 className={cls("text-3xl font-bold font-western mb-4", isDark ? 'text-gray-100' : 'text-[#292524]')}>You are ready to fly!</h2>
           <p className={cls("mb-8 text-lg", isDark ? 'text-gray-300' : 'text-[#57534e]')}>Setup is complete. Good luck, Captain.</p>
@@ -183,6 +169,8 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
           onPrev={handlePrev}
           isNavigating={isNavigating}
           isDevMode={isDevMode}
+          openOverrideModal={openOverrideModal}
+          hasUnacknowledgedPastOverrides={hasUnacknowledgedPastOverrides}
         />
       )}
       
