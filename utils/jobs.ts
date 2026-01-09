@@ -256,16 +256,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
         const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
         const details = _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge);
-        
-        let caperDrawCount: number | undefined;
-        if (jobDrawMode === 'caper_start') {
-             const caperBonusRule = details.messages.find(msg => msg.title === 'Caper Bonus');
-             if (caperBonusRule) {
-                caperDrawCount = 1; // Assume 1 if rule exists
-             }
-        }
-        
-        baseDetails = { ...details, caperDrawCount };
+        baseDetails = { ...details };
     } else {
         const initialContacts = _getInitialContacts(allRules, gameState);
         const contacts = _filterContacts(initialContacts, allRules);
@@ -287,18 +278,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             });
         }
         
-        let caperDrawCount: number | undefined;
-        const caperBonusRule = messages.find(msg => msg.title === 'Caper Bonus');
-        if (caperBonusRule) {
-            const contentText = getTextFromContent(caperBonusRule.content);
-            const match = contentText.match(/Draw (\d+)/i);
-            if (match && match[1]) {
-                caperDrawCount = parseInt(match[1], 10);
-            } else {
-                caperDrawCount = 1; // Default to 1 if parsing fails
-            }
-        }
-        
         const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
         const standardContacts = [CONTACT_NAMES.HARKEN, CONTACT_NAMES.BADGER, CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.PATIENCE, CONTACT_NAMES.NISKA];
         const isContactListOverridden = 
@@ -312,7 +291,23 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         const baseKeepCount = 3;
         const finalKeepCount = Math.min(baseKeepCount, actualDrawCount);
     
-        baseDetails = { contacts, messages, showStandardContactList, isSingleContactChoice, cardsToDraw: finalKeepCount, totalJobCards: contacts.length, caperDrawCount, isContactListOverridden };
+        baseDetails = { contacts, messages, showStandardContactList, isSingleContactChoice, cardsToDraw: finalKeepCount, totalJobCards: contacts.length, isContactListOverridden };
+    }
+
+    let caperDrawCount: number | undefined;
+    if (jobDrawMode === 'caper_start') {
+        caperDrawCount = 1;
+    } else {
+        const caperBonusRule = baseDetails.messages.find(msg => msg.title === 'Caper Bonus');
+        if (caperBonusRule) {
+            const contentText = getTextFromContent(caperBonusRule.content);
+            const match = contentText.match(/Draw (\d+)/i);
+            if (match && match[1]) {
+                caperDrawCount = parseInt(match[1], 10);
+            } else {
+                caperDrawCount = 1; // Default to 1 if parsing fails
+            }
+        }
     }
 
     const jobStepContentRule = allRules.find(
@@ -323,6 +318,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
 
     return {
         ...baseDetails,
+        caperDrawCount,
         jobDrawMode,
         mainContent,
         mainContentPosition,

@@ -15,8 +15,8 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
-          title: 'Caper Bonus',
-          content: ["Each player begins the game with one Caper card."]
+          title: 'Shotgun Wedding',
+          content: ["No starting jobs are dealt. Each player begins the game with one Caper."]
         }
       }
     ])
