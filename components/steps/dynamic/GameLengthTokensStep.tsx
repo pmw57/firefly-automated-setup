@@ -36,6 +36,9 @@ export const GameLengthTokensStep: React.FC = () => {
     const tokensToRemove = gameState.isCampaign ? gameState.campaignStoriesCompleted * 2 : 0;
 
     const allInfoBlocks = useMemo(() => {
+      if (gameState.setupMode === 'quick') {
+        return [];
+      }
       const blocks: SpecialRule[] = [...specialRulesFromEngine];
   
       if (tokensToRemove > 0) {
@@ -70,7 +73,6 @@ export const GameLengthTokensStep: React.FC = () => {
       
       return blocks
         .sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99))
-        .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
         .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
 
     }, [specialRulesFromEngine, tokensToRemove, gameState.campaignStoriesCompleted, shesTrouble, recipeForUnpleasantness, gameState.setupMode]);

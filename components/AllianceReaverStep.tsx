@@ -79,9 +79,7 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
 
   return (
     <div className="space-y-4">
-      {allSortedOverrides
-        .filter(rule => setupMode === 'detailed' || rule.source !== 'expansion')
-        .map((rule, index) => (
+      {setupMode === 'detailed' && allSortedOverrides.map((rule, index) => (
           <OverrideNotificationBlock key={`rule-${index}`} {...rule} />
       ))}
 

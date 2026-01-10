@@ -51,9 +51,7 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
 
   return (
     <div className="space-y-4">
-      {sortedSpecialRules
-        .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
-        .map((rule, i) => (
+      {gameState.setupMode === 'detailed' && sortedSpecialRules.map((rule, i) => (
           <OverrideNotificationBlock key={i} {...rule} />
       ))}
 
