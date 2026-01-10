@@ -20,7 +20,7 @@ import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
-const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): Omit<JobSetupDetails, 'jobDrawMode' | 'mainContent' | 'mainContentPosition'> => {
+const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): Omit<JobSetupDetails, 'jobDrawMode' | 'mainContent' | 'mainContentPosition' | 'showNoJobsMessage'> => {
     const messages: JobSetupMessage[] = [];
     
     // 1. Add any specific "addSpecialRule" rules for the jobs step.
@@ -231,6 +231,7 @@ const getTextFromContent = (content: StructuredContent): string => {
 export const getJobSetupDetails = (gameState: GameState, overrides: StepOverrides): JobSetupDetails => {
     const allRules = getResolvedRules(gameState);
     const activeStoryCard = getActiveStoryCard(gameState);
+    const showNoJobsMessageFlag = hasRuleFlag(allRules, 'showNoJobsMessage');
 
     const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
     const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
@@ -247,10 +248,11 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             isSingleContactChoice: false, 
             totalJobCards: 0,
             jobDrawMode,
+            showNoJobsMessage: showNoJobsMessageFlag,
         };
     }
     
-    let baseDetails: Omit<JobSetupDetails, 'jobDrawMode' | 'mainContent' | 'mainContentPosition'>;
+    let baseDetails: Omit<JobSetupDetails, 'jobDrawMode' | 'mainContent' | 'mainContentPosition' | 'showNoJobsMessage'>;
 
     if (jobDrawMode === 'no_jobs' || jobDrawMode === 'caper_start') {
         const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
@@ -322,5 +324,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         jobDrawMode,
         mainContent,
         mainContentPosition,
+        showNoJobsMessage: showNoJobsMessageFlag,
     };
 };

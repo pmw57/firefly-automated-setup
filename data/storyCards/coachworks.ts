@@ -19,6 +19,7 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
         }
       },
       { type: 'setJobMode', mode: 'shared_hand' },
+      { type: 'addFlag', flag: 'showNoJobsMessage' },
       {
         type: 'addSpecialRule',
         category: 'jobs',
