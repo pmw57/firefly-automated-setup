@@ -5,6 +5,7 @@ import { useGameState } from '../hooks/useGameState';
 // FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { cls } from '../utils/style';
+import { useRockerSwitchSound } from '../hooks/useRockerSwitchSound';
 
 export const SetupModeToggle: React.FC = () => {
     // FIX: Destructure only the relevant state properties from `useGameState`.
@@ -12,6 +13,7 @@ export const SetupModeToggle: React.FC = () => {
     // FIX: Get the dispatch function and action creators from `useGameDispatch`.
     const { setSetupMode } = useGameDispatch();
     const isDetailed = state.setupMode === 'detailed';
+    const { playSound } = useRockerSwitchSound();
 
     const [labelsVisible, setLabelsVisible] = useState(true);
     const timerRef = useRef<number | null>(null);
@@ -37,6 +39,7 @@ export const SetupModeToggle: React.FC = () => {
     };
 
     const handleToggle = () => {
+        playSound(isDetailed ? 'off' : 'on');
         setSetupMode(isDetailed ? 'quick' : 'detailed');
         handleMouseEnter(); 
     };
