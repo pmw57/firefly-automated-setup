@@ -90,7 +90,6 @@ export default defineConfig(({ mode }) => ({
     })
   ].filter(Boolean),
   define: {
-    'process.env.NODE_ENV': JSON.stringify(mode),
     __APP_VERSION__: JSON.stringify(getVersion()),
   },
   test: {

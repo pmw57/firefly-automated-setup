@@ -12,12 +12,13 @@ export const SetupModeToggle: React.FC = () => {
     const isDetailed = state.setupMode === 'detailed';
     const { playSound } = useRockerSwitchSound();
 
+    // Local state for the switch's visual appearance, allowing for immediate animation.
     const [visualChecked, setVisualChecked] = useState(isDetailed);
     const [isSwitching, setIsSwitching] = useState(false);
     const [labelsVisible, setLabelsVisible] = useState(true);
     const timerRef = useRef<number | null>(null);
 
-    // Sync local visual state if global state changes from another source (e.g., dev tools)
+    // Sync local visual state if global state changes (e.g., on initial load)
     useEffect(() => {
         setVisualChecked(isDetailed);
     }, [isDetailed]);
@@ -46,15 +47,17 @@ export const SetupModeToggle: React.FC = () => {
         if (isSwitching) return;
 
         setIsSwitching(true);
-        // 1. Immediately update visual state for animation
-        const nextVisualState = !visualChecked;
-        setVisualChecked(nextVisualState);
+        const nextIsDetailed = !visualChecked;
 
-        // 2. After a delay, play sound and update global state
+        // 1. Animate the switch immediately by updating local state.
+        setVisualChecked(nextIsDetailed);
+
+        // 2. After a 400ms delay, play the sound and update the global state.
+        // The label styles will update automatically when the global state changes.
         setTimeout(() => {
-            playSound(nextVisualState ? 'on' : 'off');
-            setSetupMode(nextVisualState ? 'detailed' : 'quick');
-            handleMouseEnter(); 
+            playSound(nextIsDetailed ? 'on' : 'off');
+            setSetupMode(nextIsDetailed ? 'detailed' : 'quick');
+            handleMouseEnter(); // Reset the label visibility timer
             setIsSwitching(false);
         }, 400);
     };
@@ -84,9 +87,10 @@ export const SetupModeToggle: React.FC = () => {
                 "flex flex-col items-end space-y-0.5 transition-opacity duration-500",
                 labelsVisible ? 'opacity-100' : 'opacity-0'
             )}>
+                {/* The labels are driven by the global 'isDetailed' state, so they will update after the delay. */}
                 <span className={cls(
                     "font-bold uppercase text-xs tracking-wider transition-all duration-200 px-2 py-0.5 rounded bg-black/25 backdrop-blur-sm [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]",
-                    visualChecked
+                    isDetailed
                         ? "text-white"
                         : "text-gray-400"
                 )}>
@@ -94,7 +98,7 @@ export const SetupModeToggle: React.FC = () => {
                 </span>
                 <span className={cls(
                     "font-bold uppercase text-xs tracking-wider transition-all duration-200 px-2 py-0.5 rounded bg-black/25 backdrop-blur-sm [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]",
-                    !visualChecked
+                    !isDetailed
                         ? "text-white"
                         : "text-gray-400"
                 )}>
@@ -104,10 +108,11 @@ export const SetupModeToggle: React.FC = () => {
             <label className="rocker-switch">
                 <input
                     type="checkbox"
+                    // The switch's animation is driven by the local 'visualChecked' state for an immediate effect.
                     checked={visualChecked}
                     onChange={handleToggle}
                     disabled={isSwitching}
-                    aria-label={`Current mode: ${visualChecked ? 'Detailed' : 'Quick'}. Click to switch.`}
+                    aria-label={`Current mode: ${isDetailed ? 'Detailed' : 'Quick'}. Click to switch.`}
                 />
                 <div className="button">
                     <div className="light"></div>
