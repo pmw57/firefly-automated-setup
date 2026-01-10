@@ -20,6 +20,14 @@ export const CRIME_STORIES: StoryCardDef[] = [
         }
       },
       { type: "addFlag", flag: "startWithAlertCard" },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Alliance High Alert',
+          content: ["Begin the game with one random Alliance Alert Card in play."]
+        }
+      },
       { type: "setShipPlacement", location: "londinium" },
       {
         type: "addSpecialRule",
@@ -38,14 +46,6 @@ export const CRIME_STORIES: StoryCardDef[] = [
           content: ["Place a $2000 Bill under the Contact Decks for Amnon Duul, Patience, Badger, and Niska. The first player to sell 3 Contraband to any one of these Contacts claims that Contact's bonus."]
         },
       },
-      {
-        type: 'addSpecialRule',
-        category: 'prime',
-        rule: {
-          title: 'Alliance High Alert',
-          content: ["Begin the game with one random Alliance Alert Card in play."]
-        }
-      }
     ])
   },
   {
@@ -74,6 +74,14 @@ export const CRIME_STORIES: StoryCardDef[] = [
         }
       },
       { type: 'addFlag', flag: 'startWithAlertCard' },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Alliance High Alert',
+          content: ["Begin the game with one random Alliance Alert Card in play."]
+        }
+      },
       { type: 'allowContacts', contacts: [CONTACT_NAMES.PATIENCE, CONTACT_NAMES.BADGER, CONTACT_NAMES.NISKA, CONTACT_NAMES.MR_UNIVERSE, CONTACT_NAMES.FANTY_MINGO] },
       {
         type: 'addSpecialRule',
@@ -83,14 +91,6 @@ export const CRIME_STORIES: StoryCardDef[] = [
           content: ["Starting Jobs may only be drawn from Patience, Badger, Niska, Mr. Universe and Fanty & Mingo."]
         }
       },
-      {
-        type: 'addSpecialRule',
-        category: 'prime',
-        rule: {
-          title: 'Feeling the Heat',
-          content: ["Begin the game with one random Alliance Alert Card in play."]
-        }
-      }
     ])
   },
 ];
