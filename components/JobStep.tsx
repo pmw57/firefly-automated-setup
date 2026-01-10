@@ -150,7 +150,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
           </div>
           </div>
       )}
-      {showNoJobsMessage && !mainContent && (
+      {showNoJobsMessage && (
         <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-6 text-center", textColor)}>
           <p className="font-semibold">No Starting Jobs are dealt for this setup.</p>
         </div>

@@ -8,7 +8,7 @@ export const CRIME_STORIES: StoryCardDef[] = [
     intro: "Bringin' goods to folk who want 'em is an old-fashioned way to make a living... 'cept, sometimes, a law or two gets in the way.",
     requiredExpansion: "crime",
     sourceUrl: "https://boardgamegeek.com/image/3464668/firefly-the-game-crime-and-punishment",
-    setupDescription: "Place 3 Contraband on each planetary sector in Alliance Space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead. Place a $2000 bill under Amnon Duul, Patience, Badger, and Niska's Contact Decks. Players do not receive Starting Jobs and begin at Londinium. Start with one random Alliance Alert Card in play.",
+    setupDescription: "Place a $2000 Bill under the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Players do not receive Starting Jobs.",
     rules: createStoryRules("Smuggler's Blues", [
       { type: "addFlag", flag: "smugglersBluesSetup" },
       {
@@ -39,19 +39,38 @@ export const CRIME_STORIES: StoryCardDef[] = [
       },
       { type: "setJobMode", mode: "no_jobs" },
       {
-        type: "addSpecialRule",
-        category: "jobs",
+        type: 'setJobStepContent',
+        position: 'after',
+        content: [
+          {
+            type: 'paragraph',
+            content: [{ type: 'strong', content: 'Place $2000 under the following Contact decks:'}]
+          },
+          {
+            type: 'list',
+            items: [
+              [{ type: 'strong', content: 'Amnon Duul'}],
+              [{ type: 'strong', content: 'Patience'}],
+              [{ type: 'strong', content: 'Badger'}],
+              [{ type: 'strong', content: 'Niska'}]
+            ]
+          }
+        ]
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
         rule: {
           title: "A Reliable Fence",
-          content: ["Place a $2000 Bill under the Contact Decks for Amnon Duul, Patience, Badger, and Niska. The first player to sell 3 Contraband to any one of these Contacts claims that Contact's bonus."]
-        },
-      },
+          content: ["Place a $2000 Bill under the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Players do not receive Starting Jobs."]
+        }
+      }
     ])
   },
   {
     title: "Wanted Men",
     intro: "Infamy's a funny thing. Bucking the law, while a might stressful day-to-day, leads to being known. The more you're known, the more your name's worth. Trick of it is, you got to sock away a lifetime of credits before you find yourself retiring early, in an Alliance lockup...",
-    setupDescription: "Each player starts the game with 1 Warrant. Players' starting locations may not be within Alliance Space. Start with one random Alliance Alert Card in play. Starting Jobs may only be drawn from Patience, Badger, Niska, Mr. Universe and Fanty & Mingo.",
+    setupDescription: "Each player starts the game with 1 Warrant. Players' starting locations may not be within Alliance Space. Start with one random Alliance Alert in play. Starting Jobs may only be drawn from Patience, Badger, Niska, Mr. Universe and Fanty & Mingo.",
     requiredExpansion: "crime",
     sourceUrl: "https://boardgamegeek.com/image/3524452",
     rules: createStoryRules("Wanted Men", [
