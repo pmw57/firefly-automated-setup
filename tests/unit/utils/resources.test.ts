@@ -55,7 +55,7 @@ describe('rules/resources', () => {
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(500);
-      expect(details.creditModifications[0].description).toBe('Story Funds');
+      expect(details.creditModifications[0].description).toBe('Scraping By');
     });
 
     it.concurrent('resolves conflict between "set" credit effects by prioritizing the story rule', () => {
@@ -68,7 +68,7 @@ describe('rules/resources', () => {
       
       expect(details.conflict).toBeUndefined();
       expect(details.credits).toBe(500); // Story wins by default
-      expect(details.creditModifications[0].description).toBe('Story Funds');
+      expect(details.creditModifications[0].description).toBe('Scraping By');
     });
 
     it.concurrent('applies "disable" effects for fuel and parts from a story', () => {
@@ -129,6 +129,36 @@ describe('rules/resources', () => {
       // 3. Test the outcome when user selects the 'story' option
       const storySelectionDetails = getResourceDetails(state, 'story');
       expect(storySelectionDetails.credits).toBe(500);
+    });
+
+    describe("for Smuggler's Blues", () => {
+      const storyTitle = "Smuggler's Blues";
+      const storyIndex = STORY_CARDS.findIndex(c => c.title === storyTitle);
+  
+      it.concurrent('makes variant available when Blue Sun and Kalidasa are active', () => {
+          const state: GameState = { 
+              ...baseGameState, 
+              expansions: { ...baseGameState.expansions, blue: true, kalidasa: true }, 
+              selectedStoryCardIndex: storyIndex
+          };
+          const details = getResourceDetails(state);
+          expect(details.smugglersBluesVariantAvailable).toBe(true);
+      });
+  
+      it.concurrent('adds a special rule for standard placement when only Blue Sun is active', () => {
+          const state: GameState = { 
+              ...baseGameState, 
+              expansions: { ...baseGameState.expansions, blue: true, kalidasa: false }, 
+              selectedStoryCardIndex: storyIndex
+          };
+          const details = getResourceDetails(state);
+          expect(details.smugglersBluesVariantAvailable).toBe(false);
+          const rule = details.specialRules.find(r => r.title === "A Lucrative Opportunity");
+          expect(rule).not.toBeUndefined();
+          const contentString = JSON.stringify(rule?.content);
+          expect(contentString).toContain("3 Contraband");
+          expect(contentString).toContain("Alliance Space");
+      });
     });
   });
 });
