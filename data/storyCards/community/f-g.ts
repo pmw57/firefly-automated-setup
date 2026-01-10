@@ -47,7 +47,8 @@ export const STORIES_F_G: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'A Port of Operation',
-          content: ["While choosing starting positions, players must choose a planetary sector within Blue Sun system that is not a Contact or Supply sector. Mark the sector with a Haven Token. Leave unused ships out of the box as a \"For Sale\" pile."]
+          content: ["While choosing starting positions, players must choose a planetary sector within Blue Sun system that is not a Contact or Supply sector. Mark the sector with a Haven Token. Leave unused ships out of the box as a \"For Sale\" pile."],
+          flags: ['isHavenPlacement']
         }
       }
     ])

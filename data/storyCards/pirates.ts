@@ -16,7 +16,7 @@ export const PIRATES_STORIES: StoryCardDef[] = [
         rule: {
           title: "Salvager's Stash",
           content: ["Choose Havens. Havens must be in Border Space."],
-          flags: ['havensInBorderSpace']
+          flags: ['havensInBorderSpace', 'isHavenPlacement']
         }
       },
       { type: 'addFlag', flag: 'hasConditionalHavenPageReference' },

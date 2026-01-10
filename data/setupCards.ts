@@ -253,6 +253,24 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'tenth',
     rules: createRules("Home Sweet Haven", [
       { type: 'setNavMode', mode: 'browncoat' },
+      { 
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Home Sweet Haven: Placement Rules',
+          page: 35,
+          manual: '10th AE',
+          flags: ['isHavenPlacement'],
+          content: [
+            { type: 'list', items: [
+                [`Each Haven must be placed in an unoccupied `, { type: 'strong', content: `Planetary Sector adjacent to a Supply Planet` }, `.` ],
+                [`Havens may not be placed in a Sector with a `, { type: 'strong', content: `Contact` }, `.` ],
+                [`Remaining players place their Havens in `, { type: 'strong', content: `reverse order` }, `.` ],
+                [{ type: 'strong', content: `Players' ships start at their Havens.` }],
+            ]}
+          ]
+        }
+      }
     ]),
     steps: [
       { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}` },
