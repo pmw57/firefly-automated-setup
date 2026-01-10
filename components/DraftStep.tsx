@@ -353,6 +353,9 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   );
 
   const allInfoBlocks = useMemo(() => {
+    if (isQuickMode) {
+      return [];
+    }
     const notesAsRules: SpecialRule[] = campaignNotes.map(note => ({
       source: 'story',
       title: 'Campaign Setup Note',
@@ -376,9 +379,8 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
     });
 
     return sortedRules
-      .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
       .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
-  }, [campaignNotes, specialRules, gameState.setupMode]);
+  }, [isQuickMode, campaignNotes, specialRules]);
 
   const handleDetermineOrder = useCallback(() => {
     setDraftConfig({ state: runAutomatedDraft(gameState.playerNames), isManual: false });

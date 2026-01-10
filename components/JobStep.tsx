@@ -11,7 +11,7 @@ import { StructuredContentRenderer } from './StructuredContentRenderer';
 
 export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
-  const { playerCount } = gameState;
+  const { playerCount, setupMode } = gameState;
   const { overrides = {} } = step;
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -73,6 +73,9 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   }, [mainContent, playerCount]);
 
   const sortedInfoBlocks = useMemo(() => {
+    if (setupMode === 'quick') {
+      return [];
+    }
     const blocks: SpecialRule[] = [];
 
     const campaignNotes = getCampaignNotesForStep(gameState, step.id);
@@ -89,7 +92,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     };
 
     return blocks.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
-  }, [messages, gameState, step.id]);
+  }, [messages, gameState, step.id, setupMode]);
   
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';

@@ -75,6 +75,9 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   const hasCreditModification = creditModificationDescription && creditModificationDescription !== 'Standard Allocation';
   
   const allInfoBlocks = useMemo(() => {
+    if (isQuickMode) {
+      return [];
+    }
     const blocks: SpecialRule[] = [];
 
     blocks.push(...campaignNotes.map(note => ({
@@ -102,11 +105,10 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
     );
 
     return uniqueBlocks
-        .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
         .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
   }, [
-      hasCreditModification, hasComplexCreditCalculation, creditModificationSource,
-      creditModificationDescription, campaignNotes, specialRules, gameState.setupMode
+      isQuickMode, hasCreditModification, hasComplexCreditCalculation, creditModificationSource,
+      creditModificationDescription, campaignNotes, specialRules
   ]);
 
   const useRimVariant = !!gameState.challengeOptions.smugglers_blues_rim_variant;
