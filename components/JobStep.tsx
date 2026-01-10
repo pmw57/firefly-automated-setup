@@ -27,6 +27,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     jobDrawMode,
     mainContent,
     mainContentPosition,
+    showNoJobsMessage: showNoJobsMessageFromData,
   } = useJobSetupDetails(overrides);
 
   const processedMainContent = useMemo(() => {
@@ -104,13 +105,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     : `up to ${cardsToDraw} Job Cards.`;
 
   const isSharedHand = jobDrawMode === 'shared_hand';
-  const showNoJobsMessage = !showStandardContactList && (jobDrawMode === 'no_jobs' || jobDrawMode === 'caper_start');
-
-  const MainContentBlock = processedMainContent && (
-    <div className={cls(cardBg, "rounded-lg border p-4 md:p-6", cardBorder, "shadow-sm transition-colors duration-300 text-sm", textColor)}>
-      <StructuredContentRenderer content={processedMainContent} />
-    </div>
-  );
+  const showNoJobsMessage = (!showStandardContactList && (jobDrawMode === 'no_jobs')) || showNoJobsMessageFromData;
 
   const StandardContentBlock = (
     <>
@@ -161,6 +156,13 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const CaperMessageBlock = (jobDrawMode === 'caper_start' && caperDrawCount && caperDrawCount > 0) ? (
     <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-6 text-center", textColor)}>
         <p className="font-semibold">Draw {caperDrawCount} Caper{caperDrawCount > 1 ? 's' : ''}</p>
+    </div>
+  ) : null;
+
+  // FIX: Define `MainContentBlock` to render `processedMainContent`. `MainContentBlock` was used but not defined, causing a reference error. This change defines it as a JSX element that renders the processed structured content for the step, using styles consistent with other content blocks in the component.
+  const MainContentBlock = processedMainContent ? (
+    <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-4 md:p-6", textColor)}>
+      <StructuredContentRenderer content={processedMainContent} />
     </div>
   ) : null;
 

@@ -39,6 +39,7 @@ export interface JobSetupDetails {
   jobDrawMode: JobMode;
   mainContent?: StructuredContent;
   mainContentPosition?: 'before' | 'after';
+  showNoJobsMessage?: boolean;
 }
 
 export interface NavDeckSetupDetails {

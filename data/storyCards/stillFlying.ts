@@ -11,6 +11,7 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/8103875/sjliver",
     rules: createStoryRules("A Rare Specimen Indeed", [
       { type: 'setJobMode', mode: 'caper_start' },
+      { type: 'addFlag', flag: 'showNoJobsMessage' },
       {
         type: 'addSpecialRule',
         category: 'jobs',
