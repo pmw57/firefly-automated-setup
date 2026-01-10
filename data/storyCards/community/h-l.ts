@@ -73,7 +73,7 @@ export const STORIES_H_L: StoryCardDef[] = [
   },
   {
     title: "A Jubilant Victory",
-    intro: "10,000 Credits will put a mighty fine jungle in anyone's pocket. If that pocket belongs to you, best keep a watchful eye out for Jubal Early and his intentions.",
+    intro: "10,000 Credits will put a mighty fine jingle in anyone's pocket. If that pocket belongs to you, best keep a watchful eye out for Jubal Early and his intentions.",
     requiredExpansion: "aces_eights",
     additionalRequirements: ["local_color"],
     rating: 1,
@@ -81,6 +81,14 @@ export const STORIES_H_L: StoryCardDef[] = [
     setupDescription: "Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, starting from Meridian.",
     rules: createStoryRules("A Jubilant Victory", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Story-Specific Warrant" },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Unwanted Attention',
+          content: ["Players begin at their Havens with one Warrant."]
+        }
+      },
       {
         type: 'addSpecialRule',
         category: 'draft',
