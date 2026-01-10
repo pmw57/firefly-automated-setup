@@ -46,7 +46,8 @@ export default defineConfig(({ mode }) => ({
         'assets/images/textures/parchment-body-texture.svg',
         'assets/images/textures/parchment-dossier-texture.svg',
         'assets/images/textures/metal-noise-texture.svg',
-        'assets/images/game/firefly-cover.png'
+        'assets/images/game/firefly-cover.png',
+        'assets/sounds/rocker-switch.mp3'
       ],
       manifest: {
         name: 'Firefly Automated Setup Guide',
@@ -67,7 +68,7 @@ export default defineConfig(({ mode }) => ({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,mp3}'],
         // Don't add revision query param to assets with hash in filename
         dontCacheBustURLsMatching: /\.[a-f0-9]{8}\./,
         // Prioritize fetching the latest index.html to avoid stale cache issues.
