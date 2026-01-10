@@ -23,7 +23,7 @@ const loadAudio = async () => {
         if (!audioContext) {
             audioContext = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
         }
-        const response = await fetch('assets/sounds/rocker-switch.mp3');
+        const response = await fetch('/assets/sounds/rocker-switch.mp3');
         const arrayBuffer = await response.arrayBuffer();
         if (audioContext) {
           audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
