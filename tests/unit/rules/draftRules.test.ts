@@ -47,8 +47,9 @@ describe('rules/draftRules', () => {
     });
 
     it.concurrent('identifies Haven Draft mode', () => {
+        const state: GameState = { ...baseGameState, setupCardId: SETUP_CARD_IDS.HOME_SWEET_HAVEN };
         const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT };
-        const details = getDraftDetails(baseGameState, step);
+        const details = getDraftDetails(state, step);
         expect(details.isHavenDraft).toBe(true);
         expect(details.specialRules.some(r => getTextContent(r.title).includes('Placement Rules'))).toBe(true);
     });
@@ -92,8 +93,11 @@ describe('rules/draftRules', () => {
     });
 
     it.concurrent('resolves conflict between Haven Draft and special start sector (Story Priority)', () => {
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` instead of the non-existent `selectedStoryCard` property, aligning with the `GameState` type. This involves finding the story card index by its title.
-        const state: GameState = { ...baseGameState, selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "It's a Mad, Mad, Mad, Mad 'Verse!") }; // This story forces Persephone start
+        const state: GameState = { 
+            ...baseGameState, 
+            setupCardId: SETUP_CARD_IDS.HOME_SWEET_HAVEN,
+            selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "It's a Mad, Mad, Mad, Mad 'Verse!") 
+        }; // This story forces Persephone start
         const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT }; // This is Haven Draft
         const details = getDraftDetails(state, step);
         

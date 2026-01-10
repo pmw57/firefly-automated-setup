@@ -21,7 +21,8 @@ export const STORIES_A_D: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Land Grant & Outfitting',
-          content: ["When placing ships, each player also places a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Players must buy a small ship (less than 10 cargo hold). Buy parts/fuel at listed price."]
+          content: ["When placing ships, each player also places a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Players must buy a small ship (less than 10 cargo hold). Buy parts/fuel at listed price."],
+          flags: ['isHavenPlacement']
         }
       }
     ])

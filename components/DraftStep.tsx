@@ -115,7 +115,6 @@ const PlacementOrderPanel = ({
     isHavenDraft,
     havenPlacementRules,
     isBrowncoatDraft,
-    isGoingLegit,
     specialStartSector,
     placementRegionRestriction,
     startOutsideAllianceSpace,
@@ -129,7 +128,6 @@ const PlacementOrderPanel = ({
     isHavenDraft: boolean;
     havenPlacementRules?: SpecialRule | null;
     isBrowncoatDraft: boolean;
-    isGoingLegit: boolean;
     specialStartSector: string | null;
     placementRegionRestriction: string | null;
     startOutsideAllianceSpace: boolean;
@@ -164,30 +162,6 @@ const PlacementOrderPanel = ({
                 <p className={cls("font-bold mb-1", specialPlacementTitle)}>Fixed Starting Sector</p>
                 <p className={cls("text-sm", specialPlacementText)}>All ships start in <strong>{specialStartSector}</strong>.</p>
             </div>
-        );
-    } else if (isGoingLegit) {
-        placementTitle = 'A Port of Operation';
-        const descriptionColor = isDark ? 'text-green-300' : 'text-green-800';
-        content = (
-            <>
-                <p className={cls("text-xs mb-3 italic", isDark ? 'text-gray-400' : 'text-gray-500')}>
-                    The last player to choose a Leader places first. Remaining players in reverse order.
-                </p>
-                <ul className="space-y-2">
-                    {placementOrder.map((player, i) => (
-                    <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
-                        <span className={`w-6 h-6 rounded-full bg-green-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm`}>{i + 1}</span>
-                        <span className={cls("text-sm font-medium", itemText)}>{player}</span>
-                        {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-green-400' : 'text-green-600')}>Placement 1</span>}
-                    </li>
-                    ))}
-                </ul>
-                <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
-                     <p className={cls("text-sm", descriptionColor)}>
-                        While choosing starting positions, mark your Blue Sun Haven in a non-Contact and non-Supply planetary sector.
-                    </p>
-                </div>
-            </>
         );
     } else {
         if (isHavenDraft) {
@@ -239,7 +213,7 @@ const PlacementOrderPanel = ({
                     ))}
                 </ul>
 
-                {isHavenDraft && havenPlacementRules && havenPlacementRules.title !== "Salvager's Stash" && (
+                {isHavenDraft && havenPlacementRules && (
                     <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
                          <h5 className={cls("font-bold uppercase tracking-wide text-xs mb-1", isDark ? 'text-gray-300' : 'text-gray-700')}>{havenPlacementRules.title || 'Haven Placement Rules'}:</h5>
                          <div className={cls("space-y-1 text-xs", isDark ? 'text-gray-400' : 'text-gray-600')}>
@@ -479,7 +453,6 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 isHavenDraft={isHavenDraft}
                 havenPlacementRules={havenPlacementRules}
                 isBrowncoatDraft={isBrowncoatDraft}
-                isGoingLegit={isGoingLegit}
                 specialStartSector={specialStartSector}
                 placementRegionRestriction={placementRegionRestriction}
                 startOutsideAllianceSpace={!!startOutsideAllianceSpace}

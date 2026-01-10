@@ -10,7 +10,7 @@ import {
     ThemeColor
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
-import { CHALLENGE_IDS, STEP_IDS } from '../data/ids';
+import { CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
 export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRuleDetails, 'isRuiningIt'> => {
@@ -48,35 +48,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
         }
     }
 
-    const isSetupCardHavenDraft = step.id.includes(STEP_IDS.D_HAVEN_DRAFT);
-    const storyHavenRule = specialRules.find(r => r.source === 'story' && (r.title === "Salvager's Stash" || r.flags?.includes('isHavenPlacement')));
-    
-    let havenPlacementRules: SpecialRule | null = null;
-    
-    // Story rule takes priority.
-    if (storyHavenRule) {
-        havenPlacementRules = storyHavenRule;
-    } else if (isSetupCardHavenDraft) {
-        // Setup card rule is the fallback.
-        const setupHavenRule: SpecialRule = {
-            source: 'setupCard', 
-            title: 'Home Sweet Haven: Placement Rules', 
-            page: 35,
-            manual: '10th AE',
-            content: [
-                { type: 'list', items: [
-                    [`Each Haven must be placed in an unoccupied `, { type: 'strong', content: `Planetary Sector adjacent to a Supply Planet` }, `.` ],
-                    [`Havens may not be placed in a Sector with a `, { type: 'strong', content: `Contact` }, `.` ],
-                    [`Remaining players place their Havens in `, { type: 'strong', content: `reverse order` }, `.` ],
-                    [{ type: 'strong', content: `Players' ships start at their Havens.` }],
-                ]}
-            ]
-        };
-        // Add to both specialRules (for top block) and havenPlacementRules (for panel)
-        specialRules.push(setupHavenRule);
-        havenPlacementRules = setupHavenRule;
-    }
-    
+    const havenPlacementRules = specialRules.find(r => (r.source === 'story' || r.source === 'setupCard') && r.flags?.includes('isHavenPlacement')) || null;
     const isHavenDraft = !!havenPlacementRules;
     const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
     const isHeroesAndMisfits = hasRuleFlag(allRules, 'isHeroesAndMisfits');
@@ -118,6 +90,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const showBrowncoatHeroesWarning = isBrowncoatDraft && isHeroesAndMisfits && isHeroesCustomSetup;
     
     let resolvedHavenDraft = isHavenDraft;
+    let resolvedHavenPlacementRules = havenPlacementRules;
     let conflictMessage: StructuredContent | null = null;
   
     if (isHavenDraft && specialStartSector) {
@@ -132,7 +105,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
             }
         }
         
-        havenPlacementRules = null;
+        resolvedHavenPlacementRules = null;
         conflictMessage = [{ type: 'strong', content: 'Story Priority:' }, ` Ships start at `, { type: 'strong', content: specialStartSector }, `, overriding Haven placement rules.`];
     }
     
@@ -179,5 +152,5 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
 
     if (allianceSpaceOffLimits) specialRules.push({ source: 'warning', title: 'Restricted Airspace', content: [{ type: 'strong', content: `Alliance Space is Off Limits` }, ` until Goal 3.`] });
     
-    return { specialRules, draftPanels, placementPanelExtras, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, placementRegionRestriction, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement, isWantedLeaderMode, havenPlacementRules };
+    return { specialRules, draftPanels, placementPanelExtras, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, placementRegionRestriction, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement, isWantedLeaderMode, havenPlacementRules: resolvedHavenPlacementRules };
 };
