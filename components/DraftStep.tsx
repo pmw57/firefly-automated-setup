@@ -13,6 +13,7 @@ import { getCampaignNotesForStep } from '../utils/selectors/story';
 import { SpecialRule, StructuredContent } from '../types';
 import { getResolvedRules, hasRuleFlag } from '../utils/selectors/rules';
 import { PageReference } from './PageReference';
+import { StructuredContentRenderer } from './StructuredContentRenderer';
 
 // A recursive renderer for StructuredContent
 const renderStructuredContent = (content: StructuredContent): React.ReactNode => {
@@ -121,6 +122,7 @@ const PlacementOrderPanel = ({
     excludeNewCanaanPlacement,
     mustBeInBorderSpace,
     stepBadgeClass,
+    placementPanelExtras,
 }: {
     placementOrder: string[];
     isSolo: boolean;
@@ -134,6 +136,7 @@ const PlacementOrderPanel = ({
     excludeNewCanaanPlacement: boolean;
     mustBeInBorderSpace: boolean;
     stepBadgeClass: string;
+    placementPanelExtras: SpecialRule[];
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -244,6 +247,16 @@ const PlacementOrderPanel = ({
                          </div>
                     </div>
                 )}
+                
+                {placementPanelExtras && placementPanelExtras.length > 0 && (
+                  <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
+                    {placementPanelExtras.map((extra, i) => (
+                      <p key={i} className={cls("text-xs font-bold", restrictionTextColor)}>
+                        <StructuredContentRenderer content={extra.content} />
+                      </p>
+                    ))}
+                  </div>
+                )}
             </>
         );
     }
@@ -296,6 +309,31 @@ const BrowncoatMarketPanel = () => {
     );
 };
 
+const CustomDraftPanel = ({ rule, stepBadgeClass }: { rule: SpecialRule; stepBadgeClass: string }) => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
+
+    const panelBg = isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm';
+    const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
+    const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
+    const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
+    const textColor = isDark ? 'text-gray-300' : 'text-gray-700';
+    
+    const isWide = rule.flags?.includes('col-span-2');
+
+    return (
+        <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder, isWide && 'md:col-span-2')}>
+            {rule.badge && <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>{rule.badge}</div>}
+            <h4 className={cls("font-bold mb-2 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
+                {rule.title}
+            </h4>
+            <div className={cls("text-sm", textColor)}>
+                <StructuredContentRenderer content={rule.content} />
+            </div>
+        </div>
+    );
+};
+
 export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
   const { setDraftConfig } = useGameDispatch();
@@ -311,6 +349,8 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   const {
       specialRules,
+      draftPanels,
+      placementPanelExtras,
       isHavenDraft,
       isBrowncoatDraft,
       isWantedLeaderMode,
@@ -390,6 +430,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const introText = isDark ? 'text-gray-400' : 'text-gray-600';
   const stepBadgeBlueBg = isDark ? 'bg-blue-900/50 text-blue-200' : 'bg-blue-100 text-blue-800';
   const stepBadgeAmberBg = isDark ? 'bg-amber-900/50 text-amber-200' : 'bg-amber-100 text-amber-800';
+  const stepBadgePurpleBg = isDark ? 'bg-purple-900/50 text-purple-200' : 'bg-purple-100 text-purple-800';
 
   return (
     <div className="space-y-6">
@@ -431,6 +472,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 isWantedLeaderMode={isWantedLeaderMode}
                 stepBadgeClass={stepBadgeBlueBg}
             />
+            
             <PlacementOrderPanel 
                 placementOrder={draftState.placementOrder}
                 isSolo={isSolo}
@@ -444,7 +486,12 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 excludeNewCanaanPlacement={!!excludeNewCanaanPlacement}
                 mustBeInBorderSpace={mustBeInBorderSpace}
                 stepBadgeClass={stepBadgeAmberBg}
+                placementPanelExtras={placementPanelExtras}
             />
+            
+            {draftPanels.map((panel, i) => (
+                <CustomDraftPanel key={`panel-${i}`} rule={panel} stepBadgeClass={stepBadgePurpleBg} />
+            ))}
           </div>
 
           {isBrowncoatDraft && <BrowncoatMarketPanel />}

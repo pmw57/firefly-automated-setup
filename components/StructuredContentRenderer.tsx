@@ -27,6 +27,8 @@ export const StructuredContentRenderer: React.FC<StructuredContentRendererProps>
           return <br key={index} />;
         case 'paragraph':
           return <p key={index} className="my-1">{renderParts(part.content)}</p>;
+        case 'paragraph-small-italic':
+          return <p key={index} className="text-xs italic my-1">{renderParts(part.content)}</p>;
         case 'list':
           return <ul key={index} className="list-disc ml-5 space-y-2 mt-1">{part.items.map((item, i) => <li key={i}>{renderParts(item)}</li>)}</ul>;
         case 'numbered-list':

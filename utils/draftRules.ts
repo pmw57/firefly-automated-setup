@@ -15,18 +15,26 @@ import { getActiveStoryCard } from './selectors/story';
 
 export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRuleDetails, 'isRuiningIt'> => {
     const specialRules: SpecialRule[] = [];
+    const draftPanels: SpecialRule[] = [];
+    const placementPanelExtras: SpecialRule[] = [];
     const { overrides = {} } = step;
     const allRules = getResolvedRules(gameState);
     const activeStoryCard = getActiveStoryCard(gameState);
 
     // Process generic special rules for this step category
     allRules.forEach(rule => {
-        if (rule.type === 'addSpecialRule' && rule.category === 'draft') {
-            if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
-                specialRules.push({
-                    source: rule.source as SpecialRule['source'],
-                    ...rule.rule
-                });
+        if (rule.type === 'addSpecialRule') {
+            if (rule.category === 'draft') {
+                if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
+                    specialRules.push({
+                        source: rule.source as SpecialRule['source'],
+                        ...rule.rule
+                    });
+                }
+            } else if (rule.category === 'draft_panel') {
+                draftPanels.push({ source: rule.source as SpecialRule['source'], ...rule.rule });
+            } else if (rule.category === 'draft_placement_extra') {
+                placementPanelExtras.push({ source: rule.source as SpecialRule['source'], ...rule.rule });
             }
         }
     });
@@ -41,7 +49,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     }
 
     const isSetupCardHavenDraft = step.id.includes(STEP_IDS.D_HAVEN_DRAFT);
-    const storyHavenRule = specialRules.find(r => r.source === 'story' && r.title === "Salvager's Stash");
+    const storyHavenRule = specialRules.find(r => r.source === 'story' && (r.title === "Salvager's Stash" || r.flags?.includes('isHavenPlacement')));
     
     let havenPlacementRules: SpecialRule | null = null;
     
@@ -171,5 +179,5 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
 
     if (allianceSpaceOffLimits) specialRules.push({ source: 'warning', title: 'Restricted Airspace', content: [{ type: 'strong', content: `Alliance Space is Off Limits` }, ` until Goal 3.`] });
     
-    return { specialRules, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, placementRegionRestriction, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement, isWantedLeaderMode, havenPlacementRules };
+    return { specialRules, draftPanels, placementPanelExtras, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, placementRegionRestriction, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement, isWantedLeaderMode, havenPlacementRules };
 };

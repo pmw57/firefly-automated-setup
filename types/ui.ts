@@ -116,6 +116,8 @@ export interface AllianceReaverDetails {
 
 export interface DraftRuleDetails {
   specialRules: SpecialRule[];
+  draftPanels: SpecialRule[];
+  placementPanelExtras: SpecialRule[];
   isHavenDraft: boolean;
   isBrowncoatDraft: boolean;
   specialStartSector: string | null;

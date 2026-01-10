@@ -78,15 +78,51 @@ export const STORIES_H_L: StoryCardDef[] = [
     additionalRequirements: ["local_color"],
     rating: 1,
     sourceUrl: "https://boardgamegeek.com/filepage/235439/storycard-a-jubilant-victory",
-    setupDescription: "Follow the 'Special Setup' override for player ship and Jubal Early placement. Start with one Warrant.",
+    setupDescription: "Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, starting from Meridian.",
     rules: createStoryRules("A Jubilant Victory", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Story-Specific Warrant" },
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: 'Special Setup',
-          content: ["Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, and uses a D8 die for movement, starting from Meridian."]
+          title: 'A High-Stakes Game: Haven Placement',
+          content: ["Players begin at their Havens."],
+          flags: ['isHavenPlacement']
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_panel',
+        rule: {
+          title: 'Required Ships',
+          badge: 'Ship Rules',
+          content: [
+            { type: 'paragraph', content: ["Players must use ", { type: 'strong', content: "Firefly-class ships" }, "."] },
+            { type: 'paragraph-small-italic', content: ["All ships are equipped with standard core drives."] }
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_panel',
+        rule: {
+          title: 'Jubal Early',
+          badge: 'NPC Rules',
+          flags: ['col-span-2'],
+          content: [
+            "Jubal Early is in play. He uses the ",
+            { type: 'strong', content: "Interceptor" },
+            " ship, starting from ",
+            { type: 'strong', content: "Meridian" },
+            "."
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_placement_extra',
+        rule: {
+          content: ["⚠️ Reminder: Each player also begins with one ", { type: 'strong', content: "Warrant" }, "."]
         }
       }
     ])
