@@ -59,26 +59,60 @@ export const STORIES_M_O: StoryCardDef[] = [
   {
     title: "Master Of All",
     intro: "The 'Verse is a profitable place for a crew that can rise to any occasion. Be the first to prove their crew is ready for anything... without attracting the law.",
-    setupDescription: "Follow the 'Special Placement' and 'Special Job Draw' overrides. Start with an Alliance Alert card.",
+    setupDescription: "In turn order, choose an empty planet with a Contact as a starting point. Then draw only 3 of that contact's jobs as starting hand. Start with an Alliance Alert in play and replace it whenever a Goal Token is won or when any RESHUFFLE card is drawn.",
     sourceUrl: "https://boardgamegeek.com/thread/2941994/master-of-all-story-card",
     requiredExpansion: "community",
     rules: createStoryRules("Master Of All", [
       { type: 'addFlag', flag: 'startWithAlertCard' },
       {
         type: 'addSpecialRule',
-        category: 'draft',
+        category: 'prime',
         rule: {
-          title: 'Special Placement',
-          content: ["In turn order, choose an empty planet with a Contact as a starting point."]
+          title: 'Alliance Presence',
+          content: ["Start with an Alliance Alert card in play."]
         }
       },
       {
         type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'First Contact',
+          content: ["In turn order, choose an unoccupied planet with a Contact as a starting point."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_placement_extra',
+        rule: {
+          content: ["⚠️ Restriction: Starting location must be an unoccupied planet with a Contact."]
+        }
+      },
+      { type: 'setJobMode', mode: 'no_jobs' },
+      {
+        type: 'addSpecialRule',
         category: 'jobs',
         rule: {
-          title: 'Special Job Draw',
-          content: ["Draw only 3 of that contact's jobs for your Starting Jobs."]
+          title: 'Proving Your Worth',
+          content: ["Draw only 3 of that contact's jobs as starting hand."]
         }
+      },
+      {
+        type: 'setJobStepContent',
+        position: 'before',
+        content: [
+          {
+            type: 'paragraph',
+            content: [
+              'Draw ',
+              { type: 'strong', content: '3 Jobs' },
+              ' from your starting planet Contact.'
+            ]
+          },
+          {
+            type: 'paragraph-small-italic',
+            content: ['You may keep any of the jobs drawn.']
+          }
+        ]
       }
     ])
   },

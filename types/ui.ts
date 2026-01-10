@@ -101,6 +101,7 @@ export interface PrimeDetails {
   isHighSupplyVolume: boolean;
   isBlitz: boolean;
   specialRules: SpecialRule[];
+  hasStartWithAlertCard?: boolean;
 }
 
 export interface AllianceReaverDetails {
