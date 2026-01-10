@@ -134,7 +134,8 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   
   const boardRuleMappings: Record<string, { tokenName: string, locationLine1: string, locationLine2: string, icon: string }> = {
     'Alliance Space Lockdown': { tokenName: 'Alliance Alert Tokens', locationLine1: 'Planetary Sectors', locationLine2: 'Alliance Space', icon: '🗺️' },
-    "Lonely Smuggler's Stash": { tokenName: 'Contraband Tokens', locationLine1: '3 on each Supply Planet', locationLine2: '(except Persephone/Bazaar)', icon: '📦' }
+    "Lonely Smuggler's Stash": { tokenName: 'Contraband Tokens', locationLine1: '3 on each Supply Planet', locationLine2: '(except Persephone/Bazaar)', icon: '📦' },
+    'Mass Contraband Stash': { tokenName: 'Contraband Tokens', locationLine1: '8 on each of 6 sectors:', locationLine2: 'Londinium, Bernadette, Liann Jiun, Sihnon, Gonghe, Bellerophon', icon: '💰' },
   };
 
   return (

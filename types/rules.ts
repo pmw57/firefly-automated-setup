@@ -113,6 +113,14 @@ export interface SetJobStepContentRule extends BaseRule {
   position: 'before' | 'after';
 }
 
+export interface AddBoardComponentRule extends BaseRule {
+  type: 'addBoardComponent';
+  component: 'contraband';
+  count: number;
+  locations: string[];
+  title: string;
+}
+
 export type SetupRule = 
   | SetJobModeRule
   | SetJobContactsRule
@@ -131,4 +139,5 @@ export type SetupRule =
   | ModifyPrimeRule
   | ModifyResourceRule
   | SetComponentRule
-  | SetJobStepContentRule;
+  | SetJobStepContentRule
+  | AddBoardComponentRule;

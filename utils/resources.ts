@@ -7,7 +7,8 @@ import {
     ResourceConflict,
     SpecialRule,
     CreateAlertTokenStackRule,
-    TokenStack
+    TokenStack,
+    AddBoardComponentRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { RULE_PRIORITY_ORDER } from '../data/constants';
@@ -124,6 +125,16 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
       rule
     });
   }
+  
+  const addBoardComponentRules = allRules.filter(r => r.type === 'addBoardComponent') as AddBoardComponentRule[];
+
+  addBoardComponentRules.forEach(rule => {
+    boardSetupRules.push({
+      source: rule.source as SpecialRule['source'],
+      title: rule.title,
+      content: []
+    });
+  });
 
   const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
   const smugglersBluesVariantAvailable = smugglersBluesSetup && gameState.expansions.blue && gameState.expansions.kalidasa;

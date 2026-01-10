@@ -5,17 +5,31 @@ export const STORIES_H_L: StoryCardDef[] = [
   {
     title: "Honorably Dishonorable Men",
     intro: "Care to press your luck? All them shiny things in the core sure could be of some use to folks out on the Rim.",
-    setupDescription: "Follow the 'Special Setup' override for contraband placement and game timer.",
+    setupDescription: "Place 8 contraband tokens on each of the following sectors in Alliance Space: Londonium, Bernadette, Liann Jiun, Sihnon, Gonghe, and Bellerophon. Use 20 Disgruntled tokens as the game length timer.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/3602682/honorably-dishonorable-men",
     rules: createStoryRules("Honorably Dishonorable Men", [
       {
         type: 'addSpecialRule',
-        category: 'goal',
+        category: 'resources',
         rule: {
-          title: 'Special Setup: Contraband & Timer',
-          content: ["Place 8 contraband tokens on each of the following sectors in Alliance Space: Londonium, Bernadette, Liann Jiun, Sihnon, Gonghe, and Bellerophon. Use 20 Disgruntled tokens as the game length timer. The player in first position discards 1 token at the start of each round. After the last token is discarded, all players take one final turn."]
+          title: 'Pressing Your Luck',
+          content: ["Place 8 contraband tokens on each of the following sectors in Alliance Space: Londonium, Bernadette, Liann Jiun, Sihnon, Gonghe, and Bellerophon. Use 20 Disgruntled tokens as the game length timer."]
         }
+      },
+      {
+        type: 'addBoardComponent',
+        component: 'contraband',
+        count: 8,
+        locations: ['Londinium', 'Bernadette', 'Liann Jiun', 'Sihnon', 'Gonghe', 'Bellerophon'],
+        title: 'Mass Contraband Stash'
+      },
+      {
+        type: 'createAlertTokenStack',
+        fixedValue: 20,
+        tokenName: 'Disgruntled Tokens',
+        title: 'Game Length Timer',
+        description: "The player in first position discards 1 token at the start of each round. After the last token is discarded, all players take one final turn."
       }
     ])
   },
