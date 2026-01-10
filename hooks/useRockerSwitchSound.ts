@@ -1,5 +1,4 @@
 
-
 import { useCallback } from 'react';
 
 // Define the time segments for the sounds within the audio sprite.
@@ -24,13 +23,10 @@ const loadAudio = async () => {
         if (!audioContext) {
             audioContext = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
         }
-
-        // WORKAROUND: `import.meta.env.BASE_URL` is causing a runtime error in your
-        // environment. This workaround uses `process.env.NODE_ENV` (which Vite
-        // replaces at build time) to conditionally set the base path.
-        // The production path is hardcoded to match your vite.config.ts.
-        const baseUrl = process.env.NODE_ENV === 'production' ? '/firefly-automated-setup/' : '/';
-        const soundUrl = `${baseUrl}assets/sounds/rocker-switch.mp3`.replace('//', '/');
+        
+        // Use a relative path for the sound file. The browser will automatically
+        // resolve this against the current base URL, which works for dev, preview, and prod.
+        const soundUrl = 'assets/sounds/rocker-switch.mp3';
         
         const response = await fetch(soundUrl);
         const arrayBuffer = await response.arrayBuffer();
