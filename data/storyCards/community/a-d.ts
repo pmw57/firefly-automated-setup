@@ -32,15 +32,28 @@ export const STORIES_A_D: StoryCardDef[] = [
     intro: "A big time crime boss has retired to a life of ease and comfort, leaving behind a nice little power vacuum. If you want to take his place you'll need money and business parthers. Shady business oartners to be exact. The shadier the better.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/3077380/aimin-to-misbehave",
-    setupDescription: "Follow the 'Deck Modification' override.",
+    setupDescription: "Remove all legal job cards from play.",
     rules: createStoryRules("Aimin' To Misbehave", [
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
-          title: 'Deck Modification',
+          title: 'A Shady Line of Work',
           content: ["Remove all legal jobs from play."]
         }
+      },
+      {
+        type: 'setJobStepContent',
+        position: 'before',
+        content: [
+          {
+            type: 'paragraph',
+            content: [
+              { type: 'strong', content: 'Deck Modification:' },
+              ' Before drawing starting jobs, you must first remove all Legal Job Cards from all Contact Decks. The standard job draw below will then consist of only Illegal Jobs.'
+            ]
+          }
+        ]
       }
     ])
   },
