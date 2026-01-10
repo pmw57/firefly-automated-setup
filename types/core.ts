@@ -11,6 +11,7 @@ export type StructuredContentPart =
   | { type: 'list'; items: StructuredContent[] }
   | { type: 'numbered-list'; items: StructuredContent[] }
   | { type: 'paragraph'; content: StructuredContent }
+  | { type: 'paragraph-small-italic'; content: StructuredContent }
   | { type: 'warning-box'; content: StructuredContent }
   | { type: 'sub-list'; items: { ship: string; color: ThemeColor }[] }
   | { type: 'placeholder'; id: string };
@@ -21,6 +22,7 @@ export interface SpecialRule {
     source: 'story' | 'setupCard' | 'expansion' | 'warning' | 'info';
     title?: string;
     content: StructuredContent;
+    badge?: string;
     // FIX: Add optional 'page' and 'manual' properties to align with SpecialRuleBlockProps
     page?: string | number;
     manual?: string;

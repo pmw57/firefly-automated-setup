@@ -76,7 +76,10 @@ export interface SetShipPlacementRule extends BaseRule {
     | { sector: string }
     | { region: string };
 }
-export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer' | 'goal'; rule: Omit<SpecialRule, 'source'>; }
+// FIX: Add 'draft_panel' and 'draft_placement_extra' to the category union type.
+// This aligns the type with its usage for creating custom panels within the draft step,
+// resolving type errors in `utils/draftRules.ts` and story card definitions.
+export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer' | 'goal' | 'draft_panel' | 'draft_placement_extra'; rule: Omit<SpecialRule, 'source'>; }
 
 export interface AddFlagRule extends BaseRule { 
   type: 'addFlag'; 
