@@ -2,21 +2,25 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useGameState } from '../hooks/useGameState';
-// FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { cls } from '../utils/style';
 import { useRockerSwitchSound } from '../hooks/useRockerSwitchSound';
 
 export const SetupModeToggle: React.FC = () => {
-    // FIX: Destructure only the relevant state properties from `useGameState`.
     const { state } = useGameState();
-    // FIX: Get the dispatch function and action creators from `useGameDispatch`.
     const { setSetupMode } = useGameDispatch();
     const isDetailed = state.setupMode === 'detailed';
     const { playSound } = useRockerSwitchSound();
 
+    const [visualChecked, setVisualChecked] = useState(isDetailed);
+    const [isSwitching, setIsSwitching] = useState(false);
     const [labelsVisible, setLabelsVisible] = useState(true);
     const timerRef = useRef<number | null>(null);
+
+    // Sync local visual state if global state changes from another source (e.g., dev tools)
+    useEffect(() => {
+        setVisualChecked(isDetailed);
+    }, [isDetailed]);
 
     const startTimer = () => {
         if (timerRef.current) {
@@ -39,9 +43,20 @@ export const SetupModeToggle: React.FC = () => {
     };
 
     const handleToggle = () => {
-        playSound(isDetailed ? 'off' : 'on');
-        setSetupMode(isDetailed ? 'quick' : 'detailed');
-        handleMouseEnter(); 
+        if (isSwitching) return;
+
+        setIsSwitching(true);
+        // 1. Immediately update visual state for animation
+        const nextVisualState = !visualChecked;
+        setVisualChecked(nextVisualState);
+
+        // 2. After a delay, play sound and update global state
+        setTimeout(() => {
+            playSound(nextVisualState ? 'on' : 'off');
+            setSetupMode(nextVisualState ? 'detailed' : 'quick');
+            handleMouseEnter(); 
+            setIsSwitching(false);
+        }, 400);
     };
 
     // Set initial timer on mount
@@ -71,7 +86,7 @@ export const SetupModeToggle: React.FC = () => {
             )}>
                 <span className={cls(
                     "font-bold uppercase text-xs tracking-wider transition-all duration-200 px-2 py-0.5 rounded bg-black/25 backdrop-blur-sm [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]",
-                    isDetailed
+                    visualChecked
                         ? "text-white"
                         : "text-gray-400"
                 )}>
@@ -79,7 +94,7 @@ export const SetupModeToggle: React.FC = () => {
                 </span>
                 <span className={cls(
                     "font-bold uppercase text-xs tracking-wider transition-all duration-200 px-2 py-0.5 rounded bg-black/25 backdrop-blur-sm [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]",
-                    !isDetailed
+                    !visualChecked
                         ? "text-white"
                         : "text-gray-400"
                 )}>
@@ -89,9 +104,10 @@ export const SetupModeToggle: React.FC = () => {
             <label className="rocker-switch">
                 <input
                     type="checkbox"
-                    checked={isDetailed}
+                    checked={visualChecked}
                     onChange={handleToggle}
-                    aria-label={`Current mode: ${isDetailed ? 'Detailed' : 'Quick'}. Click to switch.`}
+                    disabled={isSwitching}
+                    aria-label={`Current mode: ${visualChecked ? 'Detailed' : 'Quick'}. Click to switch.`}
                 />
                 <div className="button">
                     <div className="light"></div>

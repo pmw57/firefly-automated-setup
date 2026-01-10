@@ -283,7 +283,14 @@ const BrowncoatMarketPanel = () => {
     );
 };
 
-const CustomDraftPanel = ({ rule, stepBadgeClass }: { rule: SpecialRule; stepBadgeClass: string }) => {
+// FIX: Changed component typing to React.FC<CustomDraftPanelProps> to correctly handle
+// the 'key' prop when this component is used within a .map() loop, resolving a TypeScript error.
+interface CustomDraftPanelProps {
+  rule: SpecialRule;
+  stepBadgeClass: string;
+}
+
+const CustomDraftPanel: React.FC<CustomDraftPanelProps> = ({ rule, stepBadgeClass }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
 
