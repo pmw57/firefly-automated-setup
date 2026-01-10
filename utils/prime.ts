@@ -6,7 +6,7 @@ import {
     SpecialRule,
     SetPrimeModeRule
 } from '../types/index';
-import { getResolvedRules } from './selectors/rules';
+import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 
 export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides): PrimeDetails => {
@@ -41,11 +41,13 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   const primeModeRule = allRules.find(r => r.type === 'setPrimeMode') as SetPrimeModeRule | undefined;
   const isBlitz = primeModeRule?.mode === 'blitz' || overrides.primeMode === 'blitz';
 
+  const hasStartWithAlertCard = hasRuleFlag(allRules, 'startWithAlertCard');
+
   let effectiveMultiplier = storyMultiplier;
   if (isBlitz) effectiveMultiplier = 2;
   
   let finalCount = baseDiscard * effectiveMultiplier;
   if (primeModifier?.add) finalCount += primeModifier.add;
 
-  return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, specialRules };
+  return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, specialRules, hasStartWithAlertCard };
 };

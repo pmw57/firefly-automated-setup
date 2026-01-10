@@ -5,6 +5,7 @@ import { useGameState } from '../hooks/useGameState';
 import { usePrimeDetails } from '../hooks/usePrimeDetails';
 import { StepComponentProps } from './StepContent';
 import { SpecialRule } from '../types';
+import { cls } from '../utils/style';
 
 export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState } = useGameState();
@@ -18,6 +19,7 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     isHighSupplyVolume,
     isBlitz,
     specialRules,
+    hasStartWithAlertCard,
   } = usePrimeDetails(overrides);
   
   const allInfoBlocks = useMemo(() => {
@@ -79,6 +81,15 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
         <p className={`text-sm italic ${subTextColor}`}>
           (From the top of each Supply Deck)
         </p>
+
+        {hasStartWithAlertCard && (
+          <div className={cls("mt-6 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-stone-200')}>
+            <h4 className={cls("font-bold text-lg", isDark ? 'text-blue-300' : 'text-blue-800')}>Alliance Alert</h4>
+            <p className={cls("text-sm mt-1", textColor)}>
+              Reveal one <strong>Alliance Alert Card</strong> from the deck and put it into play.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
