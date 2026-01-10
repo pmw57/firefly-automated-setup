@@ -56,17 +56,19 @@ export const STORIES_H_L: StoryCardDef[] = [
     title: "How It All Started",
     intro: "You're low on funds, and need to get a job. Badger's hired you to scavenge a derelict ship dangerously close to an Alliance cruiser. Get the cargo, evade the Alliance, and sell it.",
     requiredExpansion: "community",
-    setupDescription: "Start with $500, 2 Fuel, and 2 Parts. Special hiring bonus for Nandi.",
+    setupDescription: "Start with $500, 2 Fuel, and 2 Parts. Nandi pays half price, rounded up, when hiring crew.",
     rules: createStoryRules("How It All Started", [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Story Funds" },
-      { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, description: "Story-Specific Fuel" },
-      { type: 'modifyResource', resource: 'parts', method: 'set', value: 2, description: "Story-Specific Parts" },
-      { 
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Scraping By" },
+      { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, description: "Scraping By" },
+      {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
-          title: "Hiring Bonus",
-          content: ["Nandi pays half price (rounded up) when hiring crew."]
+          title: "Scraping By",
+          content: [
+            "Start with $500, 2 Fuel, and 2 Parts. ",
+            "Nandi pays half price (rounded up) when hiring crew."
+          ]
         }
       }
     ]),
