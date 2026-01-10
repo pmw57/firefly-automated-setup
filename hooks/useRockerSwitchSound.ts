@@ -1,4 +1,5 @@
 
+
 import { useCallback } from 'react';
 
 // Define the time segments for the sounds within the audio sprite.
@@ -23,7 +24,15 @@ const loadAudio = async () => {
         if (!audioContext) {
             audioContext = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
         }
-        const response = await fetch('assets/sounds/rocker-switch.mp3');
+
+        // WORKAROUND: `import.meta.env.BASE_URL` is causing a runtime error in your
+        // environment. This workaround uses `process.env.NODE_ENV` (which Vite
+        // replaces at build time) to conditionally set the base path.
+        // The production path is hardcoded to match your vite.config.ts.
+        const baseUrl = process.env.NODE_ENV === 'production' ? '/firefly-automated-setup/' : '/';
+        const soundUrl = `${baseUrl}assets/sounds/rocker-switch.mp3`.replace('//', '/');
+        
+        const response = await fetch(soundUrl);
         const arrayBuffer = await response.arrayBuffer();
         if (audioContext) {
           audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
@@ -53,12 +62,8 @@ export const useRockerSwitchSound = () => {
     source.buffer = audioBuffer;
     source.connect(audioContext.destination);
 
-    // Define the delay to match the animation.
-    const delay = 0.4; // seconds
-
-    // Schedule the sound to play after the delay.
-    // The first argument is the absolute time to start, so we add the delay to the current time.
-    source.start(audioContext.currentTime + delay, sound.offset, sound.duration);
+    // The sound is now played immediately. The delay is handled by the calling component.
+    source.start(undefined, sound.offset, sound.duration);
   }, []);
 
   return { playSound };

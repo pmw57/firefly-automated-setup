@@ -1,4 +1,5 @@
 
+
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react-swc'
 import { VitePWA } from 'vite-plugin-pwa'
@@ -39,6 +40,7 @@ export default defineConfig(({ mode }) => ({
         'assets/images/game/expansion_sprites.png', 
         'assets/images/branding/logo.svg', 
         'assets/images/branding/qrcode.png',
+        'assets/sounds/rocker-switch.mp3',
         'robots.txt', 
         'sitemap.xml', 
         'google45bc800396599bee.html',
@@ -46,8 +48,7 @@ export default defineConfig(({ mode }) => ({
         'assets/images/textures/parchment-body-texture.svg',
         'assets/images/textures/parchment-dossier-texture.svg',
         'assets/images/textures/metal-noise-texture.svg',
-        'assets/images/game/firefly-cover.png',
-        'assets/sounds/rocker-switch.mp3'
+        'assets/images/game/firefly-cover.png'
       ],
       manifest: {
         name: 'Firefly Automated Setup Guide',
@@ -89,6 +90,7 @@ export default defineConfig(({ mode }) => ({
     })
   ].filter(Boolean),
   define: {
+    'process.env.NODE_ENV': JSON.stringify(mode),
     __APP_VERSION__: JSON.stringify(getVersion()),
   },
   test: {
