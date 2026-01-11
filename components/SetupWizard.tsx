@@ -126,7 +126,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
 
   return (
     <div 
-      className="max-w-2xl mx-auto pb-24 sm:pb-0"
+      className="max-w-2xl mx-auto pb-24 lg:pb-0"
       key={resetKey}
       {...touchHandlers}
     >
@@ -148,12 +148,12 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
           
           {gameState.setupMode === 'detailed' && <FinalSummary gameState={gameState} />}
 
-          <div className="hidden sm:flex justify-center gap-4">
+          <div className="hidden lg:flex justify-center gap-4">
             <Button onClick={handlePrev} variant="secondary">← Back</Button>
             <Button onClick={performReset}>Start New Game Setup</Button>
           </div>
           
-           <div className={cls("fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex sm:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300", footerBg, footerBorder)}>
+           <div className={cls("fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex lg:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300", footerBg, footerBorder)}>
             <Button onClick={handlePrev} variant="secondary" className="flex-1 text-xs uppercase tracking-wider !py-3">
               ← Back
             </Button>
