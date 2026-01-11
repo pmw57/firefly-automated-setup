@@ -23,9 +23,6 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   } = usePrimeDetails(overrides);
   
   const allInfoBlocks = useMemo(() => {
-    if (gameState.setupMode === 'quick') {
-      return [];
-    }
     const blocks: SpecialRule[] = [...specialRules];
 
     // Check if a story already provides a custom 'prime' rule to avoid redundant messages.
@@ -47,8 +44,11 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
         info: 4,
     };
 
-    return blocks
-      .sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99))
+    const sorted = blocks.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+
+    const filtered = gameState.setupMode === 'quick' ? sorted.filter(b => b.source !== 'story') : sorted;
+
+    return filtered
       .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
   }, [
     isHighSupplyVolume, gameState.optionalRules.highVolumeSupply, isBlitz, 

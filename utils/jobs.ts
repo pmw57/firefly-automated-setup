@@ -20,7 +20,7 @@ import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
-const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): Omit<JobSetupDetails, 'jobDrawMode' | 'mainContent' | 'mainContentPosition' | 'showNoJobsMessage'> => {
+const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): Omit<JobSetupDetails, 'jobDrawMode' | 'mainContent' | 'mainContentPosition' | 'showNoJobsMessage' | 'primeContactsInstruction'> => {
     const messages: JobSetupMessage[] = [];
     
     // 1. Add any specific "addSpecialRule" rules for the jobs step.
@@ -252,13 +252,24 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         };
     }
     
-    let baseDetails: Omit<JobSetupDetails, 'jobDrawMode' | 'mainContent' | 'mainContentPosition' | 'showNoJobsMessage'>;
+    let baseDetails: Omit<JobSetupDetails, 'jobDrawMode' | 'mainContent' | 'mainContentPosition' | 'showNoJobsMessage' | 'primeContactsInstruction'>;
+    let primeContactsInstruction: StructuredContent | undefined;
 
     if (jobDrawMode === 'no_jobs' || jobDrawMode === 'caper_start') {
         const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
         const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
         const details = _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge);
         baseDetails = { ...details };
+        
+        if (!dontPrimeContactsChallenge && allRules.some(r => r.type === 'primeContacts')) {
+            primeContactsInstruction = [
+              { type: 'paragraph', content: ['Instead of taking Starting Jobs, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
+              { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
+            ];
+            // Remove it from messages so it's not duplicated in detailed view
+            baseDetails.messages = baseDetails.messages.filter(m => m.title !== 'Prime Contact Decks');
+        }
+
     } else {
         const initialContacts = _getInitialContacts(allRules, gameState);
         const contacts = _filterContacts(initialContacts, allRules);
@@ -325,5 +336,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         mainContent,
         mainContentPosition,
         showNoJobsMessage: showNoJobsMessageFlag,
+        primeContactsInstruction,
     };
 };

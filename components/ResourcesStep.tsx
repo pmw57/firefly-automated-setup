@@ -75,9 +75,6 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   const hasCreditModification = creditModificationDescription && creditModificationDescription !== 'Standard Allocation';
   
   const allInfoBlocks = useMemo(() => {
-    if (isQuickMode) {
-      return [];
-    }
     const blocks: SpecialRule[] = [];
 
     blocks.push(...campaignNotes.map(note => ({
@@ -104,7 +101,9 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
         index === self.findIndex((b) => (b.title === block.title && JSON.stringify(b.content) === JSON.stringify(b.content)))
     );
 
-    return uniqueBlocks
+    const filtered = isQuickMode ? uniqueBlocks.filter(b => b.source !== 'story') : uniqueBlocks;
+
+    return filtered
         .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
   }, [
       isQuickMode, hasCreditModification, hasComplexCreditCalculation, creditModificationSource,

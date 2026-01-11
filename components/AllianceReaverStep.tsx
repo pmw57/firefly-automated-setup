@@ -42,8 +42,8 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   const allSortedOverrides = useMemo(() => {
     const rules: SpecialRule[] = [...specialRules];
     
-    // For detailed mode, show the override blocks to provide context, even though the
-    // rule is also rendered inline. In quick mode, these blocks are hidden.
+    // The alliance/reaver overrides are rendered inline, so the notification blocks
+    // for them are for extra context in detailed mode only.
     if (setupMode === 'detailed') {
       if (allianceOverride) {
         rules.push(allianceOverride);
@@ -61,7 +61,13 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
         info: 4,
     };
     
-    return rules.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+    const sorted = rules.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+
+    if (setupMode === 'quick') {
+      return sorted.filter(r => r.source !== 'story');
+    }
+
+    return sorted;
   }, [specialRules, allianceOverride, reaverOverride, setupMode]);
 
   const standardContainerBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
@@ -79,7 +85,7 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
 
   return (
     <div className="space-y-4">
-      {setupMode === 'detailed' && allSortedOverrides.map((rule, index) => (
+      {allSortedOverrides.map((rule, index) => (
           <OverrideNotificationBlock key={`rule-${index}`} {...rule} />
       ))}
 

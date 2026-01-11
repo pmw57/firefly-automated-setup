@@ -353,9 +353,6 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   );
 
   const allInfoBlocks = useMemo(() => {
-    if (isQuickMode) {
-      return [];
-    }
     const notesAsRules: SpecialRule[] = campaignNotes.map(note => ({
       source: 'story',
       title: 'Campaign Setup Note',
@@ -378,7 +375,9 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       return (order[a.source] || 99) - (order[b.source] || 99);
     });
 
-    return sortedRules
+    const filteredRules = isQuickMode ? sortedRules.filter(r => r.source !== 'story') : sortedRules;
+
+    return filteredRules
       .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
   }, [isQuickMode, campaignNotes, specialRules]);
 
