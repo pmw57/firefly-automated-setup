@@ -71,42 +71,37 @@ describe('rules/jobs', () => {
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
         gameMode: 'solo',
       };
-      const { showStandardContactList, messages } = getJobSetupDetails(state, {});
+      const { showStandardContactList, messages, primeContactsInstruction } = getJobSetupDetails(state, {});
       expect(showStandardContactList).toBe(false);
-      expect(messages).toMatchInlineSnapshot(`
+      expect(messages).toEqual([]); // This instruction is now handled by primeContactsInstruction
+      expect(primeContactsInstruction).toMatchInlineSnapshot(`
         [
           {
             "content": [
+              "Instead of taking Starting Jobs, ",
               {
-                "content": [
-                  "Instead of taking Starting Jobs, ",
-                  {
-                    "content": "prime the Contact Decks",
-                    "type": "strong",
-                  },
-                  ":",
-                ],
-                "type": "paragraph",
+                "content": "prime the Contact Decks",
+                "type": "strong",
               },
-              {
-                "items": [
-                  [
-                    "Reveal the top ",
-                    {
-                      "content": "3 cards",
-                      "type": "strong",
-                    },
-                    " of each Contact Deck.",
-                  ],
-                  [
-                    "Place the revealed Job Cards in their discard piles.",
-                  ],
-                ],
-                "type": "list",
-              },
+              ":",
             ],
-            "source": "story",
-            "title": "Prime Contact Decks",
+            "type": "paragraph",
+          },
+          {
+            "items": [
+              [
+                "Reveal the top ",
+                {
+                  "content": "3 cards",
+                  "type": "strong",
+                },
+                " of each Contact Deck.",
+              ],
+              [
+                "Place the revealed Job Cards in their discard piles.",
+              ],
+            ],
+            "type": "list",
           },
         ]
       `);
