@@ -28,6 +28,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     mainContent,
     mainContentPosition,
     showNoJobsMessage: showNoJobsMessageFromData,
+    primeContactsInstruction,
   } = useJobSetupDetails(overrides);
 
   const processedMainContent = useMemo(() => {
@@ -73,9 +74,6 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   }, [mainContent, playerCount]);
 
   const sortedInfoBlocks = useMemo(() => {
-    if (setupMode === 'quick') {
-      return [];
-    }
     const blocks: SpecialRule[] = [];
 
     const campaignNotes = getCampaignNotesForStep(gameState, step.id);
@@ -91,7 +89,12 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
         expansion: 1, setupCard: 2, story: 3, warning: 3, info: 4,
     };
 
-    return blocks.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+    const sorted = blocks.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+
+    if (setupMode === 'quick') {
+      return sorted.filter(b => b.source !== 'story');
+    }
+    return sorted;
   }, [messages, gameState, step.id, setupMode]);
   
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
@@ -148,7 +151,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
           </div>
           </div>
       )}
-      {showNoJobsMessage && (
+      {showNoJobsMessage && !primeContactsInstruction && (
         <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-6 text-center", textColor)}>
           <p className="font-semibold">No Starting Jobs are dealt for this setup.</p>
         </div>
@@ -162,7 +165,15 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     </div>
   ) : null;
 
-  // FIX: Define `MainContentBlock` to render `processedMainContent`. `MainContentBlock` was used but not defined, causing a reference error. This change defines it as a JSX element that renders the processed structured content for the step, using styles consistent with other content blocks in the component.
+  const PrimeContactsBlock = primeContactsInstruction ? (
+    <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-4 md:p-6", textColor)}>
+      <h4 className={cls("font-bold text-lg mb-3 pb-2 border-b", sectionHeaderColor, sectionHeaderBorder)}>
+        Prime Contact Decks
+      </h4>
+      <StructuredContentRenderer content={primeContactsInstruction} />
+    </div>
+  ) : null;
+
   const MainContentBlock = processedMainContent ? (
     <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-4 md:p-6", textColor)}>
       <StructuredContentRenderer content={processedMainContent} />
@@ -177,6 +188,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
         <>
           {StandardContentBlock}
           {CaperMessageBlock}
+          {PrimeContactsBlock}
           {MainContentBlock}
         </>
       ) : (
@@ -184,6 +196,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
           {MainContentBlock}
           {StandardContentBlock}
           {CaperMessageBlock}
+          {PrimeContactsBlock}
         </>
       )}
     </div>

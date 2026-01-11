@@ -40,6 +40,7 @@ export interface JobSetupDetails {
   mainContent?: StructuredContent;
   mainContentPosition?: 'before' | 'after';
   showNoJobsMessage?: boolean;
+  primeContactsInstruction?: StructuredContent;
 }
 
 export interface NavDeckSetupDetails {

@@ -20,7 +20,7 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
     hasRimDecks,
   } = useNavDeckDetails(overrides);
 
-  const sortedSpecialRules = useMemo(() => {
+  const specialRulesToDisplay = useMemo(() => {
     const order: Record<SpecialRule['source'], number> = {
         expansion: 1,
         setupCard: 2,
@@ -28,8 +28,13 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
         warning: 3,
         info: 4,
     };
-    return [...specialRules].sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
-  }, [specialRules]);
+    const sorted = [...specialRules].sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+    
+    if (gameState.setupMode === 'quick') {
+        return sorted.filter(r => r.source !== 'story');
+    }
+    return sorted;
+  }, [specialRules, gameState.setupMode]);
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -51,7 +56,7 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
 
   return (
     <div className="space-y-4">
-      {gameState.setupMode === 'detailed' && sortedSpecialRules.map((rule, i) => (
+      {specialRulesToDisplay.map((rule, i) => (
           <OverrideNotificationBlock key={i} {...rule} />
       ))}
 
