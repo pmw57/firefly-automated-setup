@@ -74,7 +74,7 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
   const nextButtonText = enablePart2 && gameState.setupMode === 'detailed' ? 'Next: Advanced →' : 'Next Step →';
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in pb-24 xl:pb-0">
       <h4 className={`text-center font-bold text-sm uppercase tracking-wider ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
           {title}
       </h4>
@@ -111,7 +111,7 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
       
       {/* Desktop Nav */}
       <div className={cls(
-          "hidden sm:flex mt-8 clear-both pt-6 border-t",
+          "hidden xl:flex mt-8 clear-both pt-6 border-t",
           isFirstStep ? 'justify-end' : 'justify-between',
           navBorderTop
       )}>
@@ -131,7 +131,7 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
       
       {/* Sticky Mobile Nav */}
       <div className={cls(
-        "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex sm:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
+        "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex xl:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
         footerBg, footerBorder
       )}>
         {!isFirstStep && (

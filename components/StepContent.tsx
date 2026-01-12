@@ -151,13 +151,13 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
       const isButtonDisabled = step.id === STEP_IDS.SETUP_CARD_SELECTION && isNextDisabled;
       
       return (
-          <div className="animate-fade-in-up pb-24 lg:pb-0">
+          <div className="animate-fade-in-up pb-24 xl:pb-0">
             <Suspense fallback={<StepLoading />}>
               {renderStepBody()}
             </Suspense>
 
             {/* Desktop Nav */}
-            <div className={cls("hidden lg:flex mt-8 pt-6 border-t", isFirstSetupStep ? 'justify-end' : 'justify-between', isDark ? 'border-zinc-800' : 'border-stone-200')}>
+            <div className={cls("hidden xl:flex mt-8 pt-6 border-t", isFirstSetupStep ? 'justify-end' : 'justify-between', isDark ? 'border-zinc-800' : 'border-stone-200')}>
                 {!isFirstSetupStep && (
                     <Button onClick={onPrev} variant="secondary" disabled={isNavigating}>
                         ← Back
@@ -170,7 +170,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
             
             {/* Sticky Mobile Nav */}
             <div className={cls(
-              "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex lg:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
+              "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex xl:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
               footerBg, footerBorder
             )}>
                 {!isFirstSetupStep && (
@@ -209,7 +209,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
     : (isDark ? 'text-amber-400' : 'text-amber-200');
 
   return (
-    <div className="animate-fade-in-up pb-32 lg:pb-8">
+    <div className="animate-fade-in-up pb-32 xl:pb-8">
       <div className="flex flex-wrap items-start justify-between mb-6 gap-4">
         <h2 
             ref={titleRef}
@@ -240,7 +240,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
       {showNav && (
         <>
           {/* Desktop Nav */}
-          <div className={cls("hidden lg:flex mt-12 justify-between clear-both pt-8 border-t", isDark ? 'border-zinc-800' : 'border-stone-200')}>
+          <div className={cls("hidden xl:flex mt-12 justify-between clear-both pt-8 border-t", isDark ? 'border-zinc-800' : 'border-stone-200')}>
             <Button onClick={onPrev} variant="secondary" disabled={isNavigating}>
               ← Back
             </Button>
@@ -251,7 +251,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
 
           {/* Sticky Mobile Nav */}
           <div className={cls(
-            "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex lg:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
+            "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex xl:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
             footerBg, footerBorder
           )}>
             <Button 
