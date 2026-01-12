@@ -6,6 +6,37 @@ import { usePrimeDetails } from '../hooks/usePrimeDetails';
 import { StepComponentProps } from './StepContent';
 import { SpecialRule } from '../types';
 import { cls } from '../utils/style';
+import { StructuredContentRenderer } from './StructuredContentRenderer';
+
+interface CustomPrimePanelProps {
+  rule: SpecialRule;
+  badgeClass: string;
+}
+
+const CustomPrimePanel: React.FC<CustomPrimePanelProps> = ({ rule, badgeClass }) => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
+
+    const panelBg = isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm';
+    const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
+    const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
+    const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
+    const textColor = isDark ? 'text-gray-300' : 'text-gray-700';
+    
+    const isWide = rule.flags?.includes('col-span-2');
+
+    return (
+        <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder, isWide && 'md:col-span-2')}>
+            {rule.badge && <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", badgeClass)}>{rule.badge}</div>}
+            <h4 className={cls("font-bold mb-2 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
+                {rule.title}
+            </h4>
+            <div className={cls("text-sm", textColor)}>
+                <StructuredContentRenderer content={rule.content} />
+            </div>
+        </div>
+    );
+};
 
 export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState } = useGameState();
@@ -19,6 +50,7 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     isHighSupplyVolume,
     isBlitz,
     specialRules,
+    primePanels,
     hasStartWithAlertCard,
   } = usePrimeDetails(overrides);
   
@@ -66,9 +98,19 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   const labelColor = isDark ? 'text-green-300' : 'text-[#78350f]';
   const subTextColor = isDark ? 'text-gray-400' : 'text-[#a8a29e]';
 
+  const stepBadgePurpleBg = isDark ? 'bg-purple-900/50 text-purple-200' : 'bg-purple-100 text-purple-800';
+
   return (
     <div className="space-y-4">
       {allInfoBlocks}
+
+      {primePanels.length > 0 && (
+          <div className="space-y-4">
+              {primePanels.map((panel, i) => (
+                  <CustomPrimePanel key={`panel-${i}`} rule={panel} badgeClass={stepBadgePurpleBg} />
+              ))}
+          </div>
+      )}
       
       <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm text-center transition-colors duration-300`}>
         <h4 className={`font-bold text-xl font-western mb-4 ${titleColor}`}>Priming The Pump</h4>

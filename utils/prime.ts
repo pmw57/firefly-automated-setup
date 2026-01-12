@@ -4,7 +4,8 @@ import {
     StepOverrides,
     ModifyPrimeRule,
     SpecialRule,
-    SetPrimeModeRule
+    SetPrimeModeRule,
+    AddSpecialRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { EXPANSIONS_METADATA } from '../data/expansions';
@@ -19,16 +20,25 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   
   const allRules = getResolvedRules(gameState);
   const specialRules: SpecialRule[] = [];
+  const primePanels: SpecialRule[] = [];
 
   // Process generic special rules for this step category
   allRules.forEach(rule => {
-      if (rule.type === 'addSpecialRule' && rule.category === 'prime') {
-          if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
-              specialRules.push({
-                  source: rule.source as SpecialRule['source'],
-                  ...rule.rule
-              });
-          }
+      if (rule.type === 'addSpecialRule') {
+        const r = rule as AddSpecialRule;
+        if (r.category === 'prime') {
+            if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(r.source)) {
+                specialRules.push({
+                    source: r.source as SpecialRule['source'],
+                    ...r.rule
+                });
+            }
+        } else if (r.category === 'prime_panel') {
+            primePanels.push({
+                source: r.source as SpecialRule['source'],
+                ...r.rule
+            });
+        }
       }
   });
   
@@ -49,5 +59,5 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   let finalCount = baseDiscard * effectiveMultiplier;
   if (primeModifier?.add) finalCount += primeModifier.add;
 
-  return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, specialRules, hasStartWithAlertCard };
+  return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, specialRules, primePanels, hasStartWithAlertCard };
 };

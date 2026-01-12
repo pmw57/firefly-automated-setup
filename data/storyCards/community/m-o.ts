@@ -61,7 +61,7 @@ export const STORIES_M_O: StoryCardDef[] = [
   {
     title: "Master Of All",
     intro: "The 'Verse is a profitable place for a crew that can rise to any occasion. Be the first to prove their crew is ready for anything... without attracting the law.",
-    setupDescription: "In turn order, choose an empty planet with a Contact as a starting point. Then draw only 3 of that contact's jobs as starting hand. Start with an Alliance Alert in play and replace it whenever a Goal Token is won or when any RESHUFFLE card is drawn.",
+    setupDescription: "In turn order, choose an unoccupied planet with a Contact as a starting point. Then draw only 3 of that contact's jobs as starting hand. Start with an Alliance Alert in play and replace it whenever a Goal Token is won or when any RESHUFFLE card is drawn.",
     sourceUrl: "https://boardgamegeek.com/thread/2941994/master-of-all-story-card",
     requiredExpansion: "community",
     tags: ['community', 'reputation'],
@@ -154,19 +154,65 @@ export const STORIES_M_O: StoryCardDef[] = [
     title: "My Fellow Browncoats",
     isCoOp: true,
     intro: "The crew of Serenity needs your help. They've been captured by the Alliance and sent to unknown prison camps all over the 'Verse. For a price, Badger might let you in on a little secret.",
-    setupDescription: "Follow the 'Rescue Mission Setup' override.",
+    setupDescription: "Place Serenity on Shadow, Murphy as the drop-off point for Serenity's rescued crew. Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together. Place them face down as the \"Prisoner Deck\".",
     tags: ['community', 'jailbreak', 'against_the_black', 'coop'],
     rules: createStoryRules("My Fellow Browncoats", [
-      { 
-        type: 'addSpecialRule', 
-        category: 'goal',
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Story Override',
+          content: [
+            "Place Serenity on Shadow, Murphy as the drop-off point for Serenity's rescued crew."
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_panel',
         rule: {
           title: 'Rescue Mission Setup',
-          content: ["Place Serenity on Shadow, Murphy as the drop-off point for rescued crew. Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together. Place them face down as the \"Prisoner Deck\". They are your goals for this game."]
+          badge: 'Story Setup',
+          content: [
+            {
+              type: 'list',
+              items: [
+                ["Place the Serenity ship token on the 'Shadow, Murphy' sector."],
+                ["This will be the drop-off point for any rescued crew during the game."],
+              ]
+            }
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime_panel',
+        rule: {
+          title: 'Prepare Prisoner Deck',
+          badge: 'Story Setup',
+          content: [
+            {
+              type: 'list',
+              items: [
+                ["Shuffle the 9 original Serenity crew cards (Malcolm, Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, and Shepherd Book) together."],
+                ["Place this shuffled deck face down. This is the 'Prisoner Deck' and represents your game goals."],
+              ]
+            }
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Story Override',
+          content: [
+            "Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together. Place them face down as the \"Prisoner Deck\"."
+          ]
         }
       }
     ]),
-    sourceUrl: "https://boardgamegeek.com/thread/3282832/my-fellow-browncoats-remastered-into-a-solo-and-co",
+    sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
     requiredExpansion: "community"
   },
   {
