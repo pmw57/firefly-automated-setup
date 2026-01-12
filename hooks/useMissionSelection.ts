@@ -25,6 +25,7 @@ export interface MissionSelectionContextType {
   handleGenerateShortList: () => void;
   handlePickFromShortList: () => void;
   handleCancelShortList: () => void;
+  handleJump?: (index: number) => void;
   gameState: GameState;
 }
 

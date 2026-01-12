@@ -9,6 +9,7 @@ import { STORY_CARDS } from '../../data/storyCards';
 import { cls } from '../../utils/style';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionId, StoryTag } from '../../types';
+import { useSetupFlow } from '../../hooks/useSetupFlow';
 
 interface StoryCardGridProps {
   onSelect: (index: number) => void;
@@ -79,8 +80,10 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
     toggleSortMode,
     filterTheme,
     setFilterTheme,
+    handleJump,
     gameState,
   } = useMissionSelection();
+  const { flow } = useSetupFlow();
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -131,6 +134,14 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+  
+  const handleReasonClick = (stepId: string) => {
+    if (!handleJump || !stepId) return;
+    const index = flow.findIndex(step => step.id === stepId);
+    if (index > -1) {
+      handleJump(index);
+    }
+  };
 
   const filterButtonText = filterExpansion.length === 0 || filterExpansion.length === expansionsForFilter.length
     ? "All Expansions"
@@ -286,17 +297,28 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
                 These stories exist but are hidden due to your current game settings.
             </p>
             <div className="space-y-3">
-                {hiddenMatches.map(({ card, reason }) => (
-                    <div key={card.title} className="bg-gray-100 dark:bg-zinc-800/50 p-3 rounded-lg border border-gray-200 dark:border-zinc-700 flex items-center gap-3">
-                        <div className="shrink-0 w-8 h-8">
-                            <InlineExpansionIcon type={card.requiredExpansion || 'base'} />
+                {hiddenMatches.map(({ card, reason }) => {
+                    const isClickable = reason?.stepId && handleJump;
+                    const ReasonComponent = isClickable ? 'button' : 'p';
+                    const reasonProps = isClickable ? { onClick: () => handleReasonClick(reason.stepId!) } : {};
+                    const reasonClass = isClickable
+                        ? 'text-blue-600 dark:text-blue-400 underline hover:no-underline'
+                        : 'text-red-600 dark:text-red-400';
+
+                    return (
+                        <div key={card.title} className="bg-gray-100 dark:bg-zinc-800/50 p-3 rounded-lg border border-gray-200 dark:border-zinc-700 flex items-center gap-3 text-left">
+                            <div className="shrink-0 w-8 h-8">
+                                <InlineExpansionIcon type={card.requiredExpansion || 'base'} />
+                            </div>
+                            <div className="flex-1">
+                                <p className="font-bold text-sm text-gray-800 dark:text-gray-200">{card.title}</p>
+                                <ReasonComponent {...reasonProps} className={`text-xs ${reasonClass}`}>
+                                    {reason?.text}
+                                </ReasonComponent>
+                            </div>
                         </div>
-                        <div className="flex-1">
-                            <p className="font-bold text-sm text-gray-800 dark:text-gray-200">{card.title}</p>
-                            <p className="text-xs text-red-600 dark:text-red-400">{reason}</p>
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
           </div>
         ) : (

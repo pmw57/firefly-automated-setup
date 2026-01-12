@@ -60,7 +60,12 @@ function reducer(state: LocalState, action: LocalAction): LocalState {
   }
 }
 
-export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface MissionSelectionProviderProps {
+    children: React.ReactNode;
+    onJump?: (index: number) => void;
+}
+
+export const MissionSelectionProvider: React.FC<MissionSelectionProviderProps> = ({ children, onJump }) => {
   const { state: gameState } = useGameState();
   const { setStoryCard, setMissionDossierSubstep } = useGameDispatch();
   const [localState, localDispatch] = useReducer(reducer, initialState);
@@ -135,6 +140,12 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     handleStoryCardSelect(originalIndex);
   }, [shortList, handleStoryCardSelect]);
 
+  const handleJump = useCallback((index: number) => {
+    if (onJump) {
+        onJump(index);
+    }
+  }, [onJump]);
+
   const value: MissionSelectionContextType = {
     // State
     searchTerm,
@@ -163,6 +174,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     handleGenerateShortList,
     handlePickFromShortList,
     handleCancelShortList,
+    handleJump,
     gameState,
   };
 

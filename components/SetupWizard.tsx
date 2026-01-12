@@ -171,6 +171,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
           isDevMode={isDevMode}
           openOverrideModal={openOverrideModal}
           hasUnacknowledgedPastOverrides={hasUnacknowledgedPastOverrides}
+          onJump={handleJump}
         />
       )}
       
