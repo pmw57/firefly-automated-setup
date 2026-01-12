@@ -9,6 +9,7 @@ export const STORIES_F_G: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1045716/article/13603393#13603393",
     rating: 1,
+    tags: ['community', 'mystery'],
     rules: createStoryRules("Fruity Oat Bar", [
       {
         type: 'addSpecialRule',
@@ -26,6 +27,7 @@ export const STORIES_F_G: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1101220/story-card-gentlemans-agreement",
     rating: 0,
+    tags: ['community', 'faction_war'],
   },
   {
     title: "The Ghost Rock Run",
@@ -33,6 +35,7 @@ export const STORIES_F_G: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/105342/custom-story-card-the-ghost-rock-run",
     rating: 2,
+    tags: ['community', 'smugglers_run'],
   },
   {
     title: "Going Legit",
@@ -40,6 +43,7 @@ export const STORIES_F_G: StoryCardDef[] = [
     setupDescription: "A Port of Operation: While choosing starting positions, players must choose a planetary sector within Blue Sun system that is not a Contact or Supply sector. Mark the sector with a Haven Token. Leave unused ships out of the box as a \"For Sale\" pile.",
     sourceUrl: "https://boardgamegeek.com/thread/3560944/going-legit-story-card",
     requiredExpansion: "community",
+    tags: ['community', 'character'],
     rules: createStoryRules("Going Legit", [
       { type: 'addFlag', flag: 'isGoingLegit' },
       {
@@ -59,6 +63,7 @@ export const STORIES_F_G: StoryCardDef[] = [
     setupDescription: "Follow the 'Moral Compass' override. Exclude Niska from Starting Jobs.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1624739/story-card-the-good-guys",
+    tags: ['community', 'against_the_black'],
     rules: createStoryRules("The Good Guys", [
       { type: 'forbidContact', contact: 'Niska' },
       {
@@ -77,13 +82,15 @@ export const STORIES_F_G: StoryCardDef[] = [
     intro: "To survive the 'Verse, you must walk among saints, trade with devils, and strike a deal with the depraved. Prove you can master every side of the law.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/2688034/the-good-the-bad-and-the-ugly-story-card",
-    rating: 2
+    rating: 2,
+    tags: ['community', 'reputation'],
   },
   {
     title: "The Great Escape",
     intro: "The Alliance has been busy. Rounded up a few of our nearest and dearest. We aim to right that wrong, and see about ending that incarceration.",
     requiredExpansion: "community",
     isCoOp: true,
-    sourceUrl: "https://boardgamegeek.com/thread/2717955/article/38380038#38380038"
+    sourceUrl: "https://boardgamegeek.com/thread/2717955/article/38380038#38380038",
+    tags: ['community', 'jailbreak', 'against_the_black', 'coop'],
   },
 ];

@@ -1,5 +1,5 @@
 // FIX: Changed import from '../types' to '../../types/index' to fix module resolution ambiguity.
-import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption, CampaignSetupNote, SetupMode } from '../../types/index';
+import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption, CampaignSetupNote, SetupMode, StoryTag } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { SETUP_CARD_IDS } from '../../data/ids';
@@ -68,10 +68,10 @@ export const getAvailableStoryCards = (gameState: GameState): StoryCardDef[] => 
 
 export const getFilteredStoryCards = (
     gameState: GameState, 
-    filters: { searchTerm: string; filterExpansion: string[]; filterGameType: 'all' | 'solo' | 'co-op' | 'pvp'; sortMode: 'expansion' | 'name' | 'rating' }
+    filters: { searchTerm: string; filterExpansion: string[]; filterTheme: StoryTag | 'all'; sortMode: 'expansion' | 'name' | 'rating' }
 ): StoryCardDef[] => {
     const validStories = getAvailableStoryCards(gameState);
-    const { searchTerm, filterExpansion, filterGameType, sortMode } = filters;
+    const { searchTerm, filterExpansion, filterTheme, sortMode } = filters;
     
     const stories = validStories.filter(card => {
         const matchesSearch = searchTerm === '' || 
@@ -82,13 +82,9 @@ export const getFilteredStoryCards = (
             (filterExpansion.includes('base') && !card.requiredExpansion) ||
             (card.requiredExpansion && filterExpansion.includes(card.requiredExpansion));
 
-        const matchesGameType =
-            filterGameType === 'all' ||
-            (filterGameType === 'solo' && card.isSolo) ||
-            (filterGameType === 'co-op' && card.isCoOp) ||
-            (filterGameType === 'pvp' && card.isPvP);
+        const matchesTheme = filterTheme === 'all' || (card.tags && card.tags.includes(filterTheme));
 
-        return matchesSearch && matchesExpansion && matchesGameType;
+        return matchesSearch && matchesExpansion && matchesTheme;
     });
     
     const getSortableTitle = (str: string) => str.replace(/^[^a-zA-Z0-9]+/, '').replace(/^The\s+/i, '');

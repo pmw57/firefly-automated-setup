@@ -1,5 +1,5 @@
 import { StoryCardDef } from '../../../types';
-import { CONTACT_NAMES } from '../../ids';
+import { CONTACT_NAMES, STEP_IDS } from '../../ids';
 import { createStoryRules } from '../utils';
 
 export const STORIES_M_O: StoryCardDef[] = [
@@ -9,6 +9,7 @@ export const STORIES_M_O: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/image/2277037/upstarter",
     setupDescription: "No starting jobs are dealt.",
+    tags: ['community', 'survival'],
     rules: createStoryRules("The Magnificent Crew", [
       { type: 'setJobMode', mode: 'no_jobs' },
       {
@@ -29,6 +30,7 @@ export const STORIES_M_O: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/286230/mark-of-a-great-captain-story-card",
     rating: 2,
+    tags: ['community', 'character'],
     rules: createStoryRules("Mark Of A Great Captain", [
       {
         type: 'addSpecialRule',
@@ -62,6 +64,7 @@ export const STORIES_M_O: StoryCardDef[] = [
     setupDescription: "In turn order, choose an empty planet with a Contact as a starting point. Then draw only 3 of that contact's jobs as starting hand. Start with an Alliance Alert in play and replace it whenever a Goal Token is won or when any RESHUFFLE card is drawn.",
     sourceUrl: "https://boardgamegeek.com/thread/2941994/master-of-all-story-card",
     requiredExpansion: "community",
+    tags: ['community', 'reputation'],
     rules: createStoryRules("Master Of All", [
       { type: 'addFlag', flag: 'startWithAlertCard' },
       {
@@ -123,6 +126,7 @@ export const STORIES_M_O: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1135128/article/1512332#1512332",
     rating: 2,
+    tags: ['community', 'mystery'],
     rules: createStoryRules("Miranda", [
       {
         type: 'addSpecialRule',
@@ -143,13 +147,15 @@ export const STORIES_M_O: StoryCardDef[] = [
     ],
     sourceUrl: "https://boardgamegeek.com/filepage/110153/story-card-mirandas-secret",
     requiredExpansion: "community",
-    rating: 2
+    rating: 2,
+    tags: ['community', 'mystery'],
   },
   {
     title: "My Fellow Browncoats",
     isCoOp: true,
     intro: "The crew of Serenity needs your help. They've been captured by the Alliance and sent to unknown prison camps all over the 'Verse. For a price, Badger might let you in on a little secret.",
     setupDescription: "Follow the 'Rescue Mission Setup' override.",
+    tags: ['community', 'jailbreak', 'against_the_black', 'coop'],
     rules: createStoryRules("My Fellow Browncoats", [
       { 
         type: 'addSpecialRule', 
@@ -170,6 +176,7 @@ export const STORIES_M_O: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1076645/story-card-my-number-one-guy-player-vs-player",
     setupDescription: "Follow the 'Special Job Draw' override.",
     rating: 0,
+    tags: ['community', 'pvp'],
     requiredExpansion: "community",
     rules: createStoryRules("My Number One Guy", [
       { 
@@ -205,13 +212,14 @@ export const STORIES_M_O: StoryCardDef[] = [
     setupDescription: "Follow the 'Custom Mudder Deck' override.",
     sourceUrl: "https://boardgamegeek.com/filepage/294565/new-heroes-of-canton-co-op-story-card",
     requiredExpansion: "community",
+    tags: ['community', 'against_the_black', 'coop'],
     rules: createStoryRules("New Heroes of Canton", [
       {
         type: 'addSpecialRule',
         category: 'prime',
         rule: {
           title: 'Custom Mudder Deck',
-          content: ["Pull all Mudders from Supply decks. Shuffle together the Foreman plus 3 Mudders per player. Place this new deck face up. If the Foreman is on top after a shuffle, reshuffle."]
+          content: ["Pull all Mudders from Supply decks. Shuffle together the Foreman plus 3 Mudders per player. Place this new deck face up. If the Foreman is on top after a shuffle, reshuffle the deck."]
         }
       }
     ])
@@ -222,6 +230,7 @@ export const STORIES_M_O: StoryCardDef[] = [
     setupDescription: "Follow the 'Game Timer' override. Niska is unavailable for jobs.",
     sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards",
     requiredExpansion: "community",
+    tags: ['community', 'survival'],
     rules: createStoryRules("Oh Captain My Captain", [
       { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
       { type: 'setJobMode', mode: 'no_jobs' },
@@ -248,25 +257,7 @@ export const STORIES_M_O: StoryCardDef[] = [
     intro: "You thought he was dead, but now you know your old War buddy is being held in a max-security prison on Valentine. You'll need the help of some new friends to unlock the Cortex master identity files, then mingle with the high and mighty to get the prison plans, and finally it's off to the rescue!",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1119976/story-card-old-friends-and-new",
-    rating: 2
+    rating: 2,
+    tags: ['community', 'jailbreak'],
   },
-  {
-    title: "Seeds Of Rebellion",
-    intro: "The New Resistance is ready to open up some eyes and change a few hearts. They need a savvy captain to deliver key personnel to the heart of Alliance Space.",
-    setupDescription: "You may not deal with Harken. Place harken's 7 Immoral Transport Jobs in separate discard pile to represent New Resistance Missions. ",
-    requiredExpansion: "tenth",
-    additionalRequirements: ["blue", "kalidasa"],
-    isSolo: true,
-    sourceUrl: "https://boardgamegeek.com/image/8860507/sjliver",
-    rules: createStoryRules("Seeds Of Rebellion", [
-      { type: 'addFlag', flag: 'soloGameTimer' },
-      { type: 'forbidContact', contact: 'Harken' }
-    ]),
-    advancedRule: {
-      id: "adv_lost_little_lambs",
-      title: "Lost Little Lambs",
-      description: "Rescuing crew has additional complications and risks.",
-      disabledDescription: "This rule is on the back of the selected Story Card."
-    }
-  }
 ];

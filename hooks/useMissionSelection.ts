@@ -1,10 +1,10 @@
 import { createContext, useContext } from 'react';
-import { StoryCardDef, AdvancedRuleDef, GameState } from '../types';
+import { StoryCardDef, AdvancedRuleDef, GameState, StoryTag } from '../types';
 
 export interface MissionSelectionContextType {
   searchTerm: string;
   filterExpansion: string[];
-  filterGameType: 'all' | 'solo' | 'co-op' | 'pvp';
+  filterTheme: StoryTag | 'all';
   shortList: StoryCardDef[];
   subStep: number;
   sortMode: 'expansion' | 'name' | 'rating';
@@ -17,7 +17,7 @@ export interface MissionSelectionContextType {
   setSearchTerm: (term: string) => void;
   setFilterExpansion: (ids: string[]) => void;
   toggleFilterExpansion: (id: string) => void;
-  setFilterGameType: (type: 'all' | 'solo' | 'co-op' | 'pvp') => void;
+  setFilterTheme: (theme: StoryTag | 'all') => void;
   setSubStep: (step: number) => void;
   toggleSortMode: () => void;
   handleStoryCardSelect: (index: number | null) => void;

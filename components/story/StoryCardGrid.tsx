@@ -8,11 +8,59 @@ import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { STORY_CARDS } from '../../data/storyCards';
 import { cls } from '../../utils/style';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
-import { ExpansionId } from '../../types';
+import { ExpansionId, StoryTag } from '../../types';
 
 interface StoryCardGridProps {
   onSelect: (index: number) => void;
 }
+
+type FilterOption = { id: StoryTag, label: string };
+type FilterGroup = { label: string, options: FilterOption[] };
+
+const FILTER_GROUPS: FilterGroup[] = [
+    {
+        label: 'By Game Type',
+        options: [
+            { id: 'solo', label: 'Solo' },
+            { id: 'coop', label: 'Co-Op' },
+            { id: 'pvp', label: 'PvP' },
+        ]
+    },
+    {
+        label: "Heists & High Stakes",
+        options: [
+            { id: 'classic_heist', label: 'Classic Heists' },
+            { id: 'smugglers_run', label: "Smuggler's Run" },
+            { id: 'jailbreak', label: 'Jailbreaks & Rescues' },
+            { id: 'criminal_enterprise', label: 'Criminal Enterprise' },
+        ]
+    },
+    {
+        label: "Galactic Conflict",
+        options: [
+            { id: 'faction_war', label: 'Faction Wars' },
+            { id: 'survival', label: 'Survival & Evasion' },
+        ]
+    },
+    {
+        label: "Tales from the 'Verse",
+        options: [
+            { id: 'character', label: 'Character Episodes' },
+            { id: 'mystery', label: "Mysteries & Misadventures" },
+            { id: 'reputation', label: "Reputation & Renown" },
+        ]
+    },
+    {
+        label: "Other Themes",
+        options: [
+            { id: 'doing_the_job', label: "Doing the Job" },
+            { id: 'against_the_black', label: "Against the Black" },
+            { id: 'verse_variant', label: "'Verse Variants" },
+            { id: 'community', label: "Community Spotlight" }
+        ]
+    }
+];
+
 
 export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
   const { theme } = useTheme();
@@ -29,18 +77,13 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
     selectedStoryCardIndex,
     sortMode,
     toggleSortMode,
-    filterGameType,
-    setFilterGameType,
+    filterTheme,
+    setFilterTheme,
     gameState,
   } = useMissionSelection();
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
-
-  const hasSoloStories = useMemo(() => validStories.some(s => s.isSolo), [validStories]);
-  const hasCoOpStories = useMemo(() => validStories.some(s => s.isCoOp), [validStories]);
-  const hasPvPStories = useMemo(() => validStories.some(s => s.isPvP), [validStories]);
-  const showGameTypeFilter = hasSoloStories || hasCoOpStories || hasPvPStories;
 
   const expansionsForFilter = useMemo(() => {
     // 1. Get all unique expansion IDs present in the currently valid stories.
@@ -86,6 +129,19 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
   const countText = isDark ? 'text-zinc-500' : 'text-[#78350f]';
 
   const nextSortMode = sortMode === 'expansion' ? 'Name' : sortMode === 'name' ? 'Rating' : 'Expansion';
+  const availableFilterGroups = useMemo(() => {
+    const themesInStories = new Set<StoryTag>();
+    validStories.forEach(story => {
+        story.tags?.forEach(tag => themesInStories.add(tag));
+    });
+
+    return FILTER_GROUPS
+        .map(group => ({
+            ...group,
+            options: group.options.filter(option => themesInStories.has(option.id))
+        }))
+        .filter(group => group.options.length > 0);
+  }, [validStories]);
 
   return (
     <div className="space-y-3">
@@ -126,18 +182,20 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
             )}
           </div>
           
-          {showGameTypeFilter && (
+          {availableFilterGroups.length > 0 && (
               <div className="relative w-full sm:w-auto sm:flex-1 md:flex-none md:w-48">
                   <select
-                      value={filterGameType}
-                      onChange={(e) => setFilterGameType(e.target.value as 'all' | 'solo' | 'co-op' | 'pvp')}
+                      value={filterTheme}
+                      onChange={(e) => setFilterTheme(e.target.value as StoryTag | 'all')}
                       className={`w-full h-full p-3 border ${inputBorder} rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none ${inputBg} ${inputText} transition-colors text-left appearance-none pr-8`}
-                      aria-label="Filter by game type"
+                      aria-label="Filter by theme"
                   >
-                      <option value="all">All Game Types</option>
-                      {hasSoloStories && <option value="solo">Solo Only</option>}
-                      {hasCoOpStories && <option value="co-op">Co-op Only</option>}
-                      {hasPvPStories && <option value="pvp">PvP Only</option>}
+                      <option value="all">All Stories</option>
+                      {availableFilterGroups.map(group => (
+                          <optgroup label={group.label} key={group.label}>
+                              {group.options.map(opt => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
+                          </optgroup>
+                      ))}
                   </select>
                   <div className={`pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>
                       <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>

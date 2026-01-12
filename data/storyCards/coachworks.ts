@@ -8,6 +8,7 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
     requiredExpansion: "coachworks",
     sourceUrl: "https://boardgamegeek.com/image/2785043/gerryrailbaron",
     setupDescription: "Place one job from each Contact face up on top of its deck. These face up Jobs form a shared hand of Inactive Jobs that everyone may use. All Players start with a Warrant token.",
+    tags: ['reputation', 'classic_heist', 'verse_variant'],
     rules: createStoryRules("Down and Out", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
       {
@@ -36,6 +37,7 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
     requiredExpansion: "coachworks",
     sourceUrl: "https://boardgamegeek.com/image/2785042/gerryrailbaron",
     setupDescription: "Special 'winds of fate' rules for placing Goal tokens. No Starting Jobs are dealt.",
+    tags: ['character', 'verse_variant'],
     rules: createStoryRules("Where The Wind Takes Us", [
       { type: 'setJobMode', mode: 'no_jobs' },
       { 

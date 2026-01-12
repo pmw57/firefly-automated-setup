@@ -69,6 +69,24 @@ export interface CampaignSetupNote {
   content: import('./core').StructuredContent;
 }
 
+export type StoryTag =
+  | 'classic_heist'
+  | 'smugglers_run'
+  | 'jailbreak'
+  | 'criminal_enterprise'
+  | 'faction_war'
+  | 'survival'
+  | 'character'
+  | 'reputation'
+  | 'mystery'
+  | 'doing_the_job'
+  | 'against_the_black'
+  | 'verse_variant'
+  | 'community'
+  | 'solo'
+  | 'coop'
+  | 'pvp';
+
 export interface StoryCardDef {
   title: string;
   intro: string;
@@ -93,4 +111,5 @@ export interface StoryCardDef {
   campaignSetupNotes?: string[];
   rating?: number;
   noJobsMessage?: { title: string; description: string; };
+  tags?: StoryTag[];
 }

@@ -10,6 +10,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     sourceUrl: "https://boardgamegeek.com/image/8103874/sjliver",
+    tags: ['character'],
     rules: createStoryRules("A Friend In Every Port", [
       { type: 'setJobMode', mode: 'draft_choice' },
       { type: 'addFlag', flag: 'useAllContactsForJobDraft' },
@@ -38,6 +39,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     setupDescription: "Create a stack of Alliance Alert Tokens equal to four times the number of players.",
     requiredExpansion: "tenth",
     sourceUrl: "https://boardgamegeek.com/image/8103873/sjliver",
+    tags: ['reputation'],
     rules: createStoryRules("Aces Up Your Sleeve", [
       { type: 'createAlertTokenStack', multiplier: 4 },
       {
@@ -55,7 +57,8 @@ export const TENTH_STORIES: StoryCardDef[] = [
     intro: "The tale of the Dead Man's Hand followed mankind from Earth-That-Was out to the Black. Honor the legends of the outlaws of old with a series of adventures across the 'Verse.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue"],
-    sourceUrl: "https://boardgamegeek.com/image/8103876/sjliver"
+    sourceUrl: "https://boardgamegeek.com/image/8103876/sjliver",
+    tags: ['classic_heist'],
   },
   {
     title: "It's a Mad, Mad, Mad, Mad 'Verse!",
@@ -64,6 +67,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["kalidasa"],
     sourceUrl: "https://boardgamegeek.com/image/8103877",
+    tags: ['classic_heist'],
     rules: createStoryRules("It's a Mad, Mad, Mad, Mad 'Verse!", [
       { type: 'setShipPlacement', location: 'persephone' },
       {
@@ -82,6 +86,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     setupDescription: "Players may not deal with Niska until they are Solid with at least one other Contact. Jobs for Niska are not dealt during Set Up.",
     requiredExpansion: "tenth",
     sourceUrl: "https://boardgamegeek.com/image/8103878/sjliver",
+    tags: ['criminal_enterprise'],
     rules: createStoryRules("Let's Be Bad Guys", [
       { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
       {
@@ -101,6 +106,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue"],
     sourceUrl: "https://boardgamegeek.com/image/8103879/sjliver",
+    tags: ['survival'],
     rules: createStoryRules("Red Skies Over Ransom", [
       { type: 'addFlag', flag: 'excludeNewCanaanPlacement' },
       {
@@ -134,6 +140,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     sourceUrl: "https://boardgamegeek.com/image/8103880/sjliver",
+    tags: ['character'],
     rules: createStoryRules("Running On Empty", [
       { type: 'modifyResource', resource: 'credits', method: 'add', value: 1200, description: "Story Bonus" },
       { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No Starting Fuel" },
@@ -153,6 +160,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
     intro: "Dolls with big heads that wobble! What could go wrong!",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
-    sourceUrl: "https://boardgamegeek.com/image/8103883/sjliver"
+    sourceUrl: "https://boardgamegeek.com/image/8103883/sjliver",
+    tags: ['classic_heist', 'mystery'],
   },
 ];

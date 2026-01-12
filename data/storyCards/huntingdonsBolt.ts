@@ -9,5 +9,6 @@ export const HUNTINGDONS_BOLT_STORIES: StoryCardDef[] = [
         additionalRequirements: [
             "blue"
         ],
+        tags: ['classic_heist'],
     }
 ];
