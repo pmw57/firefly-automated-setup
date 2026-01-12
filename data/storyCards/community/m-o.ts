@@ -265,28 +265,34 @@ export const STORIES_M_O: StoryCardDef[] = [
   {
     title: "Oh Captain My Captain",
     intro: "Remember that one time your Leader failed a Niska Job? Well, Niska remembers and now he's lookin' to kill some folk.",
-    setupDescription: "Follow the 'Game Timer' override. Niska is unavailable for jobs.",
+    setupDescription: "Don't draw Starting Jobs from Niska. 1st player is given 20 Disgruntle tokens as a game timer.",
     sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards",
     requiredExpansion: "community",
     tags: ['community', 'survival'],
     rules: createStoryRules("Oh Captain My Captain", [
       { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
-      { type: 'setJobMode', mode: 'no_jobs' },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: "Niska's Grudge",
-          content: ["Do not prime Niska's deck. No starting jobs are drawn from Niska."]
+          content: ["Don't draw Starting Jobs from Niska."]
         }
       },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
-          title: 'Game Timer',
-          content: ["Give the first player a pile of 20 Disgruntled tokens. At the start of each of that player's turns, discard one token. After the last token is discarded, all players get one last turn, then the game is over."]
+          title: "Niska Remembers",
+          content: ["1st player is given 20 Disgruntle tokens as a game timer."]
         }
+      },
+      {
+        type: 'createAlertTokenStack',
+        fixedValue: 20,
+        tokenName: 'Disgruntled Tokens',
+        title: 'Game Timer',
+        description: "Give the pile to the first player."
       }
     ])
   },

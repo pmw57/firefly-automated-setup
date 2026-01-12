@@ -7,7 +7,7 @@ import { useGameDispatch } from '../hooks/useGameDispatch';
 import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
-import { SpecialRule, StructuredContent, StructuredContentPart, RuleSourceType } from '../types';
+import { SpecialRule, StructuredContent, StructuredContentPart } from '../types';
 
 const renderSimpleContent = (content: StructuredContent): React.ReactNode => {
   return content.map((part: StructuredContentPart, index: number) => {
@@ -22,19 +22,6 @@ const renderSimpleContent = (content: StructuredContent): React.ReactNode => {
         return null;
     }
   });
-};
-
-const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source'] => {
-  if (source === 'challenge') {
-    return 'warning';
-  }
-  if (source === 'optionalRule') {
-    return 'info';
-  }
-  if (source === 'combinableSetupCard') {
-    return 'setupCard';
-  }
-  return source;
 };
 
 export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
@@ -60,7 +47,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
     isFuelDisabled, isPartsDisabled, creditModifications, specialRules,
     boardSetupRules, componentAdjustmentRules,
     smugglersBluesVariantAvailable,
-    creditModificationDescription, creditModificationSource,
+    creditModificationDescription,
     fuelModificationDescription, partsModificationDescription,
     tokenStacks,
   } = resourceDetails;
@@ -83,14 +70,6 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
 
     blocks.push(...specialRules);
 
-    if (hasCreditModification && !hasComplexCreditCalculation && creditModificationSource) {
-        blocks.push({
-            source: mapRuleSourceToBlockSource(creditModificationSource),
-            title: 'Starting Funds Override',
-            content: [creditModificationDescription || ''],
-        });
-    }
-    
     const order: Record<SpecialRule['source'], number> = {
         expansion: 1, setupCard: 2, story: 3, warning: 3, info: 4,
     };
@@ -106,8 +85,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
     return filtered
         .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
   }, [
-      isQuickMode, hasCreditModification, hasComplexCreditCalculation, creditModificationSource,
-      creditModificationDescription, campaignNotes, specialRules
+      isQuickMode, campaignNotes, specialRules
   ]);
 
   const useRimVariant = !!gameState.challengeOptions.smugglers_blues_rim_variant;
