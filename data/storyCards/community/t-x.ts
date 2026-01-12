@@ -1,6 +1,5 @@
 import { StoryCardDef } from '../../../types';
 import { SETUP_CARD_IDS } from '../../ids';
-import { createStoryRules } from '../utils';
 
 export const STORIES_T_X: StoryCardDef[] = [
   {

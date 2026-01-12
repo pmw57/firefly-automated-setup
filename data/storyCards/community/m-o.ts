@@ -1,5 +1,5 @@
 import { StoryCardDef } from '../../../types';
-import { CONTACT_NAMES, STEP_IDS } from '../../ids';
+import { CONTACT_NAMES } from '../../ids';
 import { createStoryRules } from '../utils';
 
 export const STORIES_M_O: StoryCardDef[] = [
