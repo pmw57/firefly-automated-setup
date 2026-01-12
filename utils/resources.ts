@@ -110,7 +110,14 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     let count = 0;
     const description: string | undefined = rule.description;
     
-    if (rule.fixedValue !== undefined) {
+    if (rule.valuesByGoal && gameState.selectedGoal) {
+      const goalMatch = Object.keys(rule.valuesByGoal).find(
+          key => key.toLowerCase() === gameState.selectedGoal!.toLowerCase()
+      );
+      if (goalMatch) {
+          count = rule.valuesByGoal[goalMatch];
+      }
+    } else if (rule.fixedValue !== undefined) {
       count = rule.fixedValue;
     } else if (rule.multiplier !== undefined) {
       count = rule.multiplier * gameState.playerCount;

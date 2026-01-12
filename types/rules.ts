@@ -58,6 +58,7 @@ export interface CreateAlertTokenStackRule extends BaseRule {
   type: 'createAlertTokenStack';
   multiplier?: number;
   fixedValue?: number;
+  valuesByGoal?: Record<string, number>;
   tokenName?: string;
   title?: string;
   description?: string;
