@@ -126,12 +126,26 @@ export const getStoryIncompatibilityReason = (card: StoryCardDef, state: GameSta
     }
 
     if (card.requiredExpansion && !state.expansions[card.requiredExpansion]) {
+        const expansionMeta = EXPANSIONS_METADATA.find(e => e.id === card.requiredExpansion);
+        if (expansionMeta?.hidden && !state.showHiddenContent) {
+            return { text: `Requires a currently unavailable expansion: '${expansionMeta.label}'.` };
+        }
         return { text: `Requires the '${getExpansionLabel(card.requiredExpansion)}' expansion.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
     }
     if (card.additionalRequirements) {
-        const missing = card.additionalRequirements.filter(req => !state.expansions[req]);
-        if (missing.length > 0) {
-            return { text: `Requires expansions: ${missing.map(getExpansionLabel).join(', ')}.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
+        const missingReqs = card.additionalRequirements.filter(req => !state.expansions[req]);
+        if (missingReqs.length > 0) {
+            const unachievableReqs = missingReqs.filter(req => {
+                const expansionMeta = EXPANSIONS_METADATA.find(e => e.id === req);
+                return expansionMeta?.hidden && !state.showHiddenContent;
+            });
+
+            if (unachievableReqs.length > 0) {
+                const unachievableLabels = unachievableReqs.map(getExpansionLabel);
+                return { text: `Requires currently unavailable expansion(s): '${unachievableLabels.join(', ')}'.` };
+            }
+
+            return { text: `Requires expansions: ${missingReqs.map(getExpansionLabel).join(', ')}.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
         }
     }
 
@@ -253,13 +267,19 @@ export const getActiveAdvancedRules = (gameState: GameState): AdvancedRuleDef[] 
         .map(c => c.advancedRule!);
 };
 
+// FIX: Add missing function `getActiveStoryChallenges` to resolve import error in FinalSummary.tsx.
+/**
+ * Gets a list of active story challenges based on the selected story card and game state.
+ * @param gameState The current game state.
+ * @returns An array of active ChallengeOption objects.
+ */
 export const getActiveStoryChallenges = (gameState: GameState): ChallengeOption[] => {
-    const activeStoryCard = getActiveStoryCard(gameState);
-    if (!activeStoryCard || !activeStoryCard.challengeOptions) {
+    const storyCard = getActiveStoryCard(gameState);
+    if (!storyCard?.challengeOptions) {
         return [];
     }
-    return activeStoryCard.challengeOptions.filter(
-        (option: ChallengeOption) => gameState.challengeOptions[option.id]
+    return storyCard.challengeOptions.filter(
+        option => gameState.challengeOptions[option.id]
     );
 };
 
