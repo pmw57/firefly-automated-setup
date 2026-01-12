@@ -1,6 +1,6 @@
 import { GameState, SetupMode } from '../types/index';
 
-// FIX: Reverted to 'Campaign' action types to align with state changes.
+// Action types related to the 10th Anniversary solo campaign mode.
 export enum ActionType {
   SET_PLAYER_COUNT = 'SET_PLAYER_COUNT',
   SET_PLAYER_NAME = 'SET_PLAYER_NAME',

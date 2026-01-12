@@ -1,6 +1,6 @@
 import { SetupContentData, StepOverrides } from './ui';
-// FIX: Removed local definitions and imported the updated GameState from common types
-// to ensure consistency with the new 'Campaign' naming scheme.
+// The main GameState type is now defined in the 'common' module to break circular
+// dependencies and is re-exported here for dependent files.
 import type { GameState } from './common';
 
 export type { GameState };

@@ -9,9 +9,9 @@ import {
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 
-// FIX: Added a helper function to safely map the broader RuleSourceType
-// to the narrower source type expected by SpecialRuleBlock. This resolves the
-// TypeScript error by explicitly handling 'challenge', 'optionalRule', and 'combinableSetupCard' cases.
+// Maps the broader RuleSourceType to the more specific source type expected by the
+// SpecialRuleBlock component. This ensures type safety by explicitly handling sources
+// like 'challenge' and 'optionalRule' which have distinct UI representations.
 const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source'] => {
   if (source === 'challenge') {
     return 'warning';
@@ -69,7 +69,7 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
   const finalAlliancePlacement = allianceMode === 'extra_cruisers' ? "Place a Cruiser at Regulus AND Persephone." : standardAlliancePlacement;
   if (finalAlliancePlacement !== standardAlliancePlacement) {
     allianceOverride = {
-        // FIX: Use mapping function to prevent type error.
+        // Use the mapping function to ensure the source type is compatible with the UI component.
         source: mapRuleSourceToBlockSource(allianceModeRule?.source || 'setupCard'),
         title: 'Alliance Cruiser Placement Override',
         content: [finalAlliancePlacement]
@@ -111,7 +111,7 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
 
   if (finalReaverPlacement !== standardReaverPlacement) {
     reaverOverride = {
-        // FIX: Use mapping function to prevent type error.
+        // Use the mapping function to ensure the source type is compatible with the UI component.
         source: mapRuleSourceToBlockSource(reaverOverrideSource),
         title: reaverOverrideTitle,
         content: [finalReaverPlacement]
@@ -124,7 +124,8 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
     standardReaverPlacement,
     allianceOverride,
     reaverOverride,
-    // FIX: Add final resolved placement strings to the return object to satisfy legacy tests.
+    // The final resolved placement strings are included for consumption by legacy tests
+    // that don't parse the more complex override objects.
     alliancePlacement: finalAlliancePlacement,
     reaverPlacement: finalReaverPlacement,
   };

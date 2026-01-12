@@ -3,8 +3,8 @@
 import { ExpansionDef } from '../types/index';
 import { createExpansionRules } from './storyCards/utils';
 
-// FIX: This type was defined locally, but now it's part of the main ExpansionDef to fix type errors.
-// The existing data structure is now compatible with the updated ExpansionDef.
+// This type alias clarifies that the metadata array conforms to the full ExpansionDef,
+// which includes the 'category' property used for grouping expansions in the UI.
 type CategorizedExpansionDef = ExpansionDef;
 
 export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [

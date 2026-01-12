@@ -283,8 +283,8 @@ const BrowncoatMarketPanel = () => {
     );
 };
 
-// FIX: Changed component typing to React.FC<CustomDraftPanelProps> to correctly handle
-// the 'key' prop when this component is used within a .map() loop, resolving a TypeScript error.
+// By typing the component as React.FC, we ensure it correctly handles standard
+// React props like 'key', which is necessary when rendering this component in a list.
 interface CustomDraftPanelProps {
   rule: SpecialRule;
   stepBadgeClass: string;

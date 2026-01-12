@@ -26,7 +26,7 @@ export const StoryRandomizer: React.FC<StoryRandomizerProps> = ({ onSelect }) =>
   } = useMissionSelection();
 
   const showRandomOption = validStories.length > 1;
-  // FIX: Changed 'advanced' to 'detailed' to match SetupMode type.
+  // The "Draft 3" option is an advanced feature only available in the detailed setup mode.
   const showDraftOption = validStories.length > 3 && gameState.setupMode === 'detailed';
 
   const draftButtonClass = isDark

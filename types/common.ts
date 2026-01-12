@@ -28,7 +28,7 @@ export interface Expansions {
 export interface TimerConfig {
     mode: 'standard' | 'unpredictable';
     unpredictableSelectedIndices: number[];
-    // FIX: Added optional property to fix type errors in utils/ui.ts and related tests.
+    // An optional flag to indicate if unpredictable timer tokens should be randomized.
     randomizeUnpredictable?: boolean;
 }
 
@@ -47,7 +47,7 @@ export interface OptionalRules {
     highVolumeSupply: boolean | undefined;
 }
 
-// FIX: Reverted to 'Campaign' terminology as requested to match the rulebook.
+// "Campaign" terminology is used to align with the 10th Anniversary rulebook.
 export interface GameState {
   gameEdition: GameEdition;
   gameMode: GameMode;

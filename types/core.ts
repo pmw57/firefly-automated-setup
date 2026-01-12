@@ -23,7 +23,7 @@ export interface SpecialRule {
     title?: string;
     content: StructuredContent;
     badge?: string;
-    // FIX: Add optional 'page' and 'manual' properties to align with SpecialRuleBlockProps
+    // The `page` and `manual` properties are optional for compatibility with the PageReference component.
     page?: string | number;
     manual?: string;
     flags?: string[];

@@ -1,4 +1,5 @@
 
+
 import { GameState, StoryCardDef } from '../types/index';
 import { SOLO_EXCLUDED_STORIES } from '../data/collections';
 import { SETUP_CARD_IDS } from '../data/ids';
@@ -31,12 +32,10 @@ export const isStoryCompatible = (card: StoryCardDef, state: GameState): boolean
     const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
     const isClassicSolo = state.gameMode === 'solo' && !isFlyingSolo;
     
-    // FIX: Refactored the solo mode filter logic to be more explicit.
-    // In Classic Solo (i.e., when "Flying Solo" is NOT the active setup card),
-    // only story cards explicitly marked with `isSolo: true` are permitted.
-    // This prevents multiplayer stories from appearing in a classic solo game,
-    // while allowing `isSolo` cards to correctly appear when paired with the
-    // "Flying Solo" setup, which was the source of the bug.
+    // This logic differentiates between the two solo modes. In "Classic Solo" (any solo
+    // game without the "Flying Solo" setup), only stories explicitly marked with
+    // `isSolo: true` are allowed. This prevents standard multiplayer stories from appearing.
+    // "Flying Solo" mode has its own filtering logic to allow a wider range of stories.
     if (isClassicSolo && !card.isSolo) {
         return false;
     }

@@ -112,7 +112,8 @@ export interface AllianceReaverDetails {
   standardReaverPlacement: string;
   allianceOverride?: SpecialRule;
   reaverOverride?: SpecialRule;
-  // FIX: Add final resolved placement strings to satisfy legacy tests.
+  // Final resolved placement strings are included to satisfy legacy tests
+  // that expect simple string outputs rather than parsing complex rule objects.
   alliancePlacement: string;
   reaverPlacement: string;
 }

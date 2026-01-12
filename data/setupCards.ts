@@ -210,7 +210,8 @@ export const SETUP_CARDS: SetupCardDef[] = [
       }
     ]),
     steps: [
-      // FIX: Add missing 'title' property to steps to conform to the SetupCardStep type.
+      // Although Flying Solo merges with another Setup Card, its steps still require
+      // titles to conform to the SetupCardStep type and provide fallbacks.
       { id: STEP_IDS.C4, title: BASE_TITLES.C4 },
       { id: STEP_IDS.C1, title: BASE_TITLES.C1 },
       { id: STEP_IDS.C2, title: BASE_TITLES.C2 },

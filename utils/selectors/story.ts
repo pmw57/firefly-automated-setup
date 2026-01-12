@@ -1,4 +1,4 @@
-// FIX: Changed import from '../types' to '../../types/index' to fix module resolution ambiguity.
+// Explicitly import from the barrel file to avoid module resolution ambiguity.
 import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption, CampaignSetupNote, SetupMode, StoryTag } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';

@@ -1,6 +1,8 @@
 
-// FIX: Manually defining `ImportMetaEnv` because the vite/client types were not being found.
-// This provides TypeScript with the necessary definitions for Vite's environment variables like `import.meta.env.DEV`.
+
+// Manually defining `ImportMetaEnv` because the standard `vite/client` types
+// were not always being picked up by the TypeScript compiler. This ensures
+// Vite's environment variables (e.g., import.meta.env.DEV) are always typed.
 interface ImportMetaEnv {
   BASE_URL: string;
   MODE: string;

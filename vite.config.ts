@@ -95,9 +95,9 @@ export default defineConfig(({ mode }) => ({
   test: {
     globals: true,
     environment: 'jsdom',
-    // FIX: Suppress JSDOM's localStorage warning by providing a mock URL.
-    // This resolves the "localstorage-file was provided without a valid path"
-    // warning that can appear when running tests in a Node.js environment.
+    // Suppress JSDOM's "localStorage is not available" warning by providing a mock URL.
+    // This is necessary for tests running in a Node.js environment where localStorage
+    // doesn't exist, preventing console noise.
     environmentOptions: {
       jsdom: {
         url: 'http://localhost/',
