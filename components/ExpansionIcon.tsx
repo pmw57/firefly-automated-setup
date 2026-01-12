@@ -3,7 +3,7 @@ import { ExpansionDef } from '../types';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { expansionColorConfig, specialColorConfig } from '../data/themeColors';
 import { useTheme } from './ThemeContext';
-import { SPRITE_SHEET_URL } from '../data/constants';
+import { RELATIVE_SPRITE_SHEET_URL, ONLINE_BASE_URL } from '../data/constants';
 
 interface ExpansionIconProps {
   id: string;
@@ -36,6 +36,10 @@ export const ExpansionIcon = ({ id, className = "w-full h-full" }: ExpansionIcon
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const meta = getMeta(id);
+
+  const isPreview = typeof import.meta.env === 'undefined';
+  const baseUrl = !isPreview ? import.meta.env.BASE_URL : ONLINE_BASE_URL;
+  const SPRITE_SHEET_URL = `${baseUrl}${RELATIVE_SPRITE_SHEET_URL}`;
 
   if (!meta) {
       return (

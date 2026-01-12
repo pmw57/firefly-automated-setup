@@ -4,16 +4,16 @@ import { InstallPWA } from './components/InstallPWA';
 import { UpdatePrompt } from './components/UpdatePrompt';
 import { HelpModal } from './components/HelpModal';
 import { QrModal } from './components/QrModal';
-import { DevPanel } from './components/DevPanel';
 import { HeaderActions } from './components/HeaderActions';
 import { FooterQrCode } from './components/FooterQrCode';
-import { SHOW_FOOTER_QR_KEY } from './data/constants';
+import { SHOW_FOOTER_QR_KEY, ONLINE_BASE_URL } from './data/constants';
 import SetupWizard from './components/SetupWizard';
 import { useGameState } from './hooks/useGameState';
 // Import the wizard state hook to access UI-specific state like initialization status.
 import { useWizardState } from './hooks/useWizardState';
 import { SetupModeToggle } from './components/SetupModeToggle';
 import { OnboardingTooltip } from './components/OnboardingTooltip';
+import { DevPanel } from './components/DevPanel';
 
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
@@ -121,10 +121,8 @@ const App = (): React.ReactElement => {
   const isAnyModalOpen = isHelpModalOpen || isQrModalOpen;
   const showWizard = isStateInitialized && isWizardInitialized;
 
-  const baseUrl = !isPreview ? import.meta.env.BASE_URL : '/';
-  const headerImageUrl = isPreview
-    ? 'https://cf.geekdo-images.com/FtTleN6TrwDz378_TQ2NFw__imagepage/img/kytwle1zmoWYFCYtr1cq6EPnRHc=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7565930.jpg'
-    : `${baseUrl}assets/images/game/firefly-cover.png`;
+  const baseUrl = !isPreview ? import.meta.env.BASE_URL : ONLINE_BASE_URL;
+  const headerImageUrl = `${baseUrl}assets/images/game/firefly-cover.png`;
 
   return (
     <div className="min-h-screen font-sans pb-12 transition-colors duration-500 relative">
@@ -151,8 +149,6 @@ const App = (): React.ReactElement => {
 
       {isProdDeployment && <OnboardingTooltip />}
       
-      {showDevFeatures && <DevPanel />}
-
       <InstallPWA isModalOpen={isAnyModalOpen} />
 
       <UpdatePrompt
@@ -214,6 +210,7 @@ const App = (): React.ReactElement => {
           setShowFooterQr(localStorage.getItem(SHOW_FOOTER_QR_KEY) !== 'false');
         }}
       />
+      {showDevFeatures && <DevPanel />}
     </div>
   );
 };

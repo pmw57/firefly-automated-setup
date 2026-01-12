@@ -53,6 +53,17 @@ export interface NavDeckSetupDetails {
   hasRimDecks: boolean;
 }
 
+// FIX: Add missing export for AllianceReaverDetails. This type is used by `getAllianceReaverDetails` but was not defined.
+export interface AllianceReaverDetails {
+  specialRules: SpecialRule[];
+  standardAlliancePlacement: string;
+  standardReaverPlacement: string;
+  allianceOverride: SpecialRule | undefined;
+  reaverOverride: SpecialRule | undefined;
+  alliancePlacement: string;
+  reaverPlacement: string;
+}
+
 export interface ConflictOptionDetails {
   value: number | string;
   label: string;
@@ -105,18 +116,7 @@ export interface PrimeDetails {
   specialRules: SpecialRule[];
   primePanels: SpecialRule[];
   hasStartWithAlertCard?: boolean;
-}
-
-export interface AllianceReaverDetails {
-  specialRules: SpecialRule[];
-  standardAlliancePlacement: string;
-  standardReaverPlacement: string;
-  allianceOverride?: SpecialRule;
-  reaverOverride?: SpecialRule;
-  // Final resolved placement strings are included to satisfy legacy tests
-  // that expect simple string outputs rather than parsing complex rule objects.
-  alliancePlacement: string;
-  reaverPlacement: string;
+  disablePriming?: boolean;
 }
 
 export interface DraftRuleDetails {

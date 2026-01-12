@@ -1,5 +1,6 @@
 import { StoryCardDef } from '../../../types';
-import { SETUP_CARD_IDS, CONTACT_NAMES } from '../../ids';
+// FIX: Import CONTACT_NAMES and SETUP_CARD_IDS to fix reference errors.
+import { CONTACT_NAMES, SETUP_CARD_IDS } from '../../ids';
 import { createStoryRules } from '../utils';
 
 export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
@@ -25,8 +26,9 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     rules: createStoryRules("And That Makes Us Mighty", [
       {
         type: 'addSpecialRule',
-        category: 'prime',
+        category: 'prime_panel',
         rule: {
+          badge: 'Story Action',
           title: 'Post-Priming Draft',
           content: ["After Priming the Pump, you may select up to 4 Crew cards that were revealed, up to a total value of $1000."]
         }
@@ -66,12 +68,14 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         }
       },
       { type: 'setJobMode', mode: 'no_jobs' },
+      { type: 'addFlag', flag: 'disablePriming' },
       {
         type: 'addSpecialRule',
-        category: 'prime',
+        category: 'prime_panel',
         rule: {
-          title: 'No Priming',
-          content: ["Do not \"Prime the Pump\" during setup."]
+          title: 'Priming Skipped',
+          badge: 'Story Override',
+          content: ["The 'Prime the Pump' step is skipped for this story. Do not discard any cards from the Supply Decks."]
         }
       }
     ]),

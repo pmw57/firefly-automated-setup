@@ -52,6 +52,7 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     specialRules,
     primePanels,
     hasStartWithAlertCard,
+    disablePriming,
   } = usePrimeDetails(overrides);
   
   const allInfoBlocks = useMemo(() => {
@@ -112,29 +113,31 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
           </div>
       )}
       
-      <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm text-center transition-colors duration-300`}>
-        <h4 className={`font-bold text-xl font-western mb-4 ${titleColor}`}>Priming The Pump</h4>
-        <div className={`text-5xl font-bold mb-4 ${iconColor}`}>🃏</div>
-        <p className={`text-lg ${textColor}`}>
-          Shuffle all Supply Decks.
-        </p>
-        <div className={`my-6 p-4 rounded-lg inline-block border ${highlightBg}`}>
-          <span className={`block text-4xl font-bold mb-1 ${numberColor}`}>{finalCount}</span>
-          <span className={`text-sm font-bold uppercase tracking-wide ${labelColor}`}>Cards Discarded</span>
-        </div>
-        <p className={`text-sm italic ${subTextColor}`}>
-          (From the top of each Supply Deck)
-        </p>
-
-        {hasStartWithAlertCard && (
-          <div className={cls("mt-6 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-stone-200')}>
-            <h4 className={cls("font-bold text-lg", isDark ? 'text-blue-300' : 'text-blue-800')}>Alliance Alert</h4>
-            <p className={cls("text-sm mt-1", textColor)}>
-              Reveal one <strong>Alliance Alert Card</strong> from the deck and put it into play.
-            </p>
+      {!disablePriming && (
+        <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm text-center transition-colors duration-300`}>
+          <h4 className={`font-bold text-xl font-western mb-4 ${titleColor}`}>Priming The Pump</h4>
+          <div className={`text-5xl font-bold mb-4 ${iconColor}`}>🃏</div>
+          <p className={`text-lg ${textColor}`}>
+            Shuffle all Supply Decks.
+          </p>
+          <div className={`my-6 p-4 rounded-lg inline-block border ${highlightBg}`}>
+            <span className={`block text-4xl font-bold mb-1 ${numberColor}`}>{finalCount}</span>
+            <span className={`text-sm font-bold uppercase tracking-wide ${labelColor}`}>Cards Discarded</span>
           </div>
-        )}
-      </div>
+          <p className={`text-sm italic ${subTextColor}`}>
+            (From the top of each Supply Deck)
+          </p>
+
+          {hasStartWithAlertCard && (
+            <div className={cls("mt-6 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-stone-200')}>
+              <h4 className={cls("font-bold text-lg", isDark ? 'text-blue-300' : 'text-blue-800')}>Alliance Alert</h4>
+              <p className={cls("text-sm mt-1", textColor)}>
+                Reveal one <strong>Alliance Alert Card</strong> from the deck and put it into play.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

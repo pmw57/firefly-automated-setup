@@ -52,8 +52,9 @@ export const STORIES_R_S: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'prime',
+        category: 'prime_panel',
         rule: {
+          badge: 'Story Setup',
           title: 'Bounty Deck Setup',
           content: ["Remove all of Serenity's crew from the Bounty deck, excluding River Tam. The Bounty deck is placed face up and all bounties are active."]
         }

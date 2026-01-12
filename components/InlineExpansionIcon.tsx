@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ExpansionId } from '../types/index';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { useTheme } from './ThemeContext';
-import { SPRITE_SHEET_URL } from '../data/constants';
+import { RELATIVE_SPRITE_SHEET_URL, ONLINE_BASE_URL } from '../data/constants';
 
 interface InlineExpansionIconProps {
   type: ExpansionId | 'base';
@@ -35,6 +35,10 @@ export const InlineExpansionIcon = ({ type, className = "mx-1 align-bottom" }: I
   
   const meta = EXPANSIONS_METADATA.find(e => e.id === type);
   if (!meta) return null;
+
+  const isPreview = typeof import.meta.env === 'undefined';
+  const baseUrl = !isPreview ? import.meta.env.BASE_URL : ONLINE_BASE_URL;
+  const SPRITE_SHEET_URL = `${baseUrl}${RELATIVE_SPRITE_SHEET_URL}`;
 
   const borderClass = isDark ? 'border-zinc-700' : 'border-gray-300';
 
