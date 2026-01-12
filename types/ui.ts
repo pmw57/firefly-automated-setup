@@ -103,6 +103,7 @@ export interface PrimeDetails {
   isHighSupplyVolume: boolean;
   isBlitz: boolean;
   specialRules: SpecialRule[];
+  primePanels: SpecialRule[];
   hasStartWithAlertCard?: boolean;
 }
 
