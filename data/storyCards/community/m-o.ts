@@ -247,7 +247,7 @@ export const STORIES_M_O: StoryCardDef[] = [
         description: "Use 17 Disgruntled tokens as the game timer."
       }
     ],
-    setupDescription: "Pull all Mudders from Supply decks. Shuffle a set # of Mudders and Foremen together. Place them face up. if the Foreman is on top after a Shuffle, reshuffle. 2/3/4 Players = 7/10/13 Goal Mudders and the Foreman. Easy/Medium/Pro: Use 25/21/17 Disgruntle tokens as a game timer.",
+    setupDescription: "Pull all Mudders from Supply decks. Shuffle a set # of Mudders and Foremen together. Place them face up. if the Foreman is on top after a Shuffle, reshuffle. 2/3/4 Players = 7/10/13 Goal Mudders and the Foreman. Easy/Medium/Pro: Use 25/21/17 Disgruntled tokens as a game timer.",
     sourceUrl: "https://boardgamegeek.com/filepage/294565/new-heroes-of-canton-co-op-story-card",
     requiredExpansion: "community",
     tags: ['community', 'against_the_black', 'coop'],
@@ -257,8 +257,58 @@ export const STORIES_M_O: StoryCardDef[] = [
         category: 'prime',
         rule: {
           title: 'Custom Mudder Deck',
-          content: ["Pull all Mudders from Supply decks. Shuffle together the Foreman plus 3 Mudders per player. Place this new deck face up. If the Foreman is on top after a shuffle, reshuffle the deck."]
+          content: ["Pull all Mudders from Supply decks. Shuffle a set # of Mudders and Foremen together. Place them face up. if the Foreman is on top after a Shuffle, reshuffle. 2/3/4 Players = 7/10/13 Goal Mudders and the Foreman."]
         }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime_panel',
+        rule: {
+          title: 'Custom Mudder Deck',
+          badge: 'Story Setup',
+          content: [
+            {
+              type: 'list',
+              items: [
+                ["Pull all Mudder cards from the Supply decks."],
+                [
+                  "Create a new deck with ",
+                  {type: 'strong', content: 'The Foreman'},
+                  " and a number of Mudders based on player count:",
+                  {
+                    type: 'list',
+                    items: [
+                      ['2 Players: 7 Mudders'],
+                      ['3 Players: 10 Mudders'],
+                      ['4 Players: 13 Mudders']
+                    ]
+                  }
+                ],
+                ["Shuffle this new deck and place it face up."],
+                [{type: 'warning-box', content: ["If The Foreman is on top after shuffling, reshuffle the deck."]}]
+              ]
+            }
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: "A Hero's Gamble",
+          content: ["Easy/Medium/Pro: Use 25/21/17 Disgruntled tokens as a game timer."]
+        }
+      },
+      {
+        type: 'createAlertTokenStack',
+        valuesByGoal: {
+            "Easy": 25,
+            "Medium": 21,
+            "Pro": 17,
+        },
+        tokenName: 'Disgruntled Tokens',
+        title: "A Hero's Gamble",
+        description: "The first player takes the tokens."
       }
     ])
   },
