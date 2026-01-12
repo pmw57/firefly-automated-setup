@@ -3,7 +3,7 @@ import { StoryCardGridItem } from './StoryCardGridItem';
 import { Button } from '../Button';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useTheme } from '../ThemeContext';
-import { getFilterableExpansions } from '../../utils/selectors/story';
+import { getFilterableExpansions, getStoryIncompatibilityReason } from '../../utils/selectors/story';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { STORY_CARDS } from '../../data/storyCards';
 import { cls } from '../../utils/style';
@@ -98,6 +98,27 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
     // 3. Filter this list to only include expansions that have valid stories.
     return allPossibleFilters.filter(exp => storyExpansionIds.has(exp.id));
   }, [validStories, gameState.showHiddenContent]);
+
+  const hiddenMatches = useMemo(() => {
+    if (searchTerm === '' || filteredStories.length > 0) {
+        return [];
+    }
+
+    const allMatchingSearch = STORY_CARDS.filter(card =>
+        card.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        card.intro.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const visibleTitles = new Set(filteredStories.map(s => s.title));
+    
+    return allMatchingSearch
+        .filter(card => !visibleTitles.has(card.title))
+        .map(card => ({
+            card,
+            reason: getStoryIncompatibilityReason(card, gameState),
+        }))
+        .filter(item => item.reason !== null);
+  }, [searchTerm, filteredStories, gameState]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -258,11 +279,31 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
               );
             })}
           </>
+        ) : hiddenMatches.length > 0 ? (
+          <div className="p-4">
+            <h4 className="font-bold text-center mb-2 text-yellow-600 dark:text-yellow-400">Unavailable Stories Matching Your Search</h4>
+            <p className="text-xs text-center text-gray-500 dark:text-gray-400 mb-4">
+                These stories exist but are hidden due to your current game settings.
+            </p>
+            <div className="space-y-3">
+                {hiddenMatches.map(({ card, reason }) => (
+                    <div key={card.title} className="bg-gray-100 dark:bg-zinc-800/50 p-3 rounded-lg border border-gray-200 dark:border-zinc-700 flex items-center gap-3">
+                        <div className="shrink-0 w-8 h-8">
+                            <InlineExpansionIcon type={card.requiredExpansion || 'base'} />
+                        </div>
+                        <div className="flex-1">
+                            <p className="font-bold text-sm text-gray-800 dark:text-gray-200">{card.title}</p>
+                            <p className="text-xs text-red-600 dark:text-red-400">{reason}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+          </div>
         ) : (
           <div className={`flex flex-col items-center justify-center h-full ${emptyStateText} italic`}>
             <span className="text-4xl mb-2">🕵️</span>
             <p>No stories found.</p>
-            <Button onClick={() => { setSearchTerm(''); setFilterExpansion([]); }} variant="secondary" className="mt-4 text-sm">Clear Filters</Button>
+            <Button onClick={() => { setSearchTerm(''); setFilterExpansion([]); setFilterTheme('all'); }} variant="secondary" className="mt-4 text-sm">Clear Filters</Button>
           </div>
         )}
       </div>
