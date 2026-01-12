@@ -17,6 +17,7 @@ export interface StepComponentProps {
   onPrev: () => void;
   isNavigating: boolean;
   isDevMode?: boolean;
+  onJump?: (index: number) => void;
   // New props for MissionDossierStep
   openOverrideModal?: (onContinue: () => void) => void;
   hasUnacknowledgedPastOverrides?: boolean;
@@ -80,7 +81,7 @@ const STORY_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
     RuiningItJobsStep,
 };
 
-export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, openOverrideModal, hasUnacknowledgedPastOverrides }: StepComponentProps): React.ReactElement => {
+export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, openOverrideModal, hasUnacknowledgedPastOverrides, onJump }: StepComponentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -125,6 +126,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
         isDevMode={isDevMode}
         openOverrideModal={openOverrideModal}
         hasUnacknowledgedPastOverrides={hasUnacknowledgedPastOverrides}
+        onJump={onJump}
       />;
     }
 

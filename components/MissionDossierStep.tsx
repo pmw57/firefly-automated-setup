@@ -58,7 +58,7 @@ const MissionDossierStepContent = (props: StepComponentProps): React.ReactElemen
 
 export const MissionDossierStep = (props: StepComponentProps): React.ReactElement => {
   return (
-    <MissionSelectionProvider>
+    <MissionSelectionProvider onJump={props.onJump}>
       <MissionDossierStepContent {...props} />
     </MissionSelectionProvider>
   );

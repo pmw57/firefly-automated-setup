@@ -2,7 +2,7 @@
 import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption, CampaignSetupNote, SetupMode, StoryTag } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
-import { SETUP_CARD_IDS } from '../../data/ids';
+import { SETUP_CARD_IDS, STEP_IDS } from '../../data/ids';
 import { STORY_CARDS } from '../../data/storyCards';
 import { isStoryCompatible } from '../filters';
 import { CAMPAIGN_SETUP_NOTES } from '../../data/collections';
@@ -107,46 +107,51 @@ export const getFilteredStoryCards = (
 // Rule & Expansion Selectors
 // =================================================================
 
+export interface IncompatibilityReason {
+  text: string;
+  stepId?: string;
+}
+
 const getExpansionLabel = (id: string): string => {
     return EXPANSIONS_METADATA.find(e => e.id === id)?.label || id;
 };
 
-export const getStoryIncompatibilityReason = (card: StoryCardDef, state: GameState): string | null => {
+export const getStoryIncompatibilityReason = (card: StoryCardDef, state: GameState): IncompatibilityReason | null => {
     if (state.setupMode === 'quick' && card.requiredExpansion === 'community') {
-        return "Community content is hidden in 'Quick' setup mode.";
+        return { text: "Community content is hidden in 'Quick' setup mode. (Use toggle in header)" };
     }
 
     if (state.gameMode === 'multiplayer' && card.isSolo) {
-        return "Requires Solo mode.";
+        return { text: "Requires Solo mode.", stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
     }
 
     if (card.requiredExpansion && !state.expansions[card.requiredExpansion]) {
-        return `Requires the '${getExpansionLabel(card.requiredExpansion)}' expansion.`;
+        return { text: `Requires the '${getExpansionLabel(card.requiredExpansion)}' expansion.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
     }
     if (card.additionalRequirements) {
         const missing = card.additionalRequirements.filter(req => !state.expansions[req]);
         if (missing.length > 0) {
-            return `Requires expansions: ${missing.map(getExpansionLabel).join(', ')}.`;
+            return { text: `Requires expansions: ${missing.map(getExpansionLabel).join(', ')}.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
         }
     }
 
     if (card.playerCount && card.playerCount !== state.playerCount) {
-        return `Requires exactly ${card.playerCount} players.`;
+        return { text: `Requires exactly ${card.playerCount} players.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
     }
     if (card.maxPlayerCount && state.playerCount > card.maxPlayerCount) {
-        return `Requires ${card.maxPlayerCount} or fewer players.`;
+        return { text: `Requires ${card.maxPlayerCount} or fewer players.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
     }
 
     const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
     const isClassicSolo = state.gameMode === 'solo' && !isFlyingSolo;
 
     if (isClassicSolo && !card.isSolo) {
-        return "Not available in 'Classic Solo' mode.";
+        return { text: "Not available in 'Classic Solo' mode.", stepId: STEP_IDS.SETUP_CARD_SELECTION };
     }
     
     if (isFlyingSolo) {
         if (SOLO_EXCLUDED_STORIES.includes(card.title)) {
-            return "Not available in 'Flying Solo' mode.";
+            return { text: "Not available in 'Flying Solo' mode.", stepId: STEP_IDS.SETUP_CARD_SELECTION };
         }
     }
 
@@ -154,11 +159,11 @@ export const getStoryIncompatibilityReason = (card: StoryCardDef, state: GameSta
 
     if (isSolitaireActive) {
       if (card.requiredFlag !== 'isSolitaireFirefly') {
-        return "Only available with the 'Solitaire Firefly' setup card.";
+        return { text: "Only available with the 'Solitaire Firefly' setup card.", stepId: STEP_IDS.SETUP_CARD_SELECTION };
       }
     } else {
       if (card.requiredFlag === 'isSolitaireFirefly') {
-        return "Requires the 'Solitaire Firefly' setup card.";
+        return { text: "Requires the 'Solitaire Firefly' setup card.", stepId: STEP_IDS.SETUP_CARD_SELECTION };
       }
     }
     
@@ -166,7 +171,7 @@ export const getStoryIncompatibilityReason = (card: StoryCardDef, state: GameSta
         const effectiveSetupCardId = isFlyingSolo ? state.secondarySetupId : state.setupCardId;
         if (card.requiredSetupCardId !== effectiveSetupCardId) {
             const requiredSetup = getSetupCardById(card.requiredSetupCardId);
-            return `Requires the '${requiredSetup?.label || card.requiredSetupCardId}' setup card.`;
+            return { text: `Requires the '${requiredSetup?.label || card.requiredSetupCardId}' setup card.`, stepId: STEP_IDS.SETUP_CARD_SELECTION };
         }
     }
 
@@ -174,13 +179,13 @@ export const getStoryIncompatibilityReason = (card: StoryCardDef, state: GameSta
         const effectiveSetupCardId = isFlyingSolo ? state.secondarySetupId : state.setupCardId;
         if (effectiveSetupCardId && card.incompatibleSetupCardIds.includes(effectiveSetupCardId)) {
             const incompatibleSetup = getSetupCardById(effectiveSetupCardId);
-            return `Not compatible with the '${incompatibleSetup?.label || effectiveSetupCardId}' setup card.`;
+            return { text: `Not compatible with the '${incompatibleSetup?.label || effectiveSetupCardId}' setup card.`, stepId: STEP_IDS.SETUP_CARD_SELECTION };
         }
     }
 
     if (card.requiredExpansion === 'community' && typeof card.rating === 'number') {
         if (state.storyRatingFilters && !state.storyRatingFilters[card.rating]) {
-            return `Currently filtered out by rating (${card.rating} stars).`;
+            return { text: `Currently filtered out by rating (${card.rating} stars).`, stepId: STEP_IDS.SETUP_OPTIONAL_RULES };
         }
     }
     
