@@ -48,7 +48,7 @@ export const AdvancedRulesConfigurationPart: React.FC<AdvancedRulesConfiguration
   const bgIconBorder = isDark ? 'border-zinc-700' : 'border-[#d4d4d4]';
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in pb-24 xl:pb-0">
       <div className={`${containerBg} rounded-lg shadow-md border ${containerBorder} overflow-hidden transition-colors duration-300`}>
         <div className={`${headerBarBg} p-4 flex justify-between items-center border-b ${headerBarBorder} transition-colors duration-300`}>
           <div className="flex items-baseline gap-2">
@@ -135,7 +135,7 @@ export const AdvancedRulesConfigurationPart: React.FC<AdvancedRulesConfiguration
       </div>
 
       {/* Desktop Nav */}
-      <div className={`hidden sm:flex mt-8 justify-between clear-both pt-6 border-t ${navBorderTop}`}>
+      <div className={`hidden xl:flex mt-8 justify-between clear-both pt-6 border-t ${navBorderTop}`}>
         <Button onClick={onBack} variant="secondary" className="shadow-sm" disabled={isNavigating}>
           ← Back
         </Button>
@@ -150,7 +150,7 @@ export const AdvancedRulesConfigurationPart: React.FC<AdvancedRulesConfiguration
 
       {/* Sticky Mobile Nav */}
       <div className={cls(
-        "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex sm:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
+        "fixed bottom-0 left-0 right-0 p-4 border-t z-[60] flex xl:hidden justify-between gap-4 backdrop-blur-md shadow-[0_-10px_20px_rgba(0,0,0,0.1)] transition-colors duration-300",
         footerBg, footerBorder
       )}>
         <Button 
