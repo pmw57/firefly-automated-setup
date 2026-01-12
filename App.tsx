@@ -10,7 +10,7 @@ import { FooterQrCode } from './components/FooterQrCode';
 import { SHOW_FOOTER_QR_KEY } from './data/constants';
 import SetupWizard from './components/SetupWizard';
 import { useGameState } from './hooks/useGameState';
-// FIX: Import `useWizardState` to correctly access wizard-specific UI state like `isWizardInitialized`.
+// Import the wizard state hook to access UI-specific state like initialization status.
 import { useWizardState } from './hooks/useWizardState';
 import { SetupModeToggle } from './components/SetupModeToggle';
 import { OnboardingTooltip } from './components/OnboardingTooltip';
@@ -21,9 +21,9 @@ declare const __APP_VERSION__: string;
 const App = (): React.ReactElement => {
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
-  // FIX: Destructure only the relevant state properties from `useGameState`.
+  // Access the global game state initialization status.
   const { isStateInitialized } = useGameState();
-  // FIX: Get wizard-specific state from the `useWizardState` hook.
+  // Access the UI-specific wizard state.
   const { isWizardInitialized } = useWizardState();
   
   const [showFooterQr, setShowFooterQr] = useState(() => {
@@ -115,8 +115,8 @@ const App = (): React.ReactElement => {
   // "Production" is defined as not dev, not a static preview, and not running on localhost.
   const isProdDeployment = !isDevMode && !isPreview && (typeof window !== 'undefined' && !['localhost', '1227.0.0.1'].includes(window.location.hostname));
   
-  // FIX: Show dev features (like the unreleased content toggle) in both dev and preview modes,
-  // but hide them in a live production deployment.
+  // Development features (like the unreleased content toggle) are shown in dev and preview,
+  // but hidden in the live production deployment.
   const showDevFeatures = !isProdDeployment;
   const isAnyModalOpen = isHelpModalOpen || isQrModalOpen;
   const showWizard = isStateInitialized && isWizardInitialized;

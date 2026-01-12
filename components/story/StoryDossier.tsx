@@ -13,9 +13,9 @@ interface StoryDossierProps {
   activeStoryCard: StoryCardDef;
 }
 
-// FIX: Added a helper function to safely map the broader RuleSourceType
-// to the narrower source type expected by SpecialRuleBlock. This resolves the
-// TypeScript error by explicitly handling 'challenge', 'optionalRule', and 'combinableSetupCard' cases.
+// Maps the broader RuleSourceType to the more specific source type expected by the
+// SpecialRuleBlock component. This ensures type safety by explicitly handling sources
+// like 'challenge' and 'optionalRule' which have distinct UI representations.
 const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source'] => {
   if (source === 'challenge') {
     return 'warning';
@@ -81,7 +81,8 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
       <p className={`${italicTextColor} italic font-serif text-lg leading-relaxed border-l-4 ${quoteBorder} pl-4 mb-4`}>"{activeStoryCard.intro}"</p>
       
       {goalRules
-        // FIX: Changed 'advanced' to 'detailed' to match SetupMode type.
+        // In "detailed" mode, all rules are shown. In "quick" mode, expansion-specific
+        // rules are hidden to streamline the UI.
         .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
         .map((rule, index) => (
           <OverrideNotificationBlock

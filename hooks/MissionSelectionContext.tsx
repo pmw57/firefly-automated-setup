@@ -1,4 +1,5 @@
 
+
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { StoryCardDef, AdvancedRuleDef, StoryTag } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
@@ -72,7 +73,8 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
   const validStories = useMemo(() => getAvailableStoryCards(gameState), [gameState]);
   const filteredStories = useMemo(() => {
-    // FIX: Replaced `filterGameType` with `filterTheme` to match the expected type for `getFilteredStoryCards`.
+    // The `filterTheme` state is used here instead of a separate `filterGameType`,
+    // as game types like 'solo' and 'coop' are now treated as just another theme tag.
     return getFilteredStoryCards(gameState, { searchTerm, filterExpansion, filterTheme, sortMode });
   }, [gameState, searchTerm, filterExpansion, filterTheme, sortMode]);
   const allPotentialAdvancedRules: AdvancedRuleDef[] = useMemo(() =>
@@ -137,7 +139,6 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     handleStoryCardSelect(originalIndex);
   }, [shortList, handleStoryCardSelect]);
 
-  // FIX: Replaced `filterGameType` with `filterTheme` in the context value to match `MissionSelectionContextType`.
   const value: MissionSelectionContextType = {
     // State
     searchTerm,

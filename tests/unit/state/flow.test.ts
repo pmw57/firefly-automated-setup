@@ -56,7 +56,7 @@ describe('state/flow', () => {
         STEP_IDS.SETUP_CAPTAIN_EXPANSIONS,
         STEP_IDS.SETUP_CARD_SELECTION,
         STEP_IDS.SETUP_OPTIONAL_RULES,
-        // FIX: Replaced D_FIRST_GOAL with C4, which is the correct step ID for the goal selection.
+        // D_FIRST_GOAL was a legacy ID; C4 is now the standard ID for the goal selection step.
         STEP_IDS.C4,
         STEP_IDS.C1,
         STEP_IDS.C2,

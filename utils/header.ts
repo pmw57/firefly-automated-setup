@@ -1,4 +1,4 @@
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+// Explicitly import from the barrel file to avoid module resolution ambiguity.
 import { GameState, Step, HeaderDetails } from '../types/index';
 import { getDisplaySetupName } from './selectors/ui';
 import { SETUP_CARD_IDS } from '../data/ids';

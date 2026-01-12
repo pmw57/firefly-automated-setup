@@ -71,7 +71,8 @@ describe('rules/draftRules', () => {
     });
     
     it.concurrent('generates a rule for Racing a Pale Horse', () => {
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` instead of the non-existent `selectedStoryCard` property, aligning with the `GameState` type. This involves finding the story card index by its title.
+        // The game state stores the index of the selected story card, not the card object itself.
+        // We find the index by title to set up the test state correctly.
         const state: GameState = { ...baseGameState, selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "Racing A Pale Horse") };
         const details = getDraftDetails(state, baseStep);
         const rule = details.specialRules.find(r => r.title === 'Story Setup: Haven');
@@ -82,7 +83,8 @@ describe('rules/draftRules', () => {
     it.concurrent('generates a rule for Heroes & Misfits custom setup', () => {
         const state: GameState = { 
             ...baseGameState, 
-            // FIX: Updated test state setup to use `selectedStoryCardIndex` instead of the non-existent `selectedStoryCard` property, aligning with the `GameState` type. This involves finding the story card index by its title.
+            // The game state stores the index of the selected story card, not the card object itself.
+            // We find the index by title to set up the test state correctly.
             selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "Heroes & Misfits"),
             challengeOptions: { [CHALLENGE_IDS.HEROES_CUSTOM_SETUP]: true }
         };
@@ -110,7 +112,8 @@ describe('rules/draftRules', () => {
       const state: GameState = {
         ...baseGameState,
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` instead of the non-existent `selectedStoryCard` property, aligning with the `GameState` type. This involves finding the story card index by its title.
+        // The game state stores the index of the selected story card, not the card object itself.
+        // We find the index by title to set up the test state correctly.
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "Heroes & Misfits"),
         challengeOptions: { [CHALLENGE_IDS.HEROES_CUSTOM_SETUP]: true },
         finalStartingCredits: 12000, // From Browncoat Way

@@ -1,4 +1,4 @@
-// FIX: Changed import from '../types' to '../types/index' to fix module resolution ambiguity.
+// Explicitly import from the barrel file to avoid module resolution ambiguity.
 import { DiceResult, DraftState } from '../types/index';
 
 const findWinnerIndex = (rolls: DiceResult[], overrideWinnerIndex?: number): number => {

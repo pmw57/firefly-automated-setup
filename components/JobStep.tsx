@@ -37,9 +37,9 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     }
 
     const process = (content: StructuredContent): StructuredContent => {
-      // FIX: Replaced chained `if` statements with a `switch` on `part.type` for robust type narrowing.
-      // This resolves a TypeScript error where the compiler couldn't correctly infer the type of `part.content`,
-      // leading to a type mismatch when recursively processing nested content.
+      // A `switch` statement is used here for robust type narrowing. This helps TypeScript
+      // correctly infer the type of `part.content` within each case, preventing mismatches
+      // when recursively processing nested content structures.
       return content.flatMap((part: StructuredContentPart): StructuredContentPart | StructuredContentPart[] => {
         if (typeof part === 'string') {
           return part;

@@ -64,7 +64,7 @@ describe('rules/prime', () => {
       const storyTitle = "A Friend In Every Port";
       const state: GameState = {
         ...stateForStandardPriming,
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
+        // The game state stores the index of the selected story card, not the card object itself.
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
       };
       const details = getPrimeDetails(state, {});
@@ -76,7 +76,7 @@ describe('rules/prime', () => {
       const storyTitle = "A Friend In Every Port";
       const state: GameState = {
         ...stateForStandardPriming,
-        // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
+        // The game state stores the index of the selected story card, not the card object itself.
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
       };
       const details = getPrimeDetails(state, { primeMode: 'blitz' });
@@ -88,7 +88,7 @@ describe('rules/prime', () => {
         const storyTitle = "Slaying The Dragon";
         const state: GameState = {
             ...stateForStandardPriming,
-            // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
+            // The game state stores the index of the selected story card, not the card object itself.
             selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
         };
         const details = getPrimeDetails(state, {});
@@ -99,7 +99,7 @@ describe('rules/prime', () => {
         const storyTitle = "Slaying The Dragon";
         const state: GameState = {
             ...stateForStandardPriming,
-            // FIX: Updated test state setup to use `selectedStoryCardIndex` with the story card's index instead of `selectedStoryCard` with its title, correcting the property access to match the `GameState` type.
+            // The game state stores the index of the selected story card, not the card object itself.
             selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
         };
         const details = getPrimeDetails(state, { primeMode: 'blitz' });
