@@ -10,6 +10,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860502/sjliver",
+    tags: ['reputation', 'against_the_black', 'solo'],
     rules: createStoryRules("A Fistful Of Scoundrels", [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'primeContacts' },
@@ -41,6 +42,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     intro: "It takes a brave soul to sail the Big Black alone... Pick your goal and test your skills.",
     setupDescription: "Setup follows the normal rules with the following exceptions: 1) In addition to selecting yout Leader, you may also select up to 4 crew cards from any deck - up to a total value of $1000. 2) Place a pile of exactly 20 Disgruntled Tokens to the side. These tokens will be used as Game Length Tokens.",
     sourceUrl: "https://web.archive.org/web/20220226163627/https://www.flamesofwar.com/Portals/0/all_images/GF9/Firefly/Rulebooks/StoryCards/AwfulLonelyStoryCard.png",
+    tags: ['against_the_black', 'solo'],
     rules: createStoryRules("Awful Lonely In The Big Black", [
       { type: 'addFlag', flag: 'soloCrewDraft' },
       { type: 'addFlag', flag: 'soloGameTimer' },
@@ -79,6 +81,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["crime"],
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860501/sjliver",
+    tags: ['doing_the_job', 'against_the_black', 'solo'],
     rules: createStoryRules("For A Few Credits More", [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'addFlag', flag: 'startWithAlertCard' },
@@ -114,6 +117,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860508/sjliver",
+    tags: ['survival', 'against_the_black', 'solo'],
     rules: createStoryRules("Goin' Reaver", [
       { type: 'addFlag', flag: 'placeReaverAlertsInMotherlodeAndUroboros' },
       { type: 'addFlag', flag: 'soloGameTimer' }
@@ -132,6 +136,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860504/sjliver",
+    tags: ['character', 'against_the_black', 'solo'],
     rules: createStoryRules("Heroes & Misfits", [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Funds" },
       { type: 'addFlag', flag: 'soloGameTimer' },
@@ -177,6 +182,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["crime"],
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860503/sjliver",
+    tags: ['smugglers_run', 'against_the_black', 'solo'],
     rules: createStoryRules("The Lonely Smuggler's Blues", [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'addFlag', flag: 'lonelySmugglerSetup' },
@@ -213,6 +219,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860506/sjliver",
+    tags: ['character', 'against_the_black', 'solo'],
     advancedRule: {
       id: "adv_alt_reaver_contacts",
       title: "Alternate Reaver Contacts",
@@ -228,6 +235,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860500/sjliver",
+    tags: ['character', 'survival', 'against_the_black', 'solo'],
     rules: createStoryRules("Racing A Pale Horse", [
       { type: 'addFlag', flag: 'disableSoloTimer' },
       { 
@@ -262,6 +270,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["crime"],
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860505/sjliver",
+    tags: ['character', 'survival', 'against_the_black', 'solo'],
     rules: createStoryRules("The Raggedy Edge", [
       { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, description: "Begin play with 1 Goal Token." },
       { type: 'addFlag', flag: 'disableSoloTimer' },
@@ -298,6 +307,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860507/sjliver",
+    tags: ['character', 'faction_war', 'against_the_black', 'solo'],
     rules: createStoryRules("Seeds Of Rebellion", [
       { type: 'addFlag', flag: 'soloGameTimer' },
       { type: 'forbidContact', contact: 'Harken' }

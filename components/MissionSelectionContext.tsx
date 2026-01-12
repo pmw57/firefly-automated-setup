@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
-import { StoryCardDef, AdvancedRuleDef } from '../types/index';
+import { StoryCardDef, AdvancedRuleDef, StoryTag } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { MissionSelectionContext, MissionSelectionContextType } from '../hooks/useMissionSelection';
@@ -9,7 +9,7 @@ import { STORY_CARDS } from '../data/storyCards';
 interface LocalState {
   searchTerm: string;
   filterExpansion: string[];
-  filterGameType: 'all' | 'solo' | 'co-op' | 'pvp';
+  filterTheme: StoryTag | 'all';
   shortList: StoryCardDef[];
   sortMode: 'expansion' | 'name' | 'rating';
 }
@@ -18,14 +18,14 @@ type LocalAction =
   | { type: 'SET_SEARCH_TERM'; payload: string }
   | { type: 'SET_FILTER_EXPANSION'; payload: string[] }
   | { type: 'TOGGLE_FILTER_EXPANSION'; payload: string }
-  | { type: 'SET_FILTER_GAME_TYPE'; payload: 'all' | 'solo' | 'co-op' | 'pvp' }
+  | { type: 'SET_FILTER_THEME'; payload: StoryTag | 'all' }
   | { type: 'SET_SHORT_LIST'; payload: StoryCardDef[] }
   | { type: 'TOGGLE_SORT_MODE' };
 
 const initialState: LocalState = {
   searchTerm: '',
   filterExpansion: [],
-  filterGameType: 'all',
+  filterTheme: 'all',
   shortList: [],
   sortMode: 'expansion',
 };
@@ -43,8 +43,8 @@ function reducer(state: LocalState, action: LocalAction): LocalState {
         : [...state.filterExpansion, id];
       return { ...state, filterExpansion: newFilter };
     }
-    case 'SET_FILTER_GAME_TYPE':
-      return { ...state, filterGameType: action.payload };
+    case 'SET_FILTER_THEME':
+      return { ...state, filterTheme: action.payload };
     case 'SET_SHORT_LIST':
       return { ...state, shortList: action.payload };
     case 'TOGGLE_SORT_MODE': {
@@ -64,15 +64,15 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   const { state: gameState } = useGameState();
   const { setStoryCard, setMissionDossierSubstep } = useGameDispatch();
   const [localState, localDispatch] = useReducer(reducer, initialState);
-  const { searchTerm, filterExpansion, filterGameType, shortList, sortMode } = localState;
+  const { searchTerm, filterExpansion, filterTheme, shortList, sortMode } = localState;
   const subStep = gameState.missionDossierSubStep;
   
   // Memoized derived data
   const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
   const validStories = useMemo(() => getAvailableStoryCards(gameState), [gameState]);
   const filteredStories = useMemo(() => {
-    return getFilteredStoryCards(gameState, { searchTerm, filterExpansion, filterGameType, sortMode });
-  }, [gameState, searchTerm, filterExpansion, filterGameType, sortMode]);
+    return getFilteredStoryCards(gameState, { searchTerm, filterExpansion, filterTheme, sortMode });
+  }, [gameState, searchTerm, filterExpansion, filterTheme, sortMode]);
   const allPotentialAdvancedRules: AdvancedRuleDef[] = useMemo(() =>
     getAllPotentialAdvancedRules(gameState),
     [gameState]
@@ -103,7 +103,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   const setSubStep = useCallback((step: number) => setMissionDossierSubstep(step), [setMissionDossierSubstep]);
   const toggleSortMode = useCallback(() => localDispatch({ type: 'TOGGLE_SORT_MODE' }), []);
   const toggleFilterExpansion = useCallback((id: string) => localDispatch({ type: 'TOGGLE_FILTER_EXPANSION', payload: id }), []);
-  const setFilterGameType = useCallback((type: 'all' | 'solo' | 'co-op' | 'pvp') => localDispatch({ type: 'SET_FILTER_GAME_TYPE', payload: type }), []);
+  const setFilterTheme = useCallback((theme: StoryTag | 'all') => localDispatch({ type: 'SET_FILTER_THEME', payload: theme }), []);
   const handleCancelShortList = useCallback(() => localDispatch({ type: 'SET_SHORT_LIST', payload: [] }), []);
 
   // --- Handlers with Logic ---
@@ -139,7 +139,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     // State
     searchTerm,
     filterExpansion,
-    filterGameType,
+    filterTheme,
     shortList,
     subStep,
     sortMode,
@@ -154,7 +154,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     setSearchTerm,
     setFilterExpansion,
     toggleFilterExpansion,
-    setFilterGameType,
+    setFilterTheme,
     setSubStep,
     toggleSortMode,
     // Handlers

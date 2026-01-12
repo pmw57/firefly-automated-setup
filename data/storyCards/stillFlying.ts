@@ -9,6 +9,7 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     setupDescription: "No starting jobs are dealt. Each player begins the game with one Caper.",
     requiredExpansion: "still_flying",
     sourceUrl: "https://boardgamegeek.com/image/8103875/sjliver",
+    tags: ['character', 'mystery'],
     rules: createStoryRules("A Rare Specimen Indeed", [
       { type: 'setJobMode', mode: 'caper_start' },
       { type: 'addFlag', flag: 'showNoJobsMessage' },
@@ -27,7 +28,8 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     intro: "An eccentric billionaire arranges a very special race every year to pick his most favorite captain. Win and you're set for life... or at least until someone breaks your record next time around.",
     requiredExpansion: "still_flying",
     additionalRequirements: ["blue", "kalidasa"],
-    sourceUrl: "https://boardgamegeek.com/image/8103881/sjliver"
+    sourceUrl: "https://boardgamegeek.com/image/8103881/sjliver",
+    tags: ['character', 'doing_the_job'],
   },
   {
     title: "The Smuggly Bustle",
@@ -36,6 +38,7 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue", "kalidasa"],
     setupDescription: "Place an Alliance Alert Token on every planetary sector in Alliance Space.",
     sourceUrl: "https://boardgamegeek.com/image/8103882/sjliver",
+    tags: ['smugglers_run'],
     rules: createStoryRules("The Smuggly Bustle", [
       {
         type: 'addSpecialRule',

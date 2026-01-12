@@ -1,5 +1,3 @@
-
-
 import { StoryCardDef } from '../../../types';
 import { SETUP_CARD_IDS, CONTACT_NAMES } from '../../ids';
 import { createStoryRules } from '../utils';
@@ -23,6 +21,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         description: "Successfully Proceed past 20 more Misbehave cards by the end of the game."
       }
     ],
+    tags: ['community', 'reputation', 'against_the_black', 'solo'],
     rules: createStoryRules("And That Makes Us Mighty", [
       {
         type: 'addSpecialRule',
@@ -48,6 +47,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     title: "Beholden to Niska",
     intro: "You have gotten a loan from Niska to buy your first ship. Niska will expect favors and to be paid back (with interest) in a timely manner. Failure to do so will result in legal confiscation of your ship, and illegal confiscation of your life!",
     isSolo: true,
+    tags: ['community', 'criminal_enterprise', 'against_the_black', 'solo'],
     rules: createStoryRules("Beholden to Niska", [
       {
         type: 'addSpecialRule',
@@ -84,6 +84,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     requiredExpansion: "community",
     isSolo: true,
     setupDescription: "Same as Awful Lonely in the Big Black",
+    tags: ['community', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Christmas Delivery", [
       { type: 'addFlag', flag: 'soloCrewDraft' },
       { type: 'addFlag', flag: 'soloGameTimer' },
@@ -102,6 +103,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     title: "The Hero of Canton",
     intro: "You can't do that to my people. Can't crush them under your heel. I'll strap on my hat, and in 20 rounds flat, steal every Mudder Boss Higgins has to steal.",
     isSolo: true,
+    tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("The Hero of Canton", [
       {
         type: 'addSpecialRule',
@@ -146,6 +148,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/thread/1049419/hunt-for-the-arc-a-solo-adventure",
     setupDescription: "Place 1 Reaver ship below Valentine. If Blue Sun is active, place 2 more Cutters near Miranda.",
+    tags: ['community', 'mystery', 'against_the_black', 'solo'],
     rules: createStoryRules("Hunt For The Arc", [
       { type: 'addFlag', flag: 'huntForTheArcReaverPlacement', reaverShipCount: 1 }
     ])
@@ -160,6 +163,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         "description": "During Setup, mark 3 random bounties (not Cortex Alerts). Deliver the 3 marked bounties."
       }
     ],
+    tags: ['community', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Jubal's Early Years", [
       {
         type: 'addSpecialRule',
@@ -187,6 +191,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredExpansion: "community",
     rating: 3,
+    tags: ['community', 'doing_the_job', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Jubal's Mighty Roar", [
       {
         type: 'addSpecialRule',
@@ -268,6 +273,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Fixed assignment: Serenity's original crew. $0 starting cash. Game timer is 15 turns. Niska is unavailable.",
     sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards",
     requiredExpansion: "community",
+    tags: ['community', 'survival', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("War Stories", [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 0, description: "Story Funds" },
       { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },

@@ -1,5 +1,3 @@
-
-
 import { StoryCardDef } from '../../../types';
 import { createStoryRules } from '../utils';
 
@@ -13,6 +11,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 10,
     campaignSetupNotes: ['EXPLOSIVES_REQUIRED'],
+    tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Ariel", [
       {
         type: 'addSpecialRule',
@@ -32,6 +31,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 4,
+    tags: ['community', 'mystery', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Bushwhacked", [
       {
         type: 'addSpecialRule',
@@ -51,6 +51,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 14,
+    tags: ['community', 'faction_war', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Heart of Gold", [
       {
         type: 'addSpecialRule',
@@ -71,6 +72,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 8,
     campaignSetupNotes: ['SUGGEST_NEGOTIATION_GEAR'],
+    tags: ['community', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Jaynestown", [
       {
         type: 'addSpecialRule',
@@ -91,6 +93,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 13,
     campaignSetupNotes: ['START_AT_SPACE_BAZAAR', 'SUGGEST_MED_BAY_AND_HAT'],
+    tags: ['community', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("The Message", [
       {
         type: 'addSpecialRule',
@@ -111,6 +114,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 15,
     campaignSetupNotes: ['ANY_SECTOR_PLACEMENT_WITH_CREW_NOTE'],
+    tags: ['community', 'survival', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Objects in Space", [
       {
         type: 'addSpecialRule',
@@ -131,6 +135,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 7,
     campaignSetupNotes: ['SUGGEST_BONNET_VERA'],
+    tags: ['community', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Our Mrs. Reynolds", [
       {
         type: 'addSpecialRule',
@@ -151,6 +156,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 9,
     campaignSetupNotes: ['ANY_SECTOR_PLACEMENT'],
+    tags: ['community', 'survival', 'against_the_black', 'solo'],
     rules: createStoryRules("Out of Gas", [
       {
         type: 'addSpecialRule',
@@ -171,6 +177,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 6,
     campaignSetupNotes: ['FAKE_ID_REQUIRED'],
+    tags: ['community', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Safe", [
       {
         type: 'addSpecialRule',
@@ -191,6 +198,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 16,
     campaignSetupNotes: ['REMOVE_INARA_AND_BOOK', 'TRANSPORT_REQUIRED'],
+    tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Serenity Movie Part 1", [
       {
         type: 'addSpecialRule',
@@ -211,6 +219,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 17,
     campaignSetupNotes: ['INARA_REJOINS', 'REMOVE_DISGRUNTLED'],
+    tags: ['community', 'mystery', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Serenity Movie Part 2", [
       {
         type: 'addSpecialRule',
@@ -231,6 +240,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 18,
     campaignSetupNotes: ['NO_MED_BAY_SUGGEST_KIT'],
+    tags: ['community', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Serenity Movie Part 3", [
       {
         type: 'addSpecialRule',
@@ -250,6 +260,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 1,
+    tags: ['community', 'smugglers_run', 'character', 'against_the_black', 'solo'],
     campaignSetupNotes: [
       'SERENITY_PART_1_CREW',
       'SERENITY_PART_1_RESOURCES',
@@ -274,6 +285,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     isSolo: true,
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 2,
+    tags: ['community', 'smugglers_run', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Serenity Part 2", [
       {
         type: 'addSpecialRule',
@@ -294,6 +306,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 5,
     campaignSetupNotes: ['SUGGEST_FANCY_DUDS'],
+    tags: ['community', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Shindig", [
       {
         type: 'addSpecialRule',
@@ -314,6 +327,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 3,
     campaignSetupNotes: ['SUGGEST_MED_BAY'],
+    tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("The Train Job", [
       {
         type: 'addSpecialRule',
@@ -334,6 +348,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 12,
     campaignSetupNotes: ['PICK_UP_SAFFRON', 'HACKING_RIG_REQUIRED'],
+    tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("Trash", [
       {
         type: 'addSpecialRule',
@@ -354,6 +369,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 11,
     campaignSetupNotes: ['EXPLOSIVES_REQUIRED'],
+    tags: ['community', 'jailbreak', 'character', 'against_the_black', 'solo'],
     rules: createStoryRules("War Stories", [
       {
         type: 'addSpecialRule',

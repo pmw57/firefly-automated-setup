@@ -8,6 +8,7 @@ export const KALIDASA_STORIES: StoryCardDef[] = [
     requiredExpansion: "kalidasa",
     sourceUrl: "https://boardgamegeek.com/image/2785039/gerryrailbaron",
     setupDescription: "Creates an Alliance Alert Token stack. No starting jobs are dealt.",
+    tags: ['reputation', 'verse_variant'],
     rules: createStoryRules("It's All In Who You Know", [
       { type: 'createAlertTokenStack', multiplier: 3 },
       {
@@ -33,12 +34,14 @@ export const KALIDASA_STORIES: StoryCardDef[] = [
     title: "The Scavenger's 'Verse",
     intro: "Scour the 'Verse high and low, to the Rim and back you may go.",
     requiredExpansion: "kalidasa",
-    sourceUrl: "https://boardgamegeek.com/image/2785038/gerryrailbaron"
+    sourceUrl: "https://boardgamegeek.com/image/2785038/gerryrailbaron",
+    tags: ['character', 'mystery'],
   },
   {
     title: "The Well's Run Dry",
     intro: "Increased Alliance oversight has made gettin' paid hard. Folks are limited to whatever cash they've got stashed under their bedrolls; even the movers and shakers are findin' the spigot's run dry.",
     requiredExpansion: "kalidasa",
-    sourceUrl: "https://boardgamegeek.com/image/2785037/gerryrailbaron"
+    sourceUrl: "https://boardgamegeek.com/image/2785037/gerryrailbaron",
+    tags: ['smugglers_run'],
   },
 ];

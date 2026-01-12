@@ -7,5 +7,6 @@ export const CANTANKEROUS_STORIES: StoryCardDef[] = [
         sourceUrl: "https://boardgamegeek.com/image/7072594/gwek",
         requiredExpansion: "cantankerous",
         additionalRequirements: ["blue", "kalidasa"],
+        tags: ['classic_heist', 'faction_war'],
     },
 ];

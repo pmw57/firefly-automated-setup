@@ -14,6 +14,7 @@ export const STORIES_A_D: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/3092841/a-new-leaf-story-card-using-fan-made-ships",
     requiredExpansion: "community",
     rating: 1,
+    tags: ['community', 'character'],
     rules: createStoryRules("A New Leaf", [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 10000, description: "Story Funds" },
       {
@@ -33,6 +34,7 @@ export const STORIES_A_D: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/3077380/aimin-to-misbehave",
     setupDescription: "Remove all legal job cards from play.",
+    tags: ['community', 'criminal_enterprise'],
     rules: createStoryRules("Aimin' To Misbehave", [
       {
         type: 'addSpecialRule',
@@ -63,6 +65,7 @@ export const STORIES_A_D: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/103321/firefly-goal-bank-job-jpeg-and-psd",
     rating: 3,
+    tags: ['community', 'classic_heist'],
   },
   {
     title: "The Battle of Serenity Valley (PvP)",
@@ -72,6 +75,7 @@ export const STORIES_A_D: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1099553/story-card-the-battle-of-serenity-valley-pvp",
     rating: 0,
+    tags: ['community', 'pvp'],
     rules: createStoryRules("The Battle of Serenity Valley (PvP)", [
       {
         type: 'addSpecialRule',
@@ -90,6 +94,7 @@ export const STORIES_A_D: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1098646/article/14445829#14445829",
     rating: 1,
+    tags: ['community', 'character'],
     rules: createStoryRules("Black Market Beagles", [
       {
         type: 'addSpecialRule',
@@ -107,6 +112,7 @@ export const STORIES_A_D: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1122149/story-card-cupids-little-helpers",
     rating: 0,
+    tags: ['community', 'character'],
   },
   {
     title: "Doing Good Works",
@@ -115,6 +121,7 @@ export const STORIES_A_D: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1240655/doing-good-works-soloco-op-scenario",
     rating: 0,
+    tags: ['community', 'against_the_black'],
     rules: createStoryRules("Doing Good Works", [
       {
         type: 'addSpecialRule',
@@ -132,5 +139,6 @@ export const STORIES_A_D: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/image/6067255",
     rating: 3,
+    tags: ['community', 'criminal_enterprise'],
   },
 ];

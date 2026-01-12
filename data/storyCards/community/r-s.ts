@@ -8,7 +8,8 @@ export const STORIES_R_S: StoryCardDef[] = [
     intro: " ",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/108288/rags-to-riches",
-    rating: 0
+    rating: 0,
+    tags: ['community', 'reputation'],
   },
   {
     title: "Return to Sturges",
@@ -16,6 +17,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     setupDescription: "Follow the 'Leader Restriction' override.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/125866/return-to-sturges-a-firefly-mission",
+    tags: ['community', 'classic_heist'],
     rules: createStoryRules("Return to Sturges", [
       { 
         type: 'addSpecialRule', 
@@ -37,6 +39,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     setupDescription: "Follow the 'Asymmetric Setup' and 'Bounty Deck Setup' overrides.",
     sourceUrl: "https://boardgamegeek.com/thread/3454248/rivers-run-1v1",
     requiredExpansion: "community",
+    tags: ['community', 'pvp'],
     rules: createStoryRules("River's Run 1v1", [
       { type: 'setJobMode', mode: 'no_jobs' },
       {
@@ -61,7 +64,8 @@ export const STORIES_R_S: StoryCardDef[] = [
     title: "Round the 'Verse in \"80 Days\"",
     intro: "Mr. Big Bucks, who lives next to the Tams in Sihnon, has two 19-year-old kids. They are finishing a semester of school at Osiris. Mr. Big Bucks wants the kids to experience the universe. He's looking for someone to show them around the universe and return them healthily. You can put the kids to work to some extent, but must return them healthy. He'll pay $20,000 when done.",
     requiredExpansion: "community",
-    sourceUrl: "https://web.archive.org/web/20151227202622/http://notionnexus.com/index.php/ponderings-and-thoughts/247-playing-firefly"
+    sourceUrl: "https://web.archive.org/web/20151227202622/http://notionnexus.com/index.php/ponderings-and-thoughts/247-playing-firefly",
+    tags: ['community', 'character'],
   },
   {
     title: "Ruining It For Everyone",
@@ -70,6 +74,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     intro: "During the war you watched your twin get cut down in a hail of shrapnel. You've lived an empty existence since that day making ends meet and trying to keep flying as best you can. Then you get a message from your Ma out on the Rim. \"Come home right away.\"\n\nSo you fly to St. Albans, Red Sun to see your Mother.\n\nOnce there, your twin (Who wasn't dead!) steals your ship and sets about ruining your life. Your twin has the exact same abilities as you do. Your twin may not discard any of your inactive jobs.",
     sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
     setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship. Both ships starts on St. Albans, Red Sun. Set 20 counters on this card as timing counters.",
+    tags: ['community', 'character', 'pvp'],
     rules: createStoryRules("Ruining It For Everyone", [
       { type: 'setComponent', stepId: STEP_IDS.C3, component: 'RuiningItDraftStep' },
       { type: 'setComponent', stepId: STEP_IDS.C5, component: 'RuiningItResourcesStep' },
@@ -111,6 +116,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1066622/story-card-save-river-tam",
     setupDescription: "Remove River Tam from play.",
+    tags: ['community', 'jailbreak', 'character'],
     rules: createStoryRules("Save River Tam", [
       { type: 'addFlag', flag: 'removeRiver' },
       {
@@ -129,7 +135,8 @@ export const STORIES_R_S: StoryCardDef[] = [
     intro: "You know, there's a certain motto. A creed among folks like us. You may have heard it: \"Leave no man behind.\" Wash - Firefy Episide 10 - War Stories",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1536695/article/22110859#22110859",
-    rating: 1
+    rating: 1,
+    tags: ['community', 'jailbreak'],
   },
   {
     title: "Scavengers",
@@ -139,6 +146,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/3114859/scavenger-card-game-story-card",
     requiredExpansion: "community",
     rating: 1,
+    tags: ['community', 'pvp', 'verse_variant'],
     rules: createStoryRules("Scavengers", [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 10000, description: "Scavenger's Hoard" },
       { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No fuel used." },
@@ -207,6 +215,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/100497/shadows-over-duul-new-goal-reupload",
     setupDescription: "Remove jobs from Amnon Duul during Set Up. Start in the border of Murphy.",
+    tags: ['community', 'survival'],
     rules: createStoryRules("Shadows Over Duul", [
       { type: 'forbidContact', contact: CONTACT_NAMES.AMNON_DUUL },
       { type: 'setShipPlacement', location: { region: 'border of Murphy' } },
@@ -235,9 +244,11 @@ export const STORIES_R_S: StoryCardDef[] = [
     additionalRequirements: [
       "pirates"
     ],
+    isPvP: true,
     setupDescription: "Follow the 'Deck Modification' override.",
     sourceUrl: "https://boardgamegeek.com/thread/3405568/article/45332549#45332549",
     requiredExpansion: "community",
+    tags: ['community', 'pvp'],
     rules: createStoryRules("Shiny New Year 25 - Protect Or Plunder", [
       {
         type: 'addSpecialRule',
@@ -256,6 +267,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     intro: "Adelai Niska has been lord of the underworld for as long as anyone can remember. Shu-ki, the tong boss of Gonghe, has long suffered under Niska's yoke. After being publicly shamed by Niska at a meeting of crime-bosses, an enraged Shu-ki has decided to bring Niska down. He has a plan - Operation Dragon - but the job is so daunting that it requires two crews to have any hope of success. Can two Firefly captains bring down the most feared criminal boss in the 'Verse?",
     requiredExpansion: "community",
     setupDescription: "Niska is unavailable. 'Prime the Pump' discards 2 additional cards.",
+    tags: ['community', 'faction_war', 'against_the_black', 'coop'],
     rules: createStoryRules("Slaying The Dragon", [
       { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
       { type: 'modifyPrime', modifier: { add: 2 } },

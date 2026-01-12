@@ -9,6 +9,7 @@ export const CRIME_STORIES: StoryCardDef[] = [
     requiredExpansion: "crime",
     sourceUrl: "https://boardgamegeek.com/image/3464668/firefly-the-game-crime-and-punishment",
     setupDescription: "Place a $2000 Bill under the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Players do not receive Starting Jobs.",
+    tags: ['smugglers_run'],
     rules: createStoryRules("Smuggler's Blues", [
       { type: "addFlag", flag: "smugglersBluesSetup" },
       {
@@ -73,6 +74,7 @@ export const CRIME_STORIES: StoryCardDef[] = [
     setupDescription: "Each player starts the game with 1 Warrant. Players' starting locations may not be within Alliance Space. Start with one random Alliance Alert in play. Starting Jobs may only be drawn from Patience, Badger, Niska, Mr. Universe and Fanty & Mingo.",
     requiredExpansion: "crime",
     sourceUrl: "https://boardgamegeek.com/image/3524452",
+    tags: ['reputation', 'smugglers_run'],
     rules: createStoryRules("Wanted Men", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
       {
