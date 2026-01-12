@@ -6,6 +6,7 @@ import { SETUP_CARD_IDS } from '../../data/ids';
 import { STORY_CARDS } from '../../data/storyCards';
 import { isStoryCompatible } from '../filters';
 import { CAMPAIGN_SETUP_NOTES } from '../../data/collections';
+import { SOLO_EXCLUDED_STORIES } from '../../data/collections';
 
 // =================================================================
 // Card Definition Fetchers
@@ -105,6 +106,86 @@ export const getFilteredStoryCards = (
 // =================================================================
 // Rule & Expansion Selectors
 // =================================================================
+
+const getExpansionLabel = (id: string): string => {
+    return EXPANSIONS_METADATA.find(e => e.id === id)?.label || id;
+};
+
+export const getStoryIncompatibilityReason = (card: StoryCardDef, state: GameState): string | null => {
+    if (state.setupMode === 'quick' && card.requiredExpansion === 'community') {
+        return "Community content is hidden in 'Quick' setup mode.";
+    }
+
+    if (state.gameMode === 'multiplayer' && card.isSolo) {
+        return "Requires Solo mode.";
+    }
+
+    if (card.requiredExpansion && !state.expansions[card.requiredExpansion]) {
+        return `Requires the '${getExpansionLabel(card.requiredExpansion)}' expansion.`;
+    }
+    if (card.additionalRequirements) {
+        const missing = card.additionalRequirements.filter(req => !state.expansions[req]);
+        if (missing.length > 0) {
+            return `Requires expansions: ${missing.map(getExpansionLabel).join(', ')}.`;
+        }
+    }
+
+    if (card.playerCount && card.playerCount !== state.playerCount) {
+        return `Requires exactly ${card.playerCount} players.`;
+    }
+    if (card.maxPlayerCount && state.playerCount > card.maxPlayerCount) {
+        return `Requires ${card.maxPlayerCount} or fewer players.`;
+    }
+
+    const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
+    const isClassicSolo = state.gameMode === 'solo' && !isFlyingSolo;
+
+    if (isClassicSolo && !card.isSolo) {
+        return "Not available in 'Classic Solo' mode.";
+    }
+    
+    if (isFlyingSolo) {
+        if (SOLO_EXCLUDED_STORIES.includes(card.title)) {
+            return "Not available in 'Flying Solo' mode.";
+        }
+    }
+
+    const isSolitaireActive = state.setupCardId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY || state.secondarySetupId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY;
+
+    if (isSolitaireActive) {
+      if (card.requiredFlag !== 'isSolitaireFirefly') {
+        return "Only available with the 'Solitaire Firefly' setup card.";
+      }
+    } else {
+      if (card.requiredFlag === 'isSolitaireFirefly') {
+        return "Requires the 'Solitaire Firefly' setup card.";
+      }
+    }
+    
+    if (card.requiredSetupCardId) {
+        const effectiveSetupCardId = isFlyingSolo ? state.secondarySetupId : state.setupCardId;
+        if (card.requiredSetupCardId !== effectiveSetupCardId) {
+            const requiredSetup = getSetupCardById(card.requiredSetupCardId);
+            return `Requires the '${requiredSetup?.label || card.requiredSetupCardId}' setup card.`;
+        }
+    }
+
+    if (card.incompatibleSetupCardIds) {
+        const effectiveSetupCardId = isFlyingSolo ? state.secondarySetupId : state.setupCardId;
+        if (effectiveSetupCardId && card.incompatibleSetupCardIds.includes(effectiveSetupCardId)) {
+            const incompatibleSetup = getSetupCardById(effectiveSetupCardId);
+            return `Not compatible with the '${incompatibleSetup?.label || effectiveSetupCardId}' setup card.`;
+        }
+    }
+
+    if (card.requiredExpansion === 'community' && typeof card.rating === 'number') {
+        if (state.storyRatingFilters && !state.storyRatingFilters[card.rating]) {
+            return `Currently filtered out by rating (${card.rating} stars).`;
+        }
+    }
+    
+    return null;
+};
 
 export const getSoloTimerAdjustmentText = (storyCard: StoryCardDef | undefined): string | null => {
     return storyCard?.soloTimerAdjustment || null;
