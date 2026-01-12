@@ -1,10 +1,9 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from './ThemeContext';
 import { Button } from './Button';
 import { usePwaInstall } from '../hooks/usePwaInstall';
-import { SHOW_FOOTER_QR_KEY } from '../data/constants';
+import { SHOW_FOOTER_QR_KEY, ONLINE_BASE_URL } from '../data/constants';
 
 interface NavigatorWithStandalone extends Navigator {
   standalone?: boolean;
@@ -66,7 +65,7 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
   };
 
   const isPreview = typeof import.meta.env === 'undefined';
-  const baseUrl = !isPreview ? import.meta.env.BASE_URL : '/';
+  const baseUrl = !isPreview ? import.meta.env.BASE_URL : ONLINE_BASE_URL;
   const qrCodeUrl = `${baseUrl}assets/images/branding/qrcode.png`;
 
   // Close on Escape key press

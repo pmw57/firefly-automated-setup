@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { useTheme } from './ThemeContext';
+import { ONLINE_BASE_URL } from '../data/constants';
 
 interface FooterQrCodeProps {
   onDismiss: () => void;
@@ -11,7 +11,7 @@ export const FooterQrCode: React.FC<FooterQrCodeProps> = ({ onDismiss }) => {
   const isDark = theme === 'dark';
   
   const isPreview = typeof import.meta.env === 'undefined';
-  const baseUrl = !isPreview ? import.meta.env.BASE_URL : '/';
+  const baseUrl = !isPreview ? import.meta.env.BASE_URL : ONLINE_BASE_URL;
   const qrCodeUrl = `${baseUrl}assets/images/branding/qrcode.png`;
 
   const containerBg = isDark ? 'bg-zinc-800/50' : 'bg-white/50';

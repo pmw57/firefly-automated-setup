@@ -1,5 +1,5 @@
-
 import { useCallback } from 'react';
+import { ONLINE_BASE_URL } from '../data/constants';
 
 // Define the time segments for the sounds within the audio sprite.
 const SOUND_SPRITE = {
@@ -24,9 +24,9 @@ const loadAudio = async () => {
             audioContext = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
         }
         
-        // Use a relative path for the sound file. The browser will automatically
-        // resolve this against the current base URL, which works for dev, preview, and prod.
-        const soundUrl = 'assets/sounds/rocker-switch.mp3';
+        const isPreview = typeof import.meta.env === 'undefined';
+        const baseUrl = !isPreview ? (import.meta.env.BASE_URL || '/') : ONLINE_BASE_URL;
+        const soundUrl = `${baseUrl}assets/sounds/rocker-switch.mp3`;
         
         const response = await fetch(soundUrl);
         const arrayBuffer = await response.arrayBuffer();

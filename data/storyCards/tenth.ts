@@ -22,14 +22,6 @@ export const TENTH_STORIES: StoryCardDef[] = [
           title: "Friends in Low Places",
           content: ["Starting with the last player to choose a Leader, each player chooses 1 Job from 3 different Contacts. Mr. Universe cannot be chosen for these starting Jobs."]
         }
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'prime',
-        rule: {
-          title: "Priming the Pump Override",
-          content: ["Reveal the top 6 cards of each Supply deck. Place the revealed cards in their discard piles."]
-        }
       }
     ]),
   },

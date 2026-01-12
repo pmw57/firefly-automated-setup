@@ -202,9 +202,10 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setNavMode', mode: 'flying_solo' },
       {
         type: 'addSpecialRule',
-        category: 'prime',
+        category: 'prime_panel',
         rule: {
-          title: 'Flying Solo',
+          badge: 'Setup Rule',
+          title: 'Flying Solo: Post-Priming Purchase',
           content: ["After priming, you may spend up to $1000 to buy up to 4 Supply Cards that were revealed. Discounts from special abilities apply. Replace any purchased cards."]
         }
       }
@@ -335,13 +336,15 @@ export const SETUP_CARDS: SetupCardDef[] = [
       }
     ]),
     steps: [
-      { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}`, page: 4, manual: 'Core' },
-      { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}`, page: 3, manual: 'Core' },
-      { id: STEP_IDS.C2, title: `3. ${BASE_TITLES.C2}`, page: 3, manual: 'Core' },
-      { id: STEP_IDS.C3, title: `4. ${BASE_TITLES.C3}`, page: 3, manual: 'Core' },
-      { id: STEP_IDS.C5, title: `5. ${BASE_TITLES.C5}`, page: 4, manual: 'Core' },
-      { id: STEP_IDS.C6, title: `6. ${BASE_TITLES.C6}`, page: 4, manual: 'Core' },
-      { id: STEP_IDS.C_PRIME, title: `7. ${BASE_TITLES.C_PRIME}`, page: 4, manual: 'Core' }
+      // Although Flying Solo merges with another Setup Card, its steps still require
+      // titles to conform to the SetupCardStep type and provide fallbacks.
+      { id: STEP_IDS.C4, title: BASE_TITLES.C4 },
+      { id: STEP_IDS.C1, title: BASE_TITLES.C1 },
+      { id: STEP_IDS.C2, title: BASE_TITLES.C2 },
+      { id: STEP_IDS.C3, title: BASE_TITLES.C3 },
+      { id: STEP_IDS.C5, title: BASE_TITLES.C5 },
+      { id: STEP_IDS.C6, title: BASE_TITLES.C6 },
+      { id: STEP_IDS.C_PRIME, title: BASE_TITLES.C_PRIME },
     ],
   }
 ];

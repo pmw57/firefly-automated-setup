@@ -21,6 +21,7 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   const allRules = getResolvedRules(gameState);
   const specialRules: SpecialRule[] = [];
   const primePanels: SpecialRule[] = [];
+  const disablePriming = hasRuleFlag(allRules, 'disablePriming');
 
   // Process generic special rules for this step category
   allRules.forEach(rule => {
@@ -59,5 +60,5 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   let finalCount = baseDiscard * effectiveMultiplier;
   if (primeModifier?.add) finalCount += primeModifier.add;
 
-  return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, specialRules, primePanels, hasStartWithAlertCard };
+  return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, specialRules, primePanels, hasStartWithAlertCard, disablePriming };
 };

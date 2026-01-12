@@ -69,14 +69,6 @@ export const STORIES_M_O: StoryCardDef[] = [
       { type: 'addFlag', flag: 'startWithAlertCard' },
       {
         type: 'addSpecialRule',
-        category: 'prime',
-        rule: {
-          title: 'Alliance Presence',
-          content: ["Start with an Alliance Alert card in play."]
-        }
-      },
-      {
-        type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'First Contact',
@@ -244,18 +236,18 @@ export const STORIES_M_O: StoryCardDef[] = [
     goals: [
       {
         title: "Easy",
-        description: "Use 26 Disgruntled tokens as the game timer."
+        description: "Use 25 Disgruntled tokens as the game timer."
       },
       {
         title: "Medium",
         description: "Use 21 Disgruntled tokens as the game timer."
       },
       {
-        title: "Hard",
+        title: "Pro",
         description: "Use 17 Disgruntled tokens as the game timer."
       }
     ],
-    setupDescription: "Follow the 'Custom Mudder Deck' override.",
+    setupDescription: "Pull all Mudders from Supply decks. Shuffle a set # of Mudders and Foremen together. Place them face up. if the Foreman is on top after a Shuffle, reshuffle. 2/3/4 Players = 7/10/13 Goal Mudders and the Foreman. Easy/Medium/Pro: Use 25/21/17 Disgruntle tokens as a game timer.",
     sourceUrl: "https://boardgamegeek.com/filepage/294565/new-heroes-of-canton-co-op-story-card",
     requiredExpansion: "community",
     tags: ['community', 'against_the_black', 'coop'],

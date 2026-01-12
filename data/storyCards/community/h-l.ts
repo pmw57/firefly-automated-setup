@@ -63,6 +63,7 @@ export const STORIES_H_L: StoryCardDef[] = [
     rules: createStoryRules("How It All Started", [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Scraping By" },
       { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, description: "Scraping By" },
+      { type: 'addFlag', flag: 'disablePriming' },
       {
         type: 'addSpecialRule',
         category: 'resources',
@@ -72,6 +73,15 @@ export const STORIES_H_L: StoryCardDef[] = [
             "Start with $500, 2 Fuel, and 2 Parts. ",
             "Nandi pays half price (rounded up) when hiring crew."
           ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime_panel',
+        rule: {
+          title: 'Priming Skipped',
+          badge: 'Story Override',
+          content: ["The 'Prime the Pump' step is skipped for this story. Do not discard any cards from the Supply Decks."]
         }
       }
     ]),
