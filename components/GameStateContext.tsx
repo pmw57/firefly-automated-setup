@@ -117,11 +117,12 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode, initialSta
   const setSetupMode = useCallback((mode: 'quick' | 'detailed') => dispatch({ type: ActionType.SET_SETUP_MODE, payload: mode }), [dispatch]);
   const setExpansionsBundle = useCallback((bundle: ExpansionBundle) => dispatch({ type: ActionType.SET_EXPANSIONS_BUNDLE, payload: bundle }), [dispatch]);
   const setMissionDossierSubstep = useCallback((step: number) => dispatch({ type: ActionType.SET_MISSION_DOSSIER_SUBSTEP, payload: step }), [dispatch]);
+  const riversRunConfirmSetup = useCallback(() => dispatch({ type: ActionType.RIVERS_RUN_CONFIRM_SETUP }), [dispatch]);
   const initializeOptionalRules = useCallback(() => dispatch({ type: ActionType.INITIALIZE_OPTIONAL_RULES }), [dispatch]);
 
   // FIX: Create separate value objects for each context.
   const gameStateValue = { state, isStateInitialized };
-  const gameDispatchValue = { dispatch, resetGameState, setPlayerCount, setPlayerName, toggleExpansion, setCampaignMode, setCampaignStories, setSetupCard, toggleFlyingSolo, setStoryCard, setGoal, toggleChallengeOption, setDisgruntledDie, toggleShipUpgrades, toggleConflictResolution, toggleHighVolumeSupply, setFinalStartingCredits, toggleSoloOption, toggleTimerMode, toggleUnpredictableToken, acknowledgeOverrides, visitOverriddenStep, setDraftConfig, setSetupMode, setExpansionsBundle, setMissionDossierSubstep, initializeOptionalRules };
+  const gameDispatchValue = { dispatch, resetGameState, setPlayerCount, setPlayerName, toggleExpansion, setCampaignMode, setCampaignStories, setSetupCard, toggleFlyingSolo, setStoryCard, setGoal, toggleChallengeOption, setDisgruntledDie, toggleShipUpgrades, toggleConflictResolution, toggleHighVolumeSupply, setFinalStartingCredits, toggleSoloOption, toggleTimerMode, toggleUnpredictableToken, acknowledgeOverrides, visitOverriddenStep, setDraftConfig, setSetupMode, setExpansionsBundle, setMissionDossierSubstep, riversRunConfirmSetup, initializeOptionalRules };
   const wizardStateValue = { currentStepIndex, setCurrentStepIndex, isWizardInitialized };
   
   // FIX: Wrap children in all three context providers.

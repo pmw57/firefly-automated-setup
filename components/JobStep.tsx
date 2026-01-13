@@ -112,6 +112,9 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   const isSharedHand = jobDrawMode === 'shared_hand';
   const showNoJobsMessage = (!showStandardContactList && (jobDrawMode === 'no_jobs')) || showNoJobsMessageFromData;
+  
+  const hasSpecificNoJobsMessage = sortedInfoBlocks.some(block => block.flags?.includes('isNoJobsMessage'));
+  const showGenericNoJobsMessage = showNoJobsMessage && !primeContactsInstruction && !hasSpecificNoJobsMessage;
 
   const StandardContentBlock = (
     <>
@@ -151,7 +154,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
           </div>
           </div>
       )}
-      {showNoJobsMessage && !primeContactsInstruction && (
+      {showGenericNoJobsMessage && (
         <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-6 text-center", textColor)}>
           <p className="font-semibold">No Starting Jobs are dealt for this setup.</p>
         </div>

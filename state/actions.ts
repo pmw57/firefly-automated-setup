@@ -31,6 +31,7 @@ export enum ActionType {
   SET_SETUP_MODE = 'SET_SETUP_MODE',
   SET_EXPANSIONS_BUNDLE = 'SET_EXPANSIONS_BUNDLE',
   SET_MISSION_DOSSIER_SUBSTEP = 'SET_MISSION_DOSSIER_SUBSTEP',
+  RIVERS_RUN_CONFIRM_SETUP = 'RIVERS_RUN_CONFIRM_SETUP',
   INITIALIZE_OPTIONAL_RULES = 'INITIALIZE_OPTIONAL_RULES',
 }
 
@@ -67,4 +68,5 @@ export type Action =
   | { type: ActionType.SET_SETUP_MODE; payload: SetupMode }
   | { type: ActionType.SET_EXPANSIONS_BUNDLE; payload: ExpansionBundle }
   | { type: ActionType.SET_MISSION_DOSSIER_SUBSTEP; payload: number }
+  | { type: ActionType.RIVERS_RUN_CONFIRM_SETUP }
   | { type: ActionType.INITIALIZE_OPTIONAL_RULES };

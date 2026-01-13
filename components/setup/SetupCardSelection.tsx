@@ -4,11 +4,14 @@ import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
 // FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
 import { useGameDispatch } from '../../hooks/useGameDispatch';
-import { getAvailableSetupCards, getSetupCardById } from '../../utils/selectors/story';
+import { getActiveStoryCard, getAvailableSetupCards, getSetupCardById } from '../../utils/selectors/story';
 import { FlyingSoloBanner } from './FlyingSoloBanner';
 import { SetupCardList } from './SetupCardList';
 import { getSetupCardSelectionInfo } from '../../utils/selectors/ui';
 import { calculateSetupFlow } from '../../utils/flow';
+import { OverrideNotificationBlock } from '../SpecialRuleBlock';
+import { getResolvedRules } from '../../utils/selectors/rules';
+import { AddSpecialRule } from '../../types';
 
 interface SetupCardSelectionProps {
 }
@@ -17,9 +20,19 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
   // FIX: Destructure only the relevant state properties from `useGameState`.
   const { state: gameState } = useGameState();
   // FIX: Get the dispatch function and action creators from `useGameDispatch`.
-  const { setSetupCard, toggleFlyingSolo } = useGameDispatch();
+  const { setSetupCard, toggleFlyingSolo, riversRunConfirmSetup } = useGameDispatch();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  
+  const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
+  const isRiversRun = activeStoryCard?.title === "River's Run 1v1";
+
+  const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
+  const setupSelectionRules = useMemo(() => {
+    return allRules
+      .filter((r): r is AddSpecialRule => r.type === 'addSpecialRule' && r.category === 'setup_selection' && r.rule.title !== "River's Run 1v1: Player 2 Action")
+      .map(r => ({ ...r.rule, source: r.source as 'story' | 'setupCard' | 'expansion' | 'warning' | 'info' }));
+  }, [allRules]);
   
   const totalParts = useMemo(() => calculateSetupFlow(gameState).filter(s => s.type === 'setup').length, [gameState]);
 
@@ -53,6 +66,13 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
       handleSetupCardSelect(firstCard.id, firstCard.label);
     }
   }, [availableSetups, isFlyingSoloActive, gameState.setupCardId, gameState.secondarySetupId, handleSetupCardSelect]);
+  
+  // Effect for River's Run 1v1 confirmation
+  useEffect(() => {
+    if (activeStoryCard?.title === "River's Run 1v1") {
+      riversRunConfirmSetup();
+    }
+  }, [activeStoryCard, riversRunConfirmSetup]);
 
 
   const containerBg = isDark ? 'bg-black/60 backdrop-blur-sm' : 'bg-[#faf8ef]/80 backdrop-blur-sm';
@@ -66,6 +86,22 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
            <h2 className={`text-2xl font-bold font-western ${headerColor}`}>Select Setup Card</h2>
            <span className={`text-xs font-bold ${badgeClass} border px-2 py-1 rounded`}>Part 2 of {totalParts}</span>
         </div>
+        
+        {isRiversRun && (
+            <div className={`p-4 rounded-lg border shadow-inner mb-6 ${isDark ? 'bg-zinc-800/50 border-zinc-700' : 'bg-amber-50 border-amber-200'}`}>
+                <p className={`text-center font-semibold ${isDark ? 'text-amber-200' : 'text-amber-800'}`}>
+                    Player 2 (the Bounty Hunter) must now choose the Setup Card for this game.
+                </p>
+            </div>
+        )}
+
+        {setupSelectionRules.length > 0 && (
+          <div className="mb-6 space-y-4">
+            {setupSelectionRules.map((rule, i) => (
+              <OverrideNotificationBlock key={i} {...rule} />
+            ))}
+          </div>
+        )}
 
        <div className="mb-8 relative">
         <FlyingSoloBanner 
