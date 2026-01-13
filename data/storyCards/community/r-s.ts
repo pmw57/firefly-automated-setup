@@ -276,34 +276,4 @@ export const STORIES_R_S: StoryCardDef[] = [
       }
     ])
   },
-  {
-    title: "Slaying The Dragon",
-    playerCount: 2,
-    isCoOp: true,
-    intro: "Adelai Niska has been lord of the underworld for as long as anyone can remember. Shu-ki, the tong boss of Gonghe, has long suffered under Niska's yoke. After being publicly shamed by Niska at a meeting of crime-bosses, an enraged Shu-ki has decided to bring Niska down. He has a plan - Operation Dragon - but the job is so daunting that it requires two crews to have any hope of success. Can two Firefly captains bring down the most feared criminal boss in the 'Verse?",
-    requiredExpansion: "community",
-    setupDescription: "Niska is unavailable. 'Prime the Pump' discards 2 additional cards.",
-    tags: ['community', 'faction_war', 'against_the_black', 'coop'],
-    rules: createStoryRules("Slaying The Dragon", [
-      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
-      { type: 'modifyPrime', modifier: { add: 2 } },
-      { 
-        type: 'addSpecialRule', 
-        category: 'prime',
-        rule: {
-          title: 'Priming Bonus',
-          content: ["Shu-ki is greasing the rails: Turn up 2 additional cards from each deck when Priming the Pump."]
-        }
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'goal',
-        rule: {
-          title: 'Co-Op & Countdown',
-          content: ["2-Player Co-Op: Both players win or lose together. Countdown: Stack 16 Disgruntled Tokens. At the start of each player's turn, discard one token. The game ends when the last token is discarded."]
-        }
-      }
-    ]),
-    sourceUrl: "https://boardgamegeek.com/thread/1049020/article/13686225#13686225"
-  },
 ];
