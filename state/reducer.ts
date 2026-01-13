@@ -241,6 +241,7 @@ export const getDefaultGameState = (): GameState => {
         },
         showHiddenContent: false,
         missionDossierSubStep: 1,
+        riversRun_setupConfirmed: false,
     };
 };
 
@@ -409,6 +410,7 @@ export function gameReducer(state: GameState, action: Action): GameState {
         acknowledgedOverrides: [], 
         visitedStepOverrides: [],
         missionDossierSubStep: 1,
+        riversRun_setupConfirmed: false,
       };
       break;
     }
@@ -535,6 +537,12 @@ export function gameReducer(state: GameState, action: Action): GameState {
     case ActionType.SET_MISSION_DOSSIER_SUBSTEP:
         nextState = { ...state, missionDossierSubStep: action.payload };
         break;
+
+    case ActionType.RIVERS_RUN_CONFIRM_SETUP:
+        return {
+            ...state,
+            riversRun_setupConfirmed: true,
+        };
 
     case ActionType.INITIALIZE_OPTIONAL_RULES:
       return {

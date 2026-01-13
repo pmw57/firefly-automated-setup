@@ -33,10 +33,11 @@ export const STORIES_R_S: StoryCardDef[] = [
     title: "River's Run 1v1",
     intro: "The Alliance had her in that institution for a purpose, whatever it was, and they will want her back.",
     isPvP: true,
+    playerCount: 2,
     additionalRequirements: [
       "blue"
     ],
-    setupDescription: "Follow the 'Asymmetric Setup' and 'Bounty Deck Setup' overrides.",
+    setupDescription: "Roll for player position. Player 1 will be the Captain of Serenity with Malcolm, Zoë, Wash, Kaylee, Jayne, Inara, Book, Simon, and River. Serenity starts with the Xùnsù Whisper X1 from Meridian, Expanded Crew Quarters from Osiris, and an EVA Suit from Space Bazaar for River. Player 2 is a Bounty Hunter and chooses the Setup card. No Starting Jobs. Remove all Serenity's crew from the Bounty deck, excluding River Tam. The Bounty deck is placed face up and all bounties are active.",
     sourceUrl: "https://boardgamegeek.com/thread/3454248/rivers-run-1v1",
     requiredExpansion: "community",
     tags: ['community', 'pvp'],
@@ -44,19 +45,33 @@ export const STORIES_R_S: StoryCardDef[] = [
       { type: 'setJobMode', mode: 'no_jobs' },
       {
         type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: "A Different Kind of Work",
+          content: [{ type: 'paragraph', content: ["No Starting Jobs."] }]
+        }
+      },
+      {
+        type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Asymmetric Setup',
-          content: ["Player 1 (Serenity): Leader: Malcolm, Ship: Serenity. Crew: Zoë, Wash, Kaylee, Jayne, Inara, Book, Simon, and River. Upgrades: Xùnsù Whisper X1 (Meridian), Expanded Crew Quarters (Osiris), EVA Suit (Space Bazaar for River). Player 2 (Bounty Hunter): Choose any Setup Card to determine starting conditions."]
+          content: ["Player 1 (Serenity): Leader: Malcolm, Ship: Serenity. Crew: Zoë, Wash, Kaylee, Jayne, Inara, Book, Simon, and River. Upgrades: Xùnsù Whisper X1 (Meridian), Expanded Crew Quarters (Osiris), EVA Suit (Space Bazaar for River). Player 2 is a Bounty Hunter and chooses the Setup card."]
         }
       },
       {
         type: 'addSpecialRule',
         category: 'prime_panel',
         rule: {
-          badge: 'Story Setup',
           title: 'Bounty Deck Setup',
-          content: ["Remove all of Serenity's crew from the Bounty deck, excluding River Tam. The Bounty deck is placed face up and all bounties are active."]
+          badge: 'Story Setup',
+          content: [
+            { type: 'list', items: [
+              ['Remove all Serenity\'s crew from the Bounty deck, ', { type: 'strong', content: 'excluding River Tam' }, '.'],
+              ['Place the Bounty deck ', { type: 'strong', content: 'face up' }, '.'],
+              ['All bounties are ', { type: 'strong', content: 'active' }, '.']
+            ]}
+          ]
         }
       }
     ])

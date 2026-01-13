@@ -77,4 +77,5 @@ export interface GameState {
   };
   showHiddenContent: boolean;
   missionDossierSubStep: number;
+  riversRun_setupConfirmed: boolean;
 }

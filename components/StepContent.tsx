@@ -21,6 +21,7 @@ export interface StepComponentProps {
   // New props for MissionDossierStep
   openOverrideModal?: (onContinue: () => void) => void;
   hasUnacknowledgedPastOverrides?: boolean;
+  isNextDisabled?: boolean;
 }
 
 const StepLoading: React.FC = () => (
@@ -81,7 +82,7 @@ const STORY_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
     RuiningItJobsStep,
 };
 
-export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, openOverrideModal, hasUnacknowledgedPastOverrides, onJump }: StepComponentProps): React.ReactElement => {
+export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, openOverrideModal, hasUnacknowledgedPastOverrides, onJump, isNextDisabled }: StepComponentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -244,7 +245,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
             <Button onClick={onPrev} variant="secondary" disabled={isNavigating}>
               ← Back
             </Button>
-            <Button onClick={onNext} disabled={isNavigating} className="px-10">
+            <Button onClick={onNext} disabled={isNavigating || isNextDisabled} className="px-10">
               Next Step →
             </Button>
           </div>
@@ -264,7 +265,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
             </Button>
             <Button 
               onClick={onNext} 
-              disabled={isNavigating}
+              disabled={isNavigating || isNextDisabled}
               className="flex-[2] text-xs uppercase tracking-[0.1em] !py-3"
             >
               Next Step →

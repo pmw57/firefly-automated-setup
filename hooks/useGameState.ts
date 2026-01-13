@@ -46,6 +46,7 @@ export interface GameDispatchContextType {
   setSetupMode: (mode: 'quick' | 'detailed') => void;
   setExpansionsBundle: (bundle: ExpansionBundle) => void;
   setMissionDossierSubstep: (step: number) => void;
+  riversRunConfirmSetup: () => void;
   initializeOptionalRules: () => void;
 }
 export const GameDispatchContext = createContext<GameDispatchContextType | undefined>(undefined);

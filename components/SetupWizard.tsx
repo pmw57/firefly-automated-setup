@@ -54,6 +54,13 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   const isNextDisabled = useMemo(() => {
       if (!currentStep || isNavigating) return true;
       if (currentStep.type === 'final' || currentStepIndex >= flow.length - 1) return true;
+      
+      // Special logic for River's Run
+      if (currentStep.id === STEP_IDS.C3 && getActiveStoryCard(gameState)?.title === "River's Run 1v1") {
+        // Disable ONLY IF the draft has been rolled AND the setup hasn't been confirmed yet.
+        return !!gameState.draft.state && !gameState.riversRun_setupConfirmed;
+      }
+      
       if (currentStep.id === STEP_IDS.SETUP_CARD_SELECTION) {
           return getSetupCardSelectionInfo(gameState).isNextDisabled;
       }
@@ -172,6 +179,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
           openOverrideModal={openOverrideModal}
           hasUnacknowledgedPastOverrides={hasUnacknowledgedPastOverrides}
           onJump={handleJump}
+          isNextDisabled={isNextDisabled}
         />
       )}
       
