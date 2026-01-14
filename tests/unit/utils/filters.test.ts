@@ -22,7 +22,7 @@ describe('utils/filters', () => {
     const mockMultiReqStory: StoryCardDef = { title: 'Mock Multi Req Story', intro: '', requiredExpansion: 'blue', additionalRequirements: ['kalidasa'] };
     
     // Real cards for specific logic tests
-    const slayStory = getStory("Slaying The Dragon");
+    const riverStory = getStory("River's Run 1v1");
     const greatRecessionStory = getStory("The Great Recession");
     const awfulLonelyStory = getStory("Awful Lonely In The Big Black");
     const huntForArcStory = getStory("Hunt For The Arc");
@@ -57,12 +57,12 @@ describe('utils/filters', () => {
       expect(isStoryCompatible(mockMultiReqStory, state)).toBe(true);
     });
     
-    it.concurrent('returns true for "Slaying the Dragon" only with 2 players', () => {
-      // "Slaying The Dragon" requires the 'community' expansion, which is off by default.
+    it.concurrent('returns true for "River\'s Run 1v1" only with 2 players', () => {
+      // "River's Run 1v1" requires the 'community' expansion, which is off by default.
       const stateWithCommunity = { ...baseGameState, expansions: { ...baseGameState.expansions, community: true } };
-      expect(isStoryCompatible(slayStory, { ...stateWithCommunity, playerCount: 2 })).toBe(true);
-      expect(isStoryCompatible(slayStory, { ...stateWithCommunity, playerCount: 3 })).toBe(false);
-      expect(isStoryCompatible(slayStory, { ...stateWithCommunity, playerCount: 1 })).toBe(false);
+      expect(isStoryCompatible(riverStory, { ...stateWithCommunity, playerCount: 2 })).toBe(true);
+      expect(isStoryCompatible(riverStory, { ...stateWithCommunity, playerCount: 3 })).toBe(false);
+      expect(isStoryCompatible(riverStory, { ...stateWithCommunity, playerCount: 1 })).toBe(false);
     });
     
     // Solo Modes
