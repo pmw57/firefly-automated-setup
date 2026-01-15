@@ -14,8 +14,6 @@ import { SpecialRule, StructuredContent } from '../types';
 import { getResolvedRules, hasRuleFlag } from '../utils/selectors/rules';
 import { PageReference } from './PageReference';
 import { StructuredContentRenderer } from './StructuredContentRenderer';
-import { useSetupFlow } from '../hooks/useSetupFlow';
-import { STEP_IDS } from '../data/ids';
 
 // A recursive renderer for StructuredContent
 const renderStructuredContent = (content: StructuredContent): React.ReactNode => {
@@ -330,7 +328,7 @@ const CustomDraftPanel: React.FC<CustomDraftPanelProps> = ({ rule, stepBadgeClas
     );
 };
 
-export const DraftStep = ({ step, onJump }: StepComponentProps): React.ReactElement => {
+export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
   const { setDraftConfig } = useGameDispatch();
   const { state: draftState, isManual: isManualEntry } = gameState.draft;
