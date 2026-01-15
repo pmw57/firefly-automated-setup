@@ -98,7 +98,7 @@ export interface StoryCardDef {
   isSolo?: boolean;
   isCoOp?: boolean;
   isPvP?: boolean;
-  playerCount?: number;
+  playerCount?: number | number[];
   maxPlayerCount?: number;
   soloTimerAdjustment?: string;
   challengeOptions?: ChallengeOption[];

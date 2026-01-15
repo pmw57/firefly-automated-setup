@@ -21,9 +21,16 @@ export const isStoryCompatible = (card: StoryCardDef, state: GameState): boolean
     }
 
     // Rule 3: Specific story card rules based on player count
-    if (card.playerCount && card.playerCount !== state.playerCount) {
-        return false;
+    if (card.playerCount) {
+        if (Array.isArray(card.playerCount)) {
+            if (!card.playerCount.includes(state.playerCount)) {
+                return false;
+            }
+        } else if (card.playerCount !== state.playerCount) {
+            return false;
+        }
     }
+    
     if (card.maxPlayerCount && state.playerCount > card.maxPlayerCount) {
         return false;
     }

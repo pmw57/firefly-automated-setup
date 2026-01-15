@@ -149,9 +149,19 @@ export const getStoryIncompatibilityReason = (card: StoryCardDef, state: GameSta
         }
     }
 
-    if (card.playerCount && card.playerCount !== state.playerCount) {
-        return { text: `Requires exactly ${card.playerCount} players.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
+    if (card.playerCount) {
+        const isCompatible = Array.isArray(card.playerCount) 
+            ? card.playerCount.includes(state.playerCount)
+            : card.playerCount === state.playerCount;
+            
+        if (!isCompatible) {
+            const reqText = Array.isArray(card.playerCount) 
+                ? card.playerCount.join(', ') 
+                : card.playerCount;
+            return { text: `Requires specific player counts: ${reqText}.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
+        }
     }
+
     if (card.maxPlayerCount && state.playerCount > card.maxPlayerCount) {
         return { text: `Requires ${card.maxPlayerCount} or fewer players.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
     }
