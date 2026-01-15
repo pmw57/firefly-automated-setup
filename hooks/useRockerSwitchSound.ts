@@ -26,7 +26,7 @@ const loadAudio = async () => {
         
         const isPreview = typeof import.meta.env === 'undefined';
         const baseUrl = !isPreview ? (import.meta.env.BASE_URL || '/') : ONLINE_BASE_URL;
-        const soundUrl = `${baseUrl}assets/sounds/rocker-switch.mp3`;
+        const soundUrl = `${baseUrl}sounds/rocker-switch.mp3`;
         
         const response = await fetch(soundUrl);
         const arrayBuffer = await response.arrayBuffer();

@@ -66,7 +66,7 @@ export const QrModal: React.FC<QrModalProps> = ({ isOpen, onClose }) => {
 
   const isPreview = typeof import.meta.env === 'undefined';
   const baseUrl = !isPreview ? import.meta.env.BASE_URL : ONLINE_BASE_URL;
-  const qrCodeUrl = `${baseUrl}assets/images/branding/qrcode.png`;
+  const qrCodeUrl = `${baseUrl}images/branding/qrcode.png`;
 
   // Close on Escape key press
   useEffect(() => {
