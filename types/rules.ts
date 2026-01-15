@@ -121,6 +121,11 @@ export interface AddBoardComponentRule extends BaseRule {
   title: string;
 }
 
+export interface SetPlayerBadgesRule extends BaseRule {
+    type: 'setPlayerBadges';
+    badges: Record<number, string>; // Player Index -> Badge Text
+}
+
 export type SetupRule = 
   | SetJobModeRule
   | SetJobContactsRule
@@ -140,4 +145,5 @@ export type SetupRule =
   | ModifyResourceRule
   | SetComponentRule
   | SetJobStepContentRule
-  | AddBoardComponentRule;
+  | AddBoardComponentRule
+  | SetPlayerBadgesRule;

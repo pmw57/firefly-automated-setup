@@ -132,6 +132,7 @@ export interface DraftRuleDetails {
   excludeNewCanaanPlacement?: boolean;
   isWantedLeaderMode?: boolean;
   havenPlacementRules?: SpecialRule | null;
+  playerBadges: Record<number, string>;
 }
 
 export interface HeaderDetails {
