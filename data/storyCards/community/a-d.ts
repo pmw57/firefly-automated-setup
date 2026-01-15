@@ -43,7 +43,7 @@ export const STORIES_A_D: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: 'Payment Required',
-          content: ["Use your Starting Capitol to pay for your ship, fuel, and parts."],
+          content: ["Pay for your ship, fuel, and parts from your Starting Capitol."],
           flags: ['showInResourceList', 'hideFromTop']
         }
       },
@@ -100,6 +100,7 @@ export const STORIES_A_D: StoryCardDef[] = [
   {
     title: "The Battle of Serenity Valley (PvP)",
     isPvP: true,
+    playerCount: [2, 4, 6],
     intro: "Serenity Valley was a valley located on Hera; it was mainly sparse and rocky with little vegetation. The valley was famous for being the location of the Battle of Serenity Valley—one of the bloodiest battles of the entire Unification War. Due to Hera's strategic positioning, taking the planet was a key to winning the war, and Serenity Valley became the turning point of the entire conflict.",
     setupDescription: "Follow the 'War Materiel Setup' override instructions.",
     requiredExpansion: "community",
