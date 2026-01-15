@@ -7,7 +7,8 @@ import {
     SetShipPlacementRule,
     SetDraftModeRule,
     SetLeaderSetupRule,
-    ThemeColor
+    ThemeColor,
+    SetPlayerBadgesRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CHALLENGE_IDS } from '../data/ids';
@@ -152,5 +153,23 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
 
     if (allianceSpaceOffLimits) specialRules.push({ source: 'warning', title: 'Restricted Airspace', content: [{ type: 'strong', content: `Alliance Space is Off Limits` }, ` until Goal 3.`] });
     
-    return { specialRules, draftPanels, placementPanelExtras, isHavenDraft: resolvedHavenDraft, isBrowncoatDraft, specialStartSector, placementRegionRestriction, conflictMessage, startOutsideAllianceSpace, excludeNewCanaanPlacement, isWantedLeaderMode, havenPlacementRules: resolvedHavenPlacementRules };
+    // Process Player Badges
+    const badgeRule = allRules.find(r => r.type === 'setPlayerBadges') as SetPlayerBadgesRule | undefined;
+    const playerBadges: Record<number, string> = badgeRule ? badgeRule.badges : {};
+    
+    return { 
+        specialRules, 
+        draftPanels, 
+        placementPanelExtras, 
+        isHavenDraft: resolvedHavenDraft, 
+        isBrowncoatDraft, 
+        specialStartSector, 
+        placementRegionRestriction, 
+        conflictMessage, 
+        startOutsideAllianceSpace, 
+        excludeNewCanaanPlacement, 
+        isWantedLeaderMode, 
+        havenPlacementRules: resolvedHavenPlacementRules,
+        playerBadges 
+    };
 };

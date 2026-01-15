@@ -43,6 +43,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     tags: ['community', 'pvp'],
     rules: createStoryRules("River's Run 1v1", [
       { type: 'setJobMode', mode: 'no_jobs' },
+      { type: 'setPlayerBadges', badges: { 0: 'Assigned Serenity', 1: 'Assigned Bounty Hunter' } },
       {
         type: 'addSpecialRule',
         category: 'jobs',
@@ -57,6 +58,36 @@ export const STORIES_R_S: StoryCardDef[] = [
         rule: {
           title: 'Asymmetric Setup',
           content: ["Player 1 (Serenity): Leader: Malcolm, Ship: Serenity. Crew: Zoë, Wash, Kaylee, Jayne, Inara, Book, Simon, and River. Upgrades: Xùnsù Whisper X1 (Meridian), Expanded Crew Quarters (Osiris), EVA Suit (Space Bazaar for River). Player 2 is a Bounty Hunter and chooses the Setup card."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_panel',
+        rule: {
+            title: 'River\'s Run: Asymmetric Draft',
+            badge: 'Story Setup',
+            content: [
+                { type: 'paragraph', content: ["This scenario has unique setup roles:"] },
+                { 
+                    type: 'list', 
+                    items: [
+                        [{ type: 'strong', content: 'Player 1 (Serenity):' }, " Is assigned Malcolm Reynolds, the Serenity ship (with Expanded Crew Quarters), the full original crew, and several upgrades."],
+                        [{ type: 'strong', content: 'Player 2 (Bounty Hunter):' }, " Chooses their own Ship & Leader."]
+                    ] 
+                }
+            ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_panel',
+        rule: {
+            title: 'River\'s Run: Action Required',
+            badge: 'Important',
+            content: [
+                { type: 'paragraph', content: ["Player 2 (the Bounty Hunter) must ", { type: 'strong', content: "choose the Setup Card for this game" }, "."] },
+                { type: 'paragraph', content: ["If the 'Next' button is disabled, verify that you have selected a Setup Card in the previous step."] }
+            ]
         }
       },
       {

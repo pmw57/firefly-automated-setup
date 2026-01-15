@@ -9,7 +9,7 @@ import { useGameState } from '../hooks/useGameState';
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
-import { getCampaignNotesForStep, getActiveStoryCard } from '../utils/selectors/story';
+import { getCampaignNotesForStep } from '../utils/selectors/story';
 import { SpecialRule, StructuredContent } from '../types';
 import { getResolvedRules, hasRuleFlag } from '../utils/selectors/rules';
 import { PageReference } from './PageReference';
@@ -42,63 +42,6 @@ const renderStructuredContent = (content: StructuredContent): React.ReactNode =>
   });
 };
 
-const RiversRunDraftInfoPanel = () => {
-    const { theme } = useTheme();
-    const isDark = theme === 'dark';
-    
-    const s = {
-        bg: isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm',
-        border: isDark ? 'border-zinc-700' : 'border-gray-200',
-        headerColor: isDark ? 'text-amber-300' : 'text-amber-800',
-        textColor: isDark ? 'text-gray-300' : 'text-gray-700'
-    };
-
-    return (
-        <div className={cls(s.bg, s.border, "p-4 md:p-6 rounded-lg border shadow-sm transition-colors duration-300")}>
-            <h4 className={`font-bold text-lg mb-3 ${s.headerColor}`}>River's Run: Asymmetric Draft</h4>
-            <div className={`text-sm space-y-3 ${s.textColor}`}>
-                <p>This scenario has unique setup roles:</p>
-                <ul className="list-disc list-inside space-y-2 pl-2">
-                    <li>
-                        <strong>Player 1 (Serenity):</strong> Is assigned Malcolm Reynolds, the Serenity ship (with Expanded Crew Quarters), the full original crew, and several upgrades.
-                    </li>
-                    <li>
-                        <strong>Player 2 (Bounty Hunter):</strong> Chooses their own Ship & Leader.
-                    </li>
-                </ul>
-            </div>
-        </div>
-    );
-};
-
-const RiversRunSetupActionPanel = ({ onJumpToSetup }: { onJumpToSetup: () => void }) => {
-    const { theme } = useTheme();
-    const isDark = theme === 'dark';
-    
-    const s = {
-        bg: isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm',
-        border: isDark ? 'border-zinc-700' : 'border-gray-200',
-        headerColor: isDark ? 'text-amber-300' : 'text-amber-800',
-        textColor: isDark ? 'text-gray-300' : 'text-gray-700'
-    };
-
-    return (
-        <div className={cls(s.bg, s.border, "p-4 md:p-6 rounded-lg border shadow-sm transition-colors duration-300")}>
-            <h4 className={`font-bold text-lg mb-3 ${s.headerColor}`}>River's Run: Action Required</h4>
-            <div className={`text-sm space-y-3 ${s.textColor}`}>
-                <p>Player 2 (the Bounty Hunter) must <strong className="text-yellow-500">choose the Setup Card for this game</strong>.</p>
-                <div className="mt-4 flex items-center gap-4 p-3 bg-black/10 dark:bg-black/20 rounded-lg">
-                    <p className="flex-1 text-xs">Click here to select the Setup Card. The 'Next Step' button is disabled until you do.</p>
-                    <Button onClick={onJumpToSetup} variant="secondary" className="!py-2 !px-4 text-xs">
-                        ← Go to Setup Step
-                    </Button>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-
 // Sub-component for Draft Order
 const DraftOrderPanel = ({ 
     draftOrder, 
@@ -107,7 +50,7 @@ const DraftOrderPanel = ({
     isBrowncoatDraft,
     isWantedLeaderMode,
     stepBadgeClass,
-    isRiversRun,
+    playerBadges,
 }: { 
     draftOrder: string[]; 
     isSolo: boolean; 
@@ -115,7 +58,7 @@ const DraftOrderPanel = ({
     isBrowncoatDraft: boolean;
     isWantedLeaderMode?: boolean;
     stepBadgeClass: string; 
-    isRiversRun?: boolean;
+    playerBadges: Record<number, string>;
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -128,9 +71,7 @@ const DraftOrderPanel = ({
     const itemText = isDark ? 'text-gray-200' : 'text-gray-800';
     const restrictionTextColor = isDark ? 'text-yellow-400' : 'text-yellow-700';
 
-    const description = isRiversRun
-        ? "Player 1 (winner) is assigned Serenity & its crew. Player 2 chooses their own Ship & Leader."
-        : isSolo
+    const description = isSolo
         ? (isHavenDraft ? "Choose a Leader & Ship." : "Choose a Leader & Ship.")
         : isHavenDraft
         ? "The player with the highest die roll chooses a Leader & Ship first. Pass to Left."
@@ -149,24 +90,26 @@ const DraftOrderPanel = ({
                 {description}
               </p>
               <ul className="space-y-2">
-                {draftOrder.map((player, i) => (
-                  <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
-                    <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
-                    <span className={cls("text-sm font-medium", itemText)}>
-                        {player}
-                    </span>
-                    {!isSolo && i === 0 && (
-                      <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-blue-400' : 'text-blue-600')}>
-                        {isRiversRun ? 'Assigned Serenity' : 'Pick 1'}
+                {draftOrder.map((player, i) => {
+                  const badge = playerBadges[i];
+                  // Default for player 1 in standard multi is "Pick 1" unless overridden or solo
+                  const defaultBadge = !isSolo && i === 0 && Object.keys(playerBadges).length === 0 ? 'Pick 1' : null;
+                  const displayBadge = badge || defaultBadge;
+
+                  return (
+                    <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
+                      <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm">{i + 1}</span>
+                      <span className={cls("text-sm font-medium", itemText)}>
+                          {player}
                       </span>
-                    )}
-                    {isRiversRun && i === 1 && (
-                        <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-amber-400' : 'text-amber-600')}>
-                            Assigned Bounty Hunter
+                      {displayBadge && (
+                        <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-blue-400' : 'text-blue-600')}>
+                          {displayBadge}
                         </span>
-                    )}
-                  </li>
-                ))}
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
 
               {isWantedLeaderMode && (
@@ -391,7 +334,6 @@ export const DraftStep = ({ step, onJump }: StepComponentProps): React.ReactElem
   const { state: gameState } = useGameState();
   const { setDraftConfig } = useGameDispatch();
   const { state: draftState, isManual: isManualEntry } = gameState.draft;
-  const { flow } = useSetupFlow();
   
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -400,7 +342,6 @@ export const DraftStep = ({ step, onJump }: StepComponentProps): React.ReactElem
   
   const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
   const isGoingLegit = useMemo(() => hasRuleFlag(allRules, 'isGoingLegit'), [allRules]);
-  const isRiversRun = useMemo(() => getActiveStoryCard(gameState)?.title === "River's Run 1v1", [gameState]);
 
   const {
       specialRules,
@@ -414,14 +355,8 @@ export const DraftStep = ({ step, onJump }: StepComponentProps): React.ReactElem
       startOutsideAllianceSpace,
       excludeNewCanaanPlacement,
       havenPlacementRules,
+      playerBadges,
   } = useDraftDetails(step);
-
-  const setupStepIndex = useMemo(() => flow.findIndex(s => s.id === STEP_IDS.SETUP_CARD_SELECTION), [flow]);
-  const handleJumpToSetup = useCallback(() => {
-    if (onJump && setupStepIndex !== -1) {
-        onJump(setupStepIndex);
-    }
-  }, [onJump, setupStepIndex]);
 
   const campaignNotes = useMemo(
     () => getCampaignNotesForStep(gameState, step.id), 
@@ -450,7 +385,7 @@ export const DraftStep = ({ step, onJump }: StepComponentProps): React.ReactElem
         expansion: 1,
         setupCard: 2,
         story: 3,
-        warning: 3, // Treat warnings like story overrides
+        warning: 3,
         info: 4,
       };
       return (order[a.source] || 99) - (order[b.source] || 99);
@@ -527,10 +462,6 @@ export const DraftStep = ({ step, onJump }: StepComponentProps): React.ReactElem
           )}
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {isRiversRun && !gameState.riversRun_setupConfirmed && (
-              <RiversRunDraftInfoPanel />
-            )}
-
             <DraftOrderPanel 
                 draftOrder={draftState.draftOrder}
                 isSolo={isSolo}
@@ -538,7 +469,7 @@ export const DraftStep = ({ step, onJump }: StepComponentProps): React.ReactElem
                 isBrowncoatDraft={isBrowncoatDraft}
                 isWantedLeaderMode={isWantedLeaderMode}
                 stepBadgeClass={stepBadgeBlueBg}
-                isRiversRun={isRiversRun}
+                playerBadges={playerBadges}
             />
             
             <PlacementOrderPanel 
@@ -555,10 +486,6 @@ export const DraftStep = ({ step, onJump }: StepComponentProps): React.ReactElem
                 stepBadgeClass={stepBadgeAmberBg}
                 placementPanelExtras={placementPanelExtras}
             />
-
-            {isRiversRun && !gameState.riversRun_setupConfirmed && (
-              <RiversRunSetupActionPanel onJumpToSetup={handleJumpToSetup} />
-            )}
             
             {draftPanels.map((panel, i) => (
                 <CustomDraftPanel key={`panel-${i}`} rule={panel} stepBadgeClass={stepBadgePurpleBg} />
