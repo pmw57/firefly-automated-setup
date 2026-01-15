@@ -158,13 +158,15 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
         if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
             const newRule = { source: rule.source as SpecialRule['source'], ...rule.rule };
             
-            specialRules.push(newRule);
+            if (!newRule.flags?.includes('hideFromTop')) {
+                 specialRules.push(newRule);
+            }
             
             // Check if this rule should also be displayed inside the resource card
             if (newRule.title === 'Alliance Space Lockdown' || newRule.title === "Lonely Smuggler's Stash") {
               boardSetupRules.push(newRule);
             }
-            if (newRule.title === 'Missing Person') {
+            if (newRule.title === 'Missing Person' || newRule.flags?.includes('showInResourceList')) {
               componentAdjustmentRules.push(newRule);
             }
         }

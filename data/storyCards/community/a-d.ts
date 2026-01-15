@@ -1,16 +1,17 @@
 import { StoryCardDef } from '../../../types';
+import { CONTACT_NAMES } from '../../ids';
 import { createStoryRules } from '../utils';
 
 export const STORIES_A_D: StoryCardDef[] = [
   {
     title: "A New Leaf",
-    intro: "You're a Captain who's tire dof the smuggling life. Also, recent inflation spikes in the 'Verse are making ship maintenance costs too ruttin' expensive. You're considering a government land grab program that helps people get settled on planets in Alliance Space. The program has only one slot left to claim a free piece of land.",
+    intro: "You're a Captain who's tired of the smuggling life. Also, recent inflation spikes in the 'Verse are making ship maintenance costs too ruttin' expensive. You're considering a government land grab program that helps people get settled on planets in Alliance Space. The program has only one slot left to claim a free piece of land.",
     additionalRequirements: [
       "blue",
       "kalidasa",
       "pirates"
     ],
-    setupDescription: "Follow the 'Land Grant & Outfitting' override. Start with $10,000.",
+    setupDescription: "No Starting Jobs from Niska. When placing ships, each player also places a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Start with $10,000. Buy a small ship (less than 10 cargo hold).",
     sourceUrl: "https://boardgamegeek.com/thread/3092841/a-new-leaf-story-card-using-fan-made-ships",
     requiredExpansion: "community",
     rating: 1,
@@ -21,11 +22,40 @@ export const STORIES_A_D: StoryCardDef[] = [
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: 'Land Grant & Outfitting',
-          content: ["When placing ships, each player also places a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Players must buy a small ship (less than 10 cargo hold). Buy parts/fuel at listed price."],
+          title: 'The Boneyard Special',
+          content: ["When placing ships, each player also places a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Start with a small ship (less than 10 cargo hold) and pay for it and your Starting Supplies when you gain your money."],
           flags: ['isHavenPlacement']
         }
-      }
+      },
+      { type: 'setPlayerBadges', badges: { 0: 'Select Small Ship', 1: 'Select Small Ship' } },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Retirement funds',
+          content: [
+            "Start with $10,000 anda small ship (less than 10 cargo hold) and pay for it and your Starting Supplies when you gain your money."
+          ]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'Payment Required',
+          content: ["Use your Starting Capitol to pay for your ship, fuel, and parts."],
+          flags: ['showInResourceList', 'hideFromTop']
+        }
+      },
+      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: "Proving your worth",
+          content: ["No Starting Jobs from Niska."]
+        }
+      },
     ])
   },
   {
