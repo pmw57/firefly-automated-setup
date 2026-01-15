@@ -14,7 +14,7 @@ export const SETUP_MODE_STORAGE_KEY = 'firefly_setupMode_v1';
 
 // --- Asset Paths ---
 export const ONLINE_BASE_URL = 'https://pmw57.github.io/firefly-automated-setup/';
-export const RELATIVE_SPRITE_SHEET_URL = "assets/images/game/expansion_sprites.png";
+export const RELATIVE_SPRITE_SHEET_URL = "images/game/expansion_sprites.png";
 
 // --- Rule Engine Constants ---
 export const RULE_PRIORITY_ORDER: RuleSourceType[] = [

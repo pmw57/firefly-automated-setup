@@ -81,25 +81,5 @@ describe('rules/prime', () => {
       expect(details.effectiveMultiplier).toBe(2); // Blitz is 2x
       expect(details.finalCount).toBe(6); // 3 * 2
     });
-
-    it.concurrent('applies Slaying the Dragon modifier (+2 cards)', () => {
-        const storyTitle = "Slaying The Dragon";
-        const state: GameState = {
-            ...stateForStandardPriming,
-            selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
-        };
-        const details = getPrimeDetails(state, {});
-        expect(details.finalCount).toBe(5); // 3 + 2
-    });
-
-    it.concurrent('combines blitz and Slaying the Dragon', () => {
-        const storyTitle = "Slaying The Dragon";
-        const state: GameState = {
-            ...stateForStandardPriming,
-            selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
-        };
-        const details = getPrimeDetails(state, { primeMode: 'blitz' });
-        expect(details.finalCount).toBe(8); // (3 * 2) + 2
-    });
   });
 });

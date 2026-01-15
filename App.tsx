@@ -122,7 +122,7 @@ const App = (): React.ReactElement => {
   const showWizard = isStateInitialized && isWizardInitialized;
 
   const baseUrl = !isPreview ? import.meta.env.BASE_URL : ONLINE_BASE_URL;
-  const headerImageUrl = `${baseUrl}assets/images/game/firefly-cover.png`;
+  const headerImageUrl = `${baseUrl}images/game/firefly-cover.png`;
 
   return (
     <div className="min-h-screen font-sans pb-12 transition-colors duration-500 relative">

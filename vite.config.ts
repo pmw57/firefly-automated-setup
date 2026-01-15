@@ -37,18 +37,18 @@ export default defineConfig(({ mode }) => ({
     mode !== 'test' && VitePWA({
       registerType: 'autoUpdate',
       includeAssets: [
-        'assets/images/game/expansion_sprites.png', 
-        'assets/images/branding/logo.svg', 
-        'assets/images/branding/qrcode.png',
-        'assets/sounds/rocker-switch.mp3',
+        'images/game/expansion_sprites.png', 
+        'images/branding/logo.svg', 
+        'images/branding/qrcode.png',
+        'sounds/rocker-switch.mp3',
         'robots.txt', 
         'sitemap.xml', 
         'google45bc800396599bee.html',
-        'assets/images/textures/starfield-noise-texture.svg',
-        'assets/images/textures/parchment-body-texture.svg',
-        'assets/images/textures/parchment-dossier-texture.svg',
-        'assets/images/textures/metal-noise-texture.svg',
-        'assets/images/game/firefly-cover.png'
+        'images/textures/starfield-noise-texture.svg',
+        'images/textures/parchment-body-texture.svg',
+        'images/textures/parchment-dossier-texture.svg',
+        'images/textures/metal-noise-texture.svg',
+        'images/game/firefly-cover.png'
       ],
       manifest: {
         name: 'Firefly Automated Setup Guide',
@@ -61,7 +61,7 @@ export default defineConfig(({ mode }) => ({
         start_url: '/firefly-automated-setup/',
         icons: [
           {
-            src: 'assets/images/branding/logo.svg',
+            src: 'images/branding/logo.svg',
             sizes: '192x192 512x512',
             type: 'image/svg+xml',
             purpose: 'any maskable'
