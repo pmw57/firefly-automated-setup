@@ -87,8 +87,11 @@ export const CRIME_STORIES: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'draft_placement_extra',
-        rule: { content: ['⚠️ Not within Alliance Space'] }
+        category: 'draft_placement',
+        rule: { 
+            content: ['⚠️ Not within Alliance Space'],
+            position: 'before'
+        }
       },
       {
         type: 'addSpecialRule',

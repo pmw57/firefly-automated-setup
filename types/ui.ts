@@ -121,9 +121,12 @@ export interface PrimeDetails {
 
 export interface DraftRuleDetails {
   specialRules: SpecialRule[];
-  draftPanels: SpecialRule[];
-  draftAnnotations: StructuredContent[];
-  placementAnnotations: StructuredContent[];
+  draftPanelsBefore: SpecialRule[];
+  draftPanelsAfter: SpecialRule[];
+  draftShipsBefore: SpecialRule[];
+  draftShipsAfter: SpecialRule[];
+  draftPlacementBefore: SpecialRule[];
+  draftPlacementAfter: SpecialRule[];
   isHavenDraft: boolean;
   isBrowncoatDraft: boolean;
   specialStartSector: string | null;

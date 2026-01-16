@@ -40,6 +40,20 @@ const renderStructuredContent = (content: StructuredContent): React.ReactNode =>
   });
 };
 
+// Helper for inline instructions
+const DraftInstructionList = ({ rules, textColor }: { rules: SpecialRule[], textColor: string }) => {
+    if (!rules || rules.length === 0) return null;
+    return (
+        <div className="space-y-2 mb-3">
+            {rules.map((rule, i) => (
+                <p key={i} className={cls("text-xs font-bold", textColor)}>
+                    <StructuredContentRenderer content={rule.content} />
+                </p>
+            ))}
+        </div>
+    );
+};
+
 // Sub-component for Draft Order
 const DraftOrderPanel = ({ 
     draftOrder, 
@@ -48,7 +62,8 @@ const DraftOrderPanel = ({
     isBrowncoatDraft,
     stepBadgeClass,
     playerBadges,
-    annotations,
+    beforeRules,
+    afterRules,
 }: { 
     draftOrder: string[]; 
     isSolo: boolean; 
@@ -56,7 +71,8 @@ const DraftOrderPanel = ({
     isBrowncoatDraft: boolean;
     stepBadgeClass: string; 
     playerBadges: Record<number, string>;
-    annotations: StructuredContent[];
+    beforeRules: SpecialRule[];
+    afterRules: SpecialRule[];
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -87,6 +103,9 @@ const DraftOrderPanel = ({
               <p className={cls("text-xs mb-3 italic", panelSubColor)}>
                 {description}
               </p>
+              
+              <DraftInstructionList rules={beforeRules} textColor={restrictionTextColor} />
+
               <ul className="space-y-2">
                 {draftOrder.map((player, i) => {
                   const badge = playerBadges[i];
@@ -110,15 +129,11 @@ const DraftOrderPanel = ({
                 })}
               </ul>
 
-              {annotations.length > 0 && (
+              {afterRules.length > 0 && (
                 <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
-                    {annotations.map((note, i) => (
-                      <p key={i} className={cls("text-xs font-bold", restrictionTextColor)}>
-                        <StructuredContentRenderer content={note} />
-                      </p>
-                    ))}
+                     <DraftInstructionList rules={afterRules} textColor={restrictionTextColor} />
                 </div>
-            )}
+              )}
         </div>
     );
 };
@@ -132,7 +147,8 @@ const PlacementOrderPanel = ({
     isBrowncoatDraft,
     specialStartSector,
     stepBadgeClass,
-    annotations,
+    beforeRules,
+    afterRules,
 }: {
     placementOrder: string[];
     isSolo: boolean;
@@ -141,7 +157,8 @@ const PlacementOrderPanel = ({
     isBrowncoatDraft: boolean;
     specialStartSector: string | null;
     stepBadgeClass: string;
-    annotations: StructuredContent[];
+    beforeRules: SpecialRule[];
+    afterRules: SpecialRule[];
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -189,15 +206,7 @@ const PlacementOrderPanel = ({
                     {description}
                 </p>
 
-                {annotations && annotations.length > 0 && (
-                   <div className="mb-3 space-y-2">
-                    {annotations.map((note, i) => (
-                      <p key={i} className={cls("text-xs font-bold", restrictionTextColor)}>
-                        <StructuredContentRenderer content={note} />
-                      </p>
-                    ))}
-                  </div>
-                )}
+                <DraftInstructionList rules={beforeRules} textColor={restrictionTextColor} />
                 
                 <ul className="space-y-2">
                     {placementOrder.map((player, i) => (
@@ -208,6 +217,12 @@ const PlacementOrderPanel = ({
                     </li>
                     ))}
                 </ul>
+                
+                {afterRules.length > 0 && (
+                    <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
+                         <DraftInstructionList rules={afterRules} textColor={restrictionTextColor} />
+                    </div>
+                )}
 
                 {isHavenDraft && havenPlacementRules && (
                     <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
@@ -284,9 +299,12 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   const {
       specialRules,
-      draftPanels,
-      draftAnnotations,
-      placementAnnotations,
+      draftPanelsBefore,
+      draftPanelsAfter,
+      draftShipsBefore,
+      draftShipsAfter,
+      draftPlacementBefore,
+      draftPlacementAfter,
       isHavenDraft,
       isBrowncoatDraft,
       specialStartSector,
@@ -393,6 +411,13 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
           )}
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* Dynamic Panels - Before */}
+            {draftPanelsBefore.map((panel, i) => (
+                <CustomDraftPanel key={`panel-before-${i}`} rule={panel} stepBadgeClass={stepBadgePurpleBg} />
+            ))}
+
+            {/* Standard Panels */}
             <DraftOrderPanel 
                 draftOrder={draftState.draftOrder}
                 isSolo={isSolo}
@@ -400,7 +425,8 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 isBrowncoatDraft={isBrowncoatDraft}
                 stepBadgeClass={stepBadgeBlueBg}
                 playerBadges={playerBadges}
-                annotations={draftAnnotations}
+                beforeRules={draftShipsBefore}
+                afterRules={draftShipsAfter}
             />
             
             <PlacementOrderPanel 
@@ -411,11 +437,13 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 isBrowncoatDraft={isBrowncoatDraft}
                 specialStartSector={specialStartSector}
                 stepBadgeClass={stepBadgeAmberBg}
-                annotations={placementAnnotations}
+                beforeRules={draftPlacementBefore}
+                afterRules={draftPlacementAfter}
             />
             
-            {draftPanels.map((panel, i) => (
-                <CustomDraftPanel key={`panel-${i}`} rule={panel} stepBadgeClass={stepBadgePurpleBg} />
+            {/* Dynamic Panels - After */}
+            {draftPanelsAfter.map((panel, i) => (
+                <CustomDraftPanel key={`panel-after-${i}`} rule={panel} stepBadgeClass={stepBadgePurpleBg} />
             ))}
             
           </div>

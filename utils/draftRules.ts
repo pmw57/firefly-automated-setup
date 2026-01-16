@@ -3,11 +3,11 @@ import {
     Step,
     DraftRuleDetails,
     SpecialRule,
-    StructuredContent,
     SetShipPlacementRule,
     SetDraftModeRule,
     SetPlayerBadgesRule,
-    ThemeColor
+    ThemeColor,
+    AddSpecialRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CHALLENGE_IDS } from '../data/ids';
@@ -15,10 +15,16 @@ import { getActiveStoryCard } from './selectors/story';
 
 export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRuleDetails, 'isRuiningIt'> => {
     const specialRules: SpecialRule[] = [];
-    const draftPanels: SpecialRule[] = [];
-    // These arrays hold generic content blocks for the specific UI panels
-    const draftAnnotations: StructuredContent[] = [];
-    const placementAnnotations: StructuredContent[] = [];
+    
+    // Separate arrays for positioned content
+    const draftPanelsBefore: SpecialRule[] = [];
+    const draftPanelsAfter: SpecialRule[] = [];
+    
+    const draftShipsBefore: SpecialRule[] = [];
+    const draftShipsAfter: SpecialRule[] = [];
+    
+    const draftPlacementBefore: SpecialRule[] = [];
+    const draftPlacementAfter: SpecialRule[] = [];
     
     const { overrides = {} } = step;
     const allRules = getResolvedRules(gameState);
@@ -27,19 +33,37 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     // Process generic special rules for this step category
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule') {
-            if (rule.category === 'draft') {
-                if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
-                    specialRules.push({
-                        source: rule.source as SpecialRule['source'],
-                        ...rule.rule
-                    });
-                }
-            } else if (rule.category === 'draft_panel') {
-                draftPanels.push({ source: rule.source as SpecialRule['source'], ...rule.rule });
-            } else if (rule.category === 'draft_placement_extra') {
-                placementAnnotations.push(rule.rule.content);
-            } else if (rule.category === 'draft_annotation') {
-                draftAnnotations.push(rule.rule.content);
+            const r = rule as AddSpecialRule;
+            const contentRule: SpecialRule = { source: r.source as SpecialRule['source'], ...r.rule };
+            const position = r.rule.position || 'after';
+
+            switch (r.category) {
+                case 'draft':
+                    if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(r.source)) {
+                        specialRules.push(contentRule);
+                    }
+                    break;
+                case 'draft_panel':
+                    if (position === 'before') {
+                        draftPanelsBefore.push(contentRule);
+                    } else {
+                        draftPanelsAfter.push(contentRule);
+                    }
+                    break;
+                case 'draft_ships':
+                    if (position === 'before') {
+                        draftShipsBefore.push(contentRule);
+                    } else {
+                        draftShipsAfter.push(contentRule);
+                    }
+                    break;
+                case 'draft_placement':
+                    if (position === 'before') {
+                        draftPlacementBefore.push(contentRule);
+                    } else {
+                        draftPlacementAfter.push(contentRule);
+                    }
+                    break;
             }
         }
     });
@@ -83,9 +107,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     }
 
     // --- Process Flags into Panel Extras ---
-    // NOTE: Many historical flags (startOutsideAllianceSpace, excludeNewCanaanPlacement, etc.)
-    // have been replaced by explicit `addSpecialRule` entries in the card definitions
-    // using the `draft_placement_extra` or `draft_annotation` categories.
     
     const draftModeRule = allRules.find(r => r.type === 'setDraftMode') as SetDraftModeRule | undefined;
     const isBrowncoatDraft = draftModeRule?.mode === 'browncoat' || overrides.draftMode === 'browncoat';
@@ -94,7 +115,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     
     let resolvedHavenDraft = isHavenDraft;
     let resolvedHavenPlacementRules = havenPlacementRules;
-    let conflictMessage: StructuredContent | null = null;
+    let conflictMessage: import('../types').StructuredContent | null = null;
   
     if (isHavenDraft && specialStartSector) {
         resolvedHavenDraft = false;
@@ -118,7 +139,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
         specialRules.push({ source: 'setupCard', title: 'Browncoat Market', content: ['Once all players have purchased a ship and chosen a leader, everyone may buy supplies. ', { type: 'strong', content: 'Fuel: $100, Parts: $300' }, '.'] });
         
         // Convert the previously hardcoded Browncoat Market component into a dynamic panel
-        draftPanels.push({
+        draftPanelsAfter.push({
             source: 'setupCard',
             title: 'Browncoat Market',
             badge: 'Phase 3',
@@ -175,9 +196,12 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     
     return { 
         specialRules, 
-        draftPanels,
-        draftAnnotations,
-        placementAnnotations, 
+        draftPanelsBefore,
+        draftPanelsAfter,
+        draftShipsBefore,
+        draftShipsAfter,
+        draftPlacementBefore,
+        draftPlacementAfter,
         isHavenDraft: resolvedHavenDraft, 
         isBrowncoatDraft, 
         specialStartSector, 

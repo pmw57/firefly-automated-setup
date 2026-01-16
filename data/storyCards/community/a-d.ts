@@ -126,7 +126,7 @@ export const STORIES_A_D: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'draft_annotation',
+        category: 'draft_ships',
         rule: {
           title: 'Picking Sides',
           content: ["Players evenly pick Alliance or Independents (Browncoats)."]
@@ -134,10 +134,11 @@ export const STORIES_A_D: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'draft_placement_extra',
+        category: 'draft_placement',
         rule: {
           title: 'Picking Sides',
-          content: ["Place Alliance ships to inner planets, Browncoats to Border Planets."]
+          content: ["Place Alliance ships to inner planets, Browncoats to Border Planets."],
+          position: 'before'
         }
       },
       {
@@ -169,7 +170,7 @@ export const STORIES_A_D: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'draft_annotation',
+        category: 'draft_ships',
         rule: {
           title: 'Starting Gear',
           content: ["Each player's ship starts with 1 Cry Baby."]
@@ -204,10 +205,11 @@ export const STORIES_A_D: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'draft_placement_extra',
+        category: 'draft_placement',
         rule: {
           title: 'Special Starting Procedure',
-          content: ["More than one player may start on the same world."]
+          content: ["More than one player may start on the same world."],
+          position: 'before'
         }
       },
       {

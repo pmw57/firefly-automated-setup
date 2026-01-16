@@ -302,17 +302,18 @@ export const SETUP_CARDS: SetupCardDef[] = [
       },
       {
           type: 'addSpecialRule',
-          category: 'draft_annotation',
+          category: 'draft_ships',
           rule: {
-              content: [`⚠️ Restriction: Each Leader begins play with a `, { type: 'strong', content: 'Warrant' }, ` token.`]
+              content: [`⚠️ Restriction: Each Leader begins play with a `, { type: 'strong', content: 'Warrant' }, ` token.`],
+              position: 'after'
           }
       },
       {
           type: 'addSpecialRule',
           category: 'pressures_high',
           rule: {
-              title: 'The Pressure\'s High',
-              content: ["Begin the game with one random Alliance Alert Card in play. Each Alert has a rule that affects all players. When a Misbehave Card directs you to draw a new Alert Card, place the current Alert at the bottom of the Alert Deck."]
+              title: 'Setup Override',
+              content: ["When a Misbehave Card directs you to draw a new Alert Card, place the current Alert at the bottom of the Alert Deck."]
           }
       }
     ]),

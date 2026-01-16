@@ -27,4 +27,6 @@ export interface SpecialRule {
     page?: string | number;
     manual?: string;
     flags?: string[];
+    // Controls where this rule content appears relative to the standard component content
+    position?: 'before' | 'after';
 }

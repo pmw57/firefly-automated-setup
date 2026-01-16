@@ -80,7 +80,7 @@ export interface SetShipPlacementRule extends BaseRule {
 }
 // The `draft_panel` and `draft_placement_extra` categories allow story cards
 // to inject custom UI panels directly into the draft step for complex setups.
-export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer' | 'goal' | 'draft_panel' | 'draft_annotation' | 'draft_placement_extra' | 'prime_panel' | 'setup_selection' | 'pressures_high'; rule: Omit<SpecialRule, 'source'>; }
+export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer' | 'goal' | 'draft_panel' | 'draft_ships' | 'draft_placement' | 'prime_panel' | 'setup_selection' | 'pressures_high'; rule: Omit<SpecialRule, 'source'>; }
 
 export interface AddFlagRule extends BaseRule { 
   type: 'addFlag'; 
