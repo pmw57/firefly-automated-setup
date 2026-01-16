@@ -13,8 +13,11 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     rules: createStoryRules("...Another Man's Treasure", [
       {
         type: 'addSpecialRule',
-        category: 'draft_placement_extra',
-        rule: { content: ['⚠️ Restriction: Havens must be placed in Border Space.'] }
+        category: 'draft_placement',
+        rule: { 
+            content: ['⚠️ Restriction: Havens must be placed in Border Space.'],
+            position: 'before'
+        }
       },
       {
         type: 'addSpecialRule',

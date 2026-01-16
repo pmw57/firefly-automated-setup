@@ -77,9 +77,10 @@ export const STORIES_M_O: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'draft_placement_extra',
+        category: 'draft_placement',
         rule: {
-          content: ["⚠️ Restriction: Starting location must be an unoccupied planet with a Contact."]
+          content: ["⚠️ Restriction: Starting location must be an unoccupied planet with a Contact."],
+          position: 'before'
         }
       },
       { type: 'setJobMode', mode: 'no_jobs' },

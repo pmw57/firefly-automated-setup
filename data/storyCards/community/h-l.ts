@@ -166,9 +166,10 @@ export const STORIES_H_L: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'draft_placement_extra',
+        category: 'draft_placement',
         rule: {
-          content: ["⚠️ Reminder: Each player also begins with one ", { type: 'strong', content: "Warrant" }, "."]
+          content: ["⚠️ Reminder: Each player also begins with one ", { type: 'strong', content: "Warrant" }, "."],
+          position: 'before'
         }
       }
     ])

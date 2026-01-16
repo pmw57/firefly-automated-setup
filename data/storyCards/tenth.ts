@@ -102,8 +102,11 @@ export const TENTH_STORIES: StoryCardDef[] = [
     rules: createStoryRules("Red Skies Over Ransom", [
       {
         type: 'addSpecialRule',
-        category: 'draft_placement_extra',
-        rule: { content: ['⚠️ Restriction: New Canaan may not be chosen as a starting location.'] }
+        category: 'draft_placement',
+        rule: { 
+            content: ['⚠️ Restriction: New Canaan may not be chosen as a starting location.'],
+            position: 'before'
+        }
       },
       {
         type: 'addSpecialRule',
