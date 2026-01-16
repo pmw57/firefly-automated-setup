@@ -122,15 +122,13 @@ export interface PrimeDetails {
 export interface DraftRuleDetails {
   specialRules: SpecialRule[];
   draftPanels: SpecialRule[];
-  placementPanelExtras: SpecialRule[];
+  draftAnnotations: StructuredContent[];
+  placementAnnotations: StructuredContent[];
   isHavenDraft: boolean;
   isBrowncoatDraft: boolean;
   specialStartSector: string | null;
   placementRegionRestriction: string | null;
   conflictMessage: StructuredContent | null;
-  startOutsideAllianceSpace?: boolean;
-  excludeNewCanaanPlacement?: boolean;
-  isWantedLeaderMode?: boolean;
   havenPlacementRules?: SpecialRule | null;
   playerBadges: Record<number, string>;
 }

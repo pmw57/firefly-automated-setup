@@ -102,7 +102,7 @@ export const STORIES_A_D: StoryCardDef[] = [
     isPvP: true,
     playerCount: [2, 4, 6],
     intro: "Serenity Valley was a valley located on Hera; it was mainly sparse and rocky with little vegetation. The valley was famous for being the location of the Battle of Serenity Valley—one of the bloodiest battles of the entire Unification War. Due to Hera's strategic positioning, taking the planet was a key to winning the war, and Serenity Valley became the turning point of the entire conflict.",
-    setupDescription: "Follow the 'War Materiel Setup' override instructions.",
+    setupDescription: "For 2 or 4 or 6 Players. Take all Crew cards with \"Fight\" skill and all gear cards with \"Fight\" skill, add crew compartment ship upgrades and put them all in one deck; Shuffle. Take all Misbehave cards with \"Fight\" skill checks; Shuffle. Remove half \"Keep Flying\" cards from Alliance and Border decks. Other cards won't be used. Players evenly pick Alliance or Independents (Browncoats). Deal 3 crew/gear to each player (disregard warrants). Place ships in appropriate space. Alliance to inner planets, Browncoats to Border Planets.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1099553/story-card-the-battle-of-serenity-valley-pvp",
     rating: 0,
@@ -110,10 +110,26 @@ export const STORIES_A_D: StoryCardDef[] = [
     rules: createStoryRules("The Battle of Serenity Valley (PvP)", [
       {
         type: 'addSpecialRule',
+        category: 'nav',
+        rule: {
+          title: 'Tougher Times',
+          content: ["Remove half \"Keep Flying\" cards from Alliance and Border decks. Other cards won't be used."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Picking Sides',
+          content: ["Players evenly pick Alliance or Independents (Browncoats). Place ships in appropriate space. Alliance to inner planets, Browncoats to Border Planets."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
         category: 'prime',
         rule: {
           title: 'War Materiel Setup',
-          content: ["Take all Crew cards with \"Fight\" skill and all gear cards with \"Fight\" skill, add crew compartment ship upgrades and put them all in one deck; Shuffle. Take all Misbehave cards with \"Fight\" skill checks; Shuffle. Remove half \"Keep Flying\" cards from Alliance and Border decks. Other cards won't be used. Players evenly pick Alliance or Independents (Browncoats). Deal 3 crew/gear to each player (disregard warrants). Place ships in appropriate space. Alliance to inner planets, Browncoats to Border Planets."]
+          content: ["Take all Crew cards with \"Fight\" skill and all gear cards with \"Fight\" skill, add crew compartment ship upgrades and put them all in one deck; Shuffle. Take all Misbehave cards with \"Fight\" skill checks; Shuffle. Deal 3 crew/gear to each player (disregard warrants)."]
         }
       }
     ])

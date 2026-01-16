@@ -46,17 +46,17 @@ const DraftOrderPanel = ({
     isSolo, 
     isHavenDraft, 
     isBrowncoatDraft,
-    isWantedLeaderMode,
     stepBadgeClass,
     playerBadges,
+    annotations,
 }: { 
     draftOrder: string[]; 
     isSolo: boolean; 
     isHavenDraft: boolean; 
     isBrowncoatDraft: boolean;
-    isWantedLeaderMode?: boolean;
     stepBadgeClass: string; 
     playerBadges: Record<number, string>;
+    annotations: StructuredContent[];
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -90,8 +90,8 @@ const DraftOrderPanel = ({
               <ul className="space-y-2">
                 {draftOrder.map((player, i) => {
                   const badge = playerBadges[i];
-                  // Default for player 1 in standard multi is "Pick 1" unless overridden or solo
-                  const defaultBadge = !isSolo && i === 0 && Object.keys(playerBadges).length === 0 ? 'Pick 1' : null;
+                  // Default for player 1 in standard multi is "1st Pick" unless overridden or solo
+                  const defaultBadge = !isSolo && i === 0 && Object.keys(playerBadges).length === 0 ? '1st Pick' : null;
                   const displayBadge = badge || defaultBadge;
 
                   return (
@@ -110,11 +110,13 @@ const DraftOrderPanel = ({
                 })}
               </ul>
 
-              {isWantedLeaderMode && (
+              {annotations.length > 0 && (
                 <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
-                    <p className={cls("text-xs font-bold", restrictionTextColor)}>
-                        ⚠️ Restriction: Each Leader begins play with a <strong>Warrant</strong> token.
-                    </p>
+                    {annotations.map((note, i) => (
+                      <p key={i} className={cls("text-xs font-bold", restrictionTextColor)}>
+                        <StructuredContentRenderer content={note} />
+                      </p>
+                    ))}
                 </div>
             )}
         </div>
@@ -129,12 +131,8 @@ const PlacementOrderPanel = ({
     havenPlacementRules,
     isBrowncoatDraft,
     specialStartSector,
-    placementRegionRestriction,
-    startOutsideAllianceSpace,
-    excludeNewCanaanPlacement,
-    mustBeInBorderSpace,
     stepBadgeClass,
-    placementPanelExtras,
+    annotations,
 }: {
     placementOrder: string[];
     isSolo: boolean;
@@ -142,12 +140,8 @@ const PlacementOrderPanel = ({
     havenPlacementRules?: SpecialRule | null;
     isBrowncoatDraft: boolean;
     specialStartSector: string | null;
-    placementRegionRestriction: string | null;
-    startOutsideAllianceSpace: boolean;
-    excludeNewCanaanPlacement: boolean;
-    mustBeInBorderSpace: boolean;
     stepBadgeClass: string;
-    placementPanelExtras: SpecialRule[];
+    annotations: StructuredContent[];
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -195,25 +189,14 @@ const PlacementOrderPanel = ({
                     {description}
                 </p>
 
-                {startOutsideAllianceSpace && (
-                    <p className={cls("text-sm mb-3 font-bold text-center", restrictionTextColor)}>
-                        ⚠️ Not within Alliance Space
-                    </p>
-                )}
-                {excludeNewCanaanPlacement && (
-                    <p className={cls("text-xs mb-3 font-bold", restrictionTextColor)}>
-                        ⚠️ Restriction: New Canaan may not be chosen as a starting location.
-                    </p>
-                )}
-                {mustBeInBorderSpace && (
-                    <p className={cls("text-xs mb-3 font-bold", restrictionTextColor)}>
-                        ⚠️ Restriction: Havens must be placed in Border Space.
-                    </p>
-                )}
-                {placementRegionRestriction && (
-                    <p className={cls("text-xs mb-3 font-bold", restrictionTextColor)}>
-                        ⚠️ Restriction: All ships must start in the <strong>{placementRegionRestriction}</strong>.
-                    </p>
+                {annotations && annotations.length > 0 && (
+                   <div className="mb-3 space-y-2">
+                    {annotations.map((note, i) => (
+                      <p key={i} className={cls("text-xs font-bold", restrictionTextColor)}>
+                        <StructuredContentRenderer content={note} />
+                      </p>
+                    ))}
+                  </div>
                 )}
                 
                 <ul className="space-y-2">
@@ -221,7 +204,7 @@ const PlacementOrderPanel = ({
                     <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
                         <span className={`w-6 h-6 rounded-full ${isHavenDraft ? 'bg-green-600' : 'bg-amber-500'} text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm`}>{i + 1}</span>
                         <span className={cls("text-sm font-medium", itemText)}>{player}</span>
-                        {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isHavenDraft ? (isDark ? 'text-green-400' : 'text-green-600') : (isDark ? 'text-amber-400' : 'text-amber-600'))}>Placement 1</span>}
+                        {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isHavenDraft ? (isDark ? 'text-green-400' : 'text-green-600') : (isDark ? 'text-amber-400' : 'text-amber-600'))}>Places First</span>}
                     </li>
                     ))}
                 </ul>
@@ -233,16 +216,6 @@ const PlacementOrderPanel = ({
                              {renderStructuredContent(havenPlacementRules.content)}
                          </div>
                     </div>
-                )}
-                
-                {placementPanelExtras && placementPanelExtras.length > 0 && (
-                  <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
-                    {placementPanelExtras.map((extra, i) => (
-                      <p key={i} className={cls("text-xs font-bold", restrictionTextColor)}>
-                        <StructuredContentRenderer content={extra.content} />
-                      </p>
-                    ))}
-                  </div>
                 )}
             </>
         );
@@ -260,38 +233,6 @@ const PlacementOrderPanel = ({
                 )}
             </div>
             {content}
-        </div>
-    );
-};
-
-const BrowncoatMarketPanel = () => {
-    const { theme } = useTheme();
-    const isDark = theme === 'dark';
-
-    const panelBg = isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm';
-    const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
-    const stepBadgeClass = isDark ? 'bg-lime-900/50 text-lime-200' : 'bg-lime-100 text-lime-800';
-    const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
-    const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
-    const textColor = isDark ? 'text-gray-300' : 'text-gray-700';
-    const priceColor = isDark ? 'text-lime-400' : 'text-lime-700';
-
-    return (
-        <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
-            <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Phase 3</div>
-            <h4 className={cls("font-bold mb-2 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
-                Browncoat Market
-            </h4>
-            <p className={cls("text-sm", textColor)}>
-                Once all players have purchased a ship and chosen a leader, everyone may buy supplies.
-            </p>
-            <ul className={cls("text-sm mt-2 font-bold", priceColor)}>
-                <li>Fuel: $100</li>
-                <li>Parts: $300</li>
-            </ul>
-            <p className={cls("text-xs mt-3 italic", isDark ? 'text-gray-500' : 'text-gray-600')}>
-                (Reminder: Free starting fuel/parts are disabled in this mode.)
-            </p>
         </div>
     );
 };
@@ -344,14 +285,11 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const {
       specialRules,
       draftPanels,
-      placementPanelExtras,
+      draftAnnotations,
+      placementAnnotations,
       isHavenDraft,
       isBrowncoatDraft,
-      isWantedLeaderMode,
       specialStartSector,
-      placementRegionRestriction,
-      startOutsideAllianceSpace,
-      excludeNewCanaanPlacement,
       havenPlacementRules,
       playerBadges,
   } = useDraftDetails(step);
@@ -361,11 +299,6 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
     [gameState, step.id]
   );
   
-  const mustBeInBorderSpace = useMemo(() => 
-    specialRules.some(rule => rule.flags?.includes('havensInBorderSpace')),
-    [specialRules]
-  );
-
   const allInfoBlocks = useMemo(() => {
     const notesAsRules: SpecialRule[] = campaignNotes.map(note => ({
       source: 'story',
@@ -465,9 +398,9 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 isSolo={isSolo}
                 isHavenDraft={isHavenDraft}
                 isBrowncoatDraft={isBrowncoatDraft}
-                isWantedLeaderMode={isWantedLeaderMode}
                 stepBadgeClass={stepBadgeBlueBg}
                 playerBadges={playerBadges}
+                annotations={draftAnnotations}
             />
             
             <PlacementOrderPanel 
@@ -477,12 +410,8 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 havenPlacementRules={havenPlacementRules}
                 isBrowncoatDraft={isBrowncoatDraft}
                 specialStartSector={specialStartSector}
-                placementRegionRestriction={placementRegionRestriction}
-                startOutsideAllianceSpace={!!startOutsideAllianceSpace}
-                excludeNewCanaanPlacement={!!excludeNewCanaanPlacement}
-                mustBeInBorderSpace={mustBeInBorderSpace}
                 stepBadgeClass={stepBadgeAmberBg}
-                placementPanelExtras={placementPanelExtras}
+                annotations={placementAnnotations}
             />
             
             {draftPanels.map((panel, i) => (
@@ -490,8 +419,6 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
             ))}
             
           </div>
-
-          {isBrowncoatDraft && <BrowncoatMarketPanel />}
 
           {isGoingLegit && (
             <OverrideNotificationBlock
