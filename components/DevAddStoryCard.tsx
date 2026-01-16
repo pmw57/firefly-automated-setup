@@ -15,7 +15,7 @@ const NAV_MODES: NavMode[] = ['standard', 'browncoat', 'rim', 'flying_solo', 'cl
 const PRIME_MODES: PrimeMode[] = ['standard', 'blitz'];
 const DRAFT_MODES: DraftMode[] = ['standard', 'browncoat'];
 const LEADER_SETUP_MODES: LeaderSetupMode[] = ['standard', 'wanted'];
-const ALLIANCE_SETUP_MODES: AllianceSetupMode[] = ['standard', 'awful_crowded', 'no_alerts', 'extra_cruisers'];
+const ALLIANCE_SETUP_MODES: AllianceSetupMode[] = ['standard', 'awful_crowded', 'no_alerts'];
 const RESOURCE_TYPES: ResourceType[] = ['credits', 'fuel', 'parts', 'warrants', 'goalTokens'];
 const EFFECT_METHODS: EffectMethod[] = ['set', 'add', 'disable'];
 const SHIP_PLACEMENT_LOCATIONS = ['persephone', 'londinium', 'border_of_murphy', 'outside_alliance'];
@@ -64,6 +64,7 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
   
   // Alliance / Reaver Rules
   setAllianceMode: { label: 'Set Alliance Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: ALLIANCE_SETUP_MODES }], default: () => ({ type: 'setAllianceMode', mode: 'standard' }) },
+  setAlliancePlacement: { label: 'Set Alliance Placement', params: [{ name: 'placement', label: 'Placement Text', type: 'text' }], default: () => ({ type: 'setAlliancePlacement', placement: '' }) },
   createAlertTokenStack: { label: 'Create Alert Token Stack', params: [{ name: 'multiplier', label: 'Multiplier (per player)', type: 'number' }], default: () => ({ type: 'createAlertTokenStack', multiplier: 1 } as Partial<CreateAlertTokenStackRule>) },
 
   // General / Misc Rules

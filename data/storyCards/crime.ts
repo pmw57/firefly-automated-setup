@@ -85,7 +85,11 @@ export const CRIME_STORIES: StoryCardDef[] = [
           content: ["Each player starts the game with 1 Warrant."]
         }
       },
-      { type: 'addFlag', flag: 'startOutsideAllianceSpace' },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_placement_extra',
+        rule: { content: ['⚠️ Not within Alliance Space'] }
+      },
       {
         type: 'addSpecialRule',
         category: 'draft',

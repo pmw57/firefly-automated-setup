@@ -53,7 +53,7 @@ export const STORIES_M_O: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: 'Game Timer',
-          content: ["Use 7 Disgruntled tokens as a timer. The first player discards 1 token at the start of each round. When the timer runs out, a special game event occurs (arrest of 4 crew members from each ship)."]
+          content: ["Use 7 Disgruntled tokens as the timer. The first player discards 1 token at the start of each round. When the timer runs out, a special game event occurs (arrest of 4 crew members from each ship)."]
         }
       }
     ])

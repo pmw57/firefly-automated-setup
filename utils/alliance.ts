@@ -4,6 +4,7 @@ import {
     AllianceReaverDetails, 
     SpecialRule, 
     SetAllianceModeRule,
+    SetAlliancePlacementRule,
     AddFlagRule,
     RuleSourceType
 } from '../types/index';
@@ -66,11 +67,16 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
   }
 
   // --- Process Alliance Cruiser placement ---
-  const finalAlliancePlacement = allianceMode === 'extra_cruisers' ? "Place a Cruiser at Regulus AND Persephone." : standardAlliancePlacement;
+  const alliancePlacementRule = allRules.find(r => r.type === 'setAlliancePlacement') as SetAlliancePlacementRule | undefined;
+  
+  const finalAlliancePlacement = alliancePlacementRule
+    ? alliancePlacementRule.placement
+    : standardAlliancePlacement;
+
   if (finalAlliancePlacement !== standardAlliancePlacement) {
     allianceOverride = {
         // Use the mapping function to ensure the source type is compatible with the UI component.
-        source: mapRuleSourceToBlockSource(allianceModeRule?.source || 'setupCard'),
+        source: mapRuleSourceToBlockSource(alliancePlacementRule?.source || 'setupCard'),
         title: 'Alliance Cruiser Placement Override',
         content: [finalAlliancePlacement]
     };

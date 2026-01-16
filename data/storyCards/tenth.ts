@@ -5,7 +5,7 @@ import { createStoryRules } from './utils';
 export const TENTH_STORIES: StoryCardDef[] = [
   {
     title: "A Friend In Every Port",
-    intro: "High places, low places... When you sail the Black for a living, best to have friends in ALL places.",
+    intro: "High places, low places... When you sail the Black for a living, best to be on terms with as many folks as possible.",
     setupDescription: "Starting Jobs: Starting with the last player to choose a Leader, each player chooses 1 Job from 3 different Contacts. Mr. Universe cannot be chosen for starting Jobs. Priming the Pump: Reveal the top 6 cards of each Supply deck. Place the revealed cards in their discard piles.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
@@ -100,7 +100,11 @@ export const TENTH_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/8103879/sjliver",
     tags: ['survival'],
     rules: createStoryRules("Red Skies Over Ransom", [
-      { type: 'addFlag', flag: 'excludeNewCanaanPlacement' },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_placement_extra',
+        rule: { content: ['⚠️ Restriction: New Canaan may not be chosen as a starting location.'] }
+      },
       {
         type: 'addSpecialRule',
         category: 'resources',

@@ -17,7 +17,7 @@ export type NavMode = 'standard' | 'browncoat' | 'rim' | 'flying_solo' | 'cleare
 export type PrimeMode = 'standard' | 'blitz';
 export type DraftMode = 'standard' | 'browncoat';
 export type LeaderSetupMode = 'standard' | 'wanted';
-export type AllianceSetupMode = 'standard' | 'awful_crowded' | 'no_alerts' | 'extra_cruisers';
+export type AllianceSetupMode = 'standard' | 'awful_crowded' | 'no_alerts';
 
 
 export type ResourceType = 'credits' | 'fuel' | 'parts' | 'warrants' | 'goalTokens';
@@ -64,6 +64,7 @@ export interface CreateAlertTokenStackRule extends BaseRule {
   description?: string;
 }
 export interface SetAllianceModeRule extends BaseRule { type: 'setAllianceMode'; mode: AllianceSetupMode; }
+export interface SetAlliancePlacementRule extends BaseRule { type: 'setAlliancePlacement'; placement: string; }
 export interface SetNavModeRule extends BaseRule { type: 'setNavMode'; mode: NavMode; }
 export interface SetPrimeModeRule extends BaseRule { type: 'setPrimeMode'; mode: PrimeMode; }
 export interface SetDraftModeRule extends BaseRule { type: 'setDraftMode'; mode: DraftMode; }
@@ -79,7 +80,7 @@ export interface SetShipPlacementRule extends BaseRule {
 }
 // The `draft_panel` and `draft_placement_extra` categories allow story cards
 // to inject custom UI panels directly into the draft step for complex setups.
-export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer' | 'goal' | 'draft_panel' | 'draft_placement_extra' | 'prime_panel' | 'setup_selection'; rule: Omit<SpecialRule, 'source'>; }
+export interface AddSpecialRule extends BaseRule { type: 'addSpecialRule'; category: 'jobs' | 'allianceReaver' | 'draft' | 'nav' | 'prime' | 'resources' | 'soloTimer' | 'goal' | 'draft_panel' | 'draft_annotation' | 'draft_placement_extra' | 'prime_panel' | 'setup_selection'; rule: Omit<SpecialRule, 'source'>; }
 
 export interface AddFlagRule extends BaseRule { 
   type: 'addFlag'; 
@@ -134,6 +135,7 @@ export type SetupRule =
   | PrimeContactsRule
   | CreateAlertTokenStackRule
   | SetAllianceModeRule
+  | SetAlliancePlacementRule
   | SetNavModeRule
   | SetPrimeModeRule
   | SetDraftModeRule

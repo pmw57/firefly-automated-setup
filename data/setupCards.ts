@@ -52,7 +52,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
   { 
     id: SETUP_CARD_IDS.AWFUL_CROWDED, 
     label: "Awful Crowded In My Sky", 
-    description: "Alert Tokens are placed in every sector. Reshuffle cards are active. Specific starting jobs.",
+    description: "Alert Tokens are placed in every sector. Reshuffle cards are always active. Specific starting jobs.",
     requiredExpansion: 'blue',
     rules: createRules("Awful Crowded In My Sky", [
       { type: 'setNavMode', mode: 'standard_reshuffle' },
@@ -72,7 +72,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
   {
     id: SETUP_CARD_IDS.RIMS_THE_THING,
     label: "The Rim's The Thing",
-    description: "Focuses on the outer planets. Uses only Border Nav cards. Contact Decks contain only Blue Sun and Kalidasa cards.",
+    description: "Focuses on the outer planets. Contact Decks contain only Blue Sun and Kalidasa cards.",
     requiredExpansion: 'kalidasa',
     rules: createRules("The Rim's The Thing", [
       { type: 'setNavMode', mode: 'rim' },
@@ -174,7 +174,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
   { 
     id: SETUP_CARD_IDS.CLEARER_SKIES_BETTER_DAYS, 
     label: "Clearer Skies, Better Days", 
-    description: "Features 'Full Burn' mechanic for risky travel. No Alert Tokens are used.",
+    description: "Features 'Full Burn' mechanic for easier travel. No Alert Tokens are used.",
     requiredExpansion: 'crime',
     rules: createRules("Clearer Skies, Better Days", [
       { type: 'setNavMode', mode: 'clearer_skies' },
@@ -288,11 +288,26 @@ export const SETUP_CARDS: SetupCardDef[] = [
   {
     id: SETUP_CARD_IDS.THE_HEAT_IS_ON,
     label: "The Heat Is On",
-    description: "Leaders begin with Wanted tokens. Cruisers start at Regulus and Persephone. Pressure's High rules active.",
+    description: "Leaders begin with Wanted tokens. Pressure's High rules active.",
     requiredExpansion: 'tenth',
     rules: createRules("The Heat Is On", [
       { type: 'setAllianceMode', mode: 'extra_cruisers' },
       { type: 'setLeaderSetup', mode: 'wanted' },
+      {
+          type: 'addSpecialRule',
+          category: 'draft',
+          rule: {
+              title: 'The Heat Is On',
+              content: ['Choose Ships & Leaders normally, but each Leader begins play with a ', { type: 'strong', content: 'Warrant' }, ' token.']
+          }
+      },
+      {
+          type: 'addSpecialRule',
+          category: 'draft_annotation',
+          rule: {
+              content: [`⚠️ Restriction: Each Leader begins play with a `, { type: 'strong', content: 'Warrant' }, ` token.`]
+          }
+      }
     ]),
     steps: [
       { id: STEP_IDS.D_PRESSURES_HIGH, title: `1. ${BASE_TITLES.D_PRESSURES_HIGH}` },

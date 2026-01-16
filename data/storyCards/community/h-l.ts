@@ -96,7 +96,14 @@ export const STORIES_H_L: StoryCardDef[] = [
     tags: ['community', 'classic_heist'],
     rules: createStoryRules("It Ain't Easy Goin' Legit", [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, description: "Start with 2 Warrants." },
-      { type: 'addFlag', flag: 'allianceSpaceOffLimits' },
+      { 
+        type: 'addSpecialRule', 
+        category: 'nav', 
+        rule: { 
+            title: 'Restricted Airspace', 
+            content: [{ type: 'strong', content: `Alliance Space is Off Limits` }, ` until Goal 3.`] 
+        } 
+      },
       { type: 'forbidContact', contact: 'Harken' }
     ]),
     rating: 2,
