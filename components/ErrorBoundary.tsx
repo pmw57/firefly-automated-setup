@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { ErrorFallback } from './ErrorFallback';
 
 interface ErrorBoundaryProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 interface ErrorBoundaryState {
@@ -16,26 +16,26 @@ interface ErrorBoundaryState {
 // This class extends React.Component to become a stateful error boundary.
 // As a class component, it can use lifecycle methods like `getDerivedStateFromError`
 // and `componentDidCatch` to trap rendering errors in its children.
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  state: ErrorBoundaryState = {
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  public state: ErrorBoundaryState = {
     hasError: false,
     error: null,
   };
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+  public static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     // Update state so the next render will show the fallback UI.
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("Uncaught error:", error, errorInfo);
   }
 
-  handleReset = () => {
+  private handleReset = () => {
     this.setState({ hasError: false, error: null });
   };
 
-  render(): React.ReactNode {
+  public render(): ReactNode {
     if (this.state.hasError && this.state.error) {
       return (
         <ErrorFallback

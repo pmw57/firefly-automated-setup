@@ -11,8 +11,8 @@ describe('selectors/story', () => {
     describe('getAvailableSetupCards', () => {
         it.concurrent('should return all non-FlyingSolo cards when all expansions are enabled', () => {
             const cards = getAvailableSetupCards(baseGameState);
-            // Total setup cards (13) minus Flying Solo (1) and SolitaireFirefly (1, solo only) = 11 for multiplayer.
-            expect(cards.length).toBe(11);
+            // Total setup cards (13) minus Flying Solo (1) and SolitaireFirefly (1, solo only) and The Heat Is On (1, independent content) = 10 for multiplayer.
+            expect(cards.length).toBe(10);
             expect(cards.find(c => c.id === SETUP_CARD_IDS.FLYING_SOLO)).toBeUndefined();
         });
 

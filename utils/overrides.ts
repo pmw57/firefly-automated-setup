@@ -59,6 +59,7 @@ const RULE_TYPE_TO_STEP_ID: { [key in SetupRule['type']]?: string | ((rule: Setu
       case 'resources': return STEP_IDS.C5;
       case 'goal': return STEP_IDS.C4;
       case 'soloTimer': return STEP_IDS.D_GAME_LENGTH_TOKENS;
+      case 'pressures_high': return STEP_IDS.D_PRESSURES_HIGH;
       default: return '';
     }
   },
