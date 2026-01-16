@@ -10,35 +10,9 @@ import { useGameDispatch } from '../hooks/useGameDispatch';
 import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
-import { SpecialRule, StructuredContent } from '../types';
+import { SpecialRule } from '../types';
 import { getResolvedRules, hasRuleFlag } from '../utils/selectors/rules';
-import { PageReference } from './PageReference';
 import { StructuredContentRenderer } from './StructuredContentRenderer';
-
-// A recursive renderer for StructuredContent
-const renderStructuredContent = (content: StructuredContent): React.ReactNode => {
-  return content.map((part, index) => {
-    if (typeof part === 'string') {
-      return <React.Fragment key={index}>{part}</React.Fragment>;
-    }
-
-    switch (part.type) {
-      case 'strong':
-      case 'action':
-        return <strong key={index}>{part.content}</strong>;
-      case 'br':
-        return <br key={index} />;
-      case 'list':
-        return (
-          <ul key={index} className="list-disc list-inside space-y-1">
-            {part.items.map((item, i) => <li key={i}>{renderStructuredContent(item)}</li>)}
-          </ul>
-        );
-      default:
-        return null;
-    }
-  });
-};
 
 // Helper for inline instructions
 const DraftInstructionList = ({ rules, textColor }: { rules: SpecialRule[], textColor: string }) => {
@@ -46,7 +20,7 @@ const DraftInstructionList = ({ rules, textColor }: { rules: SpecialRule[], text
     return (
         <div className="space-y-2 mb-3">
             {rules.map((rule, i) => (
-                <p key={i} className={cls("text-xs font-bold", textColor)}>
+                <p key={i} className={cls("text-sm", textColor)}>
                     <StructuredContentRenderer content={rule.content} />
                 </p>
             ))}
@@ -143,10 +117,8 @@ const PlacementOrderPanel = ({
     placementOrder,
     isSolo,
     isHavenDraft,
-    havenPlacementRules,
     isBrowncoatDraft,
     specialStartSector,
-    placementRegionRestriction,
     stepBadgeClass,
     beforeRules,
     afterRules,
@@ -154,10 +126,8 @@ const PlacementOrderPanel = ({
     placementOrder: string[];
     isSolo: boolean;
     isHavenDraft: boolean;
-    havenPlacementRules?: SpecialRule | null;
     isBrowncoatDraft: boolean;
     specialStartSector: string | null;
-    placementRegionRestriction: string | null;
     stepBadgeClass: string;
     beforeRules: SpecialRule[];
     afterRules: SpecialRule[];
@@ -183,10 +153,15 @@ const PlacementOrderPanel = ({
 
     if (specialStartSector) {
         placementTitle = 'Special Placement';
+        // When specialStartSector is set, we suppress the standard list.
+        // We now rely entirely on `beforeRules` (populated from story data) to explain where to place.
         content = (
             <div className={cls("p-4 rounded text-center border", specialPlacementBg)}>
-                <p className={cls("font-bold mb-1", specialPlacementTitle)}>Fixed Starting Sector</p>
-                <p className={cls("text-sm", specialPlacementText)}>All ships start in <strong>{specialStartSector}</strong>.</p>
+                <p className={cls("font-bold mb-2", specialPlacementTitle)}>Fixed Starting Sector</p>
+                {/* The text "All ships start in..." is no longer generated here. 
+                    It must be provided by the story card via `draft_placement` rules. */}
+                <DraftInstructionList rules={beforeRules} textColor={specialPlacementText} />
+                <DraftInstructionList rules={afterRules} textColor={specialPlacementText} />
             </div>
         );
     } else {
@@ -208,15 +183,6 @@ const PlacementOrderPanel = ({
                     {description}
                 </p>
 
-                {placementRegionRestriction && (
-                     <div className={cls("mb-3 p-3 rounded border text-center", isDark ? 'bg-indigo-900/30 border-indigo-700' : 'bg-indigo-50 border-indigo-200')}>
-                        <p className={cls("text-xs font-bold uppercase tracking-wide mb-1", isDark ? 'text-indigo-400' : 'text-indigo-800')}>Restricted Placement</p>
-                        <p className={cls("text-sm font-medium", isDark ? 'text-indigo-200' : 'text-indigo-900')}>
-                            Ships must be placed in <strong>{placementRegionRestriction}</strong>.
-                        </p>
-                     </div>
-                )}
-
                 <DraftInstructionList rules={beforeRules} textColor={restrictionTextColor} />
                 
                 <ul className="space-y-2">
@@ -234,15 +200,6 @@ const PlacementOrderPanel = ({
                          <DraftInstructionList rules={afterRules} textColor={restrictionTextColor} />
                     </div>
                 )}
-
-                {isHavenDraft && havenPlacementRules && (
-                    <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
-                         <h5 className={cls("font-bold uppercase tracking-wide text-xs mb-1", isDark ? 'text-gray-300' : 'text-gray-700')}>{havenPlacementRules.title || 'Haven Placement Rules'}:</h5>
-                         <div className={cls("space-y-1 text-xs", isDark ? 'text-gray-400' : 'text-gray-600')}>
-                             {renderStructuredContent(havenPlacementRules.content)}
-                         </div>
-                    </div>
-                )}
             </>
         );
     }
@@ -254,9 +211,6 @@ const PlacementOrderPanel = ({
                 <h4 className={cls("font-bold", panelHeaderColor)}>
                     {placementTitle}
                 </h4>
-                {isHavenDraft && havenPlacementRules?.page && (
-                    <PageReference page={havenPlacementRules.page} manual={havenPlacementRules.manual} />
-                )}
             </div>
             {content}
         </div>
@@ -319,8 +273,6 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       isHavenDraft,
       isBrowncoatDraft,
       specialStartSector,
-      placementRegionRestriction,
-      havenPlacementRules,
       playerBadges,
   } = useDraftDetails(step);
 
@@ -445,10 +397,8 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 placementOrder={draftState.placementOrder}
                 isSolo={isSolo}
                 isHavenDraft={isHavenDraft}
-                havenPlacementRules={havenPlacementRules}
                 isBrowncoatDraft={isBrowncoatDraft}
                 specialStartSector={specialStartSector}
-                placementRegionRestriction={placementRegionRestriction}
                 stepBadgeClass={stepBadgeAmberBg}
                 beforeRules={draftPlacementBefore}
                 afterRules={draftPlacementAfter}

@@ -23,11 +23,26 @@ export const STORIES_A_D: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'The Boneyard Special',
-          content: ["When placing ships, each player also places a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Start with a small ship (less than 10 cargo hold) and pay for it and your Starting Supplies when you gain your money."],
+          content: ["Place a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Start with a small ship (less than 10 cargo hold) and pay for it and your Starting Supplies when you gain your money."],
           flags: ['isHavenPlacement']
         }
       },
-      { type: 'setPlayerBadges', badges: { 0: 'Select Small Ship', 1: 'Select Small Ship' } },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_ships',
+        rule: {
+          content: ["Select small ships, less than 10 cargo hold."],
+          position: 'before'
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_placement',
+        rule: {
+          content: ["Place Haven in any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet."],
+          position: 'before'
+        }
+      },
       {
         type: 'addSpecialRule',
         category: 'resources',

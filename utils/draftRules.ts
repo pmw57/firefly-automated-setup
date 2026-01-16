@@ -85,7 +85,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const shipPlacementRule = allRules.find(r => r.type === 'setShipPlacement') as (SetShipPlacementRule | undefined);
     
     let specialStartSector: string | null = null;
-    let placementRegionRestriction: string | null = null;
+    const placementRegionRestriction: string | null = null;
     
     if (shipPlacementRule) {
       if (typeof shipPlacementRule.location === 'string') {
@@ -98,11 +98,12 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
               break;
         }
       } else if (typeof shipPlacementRule.location === 'object') {
-        if ('region' in shipPlacementRule.location) {
-            placementRegionRestriction = shipPlacementRule.location.region;
-        } else if ('sector' in shipPlacementRule.location) {
+        if ('sector' in shipPlacementRule.location) {
             specialStartSector = shipPlacementRule.location.sector;
         }
+        // NOTE: We no longer automatically extract 'region' restrictions.
+        // Instead, we rely on `draft_placement` rules defined in the story/setup data 
+        // to populate the UI panel. This prevents code/data duplication logic errors.
       }
     }
 
@@ -114,7 +115,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const showBrowncoatHeroesWarning = isBrowncoatDraft && isHeroesAndMisfits && isHeroesCustomSetup;
     
     let resolvedHavenDraft = isHavenDraft;
-    let resolvedHavenPlacementRules = havenPlacementRules;
     let conflictMessage: import('../types').StructuredContent | null = null;
   
     if (isHavenDraft && specialStartSector) {
@@ -129,7 +129,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
             }
         }
         
-        resolvedHavenPlacementRules = null;
         conflictMessage = [{ type: 'strong', content: 'Story Priority:' }, ` Ships start at `, { type: 'strong', content: specialStartSector }, `, overriding Haven placement rules.`];
     }
     
@@ -207,7 +206,9 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
         specialStartSector, 
         placementRegionRestriction, 
         conflictMessage, 
-        havenPlacementRules: resolvedHavenPlacementRules,
+        // We no longer pass the full rule object to the UI for automatic rendering,
+        // avoiding duplication with the new draft_placement rules.
+        havenPlacementRules: null, 
         playerBadges 
     };
 };
