@@ -126,6 +126,22 @@ export const STORIES_A_D: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
+        category: 'draft_annotation',
+        rule: {
+          title: 'Picking Sides',
+          content: ["Players evenly pick Alliance or Independents (Browncoats)."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_placement_extra',
+        rule: {
+          title: 'Picking Sides',
+          content: ["Place Alliance ships to inner planets, Browncoats to Border Planets."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
         category: 'prime',
         rule: {
           title: 'War Materiel Setup',
@@ -137,7 +153,7 @@ export const STORIES_A_D: StoryCardDef[] = [
   {
     title: "Black Market Beagles",
     intro: "One too many loads of smuggled cargo (of the live variety) has really started to stink up the place so the crew has opted to transport something smaller, more specifically with smaller droppings.",
-    setupDescription: "Follow the 'Starting Gear' override.",
+    setupDescription: "Beagles are the contraband. If you lose 'em you can get more at Jiangyin, Red Sun, for $1000 each! Start out with 1 Cry Baby on the ship to use as you liken'",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1098646/article/14445829#14445829",
     rating: 1,
@@ -149,6 +165,14 @@ export const STORIES_A_D: StoryCardDef[] = [
         rule: {
           title: 'Starting Gear',
           content: ["Each player begins the game with 1 Cry Baby on their ship."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_annotation',
+        rule: {
+          title: 'Starting Gear',
+          content: ["Each player's ship starts with 1 Cry Baby."]
         }
       }
     ])
@@ -164,7 +188,7 @@ export const STORIES_A_D: StoryCardDef[] = [
   {
     title: "Doing Good Works",
     intro: "A plague has broken out on the border worlds. A natural disease? Leftover bioweapons from the Unification War? Or an attempt by the Alliance to exterminate those whoresist its rule? No one knows. But word's gotten out that the Alliance has a cure for it--and they're not sharing.",
-    setupDescription: "Follow the 'Special Starting Procedure' override.",
+    setupDescription: "A player placing his ship on a supply world may choose three cards from that world's deck. Crew are hired for free. Other cards must be paid for at half price from the player's starting cash. Corbin and Marco's half-price abilities apply—round the price of each item up to the nearest $100. More than one player may start on the same world. Additional players must wait until the previous player has selected three cards before taking their selections.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1240655/doing-good-works-soloco-op-scenario",
     rating: 0,
@@ -175,7 +199,23 @@ export const STORIES_A_D: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Special Starting Procedure',
-          content: ["Players starting on a Supply world may choose three cards from that Supply deck. Crew are hired for free. Other cards must be paid for at half price from the player's starting cash. Corbin and Marco's half-price abilities apply (round up to nearest $100). More than one player may start on the same world. Additional players must wait for the previous player to finish before selecting their cards."]
+          content: ["More than one player may start on the same world."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_placement_extra',
+        rule: {
+          title: 'Special Starting Procedure',
+          content: ["More than one player may start on the same world."]
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Special Starting Procedure',
+          content: ["Players starting on a Supply world may choose three cards from that Supply deck. Crew are hired for free. Other cards must be paid for at half price from the player's starting cash. Corbin and Marco's half-price abilities apply (round up to nearest $100). Additional players must wait for the previous player to finish before selecting their cards."]
         }
       }
     ])

@@ -70,18 +70,18 @@ const DraftOrderPanel = ({
     const restrictionTextColor = isDark ? 'text-yellow-400' : 'text-yellow-700';
 
     const description = isSolo
-        ? (isHavenDraft ? "Choose a Leader & Ship." : "Choose a Leader & Ship.")
+        ? "Choose a Leader & Ship."
         : isHavenDraft
         ? "The player with the highest die roll chooses a Leader & Ship first. Pass to Left."
         : isBrowncoatDraft
-        ? "Winner selects Leader OR buys Ship. Pass to Left."
-        : "Winner selects Leader & Ship. Pass to Left.";
+        ? "Winner buys Ship or selects Leader. Pass to Left."
+        : "Winner selects Ship & Leader. Pass to Left.";
 
     return (
         <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
               <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Phase 1</div>
               <h4 className={cls("font-bold mb-2 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
-                  {isHavenDraft ? 'Select Leader & Ship' : 'Select Ship & Leader'}
+                  {'Select Ship & Leader'}
               </h4>
               
               <p className={cls("text-xs mb-3 italic", panelSubColor)}>
