@@ -173,7 +173,8 @@ export const STORIES_A_D: StoryCardDef[] = [
         category: 'draft_ships',
         rule: {
           title: 'Starting Gear',
-          content: ["Each player's ship starts with 1 Cry Baby."]
+          content: ["Each player's ship starts with 1 Cry Baby."],
+          position: 'before'
         }
       }
     ])
