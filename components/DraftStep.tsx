@@ -146,6 +146,7 @@ const PlacementOrderPanel = ({
     havenPlacementRules,
     isBrowncoatDraft,
     specialStartSector,
+    placementRegionRestriction,
     stepBadgeClass,
     beforeRules,
     afterRules,
@@ -156,6 +157,7 @@ const PlacementOrderPanel = ({
     havenPlacementRules?: SpecialRule | null;
     isBrowncoatDraft: boolean;
     specialStartSector: string | null;
+    placementRegionRestriction: string | null;
     stepBadgeClass: string;
     beforeRules: SpecialRule[];
     afterRules: SpecialRule[];
@@ -205,6 +207,15 @@ const PlacementOrderPanel = ({
                 <p className={cls("text-xs mb-3 italic", descriptionColor)}>
                     {description}
                 </p>
+
+                {placementRegionRestriction && (
+                     <div className={cls("mb-3 p-3 rounded border text-center", isDark ? 'bg-indigo-900/30 border-indigo-700' : 'bg-indigo-50 border-indigo-200')}>
+                        <p className={cls("text-xs font-bold uppercase tracking-wide mb-1", isDark ? 'text-indigo-400' : 'text-indigo-800')}>Restricted Placement</p>
+                        <p className={cls("text-sm font-medium", isDark ? 'text-indigo-200' : 'text-indigo-900')}>
+                            Ships must be placed in <strong>{placementRegionRestriction}</strong>.
+                        </p>
+                     </div>
+                )}
 
                 <DraftInstructionList rules={beforeRules} textColor={restrictionTextColor} />
                 
@@ -308,6 +319,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       isHavenDraft,
       isBrowncoatDraft,
       specialStartSector,
+      placementRegionRestriction,
       havenPlacementRules,
       playerBadges,
   } = useDraftDetails(step);
@@ -436,6 +448,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 havenPlacementRules={havenPlacementRules}
                 isBrowncoatDraft={isBrowncoatDraft}
                 specialStartSector={specialStartSector}
+                placementRegionRestriction={placementRegionRestriction}
                 stepBadgeClass={stepBadgeAmberBg}
                 beforeRules={draftPlacementBefore}
                 afterRules={draftPlacementAfter}

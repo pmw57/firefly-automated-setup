@@ -18,7 +18,17 @@ export const STORIES_F_G: StoryCardDef[] = [
           title: 'Special Crew & Placement',
           content: ["After choosing your Leader, search for any Wanted crew from any deck and add them to your crew. You must start in Alliance Space."]
         }
-      }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_ships',
+        rule: {
+          title: 'Special Crew & Placement',
+          content: ["Search for any Wanted crew from any deck and add them to your crew."],
+          position: 'after'
+        }
+      },
+      { type: 'setShipPlacement', location: { region: 'Alliance Space' } }
     ])
   },
   {
