@@ -289,9 +289,8 @@ export const SETUP_CARDS: SetupCardDef[] = [
     id: SETUP_CARD_IDS.THE_HEAT_IS_ON,
     label: "The Heat Is On",
     description: "Leaders begin with Wanted tokens. Pressure's High rules active.",
-    requiredExpansion: 'tenth',
+    requiredExpansion: 'black_market',
     rules: createRules("The Heat Is On", [
-      { type: 'setAllianceMode', mode: 'extra_cruisers' },
       { type: 'setLeaderSetup', mode: 'wanted' },
       {
           type: 'addSpecialRule',
@@ -306,6 +305,14 @@ export const SETUP_CARDS: SetupCardDef[] = [
           category: 'draft_annotation',
           rule: {
               content: [`⚠️ Restriction: Each Leader begins play with a `, { type: 'strong', content: 'Warrant' }, ` token.`]
+          }
+      },
+      {
+          type: 'addSpecialRule',
+          category: 'pressures_high',
+          rule: {
+              title: 'The Pressure\'s High',
+              content: ["Begin the game with one random Alliance Alert Card in play. Each Alert has a rule that affects all players. When a Misbehave Card directs you to draw a new Alert Card, place the current Alert at the bottom of the Alert Deck."]
           }
       }
     ]),

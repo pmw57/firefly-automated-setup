@@ -53,6 +53,16 @@ describe('rules/draftRules', () => {
         expect(details.isHavenDraft).toBe(true);
         expect(details.specialRules.some(r => getTextContent(r.title).includes('Placement Rules'))).toBe(true);
     });
+    
+    it.concurrent('generates a rule for Wanted Leader mode via Setup Card', () => {
+        // The rule is now driven by the Setup Card configuration in data/setupCards.ts
+        // rather than a hardcoded override mapping in utils/draftRules.ts
+        const state: GameState = { ...baseGameState, setupCardId: SETUP_CARD_IDS.THE_HEAT_IS_ON };
+        const details = getDraftDetails(state, baseStep);
+        const rule = details.specialRules.find(r => r.title === 'The Heat Is On');
+        expect(rule).toBeDefined();
+        expect(getTextContent(rule?.content)).toContain('each Leader begins play with a Warrant token');
+    });
 
     it.concurrent('generates a rule for Optional Ship Upgrades', () => {
         const state: GameState = { ...baseGameState, optionalRules: { ...baseGameState.optionalRules, optionalShipUpgrades: true } };
