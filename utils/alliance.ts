@@ -1,11 +1,9 @@
 import { 
     GameState, 
-    StepOverrides, 
     AllianceReaverDetails, 
     SpecialRule, 
-    SetAllianceModeRule,
     SetAlliancePlacementRule,
-    AddFlagRule,
+    SetReaverPlacementRule,
     RuleSourceType
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
@@ -26,7 +24,7 @@ const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source
   return source;
 };
 
-export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: StepOverrides): AllianceReaverDetails => {
+export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDetails => {
   const allRules = getResolvedRules(gameState);
   const specialRules: SpecialRule[] = [];
   
@@ -37,34 +35,24 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
   const standardReaverPlacement = "Place 1 Cutter at the Firefly logo.";
 
   // --- Process general alert token rules ---
-  const allianceModeRule = allRules.find(r => r.type === 'setAllianceMode') as SetAllianceModeRule | undefined;
-  const allianceMode = allianceModeRule?.mode || stepOverrides.allianceMode;
-
-  switch (allianceMode) {
-    case 'no_alerts':
-      specialRules.push({ source: 'setupCard', title: 'Safe Skies', content: [{ type: 'strong', content: 'Safe Skies:' }, ' Do not place any Alert Tokens at the start of the game.'] });
-      break;
-    case 'awful_crowded':
-      specialRules.push({
-        source: 'setupCard', title: 'Awful Crowded',
-        content: [
-          { type: 'strong', content: 'Awful Crowded:' },
-          { type: 'list', items: [
-            ['Place an ', { type: 'action', content: 'Alert Token' }, ' in ', { type: 'strong', content: 'every planetary sector' }, '.'],
-            [{ type: 'strong', content: 'Alliance Space:' }, ' Place Alliance Alert Tokens.'],
-            [{ type: 'strong', content: 'Border & Rim Space:' }, ' Place Reaver Alert Tokens.'],
-            [{ type: 'warning-box', content: ["Do not place Alert Tokens on players' starting locations."] }],
-            [{ type: 'strong', content: 'Alliance Ship movement' }, ' does not generate new Alert Tokens.'],
-            [{ type: 'strong', content: 'Reaver Ship movement' }, ' generates new Alert Tokens.']
-          ]}
-        ]
-      });
-      break;
-  }
+  // Note: Specific rule text for 'awful_crowded' and 'no_alerts' modes is now
+  // handled via explicit `addSpecialRule` entries in data/setupCards.ts.
+  // This block processes any other generic rules added by stories/expansions.
   
   if (hasRuleFlag(allRules, 'placeMixedAlertTokens')) {
     specialRules.push({ source: 'story', title: 'Verse-Wide Tension', content: ['Place ', { type: 'strong', content: '3 Alliance Alert Tokens' }, " in the 'Verse:", { type: 'list', items: [['1 in ', { type: 'strong', content: 'Alliance Space' }], ['1 in ', { type: 'strong', content: 'Border Space' }], ['1 in ', { type: 'strong', content: 'Rim Space' }]] }] });
   }
+
+  allRules.forEach(rule => {
+      if (rule.type === 'addSpecialRule' && rule.category === 'allianceReaver') {
+          if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
+              specialRules.push({
+                  source: rule.source as SpecialRule['source'],
+                  ...rule.rule
+              });
+          }
+      }
+  });
 
   // --- Process Alliance Cruiser placement ---
   const alliancePlacementRule = allRules.find(r => r.type === 'setAlliancePlacement') as SetAlliancePlacementRule | undefined;
@@ -83,31 +71,17 @@ export const getAllianceReaverDetails = (gameState: GameState, stepOverrides: St
   }
 
   // --- Process Reaver Cutter placement ---
-  const huntForTheArcRule = allRules.find(
-    (r): r is AddFlagRule => r.type === 'addFlag' && r.flag === 'huntForTheArcReaverPlacement'
-  );
+  const reaverPlacementRule = allRules.find(r => r.type === 'setReaverPlacement') as SetReaverPlacementRule | undefined;
   const hasBlueSunReavers = hasRuleFlag(allRules, 'blueSunReaverPlacement');
   
   let finalReaverPlacement: string;
   let reaverOverrideSource: RuleSourceType = 'expansion';
   let reaverOverrideTitle = 'Reaver Placement';
   
-  if (huntForTheArcRule) {
-      reaverOverrideSource = huntForTheArcRule.source;
+  if (reaverPlacementRule) {
+      reaverOverrideSource = reaverPlacementRule.source;
       reaverOverrideTitle = 'Special Reaver Placement';
-      const storyReavers = huntForTheArcRule.reaverShipCount || 1;
-      const totalReavers = hasBlueSunReavers ? 3 : 1;
-      const remainingReavers = totalReavers - storyReavers;
-      
-      const placementParts = [
-          `Place ${storyReavers} Reaver ship in the Border Space sector directly below Valentine.`
-      ];
-      
-      if (remainingReavers > 0) {
-          placementParts.push(`Place the remaining ${remainingReavers} Cutter(s) in the border sectors closest to Miranda.`);
-      }
-      finalReaverPlacement = placementParts.join(' ');
-
+      finalReaverPlacement = reaverPlacementRule.placement;
   } else if (hasBlueSunReavers) {
       reaverOverrideTitle = 'Blue Sun Reavers';
       finalReaverPlacement = "Place 3 Cutters in the border sectors closest to Miranda.";

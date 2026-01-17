@@ -23,9 +23,8 @@ const renderContent = (content: StructuredContentPart[]): React.ReactNode => {
     });
 };
 
-export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
+export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
   const { state: gameState } = useGameState();
-  const { overrides = {} } = step;
   const { setupMode } = gameState;
 
   const {
@@ -34,7 +33,7 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
     standardReaverPlacement,
     allianceOverride,
     reaverOverride
-  } = useAllianceReaverDetails(overrides);
+  } = useAllianceReaverDetails();
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
