@@ -280,16 +280,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             activeStoryCard,
             gameState
         );
-    
-        if (jobDrawMode === 'rim_jobs') {
-            messages.unshift({
-                source: 'setupCard', 
-                title: 'Rim Space Jobs', 
-                content: [
-                    { type: 'paragraph', content: [{ type: 'strong', content: "Rebuild the Contact Decks" }, " using ", { type: 'strong', content: "only" }, " cards from the Blue Sun and Kalidasa expansions."] }
-                ]
-            });
-        }
         
         const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
         const standardContacts = [CONTACT_NAMES.HARKEN, CONTACT_NAMES.BADGER, CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.PATIENCE, CONTACT_NAMES.NISKA];

@@ -154,7 +154,10 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Place 1 Reaver ship below Valentine. If Blue Sun is active, place 2 more Cutters near Miranda.",
     tags: ['community', 'mystery', 'against_the_black', 'solo'],
     rules: createStoryRules("Hunt For The Arc", [
-      { type: 'addFlag', flag: 'huntForTheArcReaverPlacement', reaverShipCount: 1 }
+        {
+            type: 'setReaverPlacement',
+            placement: "Place 1 Reaver ship in the Border Space sector directly below Valentine. If Blue Sun is active, place the remaining 2 Cutters in the border sectors closest to Miranda."
+        }
     ])
   },
   {
