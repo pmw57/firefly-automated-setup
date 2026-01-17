@@ -328,10 +328,11 @@ export const STORIES_R_S: StoryCardDef[] = [
       { type: 'setShipPlacement', location: { region: 'border of Murphy' }, source: 'story', sourceName: "Shadows Over Duul" },
       {
         type: 'addSpecialRule',
-        category: 'draft',
+        category: 'draft_placement',
         rule: {
           title: 'A Tense Start',
-          content: ["Start in the border of Murphy."]
+          content: ["Start in the border of Murphy."],
+          position: 'before'
         },
         source: 'story', 
         sourceName: "Shadows Over Duul"

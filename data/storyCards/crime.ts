@@ -35,10 +35,11 @@ export const CRIME_STORIES: StoryCardDef[] = [
       { type: "setShipPlacement", location: "londinium", source: 'story', sourceName: "Smuggler's Blues" },
       {
         type: "addSpecialRule",
-        category: "draft",
+        category: "draft_placement",
         rule: {
           title: "In the Belly of the Beast",
-          content: ["Players begin at Londinium."]
+          content: ["Players begin at Londinium."],
+          position: 'before'
         },
         source: 'story', 
         sourceName: "Smuggler's Blues"

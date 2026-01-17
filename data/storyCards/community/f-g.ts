@@ -14,8 +14,8 @@ export const STORIES_F_G: StoryCardDef[] = [
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: 'Special Crew & Placement',
-          content: ["After choosing your Leader, search for any Wanted crew from any deck and add them to your crew. You must start in Alliance Space."]
+          title: 'Special Crew',
+          content: ["After choosing your Leader, search for any Wanted crew from any deck and add them to your crew."]
         },
         source: 'story', 
         sourceName: "Fruity Oat Bar"
@@ -24,9 +24,20 @@ export const STORIES_F_G: StoryCardDef[] = [
         type: 'addSpecialRule',
         category: 'draft_ships',
         rule: {
-          title: 'Special Crew & Placement',
+          title: 'Special Crew',
           content: ["Search for any Wanted crew from any deck and add them to your crew."],
           position: 'after'
+        },
+        source: 'story', 
+        sourceName: "Fruity Oat Bar"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_placement',
+        rule: {
+          title: 'Special Placement',
+          content: ["You must start in Alliance Space."],
+          position: 'before'
         },
         source: 'story', 
         sourceName: "Fruity Oat Bar"
