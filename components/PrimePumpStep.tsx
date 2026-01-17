@@ -7,7 +7,6 @@ import { StepComponentProps } from './StepContent';
 import { SpecialRule } from '../types';
 import { cls } from '../utils/style';
 import { StructuredContentRenderer } from './StructuredContentRenderer';
-import { getActiveStoryCard } from '../utils/selectors/story';
 
 interface CustomPrimePanelProps {
   rule: SpecialRule;
@@ -55,9 +54,6 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     hasStartWithAlertCard,
     disablePriming,
   } = usePrimeDetails(overrides);
-
-  const activeStoryCard = getActiveStoryCard(gameState);
-  const isRiversRun = activeStoryCard?.title === "River's Run 1v1";
   
   const allInfoBlocks = useMemo(() => {
     const blocks: SpecialRule[] = [...specialRules];
@@ -108,19 +104,6 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
   return (
     <div className="space-y-4">
       {allInfoBlocks}
-
-      {isRiversRun && (
-        <OverrideNotificationBlock
-          source="story"
-          title="Bounty Deck Setup"
-          content={[{
-              type: 'paragraph',
-              content: [
-                  "Remove all Serenity's crew from the Bounty deck, excluding River Tam. The Bounty deck is placed face up and all bounties are active."
-              ]
-          }]}
-        />
-      )}
       
       {!disablePriming && (
         <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm text-center transition-colors duration-300`}>

@@ -1,6 +1,5 @@
 import { StoryCardDef } from '../../types';
 import { CONTACT_NAMES } from '../ids';
-import { createStoryRules } from './utils';
 
 export const CRIME_STORIES: StoryCardDef[] = [
   {
@@ -10,26 +9,30 @@ export const CRIME_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/3464668/firefly-the-game-crime-and-punishment",
     setupDescription: "Place a $2000 Bill under the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Players do not receive Starting Jobs.",
     tags: ['smugglers_run'],
-    rules: createStoryRules("Smuggler's Blues", [
-      { type: "addFlag", flag: "smugglersBluesSetup" },
+    rules: [
+      { type: "addFlag", flag: "smugglersBluesSetup", source: 'story', sourceName: "Smuggler's Blues" },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: "A Lucrative Opportunity",
           content: ["Place 3 Contraband on each planetary sector in Alliance Space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Smuggler's Blues"
       },
-      { type: "addFlag", flag: "startWithAlertCard" },
+      { type: "addFlag", flag: "startWithAlertCard", source: 'story', sourceName: "Smuggler's Blues" },
       {
         type: 'addSpecialRule',
         category: 'prime',
         rule: {
           title: 'Alliance High Alert',
           content: ["Begin the game with one random Alliance Alert Card in play."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Smuggler's Blues"
       },
-      { type: "setShipPlacement", location: "londinium" },
+      { type: "setShipPlacement", location: "londinium", source: 'story', sourceName: "Smuggler's Blues" },
       {
         type: "addSpecialRule",
         category: "draft",
@@ -37,8 +40,10 @@ export const CRIME_STORIES: StoryCardDef[] = [
           title: "In the Belly of the Beast",
           content: ["Players begin at Londinium."]
         },
+        source: 'story', 
+        sourceName: "Smuggler's Blues"
       },
-      { type: "setJobMode", mode: "no_jobs" },
+      { type: "setJobMode", mode: "no_jobs", source: 'story', sourceName: "Smuggler's Blues" },
       {
         type: 'setJobStepContent',
         position: 'after',
@@ -56,7 +61,9 @@ export const CRIME_STORIES: StoryCardDef[] = [
               [{ type: 'strong', content: 'Niska'}]
             ]
           }
-        ]
+        ],
+        source: 'story', 
+        sourceName: "Smuggler's Blues"
       },
       {
         type: 'addSpecialRule',
@@ -64,9 +71,11 @@ export const CRIME_STORIES: StoryCardDef[] = [
         rule: {
           title: "A Reliable Fence",
           content: ["Place a $2000 Bill under the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Players do not receive Starting Jobs."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Smuggler's Blues"
       }
-    ])
+    ]
   },
   {
     title: "Wanted Men",
@@ -75,15 +84,17 @@ export const CRIME_STORIES: StoryCardDef[] = [
     requiredExpansion: "crime",
     sourceUrl: "https://boardgamegeek.com/image/3524452",
     tags: ['reputation', 'smugglers_run'],
-    rules: createStoryRules("Wanted Men", [
-      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
+    rules: [
+      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant.", source: 'story', sourceName: "Wanted Men" },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: 'A Price on Your Head',
           content: ["Each player starts the game with 1 Warrant."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Wanted Men"
       },
       {
         type: 'addSpecialRule',
@@ -91,7 +102,9 @@ export const CRIME_STORIES: StoryCardDef[] = [
         rule: { 
             content: ['⚠️ Not within Alliance Space'],
             position: 'before'
-        }
+        },
+        source: 'story', 
+        sourceName: "Wanted Men"
       },
       {
         type: 'addSpecialRule',
@@ -99,26 +112,32 @@ export const CRIME_STORIES: StoryCardDef[] = [
         rule: {
           title: 'Laying Low',
           content: ["Players' starting locations may not be within Alliance Space."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Wanted Men"
       },
-      { type: 'addFlag', flag: 'startWithAlertCard' },
+      { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "Wanted Men" },
       {
         type: 'addSpecialRule',
         category: 'prime',
         rule: {
           title: 'Alliance High Alert',
           content: ["Begin the game with one random Alliance Alert Card in play."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Wanted Men"
       },
-      { type: 'allowContacts', contacts: [CONTACT_NAMES.PATIENCE, CONTACT_NAMES.BADGER, CONTACT_NAMES.NISKA, CONTACT_NAMES.MR_UNIVERSE, CONTACT_NAMES.FANTY_MINGO] },
+      { type: 'allowContacts', contacts: [CONTACT_NAMES.PATIENCE, CONTACT_NAMES.BADGER, CONTACT_NAMES.NISKA, CONTACT_NAMES.MR_UNIVERSE, CONTACT_NAMES.FANTY_MINGO], source: 'story', sourceName: "Wanted Men" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: "Known Associates",
           content: ["Starting Jobs may only be drawn from Patience, Badger, Niska, Mr. Universe and Fanty & Mingo."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Wanted Men"
       },
-    ])
+    ]
   },
 ];

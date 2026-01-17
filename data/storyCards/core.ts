@@ -1,6 +1,5 @@
 import { StoryCardDef } from '../../types/index';
 import { CONTACT_NAMES } from '../ids';
-import { createStoryRules } from './utils';
 
 export const CORE_STORIES: StoryCardDef[] = [
   {
@@ -10,26 +9,30 @@ export const CORE_STORIES: StoryCardDef[] = [
     setupDescription: "All players start with a Warrant Token! Players may not deal with Harken. Do not draw Harken Jobs during Set Up.",
     sourceUrl: "https://boardgamegeek.com/image/2785050/gerryrailbaron",
     tags: ['smugglers_run', 'survival'],
-    rules: createStoryRules("Desperadoes", [
-      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant." },
+    rules: [
+      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Start with 1 Warrant.", source: 'story', sourceName: "Desperadoes" },
       { 
         type: 'addSpecialRule', 
         category: 'resources',
         rule: {
           title: "Wanted Captains",
           content: ["All players start with one Warrant token."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Desperadoes"
       },
-      { type: 'forbidContact', contact: CONTACT_NAMES.HARKEN },
+      { type: 'forbidContact', contact: CONTACT_NAMES.HARKEN, source: 'story', sourceName: "Desperadoes" },
       { 
         type: 'addSpecialRule', 
         category: 'jobs',
         rule: {
           title: "Contact Restriction",
           content: ["Harken jobs are unavailable."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Desperadoes"
       }
-    ])
+    ]
   },
   {
     title: "First Time in the Captain's Chair",
@@ -37,17 +40,19 @@ export const CORE_STORIES: StoryCardDef[] = [
     setupDescription: "When taking Starting Jobs, only take a job from Harken and Amnon Duul. These Jobs may be discarded, as normal.",
     sourceUrl: "https://boardgamegeek.com/image/2785053/gerryrailbaron",
     tags: ['character', 'doing_the_job'],
-    rules: createStoryRules("First Time in the Captain's Chair", [
-      { type: 'allowContacts', contacts: [CONTACT_NAMES.HARKEN, CONTACT_NAMES.AMNON_DUUL] },
+    rules: [
+      { type: 'allowContacts', contacts: [CONTACT_NAMES.HARKEN, CONTACT_NAMES.AMNON_DUUL], source: 'story', sourceName: "First Time in the Captain's Chair" },
       { 
         type: 'addSpecialRule', 
         category: 'jobs',
         rule: {
           title: "The Creditor's Leash",
           content: ["Starting Jobs are drawn only from Harken and Amnon Duul."]
-        }
+        },
+        source: 'story', 
+        sourceName: "First Time in the Captain's Chair"
       }
-    ])
+    ]
   },
   {
     title: "Harken's Folly",

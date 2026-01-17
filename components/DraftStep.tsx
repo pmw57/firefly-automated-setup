@@ -11,7 +11,6 @@ import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
 import { SpecialRule } from '../types';
-import { getResolvedRules, hasRuleFlag } from '../utils/selectors/rules';
 import { StructuredContentRenderer } from './StructuredContentRenderer';
 
 // Helper for inline instructions
@@ -259,9 +258,6 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const isSolo = gameState.playerCount === 1;
   const isQuickMode = gameState.setupMode === 'quick';
   
-  const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
-  const isGoingLegit = useMemo(() => hasRuleFlag(allRules, 'isGoingLegit'), [allRules]);
-
   const {
       specialRules,
       draftPanelsBefore,
@@ -410,15 +406,6 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
             ))}
             
           </div>
-
-          {isGoingLegit && (
-            <OverrideNotificationBlock
-              source="info"
-              title="For Sale Pile"
-              content={["Leave unused ships out of the box as a \"For Sale\" pile."]}
-              className="mt-6"
-            />
-          )}
         </div>
       )}
     </div>

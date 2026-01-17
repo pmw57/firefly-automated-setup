@@ -1,6 +1,5 @@
 import { StoryCardDef } from '../../../types';
 import { CONTACT_NAMES } from '../../ids';
-import { createStoryRules } from '../utils';
 
 export const STORIES_A_D: StoryCardDef[] = [
   {
@@ -16,8 +15,8 @@ export const STORIES_A_D: StoryCardDef[] = [
     requiredExpansion: "community",
     rating: 1,
     tags: ['community', 'character'],
-    rules: createStoryRules("A New Leaf", [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 10000, description: "Story Funds" },
+    rules: [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 10000, description: "Story Funds", source: 'story', sourceName: "A New Leaf" },
       {
         type: 'addSpecialRule',
         category: 'draft',
@@ -25,7 +24,9 @@ export const STORIES_A_D: StoryCardDef[] = [
           title: 'The Boneyard Special',
           content: ["Place a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Start with a small ship (less than 10 cargo hold) and pay for it and your Starting Supplies when you gain your money."],
           flags: ['isHavenPlacement']
-        }
+        },
+        source: 'story', 
+        sourceName: "A New Leaf"
       },
       {
         type: 'addSpecialRule',
@@ -33,7 +34,9 @@ export const STORIES_A_D: StoryCardDef[] = [
         rule: {
           content: ["Select small ships, less than 10 cargo hold."],
           position: 'before'
-        }
+        },
+        source: 'story', 
+        sourceName: "A New Leaf"
       },
       {
         type: 'addSpecialRule',
@@ -41,7 +44,9 @@ export const STORIES_A_D: StoryCardDef[] = [
         rule: {
           content: ["Place Haven in any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet."],
           position: 'before'
-        }
+        },
+        source: 'story', 
+        sourceName: "A New Leaf"
       },
       {
         type: 'addSpecialRule',
@@ -51,7 +56,9 @@ export const STORIES_A_D: StoryCardDef[] = [
           content: [
             "Start with $10,000 anda small ship (less than 10 cargo hold) and pay for it and your Starting Supplies when you gain your money."
           ]
-        }
+        },
+        source: 'story', 
+        sourceName: "A New Leaf"
       },
       {
         type: 'addSpecialRule',
@@ -60,18 +67,22 @@ export const STORIES_A_D: StoryCardDef[] = [
           title: 'Payment Required',
           content: ["Pay for your ship, fuel, and parts from your Starting Capitol."],
           flags: ['showInResourceList', 'hideFromTop']
-        }
+        },
+        source: 'story', 
+        sourceName: "A New Leaf"
       },
-      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
+      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA, source: 'story', sourceName: "A New Leaf" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: "Proving your worth",
           content: ["No Starting Jobs from Niska."]
-        }
+        },
+        source: 'story', 
+        sourceName: "A New Leaf"
       },
-    ])
+    ]
   },
   {
     title: "Aimin' To Misbehave",
@@ -80,14 +91,16 @@ export const STORIES_A_D: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/3077380/aimin-to-misbehave",
     setupDescription: "Remove all legal job cards from play.",
     tags: ['community', 'criminal_enterprise'],
-    rules: createStoryRules("Aimin' To Misbehave", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: 'A Shady Line of Work',
           content: ["Remove all legal jobs from play."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Aimin' To Misbehave"
       },
       {
         type: 'setJobStepContent',
@@ -100,9 +113,11 @@ export const STORIES_A_D: StoryCardDef[] = [
               ' Before drawing starting jobs, you must first remove all Legal Job Cards from all Contact Decks. The standard job draw below will then consist of only Illegal Jobs.'
             ]
           }
-        ]
+        ],
+        source: 'story', 
+        sourceName: "Aimin' To Misbehave"
       }
-    ])
+    ]
   },
   {
     title: "Bank Job",
@@ -122,14 +137,16 @@ export const STORIES_A_D: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1099553/story-card-the-battle-of-serenity-valley-pvp",
     rating: 0,
     tags: ['community', 'pvp'],
-    rules: createStoryRules("The Battle of Serenity Valley (PvP)", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'nav',
         rule: {
           title: 'Tougher Times',
           content: ["Remove half \"Keep Flying\" cards from Alliance and Border decks. Other cards won't be used."]
-        }
+        },
+        source: 'story', 
+        sourceName: "The Battle of Serenity Valley (PvP)"
       },
       {
         type: 'addSpecialRule',
@@ -137,7 +154,9 @@ export const STORIES_A_D: StoryCardDef[] = [
         rule: {
           title: 'Picking Sides',
           content: ["Players evenly pick Alliance or Independents (Browncoats). Place ships in appropriate space. Alliance to inner planets, Browncoats to Border Planets."]
-        }
+        },
+        source: 'story', 
+        sourceName: "The Battle of Serenity Valley (PvP)"
       },
       {
         type: 'addSpecialRule',
@@ -145,7 +164,9 @@ export const STORIES_A_D: StoryCardDef[] = [
         rule: {
           title: 'Picking Sides',
           content: ["Players evenly pick Alliance or Independents (Browncoats)."]
-        }
+        },
+        source: 'story', 
+        sourceName: "The Battle of Serenity Valley (PvP)"
       },
       {
         type: 'addSpecialRule',
@@ -154,7 +175,9 @@ export const STORIES_A_D: StoryCardDef[] = [
           title: 'Picking Sides',
           content: ["Place Alliance ships to inner planets, Browncoats to Border Planets."],
           position: 'before'
-        }
+        },
+        source: 'story', 
+        sourceName: "The Battle of Serenity Valley (PvP)"
       },
       {
         type: 'addSpecialRule',
@@ -162,9 +185,11 @@ export const STORIES_A_D: StoryCardDef[] = [
         rule: {
           title: 'War Materiel Setup',
           content: ["Take all Crew cards with \"Fight\" skill and all gear cards with \"Fight\" skill, add crew compartment ship upgrades and put them all in one deck; Shuffle. Take all Misbehave cards with \"Fight\" skill checks; Shuffle. Deal 3 crew/gear to each player (disregard warrants)."]
-        }
+        },
+        source: 'story', 
+        sourceName: "The Battle of Serenity Valley (PvP)"
       }
-    ])
+    ]
   },
   {
     title: "Black Market Beagles",
@@ -174,14 +199,16 @@ export const STORIES_A_D: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1098646/article/14445829#14445829",
     rating: 1,
     tags: ['community', 'character'],
-    rules: createStoryRules("Black Market Beagles", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Starting Gear',
           content: ["Each player begins the game with 1 Cry Baby on their ship."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Black Market Beagles"
       },
       {
         type: 'addSpecialRule',
@@ -190,9 +217,11 @@ export const STORIES_A_D: StoryCardDef[] = [
           title: 'Starting Gear',
           content: ["Each player's ship starts with 1 Cry Baby."],
           position: 'before'
-        }
+        },
+        source: 'story', 
+        sourceName: "Black Market Beagles"
       }
-    ])
+    ]
   },
   {
     title: "Cupid's Little Helpers",
@@ -210,14 +239,16 @@ export const STORIES_A_D: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1240655/doing-good-works-soloco-op-scenario",
     rating: 0,
     tags: ['community', 'against_the_black'],
-    rules: createStoryRules("Doing Good Works", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Special Starting Procedure',
           content: ["More than one player may start on the same world."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Doing Good Works"
       },
       {
         type: 'addSpecialRule',
@@ -226,7 +257,9 @@ export const STORIES_A_D: StoryCardDef[] = [
           title: 'Special Starting Procedure',
           content: ["More than one player may start on the same world."],
           position: 'before'
-        }
+        },
+        source: 'story', 
+        sourceName: "Doing Good Works"
       },
       {
         type: 'addSpecialRule',
@@ -234,9 +267,11 @@ export const STORIES_A_D: StoryCardDef[] = [
         rule: {
           title: 'Special Starting Procedure',
           content: ["Players starting on a Supply world may choose three cards from that Supply deck. Crew are hired for free. Other cards must be paid for at half price from the player's starting cash. Corbin and Marco's half-price abilities apply (round up to nearest $100). Additional players must wait for the previous player to finish before selecting their cards."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Doing Good Works"
       }
-    ])
+    ]
   },
   {
     title: "Double Duty",

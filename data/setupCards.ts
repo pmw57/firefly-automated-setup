@@ -58,6 +58,24 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setNavMode', mode: 'standard_reshuffle' },
       { type: 'setAllianceMode', mode: 'awful_crowded' },
       { type: 'setJobContacts', contacts: [CONTACT_NAMES.HARKEN, CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.PATIENCE] },
+      {
+        type: 'addSpecialRule',
+        category: 'allianceReaver',
+        rule: {
+          title: 'Awful Crowded',
+          content: [
+            { type: 'strong', content: 'Awful Crowded:' },
+            { type: 'list', items: [
+              ['Place an ', { type: 'action', content: 'Alert Token' }, ' in ', { type: 'strong', content: 'every planetary sector' }, '.'],
+              [{ type: 'strong', content: 'Alliance Space:' }, ' Place Alliance Alert Tokens.'],
+              [{ type: 'strong', content: 'Border & Rim Space:' }, ' Place Reaver Alert Tokens.'],
+              [{ type: 'warning-box', content: ["Do not place Alert Tokens on players' starting locations."] }],
+              [{ type: 'strong', content: 'Alliance Ship movement' }, ' does not generate new Alert Tokens.'],
+              [{ type: 'strong', content: 'Reaver Ship movement' }, ' generates new Alert Tokens.']
+            ]}
+          ]
+        }
+      }
     ]),
     steps: [
       { id: STEP_IDS.C1, title: `1. ${BASE_TITLES.C1}` },
@@ -77,7 +95,17 @@ export const SETUP_CARDS: SetupCardDef[] = [
     rules: createRules("The Rim's The Thing", [
       { type: 'setNavMode', mode: 'rim' },
       { type: 'setJobContacts', contacts: [CONTACT_NAMES.LORD_HARROW, CONTACT_NAMES.MR_UNIVERSE, CONTACT_NAMES.FANTY_MINGO, CONTACT_NAMES.MAGISTRATE_HIGGINS] },
-      { type: 'setJobMode', mode: 'rim_jobs' }, // Still needed for the rebuild step
+      { type: 'setJobMode', mode: 'rim_jobs' },
+      {
+        type: 'addSpecialRule', 
+        category: 'jobs',
+        rule: {
+          title: 'Rim Space Jobs', 
+          content: [
+              { type: 'paragraph', content: [{ type: 'strong', content: "Rebuild the Contact Decks" }, " using ", { type: 'strong', content: "only" }, " cards from the Blue Sun and Kalidasa expansions."] }
+          ]
+        }
+      }
     ]),
     steps: [
       { id: STEP_IDS.D_RIM_JOBS, title: `1. ${BASE_TITLES.D_RIM_JOBS}` },
@@ -122,6 +150,43 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'setNavMode', mode: 'browncoat' },
       { type: 'setDraftMode', mode: 'browncoat' },
       { type: 'setJobMode', mode: 'no_jobs' },
+      // Decoupled Nav Rule
+      { 
+        type: 'addSpecialRule',
+        category: 'nav',
+        rule: {
+          title: 'Forced Reshuffle',
+          content: ["Place the 'RESHUFFLE' cards in their Nav Decks."],
+          page: 22,
+          manual: 'Core'
+        }
+      },
+      // Decoupled Draft Panel Rule (Browncoat Market)
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+            title: 'Browncoat Market',
+            content: ['Once all players have purchased a ship and chosen a leader, everyone may buy supplies. ', { type: 'strong', content: 'Fuel: $100, Parts: $300' }, '.']
+        }
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_panel',
+        rule: {
+            title: 'Browncoat Market',
+            badge: 'Phase 3',
+            position: 'after',
+            content: [
+                { type: 'paragraph', content: ["Once all players have purchased a ship and chosen a leader, everyone may buy supplies."] },
+                { type: 'list', items: [
+                    [{ type: 'strong', content: "Fuel" }, ": $100"],
+                    [{ type: 'strong', content: "Parts" }, ": $300"],
+                ]},
+                { type: 'paragraph-small-italic', content: ["(Reminder: Free starting fuel/parts are disabled in this mode.)"] }
+            ]
+        }
+      }
     ]),
     steps: [
       { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}` },
@@ -141,6 +206,28 @@ export const SETUP_CARDS: SetupCardDef[] = [
     rules: createRules("The Blitz", [
       { type: 'setNavMode', mode: 'browncoat' },
       { type: 'setPrimeMode', mode: 'blitz' },
+      // Decoupled Nav Rule (Inherited behavior from Browncoat Nav mode)
+      { 
+        type: 'addSpecialRule',
+        category: 'nav',
+        rule: {
+          title: 'Forced Reshuffle',
+          content: ["Place the 'RESHUFFLE' cards in their Nav Decks."],
+          page: 22,
+          manual: 'Core'
+        }
+      },
+      // Decoupled Prime Rule
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+            title: 'The Blitz: Double Dip',
+            content: [{ type: 'paragraph', content: [`"Double Dip" rules are in effect. Discard the top 6 cards (2x Base) from each deck.`] }],
+            page: 22,
+            manual: 'Core'
+        }
+      }
     ]),
     steps: [
       { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}` },
@@ -179,6 +266,14 @@ export const SETUP_CARDS: SetupCardDef[] = [
     rules: createRules("Clearer Skies, Better Days", [
       { type: 'setNavMode', mode: 'clearer_skies' },
       { type: 'setAllianceMode', mode: 'no_alerts' },
+      {
+        type: 'addSpecialRule',
+        category: 'allianceReaver',
+        rule: {
+          title: 'Safe Skies', 
+          content: [{ type: 'strong', content: 'Safe Skies:' }, ' Do not place any Alert Tokens at the start of the game.']
+        }
+      }
     ]),
     steps: [
       { id: STEP_IDS.C1, title: '1. Nav Decks & Navigation' },
@@ -208,7 +303,16 @@ export const SETUP_CARDS: SetupCardDef[] = [
           title: 'Flying Solo: Post-Priming Purchase',
           content: ["After priming, you may spend up to $1000 to buy up to 4 Supply Cards that were revealed. Discounts from special abilities apply. Replace any purchased cards."]
         }
-      }
+      },
+      // Decoupled Nav Rule (Inherited behavior from Flying Solo Nav mode)
+      { 
+        type: 'addSpecialRule',
+        category: 'nav',
+        rule: {
+          title: 'Forced Reshuffle',
+          content: ["Place the 'RESHUFFLE' cards in their Nav Decks."],
+        }
+      },
     ]),
     steps: [
       // Although Flying Solo merges with another Setup Card, its steps still require
@@ -235,7 +339,18 @@ export const SETUP_CARDS: SetupCardDef[] = [
         type: 'addSpecialRule', 
         category: 'jobs',
         rule: { title: 'Caper Bonus', content: ["Draw 1 Caper Card."] }
-      }
+      },
+      // Decoupled Nav Rule (Inherited behavior from Browncoat Nav mode)
+      { 
+        type: 'addSpecialRule',
+        category: 'nav',
+        rule: {
+          title: 'Forced Reshuffle',
+          content: ["Place the 'RESHUFFLE' cards in their Nav Decks."],
+          page: 22,
+          manual: 'Core'
+        }
+      },
     ]),
     steps: [
       { id: STEP_IDS.C4, title: `1. ${BASE_TITLES.C4}` },
@@ -255,6 +370,17 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'tenth',
     rules: createRules("Home Sweet Haven", [
       { type: 'setNavMode', mode: 'browncoat' },
+      // Decoupled Nav Rule (Inherited behavior from Browncoat Nav mode)
+      { 
+        type: 'addSpecialRule',
+        category: 'nav',
+        rule: {
+          title: 'Forced Reshuffle',
+          content: ["Place the 'RESHUFFLE' cards in their Nav Decks."],
+          page: 22,
+          manual: 'Core'
+        }
+      },
       { 
         type: 'addSpecialRule',
         category: 'draft',

@@ -124,7 +124,7 @@ describe('rules/draftRules', () => {
       
       const details = getDraftDetails(state, step);
       
-      const warningRule = details.specialRules.find(r => r.source === 'warning');
+      const warningRule = details.specialRules.find(r => r.title === 'Story & Setup Card Interaction');
       expect(warningRule).toBeDefined();
       expect(getTextContent(warningRule?.content)).toContain('Your starting Capitol is reduced by the cost of your assigned ship');
     });

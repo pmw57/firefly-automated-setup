@@ -1,5 +1,4 @@
 import { StoryCardDef } from '../../types';
-import { createStoryRules } from './utils';
 
 export const STILL_FLYING_STORIES: StoryCardDef[] = [
   {
@@ -10,18 +9,20 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     requiredExpansion: "still_flying",
     sourceUrl: "https://boardgamegeek.com/image/8103875/sjliver",
     tags: ['character', 'mystery'],
-    rules: createStoryRules("A Rare Specimen Indeed", [
-      { type: 'setJobMode', mode: 'caper_start' },
-      { type: 'addFlag', flag: 'showNoJobsMessage' },
+    rules: [
+      { type: 'setJobMode', mode: 'caper_start', source: 'story', sourceName: "A Rare Specimen Indeed" },
+      { type: 'addFlag', flag: 'showNoJobsMessage', source: 'story', sourceName: "A Rare Specimen Indeed" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: 'Shotgun Wedding',
           content: ["No starting jobs are dealt. Each player begins the game with one Caper."]
-        }
+        },
+        source: 'story', 
+        sourceName: "A Rare Specimen Indeed"
       }
-    ])
+    ]
   },
   {
     title: "The Rumrunner's Seasonal",
@@ -39,15 +40,17 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     setupDescription: "Place an Alliance Alert Token on every planetary sector in Alliance Space.",
     sourceUrl: "https://boardgamegeek.com/image/8103882/sjliver",
     tags: ['smugglers_run'],
-    rules: createStoryRules("The Smuggly Bustle", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: 'Alliance Space Lockdown',
           content: ["Place an Alliance Alert Token on every planetary sector in Alliance Space."]
-        }
+        },
+        source: 'story', 
+        sourceName: "The Smuggly Bustle"
       }
-    ])
+    ]
   },
 ];

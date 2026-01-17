@@ -1,5 +1,4 @@
 import { StoryCardDef } from '../../types/index';
-import { createStoryRules } from './utils';
 
 export const SOLO_STORIES: StoryCardDef[] = [
   {
@@ -11,19 +10,21 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860502/sjliver",
     tags: ['reputation', 'against_the_black', 'solo'],
-    rules: createStoryRules("A Fistful Of Scoundrels", [
-      { type: 'addFlag', flag: 'soloGameTimer' },
-      { type: 'primeContacts' },
-      { type: 'setJobMode', mode: 'no_jobs' },
+    rules: [
+      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "A Fistful Of Scoundrels" },
+      { type: 'primeContacts', source: 'story', sourceName: "A Fistful Of Scoundrels" },
+      { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "A Fistful Of Scoundrels" },
       {
         type: 'addSpecialRule',
         category: 'goal',
         rule: {
           title: 'Story Override',
           content: ["Roots In The Community: Each time you gain Solid with a Contact, recover 2 Game Length Tokens."]
-        }
+        },
+        source: 'story', 
+        sourceName: "A Fistful Of Scoundrels"
       }
-    ]),
+    ],
     challengeOptions: [
       { id: 'dont_prime_contacts', label: "Don't prime the Contact decks." },
       { id: 'illegal_jobs_only', label: "Work only Illegal Jobs." },
@@ -43,9 +44,9 @@ export const SOLO_STORIES: StoryCardDef[] = [
     setupDescription: "Setup follows the normal rules with the following exceptions: 1) In addition to selecting yout Leader, you may also select up to 4 crew cards from any deck - up to a total value of $1000. 2) Place a pile of exactly 20 Disgruntled Tokens to the side. These tokens will be used as Game Length Tokens.",
     sourceUrl: "https://web.archive.org/web/20220226163627/https://www.flamesofwar.com/Portals/0/all_images/GF9/Firefly/Rulebooks/StoryCards/AwfulLonelyStoryCard.png",
     tags: ['against_the_black', 'solo'],
-    rules: createStoryRules("Awful Lonely In The Big Black", [
-      { type: 'addFlag', flag: 'soloCrewDraft' },
-      { type: 'addFlag', flag: 'soloGameTimer' },
+    rules: [
+      { type: 'addFlag', flag: 'soloCrewDraft', source: 'story', sourceName: "Awful Lonely In The Big Black" },
+      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "Awful Lonely In The Big Black" },
       {
         type: 'addSpecialRule',
         category: 'draft',
@@ -63,9 +64,11 @@ export const SOLO_STORIES: StoryCardDef[] = [
               ]
             }
           ]
-        }
+        },
+        source: 'story', 
+        sourceName: "Awful Lonely In The Big Black"
       }
-    ]),
+    ],
     goals: [
       { title: "Goal 1: The Good", description: "Making Connections: End the game Solid with 5 different Contacts." },
       { title: "Goal 2: The Bad", description: "Crime Does Pay: End the game with $15,000 or more." },
@@ -82,20 +85,22 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860501/sjliver",
     tags: ['doing_the_job', 'against_the_black', 'solo'],
-    rules: createStoryRules("For A Few Credits More", [
-      { type: 'addFlag', flag: 'soloGameTimer' },
-      { type: 'addFlag', flag: 'startWithAlertCard' },
-      { type: 'primeContacts' },
-      { type: 'setJobMode', mode: 'no_jobs' },
+    rules: [
+      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "For A Few Credits More" },
+      { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "For A Few Credits More" },
+      { type: 'primeContacts', source: 'story', sourceName: "For A Few Credits More" },
+      { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "For A Few Credits More" },
       {
         type: 'addSpecialRule',
         category: 'prime',
         rule: {
           title: 'Alliance High Alert',
           content: ['Begin the game with one random Alliance Alert Card in play.']
-        }
+        },
+        source: 'story', 
+        sourceName: "For A Few Credits More"
       }
-    ]),
+    ],
     challengeOptions: [
       { id: 'one_job_per_contact', label: "Work no more than one Job per Contact." },
       { id: 'legal_jobs_only', label: "Work only Legal Jobs, including Bounties." },
@@ -118,10 +123,10 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860508/sjliver",
     tags: ['survival', 'against_the_black', 'solo'],
-    rules: createStoryRules("Goin' Reaver", [
-      { type: 'addFlag', flag: 'placeReaverAlertsInMotherlodeAndUroboros' },
-      { type: 'addFlag', flag: 'soloGameTimer' }
-    ]),
+    rules: [
+      { type: 'addFlag', flag: 'placeReaverAlertsInMotherlodeAndUroboros', source: 'story', sourceName: "Goin' Reaver" },
+      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "Goin' Reaver" }
+    ],
     advancedRule: {
       id: "adv_wolf_at_your_door",
       title: "Wolf At Your Door",
@@ -137,12 +142,12 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860504/sjliver",
     tags: ['character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Heroes & Misfits", [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Funds" },
-      { type: 'addFlag', flag: 'soloGameTimer' },
-      { type: 'addFlag', flag: 'startWithAlertCard' },
-      { type: 'setShipPlacement', location: 'persephone' },
-      { type: 'addFlag', flag: 'isHeroesAndMisfits' },
+    rules: [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Story Funds", source: 'story', sourceName: "Heroes & Misfits" },
+      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "Heroes & Misfits" },
+      { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "Heroes & Misfits" },
+      { type: 'setShipPlacement', location: 'persephone', source: 'story', sourceName: "Heroes & Misfits" },
+      { type: 'addFlag', flag: 'isHeroesAndMisfits', source: 'story', sourceName: "Heroes & Misfits" },
       {
         type: 'addSpecialRule',
         category: 'resources',
@@ -153,7 +158,9 @@ export const SOLO_STORIES: StoryCardDef[] = [
             { type: 'paragraph', content: [{ type: 'strong', content: 'Alliance Alerts:' }, ' Start with one random Alliance Alert in play.'] },
             { type: 'paragraph', content: [{ type: 'strong', content: 'Adventure Deck:' }, ' Shuffle all 3-Goal story cards into a single deck.'] }
           ]
-        }
+        },
+        source: 'story', 
+        sourceName: "Heroes & Misfits"
       },
       {
         type: 'addSpecialRule',
@@ -161,9 +168,22 @@ export const SOLO_STORIES: StoryCardDef[] = [
         rule: {
           title: 'Alliance High Alert',
           content: ['Begin the game with one random Alliance Alert Card in play.']
-        }
+        },
+        source: 'story', 
+        sourceName: "Heroes & Misfits"
+      },
+      { 
+        type: 'addSpecialRule', 
+        category: 'draft',
+        rule: {
+          title: 'Heroes & Misfits: Further Adventures', 
+          // Changed "Custom Setup Option:" to "Custom Setup Active:" to match test expectation
+          content: [{ type: 'strong', content: `Custom Setup Active:` }, ` If you enabled "Further Adventures", ignore standard crew/ship/location requirements.`, { type: 'br' }, `Pick your Leader, Ship, and Supply Planet. Start with $2000 and a full compliment of your favourite crew.`] 
+        },
+        source: 'warning', 
+        sourceName: "Heroes & Misfits"
       }
-    ]),
+    ],
     challengeOptions: [
       { id: 'heroes_custom_setup', label: "Why should Mal have all the fun? Pick the Leader, Ship, and Supply Planet of your choice. Begin the game with $2000 and a full compliment of your favourite crew from the show or game." }
     ],
@@ -183,29 +203,33 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860503/sjliver",
     tags: ['smugglers_run', 'against_the_black', 'solo'],
-    rules: createStoryRules("The Lonely Smuggler's Blues", [
-      { type: 'addFlag', flag: 'soloGameTimer' },
-      { type: 'addFlag', flag: 'lonelySmugglerSetup' },
+    rules: [
+      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
+      { type: 'addFlag', flag: 'lonelySmugglerSetup', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: "Lonely Smuggler's Stash",
           content: ['Place ', { type: 'strong', content: '3 Contraband' }, ' on each Supply Planet ', { type: 'strong', content: 'except Persephone and Space Bazaar' }, '.']
-        }
+        },
+        source: 'story', 
+        sourceName: "The Lonely Smuggler's Blues"
       },
-      { type: 'setShipPlacement', location: 'londinium' },
-      { type: 'addFlag', flag: 'startWithAlertCard' },
-      { type: 'setJobMode', mode: 'no_jobs' },
+      { type: 'setShipPlacement', location: 'londinium', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
+      { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
+      { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
       {
         type: 'addSpecialRule',
         category: 'prime',
         rule: {
           title: 'Alliance High Alert',
           content: ['Begin the game with one random Alliance Alert Card in play.']
-        }
+        },
+        source: 'story', 
+        sourceName: "The Lonely Smuggler's Blues"
       }
-    ]),
+    ],
     advancedRule: {
       id: "adv_lone_targets",
       title: "Lone Targets",
@@ -236,15 +260,17 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860500/sjliver",
     tags: ['character', 'survival', 'against_the_black', 'solo'],
-    rules: createStoryRules("Racing A Pale Horse", [
-      { type: 'addFlag', flag: 'disableSoloTimer' },
+    rules: [
+      { type: 'addFlag', flag: 'disableSoloTimer', source: 'story', sourceName: "Racing A Pale Horse" },
       { 
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Setup: Haven',
           content: [{ type: 'strong', content: `Place your Haven at Deadwood (Blue Sun).` }, { type: 'br' }, `If you end your turn at your Haven, remove Disgruntled from all Crew.`]
-        }
+        },
+        source: 'story', 
+        sourceName: "Racing A Pale Horse"
       },
       {
         type: 'addSpecialRule',
@@ -252,9 +278,11 @@ export const SOLO_STORIES: StoryCardDef[] = [
         rule: {
           title: 'Timer Disabled',
           content: [{ type: 'paragraph', content: ["No Timer: Do not use a Game Timer for this game."] }]
-        }
+        },
+        source: 'story', 
+        sourceName: "Racing A Pale Horse"
       }
-    ]),
+    ],
     advancedRule: {
       id: "adv_automated_movement",
       title: "Automated Movement",
@@ -271,17 +299,19 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860505/sjliver",
     tags: ['character', 'survival', 'against_the_black', 'solo'],
-    rules: createStoryRules("The Raggedy Edge", [
-      { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, description: "Begin play with 1 Goal Token." },
-      { type: 'addFlag', flag: 'disableSoloTimer' },
-      { type: 'addFlag', flag: 'startWithAlertCard' },
+    rules: [
+      { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, description: "Begin play with 1 Goal Token.", source: 'story', sourceName: "The Raggedy Edge" },
+      { type: 'addFlag', flag: 'disableSoloTimer', source: 'story', sourceName: "The Raggedy Edge" },
+      { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "The Raggedy Edge" },
       {
         type: 'addSpecialRule',
         category: 'prime',
         rule: {
           title: 'Alliance High Alert',
           content: ['Begin the game with one random Alliance Alert Card in play.']
-        }
+        },
+        source: 'story', 
+        sourceName: "The Raggedy Edge"
       },
       {
         type: 'addSpecialRule',
@@ -289,9 +319,11 @@ export const SOLO_STORIES: StoryCardDef[] = [
         rule: {
           title: 'Timer Disabled',
           content: [{ type: 'paragraph', content: ["No Timer: Do not use a Game Timer for this game."] }]
-        }
+        },
+        source: 'story', 
+        sourceName: "The Raggedy Edge"
       }
-    ]),
+    ],
     advancedRule: {
       id: "adv_contact_quirks_deal",
       title: "Contact Quirks - Deal",
@@ -308,10 +340,10 @@ export const SOLO_STORIES: StoryCardDef[] = [
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860507/sjliver",
     tags: ['character', 'faction_war', 'against_the_black', 'solo'],
-    rules: createStoryRules("Seeds Of Rebellion", [
-      { type: 'addFlag', flag: 'soloGameTimer' },
-      { type: 'forbidContact', contact: 'Harken' }
-    ]),
+    rules: [
+      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "Seeds Of Rebellion" },
+      { type: 'forbidContact', contact: 'Harken', source: 'story', sourceName: "Seeds Of Rebellion" }
+    ],
     advancedRule: {
       id: "adv_lost_little_lambs",
       title: "Lost Little Lambs",

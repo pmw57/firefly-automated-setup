@@ -1,6 +1,5 @@
 import { StoryCardDef } from '../../../types';
 import { CONTACT_NAMES } from '../../ids';
-import { createStoryRules } from '../utils';
 
 export const STORIES_M_O: StoryCardDef[] = [
   {
@@ -10,17 +9,19 @@ export const STORIES_M_O: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/2277037/upstarter",
     setupDescription: "No starting jobs are dealt.",
     tags: ['community', 'survival'],
-    rules: createStoryRules("The Magnificent Crew", [
-      { type: 'setJobMode', mode: 'no_jobs' },
+    rules: [
+      { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "The Magnificent Crew" },
       {
         type: 'addSpecialRule',
         category: 'goal',
         rule: {
           title: 'Gameplay Note',
           content: ["This story features special high-value cargo sales rules that apply during gameplay."]
-        }
+        },
+        source: 'story', 
+        sourceName: "The Magnificent Crew"
       }
-    ]),
+    ],
     rating: 2
   },
   {
@@ -31,14 +32,16 @@ export const STORIES_M_O: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/286230/mark-of-a-great-captain-story-card",
     rating: 2,
     tags: ['community', 'character'],
-    rules: createStoryRules("Mark Of A Great Captain", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Special Draft & Hiring Rules',
           content: ["Each player must choose a Moral Leader. Special Hiring Round: Starting with the 1st player, each player searches for and hires one crew card from any supply deck. Continue hiring rounds until all ships are full. Fixed Crew: Remove all other crew cards from play. You may only use the crew you start with."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Mark Of A Great Captain"
       },
       {
         type: 'addSpecialRule',
@@ -46,7 +49,9 @@ export const STORIES_M_O: StoryCardDef[] = [
         rule: {
           title: 'Mandatory Ship Upgrade',
           content: ["After collecting Starting Supplies, each player must pay $600 for an Expanded Crew Quarters, increasing crew capacity by 3."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Mark Of A Great Captain"
       },
       {
         type: 'addSpecialRule',
@@ -54,9 +59,11 @@ export const STORIES_M_O: StoryCardDef[] = [
         rule: {
           title: 'Game Timer',
           content: ["Use 7 Disgruntled tokens as the timer. The first player discards 1 token at the start of each round. When the timer runs out, a special game event occurs (arrest of 4 crew members from each ship)."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Mark Of A Great Captain"
       }
-    ])
+    ]
   },
   {
     title: "Master Of All",
@@ -65,15 +72,17 @@ export const STORIES_M_O: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/2941994/master-of-all-story-card",
     requiredExpansion: "community",
     tags: ['community', 'reputation'],
-    rules: createStoryRules("Master Of All", [
-      { type: 'addFlag', flag: 'startWithAlertCard' },
+    rules: [
+      { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "Master Of All" },
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'First Contact',
           content: ["In turn order, choose an unoccupied planet with a Contact as a starting point."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Master Of All"
       },
       {
         type: 'addSpecialRule',
@@ -81,16 +90,20 @@ export const STORIES_M_O: StoryCardDef[] = [
         rule: {
           content: ["⚠️ Restriction: Starting location must be an unoccupied planet with a Contact."],
           position: 'before'
-        }
+        },
+        source: 'story', 
+        sourceName: "Master Of All"
       },
-      { type: 'setJobMode', mode: 'no_jobs' },
+      { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "Master Of All" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: 'Proving Your Worth',
           content: ["Draw only 3 of that contact's jobs as starting hand."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Master Of All"
       },
       {
         type: 'setJobStepContent',
@@ -108,9 +121,11 @@ export const STORIES_M_O: StoryCardDef[] = [
             type: 'paragraph-small-italic',
             content: ['You may keep any of the jobs drawn.']
           }
-        ]
+        ],
+        source: 'story', 
+        sourceName: "Master Of All"
       }
-    ])
+    ]
   },
   {
     title: "Miranda",
@@ -120,16 +135,18 @@ export const STORIES_M_O: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1135128/article/1512332#1512332",
     rating: 2,
     tags: ['community', 'mystery'],
-    rules: createStoryRules("Miranda", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Special Placement & Crew Draw',
           content: ["Place your Firefly on a supply world to begin the game. Draw 1 starting crew from any deck by flipping the draw pile and taking the first named character that is revealed."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Miranda"
       }
-    ])
+    ]
   },
   {
     title: "Miranda's Secret",
@@ -149,7 +166,7 @@ export const STORIES_M_O: StoryCardDef[] = [
     intro: "The crew of Serenity needs your help. They've been captured by the Alliance and sent to unknown prison camps all over the 'Verse. For a price, Badger might let you in on a little secret.",
     setupDescription: "Place Serenity on Shadow, Murphy as the drop-off point for Serenity's rescued crew. Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together. Place them face down as the \"Prisoner Deck\".",
     tags: ['community', 'jailbreak', 'against_the_black', 'coop'],
-    rules: createStoryRules("My Fellow Browncoats", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
@@ -158,7 +175,9 @@ export const STORIES_M_O: StoryCardDef[] = [
           content: [
             "Place Serenity on Shadow, Murphy as the drop-off point for Serenity's rescued crew."
           ]
-        }
+        },
+        source: 'story', 
+        sourceName: "My Fellow Browncoats"
       },
       {
         type: 'addSpecialRule',
@@ -175,7 +194,9 @@ export const STORIES_M_O: StoryCardDef[] = [
               ]
             }
           ]
-        }
+        },
+        source: 'story', 
+        sourceName: "My Fellow Browncoats"
       },
       {
         type: 'addSpecialRule',
@@ -192,7 +213,9 @@ export const STORIES_M_O: StoryCardDef[] = [
               ]
             }
           ]
-        }
+        },
+        source: 'story', 
+        sourceName: "My Fellow Browncoats"
       },
       {
         type: 'addSpecialRule',
@@ -202,9 +225,11 @@ export const STORIES_M_O: StoryCardDef[] = [
           content: [
             "Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together. Place them face down as the \"Prisoner Deck\"."
           ]
-        }
+        },
+        source: 'story', 
+        sourceName: "My Fellow Browncoats"
       }
-    ]),
+    ],
     sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
     requiredExpansion: "community"
   },
@@ -217,16 +242,18 @@ export const STORIES_M_O: StoryCardDef[] = [
     rating: 0,
     tags: ['community', 'pvp'],
     requiredExpansion: "community",
-    rules: createStoryRules("My Number One Guy", [
+    rules: [
       { 
         type: 'addSpecialRule', 
         category: 'jobs',
         rule: {
           title: 'Special Job Draw',
           content: ["Draw three starting jobs from a single contact, and two other jobs from any other contacts. You may only keep 3 jobs."]
-        }
+        },
+        source: 'story', 
+        sourceName: "My Number One Guy"
       }
-    ])
+    ]
   },
   {
     title: "New Heroes of Canton",
@@ -252,14 +279,16 @@ export const STORIES_M_O: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/294565/new-heroes-of-canton-co-op-story-card",
     requiredExpansion: "community",
     tags: ['community', 'against_the_black', 'coop'],
-    rules: createStoryRules("New Heroes of Canton", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'prime',
         rule: {
           title: 'Custom Mudder Deck',
           content: ["Pull all Mudders from Supply decks. Shuffle a set # of Mudders and Foremen together. Place them face up. if the Foreman is on top after a Shuffle, reshuffle. 2/3/4 Players = 7/10/13 Goal Mudders and the Foreman."]
-        }
+        },
+        source: 'story', 
+        sourceName: "New Heroes of Canton"
       },
       {
         type: 'addSpecialRule',
@@ -290,7 +319,9 @@ export const STORIES_M_O: StoryCardDef[] = [
               ]
             }
           ]
-        }
+        },
+        source: 'story', 
+        sourceName: "New Heroes of Canton"
       },
       {
         type: 'addSpecialRule',
@@ -298,7 +329,9 @@ export const STORIES_M_O: StoryCardDef[] = [
         rule: {
           title: "A Hero's Gamble",
           content: ["Easy/Medium/Pro: Use 25/21/17 Disgruntled tokens as a game timer."]
-        }
+        },
+        source: 'story', 
+        sourceName: "New Heroes of Canton"
       },
       {
         type: 'createAlertTokenStack',
@@ -309,9 +342,11 @@ export const STORIES_M_O: StoryCardDef[] = [
         },
         tokenName: 'Disgruntled Tokens',
         title: "A Hero's Gamble",
-        description: "The first player takes the tokens."
+        description: "The first player takes the tokens.",
+        source: 'story', 
+        sourceName: "New Heroes of Canton"
       }
-    ])
+    ]
   },
   {
     title: "Oh Captain My Captain",
@@ -320,15 +355,17 @@ export const STORIES_M_O: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards",
     requiredExpansion: "community",
     tags: ['community', 'survival'],
-    rules: createStoryRules("Oh Captain My Captain", [
-      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
+    rules: [
+      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA, source: 'story', sourceName: "Oh Captain My Captain" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: "Niska's Grudge",
           content: ["Don't draw Starting Jobs from Niska."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Oh Captain My Captain"
       },
       {
         type: 'addSpecialRule',
@@ -336,16 +373,20 @@ export const STORIES_M_O: StoryCardDef[] = [
         rule: {
           title: "Niska Remembers",
           content: ["1st player is given 20 Disgruntle tokens as a game timer."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Oh Captain My Captain"
       },
       {
         type: 'createAlertTokenStack',
         fixedValue: 20,
         tokenName: 'Disgruntled Tokens',
         title: 'Game Timer',
-        description: "Give the pile to the first player."
+        description: "Give the pile to the first player.",
+        source: 'story', 
+        sourceName: "Oh Captain My Captain"
       }
-    ])
+    ]
   },
   {
     title: "Old Friends And New",
