@@ -117,21 +117,32 @@ const getExpansionLabel = (id: string): string => {
 };
 
 export const getStoryIncompatibilityReason = (card: StoryCardDef, state: GameState): IncompatibilityReason | null => {
+    const reasons: string[] = [];
+    let primaryStepId: string | undefined = undefined;
+
+    // Check 1: Quick Mode hiding community content
     if (state.setupMode === 'quick' && card.requiredExpansion === 'community') {
-        return { text: "Community content is hidden in 'Quick' setup mode. (Use toggle in header)" };
+        reasons.push("Community content is hidden in 'Quick' setup mode. (Use toggle in header)");
     }
 
+    // Check 2: Game Mode (Solo vs Multiplayer)
     if (state.gameMode === 'multiplayer' && card.isSolo) {
-        return { text: "Requires Solo mode.", stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
+        reasons.push("Requires Solo mode.");
+        if (!primaryStepId) primaryStepId = STEP_IDS.SETUP_CAPTAIN_EXPANSIONS;
     }
 
+    // Check 3: Required Expansion
     if (card.requiredExpansion && !state.expansions[card.requiredExpansion]) {
         const expansionMeta = EXPANSIONS_METADATA.find(e => e.id === card.requiredExpansion);
         if (expansionMeta?.hidden && !state.showHiddenContent) {
-            return { text: `Requires a currently unavailable expansion: '${expansionMeta.label}'.` };
+            reasons.push(`Requires a currently unavailable expansion: '${expansionMeta.label}'.`);
+        } else {
+            reasons.push(`Requires the '${getExpansionLabel(card.requiredExpansion)}' expansion.`);
         }
-        return { text: `Requires the '${getExpansionLabel(card.requiredExpansion)}' expansion.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
+        if (!primaryStepId) primaryStepId = STEP_IDS.SETUP_CAPTAIN_EXPANSIONS;
     }
+
+    // Check 4: Additional Requirements
     if (card.additionalRequirements) {
         const missingReqs = card.additionalRequirements.filter(req => !state.expansions[req]);
         if (missingReqs.length > 0) {
@@ -142,13 +153,15 @@ export const getStoryIncompatibilityReason = (card: StoryCardDef, state: GameSta
 
             if (unachievableReqs.length > 0) {
                 const unachievableLabels = unachievableReqs.map(getExpansionLabel);
-                return { text: `Requires currently unavailable expansion(s): '${unachievableLabels.join(', ')}'.` };
+                reasons.push(`Requires currently unavailable expansion(s): '${unachievableLabels.join(', ')}'.`);
+            } else {
+                reasons.push(`Requires expansion(s): ${missingReqs.map(getExpansionLabel).join(', ')}.`);
             }
-
-            return { text: `Requires expansions: ${missingReqs.map(getExpansionLabel).join(', ')}.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
+            if (!primaryStepId) primaryStepId = STEP_IDS.SETUP_CAPTAIN_EXPANSIONS;
         }
     }
 
+    // Check 5: Player Count
     if (card.playerCount) {
         const isCompatible = Array.isArray(card.playerCount) 
             ? card.playerCount.includes(state.playerCount)
@@ -158,61 +171,82 @@ export const getStoryIncompatibilityReason = (card: StoryCardDef, state: GameSta
             const reqText = Array.isArray(card.playerCount) 
                 ? card.playerCount.join(', ') 
                 : card.playerCount;
-            return { text: `Requires specific player counts: ${reqText}.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
+            reasons.push(`Requires specific player counts: ${reqText}.`);
+            if (!primaryStepId) primaryStepId = STEP_IDS.SETUP_CAPTAIN_EXPANSIONS;
         }
     }
 
     if (card.maxPlayerCount && state.playerCount > card.maxPlayerCount) {
-        return { text: `Requires ${card.maxPlayerCount} or fewer players.`, stepId: STEP_IDS.SETUP_CAPTAIN_EXPANSIONS };
+        reasons.push(`Requires ${card.maxPlayerCount} or fewer players.`);
+        if (!primaryStepId) primaryStepId = STEP_IDS.SETUP_CAPTAIN_EXPANSIONS;
     }
 
+    // Check 6: Solo Variants (Classic vs Flying Solo)
     const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
     const isClassicSolo = state.gameMode === 'solo' && !isFlyingSolo;
 
     if (isClassicSolo && !card.isSolo) {
-        return { text: "Not available in 'Classic Solo' mode.", stepId: STEP_IDS.SETUP_CARD_SELECTION };
+        reasons.push("Not available in 'Classic Solo' mode.");
+        if (!primaryStepId) primaryStepId = STEP_IDS.SETUP_CARD_SELECTION;
     }
     
     if (isFlyingSolo) {
         if (SOLO_EXCLUDED_STORIES.includes(card.title)) {
-            return { text: "Not available in 'Flying Solo' mode.", stepId: STEP_IDS.SETUP_CARD_SELECTION };
+            reasons.push("Not available in 'Flying Solo' mode.");
+            if (!primaryStepId) primaryStepId = STEP_IDS.SETUP_CARD_SELECTION;
         }
     }
 
+    // Check 7: Solitaire Firefly Setup
     const isSolitaireActive = state.setupCardId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY || state.secondarySetupId === SETUP_CARD_IDS.SOLITAIRE_FIREFLY;
 
     if (isSolitaireActive) {
       if (card.requiredFlag !== 'isSolitaireFirefly') {
-        return { text: "Only available with the 'Solitaire Firefly' setup card.", stepId: STEP_IDS.SETUP_CARD_SELECTION };
+        reasons.push("Only available with the 'Solitaire Firefly' setup card.");
+        if (!primaryStepId) primaryStepId = STEP_IDS.SETUP_CARD_SELECTION;
       }
     } else {
       if (card.requiredFlag === 'isSolitaireFirefly') {
-        return { text: "Requires the 'Solitaire Firefly' setup card.", stepId: STEP_IDS.SETUP_CARD_SELECTION };
+        reasons.push("Requires the 'Solitaire Firefly' setup card.");
+        if (!primaryStepId) primaryStepId = STEP_IDS.SETUP_CARD_SELECTION;
       }
     }
     
+    // Check 8: Required Setup Card
     if (card.requiredSetupCardId) {
         const effectiveSetupCardId = isFlyingSolo ? state.secondarySetupId : state.setupCardId;
         if (card.requiredSetupCardId !== effectiveSetupCardId) {
             const requiredSetup = getSetupCardById(card.requiredSetupCardId);
-            return { text: `Requires the '${requiredSetup?.label || card.requiredSetupCardId}' setup card.`, stepId: STEP_IDS.SETUP_CARD_SELECTION };
+            reasons.push(`Requires the '${requiredSetup?.label || card.requiredSetupCardId}' setup card.`);
+            if (!primaryStepId) primaryStepId = STEP_IDS.SETUP_CARD_SELECTION;
         }
     }
 
+    // Check 9: Incompatible Setup Card
     if (card.incompatibleSetupCardIds) {
         const effectiveSetupCardId = isFlyingSolo ? state.secondarySetupId : state.setupCardId;
         if (effectiveSetupCardId && card.incompatibleSetupCardIds.includes(effectiveSetupCardId)) {
             const incompatibleSetup = getSetupCardById(effectiveSetupCardId);
-            return { text: `Not compatible with the '${incompatibleSetup?.label || effectiveSetupCardId}' setup card.`, stepId: STEP_IDS.SETUP_CARD_SELECTION };
+            reasons.push(`Not compatible with the '${incompatibleSetup?.label || effectiveSetupCardId}' setup card.`);
+            if (!primaryStepId) primaryStepId = STEP_IDS.SETUP_CARD_SELECTION;
         }
     }
 
+    // Check 10: Community Rating
     if (card.requiredExpansion === 'community' && typeof card.rating === 'number') {
         if (state.storyRatingFilters && !state.storyRatingFilters[card.rating]) {
-            return { text: `Currently filtered out by rating (${card.rating} stars).`, stepId: STEP_IDS.SETUP_OPTIONAL_RULES };
+            reasons.push(`Currently filtered out by rating (${card.rating} stars).`);
+            if (!primaryStepId) primaryStepId = STEP_IDS.SETUP_OPTIONAL_RULES;
         }
     }
     
+    if (reasons.length > 0) {
+        return {
+            text: reasons.join('\n'), // Join with newline for UI splitting
+            stepId: primaryStepId
+        };
+    }
+
     return null;
 };
 
