@@ -62,6 +62,25 @@ const FILTER_GROUPS: FilterGroup[] = [
     }
 ];
 
+const RequestStoryCTA = () => (
+    <div className="mt-8 p-6 rounded-lg border border-dashed border-gray-400 dark:border-zinc-600 bg-gray-50/50 dark:bg-zinc-800/30 text-center">
+        <p className="text-sm mb-3 opacity-80 text-gray-700 dark:text-gray-300">
+            Looking for a specific story that isn't listed here?
+        </p>
+        <a
+            href="https://github.com/pmw57/firefly-automated-setup/issues/new?labels=story-request&template=story_request.md&title=[Story+Request]"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+        >
+            <span>Raise a request on GitHub</span>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+        </a>
+    </div>
+);
+
 
 export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
   const { theme } = useTheme();
@@ -299,33 +318,46 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
             <div className="space-y-3">
                 {hiddenMatches.map(({ card, reason }) => {
                     const isClickable = reason?.stepId && handleJump;
-                    const ReasonComponent = isClickable ? 'button' : 'p';
+                    const ReasonComponent = isClickable ? 'button' : 'div';
                     const reasonProps = isClickable ? { onClick: () => handleReasonClick(reason.stepId!) } : {};
                     const reasonClass = isClickable
-                        ? 'text-blue-600 dark:text-blue-400 underline hover:no-underline'
+                        ? 'text-blue-600 dark:text-blue-400 underline hover:no-underline text-left'
                         : 'text-red-600 dark:text-red-400';
 
+                    // Process potentially multiline reasons
+                    const reasonLines = reason?.text.split('\n') || [];
+
                     return (
-                        <div key={card.title} className="bg-gray-100 dark:bg-zinc-800/50 p-3 rounded-lg border border-gray-200 dark:border-zinc-700 flex items-center gap-3 text-left">
-                            <div className="shrink-0 w-8 h-8">
+                        <div key={card.title} className="bg-gray-100 dark:bg-zinc-800/50 p-3 rounded-lg border border-gray-200 dark:border-zinc-700 flex items-start gap-3 text-left">
+                            <div className="shrink-0 w-8 h-8 mt-1">
                                 <InlineExpansionIcon type={card.requiredExpansion || 'base'} />
                             </div>
                             <div className="flex-1">
                                 <p className="font-bold text-sm text-gray-800 dark:text-gray-200">{card.title}</p>
-                                <ReasonComponent {...reasonProps} className={`text-xs ${reasonClass}`}>
-                                    {reason?.text}
+                                <ReasonComponent {...reasonProps} className={`text-xs mt-1 block ${reasonClass}`}>
+                                    {reasonLines.length > 1 ? (
+                                        <ul className="list-disc list-inside">
+                                            {reasonLines.map((line, i) => <li key={i}>{line}</li>)}
+                                        </ul>
+                                    ) : (
+                                        reasonLines[0]
+                                    )}
                                 </ReasonComponent>
                             </div>
                         </div>
                     );
                 })}
             </div>
+            
+            <RequestStoryCTA />
           </div>
         ) : (
-          <div className={`flex flex-col items-center justify-center h-full ${emptyStateText} italic`}>
+          <div className={`flex flex-col items-center justify-center h-full p-6 ${emptyStateText} italic`}>
             <span className="text-4xl mb-2">🕵️</span>
             <p>No stories found.</p>
-            <Button onClick={() => { setSearchTerm(''); setFilterExpansion([]); setFilterTheme('all'); }} variant="secondary" className="mt-4 text-sm">Clear Filters</Button>
+            <Button onClick={() => { setSearchTerm(''); setFilterExpansion([]); setFilterTheme('all'); }} variant="secondary" className="mt-4 text-sm mb-6">Clear Filters</Button>
+            
+            <RequestStoryCTA />
           </div>
         )}
       </div>
