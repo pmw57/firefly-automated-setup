@@ -1,5 +1,4 @@
 import { StoryCardDef } from '../../types';
-import { createStoryRules } from './utils';
 
 export const PIRATES_STORIES: StoryCardDef[] = [
   {
@@ -10,14 +9,16 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/2785046/gerryrailbaron",
     setupDescription: "Choose Havens. Havens must be in Border Space. After taking starting Jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks.",
     tags: ['pvp'],
-    rules: createStoryRules("...Another Man's Treasure", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft_placement',
         rule: { 
             content: ['⚠️ Restriction: Havens must be placed in Border Space.'],
             position: 'before'
-        }
+        },
+        source: 'story', 
+        sourceName: "...Another Man's Treasure"
       },
       {
         type: 'addSpecialRule',
@@ -26,18 +27,22 @@ export const PIRATES_STORIES: StoryCardDef[] = [
           title: "Salvager's Stash",
           content: ["Choose Havens. Havens must be in Border Space."],
           flags: ['isHavenPlacement']
-        }
+        },
+        source: 'story', 
+        sourceName: "...Another Man's Treasure"
       },
-      { type: 'addFlag', flag: 'hasConditionalHavenPageReference' },
+      { type: 'addFlag', flag: 'hasConditionalHavenPageReference', source: 'story', sourceName: "...Another Man's Treasure" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: 'Remove Piracy Jobs',
           content: ["After taking starting Jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks."]
-        }
+        },
+        source: 'story', 
+        sourceName: "...Another Man's Treasure"
       }
-    ])
+    ]
   },
   {
     title: "Jail Break",

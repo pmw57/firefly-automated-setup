@@ -25,12 +25,11 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
   const isDark = theme === 'dark';
   
   const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
-  const isRiversRun = activeStoryCard?.title === "River's Run 1v1";
 
   const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
   const setupSelectionRules = useMemo(() => {
     return allRules
-      .filter((r): r is AddSpecialRule => r.type === 'addSpecialRule' && r.category === 'setup_selection' && r.rule.title !== "River's Run 1v1: Player 2 Action")
+      .filter((r): r is AddSpecialRule => r.type === 'addSpecialRule' && r.category === 'setup_selection')
       .map(r => ({ ...r.rule, source: r.source as 'story' | 'setupCard' | 'expansion' | 'warning' | 'info' }));
   }, [allRules]);
   
@@ -86,14 +85,6 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
            <h2 className={`text-2xl font-bold font-western ${headerColor}`}>Select Setup Card</h2>
            <span className={`text-xs font-bold ${badgeClass} border px-2 py-1 rounded`}>Part 2 of {totalParts}</span>
         </div>
-        
-        {isRiversRun && (
-            <div className={`p-4 rounded-lg border shadow-inner mb-6 ${isDark ? 'bg-zinc-800/50 border-zinc-700' : 'bg-amber-50 border-amber-200'}`}>
-                <p className={`text-center font-semibold ${isDark ? 'text-amber-200' : 'text-amber-800'}`}>
-                    Player 2 (the Bounty Hunter) must now choose the Setup Card for this game.
-                </p>
-            </div>
-        )}
 
         {setupSelectionRules.length > 0 && (
           <div className="mb-6 space-y-4">

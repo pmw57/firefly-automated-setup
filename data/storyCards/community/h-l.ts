@@ -1,5 +1,4 @@
 import { StoryCardDef } from '../../../types';
-import { createStoryRules } from '../utils';
 
 export const STORIES_H_L: StoryCardDef[] = [
   {
@@ -9,30 +8,36 @@ export const STORIES_H_L: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/3602682/honorably-dishonorable-men",
     tags: ['community', 'smugglers_run'],
-    rules: createStoryRules("Honorably Dishonorable Men", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: 'Pressing Your Luck',
           content: ["Place 8 contraband tokens on each of the following sectors in Alliance Space: Londonium, Bernadette, Liann Jiun, Sihnon, Gonghe, and Bellerophon. Use 20 Disgruntled tokens as the game length timer."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Honorably Dishonorable Men"
       },
       {
         type: 'addBoardComponent',
         component: 'contraband',
         count: 8,
         locations: ['Londinium', 'Bernadette', 'Liann Jiun', 'Sihnon', 'Gonghe', 'Bellerophon'],
-        title: 'Mass Contraband Stash'
+        title: 'Mass Contraband Stash',
+        source: 'story', 
+        sourceName: "Honorably Dishonorable Men"
       },
       {
         type: 'createAlertTokenStack',
         fixedValue: 20,
         tokenName: 'Disgruntled Tokens',
         title: 'Game Length Timer',
-        description: "The player in first position discards 1 token at the start of each round. After the last token is discarded, all players take one final turn."
+        description: "The player in first position discards 1 token at the start of each round. After the last token is discarded, all players take one final turn.",
+        source: 'story', 
+        sourceName: "Honorably Dishonorable Men"
       }
-    ])
+    ]
   },
   {
     title: "Hospital Rescue",
@@ -41,17 +46,19 @@ export const STORIES_H_L: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/103582/goal-hospital-rescue",
     setupDescription: "Remove River Tam from play.",
     tags: ['community', 'jailbreak'],
-    rules: createStoryRules("Hospital Rescue", [
-      { type: 'addFlag', flag: 'removeRiver' },
+    rules: [
+      { type: 'addFlag', flag: 'removeRiver', source: 'story', sourceName: "Hospital Rescue" },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: "Missing Person",
           content: ["Remove River Tam from play."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Hospital Rescue"
       }
-    ]),
+    ],
     rating: 2,
   },
   {
@@ -60,10 +67,10 @@ export const STORIES_H_L: StoryCardDef[] = [
     requiredExpansion: "community",
     setupDescription: "Start with $500, 2 Fuel, and 2 Parts. Nandi pays half price, rounded up, when hiring crew.",
     tags: ['community', 'classic_heist'],
-    rules: createStoryRules("How It All Started", [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Scraping By" },
-      { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, description: "Scraping By" },
-      { type: 'addFlag', flag: 'disablePriming' },
+    rules: [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Scraping By", source: 'story', sourceName: "How It All Started" },
+      { type: 'modifyResource', resource: 'fuel', method: 'set', value: 2, description: "Scraping By", source: 'story', sourceName: "How It All Started" },
+      { type: 'addFlag', flag: 'disablePriming', source: 'story', sourceName: "How It All Started" },
       {
         type: 'addSpecialRule',
         category: 'resources',
@@ -73,7 +80,9 @@ export const STORIES_H_L: StoryCardDef[] = [
             "Start with $500, 2 Fuel, and 2 Parts. ",
             "Nandi pays half price (rounded up) when hiring crew."
           ]
-        }
+        },
+        source: 'story', 
+        sourceName: "How It All Started"
       },
       {
         type: 'addSpecialRule',
@@ -82,9 +91,11 @@ export const STORIES_H_L: StoryCardDef[] = [
           title: 'Priming Skipped',
           badge: 'Story Override',
           content: ["The 'Prime the Pump' step is skipped for this story. Do not discard any cards from the Supply Decks."]
-        }
+        },
+        source: 'story', 
+        sourceName: "How It All Started"
       }
-    ]),
+    ],
     sourceUrl: "https://boardgamegeek.com/filepage/186593/where-it-all-started-story-card"
   },
   {
@@ -94,18 +105,20 @@ export const STORIES_H_L: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/4434522/pmw57",
     setupDescription: "Start with 2 Warrants. Alliance Space is off limits. Harken is unavailable for Jobs.",
     tags: ['community', 'classic_heist'],
-    rules: createStoryRules("It Ain't Easy Goin' Legit", [
-      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, description: "Start with 2 Warrants." },
+    rules: [
+      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, description: "Start with 2 Warrants.", source: 'story', sourceName: "It Ain't Easy Goin' Legit" },
       { 
         type: 'addSpecialRule', 
         category: 'nav', 
         rule: { 
             title: 'Restricted Airspace', 
             content: [{ type: 'strong', content: `Alliance Space is Off Limits` }, ` until Goal 3.`] 
-        } 
+        },
+        source: 'story', 
+        sourceName: "It Ain't Easy Goin' Legit"
       },
-      { type: 'forbidContact', contact: 'Harken' }
-    ]),
+      { type: 'forbidContact', contact: 'Harken', source: 'story', sourceName: "It Ain't Easy Goin' Legit" }
+    ],
     rating: 2,
   },
   {
@@ -117,15 +130,17 @@ export const STORIES_H_L: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/235439/storycard-a-jubilant-victory",
     setupDescription: "Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, starting from Meridian.",
     tags: ['community', 'survival'],
-    rules: createStoryRules("A Jubilant Victory", [
-      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Story-Specific Warrant" },
+    rules: [
+      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Story-Specific Warrant", source: 'story', sourceName: "A Jubilant Victory" },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: 'Unwanted Attention',
           content: ["Players begin at their Havens with one Warrant."]
-        }
+        },
+        source: 'story', 
+        sourceName: "A Jubilant Victory"
       },
       {
         type: 'addSpecialRule',
@@ -134,7 +149,9 @@ export const STORIES_H_L: StoryCardDef[] = [
           title: 'A High-Stakes Game: Haven Placement',
           content: ["Players begin at their Havens."],
           flags: ['isHavenPlacement']
-        }
+        },
+        source: 'story', 
+        sourceName: "A Jubilant Victory"
       },
       {
         type: 'addSpecialRule',
@@ -146,7 +163,9 @@ export const STORIES_H_L: StoryCardDef[] = [
             { type: 'paragraph', content: ["Players must use ", { type: 'strong', content: "Firefly-class ships" }, "."] },
             { type: 'paragraph-small-italic', content: ["All ships are equipped with standard core drives."] }
           ]
-        }
+        },
+        source: 'story', 
+        sourceName: "A Jubilant Victory"
       },
       {
         type: 'addSpecialRule',
@@ -162,7 +181,9 @@ export const STORIES_H_L: StoryCardDef[] = [
             { type: 'strong', content: "Meridian" },
             "."
           ]
-        }
+        },
+        source: 'story', 
+        sourceName: "A Jubilant Victory"
       },
       {
         type: 'addSpecialRule',
@@ -170,9 +191,11 @@ export const STORIES_H_L: StoryCardDef[] = [
         rule: {
           content: ["⚠️ Reminder: Each player also begins with one ", { type: 'strong', content: "Warrant" }, "."],
           position: 'before'
-        }
+        },
+        source: 'story', 
+        sourceName: "A Jubilant Victory"
       }
-    ])
+    ]
   },
   {
     title: "Laying Down the Law",
@@ -182,16 +205,18 @@ export const STORIES_H_L: StoryCardDef[] = [
     setupDescription: "Wanted crew may not be hired.",
     rating: 1,
     tags: ['community', 'character'],
-    rules: createStoryRules("Laying Down the Law", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Laying Low',
           content: ["Wanted crew may not be hired."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Laying Down the Law"
       }
-    ])
+    ]
   },
   {
     title: "The Long Haul",

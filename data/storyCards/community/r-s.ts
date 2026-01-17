@@ -1,6 +1,5 @@
 import { StoryCardDef } from '../../../types';
 import { CONTACT_NAMES, STEP_IDS } from '../../ids';
-import { createStoryRules } from '../utils';
 
 export const STORIES_R_S: StoryCardDef[] = [
   {
@@ -18,16 +17,18 @@ export const STORIES_R_S: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/125866/return-to-sturges-a-firefly-mission",
     tags: ['community', 'classic_heist'],
-    rules: createStoryRules("Return to Sturges", [
+    rules: [
       { 
         type: 'addSpecialRule', 
         category: 'draft',
         rule: {
           title: 'Leader Restriction',
           content: ["Captains Nandi and Atherton may not be used by any player."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Return to Sturges"
       }
-    ])
+    ]
   },
   {
     title: "River's Run 1v1",
@@ -41,16 +42,18 @@ export const STORIES_R_S: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/3454248/rivers-run-1v1",
     requiredExpansion: "community",
     tags: ['community', 'pvp'],
-    rules: createStoryRules("River's Run 1v1", [
-      { type: 'setJobMode', mode: 'no_jobs' },
-      { type: 'setPlayerBadges', badges: { 0: 'Assigned Serenity', 1: 'Assigned Bounty Hunter' } },
+    rules: [
+      { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "River's Run 1v1" },
+      { type: 'setPlayerBadges', badges: { 0: 'Assigned Serenity', 1: 'Assigned Bounty Hunter' }, source: 'story', sourceName: "River's Run 1v1" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: "A Different Kind of Work",
           content: [{ type: 'paragraph', content: ["No Starting Jobs."] }]
-        }
+        },
+        source: 'story', 
+        sourceName: "River's Run 1v1"
       },
       {
         type: 'addSpecialRule',
@@ -58,7 +61,9 @@ export const STORIES_R_S: StoryCardDef[] = [
         rule: {
           title: 'Asymmetric Setup',
           content: ["Player 1 (Serenity): Leader: Malcolm, Ship: Serenity. Crew: Zoë, Wash, Kaylee, Jayne, Inara, Book, Simon, and River. Upgrades: Xùnsù Whisper X1 (Meridian), Expanded Crew Quarters (Osiris), EVA Suit (Space Bazaar for River). Player 2 is a Bounty Hunter and chooses the Setup card."]
-        }
+        },
+        source: 'story', 
+        sourceName: "River's Run 1v1"
       },
       {
         type: 'addSpecialRule',
@@ -76,7 +81,9 @@ export const STORIES_R_S: StoryCardDef[] = [
                     ] 
                 }
             ]
-        }
+        },
+        source: 'story', 
+        sourceName: "River's Run 1v1"
       },
       {
         type: 'addSpecialRule',
@@ -88,7 +95,9 @@ export const STORIES_R_S: StoryCardDef[] = [
                 { type: 'paragraph', content: ["Player 2 (the Bounty Hunter) must ", { type: 'strong', content: "choose the Setup Card for this game" }, "."] },
                 { type: 'paragraph', content: ["If the 'Next' button is disabled, verify that you have selected a Setup Card in the previous step."] }
             ]
-        }
+        },
+        source: 'story', 
+        sourceName: "River's Run 1v1"
       },
       {
         type: 'addSpecialRule',
@@ -103,9 +112,38 @@ export const STORIES_R_S: StoryCardDef[] = [
               ['All bounties are ', { type: 'strong', content: 'active' }, '.']
             ]}
           ]
-        }
+        },
+        source: 'story', 
+        sourceName: "River's Run 1v1"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Bounty Deck Setup',
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                  "Remove all Serenity's crew from the Bounty deck, excluding River Tam. The Bounty deck is placed face up and all bounties are active."
+              ]
+            }
+          ]
+        },
+        source: 'story', 
+        sourceName: "River's Run 1v1"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'setup_selection',
+        rule: {
+          title: "River's Run 1v1: Player 2 Action",
+          content: [{ type: 'paragraph', content: ["Player 2 (the Bounty Hunter) must now choose the Setup Card for this game."] }]
+        },
+        source: 'warning', 
+        sourceName: "River's Run 1v1"
       }
-    ])
+    ]
   },
   {
     title: "Round the 'Verse in \"80 Days\"",
@@ -122,22 +160,24 @@ export const STORIES_R_S: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
     setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship. Both ships starts on St. Albans, Red Sun. Set 20 counters on this card as timing counters.",
     tags: ['community', 'character', 'pvp'],
-    rules: createStoryRules("Ruining It For Everyone", [
-      { type: 'setComponent', stepId: STEP_IDS.C3, component: 'RuiningItDraftStep' },
-      { type: 'setComponent', stepId: STEP_IDS.C5, component: 'RuiningItResourcesStep' },
-      { type: 'setComponent', stepId: STEP_IDS.C6, component: 'RuiningItJobsStep' },
-      { type: 'setShipPlacement', location: { sector: 'St. Albans, Red Sun' } },
-      { type: 'modifyResource', resource: 'credits', method: 'add', value: -1000, description: "Base funds adjusted for story." },
-      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "Your twin stole your starting fuel." },
-      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "Your twin stole your starting parts." },
-      { type: 'setJobMode', mode: 'no_jobs' },
+    rules: [
+      { type: 'setComponent', stepId: STEP_IDS.C3, component: 'RuiningItDraftStep', source: 'story', sourceName: "Ruining It For Everyone" },
+      { type: 'setComponent', stepId: STEP_IDS.C5, component: 'RuiningItResourcesStep', source: 'story', sourceName: "Ruining It For Everyone" },
+      { type: 'setComponent', stepId: STEP_IDS.C6, component: 'RuiningItJobsStep', source: 'story', sourceName: "Ruining It For Everyone" },
+      { type: 'setShipPlacement', location: { sector: 'St. Albans, Red Sun' }, source: 'story', sourceName: "Ruining It For Everyone" },
+      { type: 'modifyResource', resource: 'credits', method: 'add', value: -1000, description: "Base funds adjusted for story.", source: 'story', sourceName: "Ruining It For Everyone" },
+      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "Your twin stole your starting fuel.", source: 'story', sourceName: "Ruining It For Everyone" },
+      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "Your twin stole your starting parts.", source: 'story', sourceName: "Ruining It For Everyone" },
+      { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "Ruining It For Everyone" },
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: "Nothin' Left But The Hurt",
           content: ["Start with 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew. This is your new ship. Both ships starts on St. Albans, Red Sun."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Ruining It For Everyone"
       },
       {
         type: 'addSpecialRule',
@@ -145,7 +185,9 @@ export const STORIES_R_S: StoryCardDef[] = [
         rule: {
           title: 'A Raw Deal',
           content: ["Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Ruining It For Everyone"
       },
       {
         type: 'addSpecialRule',
@@ -153,9 +195,11 @@ export const STORIES_R_S: StoryCardDef[] = [
         rule: {
           title: "The Twin's Head Start",
           content: ["Set 20 counters on this card as timing counters."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Ruining It For Everyone"
       }
-    ])
+    ]
   },
   {
     title: "Save River Tam",
@@ -164,17 +208,19 @@ export const STORIES_R_S: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1066622/story-card-save-river-tam",
     setupDescription: "Remove River Tam from play.",
     tags: ['community', 'jailbreak', 'character'],
-    rules: createStoryRules("Save River Tam", [
-      { type: 'addFlag', flag: 'removeRiver' },
+    rules: [
+      { type: 'addFlag', flag: 'removeRiver', source: 'story', sourceName: "Save River Tam" },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: "Missing Person",
           content: ["Remove River Tam from play."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Save River Tam"
       }
-    ]),
+    ],
     rating: 1
   },
   {
@@ -194,17 +240,19 @@ export const STORIES_R_S: StoryCardDef[] = [
     requiredExpansion: "community",
     rating: 1,
     tags: ['community', 'pvp', 'verse_variant'],
-    rules: createStoryRules("Scavengers", [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 10000, description: "Scavenger's Hoard" },
-      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No fuel used." },
-      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No parts used." },
+    rules: [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 10000, description: "Scavenger's Hoard", source: 'story', sourceName: "Scavengers" },
+      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No fuel used.", source: 'story', sourceName: "Scavengers" },
+      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No parts used.", source: 'story', sourceName: "Scavengers" },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: 'Starting Cargo',
           content: ["Each player begins with 10 Cargo."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Scavengers"
       },
       {
         type: 'addSpecialRule',
@@ -212,7 +260,9 @@ export const STORIES_R_S: StoryCardDef[] = [
         rule: {
           title: 'Scavenger Draft Rules',
           content: ["No ships are used in this scenario. Roll for first player. First player chooses a Leader card, then passes the Leader deck to the next player until each player has chosen one."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Scavengers"
       },
       {
         type: 'addSpecialRule',
@@ -220,7 +270,9 @@ export const STORIES_R_S: StoryCardDef[] = [
         rule: {
           title: 'Component Not Used',
           content: ["Nav Decks are not used in this scenario."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Scavengers"
       },
       {
         type: 'addSpecialRule',
@@ -228,7 +280,9 @@ export const STORIES_R_S: StoryCardDef[] = [
         rule: {
           title: 'Component Not Used',
           content: ["Alliance Cruiser and Reaver ships are not used in this scenario."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Scavengers"
       },
       {
         type: 'addSpecialRule',
@@ -236,7 +290,9 @@ export const STORIES_R_S: StoryCardDef[] = [
         rule: {
           title: 'Goal Override',
           content: ["The standard goal step is not used. The goal is described on the main Story Card intro."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Scavengers"
       },
       {
         type: 'addSpecialRule',
@@ -244,7 +300,9 @@ export const STORIES_R_S: StoryCardDef[] = [
         rule: {
           title: 'Component Not Used',
           content: ["Job cards are not used in this scenario."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Scavengers"
       },
       {
         type: 'addSpecialRule',
@@ -252,9 +310,11 @@ export const STORIES_R_S: StoryCardDef[] = [
         rule: {
           title: 'Setup Step Skipped',
           content: ["Do not \"Prime the Pump\". Shuffle all Supply Decks and place them face down near the bank."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Scavengers"
       },
-    ])
+    ]
   },
   {
     title: "Shadows Over Duul",
@@ -263,16 +323,18 @@ export const STORIES_R_S: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/100497/shadows-over-duul-new-goal-reupload",
     setupDescription: "Remove jobs from Amnon Duul during Set Up. Start in the border of Murphy.",
     tags: ['community', 'survival'],
-    rules: createStoryRules("Shadows Over Duul", [
-      { type: 'forbidContact', contact: CONTACT_NAMES.AMNON_DUUL },
-      { type: 'setShipPlacement', location: { region: 'border of Murphy' } },
+    rules: [
+      { type: 'forbidContact', contact: CONTACT_NAMES.AMNON_DUUL, source: 'story', sourceName: "Shadows Over Duul" },
+      { type: 'setShipPlacement', location: { region: 'border of Murphy' }, source: 'story', sourceName: "Shadows Over Duul" },
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'A Tense Start',
           content: ["Start in the border of Murphy."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Shadows Over Duul"
       },
       {
         type: 'addSpecialRule',
@@ -280,9 +342,11 @@ export const STORIES_R_S: StoryCardDef[] = [
         rule: {
           title: 'Unsavory Business',
           content: ["Remove jobs from Amnon Duul during Set Up."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Shadows Over Duul"
       }
-    ]),
+    ],
     rating: 2,
   },
   {
@@ -296,15 +360,17 @@ export const STORIES_R_S: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/3405568/article/45332549#45332549",
     requiredExpansion: "community",
     tags: ['community', 'pvp'],
-    rules: createStoryRules("Shiny New Year 25 - Protect Or Plunder", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: 'Deck Modification',
           content: ["After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Shiny New Year 25 - Protect Or Plunder"
       }
-    ])
+    ]
   },
 ];

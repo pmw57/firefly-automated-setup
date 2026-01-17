@@ -41,7 +41,7 @@ export interface ModifyResourceEffect extends Effect {
   value?: number;
 }
 
-export type RuleSourceType = 'story' | 'setupCard' | 'expansion' | 'optionalRule' | 'challenge' | 'combinableSetupCard';
+export type RuleSourceType = 'story' | 'setupCard' | 'expansion' | 'optionalRule' | 'challenge' | 'combinableSetupCard' | 'warning' | 'info';
 
 export interface BaseRule {
   type: string;
@@ -65,6 +65,7 @@ export interface CreateAlertTokenStackRule extends BaseRule {
 }
 export interface SetAllianceModeRule extends BaseRule { type: 'setAllianceMode'; mode: AllianceSetupMode; }
 export interface SetAlliancePlacementRule extends BaseRule { type: 'setAlliancePlacement'; placement: string; }
+export interface SetReaverPlacementRule extends BaseRule { type: 'setReaverPlacement'; placement: string; }
 export interface SetNavModeRule extends BaseRule { type: 'setNavMode'; mode: NavMode; }
 export interface SetPrimeModeRule extends BaseRule { type: 'setPrimeMode'; mode: PrimeMode; }
 export interface SetDraftModeRule extends BaseRule { type: 'setDraftMode'; mode: DraftMode; }
@@ -136,6 +137,7 @@ export type SetupRule =
   | CreateAlertTokenStackRule
   | SetAllianceModeRule
   | SetAlliancePlacementRule
+  | SetReaverPlacementRule
   | SetNavModeRule
   | SetPrimeModeRule
   | SetDraftModeRule

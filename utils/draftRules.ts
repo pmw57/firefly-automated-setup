@@ -134,25 +134,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     
     if (conflictMessage) specialRules.push({ source: 'info', title: 'Conflict Resolved', content: conflictMessage });
 
-    if (isBrowncoatDraft) {
-        specialRules.push({ source: 'setupCard', title: 'Browncoat Market', content: ['Once all players have purchased a ship and chosen a leader, everyone may buy supplies. ', { type: 'strong', content: 'Fuel: $100, Parts: $300' }, '.'] });
-        
-        // Convert the previously hardcoded Browncoat Market component into a dynamic panel
-        draftPanelsAfter.push({
-            source: 'setupCard',
-            title: 'Browncoat Market',
-            badge: 'Phase 3',
-            content: [
-                { type: 'paragraph', content: ["Once all players have purchased a ship and chosen a leader, everyone may buy supplies."] },
-                { type: 'list', items: [
-                    [{ type: 'strong', content: "Fuel" }, ": $100"],
-                    [{ type: 'strong', content: "Parts" }, ": $300"],
-                ]},
-                { type: 'paragraph-small-italic', content: ["(Reminder: Free starting fuel/parts are disabled in this mode.)"] }
-            ]
-        });
-    }
-    
     if (showBrowncoatHeroesWarning) {
         specialRules.push({
             source: 'warning', title: 'Story & Setup Card Interaction',
@@ -166,7 +147,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
         });
     }
 
-    if (isHeroesCustomSetup) specialRules.push({ source: 'warning', title: 'Heroes & Misfits: Further Adventures', content: [{ type: 'strong', content: `Custom Setup Active:` }, ` Ignore standard crew/ship/location requirements.`, { type: 'br' }, `Pick your Leader, Ship, and Supply Planet. Start with $2000 and a full compliment of your favourite crew.`] });
+    // The generic Heroes & Misfits Custom Setup warning is now moved to the story card data.
     
     if (gameState.optionalRules.optionalShipUpgrades) {
         specialRules.push({

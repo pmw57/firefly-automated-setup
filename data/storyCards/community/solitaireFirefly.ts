@@ -1,5 +1,4 @@
 import { StoryCardDef } from '../../../types';
-import { createStoryRules } from '../utils';
 
 export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
   {
@@ -12,16 +11,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 10,
     campaignSetupNotes: ['EXPLOSIVES_REQUIRED'],
     tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Ariel", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Out of Gas. Requires EXPLOSIVES."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Ariel"
       }
-    ])
+    ]
   },
   {
     title: "Bushwhacked",
@@ -32,16 +33,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 4,
     tags: ['community', 'mystery', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Bushwhacked", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing The Train Job."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Bushwhacked"
       }
-    ])
+    ]
   },
   {
     title: "Heart of Gold",
@@ -52,16 +55,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 14,
     tags: ['community', 'faction_war', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Heart of Gold", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing The Message."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Heart of Gold"
       }
-    ])
+    ]
   },
   {
     title: "Jaynestown",
@@ -73,16 +78,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 8,
     campaignSetupNotes: ['SUGGEST_NEGOTIATION_GEAR'],
     tags: ['community', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Jaynestown", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Our Mrs. Reynolds. You may want to get Jayne some negotiation gear, or things could go badly."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Jaynestown"
       }
-    ])
+    ]
   },
   {
     title: "The Message",
@@ -94,16 +101,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 13,
     campaignSetupNotes: ['START_AT_SPACE_BAZAAR', 'SUGGEST_MED_BAY_AND_HAT'],
     tags: ['community', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("The Message", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Trash. Start the Story at the Space Bazaar. Suggested: Fully Equipped Med Bay. Take Jayne's \"Cunning\" Hat."]
-        }
+        },
+        source: 'story', 
+        sourceName: "The Message"
       }
-    ])
+    ]
   },
   {
     title: "Objects in Space",
@@ -115,16 +124,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 15,
     campaignSetupNotes: ['ANY_SECTOR_PLACEMENT_WITH_CREW_NOTE'],
     tags: ['community', 'survival', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Objects in Space", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Heart of Gold. This Story can take place in any sector. If a named Crew is missing, choose another Crew."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Objects in Space"
       }
-    ])
+    ]
   },
   {
     title: "Our Mrs. Reynolds",
@@ -136,16 +147,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 7,
     campaignSetupNotes: ['SUGGEST_BONNET_VERA'],
     tags: ['community', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Our Mrs. Reynolds", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Safe Suggested: Mal's Pretty Floral Bonnet & Vera."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Our Mrs. Reynolds"
       }
-    ])
+    ]
   },
   {
     title: "Out of Gas",
@@ -157,16 +170,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 9,
     campaignSetupNotes: ['ANY_SECTOR_PLACEMENT'],
     tags: ['community', 'survival', 'against_the_black', 'solo'],
-    rules: createStoryRules("Out of Gas", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Jaynestown. This Story can take place in any empty sector."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Out of Gas"
       }
-    ])
+    ]
   },
   {
     title: "Safe",
@@ -178,16 +193,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 6,
     campaignSetupNotes: ['FAKE_ID_REQUIRED'],
     tags: ['community', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Safe", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Shindig. Requires FAKE ID."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Safe"
       }
-    ])
+    ]
   },
   {
     title: "Serenity Movie Part 1",
@@ -199,16 +216,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 16,
     campaignSetupNotes: ['REMOVE_INARA_AND_BOOK', 'TRANSPORT_REQUIRED'],
     tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Serenity Movie Part 1", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Objects in Space. Remove Inara and Shepherd Book from the game. Requires Transport."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Serenity Movie Part 1"
       }
-    ])
+    ]
   },
   {
     title: "Serenity Movie Part 2",
@@ -220,16 +239,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 17,
     campaignSetupNotes: ['INARA_REJOINS', 'REMOVE_DISGRUNTLED'],
     tags: ['community', 'mystery', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Serenity Movie Part 2", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Serenity Movie Part 1. Remove Disgruntled Tokens from all crew. Inara rejoins the crew at this point."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Serenity Movie Part 2"
       }
-    ])
+    ]
   },
   {
     title: "Serenity Movie Part 3",
@@ -241,16 +262,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 18,
     campaignSetupNotes: ['NO_MED_BAY_SUGGEST_KIT'],
     tags: ['community', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Serenity Movie Part 3", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Serenity Movie Part 2. Fully Equipped Med Bay may not be used. Suggested: Simon's Surgical Kit."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Serenity Movie Part 3"
       }
-    ])
+    ]
   },
   {
     title: "Serenity Part 1",
@@ -266,16 +289,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
       'SERENITY_PART_1_RESOURCES',
       'SERENITY_PART_1_JOBS'
     ],
-    rules: createStoryRules("Serenity Part 1", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Set up Serenity at Valentine with Malcolm, Zoe, Wash, Kaylee, Jaune, 1 Fuel, $500, Cry Baby, Expanded Crew Quarters. Load 2 Contra, then turn over a Nav Card."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Serenity Part 1"
       }
-    ])
+    ]
   },
   {
     title: "Serenity Part 2",
@@ -286,16 +311,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     requiredFlag: 'isSolitaireFirefly',
     sortOrder: 2,
     tags: ['community', 'smugglers_run', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Serenity Part 2", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Serenity Part 1."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Serenity Part 2"
       }
-    ])
+    ]
   },
   {
     title: "Shindig",
@@ -307,16 +334,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 5,
     campaignSetupNotes: ['SUGGEST_FANCY_DUDS'],
     tags: ['community', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Shindig", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Bushwhacked. Suggested: Kaylee's Fluffy Pink Dress. Required: Mal must wear FANCY DUDS throughout."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Shindig"
       }
-    ])
+    ]
   },
   {
     title: "The Train Job",
@@ -328,16 +357,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 3,
     campaignSetupNotes: ['SUGGEST_MED_BAY'],
     tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("The Train Job", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Serenity Part 2. If you have the credits, a Fully Equipped Med Bay might also come in handy."]
-        }
+        },
+        source: 'story', 
+        sourceName: "The Train Job"
       }
-    ])
+    ]
   },
   {
     title: "Trash",
@@ -349,16 +380,18 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 12,
     campaignSetupNotes: ['PICK_UP_SAFFRON', 'HACKING_RIG_REQUIRED'],
     tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("Trash", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing War Stories. Before starting, pick up Saffron on Newhope. Requires HACKING RIG."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Trash"
       }
-    ])
+    ]
   },
   {
     title: "War Stories",
@@ -370,15 +403,17 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 11,
     campaignSetupNotes: ['EXPLOSIVES_REQUIRED'],
     tags: ['community', 'jailbreak', 'character', 'against_the_black', 'solo'],
-    rules: createStoryRules("War Stories", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Story Override',
           content: ["Continue with the crew and items you acquired after completing Ariel. Requires EXPLOSIVES."]
-        }
+        },
+        source: 'story', 
+        sourceName: "War Stories"
       }
-    ])
+    ]
   },
 ];

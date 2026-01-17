@@ -1,5 +1,4 @@
 import { StoryCardDef } from '../../../types';
-import { createStoryRules } from '../utils';
 
 export const STORIES_F_G: StoryCardDef[] = [
   {
@@ -10,14 +9,16 @@ export const STORIES_F_G: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1045716/article/13603393#13603393",
     rating: 1,
     tags: ['community', 'mystery'],
-    rules: createStoryRules("Fruity Oat Bar", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Special Crew & Placement',
           content: ["After choosing your Leader, search for any Wanted crew from any deck and add them to your crew. You must start in Alliance Space."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Fruity Oat Bar"
       },
       {
         type: 'addSpecialRule',
@@ -26,10 +27,12 @@ export const STORIES_F_G: StoryCardDef[] = [
           title: 'Special Crew & Placement',
           content: ["Search for any Wanted crew from any deck and add them to your crew."],
           position: 'after'
-        }
+        },
+        source: 'story', 
+        sourceName: "Fruity Oat Bar"
       },
-      { type: 'setShipPlacement', location: { region: 'Alliance Space' } }
-    ])
+      { type: 'setShipPlacement', location: { region: 'Alliance Space' }, source: 'story', sourceName: "Fruity Oat Bar" }
+    ]
   },
   {
     title: "Gentleman's Agreement",
@@ -49,13 +52,13 @@ export const STORIES_F_G: StoryCardDef[] = [
   },
   {
     title: "Going Legit",
-    intro: "With the strong arm of the Alliance growing ever string, there's gettin' to be less and less room for naughty men like us to slip about... I hear Blue Sun's in need of a legitimate transport company that can get government goods to the people what need 'em.",
+    intro: "With the strong arm of the Alliance growing ever string, there's gettin' to be less and less room for naughty men and women to slip about... I hear Blue Sun's in need of a legitimate transport company that can get government goods to the people what need 'em.",
     setupDescription: "A Port of Operation: While choosing starting positions, players must choose a planetary sector within Blue Sun system that is not a Contact or Supply sector. Mark the sector with a Haven Token. Leave unused ships out of the box as a \"For Sale\" pile.",
     sourceUrl: "https://boardgamegeek.com/thread/3560944/going-legit-story-card",
     requiredExpansion: "community",
     tags: ['community', 'character'],
-    rules: createStoryRules("Going Legit", [
-      { type: 'addFlag', flag: 'isGoingLegit' },
+    rules: [
+      { type: 'addFlag', flag: 'isGoingLegit', source: 'story', sourceName: "Going Legit" },
       {
         type: 'addSpecialRule',
         category: 'draft',
@@ -63,7 +66,9 @@ export const STORIES_F_G: StoryCardDef[] = [
           title: 'A Port of Operation',
           content: ["While choosing starting positions, players must choose a planetary sector within Blue Sun system that is not a Contact or Supply sector. Mark the sector with a Haven Token. Leave unused ships out of the box as a \"For Sale\" pile."],
           flags: ['isHavenPlacement']
-        }
+        },
+        source: 'story', 
+        sourceName: "Going Legit"
       },
       {
         type: 'addSpecialRule',
@@ -72,9 +77,21 @@ export const STORIES_F_G: StoryCardDef[] = [
           content: ["Haven can be different from your stating location. Haven must be a non-contact and non-supply Blue Sun planetary sector."],
           position: 'before',
           flags: ['isHavenPlacement']
-        }
+        },
+        source: 'story', 
+        sourceName: "Going Legit"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+            title: 'For Sale Pile',
+            content: ["Leave unused ships out of the box as a \"For Sale\" pile."],
+        },
+        source: 'info', 
+        sourceName: "Going Legit"
       }
-    ])
+    ]
   },
   {
     title: "The Good Guys",
@@ -83,17 +100,19 @@ export const STORIES_F_G: StoryCardDef[] = [
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1624739/story-card-the-good-guys",
     tags: ['community', 'against_the_black'],
-    rules: createStoryRules("The Good Guys", [
-      { type: 'forbidContact', contact: 'Niska' },
+    rules: [
+      { type: 'forbidContact', contact: 'Niska', source: 'story', sourceName: "The Good Guys" },
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Moral Compass',
           content: ["Only MORAL leaders can be chosen. Immoral Jobs cannot be accepted. Remove Crow from the game."]
-        }
+        },
+        source: 'story', 
+        sourceName: "The Good Guys"
       }
-    ]),
+    ],
     rating: 1
   },
   {

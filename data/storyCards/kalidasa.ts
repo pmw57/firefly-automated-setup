@@ -1,5 +1,4 @@
 import { StoryCardDef } from '../../types';
-import { createStoryRules } from './utils';
 
 export const KALIDASA_STORIES: StoryCardDef[] = [
   {
@@ -9,26 +8,30 @@ export const KALIDASA_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/2785039/gerryrailbaron",
     setupDescription: "Creates an Alliance Alert Token stack. No starting jobs are dealt.",
     tags: ['reputation', 'verse_variant'],
-    rules: createStoryRules("It's All In Who You Know", [
-      { type: 'createAlertTokenStack', multiplier: 3 },
+    rules: [
+      { type: 'createAlertTokenStack', multiplier: 3, source: 'story', sourceName: "It's All In Who You Know" },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: 'Word Gets Around',
           content: ['Create a stack of Alliance Alert Tokens equal to three times the number of players.']
-        }
+        },
+        source: 'story', 
+        sourceName: "It's All In Who You Know"
       },
-      { type: 'setJobMode', mode: 'no_jobs' },
+      { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "It's All In Who You Know" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: 'Building A Network',
           content: ["No starting jobs are dealt. You must build your network from scratch."]
-        }
+        },
+        source: 'story', 
+        sourceName: "It's All In Who You Know"
       }
-    ])
+    ]
   },
   {
     title: "The Scavenger's 'Verse",

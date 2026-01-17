@@ -1,6 +1,5 @@
 import { StoryCardDef } from '../../types';
 import { CONTACT_NAMES } from '../ids';
-import { createStoryRules } from './utils';
 
 export const TENTH_STORIES: StoryCardDef[] = [
   {
@@ -11,19 +10,21 @@ export const TENTH_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue", "kalidasa"],
     sourceUrl: "https://boardgamegeek.com/image/8103874/sjliver",
     tags: ['character'],
-    rules: createStoryRules("A Friend In Every Port", [
-      { type: 'setJobMode', mode: 'draft_choice' },
-      { type: 'addFlag', flag: 'useAllContactsForJobDraft' },
-      { type: 'modifyPrime', multiplier: 2 },
+    rules: [
+      { type: 'setJobMode', mode: 'draft_choice', source: 'story', sourceName: "A Friend In Every Port" },
+      { type: 'addFlag', flag: 'useAllContactsForJobDraft', source: 'story', sourceName: "A Friend In Every Port" },
+      { type: 'modifyPrime', multiplier: 2, source: 'story', sourceName: "A Friend In Every Port" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: "Friends in Low Places",
           content: ["Starting with the last player to choose a Leader, each player chooses 1 Job from 3 different Contacts. Mr. Universe cannot be chosen for these starting Jobs."]
-        }
+        },
+        source: 'story', 
+        sourceName: "A Friend In Every Port"
       }
-    ]),
+    ],
   },
   {
     title: "Aces Up Your Sleeve",
@@ -32,17 +33,19 @@ export const TENTH_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     sourceUrl: "https://boardgamegeek.com/image/8103873/sjliver",
     tags: ['reputation'],
-    rules: createStoryRules("Aces Up Your Sleeve", [
-      { type: 'createAlertTokenStack', multiplier: 4 },
+    rules: [
+      { type: 'createAlertTokenStack', multiplier: 4, source: 'story', sourceName: "Aces Up Your Sleeve" },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: 'Making a Name',
           content: ['Create a stack of Alliance Alert Tokens equal to four times the number of players.']
-        }
+        },
+        source: 'story', 
+        sourceName: "Aces Up Your Sleeve"
       }
-    ])
+    ]
   },
   {
     title: "Dead Man's Hand",
@@ -60,17 +63,19 @@ export const TENTH_STORIES: StoryCardDef[] = [
     additionalRequirements: ["kalidasa"],
     sourceUrl: "https://boardgamegeek.com/image/8103877",
     tags: ['classic_heist'],
-    rules: createStoryRules("It's a Mad, Mad, Mad, Mad 'Verse!", [
-      { type: 'setShipPlacement', location: 'persephone' },
+    rules: [
+      { type: 'setShipPlacement', location: 'persephone', source: 'story', sourceName: "It's a Mad, Mad, Mad, Mad 'Verse!" },
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: "A Frenzied Race",
           content: ["Players begin at Persephone."]
-        }
+        },
+        source: 'story', 
+        sourceName: "It's a Mad, Mad, Mad, Mad 'Verse!"
       }
-    ])
+    ]
   },
   {
     title: "Let's Be Bad Guys",
@@ -79,17 +84,19 @@ export const TENTH_STORIES: StoryCardDef[] = [
     requiredExpansion: "tenth",
     sourceUrl: "https://boardgamegeek.com/image/8103878/sjliver",
     tags: ['criminal_enterprise'],
-    rules: createStoryRules("Let's Be Bad Guys", [
-      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA },
+    rules: [
+      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA, source: 'story', sourceName: "Let's Be Bad Guys" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
         rule: {
           title: 'Earning Trust',
           content: ["Jobs for Niska are not dealt during Set Up."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Let's Be Bad Guys"
       }
-    ])
+    ]
   },
   {
     title: "Red Skies Over Ransom",
@@ -99,14 +106,16 @@ export const TENTH_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue"],
     sourceUrl: "https://boardgamegeek.com/image/8103879/sjliver",
     tags: ['survival'],
-    rules: createStoryRules("Red Skies Over Ransom", [
+    rules: [
       {
         type: 'addSpecialRule',
         category: 'draft_placement',
         rule: { 
             content: ['⚠️ Restriction: New Canaan may not be chosen as a starting location.'],
             position: 'before'
-        }
+        },
+        source: 'story', 
+        sourceName: "Red Skies Over Ransom"
       },
       {
         type: 'addSpecialRule',
@@ -114,7 +123,9 @@ export const TENTH_STORIES: StoryCardDef[] = [
         rule: {
           title: "Reaver Sighting!",
           content: ["Treat New Canaan, Blue Sun as if there is a Reaver Cutter there at all times. Put a stack of Reaver Alert Tokens there as a reminder. These tokens are never cleared."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Red Skies Over Ransom"
       },
       {
         type: 'addSpecialRule',
@@ -122,15 +133,19 @@ export const TENTH_STORIES: StoryCardDef[] = [
         rule: {
           title: "Reaver Sighting!",
           content: ["Treat New Canaan, Blue Sun as if there is a Reaver Cutter there at all times."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Red Skies Over Ransom"
       },
       {
         type: 'createAlertTokenStack',
         fixedValue: 6,
         tokenName: 'Reaver Alert Tokens',
-        description: 'Place this stack on New Canaan. These tokens are never cleared.'
+        description: 'Place this stack on New Canaan. These tokens are never cleared.',
+        source: 'story', 
+        sourceName: "Red Skies Over Ransom"
       }
-    ])
+    ]
   },
   {
     title: "Running On Empty",
@@ -140,19 +155,21 @@ export const TENTH_STORIES: StoryCardDef[] = [
     additionalRequirements: ["blue", "kalidasa"],
     sourceUrl: "https://boardgamegeek.com/image/8103880/sjliver",
     tags: ['character'],
-    rules: createStoryRules("Running On Empty", [
-      { type: 'modifyResource', resource: 'credits', method: 'add', value: 1200, description: "Story Bonus" },
-      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No Starting Fuel" },
-      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No Starting Parts" },
+    rules: [
+      { type: 'modifyResource', resource: 'credits', method: 'add', value: 1200, description: "Story Bonus", source: 'story', sourceName: "Running On Empty" },
+      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No Starting Fuel", source: 'story', sourceName: "Running On Empty" },
+      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No Starting Parts", source: 'story', sourceName: "Running On Empty" },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: 'Fuel Shortage',
           content: ["Players do not receive free starting Fuel or Parts. Each player begins with an extra $1200."]
-        }
+        },
+        source: 'story', 
+        sourceName: "Running On Empty"
       }
-    ])
+    ]
   },
   {
     title: "The Wobbly Headed Doll Caper",
