@@ -67,10 +67,11 @@ export const TENTH_STORIES: StoryCardDef[] = [
       { type: 'setShipPlacement', location: 'persephone', source: 'story', sourceName: "It's a Mad, Mad, Mad, Mad 'Verse!" },
       {
         type: 'addSpecialRule',
-        category: 'draft',
+        category: 'draft_placement',
         rule: {
           title: "A Frenzied Race",
-          content: ["Players begin at Persephone."]
+          content: ["Players begin at Persephone."],
+          position: 'before'
         },
         source: 'story', 
         sourceName: "It's a Mad, Mad, Mad, Mad 'Verse!"

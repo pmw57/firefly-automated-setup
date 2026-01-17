@@ -150,6 +150,17 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'addFlag', flag: 'isHeroesAndMisfits', source: 'story', sourceName: "Heroes & Misfits" },
       {
         type: 'addSpecialRule',
+        category: 'draft_placement',
+        rule: {
+          title: 'Serenity\'s Start',
+          content: ["Begin play at Persephone."],
+          position: 'before'
+        },
+        source: 'story', 
+        sourceName: "Heroes & Misfits"
+      },
+      {
+        type: 'addSpecialRule',
         category: 'resources',
         rule: {
           title: 'Story Override',
@@ -219,6 +230,17 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'setShipPlacement', location: 'londinium', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
       { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
       { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_placement',
+        rule: {
+          title: "In the Belly of the Beast",
+          content: ["Begin play at Londinium."],
+          position: 'before'
+        },
+        source: 'story', 
+        sourceName: "The Lonely Smuggler's Blues"
+      },
       {
         type: 'addSpecialRule',
         category: 'prime',

@@ -1,5 +1,4 @@
 import { StoryCardDef } from '../../../types';
-import { CONTACT_NAMES } from '../../ids';
 
 export const STORIES_M_O: StoryCardDef[] = [
   {
@@ -140,8 +139,19 @@ export const STORIES_M_O: StoryCardDef[] = [
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: 'Special Placement & Crew Draw',
-          content: ["Place your Firefly on a supply world to begin the game. Draw 1 starting crew from any deck by flipping the draw pile and taking the first named character that is revealed."]
+          title: 'Special Crew Draw',
+          content: ["Draw 1 starting crew from any deck by flipping the draw pile and taking the first named character that is revealed."]
+        },
+        source: 'story', 
+        sourceName: "Miranda"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_placement',
+        rule: {
+          title: 'Supply World Start',
+          content: ["Place your Firefly on a supply world to begin the game."],
+          position: 'before'
         },
         source: 'story', 
         sourceName: "Miranda"
@@ -181,19 +191,13 @@ export const STORIES_M_O: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'draft_panel',
+        category: 'draft_placement',
         rule: {
           title: 'Rescue Mission Setup',
-          badge: 'Story Setup',
           content: [
-            {
-              type: 'list',
-              items: [
-                ["Place the Serenity ship token on the 'Shadow, Murphy' sector."],
-                ["This will be the drop-off point for any rescued crew during the game."],
-              ]
-            }
-          ]
+            "Place the Serenity ship token on the 'Shadow, Murphy' sector. This will be the drop-off point for any rescued crew."
+          ],
+          position: 'before'
         },
         source: 'story', 
         sourceName: "My Fellow Browncoats"
@@ -226,174 +230,9 @@ export const STORIES_M_O: StoryCardDef[] = [
             "Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together. Place them face down as the \"Prisoner Deck\"."
           ]
         },
-        source: 'story', 
+        source: 'story',
         sourceName: "My Fellow Browncoats"
       }
-    ],
-    sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
-    requiredExpansion: "community"
-  },
-  {
-    title: "My Number One Guy",
-    intro: " ",
-    isPvP: true,
-    sourceUrl: "https://boardgamegeek.com/thread/1076645/story-card-my-number-one-guy-player-vs-player",
-    setupDescription: "Follow the 'Special Job Draw' override.",
-    rating: 0,
-    tags: ['community', 'pvp'],
-    requiredExpansion: "community",
-    rules: [
-      { 
-        type: 'addSpecialRule', 
-        category: 'jobs',
-        rule: {
-          title: 'Special Job Draw',
-          content: ["Draw three starting jobs from a single contact, and two other jobs from any other contacts. You may only keep 3 jobs."]
-        },
-        source: 'story', 
-        sourceName: "My Number One Guy"
-      }
     ]
-  },
-  {
-    title: "New Heroes of Canton",
-    intro: "Them Mudders got the shortest end of a stick ever been offered. How's about we offer 'em a better stick.",
-    additionalRequirements: [
-      "kalidasa"
-    ],    isCoOp: true,
-    goals: [
-      {
-        title: "Easy",
-        description: "Use 25 Disgruntled tokens as the game timer."
-      },
-      {
-        title: "Medium",
-        description: "Use 21 Disgruntled tokens as the game timer."
-      },
-      {
-        title: "Pro",
-        description: "Use 17 Disgruntled tokens as the game timer."
-      }
-    ],
-    setupDescription: "Pull all Mudders from Supply decks. Shuffle a set # of Mudders and Foremen together. Place them face up. if the Foreman is on top after a Shuffle, reshuffle. 2/3/4 Players = 7/10/13 Goal Mudders and the Foreman. Easy/Medium/Pro: Use 25/21/17 Disgruntled tokens as a game timer.",
-    sourceUrl: "https://boardgamegeek.com/filepage/294565/new-heroes-of-canton-co-op-story-card",
-    requiredExpansion: "community",
-    tags: ['community', 'against_the_black', 'coop'],
-    rules: [
-      {
-        type: 'addSpecialRule',
-        category: 'prime',
-        rule: {
-          title: 'Custom Mudder Deck',
-          content: ["Pull all Mudders from Supply decks. Shuffle a set # of Mudders and Foremen together. Place them face up. if the Foreman is on top after a Shuffle, reshuffle. 2/3/4 Players = 7/10/13 Goal Mudders and the Foreman."]
-        },
-        source: 'story', 
-        sourceName: "New Heroes of Canton"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'prime_panel',
-        rule: {
-          title: 'Custom Mudder Deck',
-          badge: 'Story Setup',
-          content: [
-            {
-              type: 'list',
-              items: [
-                ["Pull all Mudder cards from the Supply decks."],
-                [
-                  "Create a new deck with ",
-                  {type: 'strong', content: 'The Foreman'},
-                  " and a number of Mudders based on player count:",
-                  {
-                    type: 'list',
-                    items: [
-                      ['2 Players: 7 Mudders'],
-                      ['3 Players: 10 Mudders'],
-                      ['4 Players: 13 Mudders']
-                    ]
-                  }
-                ],
-                ["Shuffle this new deck and place it face up."],
-                [{type: 'warning-box', content: ["If The Foreman is on top after shuffling, reshuffle the deck."]}]
-              ]
-            }
-          ]
-        },
-        source: 'story', 
-        sourceName: "New Heroes of Canton"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'resources',
-        rule: {
-          title: "A Hero's Gamble",
-          content: ["Easy/Medium/Pro: Use 25/21/17 Disgruntled tokens as a game timer."]
-        },
-        source: 'story', 
-        sourceName: "New Heroes of Canton"
-      },
-      {
-        type: 'createAlertTokenStack',
-        valuesByGoal: {
-            "Easy": 25,
-            "Medium": 21,
-            "Pro": 17,
-        },
-        tokenName: 'Disgruntled Tokens',
-        title: "A Hero's Gamble",
-        description: "The first player takes the tokens.",
-        source: 'story', 
-        sourceName: "New Heroes of Canton"
-      }
-    ]
-  },
-  {
-    title: "Oh Captain My Captain",
-    intro: "Remember that one time your Leader failed a Niska Job? Well, Niska remembers and now he's lookin' to kill some folk.",
-    setupDescription: "Don't draw Starting Jobs from Niska. 1st player is given 20 Disgruntle tokens as a game timer.",
-    sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards",
-    requiredExpansion: "community",
-    tags: ['community', 'survival'],
-    rules: [
-      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA, source: 'story', sourceName: "Oh Captain My Captain" },
-      {
-        type: 'addSpecialRule',
-        category: 'jobs',
-        rule: {
-          title: "Niska's Grudge",
-          content: ["Don't draw Starting Jobs from Niska."]
-        },
-        source: 'story', 
-        sourceName: "Oh Captain My Captain"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'resources',
-        rule: {
-          title: "Niska Remembers",
-          content: ["1st player is given 20 Disgruntle tokens as a game timer."]
-        },
-        source: 'story', 
-        sourceName: "Oh Captain My Captain"
-      },
-      {
-        type: 'createAlertTokenStack',
-        fixedValue: 20,
-        tokenName: 'Disgruntled Tokens',
-        title: 'Game Timer',
-        description: "Give the pile to the first player.",
-        source: 'story', 
-        sourceName: "Oh Captain My Captain"
-      }
-    ]
-  },
-  {
-    title: "Old Friends And New",
-    intro: "You thought he was dead, but now you know your old War buddy is being held in a max-security prison on Valentine. You'll need the help of some new friends to unlock the Cortex master identity files, then mingle with the high and mighty to get the prison plans, and finally it's off to the rescue!",
-    requiredExpansion: "community",
-    sourceUrl: "https://boardgamegeek.com/thread/1119976/story-card-old-friends-and-new",
-    rating: 2,
-    tags: ['community', 'jailbreak'],
-  },
+  }
 ];
