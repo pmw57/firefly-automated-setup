@@ -103,7 +103,6 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
 
   return (
     <div className="space-y-4">
-      {allInfoBlocks}
       
       {!disablePriming && (
         <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm text-center transition-colors duration-300`}>
@@ -134,6 +133,8 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
       {primePanels.map((panel, i) => (
           <CustomPrimePanel key={`panel-${i}`} rule={panel} badgeClass={stepBadgePurpleBg} />
       ))}
+
+      {allInfoBlocks}
     </div>
   );
 };

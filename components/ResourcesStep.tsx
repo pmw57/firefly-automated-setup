@@ -119,7 +119,6 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
 
   return (
     <div className="space-y-6">
-      {allInfoBlocks}
       
       {smugglersBluesVariantAvailable && (
         <div className={`${cardBg} rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300 overflow-hidden animate-fade-in-up`}>
@@ -327,6 +326,8 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
             </div>
         ))}
       </div>
+
+      {allInfoBlocks}
     </div>
   );
 };

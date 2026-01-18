@@ -341,11 +341,6 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   return (
     <div className="space-y-6">
-      {allInfoBlocks.length > 0 && (
-        <div className="space-y-4">
-          {allInfoBlocks}
-        </div>
-      )}
       
       {!isSolo && !draftState && !isQuickMode && (
         <p className={cls("italic text-center", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>
@@ -406,6 +401,12 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
             ))}
             
           </div>
+        </div>
+      )}
+
+      {allInfoBlocks.length > 0 && (
+        <div className="space-y-4">
+          {allInfoBlocks}
         </div>
       )}
     </div>

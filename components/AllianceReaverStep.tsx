@@ -84,10 +84,6 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
 
   return (
     <div className="space-y-4">
-      {allSortedOverrides.map((rule, index) => (
-          <OverrideNotificationBlock key={`rule-${index}`} {...rule} />
-      ))}
-
       <div className={`${standardContainerBg} p-4 rounded-lg border ${standardContainerBorder} shadow-sm mt-4 transition-colors duration-300`}>
         <h3 className={`text-lg font-bold ${headerColor} mb-3 font-western tracking-wide border-b-2 ${headerBorder} pb-1`}>Ship Placement</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -106,6 +102,10 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
           </div>
         </div>
       </div>
+
+      {allSortedOverrides.map((rule, index) => (
+          <OverrideNotificationBlock key={`rule-${index}`} {...rule} />
+      ))}
     </div>
   );
 };

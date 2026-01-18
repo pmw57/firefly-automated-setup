@@ -90,8 +90,6 @@ export const GameLengthTokensStep: React.FC = () => {
 
     return (
         <div className="space-y-6">
-            {allInfoBlocks}
-            
             {!replacesTimerSetup && (
                 <UnpredictableTimerRules 
                     timerConfig={gameState.timerConfig}
@@ -100,6 +98,8 @@ export const GameLengthTokensStep: React.FC = () => {
                     onToggleUnpredictableToken={toggleUnpredictableToken}
                 />
             )}
+
+            {allInfoBlocks}
         </div>
     );
 };
