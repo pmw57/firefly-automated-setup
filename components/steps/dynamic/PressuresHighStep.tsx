@@ -44,10 +44,6 @@ export const PressuresHighStep = (): React.ReactElement => {
 
     return (
         <div className="space-y-4">
-            {specialRules.map((rule, i) => (
-                <OverrideNotificationBlock key={i} {...rule} />
-            ))}
-
             <div className={cls(cardBg, "p-6 rounded-lg border shadow-sm", cardBorder)}>
                 <h4 className={cls("font-bold text-lg mb-2", headerColor)}>The Pressure's High</h4>
                 <div className={cls("space-y-4", textColor)}>
@@ -65,6 +61,10 @@ export const PressuresHighStep = (): React.ReactElement => {
                     </div>
                 </div>
             </div>
+
+            {specialRules.map((rule, i) => (
+                <OverrideNotificationBlock key={i} {...rule} />
+            ))}
         </div>
     );
 };

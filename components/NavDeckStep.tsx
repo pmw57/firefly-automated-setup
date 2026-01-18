@@ -56,10 +56,6 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
 
   return (
     <div className="space-y-4">
-      {specialRulesToDisplay.map((rule, i) => (
-          <OverrideNotificationBlock key={i} {...rule} />
-      ))}
-
       <div className={cls(panelBg, "p-6 rounded-lg border shadow-sm overflow-hidden transition-colors duration-300 space-y-4", panelBorder)}>
         <div className={cls(panelText, "space-y-2")}>
           <p>Shuffle the Alliance and Border Nav Decks separately.</p>
@@ -93,6 +89,10 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
           </div>
         )}
       </div>
+
+      {specialRulesToDisplay.map((rule, i) => (
+          <OverrideNotificationBlock key={i} {...rule} />
+      ))}
     </div>
   );
 };

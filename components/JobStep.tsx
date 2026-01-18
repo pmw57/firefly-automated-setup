@@ -185,8 +185,6 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   return (
     <div className="space-y-6">
-      {sortedInfoBlocks.map((block, i) => <OverrideNotificationBlock key={`info-${i}`} {...block} />)}
-
       {mainContentPosition === 'after' ? (
         <>
           {StandardContentBlock}
@@ -202,6 +200,8 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
           {PrimeContactsBlock}
         </>
       )}
+
+      {sortedInfoBlocks.map((block, i) => <OverrideNotificationBlock key={`info-${i}`} {...block} />)}
     </div>
   );
 };

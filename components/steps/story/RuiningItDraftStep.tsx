@@ -127,11 +127,6 @@ export const RuiningItDraftStep = ({ step }: StepComponentProps): React.ReactEle
     
     return (
         <div className="space-y-6">
-            {allInfoBlocks.length > 0 && (
-                <div className="space-y-4">
-                    {allInfoBlocks}
-                </div>
-            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <RuiningItSetupPanel stepBadgeClass={stepBadgeBlueBg} />
                 <PlacementOrderPanel 
@@ -139,6 +134,12 @@ export const RuiningItDraftStep = ({ step }: StepComponentProps): React.ReactEle
                     stepBadgeClass={stepBadgeAmberBg}
                 />
             </div>
+            
+            {allInfoBlocks.length > 0 && (
+                <div className="space-y-4">
+                    {allInfoBlocks}
+                </div>
+            )}
         </div>
     );
 };
