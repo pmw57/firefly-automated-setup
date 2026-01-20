@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../types';
 
 export const STILL_FLYING_STORIES: StoryCardDef[] = [
@@ -11,7 +12,6 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     tags: ['character', 'mystery'],
     rules: [
       { type: 'setJobMode', mode: 'caper_start', source: 'story', sourceName: "A Rare Specimen Indeed" },
-      { type: 'addFlag', flag: 'showNoJobsMessage', source: 'story', sourceName: "A Rare Specimen Indeed" },
       {
         type: 'addSpecialRule',
         category: 'jobs',

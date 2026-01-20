@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../types';
 
 export const COACHWORKS_STORIES: StoryCardDef[] = [
@@ -21,7 +22,6 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
         sourceName: "Down and Out"
       },
       { type: 'setJobMode', mode: 'shared_hand', source: 'story', sourceName: "Down and Out" },
-      { type: 'addFlag', flag: 'showNoJobsMessage', source: 'story', sourceName: "Down and Out" },
       {
         type: 'addSpecialRule',
         category: 'jobs',

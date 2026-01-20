@@ -1,3 +1,4 @@
+
 import { JobMode, NavMode, AllianceSetupMode, PrimeMode, DraftMode, LeaderSetupMode, RuleSourceType, CreateAlertTokenStackRule } from './rules';
 import { StructuredContent, SpecialRule } from './core';
 
@@ -28,21 +29,31 @@ export interface JobConflict {
   setupCard: { value: string; label: string };
 }
 
-export interface JobSetupDetails {
+export interface JobContactListConfig {
+  title: string;
+  description: string;
   contacts: string[];
-  cardsToDraw?: number;
+  cardsToDraw: number;
   isSingleContactChoice: boolean;
+  isSharedHand: boolean;
+  isOverridden: boolean;
+}
+
+export interface JobSetupDetails {
+  // Config for the standard contact grid/list. Null if hidden.
+  contactList: JobContactListConfig | null;
+
+  // Generic main content, typically from setJobStepContent rule.
+  mainContent: StructuredContent | null;
+  mainContentPosition: 'before' | 'after';
+
+  // Specific blocks
+  caperDraw: number | null;
+  primeInstruction: StructuredContent | null;
+  
+  // Side messages
   infoMessages: JobSetupMessage[];
   overrideMessages: JobSetupMessage[];
-  showStandardContactList: boolean;
-  totalJobCards: number;
-  caperDrawCount?: number;
-  isContactListOverridden?: boolean;
-  jobDrawMode: JobMode;
-  mainContent?: StructuredContent;
-  mainContentPosition?: 'before' | 'after';
-  showNoJobsMessage?: boolean;
-  primeContactsInstruction?: StructuredContent;
 }
 
 export interface NavDeckSetupDetails {
