@@ -92,7 +92,7 @@ describe('rules/jobs', () => {
           {
             "items": [
               [
-                "prime the ",
+                "Prime the ",
                 {
                   "content": "Contacts",
                   "type": "strong",
