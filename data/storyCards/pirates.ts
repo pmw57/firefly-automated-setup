@@ -41,6 +41,23 @@ export const PIRATES_STORIES: StoryCardDef[] = [
         },
         source: 'story', 
         sourceName: "...Another Man's Treasure"
+      },
+      {
+        type: 'setJobStepContent',
+        position: 'after',
+        content: [
+          { type: 'strong', content: 'Remove Piracy Jobs' },
+          {
+            type: 'numbered-list',
+            items: [
+              ['Pull all remaining ', { type: 'strong', content: 'Piracy Jobs' }, ' from the Contact Decks.'],
+              ['Place them in their ', { type: 'strong', content: 'discard piles' }, '.'],
+              ['Reshuffle the Contact Decks.']
+            ]
+          }
+        ],
+        source: 'story',
+        sourceName: "...Another Man's Treasure"
       }
     ]
   },
