@@ -12,16 +12,31 @@ export const SOLO_STORIES: StoryCardDef[] = [
     tags: ['reputation', 'against_the_black', 'solo'],
     rules: [
       { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "A Fistful Of Scoundrels" },
-      { type: 'primeContacts', source: 'story', sourceName: "A Fistful Of Scoundrels" },
       { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "A Fistful Of Scoundrels" },
       {
         type: 'addSpecialRule',
-        category: 'goal',
+        category: 'jobs',
         rule: {
-          title: 'Story Override',
-          content: ["Roots In The Community: Each time you gain Solid with a Contact, recover 2 Game Length Tokens."]
+          title: 'Prime Contact Decks',
+          content: ["Starting Jobs: No Starting Jobs are dealt. Instead, prime the Contacts, revealing the top 3 cards of each. Place the revealed Job Cards in their discard piles."]
         },
         source: 'story', 
+        sourceName: "A Fistful Of Scoundrels"
+      },
+      {
+        type: 'setJobStepContent',
+        position: 'after',
+        content: [
+          { type: 'strong', content: 'Prime Contacts Decks' },
+          {
+            type: 'numbered-list',
+            items: [
+              ['Prime the ', {type: 'strong', content: 'Contacts'}, ', revealing the top 3 cards of each.'],
+              ['Place the revealed ', {type: 'strong', content: 'Job Cards'}, ' in their discard piles.']
+            ]
+          }
+        ],
+        source: 'story',
         sourceName: "A Fistful Of Scoundrels"
       }
     ],
