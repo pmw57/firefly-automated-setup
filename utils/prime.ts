@@ -59,6 +59,9 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   
   let finalCount = baseDiscard * effectiveMultiplier;
   if (primeModifier?.add) finalCount += primeModifier.add;
+  
+  const infoRules = specialRules.filter(r => r.source === 'info' || r.source === 'warning');
+  const overrideRules = specialRules.filter(r => r.source !== 'info' && r.source !== 'warning');
 
-  return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, specialRules, primePanels, hasStartWithAlertCard, disablePriming };
+  return { baseDiscard, effectiveMultiplier, finalCount, isHighSupplyVolume, isBlitz, infoRules, overrideRules, primePanels, hasStartWithAlertCard, disablePriming };
 };

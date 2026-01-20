@@ -1,4 +1,4 @@
-import React, { ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { ErrorFallback } from './ErrorFallback';
 
 interface ErrorBoundaryProps {
@@ -16,7 +16,7 @@ interface ErrorBoundaryState {
 // This class extends React.Component to become a stateful error boundary.
 // As a class component, it can use lifecycle methods like `getDerivedStateFromError`
 // and `componentDidCatch` to trap rendering errors in its children.
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   public state: ErrorBoundaryState = {
     hasError: false,
     error: null,

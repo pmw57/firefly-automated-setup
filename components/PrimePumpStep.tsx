@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
@@ -49,44 +49,47 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     finalCount,
     isHighSupplyVolume,
     isBlitz,
-    specialRules,
+    infoRules,
+    overrideRules,
     primePanels,
     hasStartWithAlertCard,
     disablePriming,
   } = usePrimeDetails(overrides);
   
-  const allInfoBlocks = useMemo(() => {
-    const blocks: SpecialRule[] = [...specialRules];
+  const formatRules = useCallback((rules: SpecialRule[]) => {
+      const combined = [...rules];
+      
+      const order: Record<SpecialRule['source'], number> = {
+          expansion: 1, setupCard: 2, story: 3, warning: 0, info: 0,
+      };
 
-    // Check if a story already provides a custom 'prime' rule to avoid redundant messages.
-    const hasStoryPrimeOverride = specialRules.some(r => r.source === 'story');
+      let sorted = combined.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
 
+      if (gameState.setupMode === 'quick') {
+        sorted = sorted.filter(b => b.source !== 'story');
+      }
+      return sorted;
+  }, [gameState.setupMode]);
+  
+  // Inject calculated logic into the appropriate list for display
+  const displayInfo = useMemo(() => {
+    const list = [...infoRules];
     if (isHighSupplyVolume && gameState.optionalRules.highVolumeSupply) {
-      blocks.push({ source: 'info', title: 'House Rule Active: High Volume Supply', content: [{ type: 'paragraph', content: ["Due to the number of large supply expansions, the base discard count for Priming the Pump is increased to 4 cards."] }] });
+      list.push({ source: 'info', title: 'House Rule Active: High Volume Supply', content: [{ type: 'paragraph', content: ["Due to the number of large supply expansions, the base discard count for Priming the Pump is increased to 4 cards."] }] });
     }
+    return formatRules(list);
+  }, [infoRules, isHighSupplyVolume, gameState.optionalRules.highVolumeSupply, formatRules]);
+
+  const displayOverrides = useMemo(() => {
+    const list = [...overrideRules];
+    // Check if a story already provides a custom 'prime' rule to avoid redundant messages.
+    const hasStoryPrimeOverride = list.some(r => r.source === 'story');
 
     if (isBlitz && !hasStoryPrimeOverride) {
-      blocks.push({ source: 'setupCard', title: 'The Blitz: Double Dip', page: 22, manual: 'Core', content: [{ type: 'paragraph', content: [`"Double Dip" rules are in effect. Discard the top ${baseDiscard * 2} cards (2x Base) from each deck.`] }] });
+      list.push({ source: 'setupCard', title: 'The Blitz: Double Dip', page: 22, manual: 'Core', content: [{ type: 'paragraph', content: [`"Double Dip" rules are in effect. Discard the top ${baseDiscard * 2} cards (2x Base) from each deck.`] }] });
     }
-    
-    const order: Record<SpecialRule['source'], number> = {
-        expansion: 1,
-        setupCard: 2,
-        story: 3,
-        warning: 3,
-        info: 4,
-    };
-
-    const sorted = blocks.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
-
-    const filtered = gameState.setupMode === 'quick' ? sorted.filter(b => b.source !== 'story') : sorted;
-
-    return filtered
-      .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
-  }, [
-    isHighSupplyVolume, gameState.optionalRules.highVolumeSupply, isBlitz, 
-    specialRules, gameState.setupMode, baseDiscard
-  ]);
+    return formatRules(list);
+  }, [overrideRules, isBlitz, baseDiscard, formatRules]);
 
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-[#faf8ef]/70 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
@@ -103,6 +106,10 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
 
   return (
     <div className="space-y-4">
+      
+      {displayInfo.map((rule, i) => (
+          <OverrideNotificationBlock key={`info-${i}`} {...rule} />
+      ))}
       
       {!disablePriming && (
         <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm text-center transition-colors duration-300`}>
@@ -134,7 +141,9 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
           <CustomPrimePanel key={`panel-${i}`} rule={panel} badgeClass={stepBadgePurpleBg} />
       ))}
 
-      {allInfoBlocks}
+      {displayOverrides.map((rule, i) => (
+          <OverrideNotificationBlock key={`override-${i}`} {...rule} />
+      ))}
     </div>
   );
 };

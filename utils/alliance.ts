@@ -97,9 +97,13 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
         content: [finalReaverPlacement]
     };
   }
+  
+  const infoRules = specialRules.filter(r => r.source === 'info' || r.source === 'warning');
+  const overrideRules = specialRules.filter(r => r.source !== 'info' && r.source !== 'warning');
 
   return { 
-    specialRules, 
+    infoRules, 
+    overrideRules,
     standardAlliancePlacement,
     standardReaverPlacement,
     allianceOverride,

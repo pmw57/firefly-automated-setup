@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { SpecialRule } from '../types';
 import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
@@ -16,25 +16,27 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
     clearerSkies, 
     showStandardRules, 
     isHighPlayerCount,
-    specialRules,
+    infoRules,
+    overrideRules,
     hasRimDecks,
   } = useNavDeckDetails(overrides);
 
-  const specialRulesToDisplay = useMemo(() => {
-    const order: Record<SpecialRule['source'], number> = {
-        expansion: 1,
-        setupCard: 2,
-        story: 3,
-        warning: 3,
-        info: 4,
-    };
-    const sorted = [...specialRules].sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
-    
-    if (gameState.setupMode === 'quick') {
-        return sorted.filter(r => r.source !== 'story');
-    }
-    return sorted;
-  }, [specialRules, gameState.setupMode]);
+  const formatRules = useCallback((rules: SpecialRule[]) => {
+      // Sort logic for overrides: Expansion -> Setup -> Story
+      const order: Record<SpecialRule['source'], number> = {
+        expansion: 1, setupCard: 2, story: 3, warning: 0, info: 0,
+      };
+      
+      let sorted = [...rules].sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+
+      if (gameState.setupMode === 'quick') {
+        sorted = sorted.filter(r => r.source !== 'story');
+      }
+      return sorted;
+  }, [gameState.setupMode]);
+  
+  const displayInfo = useMemo(() => formatRules(infoRules), [infoRules, formatRules]);
+  const displayOverrides = useMemo(() => formatRules(overrideRules), [overrideRules, formatRules]);
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -56,6 +58,10 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
 
   return (
     <div className="space-y-4">
+      {displayInfo.map((rule, i) => (
+          <OverrideNotificationBlock key={`info-${i}`} {...rule} />
+      ))}
+
       <div className={cls(panelBg, "p-6 rounded-lg border shadow-sm overflow-hidden transition-colors duration-300 space-y-4", panelBorder)}>
         <div className={cls(panelText, "space-y-2")}>
           <p>Shuffle the Alliance and Border Nav Decks separately.</p>
@@ -90,8 +96,8 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
         )}
       </div>
 
-      {specialRulesToDisplay.map((rule, i) => (
-          <OverrideNotificationBlock key={i} {...rule} />
+      {displayOverrides.map((rule, i) => (
+          <OverrideNotificationBlock key={`override-${i}`} {...rule} />
       ))}
     </div>
   );

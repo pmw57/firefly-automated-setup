@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
@@ -28,7 +28,8 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
   const { setupMode } = gameState;
 
   const {
-    specialRules,
+    infoRules,
+    overrideRules,
     standardAlliancePlacement,
     standardReaverPlacement,
     allianceOverride,
@@ -38,36 +39,31 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  const allSortedOverrides = useMemo(() => {
-    const rules: SpecialRule[] = [...specialRules];
-    
-    // The alliance/reaver overrides are rendered inline, so the notification blocks
-    // for them are for extra context in detailed mode only.
-    if (setupMode === 'detailed') {
-      if (allianceOverride) {
-        rules.push(allianceOverride);
-      }
-      if (reaverOverride) {
-        rules.push(reaverOverride);
-      }
-    }
-    
-    const order: Record<SpecialRule['source'], number> = {
-        expansion: 1,
-        setupCard: 2,
-        story: 3,
-        warning: 3,
-        info: 4,
-    };
-    
-    const sorted = rules.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+  const formatRules = useCallback((rules: SpecialRule[], includeShipOverrides = false) => {
+      const combined = [...rules];
 
-    if (setupMode === 'quick') {
-      return sorted.filter(r => r.source !== 'story');
-    }
+      // The alliance/reaver overrides are rendered inline, so the notification blocks
+      // for them are for extra context in detailed mode only.
+      if (includeShipOverrides && setupMode === 'detailed') {
+          if (allianceOverride) combined.push(allianceOverride);
+          if (reaverOverride) combined.push(reaverOverride);
+      }
+      
+      const order: Record<SpecialRule['source'], number> = {
+          expansion: 1, setupCard: 2, story: 3, warning: 0, info: 0,
+      };
+      
+      let sorted = combined.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
 
-    return sorted;
-  }, [specialRules, allianceOverride, reaverOverride, setupMode]);
+      if (setupMode === 'quick') {
+        sorted = sorted.filter(r => r.source !== 'story');
+      }
+
+      return sorted;
+  }, [setupMode, allianceOverride, reaverOverride]);
+  
+  const displayInfo = useMemo(() => formatRules(infoRules), [infoRules, formatRules]);
+  const displayOverrides = useMemo(() => formatRules(overrideRules, true), [overrideRules, formatRules]);
 
   const standardContainerBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const standardContainerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -84,6 +80,10 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
 
   return (
     <div className="space-y-4">
+      {displayInfo.map((rule, index) => (
+          <OverrideNotificationBlock key={`info-${index}`} {...rule} />
+      ))}
+
       <div className={`${standardContainerBg} p-4 rounded-lg border ${standardContainerBorder} shadow-sm mt-4 transition-colors duration-300`}>
         <h3 className={`text-lg font-bold ${headerColor} mb-3 font-western tracking-wide border-b-2 ${headerBorder} pb-1`}>Ship Placement</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -103,8 +103,8 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
         </div>
       </div>
 
-      {allSortedOverrides.map((rule, index) => (
-          <OverrideNotificationBlock key={`rule-${index}`} {...rule} />
+      {displayOverrides.map((rule, index) => (
+          <OverrideNotificationBlock key={`override-${index}`} {...rule} />
       ))}
     </div>
   );

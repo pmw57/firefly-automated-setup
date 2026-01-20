@@ -41,6 +41,9 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
         }
     });
 
+    const infoRules = specialRules.filter(r => r.source === 'info' || r.source === 'warning');
+    const overrideRules = specialRules.filter(r => r.source !== 'info' && r.source !== 'warning');
+
     const hasRimDecks = hasRuleFlag(allRules, 'activatesRimDecks');
 
     return {
@@ -49,7 +52,8 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
         showStandardRules,
         isSolo: gameState.playerCount === 1,
         isHighPlayerCount: gameState.playerCount >= 3,
-        specialRules,
+        infoRules,
+        overrideRules,
         hasRimDecks,
     };
 };

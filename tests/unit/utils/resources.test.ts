@@ -152,8 +152,9 @@ describe('rules/resources', () => {
               selectedStoryCardIndex: storyIndex
           };
           const details = getResourceDetails(state);
+          const specialRules = [...details.infoRules, ...details.overrideRules];
           expect(details.smugglersBluesVariantAvailable).toBe(false);
-          const rule = details.specialRules.find(r => r.title === "A Lucrative Opportunity");
+          const rule = specialRules.find(r => r.title === "A Lucrative Opportunity");
           expect(rule).not.toBeUndefined();
           const contentString = JSON.stringify(rule?.content);
           expect(contentString).toContain("3 Contraband");
