@@ -41,7 +41,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Awful Lonely In The Big Black",
     intro: "It takes a brave soul to sail the Big Black alone... Pick your goal and test your skills.",
-    setupDescription: "Setup follows the normal rules with the following exceptions: 1) In addition to selecting yout Leader, you may also select up to 4 crew cards from any deck - up to a total value of $1000. 2) Place a pile of exactly 20 Disgruntled Tokens to the side. These tokens will be used as Game Length Tokens.",
+    setupDescription: "Setup follows the normal rules with the following exceptions: 1) In addition to selecting your Leader, you may also select up to 4 crew cards from any deck - up to a total value of $1000. 2) Place a pile of exactly 20 Disgruntled Tokens to the side. These tokens will be used as Game Length Tokens.",
     sourceUrl: "https://web.archive.org/web/20220226163627/https://www.flamesofwar.com/Portals/0/all_images/GF9/Firefly/Rulebooks/StoryCards/AwfulLonelyStoryCard.png",
     tags: ['against_the_black', 'solo'],
     rules: [
@@ -79,7 +79,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "For A Few Credits More",
     intro: "Money can't buy happiness, but empty pockets can't buy nothin'.",
-    setupDescription: "Starting Jobs: No Starting Jobs are dealt. Instead, prime the Contact Decks, revealing the top 3 cards of each. Place the revealed Job Cards in their discard piles.",
+    setupDescription: "Starting Jobs: No Starting Jobs are dealt. Instead, prime the Contact Decks, revealing the top 3 cards of each. Place the revealed Job Cards in their discard piles. Alliance Alerts: Start with one random Alliance Alert in play.",
     requiredExpansion: "tenth",
     additionalRequirements: ["crime"],
     isSolo: true,
@@ -137,7 +137,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Heroes & Misfits",
     intro: "Legends whisper the tales of the ship that could outrun Alliance Cruisers and Reavers alike. A ship that carried a rag-tag crew, each a misfit, each a hero. Now, it's time for you to make your own legacy.",
-    setupDescription: "Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000. Alliance Alerts: Start with one random Alliance Alert in play. Shuggle all 3-Goal Story Cards into a single deck.",
+    setupDescription: "Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000. Alliance Alerts: Start with one random Alliance Alert in play. Adventure Deck: Shuffle all 3-Goal Story Cards into a single deck.",
     requiredExpansion: "tenth",
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860504/sjliver",
@@ -356,7 +356,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
   {
     title: "Seeds Of Rebellion",
     intro: "The New Resistance is ready to open up some eyes and change a few hearts. They need a savvy captain to deliver key personnel to the heart of Alliance space.",
-    setupDescription: "You may not deal with Harken. Place harken's 7 Immoral Transport Jobs in separate discard pile to represent New Resistance Missions. ",
+    setupDescription: "You may not deal with Harken. Place Harken's 7 Immoral Transport Jobs in separate discard pile to represent New Resistance Missions.",
     requiredExpansion: "tenth",
     additionalRequirements: ["blue", "kalidasa"],
     isSolo: true,

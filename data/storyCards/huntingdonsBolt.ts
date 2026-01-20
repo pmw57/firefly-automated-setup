@@ -3,7 +3,7 @@ import { StoryCardDef } from '../../types';
 export const HUNTINGDONS_BOLT_STORIES: StoryCardDef[] = [
     {
         title: "Under The Radar",
-        intro: "There's a client who'll pay good coin if you can crack the protected ICE server at Boros... but the usual suspects may draw to much attention. Best keep the crew small.",
+        intro: "Legend holds that a priceless Earth-That-Was artifact is sealed away in a high-security vault on Albion. The usual suspects might draw too much attention. Best keep the crew small this time.",
         sourceUrl: "https://boardgamegeek.com/thread/3281169/article/47098185#47098185",
         requiredExpansion: "huntingdons_bolt",
         additionalRequirements: [

@@ -6,7 +6,7 @@ export const KALIDASA_STORIES: StoryCardDef[] = [
     intro: "Credits are all well and good, but a strong network of contacts will pay greater dividends in the future. That's a lesson every captain gets to learn early, or they're likely not to be around long enough to learn it at all.",
     requiredExpansion: "kalidasa",
     sourceUrl: "https://boardgamegeek.com/image/2785039/gerryrailbaron",
-    setupDescription: "Creates an Alliance Alert Token stack. No starting jobs are dealt.",
+    setupDescription: "Create a stack of Alliance Alert Tokens equal to three times the number of players. Do not deal Starting Jobs.",
     tags: ['reputation', 'verse_variant'],
     rules: [
       { type: 'createAlertTokenStack', multiplier: 3, source: 'story', sourceName: "It's All In Who You Know" },
@@ -46,5 +46,6 @@ export const KALIDASA_STORIES: StoryCardDef[] = [
     requiredExpansion: "kalidasa",
     sourceUrl: "https://boardgamegeek.com/image/2785037/gerryrailbaron",
     tags: ['smugglers_run'],
+    setupDescription: "After completing game Set Up, reduce the amount of money in the bank to an amount equal to $5000 per player."
   },
 ];
