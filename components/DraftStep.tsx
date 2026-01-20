@@ -259,7 +259,8 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const isQuickMode = gameState.setupMode === 'quick';
   
   const {
-      specialRules,
+      infoRules,
+      overrideRules,
       draftPanelsBefore,
       draftPanelsAfter,
       draftShipsBefore,
@@ -277,34 +278,31 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
     [gameState, step.id]
   );
   
-  const allInfoBlocks = useMemo(() => {
-    const notesAsRules: SpecialRule[] = campaignNotes.map(note => ({
-      source: 'story',
-      title: 'Campaign Setup Note',
-      content: note.content
-    }));
+  const formatRules = useCallback((rules: SpecialRule[], addNotes = false) => {
+    let combined = [...rules];
+    if (addNotes) {
+        const notesAsRules: SpecialRule[] = campaignNotes.map(note => ({
+            source: 'story',
+            title: 'Campaign Setup Note',
+            content: note.content
+        }));
+        combined = [...combined, ...notesAsRules];
+    }
+
+    const order: Record<SpecialRule['source'], number> = {
+        expansion: 1, setupCard: 2, story: 3, warning: 0, info: 0,
+    };
     
-    const allRules: SpecialRule[] = [
-        ...specialRules,
-        ...notesAsRules
-    ];
+    let sorted = combined.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
 
-    const sortedRules = allRules.sort((a, b) => {
-      const order: Record<SpecialRule['source'], number> = {
-        expansion: 1,
-        setupCard: 2,
-        story: 3,
-        warning: 3,
-        info: 4,
-      };
-      return (order[a.source] || 99) - (order[b.source] || 99);
-    });
-
-    const filteredRules = isQuickMode ? sortedRules.filter(r => r.source !== 'story') : sortedRules;
-
-    return filteredRules
-      .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
-  }, [isQuickMode, campaignNotes, specialRules]);
+    if (isQuickMode) {
+      sorted = sorted.filter(r => r.source !== 'story');
+    }
+    return sorted;
+  }, [campaignNotes, isQuickMode]);
+  
+  const displayInfo = useMemo(() => formatRules(infoRules), [infoRules, formatRules]);
+  const displayOverrides = useMemo(() => formatRules(overrideRules, true), [overrideRules, formatRules]);
 
   const handleDetermineOrder = useCallback(() => {
     setDraftConfig({ state: runAutomatedDraft(gameState.playerNames), isManual: false });
@@ -341,74 +339,83 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   return (
     <div className="space-y-6">
+      {displayInfo.map((rule, i) => (
+          <OverrideNotificationBlock key={`info-${i}`} {...rule} />
+      ))}
       
-      {!isSolo && !draftState && !isQuickMode && (
-        <p className={cls("italic text-center", introText)}>Determine who drafts first using a D6. Ties are resolved automatically.</p>
+      {!draftState && !isSolo && (
+         <div className="text-center py-6">
+             <p className={cls("mb-4", introText)}>
+                Roll dice to determine who picks first.
+             </p>
+             <Button onClick={handleDetermineOrder}>
+                Roll & Determine Order
+             </Button>
+         </div>
       )}
 
-      {!draftState ? (
+      {draftState && (
         <>
-          {!isSolo && (
-            <Button onClick={handleDetermineOrder} variant="secondary" fullWidth className="my-4">
-               🎲 Roll for {isHavenDraft ? 'Haven Draft' : 'Command'}
-            </Button>
-          )}
+            {!isSolo && (
+                <div className="animate-fade-in">
+                    <DiceControls 
+                        draftState={draftState} 
+                        onRollChange={handleRollChange} 
+                        onSetWinner={handleSetWinner}
+                        allowManualOverride={true}
+                    />
+                    {!isQuickMode && !isManualEntry && (
+                         <div className="flex justify-center mb-6">
+                            <button 
+                                onClick={handleDetermineOrder}
+                                className={cls("text-xs font-bold underline", isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800')}
+                            >
+                                Re-roll
+                            </button>
+                         </div>
+                    )}
+                </div>
+            )}
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in-up">
+                {/* Custom panels injected by story/setup rules BEFORE standard panels */}
+                {draftPanelsBefore.map((rule, i) => (
+                     <CustomDraftPanel key={`panel-before-${i}`} rule={rule} stepBadgeClass={stepBadgePurpleBg} />
+                ))}
+
+                <DraftOrderPanel 
+                    draftOrder={draftState.draftOrder}
+                    isSolo={isSolo}
+                    isHavenDraft={isHavenDraft}
+                    isBrowncoatDraft={isBrowncoatDraft}
+                    stepBadgeClass={stepBadgeBlueBg}
+                    playerBadges={playerBadges}
+                    beforeRules={draftShipsBefore}
+                    afterRules={draftShipsAfter}
+                />
+                
+                <PlacementOrderPanel 
+                    placementOrder={draftState.placementOrder}
+                    isSolo={isSolo}
+                    isHavenDraft={isHavenDraft}
+                    isBrowncoatDraft={isBrowncoatDraft}
+                    specialStartSector={specialStartSector}
+                    stepBadgeClass={stepBadgeAmberBg}
+                    beforeRules={draftPlacementBefore}
+                    afterRules={draftPlacementAfter}
+                />
+
+                {/* Custom panels injected by story/setup rules AFTER standard panels */}
+                {draftPanelsAfter.map((rule, i) => (
+                     <CustomDraftPanel key={`panel-after-${i}`} rule={rule} stepBadgeClass={stepBadgePurpleBg} />
+                ))}
+            </div>
         </>
-      ) : (
-        <div className="animate-fade-in space-y-6">
-          {!isSolo && (
-            <DiceControls 
-                draftState={draftState} 
-                onRollChange={handleRollChange} 
-                onSetWinner={handleSetWinner}
-                allowManualOverride={isManualEntry && !isQuickMode}
-            />
-          )}
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            {/* Dynamic Panels - Before */}
-            {draftPanelsBefore.map((panel, i) => (
-                <CustomDraftPanel key={`panel-before-${i}`} rule={panel} stepBadgeClass={stepBadgePurpleBg} />
-            ))}
-
-            {/* Standard Panels */}
-            <DraftOrderPanel 
-                draftOrder={draftState.draftOrder}
-                isSolo={isSolo}
-                isHavenDraft={isHavenDraft}
-                isBrowncoatDraft={isBrowncoatDraft}
-                stepBadgeClass={stepBadgeBlueBg}
-                playerBadges={playerBadges}
-                beforeRules={draftShipsBefore}
-                afterRules={draftShipsAfter}
-            />
-            
-            <PlacementOrderPanel 
-                placementOrder={draftState.placementOrder}
-                isSolo={isSolo}
-                isHavenDraft={isHavenDraft}
-                isBrowncoatDraft={isBrowncoatDraft}
-                specialStartSector={specialStartSector}
-                stepBadgeClass={stepBadgeAmberBg}
-                beforeRules={draftPlacementBefore}
-                afterRules={draftPlacementAfter}
-            />
-            
-            {/* Dynamic Panels - After */}
-            {draftPanelsAfter.map((panel, i) => (
-                <CustomDraftPanel key={`panel-after-${i}`} rule={panel} stepBadgeClass={stepBadgePurpleBg} />
-            ))}
-            
-          </div>
-        </div>
       )}
 
-      {allInfoBlocks.length > 0 && (
-        <div className="space-y-4">
-          {allInfoBlocks}
-        </div>
-      )}
+      {displayOverrides.map((rule, i) => (
+          <OverrideNotificationBlock key={`override-${i}`} {...rule} />
+      ))}
     </div>
   );
 };

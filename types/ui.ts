@@ -31,7 +31,8 @@ export interface JobSetupDetails {
   contacts: string[];
   cardsToDraw?: number;
   isSingleContactChoice: boolean;
-  messages: JobSetupMessage[];
+  infoMessages: JobSetupMessage[];
+  overrideMessages: JobSetupMessage[];
   showStandardContactList: boolean;
   totalJobCards: number;
   caperDrawCount?: number;
@@ -49,13 +50,14 @@ export interface NavDeckSetupDetails {
   showStandardRules: boolean;
   isSolo: boolean;
   isHighPlayerCount: boolean;
-  specialRules: SpecialRule[];
+  infoRules: SpecialRule[];
+  overrideRules: SpecialRule[];
   hasRimDecks: boolean;
 }
 
-// FIX: Add missing export for AllianceReaverDetails. This type is used by `getAllianceReaverDetails` but was not defined.
 export interface AllianceReaverDetails {
-  specialRules: SpecialRule[];
+  infoRules: SpecialRule[];
+  overrideRules: SpecialRule[];
   standardAlliancePlacement: string;
   standardReaverPlacement: string;
   allianceOverride: SpecialRule | undefined;
@@ -94,7 +96,8 @@ export interface ResourceDetails {
 
   creditModifications: { description: string; value: string }[];
   conflict?: ResourceConflict;
-  specialRules: SpecialRule[];
+  infoRules: SpecialRule[];
+  overrideRules: SpecialRule[];
   boardSetupRules: SpecialRule[];
   componentAdjustmentRules: SpecialRule[];
   creditModificationSource?: RuleSourceType;
@@ -113,14 +116,16 @@ export interface PrimeDetails {
   finalCount: number;
   isHighSupplyVolume: boolean;
   isBlitz: boolean;
-  specialRules: SpecialRule[];
+  infoRules: SpecialRule[];
+  overrideRules: SpecialRule[];
   primePanels: SpecialRule[];
   hasStartWithAlertCard?: boolean;
   disablePriming?: boolean;
 }
 
 export interface DraftRuleDetails {
-  specialRules: SpecialRule[];
+  infoRules: SpecialRule[];
+  overrideRules: SpecialRule[];
   draftPanelsBefore: SpecialRule[];
   draftPanelsAfter: SpecialRule[];
   draftShipsBefore: SpecialRule[];

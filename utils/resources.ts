@@ -214,6 +214,9 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
   const creditModInfo = getModificationInfo('credits');
   const fuelModInfo = getModificationInfo('fuel');
   const partsModInfo = getModificationInfo('parts');
+  
+  const infoRules = specialRules.filter(r => r.source === 'info' || r.source === 'warning');
+  const overrideRules = specialRules.filter(r => r.source !== 'info' && r.source !== 'warning');
 
   return {
     credits: finalResources.credits!,
@@ -226,7 +229,9 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     isPartsDisabled: resourceRules.some(e => e.resource === 'parts' && e.method === 'disable'),
     creditModifications: finalCreditModifications,
     conflict: creditConflictInfo.conflict,
-    specialRules,
+    // specialRules kept for legacy test compatibility if needed, but not used in UI
+    infoRules,
+    overrideRules,
     boardSetupRules,
     componentAdjustmentRules,
     creditModificationSource: creditModInfo.source,

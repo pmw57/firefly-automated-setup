@@ -174,8 +174,12 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const badgeRule = allRules.find(r => r.type === 'setPlayerBadges') as SetPlayerBadgesRule | undefined;
     const playerBadges: Record<number, string> = badgeRule ? badgeRule.badges : {};
     
+    const infoRules = specialRules.filter(r => r.source === 'info' || r.source === 'warning');
+    const overrideRules = specialRules.filter(r => r.source !== 'info' && r.source !== 'warning');
+
     return { 
-        specialRules, 
+        infoRules, 
+        overrideRules,
         draftPanelsBefore,
         draftPanelsAfter,
         draftShipsBefore,

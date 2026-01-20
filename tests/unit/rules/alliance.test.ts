@@ -9,7 +9,8 @@ describe('rules/alliance', () => {
 
     it.concurrent('returns default values for a standard game', () => {
       const details = getAllianceReaverDetails(baseGameState);
-      expect(details.specialRules).toEqual([]);
+      expect(details.infoRules).toEqual([]);
+      expect(details.overrideRules).toEqual([]);
       expect(details.alliancePlacement).toContain('Londinium');
       expect(details.reaverPlacement).toContain('3 Cutters'); // Default state has Blue Sun
     });

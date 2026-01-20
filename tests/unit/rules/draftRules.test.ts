@@ -41,7 +41,8 @@ describe('rules/draftRules', () => {
     it.concurrent('returns empty special rules for a standard game', () => {
         const state: GameState = { ...baseGameState, optionalRules: { ...baseGameState.optionalRules, optionalShipUpgrades: false } };
         const details = getDraftDetails(state, baseStep);
-        expect(details.specialRules).toEqual([]);
+        const specialRules = [...details.infoRules, ...details.overrideRules];
+        expect(specialRules).toEqual([]);
         expect(details.isHavenDraft).toBe(false);
         expect(details.specialStartSector).toBeNull();
     });
@@ -50,8 +51,9 @@ describe('rules/draftRules', () => {
         const state: GameState = { ...baseGameState, setupCardId: SETUP_CARD_IDS.HOME_SWEET_HAVEN };
         const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT };
         const details = getDraftDetails(state, step);
+        const specialRules = [...details.infoRules, ...details.overrideRules];
         expect(details.isHavenDraft).toBe(true);
-        expect(details.specialRules.some(r => getTextContent(r.title).includes('Placement Rules'))).toBe(true);
+        expect(specialRules.some(r => getTextContent(r.title).includes('Placement Rules'))).toBe(true);
     });
     
     it.concurrent('generates a rule for Wanted Leader mode via Setup Card', () => {
@@ -59,7 +61,8 @@ describe('rules/draftRules', () => {
         // rather than a hardcoded override mapping in utils/draftRules.ts
         const state: GameState = { ...baseGameState, setupCardId: SETUP_CARD_IDS.THE_HEAT_IS_ON };
         const details = getDraftDetails(state, baseStep);
-        const rule = details.specialRules.find(r => r.title === 'The Heat Is On');
+        const specialRules = [...details.infoRules, ...details.overrideRules];
+        const rule = specialRules.find(r => r.title === 'The Heat Is On');
         expect(rule).toBeDefined();
         expect(getTextContent(rule?.content)).toContain('each Leader begins play with a Warrant token');
     });
@@ -67,7 +70,8 @@ describe('rules/draftRules', () => {
     it.concurrent('generates a rule for Optional Ship Upgrades', () => {
         const state: GameState = { ...baseGameState, optionalRules: { ...baseGameState.optionalRules, optionalShipUpgrades: true } };
         const details = getDraftDetails(state, baseStep);
-        const rule = details.specialRules.find(r => r.title === 'Optional Ship Upgrades');
+        const specialRules = [...details.infoRules, ...details.overrideRules];
+        const rule = specialRules.find(r => r.title === 'Optional Ship Upgrades');
         expect(rule).toBeDefined();
         expect(getTextContent(rule?.content)).toContain('Bonanza');
     });
@@ -77,7 +81,8 @@ describe('rules/draftRules', () => {
         // We find the index by title to set up the test state correctly.
         const state: GameState = { ...baseGameState, selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "Racing A Pale Horse") };
         const details = getDraftDetails(state, baseStep);
-        const rule = details.specialRules.find(r => r.title === 'Story Setup: Haven');
+        const specialRules = [...details.infoRules, ...details.overrideRules];
+        const rule = specialRules.find(r => r.title === 'Story Setup: Haven');
         expect(rule).toBeDefined();
         expect(getTextContent(rule?.content)).toContain('Place your Haven at Deadwood');
     });
@@ -91,7 +96,8 @@ describe('rules/draftRules', () => {
             challengeOptions: { [CHALLENGE_IDS.HEROES_CUSTOM_SETUP]: true }
         };
         const details = getDraftDetails(state, baseStep);
-        const rule = details.specialRules.find(r => r.title === 'Heroes & Misfits: Further Adventures');
+        const specialRules = [...details.infoRules, ...details.overrideRules];
+        const rule = specialRules.find(r => r.title === 'Heroes & Misfits: Further Adventures');
         expect(rule).toBeDefined();
         expect(getTextContent(rule?.content)).toContain('Custom Setup Active');
     });
@@ -104,10 +110,11 @@ describe('rules/draftRules', () => {
         }; // This story forces Persephone start
         const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT }; // This is Haven Draft
         const details = getDraftDetails(state, step);
+        const specialRules = [...details.infoRules, ...details.overrideRules];
         
         expect(details.isHavenDraft).toBe(false); // Overridden
         expect(details.specialStartSector).toBe('Persephone');
-        expect(details.specialRules.some(r => r.title === 'Conflict Resolved')).toBe(true);
+        expect(specialRules.some(r => r.title === 'Conflict Resolved')).toBe(true);
     });
 
     it.concurrent('should generate a warning when "The Browncoat Way" is combined with the "Heroes & Misfits" custom setup challenge', () => {
@@ -123,8 +130,9 @@ describe('rules/draftRules', () => {
       const step: Step = { type: 'core', id: STEP_IDS.C3, overrides: { draftMode: 'browncoat' } };
       
       const details = getDraftDetails(state, step);
+      const specialRules = [...details.infoRules, ...details.overrideRules];
       
-      const warningRule = details.specialRules.find(r => r.title === 'Story & Setup Card Interaction');
+      const warningRule = specialRules.find(r => r.title === 'Story & Setup Card Interaction');
       expect(warningRule).toBeDefined();
       expect(getTextContent(warningRule?.content)).toContain('Your starting Capitol is reduced by the cost of your assigned ship');
     });

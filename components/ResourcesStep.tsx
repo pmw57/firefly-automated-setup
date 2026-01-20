@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { getResourceDetails } from '../utils/resources';
 import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
@@ -44,7 +44,8 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   
   const { 
     credits, fuel, parts, warrants, goalTokens,
-    isFuelDisabled, isPartsDisabled, creditModifications, specialRules,
+    isFuelDisabled, isPartsDisabled, creditModifications, 
+    infoRules, overrideRules,
     boardSetupRules, componentAdjustmentRules,
     smugglersBluesVariantAvailable,
     creditModificationDescription,
@@ -61,32 +62,34 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   const hasComplexCreditCalculation = creditModifications.length > 1;
   const hasCreditModification = creditModificationDescription && creditModificationDescription !== 'Standard Allocation';
   
-  const allInfoBlocks = useMemo(() => {
-    const blocks: SpecialRule[] = [];
-
-    blocks.push(...campaignNotes.map(note => ({
-      source: 'story' as const, title: 'Campaign Setup Note', content: note.content
-    })));
-
-    blocks.push(...specialRules);
-
+  const formatRules = useCallback((rules: SpecialRule[], addNotes = false) => {
+    let combined = [...rules];
+    if (addNotes) {
+        const notesAsRules: SpecialRule[] = campaignNotes.map(note => ({
+            source: 'story', title: 'Campaign Setup Note', content: note.content
+        }));
+        combined = [...combined, ...notesAsRules];
+    }
+    
     const order: Record<SpecialRule['source'], number> = {
-        expansion: 1, setupCard: 2, story: 3, warning: 3, info: 4,
+        expansion: 1, setupCard: 2, story: 3, warning: 0, info: 0,
     };
     
-    const sortedBlocks = blocks.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
-    
-    const uniqueBlocks = sortedBlocks.filter((block, index, self) => 
+    let sorted = combined.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+
+    // Unique filter
+    sorted = sorted.filter((block, index, self) => 
         index === self.findIndex((b) => (b.title === block.title && JSON.stringify(b.content) === JSON.stringify(b.content)))
     );
 
-    const filtered = isQuickMode ? uniqueBlocks.filter(b => b.source !== 'story') : uniqueBlocks;
-
-    return filtered
-        .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
-  }, [
-      isQuickMode, campaignNotes, specialRules
-  ]);
+    if (isQuickMode) {
+      sorted = sorted.filter(b => b.source !== 'story');
+    }
+    return sorted;
+  }, [campaignNotes, isQuickMode]);
+  
+  const displayInfo = useMemo(() => formatRules(infoRules), [infoRules, formatRules]);
+  const displayOverrides = useMemo(() => formatRules(overrideRules, true), [overrideRules, formatRules]);
 
   const useRimVariant = !!gameState.challengeOptions.smugglers_blues_rim_variant;
 
@@ -119,6 +122,9 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
 
   return (
     <div className="space-y-6">
+      {displayInfo.map((rule, i) => (
+         <OverrideNotificationBlock key={`info-${i}`} {...rule} />
+      ))}
       
       {smugglersBluesVariantAvailable && (
         <div className={`${cardBg} rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300 overflow-hidden animate-fade-in-up`}>
@@ -327,7 +333,9 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
         ))}
       </div>
 
-      {allInfoBlocks}
+      {displayOverrides.map((rule, i) => (
+         <OverrideNotificationBlock key={`override-${i}`} {...rule} />
+      ))}
     </div>
   );
 };

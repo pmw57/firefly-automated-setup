@@ -98,11 +98,12 @@ export const RuiningItDraftStep = ({ step }: StepComponentProps): React.ReactEle
     const { state: gameState } = useGameState();
     const {
         specialStartSector,
-        specialRules,
+        infoRules,
+        overrideRules,
     } = useDraftDetails(step);
     
     const allInfoBlocks = useMemo(() => {
-        const allRules: SpecialRule[] = [...specialRules];
+        const allRules: SpecialRule[] = [...infoRules, ...overrideRules];
         
         const sortedRules = allRules.sort((a, b) => {
             const order: Record<SpecialRule['source'], number> = {
@@ -118,7 +119,7 @@ export const RuiningItDraftStep = ({ step }: StepComponentProps): React.ReactEle
         return sortedRules
             .filter(rule => gameState.setupMode === 'detailed' || rule.source !== 'expansion')
             .map((rule, i) => <OverrideNotificationBlock key={`rule-${i}`} {...rule} />);
-    }, [specialRules, gameState.setupMode]);
+    }, [infoRules, overrideRules, gameState.setupMode]);
 
     const isDark = theme === 'dark';
     

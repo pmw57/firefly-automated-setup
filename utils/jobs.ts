@@ -73,8 +73,11 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
         }
         return acc;
     }, [] as JobSetupMessage[]);
+    
+    const infoMessages = uniqueMessages.filter(m => m.source === 'info' || m.source === 'warning');
+    const overrideMessages = uniqueMessages.filter(m => m.source !== 'info' && m.source !== 'warning');
 
-    return { contacts: [], messages: uniqueMessages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+    return { contacts: [], infoMessages, overrideMessages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
 };
 
 const _getInitialContacts = (allRules: SetupRule[], gameState: GameState): string[] => {
@@ -241,9 +244,11 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         if (activeStoryCard?.setupDescription) {
             messages.push({ source: 'story', title: 'Job Draw Instructions', content: [activeStoryCard.setupDescription] });
         }
+        // Custom job draw usually implies a story override, so assume it goes in overrideMessages
         return {
             contacts: [], 
-            messages,
+            infoMessages: [],
+            overrideMessages: messages,
             showStandardContactList: false, 
             isSingleContactChoice: false, 
             totalJobCards: 0,
@@ -267,7 +272,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
               { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
             ];
             // Remove it from messages so it's not duplicated in detailed view
-            baseDetails.messages = baseDetails.messages.filter(m => m.title !== 'Prime Contact Decks');
+            baseDetails.overrideMessages = baseDetails.overrideMessages.filter(m => m.title !== 'Prime Contact Decks');
         }
 
     } else {
@@ -294,14 +299,17 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         const baseKeepCount = 3;
         const finalKeepCount = Math.min(baseKeepCount, actualDrawCount);
     
-        baseDetails = { contacts, messages, showStandardContactList, isSingleContactChoice, cardsToDraw: finalKeepCount, totalJobCards: contacts.length, isContactListOverridden };
+        const infoMessages = messages.filter(m => m.source === 'info' || m.source === 'warning');
+        const overrideMessages = messages.filter(m => m.source !== 'info' && m.source !== 'warning');
+
+        baseDetails = { contacts, infoMessages, overrideMessages, showStandardContactList, isSingleContactChoice, cardsToDraw: finalKeepCount, totalJobCards: contacts.length, isContactListOverridden };
     }
 
     let caperDrawCount: number | undefined;
     if (jobDrawMode === 'caper_start') {
         caperDrawCount = 1;
     } else {
-        const caperBonusRule = baseDetails.messages.find(msg => msg.title === 'Caper Bonus');
+        const caperBonusRule = [...baseDetails.infoMessages, ...baseDetails.overrideMessages].find(msg => msg.title === 'Caper Bonus');
         if (caperBonusRule) {
             const contentText = getTextFromContent(caperBonusRule.content);
             const match = contentText.match(/Draw (\d+)/i);

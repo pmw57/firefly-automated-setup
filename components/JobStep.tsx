@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
@@ -18,7 +18,8 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   
   const { 
     contacts, 
-    messages, 
+    infoMessages,
+    overrideMessages,
     showStandardContactList, 
     isSingleContactChoice,
     cardsToDraw = 0,
@@ -73,29 +74,32 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
     return process(mainContent);
   }, [mainContent, playerCount]);
 
-  const sortedInfoBlocks = useMemo(() => {
-    const blocks: SpecialRule[] = [];
+  const formatRules = useCallback((rules: SpecialRule[], addNotes = false) => {
+      const combined = [...rules];
+      if (addNotes) {
+          const campaignNotes = getCampaignNotesForStep(gameState, step.id);
+          const notesAsRules: SpecialRule[] = campaignNotes.map(note => ({
+            source: 'story',
+            title: 'Campaign Setup Note',
+            content: note.content
+          }));
+          combined.push(...notesAsRules);
+      }
 
-    const campaignNotes = getCampaignNotesForStep(gameState, step.id);
-    blocks.push(...campaignNotes.map(note => ({
-      source: 'story' as const,
-      title: 'Campaign Setup Note',
-      content: note.content
-    })));
+      const order: Record<SpecialRule['source'], number> = {
+          expansion: 1, setupCard: 2, story: 3, warning: 0, info: 0,
+      };
 
-    blocks.push(...messages);
-    
-    const order: Record<SpecialRule['source'], number> = {
-        expansion: 1, setupCard: 2, story: 3, warning: 3, info: 4,
-    };
+      let sorted = combined.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
 
-    const sorted = blocks.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+      if (setupMode === 'quick') {
+        sorted = sorted.filter(b => b.source !== 'story');
+      }
+      return sorted;
+  }, [gameState, step.id, setupMode]);
 
-    if (setupMode === 'quick') {
-      return sorted.filter(b => b.source !== 'story');
-    }
-    return sorted;
-  }, [messages, gameState, step.id, setupMode]);
+  const displayInfo = useMemo(() => formatRules(infoMessages), [infoMessages, formatRules]);
+  const displayOverrides = useMemo(() => formatRules(overrideMessages, true), [overrideMessages, formatRules]);
   
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
@@ -113,7 +117,8 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const isSharedHand = jobDrawMode === 'shared_hand';
   const showNoJobsMessage = (!showStandardContactList && (jobDrawMode === 'no_jobs')) || showNoJobsMessageFromData;
   
-  const hasSpecificNoJobsMessage = sortedInfoBlocks.some(block => block.flags?.includes('isNoJobsMessage'));
+  // Check if any rule (info or override) has the 'isNoJobsMessage' flag
+  const hasSpecificNoJobsMessage = [...infoMessages, ...overrideMessages].some(block => block.flags?.includes('isNoJobsMessage'));
   const showGenericNoJobsMessage = showNoJobsMessage && !primeContactsInstruction && !hasSpecificNoJobsMessage;
 
   const StandardContentBlock = (
@@ -185,6 +190,8 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   return (
     <div className="space-y-6">
+      {displayInfo.map((block, i) => <OverrideNotificationBlock key={`info-${i}`} {...block} />)}
+
       {mainContentPosition === 'after' ? (
         <>
           {StandardContentBlock}
@@ -201,7 +208,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
         </>
       )}
 
-      {sortedInfoBlocks.map((block, i) => <OverrideNotificationBlock key={`info-${i}`} {...block} />)}
+      {displayOverrides.map((block, i) => <OverrideNotificationBlock key={`override-${i}`} {...block} />)}
     </div>
   );
 };

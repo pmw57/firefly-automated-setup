@@ -46,21 +46,23 @@ describe('rules/jobs', () => {
         ...baseGameState,
         challengeOptions: { [CHALLENGE_IDS.SINGLE_CONTACT]: true }
       };
-      const { messages, isSingleContactChoice, cardsToDraw } = getJobSetupDetails(state, {});
+      const { infoMessages, overrideMessages, isSingleContactChoice, cardsToDraw } = getJobSetupDetails(state, {});
       expect(isSingleContactChoice).toBe(true);
       
       // With the "Single Contact" challenge, the player only draws 1 card,
       // so they can only keep a maximum of 1 card. The data should reflect this.
       expect(cardsToDraw).toBe(1);
 
+      const messages = [...infoMessages, ...overrideMessages];
       expect(messages.some(m => m.source === 'warning')).toBe(true);
     });
 
     it.concurrent('handles the "Browncoat Way" no jobs setup', () => {
       const overrides: StepOverrides = { jobMode: 'no_jobs' };
-      const { contacts, showStandardContactList, messages } = getJobSetupDetails(baseGameState, overrides);
+      const { contacts, showStandardContactList, infoMessages, overrideMessages } = getJobSetupDetails(baseGameState, overrides);
       expect(showStandardContactList).toBe(false);
       expect(contacts).toEqual([]);
+      const messages = [...infoMessages, ...overrideMessages];
       expect(messages.some(m => m.source === 'setupCard')).toBe(true);
     });
     
@@ -71,8 +73,9 @@ describe('rules/jobs', () => {
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
         gameMode: 'solo',
       };
-      const { showStandardContactList, messages, primeContactsInstruction } = getJobSetupDetails(state, {});
+      const { showStandardContactList, infoMessages, overrideMessages, primeContactsInstruction } = getJobSetupDetails(state, {});
       expect(showStandardContactList).toBe(false);
+      const messages = [...infoMessages, ...overrideMessages];
       expect(messages).toEqual([]); // This instruction is now handled by primeContactsInstruction
       expect(primeContactsInstruction).toMatchInlineSnapshot(`
         [
@@ -114,7 +117,8 @@ describe('rules/jobs', () => {
             selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
             challengeOptions: { [CHALLENGE_IDS.DONT_PRIME_CONTACTS]: true }
         };
-        const { messages } = getJobSetupDetails(state, {});
+        const { infoMessages, overrideMessages } = getJobSetupDetails(state, {});
+        const messages = [...infoMessages, ...overrideMessages];
         expect(messages[0].source).toBe('warning');
         expect(messages[0].title).toBe('Challenge Active');
     });
@@ -127,13 +131,14 @@ describe('rules/jobs', () => {
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       };
       const overrides: StepOverrides = { jobMode: 'awful_jobs' };
-      const { contacts, messages } = getJobSetupDetails(state, overrides);
+      const { contacts, infoMessages, overrideMessages } = getJobSetupDetails(state, overrides);
 
       // 1. Verify Harken is removed from the contact list
       expect(contacts).not.toContain('Harken');
       expect(contacts).toEqual(['Amnon Duul', 'Patience']);
 
       // 2. Verify the messages, now with a snapshot to prevent regression.
+      const messages = [...infoMessages, ...overrideMessages];
       expect(messages).toMatchInlineSnapshot(`
         [
           {
