@@ -31,6 +31,11 @@ export const generateTestingMatrixCsv = (options: { excludeNoSetupDescription: b
     for (const key in allExpansionsState.expansions) {
         allExpansionsState.expansions[key as keyof typeof allExpansionsState.expansions] = true;
     }
+    
+    // Ensure all community content ratings are enabled so they aren't filtered out by default settings
+    for (const key in allExpansionsState.storyRatingFilters) {
+        allExpansionsState.storyRatingFilters[Number(key)] = true;
+    }
 
     // Iterate through every combination
     SETUP_CARDS.forEach(setupCard => {
