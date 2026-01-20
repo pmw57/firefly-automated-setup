@@ -16,10 +16,10 @@ describe('rules/jobs', () => {
         ...baseGameState,
         expansions: { ...baseGameState.expansions, kalidasa: false },
       };
-      const { contacts, showStandardContactList, totalJobCards } = getJobSetupDetails(stateWithoutKalidasa, {});
-      expect(contacts).toEqual(['Harken', 'Badger', 'Amnon Duul', 'Patience', 'Niska']);
-      expect(showStandardContactList).toBe(true);
-      expect(totalJobCards).toBe(5);
+      const { contactList } = getJobSetupDetails(stateWithoutKalidasa, {});
+      expect(contactList).not.toBeNull();
+      expect(contactList?.contacts).toEqual(['Harken', 'Badger', 'Amnon Duul', 'Patience', 'Niska']);
+      expect(contactList?.contacts.length).toBe(5);
     });
 
     it.concurrent('removes a forbidden contact from the list', () => {
@@ -28,8 +28,8 @@ describe('rules/jobs', () => {
         ...baseGameState,
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       };
-      const { contacts } = getJobSetupDetails(state, {});
-      expect(contacts).not.toContain(CONTACT_NAMES.NISKA);
+      const { contactList } = getJobSetupDetails(state, {});
+      expect(contactList?.contacts).not.toContain(CONTACT_NAMES.NISKA);
     });
 
     it.concurrent('filters contacts to only those allowed by the story', () => {
@@ -38,8 +38,8 @@ describe('rules/jobs', () => {
         ...baseGameState,
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       };
-      const { contacts } = getJobSetupDetails(state, {});
-      expect(contacts).toEqual(['Harken', 'Amnon Duul']);
+      const { contactList } = getJobSetupDetails(state, {});
+      expect(contactList?.contacts).toEqual(['Harken', 'Amnon Duul']);
     });
     
     it.concurrent('handles the "Single Contact" challenge', () => {
@@ -47,12 +47,12 @@ describe('rules/jobs', () => {
         ...baseGameState,
         challengeOptions: { [CHALLENGE_IDS.SINGLE_CONTACT]: true }
       };
-      const { infoMessages, overrideMessages, isSingleContactChoice, cardsToDraw } = getJobSetupDetails(state, {});
-      expect(isSingleContactChoice).toBe(true);
+      const { infoMessages, overrideMessages, contactList } = getJobSetupDetails(state, {});
+      expect(contactList?.isSingleContactChoice).toBe(true);
       
       // With the "Single Contact" challenge, the player only draws 1 card,
       // so they can only keep a maximum of 1 card. The data should reflect this.
-      expect(cardsToDraw).toBe(1);
+      expect(contactList?.cardsToDraw).toBe(1);
 
       const messages = [...infoMessages, ...overrideMessages];
       expect(messages.some(m => m.source === 'warning')).toBe(true);
@@ -60,9 +60,8 @@ describe('rules/jobs', () => {
 
     it.concurrent('handles the "Browncoat Way" no jobs setup', () => {
       const overrides: StepOverrides = { jobMode: 'no_jobs' };
-      const { contacts, showStandardContactList, infoMessages, overrideMessages } = getJobSetupDetails(baseGameState, overrides);
-      expect(showStandardContactList).toBe(false);
-      expect(contacts).toEqual([]);
+      const { contactList, infoMessages, overrideMessages } = getJobSetupDetails(baseGameState, overrides);
+      expect(contactList).toBeNull();
       const messages = [...infoMessages, ...overrideMessages];
       expect(messages.some(m => m.source === 'setupCard')).toBe(true);
     });
@@ -74,8 +73,8 @@ describe('rules/jobs', () => {
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
         gameMode: 'solo',
       };
-      const { showStandardContactList, infoMessages, overrideMessages, mainContent } = getJobSetupDetails(state, {});
-      expect(showStandardContactList).toBe(false);
+      const { contactList, infoMessages, overrideMessages, mainContent } = getJobSetupDetails(state, {});
+      expect(contactList).toBeNull();
       
       const messages = [...infoMessages, ...overrideMessages];
       // A Fistful Of Scoundrels now includes an explicit special rule for context
@@ -123,10 +122,6 @@ describe('rules/jobs', () => {
         };
         const { infoMessages, overrideMessages } = getJobSetupDetails(state, {});
         const messages = [...infoMessages, ...overrideMessages];
-        // The first message should be the challenge warning. The explicit story rule might still be present as second message unless filtered out,
-        // but checking [0] verifies the warning takes precedence or is present.
-        // Actually, the utility might push warning first.
-        // Let's find the warning.
         const warning = messages.find(m => m.title === 'Challenge Active');
         expect(warning).toBeDefined();
         expect(warning?.source).toBe('warning');
@@ -140,16 +135,24 @@ describe('rules/jobs', () => {
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       };
       const overrides: StepOverrides = { jobMode: 'awful_jobs' };
-      const { contacts, infoMessages, overrideMessages } = getJobSetupDetails(state, overrides);
+      const { contactList, infoMessages, overrideMessages } = getJobSetupDetails(state, overrides);
 
       // 1. Verify Harken is removed from the contact list
-      expect(contacts).not.toContain('Harken');
-      expect(contacts).toEqual(['Amnon Duul', 'Patience']);
+      expect(contactList?.contacts).not.toContain('Harken');
+      expect(contactList?.contacts).toEqual(['Amnon Duul', 'Patience']);
 
-      // 2. Verify the messages, now with a snapshot to prevent regression.
+      // 2. Verify the messages. Story rules (Contact Restriction) come from _getJobRulesMessages which scans all rules.
+      // Logic-based overrides (Setup Card Override) are pushed afterwards.
       const messages = [...infoMessages, ...overrideMessages];
       expect(messages).toMatchInlineSnapshot(`
         [
+          {
+            "content": [
+              "Harken jobs are unavailable.",
+            ],
+            "source": "story",
+            "title": "Contact Restriction",
+          },
           {
             "content": [
               {
@@ -176,13 +179,6 @@ describe('rules/jobs', () => {
             ],
             "source": "setupCard",
             "title": "Setup Card Override",
-          },
-          {
-            "content": [
-              "Harken jobs are unavailable.",
-            ],
-            "source": "story",
-            "title": "Contact Restriction",
           },
         ]
       `);

@@ -1,3 +1,4 @@
+
 import { 
     GameState, 
     StepOverrides,
@@ -10,20 +11,18 @@ import {
     SetJobModeRule,
     RuleSourceType,
     SetupRule,
-    StoryCardDef,
     SetJobContactsRule,
     SpecialRule,
     ChallengeOption,
-    SetJobStepContentRule
+    SetJobStepContentRule,
+    JobContactListConfig
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
-const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType, dontPrimeContactsChallenge: boolean): Omit<JobSetupDetails, 'jobDrawMode' | 'mainContent' | 'mainContentPosition' | 'showNoJobsMessage' | 'primeContactsInstruction'> => {
+const _getJobRulesMessages = (allRules: SetupRule[]): JobSetupMessage[] => {
     const messages: JobSetupMessage[] = [];
-    
-    // 1. Add any specific "addSpecialRule" rules for the jobs step.
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
             if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
@@ -31,53 +30,7 @@ const _handleNoJobsMode = (allRules: SetupRule[], jobModeSource: RuleSourceType,
             }
         }
     });
-
-    // 2. Handle priming rules if they exist
-    if (dontPrimeContactsChallenge) {
-        messages.push({
-            source: 'warning',
-            title: 'Challenge Active',
-            content: [{ type: 'paragraph', content: [{ type: 'strong', content: 'Do not prime the Contact Decks.' }, ' (Challenge Override)'] }]
-        });
-    } else if (allRules.some(r => r.type === 'primeContacts')) {
-        messages.push({
-            source: 'story',
-            title: 'Prime Contact Decks',
-            content: [
-              { type: 'paragraph', content: ['Instead of taking Starting Jobs, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
-              { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
-            ]
-        });
-    }
-
-    // 3. Add a generic override message if the source was a setup card.
-    // Story cards are now expected to provide their own explicit `addSpecialRule` message.
-    if (jobModeSource === 'setupCard' && !messages.some(m => m.source === 'setupCard')) {
-        // Fallback for setup cards like Browncoat Way
-        messages.push({
-            source: 'setupCard',
-            title: 'No Starting Jobs',
-            content: [{ type: 'paragraph', content: ["Crews must find work on their own out in the black."] }]
-        });
-    }
-    
-    // 4. Deduplicate messages. This is a safeguard in case a specific rule and the 
-    // setup description contain identical text.
-    const uniqueMessages = messages.reduce((acc, current) => {
-        const isDuplicate = acc.some(item => 
-            item.title === current.title && 
-            JSON.stringify(item.content) === JSON.stringify(item.content)
-        );
-        if (!isDuplicate) {
-            acc.push(current);
-        }
-        return acc;
-    }, [] as JobSetupMessage[]);
-    
-    const infoMessages = uniqueMessages.filter(m => m.source === 'info' || m.source === 'warning');
-    const overrideMessages = uniqueMessages.filter(m => m.source !== 'info' && m.source !== 'warning');
-
-    return { contacts: [], infoMessages, overrideMessages, showStandardContactList: false, isSingleContactChoice: false, totalJobCards: 0 };
+    return messages;
 };
 
 const _getInitialContacts = (allRules: SetupRule[], gameState: GameState): string[] => {
@@ -86,9 +39,7 @@ const _getInitialContacts = (allRules: SetupRule[], gameState: GameState): strin
         return jobContactsRule.contacts;
     }
     
-    // Standard setup only uses the five core contacts for the initial job draw,
-    // regardless of which expansions are enabled. Expansion contacts are only
-    // added if a Setup or Story Card explicitly dictates it.
+    // Standard setup only uses the five core contacts for the initial job draw.
     const availableContacts = [
         CONTACT_NAMES.HARKEN, 
         CONTACT_NAMES.BADGER, 
@@ -97,7 +48,6 @@ const _getInitialContacts = (allRules: SetupRule[], gameState: GameState): strin
         CONTACT_NAMES.NISKA
     ];
 
-    // Specific story flag to add all contacts for the job draft
     if (hasRuleFlag(allRules, 'useAllContactsForJobDraft')) {
         if (gameState.expansions.kalidasa) {
             availableContacts.push(
@@ -124,7 +74,6 @@ const _filterContacts = (contacts: string[], allRules: SetupRule[]): string[] =>
         filtered = allowedContactsRule.contacts;
     }
     
-    // Story-specific filter for 'Friends in Low Places'
     if (hasRuleFlag(allRules, 'useAllContactsForJobDraft')) {
         filtered = filtered.filter(c => c !== CONTACT_NAMES.MR_UNIVERSE);
     }
@@ -132,83 +81,59 @@ const _filterContacts = (contacts: string[], allRules: SetupRule[]): string[] =>
     return filtered;
 };
 
-const _generateJobMessages = (
-    allRules: SetupRule[],
-    initialContacts: string[],
-    activeStoryCard: StoryCardDef | undefined,
-    gameState: GameState,
-    jobStepPhase: 'deck_setup' | 'job_draw'
-): JobSetupMessage[] => {
-    const messages: JobSetupMessage[] = [];
-    
-    // Generate a generic "Limited Contacts" message if a specific contact list is defined by a rule.
-    // This is skipped if we are in the 'deck_setup' phase (e.g. for Rim Jobs step 1).
-    if (jobStepPhase !== 'deck_setup') {
-        const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
-        if (jobContactsRule) {
-            const forbiddenContact = (allRules.find(r => r.type === 'forbidContact') as ForbidContactRule | undefined)?.contact;
-            const isConflict = forbiddenContact && initialContacts.includes(forbiddenContact);
-            
-            if (isConflict) {
-                const remainingContacts = initialContacts.filter(c => c !== forbiddenContact);
-                const content: StructuredContent = [
-                    { type: 'strong', content: 'Limited Contacts.' },
-                    ` This setup card normally draws from ${initialContacts.join(', ')}.`, 
-                    { 
-                        type: 'warning-box', 
-                        content: [
-                            `Story Card Conflict: `, 
-                            { type: 'strong', content: forbiddenContact }, 
-                            ` is unavailable. Draw from `,
-                            { type: 'strong', content: remainingContacts.join(' and ') },
-                            ` only.`
-                        ] 
-                    }
-                ];
-                messages.push({ source: 'setupCard', title: 'Setup Card Override', content });
-            } else {
-                const content: StructuredContent = [
-                    { type: 'strong', content: 'Limited Contacts.' },
-                    ` Starting Jobs are drawn only from ${initialContacts.join(', ')}.`
-                ];
-                messages.push({ source: 'setupCard', title: 'Limited Contacts', content });
+// Helper to recursively flatten structured content to a searchable string
+const getTextFromContent = (content: StructuredContent): string => {
+    return content.map(part => {
+        if (typeof part === 'string') {
+            return part;
+        }
+        if ('content' in part && part.content) {
+            if (typeof part.content === 'string') {
+                return part.content;
+            }
+            if (Array.isArray(part.content)) {
+                return getTextFromContent(part.content);
             }
         }
-    }
-    
-    // Process generic special rules for this step category
-    allRules.forEach(rule => {
-        if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
-            const ruleObj = rule.rule;
-            // Phase-based filtering for special rules
-            const rulePhase = ruleObj.flags?.find(f => f.startsWith('phase_'));
-            
-            let shouldShow = true;
-            if (rulePhase) {
-                if (rulePhase === 'phase_deck_setup' && jobStepPhase !== 'deck_setup') {
-                    shouldShow = false;
-                } else if (rulePhase === 'phase_job_draw' && jobStepPhase !== 'job_draw') {
-                    shouldShow = false;
-                }
+        if ('items' in part && part.items && Array.isArray(part.items)) {
+            if (part.type !== 'sub-list') {
+                return (part.items as StructuredContent[]).map(item => getTextFromContent(item)).join(' ');
             }
+        }
+        return '';
+    }).join('');
+};
 
-            if (shouldShow && ['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
-                messages.push({
-                    source: rule.source as SpecialRule['source'],
-                    ...ruleObj
-                });
-            }
-        }
-    });
+export const getJobSetupDetails = (gameState: GameState, overrides: StepOverrides): JobSetupDetails => {
+    const allRules = getResolvedRules(gameState);
+    const activeStoryCard = getActiveStoryCard(gameState);
+
+    const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
+    const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
+    const { jobStepPhase = 'job_draw' } = overrides;
+
+    let contactList: JobContactListConfig | null = null;
+    let caperDraw: number | null = null;
+    let primeInstruction: StructuredContent | null = null;
     
-    // Handle "Single Contact" first because it has custom text
+    // Collect all messages first
+    const messages = _getJobRulesMessages(allRules);
+    
+    // Handle specific challenge warnings
     const processedChallenges = new Set<string>();
     if (gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT]) {
         messages.push({ source: 'warning', title: 'Challenge Active', content: [{ type: 'strong', content: 'Single Contact Only:' }, ' You may only work for one contact.'] });
         processedChallenges.add(CHALLENGE_IDS.SINGLE_CONTACT);
     }
     
-    // Handle other active story challenges
+    if (gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS]) {
+         messages.push({
+            source: 'warning',
+            title: 'Challenge Active',
+            content: [{ type: 'paragraph', content: [{ type: 'strong', content: 'Do not prime the Contact Decks.' }, ' (Challenge Override)'] }]
+        });
+    }
+
     if (activeStoryCard?.challengeOptions) {
         const activeStoryChallenges = activeStoryCard.challengeOptions.filter(
             (opt: ChallengeOption) => gameState.challengeOptions[opt.id] && !processedChallenges.has(opt.id)
@@ -222,135 +147,178 @@ const _generateJobMessages = (
         });
     }
 
-    return messages;
-};
+    // Determine Main Content
+    const jobStepContentRule = allRules.find(
+        (r): r is SetJobStepContentRule => r.type === 'setJobStepContent'
+    );
+    const mainContent = jobStepContentRule?.content || null;
+    const mainContentPosition = jobStepContentRule?.position || 'before';
 
-// Helper to recursively flatten structured content to a searchable string
-const getTextFromContent = (content: StructuredContent): string => {
-    return content.map(part => {
-        if (typeof part === 'string') {
-            return part;
-        }
-        if ('content' in part && part.content) { // for strong, action, paragraph, warning-box
-            if (typeof part.content === 'string') {
-                return part.content;
+    // Logic for Standard/Shared Hand/Draft modes
+    if (jobDrawMode !== 'no_jobs' && jobDrawMode !== 'caper_start') {
+        const initialContacts = _getInitialContacts(allRules, gameState);
+        const contacts = _filterContacts(initialContacts, allRules);
+
+        // Generate contact restriction warnings if needed
+        if (jobStepPhase !== 'deck_setup') {
+            const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
+            if (jobContactsRule) {
+                const forbiddenContact = (allRules.find(r => r.type === 'forbidContact') as ForbidContactRule | undefined)?.contact;
+                const isConflict = forbiddenContact && initialContacts.includes(forbiddenContact);
+                
+                if (isConflict) {
+                    const remainingContacts = initialContacts.filter(c => c !== forbiddenContact);
+                    messages.push({ 
+                        source: 'setupCard', 
+                        title: 'Setup Card Override', 
+                        content: [
+                            { type: 'strong', content: 'Limited Contacts.' },
+                            ` This setup card normally draws from ${initialContacts.join(', ')}.`, 
+                            { 
+                                type: 'warning-box', 
+                                content: [
+                                    `Story Card Conflict: `, 
+                                    { type: 'strong', content: forbiddenContact }, 
+                                    ` is unavailable. Draw from `,
+                                    { type: 'strong', content: remainingContacts.join(' and ') },
+                                    ` only.`
+                                ] 
+                            }
+                        ]
+                    });
+                } else {
+                    messages.push({ 
+                        source: 'setupCard', 
+                        title: 'Limited Contacts', 
+                        content: [
+                            { type: 'strong', content: 'Limited Contacts.' },
+                            ` Starting Jobs are drawn only from ${initialContacts.join(', ')}.`
+                        ]
+                    });
+                }
             }
-            if (Array.isArray(part.content)) {
-                return getTextFromContent(part.content);
-            }
         }
-        if ('items' in part && part.items && Array.isArray(part.items)) { // for list, numbered-list, sub-list
-            if (part.type !== 'sub-list') { // list, numbered-list
-                return (part.items as StructuredContent[]).map(item => getTextFromContent(item)).join(' ');
-            }
-        }
-        return '';
-    }).join('');
-};
-
-export const getJobSetupDetails = (gameState: GameState, overrides: StepOverrides): JobSetupDetails => {
-    const allRules = getResolvedRules(gameState);
-    const activeStoryCard = getActiveStoryCard(gameState);
-    const showNoJobsMessageFlag = hasRuleFlag(allRules, 'showNoJobsMessage');
-
-    const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
-    const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
-    const { jobStepPhase = 'job_draw' } = overrides;
-    
-    if (hasRuleFlag(allRules, 'customJobDraw')) {
-        const messages: JobSetupMessage[] = [];
-        if (activeStoryCard?.setupDescription) {
-            messages.push({ source: 'story', title: 'Job Draw Instructions', content: [activeStoryCard.setupDescription] });
-        }
-        // Custom job draw usually implies a story override, so assume it goes in overrideMessages
-        return {
-            contacts: [], 
-            infoMessages: [],
-            overrideMessages: messages,
-            showStandardContactList: false, 
-            isSingleContactChoice: false, 
-            totalJobCards: 0,
-            jobDrawMode,
-            showNoJobsMessage: showNoJobsMessageFlag,
-        };
-    }
-    
-    let baseDetails: Omit<JobSetupDetails, 'jobDrawMode' | 'mainContent' | 'mainContentPosition' | 'showNoJobsMessage' | 'primeContactsInstruction'>;
-    let primeContactsInstruction: StructuredContent | undefined;
-
-    if (jobDrawMode === 'no_jobs' || jobDrawMode === 'caper_start') {
-        const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
-        const dontPrimeContactsChallenge = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
-        const details = _handleNoJobsMode(allRules, jobModeSource, dontPrimeContactsChallenge);
-        baseDetails = { ...details };
         
-        if (!dontPrimeContactsChallenge && allRules.some(r => r.type === 'primeContacts')) {
-            primeContactsInstruction = [
+        // Filter messages by phase
+        // (Existing logic: some rules are phase_deck_setup only)
+        const relevantMessages = messages.filter(msg => {
+            const rulePhase = msg.flags?.find(f => f.startsWith('phase_'));
+            if (rulePhase) {
+                if (rulePhase === 'phase_deck_setup' && jobStepPhase !== 'deck_setup') return false;
+                if (rulePhase === 'phase_job_draw' && jobStepPhase !== 'job_draw') return false;
+            }
+            return true;
+        });
+        
+        // Populate Contact List Config
+        if (jobStepPhase !== 'deck_setup') {
+            const isSingleContactChoice = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
+            const actualDrawCount = isSingleContactChoice ? 1 : contacts.length;
+            const baseKeepCount = 3;
+            const finalKeepCount = Math.min(baseKeepCount, actualDrawCount);
+            
+            const isSharedHand = jobDrawMode === 'shared_hand';
+            
+            let description = '';
+            if (isSharedHand) {
+                 description = "Place one Job Card from each Contact Deck listed below face up on top of their Contact's deck.";
+            } else {
+                 const keepText = finalKeepCount >= actualDrawCount && actualDrawCount > 0
+                    ? 'any of the Job Cards drawn.'
+                    : `up to ${finalKeepCount} Job Cards.`;
+                 
+                 const drawText = isSingleContactChoice
+                    ? `Choose ONE contact deck below.`
+                    : `Draw one Job Card from each Contact Deck listed below.`;
+                    
+                 description = `${drawText} You may keep ${keepText}`;
+            }
+
+            const standardContacts = [CONTACT_NAMES.HARKEN, CONTACT_NAMES.BADGER, CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.PATIENCE, CONTACT_NAMES.NISKA];
+            const isOverridden = JSON.stringify(contacts.slice().sort()) !== JSON.stringify(standardContacts.slice().sort());
+
+            contactList = {
+                title: isSharedHand ? 'Shared Hand Draw' : 'Starting Job Draw',
+                description,
+                contacts,
+                cardsToDraw: finalKeepCount,
+                isSingleContactChoice,
+                isSharedHand,
+                isOverridden
+            };
+        }
+
+        // Replace local 'messages' with filtered ones for return
+        messages.length = 0;
+        messages.push(...relevantMessages);
+
+    } else {
+        // Mode is no_jobs or caper_start
+        // Add generic "No Starting Jobs" message if not already covered by rules
+        const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
+        
+        // If story provides no specific rule about job removal, we add a default one if it was triggered by a setup card.
+        // This maintains compatibility with Setup Cards that set "no_jobs".
+        if (jobModeSource === 'setupCard' && !messages.some(m => m.source === 'setupCard')) {
+             messages.push({
+                source: 'setupCard',
+                title: 'No Starting Jobs',
+                content: [{ type: 'paragraph', content: ["Crews must find work on their own out in the black."] }]
+            });
+        }
+        
+        // Priming
+        const dontPrime = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
+        if (!dontPrime && allRules.some(r => r.type === 'primeContacts')) {
+             primeInstruction = [
               { type: 'paragraph', content: ['Instead of taking Starting Jobs, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
               { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
             ];
+            
+            // Add a message for visibility in the info/override list too if preferred, 
+            // but we have a dedicated UI block for it now.
+            // We'll skip adding a duplicate message here since `primeInstruction` is returned.
         }
-
-    } else {
-        const initialContacts = _getInitialContacts(allRules, gameState);
-        const contacts = _filterContacts(initialContacts, allRules);
-    
-        const messages = _generateJobMessages(
-            allRules,
-            initialContacts,
-            activeStoryCard,
-            gameState,
-            jobStepPhase
-        );
-        
-        const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
-        const standardContacts = [CONTACT_NAMES.HARKEN, CONTACT_NAMES.BADGER, CONTACT_NAMES.AMNON_DUUL, CONTACT_NAMES.PATIENCE, CONTACT_NAMES.NISKA];
-        const isContactListOverridden = 
-            !!jobContactsRule || 
-            JSON.stringify(contacts.slice().sort()) !== JSON.stringify(standardContacts.slice().sort());
-    
-        const isSingleContactChoice = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
-        const showStandardContactList = jobStepPhase !== 'deck_setup';
-        
-        const actualDrawCount = isSingleContactChoice ? 1 : contacts.length;
-        const baseKeepCount = 3;
-        const finalKeepCount = Math.min(baseKeepCount, actualDrawCount);
-    
-        const infoMessages = messages.filter(m => m.source === 'info' || m.source === 'warning');
-        const overrideMessages = messages.filter(m => m.source !== 'info' && m.source !== 'warning');
-
-        baseDetails = { contacts, infoMessages, overrideMessages, showStandardContactList, isSingleContactChoice, cardsToDraw: finalKeepCount, totalJobCards: contacts.length, isContactListOverridden };
     }
 
-    let caperDrawCount: number | undefined;
+    // Caper Logic
     if (jobDrawMode === 'caper_start') {
-        caperDrawCount = 1;
+        caperDraw = 1;
     } else {
-        const caperBonusRule = [...baseDetails.infoMessages, ...baseDetails.overrideMessages].find(msg => msg.title === 'Caper Bonus');
+        const caperBonusRule = messages.find(msg => msg.title === 'Caper Bonus');
         if (caperBonusRule) {
             const contentText = getTextFromContent(caperBonusRule.content);
             const match = contentText.match(/Draw (\d+)/i);
             if (match && match[1]) {
-                caperDrawCount = parseInt(match[1], 10);
+                caperDraw = parseInt(match[1], 10);
             } else {
-                caperDrawCount = 1; // Default to 1 if parsing fails
+                caperDraw = 1;
             }
         }
     }
+    
+    // Deduplicate messages
+    const uniqueMessages = messages.reduce((acc, current) => {
+        const isDuplicate = acc.some(item => 
+            item.title === current.title && 
+            JSON.stringify(item.content) === JSON.stringify(item.content)
+        );
+        if (!isDuplicate) {
+            acc.push(current);
+        }
+        return acc;
+    }, [] as JobSetupMessage[]);
 
-    const jobStepContentRule = allRules.find(
-        (r): r is SetJobStepContentRule => r.type === 'setJobStepContent'
-    );
-    const mainContent = jobStepContentRule?.content;
-    const mainContentPosition = jobStepContentRule?.position || 'before';
+    const infoMessages = uniqueMessages.filter(m => m.source === 'info' || m.source === 'warning');
+    const overrideMessages = uniqueMessages.filter(m => m.source !== 'info' && m.source !== 'warning');
 
     return {
-        ...baseDetails,
-        caperDrawCount,
-        jobDrawMode,
+        contactList,
         mainContent,
         mainContentPosition,
-        showNoJobsMessage: showNoJobsMessageFlag,
-        primeContactsInstruction,
+        caperDraw,
+        primeInstruction,
+        infoMessages,
+        overrideMessages
     };
 };
