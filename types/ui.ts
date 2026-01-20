@@ -8,6 +8,7 @@ export interface StepOverrides {
     primeMode?: PrimeMode;
     draftMode?: DraftMode;
     leaderSetup?: LeaderSetupMode;
+    jobStepPhase?: 'deck_setup' | 'job_draw';
 }
 
 export interface SetupContentData {

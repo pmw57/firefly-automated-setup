@@ -100,7 +100,8 @@ export const SETUP_CARDS: SetupCardDef[] = [
         type: 'addSpecialRule', 
         category: 'jobs',
         rule: {
-          title: 'Rim Space Jobs', 
+          title: 'Rim Space Jobs',
+          flags: ['phase_deck_setup'],
           content: [
               { type: 'paragraph', content: [{ type: 'strong', content: "Rebuild the Contact Decks" }, " using ", { type: 'strong', content: "only" }, " cards from the Blue Sun and Kalidasa expansions."] }
           ]
@@ -108,7 +109,7 @@ export const SETUP_CARDS: SetupCardDef[] = [
       }
     ]),
     steps: [
-      { id: STEP_IDS.D_RIM_JOBS, title: `1. ${BASE_TITLES.D_RIM_JOBS}` },
+      { id: STEP_IDS.D_RIM_JOBS, title: `1. ${BASE_TITLES.D_RIM_JOBS}`, overrides: { jobStepPhase: 'deck_setup' } },
       { id: STEP_IDS.C1, title: `2. ${BASE_TITLES.C1}` },
       { id: STEP_IDS.C3, title: `3. ${BASE_TITLES.C3}` }, 
       { id: STEP_IDS.C2, title: `4. ${BASE_TITLES.C2}` }, 
