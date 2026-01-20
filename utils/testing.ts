@@ -3,6 +3,7 @@ import { SETUP_CARDS } from '../data/setupCards';
 import { isStoryCompatible } from './filters';
 import { getDefaultGameState } from '../state/reducer';
 import { GameState } from '../types';
+import { SETUP_CARD_IDS } from '../data/ids';
 
 // Helper to escape CSV fields
 const escapeCsvField = (field: string | number): string => {
@@ -77,4 +78,82 @@ export const generateTestingMatrixCsv = (options: { excludeNoSetupDescription: b
     });
 
     return csv;
+};
+
+interface CoverageConfig {
+    name: string;
+    state: GameState;
+}
+
+export const generateCoverageReport = (): string => {
+    // Base state with ALL expansions enabled and ALL ratings allowed
+    const baseState = getDefaultGameState();
+    for (const key in baseState.expansions) {
+        baseState.expansions[key as keyof typeof baseState.expansions] = true;
+    }
+    for (const key in baseState.storyRatingFilters) {
+        baseState.storyRatingFilters[Number(key)] = true;
+    }
+
+    // Define the minimal set of configurations to cover all stories
+    const configurations: CoverageConfig[] = [
+        {
+            name: "1. Solitaire Campaign",
+            state: { ...baseState, gameMode: 'solo', playerCount: 1, setupCardId: SETUP_CARD_IDS.SOLITAIRE_FIREFLY }
+        },
+        {
+            name: "2. Flying Solo (10th Anniversary)",
+            state: { ...baseState, gameMode: 'solo', playerCount: 1, setupCardId: SETUP_CARD_IDS.FLYING_SOLO }
+        },
+        {
+            name: "3. 2-Player Duel (PvP)",
+            state: { ...baseState, gameMode: 'multiplayer', playerCount: 2, setupCardId: SETUP_CARD_IDS.STANDARD }
+        },
+        {
+            name: "4. Standard Multiplayer (4-Player)",
+            state: { ...baseState, gameMode: 'multiplayer', playerCount: 4, setupCardId: SETUP_CARD_IDS.STANDARD }
+        }
+    ];
+
+    let output = "MINIMAL CONFIGURATION COVERAGE REPORT\n";
+    output += "=====================================\n\n";
+
+    const coveredStories = new Set<string>();
+
+    configurations.forEach(config => {
+        const storiesInThisConfig: string[] = [];
+
+        STORY_CARDS.forEach(story => {
+            if (coveredStories.has(story.title)) return;
+
+            if (isStoryCompatible(story, config.state)) {
+                storiesInThisConfig.push(story.title);
+                coveredStories.add(story.title);
+            }
+        });
+
+        if (storiesInThisConfig.length > 0) {
+            output += `CONFIGURATION: ${config.name}\n`;
+            output += `-------------------------------------\n`;
+            storiesInThisConfig.sort().forEach(title => {
+                output += `[ ] ${title}\n`;
+            });
+            output += `\nTotal: ${storiesInThisConfig.length}\n\n`;
+        }
+    });
+
+    // Check for any missed stories
+    const missedStories = STORY_CARDS.filter(s => !coveredStories.has(s.title));
+    
+    if (missedStories.length > 0) {
+        output += "⚠️ MISSED STORIES (Review Logic)\n";
+        output += "-------------------------------------\n";
+        missedStories.forEach(s => {
+             output += `[ ] ${s.title}\n`;
+        });
+    } else {
+        output += "✅ 100% Story Coverage Achieved";
+    }
+
+    return output;
 };
