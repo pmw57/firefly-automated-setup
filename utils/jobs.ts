@@ -289,8 +289,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
               { type: 'paragraph', content: ['Instead of taking Starting Jobs, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
               { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
             ];
-            // Remove it from messages so it's not duplicated in detailed view
-            baseDetails.overrideMessages = baseDetails.overrideMessages.filter(m => m.title !== 'Prime Contact Decks');
         }
 
     } else {

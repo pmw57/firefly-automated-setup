@@ -66,6 +66,8 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
 
       <div className={cls(panelBg, "p-6 rounded-lg border shadow-sm overflow-hidden transition-colors duration-300 space-y-4", panelBorder)}>
         <div className={cls(panelText, "space-y-2")}>
+          <p>Shuffle the {decksToShuffle} Nav Decks separately.</p>
+          
           {showStandardRules && (
             <p>
               <span className={cls("font-bold border-b border-dotted", isDark ? 'border-zinc-500' : 'border-gray-400')}>
@@ -77,13 +79,11 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
           )}
           
           {forceReshuffle && (
-            <p>
+            <p className="font-bold">
               {forcedReshuffleInstruction}
             </p>
           )}
-
-          <p>Shuffle the {decksToShuffle} Nav Decks separately.</p>
-                  </div>
+        </div>
         
         {clearerSkies && (
           <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-stone-200')}>
