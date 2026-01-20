@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useTheme } from '../../ThemeContext';
 import { useGameState } from '../../../hooks/useGameState';
@@ -67,11 +68,17 @@ const RuiningItJobInstructions: React.FC<{
 export const RuiningItJobsStep = ({ step }: StepComponentProps): React.ReactElement => {
     const { overrides = {} } = step;
     
+    // Explicitly force standard mode here to get the contact list data, even though
+    // the global state might be 'no_jobs' due to the story card.
+    const effectiveOverrides = { ...overrides, jobMode: 'standard' } as const;
+
     const { 
-        contacts, 
-        isSingleContactChoice,
-        cardsToDraw = 0,
-    } = useJobSetupDetails(overrides);
+        contactList
+    } = useJobSetupDetails(effectiveOverrides);
+
+    const contacts = contactList?.contacts || [];
+    const isSingleContactChoice = contactList?.isSingleContactChoice || false;
+    const cardsToDraw = contactList?.cardsToDraw || 0;
 
     return (
         <div className="space-y-6">
