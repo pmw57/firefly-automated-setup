@@ -150,9 +150,9 @@ export function detectOverrides(gameState: GameState, flow: Step[]): string[] {
 
             case STEP_IDS.C1: // getNavDeckDetails
             case STEP_IDS.C2: // getAllianceReaverDetails
+            case STEP_IDS.C_PRIME: // getPrimeDetails
             case STEP_IDS.C6: // getJobSetupDetails
             case STEP_IDS.D_RIM_JOBS:
-            case STEP_IDS.C_PRIME: // getPrimeDetails
                 detailsBefore = (detailsFn as (gs: GameState, o: StepOverrides) => object)(stateWithoutStory, step.overrides || {});
                 detailsAfter = (detailsFn as (gs: GameState, o: StepOverrides) => object)(stateWithStory, step.overrides || {});
                 break;

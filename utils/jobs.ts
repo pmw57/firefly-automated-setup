@@ -136,49 +136,66 @@ const _generateJobMessages = (
     allRules: SetupRule[],
     initialContacts: string[],
     activeStoryCard: StoryCardDef | undefined,
-    gameState: GameState
+    gameState: GameState,
+    jobStepPhase: 'deck_setup' | 'job_draw'
 ): JobSetupMessage[] => {
     const messages: JobSetupMessage[] = [];
     
     // Generate a generic "Limited Contacts" message if a specific contact list is defined by a rule.
-    const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
-    if (jobContactsRule) {
-        const forbiddenContact = (allRules.find(r => r.type === 'forbidContact') as ForbidContactRule | undefined)?.contact;
-        const isConflict = forbiddenContact && initialContacts.includes(forbiddenContact);
-        
-        if (isConflict) {
-            const remainingContacts = initialContacts.filter(c => c !== forbiddenContact);
-            const content: StructuredContent = [
-                { type: 'strong', content: 'Limited Contacts.' },
-                ` This setup card normally draws from ${initialContacts.join(', ')}.`, 
-                { 
-                    type: 'warning-box', 
-                    content: [
-                        `Story Card Conflict: `, 
-                        { type: 'strong', content: forbiddenContact }, 
-                        ` is unavailable. Draw from `,
-                        { type: 'strong', content: remainingContacts.join(' and ') },
-                        ` only.`
-                    ] 
-                }
-            ];
-            messages.push({ source: 'setupCard', title: 'Setup Card Override', content });
-        } else {
-            const content: StructuredContent = [
-                { type: 'strong', content: 'Limited Contacts.' },
-                ` Starting Jobs are drawn only from ${initialContacts.join(', ')}.`
-            ];
-            messages.push({ source: 'setupCard', title: 'Limited Contacts', content });
+    // This is skipped if we are in the 'deck_setup' phase (e.g. for Rim Jobs step 1).
+    if (jobStepPhase !== 'deck_setup') {
+        const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
+        if (jobContactsRule) {
+            const forbiddenContact = (allRules.find(r => r.type === 'forbidContact') as ForbidContactRule | undefined)?.contact;
+            const isConflict = forbiddenContact && initialContacts.includes(forbiddenContact);
+            
+            if (isConflict) {
+                const remainingContacts = initialContacts.filter(c => c !== forbiddenContact);
+                const content: StructuredContent = [
+                    { type: 'strong', content: 'Limited Contacts.' },
+                    ` This setup card normally draws from ${initialContacts.join(', ')}.`, 
+                    { 
+                        type: 'warning-box', 
+                        content: [
+                            `Story Card Conflict: `, 
+                            { type: 'strong', content: forbiddenContact }, 
+                            ` is unavailable. Draw from `,
+                            { type: 'strong', content: remainingContacts.join(' and ') },
+                            ` only.`
+                        ] 
+                    }
+                ];
+                messages.push({ source: 'setupCard', title: 'Setup Card Override', content });
+            } else {
+                const content: StructuredContent = [
+                    { type: 'strong', content: 'Limited Contacts.' },
+                    ` Starting Jobs are drawn only from ${initialContacts.join(', ')}.`
+                ];
+                messages.push({ source: 'setupCard', title: 'Limited Contacts', content });
+            }
         }
     }
     
     // Process generic special rules for this step category
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
-            if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
+            const ruleObj = rule.rule;
+            // Phase-based filtering for special rules
+            const rulePhase = ruleObj.flags?.find(f => f.startsWith('phase_'));
+            
+            let shouldShow = true;
+            if (rulePhase) {
+                if (rulePhase === 'phase_deck_setup' && jobStepPhase !== 'deck_setup') {
+                    shouldShow = false;
+                } else if (rulePhase === 'phase_job_draw' && jobStepPhase !== 'job_draw') {
+                    shouldShow = false;
+                }
+            }
+
+            if (shouldShow && ['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
                 messages.push({
                     source: rule.source as SpecialRule['source'],
-                    ...rule.rule
+                    ...ruleObj
                 });
             }
         }
@@ -238,6 +255,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
 
     const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
     const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
+    const { jobStepPhase = 'job_draw' } = overrides;
     
     if (hasRuleFlag(allRules, 'customJobDraw')) {
         const messages: JobSetupMessage[] = [];
@@ -283,7 +301,8 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             allRules,
             initialContacts,
             activeStoryCard,
-            gameState
+            gameState,
+            jobStepPhase
         );
         
         const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
@@ -293,7 +312,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             JSON.stringify(contacts.slice().sort()) !== JSON.stringify(standardContacts.slice().sort());
     
         const isSingleContactChoice = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
-        const showStandardContactList = true;
+        const showStandardContactList = jobStepPhase !== 'deck_setup';
         
         const actualDrawCount = isSingleContactChoice ? 1 : contacts.length;
         const baseKeepCount = 3;
