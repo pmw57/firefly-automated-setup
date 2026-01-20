@@ -150,6 +150,16 @@ export const STORIES_A_D: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
+        category: 'nav',
+        rule: {
+          title: 'Component Cleanup',
+          content: ["Remove half of the \"Keep Flying\" cards out of the game."]
+        },
+        source: 'info', 
+        sourceName: "The Battle of Serenity Valley (PvP)"
+      },
+      {
+        type: 'addSpecialRule',
         category: 'draft',
         rule: {
           title: 'Picking Sides',
@@ -163,7 +173,8 @@ export const STORIES_A_D: StoryCardDef[] = [
         category: 'draft_ships',
         rule: {
           title: 'Picking Sides',
-          content: ["Players evenly pick Alliance or Independents (Browncoats)."]
+          content: ["Players evenly pick Alliance or Independents (Browncoats)."],
+          position: 'before'
         },
         source: 'story', 
         sourceName: "The Battle of Serenity Valley (PvP)"
