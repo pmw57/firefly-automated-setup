@@ -44,7 +44,7 @@ export const STORIES_H_L: StoryCardDef[] = [
     intro: "River is prisoner in a secure hospital at Londinium, and needs rescuing.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/103582/goal-hospital-rescue",
-    setupDescription: "Remove River Tam from play.",
+    setupDescription: "Remove River from play.",
     tags: ['community', 'jailbreak'],
     rules: [
       { type: 'addFlag', flag: 'removeRiver', source: 'story', sourceName: "Hospital Rescue" },
@@ -65,7 +65,7 @@ export const STORIES_H_L: StoryCardDef[] = [
     title: "How It All Started",
     intro: "You're low on funds, and need to get a job. Badger's hired you to scavenge a derelict ship dangerously close to an Alliance cruiser. Get the cargo, evade the Alliance, and sell it.",
     requiredExpansion: "community",
-    setupDescription: "Start with $500, 2 Fuel, and 2 Parts. Nandi pays half price, rounded up, when hiring crew.",
+    setupDescription: "Everyone starts with 2 parts, 2 fuel, and $500. Nandi pays half price, rounded up, when hiring crew.",
     tags: ['community', 'classic_heist'],
     rules: [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 500, description: "Scraping By", source: 'story', sourceName: "How It All Started" },
@@ -103,7 +103,7 @@ export const STORIES_H_L: StoryCardDef[] = [
     intro: "Your last run in with Harken turned South and you've got a boatload of warrants trailin' ya. Time to clean your ledger and get dirt on Harken instead.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/image/4434522/pmw57",
-    setupDescription: "Start with 2 Warrants. Alliance Space is off limits. Harken is unavailable for Jobs.",
+    setupDescription: "All players start with 2 Warrant Token! Alliance Space is off limits until Goal 3. Players may not deal with Harken.",
     tags: ['community', 'classic_heist'],
     rules: [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, description: "Start with 2 Warrants.", source: 'story', sourceName: "It Ain't Easy Goin' Legit" },
@@ -122,87 +122,10 @@ export const STORIES_H_L: StoryCardDef[] = [
     rating: 2,
   },
   {
-    title: "A Jubilant Victory",
-    intro: "10,000 Credits will put a mighty fine jingle in anyone's pocket. If that pocket belongs to you, best keep a watchful eye out for Jubal Early and his intentions.",
-    requiredExpansion: "aces_eights",
-    additionalRequirements: ["local_color"],
-    rating: 1,
-    sourceUrl: "https://boardgamegeek.com/filepage/235439/storycard-a-jubilant-victory",
-    setupDescription: "Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, starting from Meridian.",
-    tags: ['community', 'survival'],
-    rules: [
-      { type: 'modifyResource', resource: 'warrants', method: 'add', value: 1, description: "Story-Specific Warrant", source: 'story', sourceName: "A Jubilant Victory" },
-      {
-        type: 'addSpecialRule',
-        category: 'resources',
-        rule: {
-          title: 'Unwanted Attention',
-          content: ["Players begin at their Havens with one Warrant."]
-        },
-        source: 'story', 
-        sourceName: "A Jubilant Victory"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'draft',
-        rule: {
-          title: 'A High-Stakes Game: Haven Placement',
-          content: ["Players begin at their Havens."],
-          flags: ['isHavenPlacement']
-        },
-        source: 'story', 
-        sourceName: "A Jubilant Victory"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'draft_panel',
-        rule: {
-          title: 'Required Ships',
-          badge: 'Ship Rules',
-          content: [
-            { type: 'paragraph', content: ["Players must use ", { type: 'strong', content: "Firefly-class ships" }, "."] },
-            { type: 'paragraph-small-italic', content: ["All ships are equipped with standard core drives."] }
-          ]
-        },
-        source: 'story', 
-        sourceName: "A Jubilant Victory"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'draft_panel',
-        rule: {
-          title: 'Jubal Early',
-          badge: 'NPC Rules',
-          flags: ['col-span-2'],
-          content: [
-            "Jubal Early is in play. He uses the ",
-            { type: 'strong', content: "Interceptor" },
-            " ship, starting from ",
-            { type: 'strong', content: "Meridian" },
-            "."
-          ]
-        },
-        source: 'story', 
-        sourceName: "A Jubilant Victory"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'draft_placement',
-        rule: {
-          content: ["⚠️ Reminder: Each player also begins with one ", { type: 'strong', content: "Warrant" }, "."],
-          position: 'before'
-        },
-        source: 'story', 
-        sourceName: "A Jubilant Victory"
-      }
-    ]
-  },
-  {
     title: "Laying Down the Law",
     intro: "Alliance brass has handed down some flush to the local magistrates to round up some old warrants and they're hiring new law men who can prove they can get the job done.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1093761/article/14404723#14404723",
-    setupDescription: "Wanted crew may not be hired.",
     rating: 1,
     tags: ['community', 'character'],
     rules: [

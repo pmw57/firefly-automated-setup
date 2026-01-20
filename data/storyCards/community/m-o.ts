@@ -6,7 +6,7 @@ export const STORIES_M_O: StoryCardDef[] = [
     intro: "On a backwater planet, an old friend sends out a plea. Marauders are bleeding their town dry. Suss out the trouble, assemble a crew, and eliminate the pesky varmints.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/image/2277037/upstarter",
-    setupDescription: "No starting jobs are dealt.",
+    setupDescription: "There's no time for working other Jobs. Remove all Job Card decks from the game.",
     tags: ['community', 'survival'],
     rules: [
       { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "The Magnificent Crew" },
@@ -26,7 +26,7 @@ export const STORIES_M_O: StoryCardDef[] = [
   {
     title: "Mark Of A Great Captain",
     intro: "If you don't much care for the wellbeing of your crew, your crew won't care much for you. Do what you can to keep your chosen family together. Without them, who's gonna keep you company when you're floating in the black?",
-    setupDescription: "Follow the 'Special Draft & Hiring Rules', 'Mandatory Ship Upgrade', and 'Game Timer' overrides.",
+    setupDescription: "Each player must choose a Moral Leader. After all players have collected their Starting Supplies, each player will pay the code of an Expanded Crew Quarters ($600) and can now hold 9 crew. HIRING CREW: Starting with 1st player, each player will add any crew card from any supply deck to their ship by paying the listed cost. Continue rounds of hiring crew until all players have 9 crew on their ship. Remove all other crew cards from play. You may only use the crew you start with. 7 disgruntle tokens will be used as a timer that triggers the arrest of 4 crew members from each ship.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/286230/mark-of-a-great-captain-story-card",
     rating: 2,
@@ -67,7 +67,7 @@ export const STORIES_M_O: StoryCardDef[] = [
   {
     title: "Master Of All",
     intro: "The 'Verse is a profitable place for a crew that can rise to any occasion. Be the first to prove their crew is ready for anything... without attracting the law.",
-    setupDescription: "In turn order, choose an unoccupied planet with a Contact as a starting point. Then draw only 3 of that contact's jobs as starting hand. Start with an Alliance Alert in play and replace it whenever a Goal Token is won or when any RESHUFFLE card is drawn.",
+    setupDescription: "In turn order, choose an empty planet with a Contact as a starting point. Then draw only 3 of that contact's jobs as starting hand. Start with an Alliance Alert in play and replace it whenever a Goal Token is won or when any RESHUFFLE card is drawn.",
     sourceUrl: "https://boardgamegeek.com/thread/2941994/master-of-all-story-card",
     requiredExpansion: "community",
     tags: ['community', 'reputation'],
@@ -128,8 +128,8 @@ export const STORIES_M_O: StoryCardDef[] = [
   },
   {
     title: "Miranda",
-    intro: "You suspect that there is a hidden message in the Fruity Oaty Bars advertisement recently broadcast by the Alliance network. Decoding it may reveal something of value or maybe it's just a new form of subliminal advertising.",
-    setupDescription: "Follow the 'Special Placement & Crew Draw' override.",
+    intro: "You suspect that there is a hidden message in the Fruity Oaty Bars advertisement recently broadcast by the Alliance network. Decoding it may reveal something of value or maybe it's just a new form of subliminal advertising!",
+    setupDescription: "Place your Firefly on a supply world to begin the game. Draw 1 startgin crew from ANY deck by flipping the draw pile and taking the first 'named' character that is revealed.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1135128/article/1512332#1512332",
     rating: 2,
@@ -176,6 +176,7 @@ export const STORIES_M_O: StoryCardDef[] = [
     intro: "The crew of Serenity needs your help. They've been captured by the Alliance and sent to unknown prison camps all over the 'Verse. For a price, Badger might let you in on a little secret.",
     setupDescription: "Place Serenity on Shadow, Murphy as the drop-off point for Serenity's rescued crew. Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together. Place them face down as the \"Prisoner Deck\".",
     tags: ['community', 'jailbreak', 'against_the_black', 'coop'],
+    sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
     rules: [
       {
         type: 'addSpecialRule',

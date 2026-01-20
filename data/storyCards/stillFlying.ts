@@ -25,7 +25,7 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     ]
   },
   {
-    title: "The Rumrunner's Seasonal",
+    title: "The Rumrunners' Seasonal",
     intro: "An eccentric billionaire arranges a very special race every year to pick his most favorite captain. Win and you're set for life... or at least until someone breaks your record next time around.",
     requiredExpansion: "still_flying",
     additionalRequirements: ["blue", "kalidasa"],
@@ -37,7 +37,7 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     intro: "The Alliance is cracking down. May come a day when there won't be room for naughty men and women to slip about, but for now, the right set of connections could help make you a smuggler extraordinaire.",
     requiredExpansion: "still_flying",
     additionalRequirements: ["blue", "kalidasa"],
-    setupDescription: "Place an Alliance Alert Token on every planetary sector in Alliance Space.",
+    setupDescription: "Place an Alliance Alert Token in every planetary sector in Alliance Space.",
     sourceUrl: "https://boardgamegeek.com/image/8103882/sjliver",
     tags: ['smugglers_run'],
     rules: [

@@ -36,7 +36,7 @@ export const CORE_STORIES: StoryCardDef[] = [
   },
   {
     title: "First Time in the Captain's Chair",
-    intro: "So you finally took the plunge and borrowed enough credits for a ship to call your own. You're in debt up to your eyeballs with a creditor that's not the sort of man to be trifled with.",
+    intro: "So you finally took the plunge and borrowed enough credits for a ship to call your own. You're the master of your destiny and right now that destiny looks mighty uncertain! You're in debt up to your eyeballs with a creditor that's not the sort of man to be trifled with.",
     setupDescription: "When taking Starting Jobs, only take a job from Harken and Amnon Duul. These Jobs may be discarded, as normal.",
     sourceUrl: "https://boardgamegeek.com/image/2785053/gerryrailbaron",
     tags: ['character', 'doing_the_job'],

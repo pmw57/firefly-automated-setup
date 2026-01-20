@@ -7,6 +7,7 @@ export const BLUE_SUN_STORIES: StoryCardDef[] = [
     requiredExpansion: "blue",
     sourceUrl: "https://boardgamegeek.com/image/2785044/gerryrailbaron",
     tags: ['character', 'survival'],
+    setupDescription: "Choose Havens. Havens must in in Alliance Space. Londinium may not be chosen as a Haven. Place an Alliance Alert Token on any Alliance planet that is not a Haven. All Players Start with Warrant Token."
   },
   {
     title: "Patience's War",
@@ -21,5 +22,6 @@ export const BLUE_SUN_STORIES: StoryCardDef[] = [
     requiredExpansion: "blue",
     sourceUrl: "https://boardgamegeek.com/image/2785041/gerryrailbaron",
     tags: ['reputation', 'doing_the_job'],
+    setupDescription: "No Starting Jobs are dealt. This Story Card uses dramatically smaller Contact Decks. Each Contact Deck starts with a number of Job Cards equal to the number of players in the game. Place the remainder of the Contact's Job Cards back in the box - they will not be used in this game."
   },
 ];

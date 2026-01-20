@@ -4,7 +4,7 @@ export const STORIES_F_G: StoryCardDef[] = [
   {
     title: "Fruity Oat Bar",
     intro: "One of your crew was once used in an experiment by the Alliance. After escaping and joining your crew, they are now wanted. Before you are caught, you decide to get to the bottom of things, and discover the secret that the Alliance wants kept secret.",
-    setupDescription: "Follow the 'Special Crew & Placement' override.",
+    setupDescription: "After choosing your Leader, search for any Wanted crew from any deck and add them to your crew. You must start in Alliance space.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1045716/article/13603393#13603393",
     rating: 1,
@@ -107,7 +107,7 @@ export const STORIES_F_G: StoryCardDef[] = [
   {
     title: "The Good Guys",
     intro: " ",
-    setupDescription: "Follow the 'Moral Compass' override. Exclude Niska from Starting Jobs.",
+    setupDescription: "Only MORAL leaders can be chosen. Immoral jobs cannot be accepted. EZRA is off limits until Goal 3 and working for Niska is not allowed. Crow is removed from the Game.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1624739/story-card-the-good-guys",
     tags: ['community', 'against_the_black'],
@@ -133,6 +133,7 @@ export const STORIES_F_G: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/2688034/the-good-the-bad-and-the-ugly-story-card",
     rating: 2,
     tags: ['community', 'reputation'],
+    setupDescription: "Only take Starting Jobs from Harken, Lord Harrow, Mr. Universe and Amnon Duul. These jobs may be discardsed, as normal. Follow the Standard Game Set-Up Card otherwise."
   },
   {
     title: "The Great Escape",
@@ -141,5 +142,6 @@ export const STORIES_F_G: StoryCardDef[] = [
     isCoOp: true,
     sourceUrl: "https://boardgamegeek.com/thread/2717955/article/38380038#38380038",
     tags: ['community', 'jailbreak', 'against_the_black', 'coop'],
+    setupDescription: "During Leader selection, players also choose 2 cards from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards at Miranda, Burnham. Captains can trade crew, items, money, goods, passengers, and jobs from hand when on the same space."
   },
 ];

@@ -13,7 +13,7 @@ export const STORIES_R_S: StoryCardDef[] = [
   {
     title: "Return to Sturges",
     intro: "The Barrle of Sturges was the shortest and bloodiest battle of the Unification War. Badger has broadcast news that there is a hoard of Alliance treasure left in the wreckage of this space battle to a few \"trusted friends\". The race is on to get the information, equipment and speed to get there first, find the goods and get clear before the Alliance shows up to claim its property!",
-    setupDescription: "Follow the 'Leader Restriction' override.",
+    setupDescription: "Captain Nandi and Atherton may not be used by any player.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/125866/return-to-sturges-a-firefly-mission",
     tags: ['community', 'classic_heist'],
@@ -156,7 +156,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     title: "Ruining It For Everyone",
     maxPlayerCount: 2,
     isPvP: true,
-    intro: "During the war you watched your twin get cut down in a hail of shrapnel. You've lived an empty existence since that day making ends meet and trying to keep flying as best you can. Then you get a message from your Ma out on the Rim. \"Come home right away.\"\n\nSo you fly to St. Albans, Red Sun to see your Mother.\n\nOnce there, your twin (Who wasn't dead!) steals your ship and sets about ruining your life. Your twin has the exact same abilities as you do. Your twin may not discard any of your inactive jobs.",
+    intro: "During the war you watched your twin get cut down in a hail of shrapnel. You've lived an empty existence since that day making ends meet and trying to keep flying as best you can. Then you get a message from your Ma out on the Rim. \"Come home right away.\" So you fly to St. Albans, Red Sun to see your Mother. Once there, your twin (Who wasn't dead!) steals your ship and sets about ruining your life. Your twin has the exact same abilities as you do. Your twin may not discard any of your inactive jobs.",
     sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
     setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship. Both ships starts on St. Albans, Red Sun. Set 20 counters on this card as timing counters.",
     tags: ['community', 'character', 'pvp'],
@@ -235,7 +235,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     title: "Scavengers",
     intro: "This game only uses dice, cash, Leader cards, Supply decks, cargo, and contraband. Everything else stays in the box. A scavengers goal is simple, Find a Crew, Attack Another Crew, Keep Trying.",
     isPvP: true,
-    setupDescription: "Radical setup change: Follow the 'Scavenger Draft Rules' and other overrides.",
+    setupDescription: "Shuffle all Supply decks and lay them face down in the middle of the table with the banks cash. All players start with $10,000 and 10 cargo. Roll for first player. First player chooses a Leader card then passes the Leader deck to the next player until each player has a Leader card.",
     sourceUrl: "https://boardgamegeek.com/thread/3114859/scavenger-card-game-story-card",
     requiredExpansion: "community",
     rating: 1,
@@ -321,7 +321,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     intro: "The Silverhold-Hera route is usually a harmless uneventful run. Unless, of course, someone installs a beacon on the cargo which attracts a Reaver party.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/100497/shadows-over-duul-new-goal-reupload",
-    setupDescription: "Remove jobs from Amnon Duul during Set Up. Start in the border of Murphy.",
+    setupDescription: "Remove jobs from Amnon Duul. Start in the border of Murphy.",
     tags: ['community', 'survival'],
     rules: [
       { type: 'forbidContact', contact: CONTACT_NAMES.AMNON_DUUL, source: 'story', sourceName: "Shadows Over Duul" },
@@ -352,12 +352,12 @@ export const STORIES_R_S: StoryCardDef[] = [
   },
   {
     title: "Shiny New Year 25 - Protect Or Plunder",
-    intro: "An affluent governor from Osiris is hosting a grand New Year's celebration--a wedding for his daughter aboard the luxury linder, Shiny New Year. The event has drawn attention from both well-meaning guardians and those with darker intentions. Which one are you? Protector or plunderer?",
+    intro: "An affluent governor from Osiris is hosting a grand New Year's celebration--a wedding for his daughter aboard the luxury liner, Shiny New Year. The event has drawn attention from both well-meaning guardians and those with darker intentions. Which one are you? Protector or plunderer?",
     additionalRequirements: [
       "pirates"
     ],
     isPvP: true,
-    setupDescription: "Follow the 'Deck Modification' override.",
+    setupDescription: "After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks.",
     sourceUrl: "https://boardgamegeek.com/thread/3405568/article/45332549#45332549",
     requiredExpansion: "community",
     tags: ['community', 'pvp'],

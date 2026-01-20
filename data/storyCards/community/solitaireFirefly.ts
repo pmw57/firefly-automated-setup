@@ -48,7 +48,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
   },
   {
     title: "Heart of Gold",
-    intro: "Aboard Serenity, a crew member receives a distress call from a friend, Nandi, owner of a border moon bordello. Nandi asks for help dealing with a landowner named Burgess, who is victimizing one of her employees.",
+    intro: "Aboard Serenity, a crewmember receives a distress call from a friend, Nandi, owner of a border moon bordello. Nandi asks for help dealing with a landowner named Burgess, who is victimizing one of her employees.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
@@ -116,7 +116,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
   },
   {
     title: "Objects in Space",
-    intro: "With the crew asleep, Jubel Early, a bounty hunter, sneaks aboard Serenity. He has been paid to abduct River Tam. He locks most of the crew in their cabins. However, River has disappeared.",
+    intro: "With the crew asleep, Jubal Early, a bounty hunter, sneaks aboard Serenity. He has been paid to abduct River Tam. He locks most of the crew in their cabins. However, River has disappeared.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
@@ -139,7 +139,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
   },
   {
     title: "Our Mrs. Reynolds",
-    intro: "The crew of Serenity have agrees to help rid a settlement on Triumph of its bandit problem. The community can't pay, but promises the crew a big party and whatever other presents they can give.",
+    intro: "The crew of Serenity have agreed to help rid a settlement on Triumph of its bandit problem. The community can't pay, but promises the crew a big party and whatever other presents they can give.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
@@ -231,7 +231,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
   },
   {
     title: "Serenity Movie Part 2",
-    intro: "On Miranda a weak distress beacon leads the crew to a research shuttle and a recording that shows Miranda was an Alliance population control experiment that went horribly wrong, killing millions and creating the Reavers!",
+    intro: "The crew are laying low at Haven when Inara calls from the Companion Training Hose on Sihnon requesting help. Mal realizes it's some kind of trap, but he decides to go anyway.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
@@ -277,7 +277,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
   },
   {
     title: "Serenity Part 1",
-    intro: "Mal Reynolds and the crew of the Firefly Class Transport Serenity are involved in illegally slavaging crates off an abandoned spaceship for Badger, a small-time crime boss on the planet persephone.",
+    intro: "Mal Reynolds and the crew of the Firefly Class Transport Serenity are involved in illegally slavaging crates off an abandoned spaceship for Badger, a small-time crime boss on the planet Persephone.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
@@ -295,7 +295,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
         category: 'draft',
         rule: {
           title: 'Story Override',
-          content: ["Set up Serenity at Valentine with Malcolm, Zoe, Wash, Kaylee, Jaune, 1 Fuel, $500, Cry Baby, Expanded Crew Quarters. Load 2 Contra, then turn over a Nav Card."]
+          content: ["Set up Serenity at Valentine with Malcolm, Zoë, Wash, Kaylee, Jaune, 1 Fuel, $500, Cry Baby, Expanded Crew Quarters. Load 2 Contra, then turn over a Nav Card."]
         },
         source: 'story', 
         sourceName: "Serenity Part 1"
@@ -326,7 +326,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
   },
   {
     title: "Shindig",
-    intro: "The crew of Serenity attends a high society ball - a \"Shindig\" Badger wants Mal to deal with Sir Warrick Harrow. Everything goes smoothly until Mal inadvertently challenges someone to a duel.",
+    intro: "The crew of Serenity attends a high society ball - a \"Shindig\". Badger wants Mal to deal with Sir Warrick Harrow. Everything goes smoothly until Mal inadvertently challenges someone to a duel.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
@@ -372,7 +372,7 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
   },
   {
     title: "Trash",
-    intro: "While overseeing a cargo transfer for a smuggling job, Mal runs into Saffron. Guns are drawn, but Saffron convinces Mal to get in on her plan t steal the Lassiter Laser Pistol - a priceless artifact.",
+    intro: "While overseeing a cargo transfer for a smuggling job, Mal runs into Saffron. Guns are drawn, but Saffron convinces Mal to get in on her plan to steal the Lassiter Laser Pistol - a priceless artifact.",
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,

@@ -21,6 +21,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
       }
     ],
     tags: ['community', 'reputation', 'against_the_black', 'solo'],
+    setupDescription: "After randomly selecting a Leader, you may select up to 4 Crew cards revealed when Priming the Pump - up to a total value of $1000.",
     rules: [
       {
         type: 'addSpecialRule',
@@ -44,7 +45,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         sourceName: "And That Makes Us Mighty"
       }
     ],
-    sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
+    sourceUrl: "https://boardgamegeek.com/filepage/253651/solo-story-card-and-that-makes-us-mighty",
     requiredExpansion: "community"
   },
   {
@@ -52,6 +53,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     intro: "You have gotten a loan from Niska to buy your first ship. Niska will expect favors and to be paid back (with interest) in a timely manner. Failure to do so will result in legal confiscation of your ship, and illegal confiscation of your life!",
     isSolo: true,
     tags: ['community', 'criminal_enterprise', 'against_the_black', 'solo'],
+    setupDescription: "This game lasts for 30 turns (plus a final \"No Fly Action\" turn. Start at the Osiris ShipWorks with $3000, a Leader and a Ship.",
     rules: [
       {
         type: 'addSpecialRule',
@@ -111,13 +113,14 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         sourceName: "Christmas Delivery"
       }
     ],
-    sourceUrl: "https://boardgamegeek.com/thread/1076227/article/14229639#14229639"
+    sourceUrl: "https://boardgamegeek.com/thread/1076227/christmas-delivery-a-solo-story-card-for-the-holid"
   },
   {
     title: "The Hero of Canton",
     intro: "You can't do that to my people. Can't crush them under your heel. I'll strap on my hat, and in 20 rounds flat, steal every Mudder Boss Higgins has to steal.",
     isSolo: true,
     tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
+    setupDescription: "Start play with Cap'n Jayne as your Leader, Jayne's Cunning Hat, and Vera. Subtract the cost of Vera from your Starting Cash.",
     rules: [
       {
         type: 'addSpecialRule',
@@ -172,12 +175,12 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Place 1 Reaver ship below Valentine. If Blue Sun is active, place 2 more Cutters near Miranda.",
     tags: ['community', 'mystery', 'against_the_black', 'solo'],
     rules: [
-        {
-            type: 'setReaverPlacement',
-            placement: "Place 1 Reaver ship in the Border Space sector directly below Valentine. If Blue Sun is active, place the remaining 2 Cutters in the border sectors closest to Miranda.",
-            source: 'story',
-            sourceName: "Hunt For The Arc"
-        }
+      {
+        type: 'setReaverPlacement',
+        placement: "Place 1 Reaver ship in the Border Space sector directly below Valentine. If Blue Sun is active, place the remaining 2 Cutters in the border sectors closest to Miranda.",
+        source: 'story',
+        sourceName: "Hunt For The Arc"
+      }
     ]
   },
   {
@@ -191,6 +194,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
       }
     ],
     tags: ['community', 'character', 'against_the_black', 'solo'],
+    setupDescription: "Start play with Jubal Early as your leader. Remove Serenity's crew from the Bounty and Supply Decks. The Bounty deck is placed face up. All bounties are active.",
     rules: [
       {
         type: 'addSpecialRule',
@@ -223,6 +227,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     requiredExpansion: "community",
     rating: 3,
     tags: ['community', 'doing_the_job', 'character', 'against_the_black', 'solo'],
+    setupDescription: "Start play with Jubal Early as your Leader, Early's Pistol, Early's Combat Armor, and the Interceptor. Subtract the cost of Early's Pistol and Armor from your Starting Cash. Place Serenity on a non-planetary sector in the Georgia system. Collect Serenity's crew and set them to the side. The Bounty deck is placed face up. All bounties are active.",
     rules: [
       {
         type: 'addSpecialRule',
@@ -270,7 +275,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     title: "War Stories",
     intro: "Remember when Malcolm put Niska's man through an engine? Well, Niska remembers and now he's lookin' to kill some folk.",
     isSolo: true,
-    setupDescription: "Fixed assignment: Serenity's original crew. $0 starting cash. Game timer is 15 turns. Niska is unavailable.",
+    setupDescription: "Use Standard Setup Up card. No starting cash. use Serenity as your ship. Equip an exapanded crew Quarters from Osiris. Start play with  original Serenity crew members. Niska: Do not prime his deck. No Jobs given. Use 15 Disgruntle tokens as a game timer.",
     sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards",
     requiredExpansion: "community",
     tags: ['community', 'survival', 'character', 'against_the_black', 'solo'],
@@ -302,7 +307,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
   },
   {
     title: "They're Part Of My Crew",
-    intro: "We all know Mal's got a good aim when it comes to misnehavin'. We also know Mal's stepped on quite a few tows with his misbehavin'. There's more than a few folk like to see him and his crew behind bars or six feet under. Regardless of who or what comes at Serenity, Mal's gonna do what he's always done. Protect his crew.",
+    intro: "We all know Mal's got a good aim when it comes to misbehavin'. We also know Mal's stepped on quite a few toes with his misbehavin'. There's more than a few folk like to see him and his crew behind bars or six feet under. Regardless of who or what comes at Serenity, Mal's gonna do what he's always done. Protect his crew.",
     isSolo: true,
     goals: [
       {
@@ -311,6 +316,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
       }
     ],
     tags: ['community', 'jailbreak', 'character', 'survival', 'against_the_black', 'solo'],
+    setupDescription: "Use the Standard Set Up card with Malcolm as your Leader and Serenity as your ship. Take only $1000 in starting cash. Take Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River. Take 1 Expanded Crew Quarthers from Osiris. Collect 7 disgruntle tokens.",
     rules: [
       { 
         type: 'modifyResource', 

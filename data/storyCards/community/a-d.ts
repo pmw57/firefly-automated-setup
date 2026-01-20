@@ -10,7 +10,7 @@ export const STORIES_A_D: StoryCardDef[] = [
       "kalidasa",
       "pirates"
     ],
-    setupDescription: "No Starting Jobs from Niska. When placing ships, each player also places a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Start with $10,000. Buy a small ship (less than 10 cargo hold).",
+    setupDescription: "When placing ships, each player also places a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Start with $10,000. Strart with a small ship (less than 10 cargo hold). With your $10,000 pay for the small ship. Buy parts/fuel  at listed price. No Starting Jobs from Niska.",
     sourceUrl: "https://boardgamegeek.com/thread/3092841/a-new-leaf-story-card-using-fan-made-ships",
     requiredExpansion: "community",
     rating: 1,
@@ -86,7 +86,7 @@ export const STORIES_A_D: StoryCardDef[] = [
   },
   {
     title: "Aimin' To Misbehave",
-    intro: "A big time crime boss has retired to a life of ease and comfort, leaving behind a nice little power vacuum. If you want to take his place you'll need money and business parthers. Shady business oartners to be exact. The shadier the better.",
+    intro: "A big time crime boss has retired to a life of ease and comfort, leaving behind a nice little power vacuum. If you want to take his place you'll need money and business parthers. Shady business partners to be exact. The shadier the better.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/3077380/aimin-to-misbehave",
     setupDescription: "Remove all legal job cards from play.",
@@ -244,7 +244,7 @@ export const STORIES_A_D: StoryCardDef[] = [
   },
   {
     title: "Doing Good Works",
-    intro: "A plague has broken out on the border worlds. A natural disease? Leftover bioweapons from the Unification War? Or an attempt by the Alliance to exterminate those whoresist its rule? No one knows. But word's gotten out that the Alliance has a cure for it--and they're not sharing.",
+    intro: "A plague has broken out on the border worlds. A natural disease? Leftover bioweapons from the Unification War? Or an attempt by the Alliance to exterminate those who resist its rule? No one knows. But word's gotten out that the Alliance has a cure for it--and they're not sharing. Plucky heroes must steal the medicine from the Alliance, deliver it to those in need, and do what they can to stem the plague before worlds become graveyards.",
     setupDescription: "A player placing his ship on a supply world may choose three cards from that world's deck. Crew are hired for free. Other cards must be paid for at half price from the player's starting cash. Corbin and Marco's half-price abilities apply—round the price of each item up to the nearest $100. More than one player may start on the same world. Additional players must wait until the previous player has selected three cards before taking their selections.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1240655/doing-good-works-soloco-op-scenario",
