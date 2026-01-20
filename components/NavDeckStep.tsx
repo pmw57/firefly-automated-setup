@@ -56,6 +56,8 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
     }
   }
 
+  const decksToShuffle = hasRimDecks ? "Alliance, Border, and Rim Space" : "Alliance and Border";
+
   return (
     <div className="space-y-4">
       {displayInfo.map((rule, i) => (
@@ -64,8 +66,6 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
 
       <div className={cls(panelBg, "p-6 rounded-lg border shadow-sm overflow-hidden transition-colors duration-300 space-y-4", panelBorder)}>
         <div className={cls(panelText, "space-y-2")}>
-          <p>Shuffle the Alliance and Border Nav Decks separately.</p>
-          
           {showStandardRules && (
             <p>
               <span className={cls("font-bold border-b border-dotted", isDark ? 'border-zinc-500' : 'border-gray-400')}>
@@ -77,11 +77,13 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
           )}
           
           {forceReshuffle && (
-            <p className="font-bold">
+            <p>
               {forcedReshuffleInstruction}
             </p>
           )}
-        </div>
+
+          <p>Shuffle the {decksToShuffle} Nav Decks separately.</p>
+                  </div>
         
         {clearerSkies && (
           <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-stone-200')}>
