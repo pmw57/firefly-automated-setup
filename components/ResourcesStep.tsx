@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { getResourceDetails } from '../utils/resources';
 import { OverrideNotificationBlock } from './SpecialRuleBlock';
@@ -114,12 +115,6 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   const fuelBadgeBg = isDark ? 'bg-yellow-900/40 text-yellow-200 border-yellow-800' : 'bg-yellow-100 text-yellow-900 border-yellow-200';
   const partsBadgeBg = isDark ? 'bg-zinc-800 text-gray-200 border-zinc-700' : 'bg-gray-200 text-gray-800 border-gray-300';
   
-  const boardRuleMappings: Record<string, { tokenName: string, locationLine1: string, locationLine2: string, icon: string }> = {
-    'Alliance Space Lockdown': { tokenName: 'Alliance Alert Tokens', locationLine1: 'Planetary Sectors', locationLine2: 'Alliance Space', icon: '🗺️' },
-    "Lonely Smuggler's Stash": { tokenName: 'Contraband Tokens', locationLine1: '3 on each Supply Planet', locationLine2: '(except Persephone/Bazaar)', icon: '📦' },
-    'Mass Contraband Stash': { tokenName: 'Contraband Tokens', locationLine1: '8 on each of 6 sectors:', locationLine2: 'Londinium, Bernadette, Liann Jiun, Sihnon, Gonghe, Bellerophon', icon: '💰' },
-  };
-
   return (
     <div className="space-y-6">
       {displayInfo.map((rule, i) => (
@@ -303,18 +298,29 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
           </>
         )}
         
-        {/* Instructional sections - always visible */}
+        {/* Instructional sections (Board Setup) - Decoupled Rendering */}
         {boardSetupRules.map((rule, i) => {
-            const mapping = boardRuleMappings[rule.title || ''];
-            if (!mapping) return null;
+            // Check if rule provides new visual properties, fallback to title/content if needed
+            // The 'addBoardComponent' rule type injects these visual props.
+            const icon = rule.icon || '📍';
+            const title = rule.title || 'Board Setup';
+            const locationTitle = rule.locationTitle || '';
+            const locationSubtitle = rule.locationSubtitle || '';
+            
+            // If it's a legacy rule without the new structure, we skip it here 
+            // (or handle it with a fallback if desired, though current refactor aims to remove legacy mapping).
+            // For now, we render it using the new props if present.
 
             return (
                 <div key={`board-rule-${i}`} className={cls("p-4 md:p-6 border-t", cardBorder)}>
                     <div className="flex justify-between items-center">
-                        <h4 className={`font-bold text-lg ${textColor}`}>{mapping.tokenName}</h4>
+                        <div className="flex items-center gap-2">
+                             <span className="text-xl" role="img" aria-hidden="true">{icon}</span>
+                             <h4 className={`font-bold text-lg ${textColor}`}>{title}</h4>
+                        </div>
                         <div className={`text-right text-sm ${modsText} ml-4`}>
-                            <div>{mapping.locationLine1}</div>
-                            <div className="text-xs">{mapping.locationLine2}</div>
+                            {locationTitle && <div>{locationTitle}</div>}
+                            {locationSubtitle && <div className="text-xs">{locationSubtitle}</div>}
                         </div>
                     </div>
                 </div>
