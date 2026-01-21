@@ -167,7 +167,7 @@ describe('rules/jobs', () => {
                     "content": "Harken",
                     "type": "strong",
                   },
-                  " is unavailable. Draw from ",
+                  " unavailable. Draw from ",
                   {
                     "content": "Amnon Duul and Patience",
                     "type": "strong",

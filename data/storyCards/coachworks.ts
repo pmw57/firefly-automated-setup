@@ -21,7 +21,13 @@ export const COACHWORKS_STORIES: StoryCardDef[] = [
         source: 'story', 
         sourceName: "Down and Out"
       },
-      { type: 'setJobMode', mode: 'shared_hand', source: 'story', sourceName: "Down and Out" },
+      { 
+          type: 'setJobMode', 
+          mode: 'shared_hand', 
+          jobDescription: "Place one Job Card from each Contact Deck listed below face up on top of their Contact's deck.",
+          source: 'story', 
+          sourceName: "Down and Out" 
+      },
       {
         type: 'addSpecialRule',
         category: 'jobs',

@@ -1,3 +1,4 @@
+
 import { SpecialRule, StructuredContent } from './core';
 
 export type JobMode = 
@@ -49,7 +50,7 @@ export interface BaseRule {
   sourceName: string;
 }
 
-export interface SetJobModeRule extends BaseRule { type: 'setJobMode'; mode: JobMode; }
+export interface SetJobModeRule extends BaseRule { type: 'setJobMode'; mode: JobMode; jobDescription?: string; }
 export interface SetJobContactsRule extends BaseRule { type: 'setJobContacts'; contacts: string[]; }
 export interface ForbidContactRule extends BaseRule { type: 'forbidContact'; contact: string; }
 export interface AllowContactsRule extends BaseRule { type: 'allowContacts'; contacts: string[]; }
