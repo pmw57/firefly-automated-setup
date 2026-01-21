@@ -1,3 +1,4 @@
+
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getResourceDetails } from '../../../utils/resources';
@@ -74,7 +75,7 @@ describe('rules/resources', () => {
     it.concurrent('applies "disable" effects for fuel and parts from a story', () => {
       const storyTitle = "Running On Empty";
       const state = getGameStateWithConfig({ 
-        setupCardId: SETUP_CARD_IDS.STANDARD,
+        setupCardId: SETUP_CARD_IDS.STANDARD, 
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       });
       const details = getResourceDetails(state);
@@ -152,13 +153,14 @@ describe('rules/resources', () => {
               selectedStoryCardIndex: storyIndex
           };
           const details = getResourceDetails(state);
-          const specialRules = [...details.infoRules, ...details.overrideRules];
+          
           expect(details.smugglersBluesVariantAvailable).toBe(false);
-          const rule = specialRules.find(r => r.title === "A Lucrative Opportunity");
-          expect(rule).not.toBeUndefined();
-          const contentString = JSON.stringify(rule?.content);
-          expect(contentString).toContain("3 Contraband");
-          expect(contentString).toContain("Alliance Space");
+          
+          const rule = details.boardSetupRules.find(r => r.title === "A Lucrative Opportunity");
+          expect(rule).toBeDefined();
+          
+          expect(rule?.locationTitle).toContain("3 on each Planetary Sector");
+          expect(rule?.locationSubtitle).toContain("In Alliance Space");
       });
     });
   });

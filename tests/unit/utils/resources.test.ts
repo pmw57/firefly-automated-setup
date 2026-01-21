@@ -75,7 +75,7 @@ describe('rules/resources', () => {
     it.concurrent('applies "disable" effects for fuel and parts from a story', () => {
       const storyTitle = "Running On Empty";
       const state = getGameStateWithConfig({ 
-        setupCardId: SETUP_CARD_IDS.STANDARD,
+        setupCardId: SETUP_CARD_IDS.STANDARD, 
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
       });
       const details = getResourceDetails(state);
@@ -134,7 +134,14 @@ describe('rules/resources', () => {
 
     describe("for Smuggler's Blues", () => {
       const storyTitle = "Smuggler's Blues";
-      const storyIndex = STORY_CARDS.findIndex(c => c.title === storyTitle);
+      const storyCard = STORY_CARDS.find(c => c.title === storyTitle);
+      
+      // Safety check to ensure test data is loaded
+      if (!storyCard) {
+        throw new Error("Smuggler's Blues story card not found in test environment");
+      }
+      
+      const storyIndex = STORY_CARDS.indexOf(storyCard);
   
       it.concurrent('makes variant available when Blue Sun and Kalidasa are active', () => {
           const state: GameState = { 
@@ -153,7 +160,7 @@ describe('rules/resources', () => {
               selectedStoryCardIndex: storyIndex
           };
           const details = getResourceDetails(state);
-          const boardRules = details.boardSetupRules; // Look in boardSetupRules!
+          const boardRules = details.boardSetupRules; 
           
           expect(details.smugglersBluesVariantAvailable).toBe(false);
           

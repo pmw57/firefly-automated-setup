@@ -144,8 +144,8 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
   
   // Create deep copy of board component rules to avoid mutating the original rule objects in state/data
   const addBoardComponentRules = allRules
-      .filter(r => r.type === 'addBoardComponent')
-      .map(r => ({ ...(r as AddBoardComponentRule) }));
+      .filter((r): r is AddBoardComponentRule => r.type === 'addBoardComponent')
+      .map(r => ({ ...r }));
 
   addBoardComponentRules.forEach(rule => {
     // Dynamic logic for Smuggler's Blues variant
@@ -186,7 +186,7 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
       icon: rule.icon,
       locationTitle: locationTitle,
       locationSubtitle: locationSubtitle
-    });
+    } as SpecialRule & { icon?: string; locationTitle?: string; locationSubtitle?: string });
   });
 
   allRules.forEach(rule => {
