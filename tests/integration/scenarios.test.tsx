@@ -1,3 +1,4 @@
+
 /** @vitest-environment jsdom */
 import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest';
 import { screen, within } from '@testing-library/react';
@@ -151,7 +152,10 @@ describe('Integration Scenarios', () => {
     localStorage.setItem('firefly_gameState_v3', JSON.stringify(initialState));
     render(<App />);
 
-    const ruleBlock = await screen.findByRole('region', { name: "Story Override A Lucrative Opportunity" });
-    expect(ruleBlock).toHaveTextContent(/Place 3 Contraband on each planetary sector in Alliance Space/i);
+    // Since the rule is now an AddBoardComponentRule, it is rendered as a standard block, 
+    // not an override region with accessibility roles. We search by the heading text instead.
+    expect(await screen.findByRole('heading', { name: /A Lucrative Opportunity/i })).toBeInTheDocument();
+    expect(await screen.findByText(/3 on each Planetary Sector/i)).toBeInTheDocument();
+    expect(await screen.findByText(/In Alliance Space/i)).toBeInTheDocument();
   });
 });

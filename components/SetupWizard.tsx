@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useGameState } from '../hooks/useGameState';
@@ -18,6 +19,7 @@ import { OverrideModal } from './OverrideModal';
 import { useWizardNavigation } from '../hooks/useWizardNavigation';
 import { useSwipeNavigation } from '../hooks/useSwipeNavigation';
 import { useOverrideLogic } from '../hooks/useOverrideLogic';
+import { getResolvedRules, hasRuleFlag } from '../utils/selectors/rules';
 
 interface SetupWizardProps {
   isDevMode: boolean;
@@ -51,12 +53,17 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   
   // --- Navigation Button State ---
   const currentStep = flow[currentStepIndex];
+  
+  // Determine if specific logic flags are active
+  const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
+  const requiresSetupConfirmation = useMemo(() => hasRuleFlag(allRules, 'requiresSetupConfirmation'), [allRules]);
+
   const isNextDisabled = useMemo(() => {
       if (!currentStep || isNavigating) return true;
       if (currentStep.type === 'final' || currentStepIndex >= flow.length - 1) return true;
       
-      // Special logic for River's Run
-      if (currentStep.id === STEP_IDS.C3 && getActiveStoryCard(gameState)?.title === "River's Run 1v1") {
+      // Generic logic for setup confirmation (e.g. River's Run)
+      if (currentStep.id === STEP_IDS.C3 && requiresSetupConfirmation) {
         // Disable ONLY IF the draft has been rolled AND the setup hasn't been confirmed yet.
         return !!gameState.draft.state && !gameState.riversRun_setupConfirmed;
       }
@@ -70,7 +77,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
           }
       }
       return false;
-  }, [currentStep, currentStepIndex, flow.length, gameState, isNavigating]);
+  }, [currentStep, currentStepIndex, flow.length, gameState, isNavigating, requiresSetupConfirmation]);
 
   const isPrevDisabled = useMemo(() => {
       return currentStepIndex <= 0 || isNavigating;

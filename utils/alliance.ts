@@ -1,3 +1,4 @@
+
 import { 
     GameState, 
     AllianceReaverDetails, 
@@ -6,7 +7,7 @@ import {
     SetReaverPlacementRule,
     RuleSourceType
 } from '../types/index';
-import { getResolvedRules, hasRuleFlag } from './selectors/rules';
+import { getResolvedRules } from './selectors/rules';
 
 // Maps the broader RuleSourceType to the more specific source type expected by the
 // SpecialRuleBlock component. This ensures type safety by explicitly handling sources
@@ -38,10 +39,6 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
   // Note: Specific rule text for 'awful_crowded' and 'no_alerts' modes is now
   // handled via explicit `addSpecialRule` entries in data/setupCards.ts.
   // This block processes any other generic rules added by stories/expansions.
-  
-  if (hasRuleFlag(allRules, 'placeMixedAlertTokens')) {
-    specialRules.push({ source: 'story', title: 'Verse-Wide Tension', content: ['Place ', { type: 'strong', content: '3 Alliance Alert Tokens' }, " in the 'Verse:", { type: 'list', items: [['1 in ', { type: 'strong', content: 'Alliance Space' }], ['1 in ', { type: 'strong', content: 'Border Space' }], ['1 in ', { type: 'strong', content: 'Rim Space' }]] }] });
-  }
 
   allRules.forEach(rule => {
       if (rule.type === 'addSpecialRule' && rule.category === 'allianceReaver') {
@@ -72,7 +69,6 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
 
   // --- Process Reaver Cutter placement ---
   const reaverPlacementRule = allRules.find(r => r.type === 'setReaverPlacement') as SetReaverPlacementRule | undefined;
-  const hasBlueSunReavers = hasRuleFlag(allRules, 'blueSunReaverPlacement');
   
   let finalReaverPlacement: string;
   let reaverOverrideSource: RuleSourceType = 'expansion';
@@ -82,9 +78,6 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
       reaverOverrideSource = reaverPlacementRule.source;
       reaverOverrideTitle = 'Special Reaver Placement';
       finalReaverPlacement = reaverPlacementRule.placement;
-  } else if (hasBlueSunReavers) {
-      reaverOverrideTitle = 'Blue Sun Reavers';
-      finalReaverPlacement = "Place 3 Cutters in the border sectors closest to Miranda.";
   } else {
       finalReaverPlacement = standardReaverPlacement;
   }

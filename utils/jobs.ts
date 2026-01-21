@@ -17,7 +17,7 @@ import {
     SetJobStepContentRule,
     JobContactListConfig
 } from '../types/index';
-import { getResolvedRules, hasRuleFlag } from './selectors/rules';
+import { getResolvedRules } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
@@ -29,18 +29,34 @@ const _getJobRulesMessages = (allRules: SetupRule[]): JobSetupMessage[] => {
                 messages.push({ source: rule.source as SpecialRule['source'], ...rule.rule });
             }
         }
+        
+        // Handle generic Job Deck modifications
+        if (rule.type === 'setJobDeck') {
+            const title = 'Deck Modification';
+            let content: string = '';
+            
+            if (rule.operation === 'remove') {
+                content = `Remove all ${rule.jobType} jobs from the Contact Decks.`;
+            } else if (rule.operation === 'keep_only') {
+                content = `Remove all non-${rule.jobType} jobs from the Contact Decks.`;
+            }
+            
+            if (content) {
+                messages.push({
+                    source: rule.source as SpecialRule['source'],
+                    title,
+                    content: [content]
+                });
+            }
+        }
     });
     return messages;
 };
 
 const _getInitialContacts = (allRules: SetupRule[], gameState: GameState): string[] => {
     const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
-    if (jobContactsRule) {
-        return jobContactsRule.contacts;
-    }
     
-    // Standard setup only uses the five core contacts for the initial job draw.
-    const availableContacts = [
+    const coreContacts = [
         CONTACT_NAMES.HARKEN, 
         CONTACT_NAMES.BADGER, 
         CONTACT_NAMES.AMNON_DUUL, 
@@ -48,18 +64,27 @@ const _getInitialContacts = (allRules: SetupRule[], gameState: GameState): strin
         CONTACT_NAMES.NISKA
     ];
 
-    if (hasRuleFlag(allRules, 'useAllContactsForJobDraft')) {
-        if (gameState.expansions.kalidasa) {
-            availableContacts.push(
-                CONTACT_NAMES.LORD_HARROW,
-                CONTACT_NAMES.MR_UNIVERSE,
-                CONTACT_NAMES.FANTY_MINGO,
-                CONTACT_NAMES.MAGISTRATE_HIGGINS
-            );
+    if (jobContactsRule) {
+        if (jobContactsRule.preset === 'all') {
+            const allContacts = [...coreContacts];
+            // Add Expansion Contacts
+            if (gameState.expansions.kalidasa) {
+                allContacts.push(
+                    CONTACT_NAMES.LORD_HARROW,
+                    CONTACT_NAMES.MR_UNIVERSE,
+                    CONTACT_NAMES.FANTY_MINGO,
+                    CONTACT_NAMES.MAGISTRATE_HIGGINS
+                );
+            }
+            // Future expansions can be added here
+            return allContacts;
+        } else if (jobContactsRule.preset === 'custom' || jobContactsRule.contacts?.length > 0) {
+            return jobContactsRule.contacts;
         }
     }
     
-    return availableContacts;
+    // Default to core contacts
+    return coreContacts;
 };
 
 const _filterContacts = (contacts: string[], allRules: SetupRule[]): string[] => {
@@ -162,7 +187,9 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         // Generate contact restriction warnings if needed
         if (jobStepPhase !== 'deck_setup') {
             const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
-            if (jobContactsRule) {
+            // The compiler may believe 'all' is not in preset type, causing an overlap error. 
+            // We cast to string to safely perform the check.
+            if (jobContactsRule && (jobContactsRule.preset as string) !== 'all') {
                 // Find all forbidden contacts that might cause a conflict with the initial contact list
                 const forbiddenRules = allRules.filter(r => r.type === 'forbidContact') as ForbidContactRule[];
                 const conflicts = forbiddenRules
@@ -191,7 +218,9 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
                             }
                         ]
                     });
-                } else {
+                } else if (jobContactsRule.preset !== 'all') {
+                    // Only show "Limited Contacts" message if we aren't using "all" mode,
+                    // as "all" implies the story specifically wants to expand options, not limit them.
                     messages.push({ 
                         source: 'setupCard', 
                         title: 'Limited Contacts', 
@@ -219,14 +248,18 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             const isSingleContactChoice = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
             const actualDrawCount = isSingleContactChoice ? 1 : contacts.length;
             const baseKeepCount = 3;
-            const finalKeepCount = Math.min(baseKeepCount, actualDrawCount);
+            let finalKeepCount = Math.min(baseKeepCount, actualDrawCount);
             
             const isSharedHand = jobDrawMode === 'shared_hand';
             const isDraftChoice = jobDrawMode === 'draft_choice';
             
+            if (isDraftChoice) {
+                 finalKeepCount = 3;
+            }
+            
             let description = '';
 
-            // Use description from data if provided, otherwise fallback to standard default text
+            // Use description from data if provided, otherwise fallback to defaults
             if (jobModeRule?.jobDescription) {
                  description = jobModeRule.jobDescription;
             } else {

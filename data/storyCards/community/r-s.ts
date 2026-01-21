@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../../types';
 import { CONTACT_NAMES, STEP_IDS } from '../../ids';
 
@@ -45,6 +46,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     rules: [
       { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "River's Run 1v1" },
       { type: 'setPlayerBadges', badges: { 0: 'Assigned Serenity', 1: 'Assigned Bounty Hunter' }, source: 'story', sourceName: "River's Run 1v1" },
+      { type: 'addFlag', flag: 'requiresSetupConfirmation', source: 'story', sourceName: "River's Run 1v1" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
@@ -362,6 +364,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     requiredExpansion: "community",
     tags: ['community', 'pvp'],
     rules: [
+      { type: 'setJobDeck', operation: 'remove', jobType: 'piracy', source: 'story', sourceName: "Shiny New Year 25 - Protect Or Plunder" },
       {
         type: 'addSpecialRule',
         category: 'jobs',

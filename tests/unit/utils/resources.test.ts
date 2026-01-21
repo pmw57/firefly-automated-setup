@@ -1,3 +1,4 @@
+
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getResourceDetails } from '../../../utils/resources';
@@ -152,13 +153,16 @@ describe('rules/resources', () => {
               selectedStoryCardIndex: storyIndex
           };
           const details = getResourceDetails(state);
-          const specialRules = [...details.infoRules, ...details.overrideRules];
+          const boardRules = details.boardSetupRules; // Look in boardSetupRules!
+          
           expect(details.smugglersBluesVariantAvailable).toBe(false);
-          const rule = specialRules.find(r => r.title === "A Lucrative Opportunity");
-          expect(rule).not.toBeUndefined();
-          const contentString = JSON.stringify(rule?.content);
-          expect(contentString).toContain("3 Contraband");
-          expect(contentString).toContain("Alliance Space");
+          
+          const rule = boardRules.find(r => r.title === "A Lucrative Opportunity");
+          expect(rule).toBeDefined();
+          
+          // Verify content generated from distribution props
+          expect(rule?.locationTitle).toContain("3 on each Planetary Sector");
+          expect(rule?.locationSubtitle).toContain("In Alliance Space");
       });
     });
   });

@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../types';
 import { CONTACT_NAMES } from '../ids';
 
@@ -9,15 +10,21 @@ export const CRIME_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/3464668/firefly-the-game-crime-and-punishment",
     setupDescription: "Place 3 Contraband on each Planetary Sector in Alliance Space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead. Place a $2000 Bill under Amnon Duul, Patience, Badger, and Niska's Contact Decks. Players do not receive Starting Jobs and begin at Londinium. Start with one random Alliance Alert Card in play.",
     tags: ['smugglers_run'],
-    rules: [
-      { type: "addFlag", flag: "smugglersBluesSetup", source: 'story', sourceName: "Smuggler's Blues" },
+    challengeOptions: [
       {
-        type: 'addSpecialRule',
-        category: 'resources',
-        rule: {
-          title: "A Lucrative Opportunity",
-          content: ["Place 3 Contraband on each planetary sector in Alliance Space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead."]
-        },
+        id: 'smugglers_blues_rim_variant',
+        label: 'Use "The Rim\'s The Thing" Variant (Place 2 Contraband in Rim Space instead)'
+      }
+    ],
+    rules: [
+      {
+        type: 'addBoardComponent',
+        component: 'contraband',
+        count: 3,
+        locations: ['Alliance Space Planets'], // Default fallback text
+        title: 'A Lucrative Opportunity',
+        distribution: 'region',
+        targetRegion: 'Alliance Space',
         source: 'story', 
         sourceName: "Smuggler's Blues"
       },

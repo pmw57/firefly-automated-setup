@@ -1,3 +1,4 @@
+
 import { SetupCardDef, SetupCardStep, SetupRule } from '../types/index';
 import { STEP_IDS, SETUP_CARD_IDS, CONTACT_NAMES } from './ids';
 
@@ -465,7 +466,8 @@ export const SETUP_CARDS: SetupCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1335810/solitaire-firefly-some-new-story-cards-for-fans-of",
     rules: createRules("Solitaire Firefly", [
       { type: 'addFlag', flag: 'isSolitaireFirefly' },
-      { type: 'addFlag', flag: 'removePiracyJobs' },
+      // Decoupled: Replaced 'removePiracyJobs' flag with explicit SetJobDeckRule
+      { type: 'setJobDeck', operation: 'remove', jobType: 'piracy' },
       { type: 'addFlag', flag: 'soloCrewDraft' },
       { type: 'addFlag', flag: 'soloGameTimer' },
       {

@@ -1,3 +1,4 @@
+
 import { GameState, SetupRule, Step, AddSpecialRule, AddFlagRule, StepOverrides } from '../types/index';
 import { STEP_IDS } from '../data/ids';
 import { getNavDeckDetails } from './nav';
@@ -39,6 +40,7 @@ const RULE_TYPE_TO_STEP_ID: { [key in SetupRule['type']]?: string | ((rule: Setu
   forbidContact: STEP_IDS.C6,
   allowContacts: STEP_IDS.C6,
   primeContacts: STEP_IDS.C6,
+  setJobDeck: STEP_IDS.C6, // New rule mapping
   setNavMode: STEP_IDS.C1,
   setPrimeMode: STEP_IDS.C_PRIME,
   modifyPrime: STEP_IDS.C_PRIME,

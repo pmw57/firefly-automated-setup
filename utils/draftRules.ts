@@ -1,3 +1,4 @@
+
 import { 
     GameState, 
     Step,
@@ -80,7 +81,10 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const havenPlacementRules = specialRules.find(r => (r.source === 'story' || r.source === 'setupCard') && r.flags?.includes('isHavenPlacement')) || null;
     const isHavenDraft = !!havenPlacementRules;
     const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
-    const isHeroesAndMisfits = hasRuleFlag(allRules, 'isHeroesAndMisfits');
+    
+    // Check if the "Heroes & Misfits: Further Adventures" rule exists to detect the story context,
+    // rather than using a hardcoded flag.
+    const isHeroesAndMisfitsActive = allRules.some(r => r.type === 'addSpecialRule' && r.rule.title === 'Heroes & Misfits: Further Adventures');
 
     const shipPlacementRule = allRules.find(r => r.type === 'setShipPlacement') as (SetShipPlacementRule | undefined);
     
@@ -112,7 +116,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const draftModeRule = allRules.find(r => r.type === 'setDraftMode') as SetDraftModeRule | undefined;
     const isBrowncoatDraft = draftModeRule?.mode === 'browncoat' || overrides.draftMode === 'browncoat';
 
-    const showBrowncoatHeroesWarning = isBrowncoatDraft && isHeroesAndMisfits && isHeroesCustomSetup;
+    const showBrowncoatHeroesWarning = isBrowncoatDraft && isHeroesAndMisfitsActive && isHeroesCustomSetup;
     
     let resolvedHavenDraft = isHavenDraft;
     let conflictMessage: import('../types').StructuredContent | null = null;

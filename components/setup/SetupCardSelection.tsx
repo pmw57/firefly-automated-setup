@@ -1,37 +1,35 @@
+
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { SETUP_CARD_IDS } from '../../data/ids';
 import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
-// FIX: Import `useGameDispatch` to correctly dispatch actions to the game state reducer.
 import { useGameDispatch } from '../../hooks/useGameDispatch';
-import { getActiveStoryCard, getAvailableSetupCards, getSetupCardById } from '../../utils/selectors/story';
+import { getAvailableSetupCards, getSetupCardById } from '../../utils/selectors/story';
 import { FlyingSoloBanner } from './FlyingSoloBanner';
 import { SetupCardList } from './SetupCardList';
 import { getSetupCardSelectionInfo } from '../../utils/selectors/ui';
 import { calculateSetupFlow } from '../../utils/flow';
 import { OverrideNotificationBlock } from '../SpecialRuleBlock';
-import { getResolvedRules } from '../../utils/selectors/rules';
+import { getResolvedRules, hasRuleFlag } from '../../utils/selectors/rules';
 import { AddSpecialRule } from '../../types';
 
 interface SetupCardSelectionProps {
 }
 
 export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
-  // FIX: Destructure only the relevant state properties from `useGameState`.
   const { state: gameState } = useGameState();
-  // FIX: Get the dispatch function and action creators from `useGameDispatch`.
   const { setSetupCard, toggleFlyingSolo, riversRunConfirmSetup } = useGameDispatch();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
-
   const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
   const setupSelectionRules = useMemo(() => {
     return allRules
       .filter((r): r is AddSpecialRule => r.type === 'addSpecialRule' && r.category === 'setup_selection')
       .map(r => ({ ...r.rule, source: r.source as 'story' | 'setupCard' | 'expansion' | 'warning' | 'info' }));
   }, [allRules]);
+  
+  const requiresSetupConfirmation = useMemo(() => hasRuleFlag(allRules, 'requiresSetupConfirmation'), [allRules]);
   
   const totalParts = useMemo(() => calculateSetupFlow(gameState).filter(s => s.type === 'setup').length, [gameState]);
 
@@ -66,12 +64,12 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
     }
   }, [availableSetups, isFlyingSoloActive, gameState.setupCardId, gameState.secondarySetupId, handleSetupCardSelect]);
   
-  // Effect for River's Run 1v1 confirmation
+  // Generic effect for auto-confirming setup when required by specific stories (like River's Run)
   useEffect(() => {
-    if (activeStoryCard?.title === "River's Run 1v1") {
+    if (requiresSetupConfirmation) {
       riversRunConfirmSetup();
     }
-  }, [activeStoryCard, riversRunConfirmSetup]);
+  }, [requiresSetupConfirmation, riversRunConfirmSetup]);
 
 
   const containerBg = isDark ? 'bg-black/60 backdrop-blur-sm' : 'bg-[#faf8ef]/80 backdrop-blur-sm';
