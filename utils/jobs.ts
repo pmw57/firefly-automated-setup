@@ -64,18 +64,18 @@ const _getInitialContacts = (allRules: SetupRule[], gameState: GameState): strin
 
 const _filterContacts = (contacts: string[], allRules: SetupRule[]): string[] => {
     let filtered = [...contacts];
-    const forbiddenContactRule = allRules.find(r => r.type === 'forbidContact') as ForbidContactRule | undefined;
-    const allowedContactsRule = allRules.find(r => r.type === 'allowContacts') as AllowContactsRule | undefined;
 
-    if (forbiddenContactRule?.contact) {
-        filtered = filtered.filter(c => c !== forbiddenContactRule.contact);
+    // Identify all contacts forbidden by any active rule
+    const forbiddenRules = allRules.filter(r => r.type === 'forbidContact') as ForbidContactRule[];
+    const forbiddenContacts = new Set(forbiddenRules.map(r => r.contact));
+    
+    if (forbiddenContacts.size > 0) {
+        filtered = filtered.filter(c => !forbiddenContacts.has(c));
     }
+
+    const allowedContactsRule = allRules.find(r => r.type === 'allowContacts') as AllowContactsRule | undefined;
     if (allowedContactsRule?.contacts?.length) {
         filtered = allowedContactsRule.contacts;
-    }
-    
-    if (hasRuleFlag(allRules, 'useAllContactsForJobDraft')) {
-        filtered = filtered.filter(c => c !== CONTACT_NAMES.MR_UNIVERSE);
     }
     
     return filtered;
@@ -163,11 +163,16 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         if (jobStepPhase !== 'deck_setup') {
             const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
             if (jobContactsRule) {
-                const forbiddenContact = (allRules.find(r => r.type === 'forbidContact') as ForbidContactRule | undefined)?.contact;
-                const isConflict = forbiddenContact && initialContacts.includes(forbiddenContact);
+                // Find all forbidden contacts that might cause a conflict with the initial contact list
+                const forbiddenRules = allRules.filter(r => r.type === 'forbidContact') as ForbidContactRule[];
+                const conflicts = forbiddenRules
+                    .map(r => r.contact)
+                    .filter(c => initialContacts.includes(c));
                 
-                if (isConflict) {
-                    const remainingContacts = initialContacts.filter(c => c !== forbiddenContact);
+                if (conflicts.length > 0) {
+                    const remainingContacts = initialContacts.filter(c => !conflicts.includes(c));
+                    const conflictText = conflicts.length === 1 ? conflicts[0] : conflicts.join(', ');
+                    
                     messages.push({ 
                         source: 'setupCard', 
                         title: 'Setup Card Override', 
@@ -178,8 +183,8 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
                                 type: 'warning-box', 
                                 content: [
                                     `Story Card Conflict: `, 
-                                    { type: 'strong', content: forbiddenContact }, 
-                                    ` is unavailable. Draw from `,
+                                    { type: 'strong', content: conflictText }, 
+                                    ` unavailable. Draw from `,
                                     { type: 'strong', content: remainingContacts.join(' and ') },
                                     ` only.`
                                 ] 
@@ -200,7 +205,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         }
         
         // Filter messages by phase
-        // (Existing logic: some rules are phase_deck_setup only)
         const relevantMessages = messages.filter(msg => {
             const rulePhase = msg.flags?.find(f => f.startsWith('phase_'));
             if (rulePhase) {
@@ -218,10 +222,13 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             const finalKeepCount = Math.min(baseKeepCount, actualDrawCount);
             
             const isSharedHand = jobDrawMode === 'shared_hand';
+            const isDraftChoice = jobDrawMode === 'draft_choice';
             
             let description = '';
-            if (isSharedHand) {
-                 description = "Place one Job Card from each Contact Deck listed below face up on top of their Contact's deck.";
+
+            // Use description from data if provided, otherwise fallback to standard default text
+            if (jobModeRule?.jobDescription) {
+                 description = jobModeRule.jobDescription;
             } else {
                  const keepText = finalKeepCount >= actualDrawCount && actualDrawCount > 0
                     ? 'any of the Job Cards drawn.'
@@ -238,7 +245,7 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             const isOverridden = JSON.stringify(contacts.slice().sort()) !== JSON.stringify(standardContacts.slice().sort());
 
             contactList = {
-                title: isSharedHand ? 'Shared Hand Draw' : 'Starting Job Draw',
+                title: isSharedHand ? 'Shared Hand Draw' : isDraftChoice ? 'Draft Starting Jobs' : 'Starting Job Draw',
                 description,
                 contacts,
                 cardsToDraw: finalKeepCount,
@@ -274,10 +281,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
               { type: 'paragraph', content: ['Instead of taking Starting Jobs, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
               { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
             ];
-            
-            // Add a message for visibility in the info/override list too if preferred, 
-            // but we have a dedicated UI block for it now.
-            // We'll skip adding a duplicate message here since `primeInstruction` is returned.
         }
     }
 

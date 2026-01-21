@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../types';
 import { CONTACT_NAMES } from '../ids';
 
@@ -11,8 +12,15 @@ export const TENTH_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/image/8103874/sjliver",
     tags: ['character'],
     rules: [
-      { type: 'setJobMode', mode: 'draft_choice', source: 'story', sourceName: "A Friend In Every Port" },
+      { 
+          type: 'setJobMode', 
+          mode: 'draft_choice', 
+          jobDescription: "Starting with the last player to choose a Leader, choose 3 different Contacts below. Draw 1 Job Card from each.",
+          source: 'story', 
+          sourceName: "A Friend In Every Port" 
+      },
       { type: 'addFlag', flag: 'useAllContactsForJobDraft', source: 'story', sourceName: "A Friend In Every Port" },
+      { type: 'forbidContact', contact: CONTACT_NAMES.MR_UNIVERSE, source: 'story', sourceName: "A Friend In Every Port" },
       { type: 'modifyPrime', multiplier: 2, source: 'story', sourceName: "A Friend In Every Port" },
       {
         type: 'addSpecialRule',

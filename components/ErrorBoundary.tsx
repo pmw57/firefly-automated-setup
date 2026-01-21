@@ -13,7 +13,7 @@ interface ErrorBoundaryState {
 /**
  * ErrorBoundary class component to catch rendering errors in its children.
  */
-// This class extends React.Component to become a stateful error boundary.
+// This class extends Component to become a stateful error boundary.
 // As a class component, it can use lifecycle methods like `getDerivedStateFromError`
 // and `componentDidCatch` to trap rendering errors in its children.
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
