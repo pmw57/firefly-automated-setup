@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../../types';
 
 export const STORIES_H_L: StoryCardDef[] = [
@@ -25,6 +26,9 @@ export const STORIES_H_L: StoryCardDef[] = [
         count: 8,
         locations: ['Londinium', 'Bernadette', 'Liann Jiun', 'Sihnon', 'Gonghe', 'Bellerophon'],
         title: 'Mass Contraband Stash',
+        icon: '💰',
+        locationTitle: '8 on each of 6 sectors:',
+        locationSubtitle: 'Londinium, Bernadette, Liann Jiun, Sihnon, Gonghe, Bellerophon',
         source: 'story', 
         sourceName: "Honorably Dishonorable Men"
       },

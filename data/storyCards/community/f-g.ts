@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../../types';
 
 export const STORIES_F_G: StoryCardDef[] = [
@@ -69,7 +70,6 @@ export const STORIES_F_G: StoryCardDef[] = [
     requiredExpansion: "community",
     tags: ['community', 'character'],
     rules: [
-      { type: 'addFlag', flag: 'isGoingLegit', source: 'story', sourceName: "Going Legit" },
       {
         type: 'addSpecialRule',
         category: 'draft',
@@ -94,7 +94,7 @@ export const STORIES_F_G: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'draft',
+        category: 'draft_panel',
         rule: {
             title: 'For Sale Pile',
             content: ["Leave unused ships out of the box as a \"For Sale\" pile."],

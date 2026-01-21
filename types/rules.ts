@@ -51,7 +51,11 @@ export interface BaseRule {
 }
 
 export interface SetJobModeRule extends BaseRule { type: 'setJobMode'; mode: JobMode; jobDescription?: string; }
-export interface SetJobContactsRule extends BaseRule { type: 'setJobContacts'; contacts: string[]; }
+export interface SetJobContactsRule extends BaseRule { 
+    type: 'setJobContacts'; 
+    contacts: string[]; 
+    preset?: 'core' | 'all' | 'custom';
+}
 export interface ForbidContactRule extends BaseRule { type: 'forbidContact'; contact: string; }
 export interface AllowContactsRule extends BaseRule { type: 'allowContacts'; contacts: string[]; }
 export interface PrimeContactsRule extends BaseRule { type: 'primeContacts'; }
@@ -118,15 +122,29 @@ export interface SetJobStepContentRule extends BaseRule {
 
 export interface AddBoardComponentRule extends BaseRule {
   type: 'addBoardComponent';
-  component: 'contraband';
+  component: 'contraband' | 'alert_token';
   count: number;
-  locations: string[];
+  locations: string[]; // Legacy support or explicit list
   title: string;
+  // Distribution Logic
+  distribution?: 'fixed' | 'all_supply_planets' | 'region';
+  targetRegion?: string;
+  excludeLocations?: string[];
+  // Visual properties for UI decoupling
+  icon?: string; 
+  locationTitle?: string;
+  locationSubtitle?: string;
 }
 
 export interface SetPlayerBadgesRule extends BaseRule {
     type: 'setPlayerBadges';
     badges: Record<number, string>; // Player Index -> Badge Text
+}
+
+export interface SetJobDeckRule extends BaseRule {
+    type: 'setJobDeck';
+    operation: 'remove' | 'keep_only';
+    jobType: 'piracy' | 'legal' | 'immoral';
 }
 
 export type SetupRule = 
@@ -151,4 +169,5 @@ export type SetupRule =
   | SetComponentRule
   | SetJobStepContentRule
   | AddBoardComponentRule
-  | SetPlayerBadgesRule;
+  | SetPlayerBadgesRule
+  | SetJobDeckRule;

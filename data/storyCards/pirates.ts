@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../types';
 
 export const PIRATES_STORIES: StoryCardDef[] = [
@@ -7,7 +8,7 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     intro: "Wealth can be measured in many ways. In some parts of the 'Verse Alliance credits ain't worth the paper they're printed on. For those regions, a more practical measure of wealth is required. Hoard a mountain of trade goods and spare parts, through any means necessary. Break contracts, steal from your rivals or just pick the bones. Anything goes!",
     requiredExpansion: "pirates",
     sourceUrl: "https://boardgamegeek.com/image/2785046/gerryrailbaron",
-    setupDescription: "Choose Havens. Havens must be in Border Space. After taking starting Jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks.",
+    setupDescription: "Choose Havens. Havens must in in Border Space. After taking starting Jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks.",
     tags: ['pvp'],
     rules: [
       {
@@ -32,6 +33,7 @@ export const PIRATES_STORIES: StoryCardDef[] = [
         sourceName: "...Another Man's Treasure"
       },
       { type: 'addFlag', flag: 'hasConditionalHavenPageReference', source: 'story', sourceName: "...Another Man's Treasure" },
+      { type: 'setJobDeck', operation: 'remove', jobType: 'piracy', source: 'story', sourceName: "...Another Man's Treasure" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
@@ -78,6 +80,19 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     requiredExpansion: "pirates",
     sourceUrl: "https://boardgamegeek.com/image/2785051/gerryrailbaron",
     tags: ['pvp'],
-    setupDescription: "After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles."
+    setupDescription: "After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles.",
+    rules: [
+       { type: 'setJobDeck', operation: 'remove', jobType: 'piracy', source: 'story', sourceName: "The Choices We Make" },
+       {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Remove Piracy Jobs',
+          content: ["After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles."]
+        },
+        source: 'story', 
+        sourceName: "The Choices We Make"
+      }
+    ]
   },
 ];

@@ -29,4 +29,8 @@ export interface SpecialRule {
     flags?: string[];
     // Controls where this rule content appears relative to the standard component content
     position?: 'before' | 'after';
+    // Visual properties for board setup components
+    icon?: string;
+    locationTitle?: string;
+    locationSubtitle?: string;
 }

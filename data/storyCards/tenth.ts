@@ -19,7 +19,7 @@ export const TENTH_STORIES: StoryCardDef[] = [
           source: 'story', 
           sourceName: "A Friend In Every Port" 
       },
-      { type: 'addFlag', flag: 'useAllContactsForJobDraft', source: 'story', sourceName: "A Friend In Every Port" },
+      { type: 'setJobContacts', contacts: [], preset: 'all', source: 'story', sourceName: "A Friend In Every Port" },
       { type: 'forbidContact', contact: CONTACT_NAMES.MR_UNIVERSE, source: 'story', sourceName: "A Friend In Every Port" },
       { type: 'modifyPrime', multiplier: 2, source: 'story', sourceName: "A Friend In Every Port" },
       {

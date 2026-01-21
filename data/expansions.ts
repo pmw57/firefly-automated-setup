@@ -58,7 +58,7 @@ export const EXPANSIONS_METADATA: CategorizedExpansionDef[] = [
     page_10th: 36,
     category: 'map',
     rules: createExpansionRules('Blue Sun', [
-      { type: 'addFlag', flag: 'blueSunReaverPlacement' },
+      { type: 'setReaverPlacement', placement: "Place 3 Cutters in the border sectors closest to Miranda." },
       { type: 'addFlag', flag: 'activatesRimDecks' }
     ])
   },

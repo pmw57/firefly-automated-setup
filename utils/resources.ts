@@ -1,3 +1,4 @@
+
 import { 
     GameState, 
     ResourceDetails,
@@ -10,7 +11,8 @@ import {
     TokenStack,
     AddBoardComponentRule
 } from '../types/index';
-import { getResolvedRules, hasRuleFlag } from './selectors/rules';
+import { getResolvedRules } from './selectors/rules';
+import { getActiveStoryCard } from './selectors/story';
 import { RULE_PRIORITY_ORDER } from '../data/constants';
 
 const _findCreditConflict = (resourceRules: ModifyResourceRule[], manualResolutionEnabled: boolean): {
@@ -99,6 +101,7 @@ const _applyResourceRules = (
 export const getResourceDetails = (gameState: GameState, manualSelection?: 'story' | 'setupCard'): ResourceDetails => {
   const allRules = getResolvedRules(gameState);
   const resourceRules = allRules.filter(r => r.type === 'modifyResource') as ModifyResourceRule[];
+  const activeStoryCard = getActiveStoryCard(gameState);
   
   const specialRules: SpecialRule[] = [];
   const boardSetupRules: SpecialRule[] = [];
@@ -133,26 +136,59 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     });
   }
   
-  const addBoardComponentRules = allRules.filter(r => r.type === 'addBoardComponent') as AddBoardComponentRule[];
+  // Smugglers Blues variant check
+  const smugglersBluesVariantAvailable = 
+      !!activeStoryCard?.challengeOptions?.some(o => o.id === 'smugglers_blues_rim_variant') &&
+      gameState.expansions.blue && 
+      gameState.expansions.kalidasa;
+  
+  // Create deep copy of board component rules to avoid mutating the original rule objects in state/data
+  const addBoardComponentRules = allRules
+      .filter(r => r.type === 'addBoardComponent')
+      .map(r => ({ ...(r as AddBoardComponentRule) }));
 
   addBoardComponentRules.forEach(rule => {
+    // Dynamic logic for Smuggler's Blues variant
+    if (rule.sourceName === "Smuggler's Blues" && rule.title === 'A Lucrative Opportunity') {
+        if (gameState.challengeOptions['smugglers_blues_rim_variant']) {
+            rule.count = 2;
+            rule.targetRegion = 'Rim Space';
+            // Clear explicit locations to force dynamic generation based on new region
+            rule.locations = [];
+            // Clear titles to allow dynamic regeneration
+            rule.locationTitle = undefined;
+            rule.locationSubtitle = undefined;
+        }
+    }
+
+    let locationTitle = rule.locationTitle;
+    let locationSubtitle = rule.locationSubtitle;
+
+    // Dynamically generate location text based on distribution properties if not explicitly provided
+    if (!locationTitle && rule.distribution) {
+        if (rule.distribution === 'region' && rule.targetRegion) {
+            locationTitle = `${rule.count} on each Planetary Sector`;
+            locationSubtitle = `In ${rule.targetRegion}`;
+        } else if (rule.distribution === 'all_supply_planets') {
+            locationTitle = `${rule.count} on each Supply Planet`;
+        }
+        
+        if (rule.excludeLocations && rule.excludeLocations.length > 0) {
+            locationSubtitle = (locationSubtitle ? `${locationSubtitle} ` : '') + `(except ${rule.excludeLocations.join(', ')})`;
+        }
+    }
+
     boardSetupRules.push({
       source: rule.source as SpecialRule['source'],
       title: rule.title,
-      content: []
+      content: [],
+      // Pass through new visual properties
+      icon: rule.icon,
+      locationTitle: locationTitle,
+      locationSubtitle: locationSubtitle
     });
   });
 
-  const smugglersBluesSetup = hasRuleFlag(allRules, 'smugglersBluesSetup');
-  const smugglersBluesVariantAvailable = smugglersBluesSetup && gameState.expansions.blue && gameState.expansions.kalidasa;
-
-  // DESIGN NOTE: Preserving Rule Source Duplication
-  // The logic here intentionally avoids de-duplicating 'addSpecialRule' entries
-  // that may seem redundant (e.g., a base rule and an optional variant of it).
-  // The UI is designed to show each rule block with its specific source to give
-  // the user clear context for each setup step. Merging or filtering these rules
-  // here would break that design principle. Duplication in the data layer is
-  // preferred to maintain clarity in the presentation layer.
   allRules.forEach(rule => {
     if (rule.type === 'addSpecialRule' && rule.category === 'resources') {
         if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
@@ -162,10 +198,6 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
                  specialRules.push(newRule);
             }
             
-            // Check if this rule should also be displayed inside the resource card
-            if (newRule.title === 'Alliance Space Lockdown' || newRule.title === "Lonely Smuggler's Stash") {
-              boardSetupRules.push(newRule);
-            }
             if (newRule.title === 'Missing Person' || newRule.flags?.includes('showInResourceList')) {
               componentAdjustmentRules.push(newRule);
             }
@@ -229,7 +261,6 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     isPartsDisabled: resourceRules.some(e => e.resource === 'parts' && e.method === 'disable'),
     creditModifications: finalCreditModifications,
     conflict: creditConflictInfo.conflict,
-    // specialRules kept for legacy test compatibility if needed, but not used in UI
     infoRules,
     overrideRules,
     boardSetupRules,

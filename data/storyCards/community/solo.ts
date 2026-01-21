@@ -1,5 +1,5 @@
+
 import { StoryCardDef } from '../../../types';
-import { CONTACT_NAMES, SETUP_CARD_IDS } from '../../ids';
 
 export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
   {
@@ -272,84 +272,174 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/3399878/jubals-mighty-roar"
   },
   {
-    title: "War Stories",
-    intro: "Remember when Malcolm put Niska's man through an engine? Well, Niska remembers and now he's lookin' to kill some folk.",
+    title: "The Lonely Smuggler's Blues",
+    intro: "Sometimes, it gets lonely in the Black, but it's a good way to dodge the law when you're haulin' goods that might draw the wrong kind of attention.",
+    setupDescription: "Place 3 Contraband on each Supply Planet except Persephone and Space Bazaar. Place a Goal Token on the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Do not deal Starting Jobs. Begin play at Londinium. Start with one random Alliance Alert Card in play.",
+    requiredExpansion: "tenth",
+    additionalRequirements: ["crime"],
     isSolo: true,
-    setupDescription: "Use Standard Setup Up card. No starting cash. use Serenity as your ship. Equip an exapanded crew Quarters from Osiris. Start play with  original Serenity crew members. Niska: Do not prime his deck. No Jobs given. Use 15 Disgruntle tokens as a game timer.",
-    sourceUrl: "https://boardgamegeek.com/thread/3019475/war-stories-and-oh-captain-my-captain-story-cards",
-    requiredExpansion: "community",
-    tags: ['community', 'survival', 'character', 'against_the_black', 'solo'],
+    sourceUrl: "https://boardgamegeek.com/image/8860503/sjliver",
+    tags: ['smugglers_run', 'against_the_black', 'solo'],
     rules: [
-      { type: 'modifyResource', resource: 'credits', method: 'set', value: 0, description: "Story Funds", source: 'story', sourceName: "War Stories" },
-      { type: 'forbidContact', contact: CONTACT_NAMES.NISKA, source: 'story', sourceName: "War Stories" },
+      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
+      { type: 'addFlag', flag: 'lonelySmugglerSetup', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
+      {
+        type: 'addBoardComponent',
+        component: 'contraband',
+        count: 3,
+        locations: ['Supply Planets'],
+        title: "Lonely Smuggler's Stash",
+        icon: '📦',
+        locationTitle: '3 on each Supply Planet',
+        distribution: 'all_supply_planets',
+        excludeLocations: ['Persephone', 'Space Bazaar'],
+        source: 'story', 
+        sourceName: "The Lonely Smuggler's Blues"
+      },
+      { type: 'setShipPlacement', location: 'londinium', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
+      { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
+      { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
       {
         type: 'addSpecialRule',
-        category: 'draft',
+        category: 'draft_placement',
         rule: {
-          title: "Fixed Assignment: Serenity's Crew",
-          content: ["Your assignment for this story is fixed. You do not perform the standard draft. Ship: Serenity Leader: Malcolm Reynolds Ship Upgrade: Equip one Expanded Crew Quarters from the Osiris Supply Deck. Crew: Start play with the 9 original Serenity crew members."]
+          title: "In the Belly of the Beast",
+          content: ["Begin play at Londinium."],
+          position: 'before'
         },
-        source: 'story',
-        sourceName: "War Stories"
+        source: 'story', 
+        sourceName: "The Lonely Smuggler's Blues"
       },
       {
         type: 'addSpecialRule',
-        category: 'resources',
+        category: 'prime',
         rule: {
-          title: 'Game Timer',
-          content: ["Use 15 Disgruntled tokens as the game length timer. Discard one at the start of your turn."]
+          title: 'Alliance High Alert',
+          content: ['Begin the game with one random Alliance Alert Card in play.']
         },
-        source: 'story',
-        sourceName: "War Stories"
+        source: 'story', 
+        sourceName: "The Lonely Smuggler's Blues"
       }
     ],
-    requiredSetupCardId: SETUP_CARD_IDS.STANDARD
+    advancedRule: {
+      id: "adv_lone_targets",
+      title: "Lone Targets",
+      description: "You are more vulnerable to threats when flying alone.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
+    }
   },
   {
-    title: "They're Part Of My Crew",
-    intro: "We all know Mal's got a good aim when it comes to misbehavin'. We also know Mal's stepped on quite a few toes with his misbehavin'. There's more than a few folk like to see him and his crew behind bars or six feet under. Regardless of who or what comes at Serenity, Mal's gonna do what he's always done. Protect his crew.",
+    title: "Once Upon A Time In The Black",
+    intro: "Robin Hood. Ching Shih. Billy the Kid. Al Capone. Bori Khan. Test your mettle to tell a tale to match the legends.",
+    requiredExpansion: "tenth",
     isSolo: true,
-    goals: [
-      {
-        title: "Free Your Crew",
-        description: "Once the 7-turn timer is up, you must immediately fly to Londinium and proceed past 5 negotiation skill checks to free your crew from the Alliance prison. If you are successful, you have won the game."
-      }
-    ],
-    tags: ['community', 'jailbreak', 'character', 'survival', 'against_the_black', 'solo'],
-    setupDescription: "Use the Standard Set Up card with Malcolm as your Leader and Serenity as your ship. Take only $1000 in starting cash. Take Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River. Take 1 Expanded Crew Quarthers from Osiris. Collect 7 disgruntle tokens.",
+    sourceUrl: "https://boardgamegeek.com/image/8860506/sjliver",
+    tags: ['character', 'against_the_black', 'solo'],
+    advancedRule: {
+      id: "adv_alt_reaver_contacts",
+      title: "Alternate Reaver Contacts",
+      description: "Changes which contacts are associated with Reavers.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
+    }
+  },
+  {
+    title: "Racing A Pale Horse",
+    intro: "The Operative has your scent. He's closing in on your home, and nothing can stop him. Well, maybe nothing except Glücklich Jiã's prototype next-gen artillery cannon...",
+    setupDescription: "Place your Haven at Deadwood, Blue Sun. Do not use a Timer for this game.",
+    requiredExpansion: "tenth",
+    additionalRequirements: ["blue", "kalidasa"],
+    isSolo: true,
+    sourceUrl: "https://boardgamegeek.com/image/8860500/sjliver",
+    tags: ['character', 'survival', 'against_the_black', 'solo'],
     rules: [
+      { type: 'addFlag', flag: 'disableSoloTimer', source: 'story', sourceName: "Racing A Pale Horse" },
       { 
-        type: 'modifyResource', 
-        resource: 'credits', 
-        method: 'set', 
-        value: 1000, 
-        description: "Story Funds",
-        source: 'story',
-        sourceName: "They're Part Of My Crew"
-      },
-      {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: "Story Setup",
-          content: ["Use Malcolm as your Leader and Serenity as your ship. Your starting crew is: Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River. Take 1 Expanded Crew Quarters from the Osiris Supply Deck."]
+          title: 'Story Setup: Haven',
+          content: [{ type: 'strong', content: `Place your Haven at Deadwood (Blue Sun).` }, { type: 'br' }, `If you end your turn at your Haven, remove Disgruntled from all Crew.`]
         },
-        source: 'story',
-        sourceName: "They're Part Of My Crew"
+        source: 'story', 
+        sourceName: "Racing A Pale Horse"
       },
       {
         type: 'addSpecialRule',
-        category: 'resources',
+        category: 'soloTimer',
         rule: {
-          title: "Disgruntled Timer",
-          content: ["Collect 7 Disgruntled tokens. These will be used as a special game timer. Discard 1 token at the start of each of your turns."]
+          title: 'Timer Disabled',
+          content: [{ type: 'paragraph', content: ["No Timer: Do not use a Game Timer for this game."] }]
         },
-        source: 'story',
-        sourceName: "They're Part Of My Crew"
+        source: 'story', 
+        sourceName: "Racing A Pale Horse"
       }
     ],
-    sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
-    requiredExpansion: "community",
-    requiredSetupCardId: SETUP_CARD_IDS.STANDARD,
+    advancedRule: {
+      id: "adv_automated_movement",
+      title: "Automated Movement",
+      description: "When you draw 'Keep Flying', move an NPC ship one sector instead of drawing again.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
+    }
+  },
+  {
+    title: "The Raggedy Edge",
+    intro: "It's a hard life out in the Black. See how long you can last before Reavers, the law, or bad luck catches up with you.",
+    setupDescription: "Do not use a Timer for this game. Start with one random Alliance Alert Card in play. Begin play with 1 Goal Token.",
+    requiredExpansion: "tenth",
+    additionalRequirements: ["crime"],
+    isSolo: true,
+    sourceUrl: "https://boardgamegeek.com/image/8860505/sjliver",
+    tags: ['character', 'survival', 'against_the_black', 'solo'],
+    rules: [
+      { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, description: "Begin play with 1 Goal Token.", source: 'story', sourceName: "The Raggedy Edge" },
+      { type: 'addFlag', flag: 'disableSoloTimer', source: 'story', sourceName: "The Raggedy Edge" },
+      { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "The Raggedy Edge" },
+      {
+        type: 'addSpecialRule',
+        category: 'prime',
+        rule: {
+          title: 'Alliance High Alert',
+          content: ['Begin the game with one random Alliance Alert Card in play.']
+        },
+        source: 'story', 
+        sourceName: "The Raggedy Edge"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'soloTimer',
+        rule: {
+          title: 'Timer Disabled',
+          content: [{ type: 'paragraph', content: ["No Timer: Do not use a Game Timer for this game."] }]
+        },
+        source: 'story', 
+        sourceName: "The Raggedy Edge"
+      }
+    ],
+    advancedRule: {
+      id: "adv_contact_quirks_deal",
+      title: "Contact Quirks - Deal",
+      description: "Contacts have special rules when dealing with them.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
+    }
+  },
+  {
+    title: "Seeds Of Rebellion",
+    intro: "The New Resistance is ready to open up some eyes and change a few hearts. They need a savvy captain to deliver key personnel to the heart of Alliance space.",
+    setupDescription: "You may not deal with Harken. Place Harken's 7 Immoral Transport Jobs in separate discard pile to represent New Resistance Missions.",
+    requiredExpansion: "tenth",
+    additionalRequirements: ["blue", "kalidasa"],
+    isSolo: true,
+    sourceUrl: "https://boardgamegeek.com/image/8860507/sjliver",
+    tags: ['character', 'faction_war', 'against_the_black', 'solo'],
+    rules: [
+      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "Seeds Of Rebellion" },
+      { type: 'forbidContact', contact: 'Harken', source: 'story', sourceName: "Seeds Of Rebellion" }
+    ],
+    advancedRule: {
+      id: "adv_lost_little_lambs",
+      title: "Lost Little Lambs",
+      description: "Rescuing crew has additional complications and risks.",
+      disabledDescription: "This rule is on the back of the selected Story Card."
+    }
   }
 ];

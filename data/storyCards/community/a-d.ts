@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../../types';
 import { CONTACT_NAMES } from '../../ids';
 
@@ -92,6 +93,7 @@ export const STORIES_A_D: StoryCardDef[] = [
     setupDescription: "Remove all legal job cards from play.",
     tags: ['community', 'criminal_enterprise'],
     rules: [
+      { type: 'setJobDeck', operation: 'remove', jobType: 'legal', source: 'story', sourceName: "Aimin' To Misbehave" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
@@ -99,21 +101,6 @@ export const STORIES_A_D: StoryCardDef[] = [
           title: 'A Shady Line of Work',
           content: ["Remove all legal jobs from play."]
         },
-        source: 'story', 
-        sourceName: "Aimin' To Misbehave"
-      },
-      {
-        type: 'setJobStepContent',
-        position: 'before',
-        content: [
-          {
-            type: 'paragraph',
-            content: [
-              { type: 'strong', content: 'Deck Modification:' },
-              ' Before drawing starting jobs, you must first remove all Legal Job Cards from all Contact Decks. The standard job draw below will then consist of only Illegal Jobs.'
-            ]
-          }
-        ],
         source: 'story', 
         sourceName: "Aimin' To Misbehave"
       }

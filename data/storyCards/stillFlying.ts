@@ -42,12 +42,14 @@ export const STILL_FLYING_STORIES: StoryCardDef[] = [
     tags: ['smugglers_run'],
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'resources',
-        rule: {
-          title: 'Alliance Space Lockdown',
-          content: ["Place an Alliance Alert Token on every planetary sector in Alliance Space."]
-        },
+        type: 'addBoardComponent',
+        component: 'alert_token',
+        count: 1, // Per planet
+        locations: ['Alliance Space Planets'],
+        title: 'Alliance Space Lockdown',
+        icon: '🗺️',
+        locationTitle: 'Planetary Sectors',
+        locationSubtitle: 'Alliance Space',
         source: 'story', 
         sourceName: "The Smuggly Bustle"
       }
