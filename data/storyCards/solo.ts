@@ -71,11 +71,40 @@ export const SOLO_STORIES: StoryCardDef[] = [
             {
               type: 'paragraph',
               content: [
-                'In addition to selecting your Leader, you may also select up to ',
-                { type: 'strong', content: '4 Crew cards' },
-                ' from any deck, up to a total value of ',
-                { type: 'strong', content: '$1000' },
-                '.'
+                'In addition to selecting your Leader, you may also select up to 4 Crew cards from any deck, up to a total value of $1000.'
+              ]
+            }
+          ]
+        },
+        source: 'story', 
+        sourceName: "Awful Lonely In The Big Black"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_ships',
+        rule: {
+          content: [
+            'Also, select up to ',
+            { type: 'strong', content: '4 Crew cards' },
+            ' from any deck, up to a total value of ',
+            { type: 'strong', content: '$1000' },
+            '.'
+          ],
+          position: 'after'
+        },
+        source: 'story', 
+        sourceName: "Awful Lonely In The Big Black"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'soloTimer',
+        rule: {
+          title: 'Persona Non Grata',
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                'Place a pile of exactly 20 Disgruntled Tokens to the side. These tokens will be used as Game Length Tokens.'
               ]
             }
           ]
@@ -180,7 +209,10 @@ export const SOLO_STORIES: StoryCardDef[] = [
         rule: {
           title: 'Story Override',
           content: [
-            { type: 'paragraph', content: [{ type: 'strong', content: 'Starting Resources:' }, ' Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000.'] },
+            { type: 'paragraph', content: [
+              { type: 'strong', content: 'Starting Resources: ' },
+              'Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000.'
+            ] },
             { type: 'paragraph', content: [{ type: 'strong', content: 'Alliance Alerts:' }, ' Start with one random Alliance Alert in play.'] },
             { type: 'paragraph', content: [{ type: 'strong', content: 'Adventure Deck:' }, ' Shuffle all 3-Goal story cards into a single deck.'] }
           ]
