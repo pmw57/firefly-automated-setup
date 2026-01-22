@@ -1,3 +1,4 @@
+
 import { 
     GameState, 
     PrimeDetails,
@@ -5,10 +6,18 @@ import {
     ModifyPrimeRule,
     SpecialRule,
     SetPrimeModeRule,
-    AddSpecialRule
+    AddSpecialRule,
+    RuleSourceType
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { EXPANSIONS_METADATA } from '../data/expansions';
+
+const mapSource = (source: RuleSourceType): SpecialRule['source'] => {
+    if (source === 'challenge') return 'warning';
+    if (source === 'combinableSetupCard') return 'setupCard';
+    if (source === 'optionalRule') return 'info';
+    return source as SpecialRule['source'];
+};
 
 export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides): PrimeDetails => {
   const activeSupplyHeavyCount = EXPANSIONS_METADATA.filter(
@@ -28,15 +37,13 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
       if (rule.type === 'addSpecialRule') {
         const r = rule as AddSpecialRule;
         if (r.category === 'prime') {
-            if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(r.source)) {
-                specialRules.push({
-                    source: r.source as SpecialRule['source'],
-                    ...r.rule
-                });
-            }
+            specialRules.push({
+                source: mapSource(r.source),
+                ...r.rule
+            });
         } else if (r.category === 'prime_panel') {
             primePanels.push({
-                source: r.source as SpecialRule['source'],
+                source: mapSource(r.source),
                 ...r.rule
             });
         }
