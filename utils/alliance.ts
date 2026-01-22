@@ -13,16 +13,10 @@ import { getResolvedRules } from './selectors/rules';
 // SpecialRuleBlock component. This ensures type safety by explicitly handling sources
 // like 'challenge' and 'optionalRule' which have distinct UI representations.
 const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source'] => {
-  if (source === 'challenge') {
-    return 'warning';
-  }
-  if (source === 'optionalRule') {
-    return 'info';
-  }
-  if (source === 'combinableSetupCard') {
-    return 'setupCard';
-  }
-  return source;
+  if (source === 'challenge') return 'warning';
+  if (source === 'optionalRule') return 'info';
+  if (source === 'combinableSetupCard') return 'setupCard';
+  return source as SpecialRule['source'];
 };
 
 export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDetails => {
@@ -42,12 +36,10 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
 
   allRules.forEach(rule => {
       if (rule.type === 'addSpecialRule' && rule.category === 'allianceReaver') {
-          if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
-              specialRules.push({
-                  source: rule.source as SpecialRule['source'],
-                  ...rule.rule
-              });
-          }
+          specialRules.push({
+              source: mapRuleSourceToBlockSource(rule.source),
+              ...rule.rule
+          });
       }
   });
 

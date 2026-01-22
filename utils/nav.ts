@@ -1,12 +1,21 @@
+
 import { 
     GameState, 
     NavDeckSetupDetails,
     StepOverrides,
     SetNavModeRule,
-    SpecialRule
+    SpecialRule,
+    RuleSourceType
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { RULE_PRIORITY_ORDER } from '../data/constants';
+
+const mapSource = (source: RuleSourceType): SpecialRule['source'] => {
+    if (source === 'challenge') return 'warning';
+    if (source === 'combinableSetupCard') return 'setupCard';
+    if (source === 'optionalRule') return 'info';
+    return source as SpecialRule['source'];
+};
 
 export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides): NavDeckSetupDetails => {
     const allRules = getResolvedRules(gameState);
@@ -32,12 +41,10 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
     // Process generic special rules for this step category
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule' && rule.category === 'nav') {
-            if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
-                specialRules.push({
-                    source: rule.source as SpecialRule['source'],
-                    ...rule.rule
-                });
-            }
+            specialRules.push({
+                source: mapSource(rule.source),
+                ...rule.rule
+            });
         }
     });
 

@@ -15,6 +15,13 @@ import { getResolvedRules } from './selectors/rules';
 import { getActiveStoryCard } from './selectors/story';
 import { RULE_PRIORITY_ORDER } from '../data/constants';
 
+const mapSource = (source: RuleSourceType): SpecialRule['source'] => {
+    if (source === 'challenge') return 'warning';
+    if (source === 'combinableSetupCard') return 'setupCard';
+    if (source === 'optionalRule') return 'info';
+    return source as SpecialRule['source'];
+};
+
 const _findCreditConflict = (resourceRules: ModifyResourceRule[], manualResolutionEnabled: boolean): {
     conflict?: ResourceConflict;
     storyRule?: ModifyResourceRule;
@@ -179,7 +186,7 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     }
 
     boardSetupRules.push({
-      source: rule.source as SpecialRule['source'],
+      source: mapSource(rule.source),
       title: rule.title,
       content: [],
       // Pass through new visual properties
@@ -191,16 +198,14 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
 
   allRules.forEach(rule => {
     if (rule.type === 'addSpecialRule' && rule.category === 'resources') {
-        if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
-            const newRule = { source: rule.source as SpecialRule['source'], ...rule.rule };
-            
-            if (!newRule.flags?.includes('hideFromTop')) {
-                 specialRules.push(newRule);
-            }
-            
-            if (newRule.title === 'Missing Person' || newRule.flags?.includes('showInResourceList')) {
-              componentAdjustmentRules.push(newRule);
-            }
+        const newRule = { source: mapSource(rule.source), ...rule.rule };
+        
+        if (!newRule.flags?.includes('hideFromTop')) {
+                specialRules.push(newRule);
+        }
+        
+        if (newRule.title === 'Missing Person' || newRule.flags?.includes('showInResourceList')) {
+            componentAdjustmentRules.push(newRule);
         }
     }
   });

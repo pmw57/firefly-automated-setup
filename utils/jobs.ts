@@ -21,14 +21,35 @@ import { getResolvedRules } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 
-const _getJobRulesMessages = (allRules: SetupRule[]): JobSetupMessage[] => {
+const mapSource = (source: RuleSourceType): SpecialRule['source'] => {
+    if (source === 'challenge') return 'warning';
+    if (source === 'combinableSetupCard') return 'setupCard';
+    if (source === 'optionalRule') return 'info';
+    return source as SpecialRule['source'];
+};
+
+const _getJobRulesMessages = (allRules: SetupRule[], phase: 'deck_setup' | 'job_draw'): JobSetupMessage[] => {
     const messages: JobSetupMessage[] = [];
     allRules.forEach(rule => {
         // Explicit Text Rules (addSpecialRule)
         if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
-            if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
-                messages.push({ source: rule.source as SpecialRule['source'], ...rule.rule });
-            }
+             const flags = rule.rule.flags || [];
+             
+             // Phase Filtering:
+             // If a rule is explicitly tagged for deck setup, don't show it during job draw.
+             if (flags.includes('phase_deck_setup') && phase !== 'deck_setup') return;
+             
+             // If a rule is explicitly tagged for job draw, don't show it during deck setup.
+             // (Though usually default rules appear in job draw)
+             if (flags.includes('phase_job_draw') && phase !== 'job_draw') return;
+
+             // If we are in deck setup phase, we generally treat it as a specialized step.
+             // To prevent generic job rules (like "Remove Piracy Jobs") from appearing here 
+             // AND in the later step, we can be restrictive.
+             // However, simply respecting the phase_deck_setup flag is usually sufficient 
+             // if the content definition is correct.
+             
+             messages.push({ source: mapSource(rule.source), ...rule.rule });
         }
     });
     return messages;
@@ -122,8 +143,8 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     let caperDraw: number | null = null;
     let primeInstruction: StructuredContent | null = null;
     
-    // Collect all messages first
-    const messages = _getJobRulesMessages(allRules);
+    // Collect all messages first, passing the current phase
+    const messages = _getJobRulesMessages(allRules, jobStepPhase);
     
     // Handle specific challenge warnings
     const processedChallenges = new Set<string>();
@@ -222,16 +243,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             }
         }
         
-        // Filter messages by phase
-        const relevantMessages = messages.filter(msg => {
-            const rulePhase = msg.flags?.find(f => f.startsWith('phase_'));
-            if (rulePhase) {
-                if (rulePhase === 'phase_deck_setup' && jobStepPhase !== 'deck_setup') return false;
-                if (rulePhase === 'phase_job_draw' && jobStepPhase !== 'job_draw') return false;
-            }
-            return true;
-        });
-        
         // Populate Contact List Config
         if (jobStepPhase !== 'deck_setup') {
             const isSingleContactChoice = !!gameState.challengeOptions[CHALLENGE_IDS.SINGLE_CONTACT];
@@ -277,10 +288,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             };
         }
 
-        // Replace local 'messages' with filtered ones for return
-        messages.length = 0;
-        messages.push(...relevantMessages);
-
     } else {
         // Mode is no_jobs or caper_start
         // Add generic "No Starting Jobs" message if the mode is specifically 'no_jobs'.
@@ -289,7 +296,8 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         
         if (jobDrawMode === 'no_jobs') {
             const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
-            const validSource = (['story', 'setupCard'].includes(jobModeSource)) ? jobModeSource as 'story' | 'setupCard' : 'setupCard';
+            // Simple mapping since we're generating the message directly
+            const validSource = mapSource(jobModeSource);
              
             messages.push({
                 source: validSource,

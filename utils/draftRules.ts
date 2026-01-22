@@ -8,11 +8,19 @@ import {
     SetDraftModeRule,
     SetPlayerBadgesRule,
     ThemeColor,
-    AddSpecialRule
+    AddSpecialRule,
+    RuleSourceType
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
+
+const mapSource = (source: RuleSourceType): SpecialRule['source'] => {
+    if (source === 'challenge') return 'warning';
+    if (source === 'combinableSetupCard') return 'setupCard';
+    if (source === 'optionalRule') return 'info';
+    return source as SpecialRule['source'];
+};
 
 export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRuleDetails, 'isRuiningIt'> => {
     const specialRules: SpecialRule[] = [];
@@ -35,14 +43,12 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule') {
             const r = rule as AddSpecialRule;
-            const contentRule: SpecialRule = { source: r.source as SpecialRule['source'], ...r.rule };
+            const contentRule: SpecialRule = { source: mapSource(r.source), ...r.rule };
             const position = r.rule.position || 'after';
 
             switch (r.category) {
                 case 'draft':
-                    if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(r.source)) {
-                        specialRules.push(contentRule);
-                    }
+                    specialRules.push(contentRule);
                     break;
                 case 'draft_panel':
                     if (position === 'before') {
