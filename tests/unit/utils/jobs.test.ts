@@ -78,7 +78,7 @@ describe('rules/jobs', () => {
       
       const messages = [...infoMessages, ...overrideMessages];
       // A Fistful Of Scoundrels now includes an explicit special rule for context
-      expect(messages).toHaveLength(1);
+      expect(messages).toHaveLength(2);
       expect(messages[0].title).toBe("Prime Contact Decks");
 
       // And it uses mainContent to render the step instructions
