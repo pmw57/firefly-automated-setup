@@ -1,4 +1,5 @@
 
+
 import { StoryCardDef } from '../../types';
 
 export const PIRATES_STORIES: StoryCardDef[] = [
@@ -33,7 +34,6 @@ export const PIRATES_STORIES: StoryCardDef[] = [
         sourceName: "...Another Man's Treasure"
       },
       { type: 'addFlag', flag: 'hasConditionalHavenPageReference', source: 'story', sourceName: "...Another Man's Treasure" },
-      { type: 'setJobDeck', operation: 'remove', jobType: 'piracy', source: 'story', sourceName: "...Another Man's Treasure" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
@@ -42,6 +42,17 @@ export const PIRATES_STORIES: StoryCardDef[] = [
           content: ["After taking starting Jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks."]
         },
         source: 'story', 
+        sourceName: "...Another Man's Treasure"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+            title: 'Deck Modification',
+            content: ['Remove all Piracy Jobs from the Contact Decks.'],
+            position: 'after'
+        },
+        source: 'info',
         sourceName: "...Another Man's Treasure"
       },
       {
@@ -82,7 +93,6 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     tags: ['pvp'],
     setupDescription: "After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles.",
     rules: [
-       { type: 'setJobDeck', operation: 'remove', jobType: 'piracy', source: 'story', sourceName: "The Choices We Make" },
        {
         type: 'addSpecialRule',
         category: 'jobs',
@@ -91,6 +101,17 @@ export const PIRATES_STORIES: StoryCardDef[] = [
           content: ["After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles."]
         },
         source: 'story', 
+        sourceName: "The Choices We Make"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+            title: 'Deck Modification',
+            content: ['Remove all Piracy Jobs from the Contact Decks.'],
+            position: 'after'
+        },
+        source: 'info',
         sourceName: "The Choices We Make"
       }
     ]

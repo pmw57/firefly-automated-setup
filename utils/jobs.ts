@@ -24,29 +24,10 @@ import { getActiveStoryCard } from './selectors/story';
 const _getJobRulesMessages = (allRules: SetupRule[]): JobSetupMessage[] => {
     const messages: JobSetupMessage[] = [];
     allRules.forEach(rule => {
+        // Explicit Text Rules (addSpecialRule)
         if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
             if (['story', 'setupCard', 'expansion', 'warning', 'info'].includes(rule.source)) {
                 messages.push({ source: rule.source as SpecialRule['source'], ...rule.rule });
-            }
-        }
-        
-        // Handle generic Job Deck modifications
-        if (rule.type === 'setJobDeck') {
-            const title = 'Deck Modification';
-            let content: string = '';
-            
-            if (rule.operation === 'remove') {
-                content = `Remove all ${rule.jobType} jobs from the Contact Decks.`;
-            } else if (rule.operation === 'keep_only') {
-                content = `Remove all non-${rule.jobType} jobs from the Contact Decks.`;
-            }
-            
-            if (content) {
-                messages.push({
-                    source: rule.source as SpecialRule['source'],
-                    title,
-                    content: [content]
-                });
             }
         }
     });
@@ -343,20 +324,8 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         }
     }
     
-    // Deduplicate messages
-    const uniqueMessages = messages.reduce((acc, current) => {
-        const isDuplicate = acc.some(item => 
-            item.title === current.title && 
-            JSON.stringify(item.content) === JSON.stringify(item.content)
-        );
-        if (!isDuplicate) {
-            acc.push(current);
-        }
-        return acc;
-    }, [] as JobSetupMessage[]);
-
-    const infoMessages = uniqueMessages.filter(m => m.source === 'info' || m.source === 'warning');
-    const overrideMessages = uniqueMessages.filter(m => m.source !== 'info' && m.source !== 'warning');
+    const infoMessages = messages.filter(m => m.source === 'info' || m.source === 'warning');
+    const overrideMessages = messages.filter(m => m.source !== 'info' && m.source !== 'warning');
 
     return {
         contactList,
