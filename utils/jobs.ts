@@ -314,6 +314,10 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
               { type: 'paragraph', content: ['Instead of taking Starting Jobs, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
               { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
             ];
+            
+            // Add a message for visibility in the info/override list too if preferred, 
+            // but we have a dedicated UI block for it now.
+            // We'll skip adding a duplicate message here since `primeInstruction` is returned.
         }
     }
 
