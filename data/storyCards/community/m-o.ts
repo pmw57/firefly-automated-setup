@@ -174,6 +174,7 @@ export const STORIES_M_O: StoryCardDef[] = [
     title: "My Fellow Browncoats",
     isCoOp: true,
     intro: "The crew of Serenity needs your help. They've been captured by the Alliance and sent to unknown prison camps all over the 'Verse. For a price, Badger might let you in on a little secret.",
+    requiredExpansion: "community",
     setupDescription: "Place Serenity on Shadow, Murphy as the drop-off point for Serenity's rescued crew. Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together. Place them face down as the \"Prisoner Deck\".",
     tags: ['community', 'jailbreak', 'against_the_black', 'coop'],
     sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
@@ -192,13 +193,13 @@ export const STORIES_M_O: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'draft_placement',
+        category: 'draft_panel',
         rule: {
           title: 'Rescue Mission Setup',
           content: [
             "Place the Serenity ship token on the 'Shadow, Murphy' sector. This will be the drop-off point for any rescued crew."
           ],
-          position: 'before'
+          position: 'after'
         },
         source: 'story', 
         sourceName: "My Fellow Browncoats"
@@ -208,15 +209,24 @@ export const STORIES_M_O: StoryCardDef[] = [
         category: 'prime_panel',
         rule: {
           title: 'Prepare Prisoner Deck',
-          badge: 'Story Setup',
           content: [
-            {
-              type: 'list',
-              items: [
-                ["Shuffle the 9 original Serenity crew cards (Malcolm, Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, and Shepherd Book) together."],
-                ["Place this shuffled deck face down. This is the 'Prisoner Deck' and represents your game goals."],
-              ]
-            }
+            'Shuffle the 9 original Serenity crew cards together:',
+            {type: 'numbered-list', items: [
+              [{type: 'strong', content: "Malcolm"}, ' from ', {type: 'strong', content: 'Leaders'}, ' deck'],
+              [{type: 'strong', content: "Zoë"}, ' from ', {type: 'strong', content: 'Silverhold'}, ' deck'],
+              [{type: 'strong', content: "Wash"}, ' from ', {type: 'strong', content: 'Space Bazaar'}, ' deck'],
+              [{type: 'strong', content: "Jayne"}, ' from ', {type: 'strong', content: 'Silverhold'}, ' deck'],
+              [{type: 'strong', content: "Kaylee"}, ' from ', {type: 'strong', content: 'Regina'}, ' deck'],
+              [{type: 'strong', content: "Simon Tam"}, ' from ', {type: 'strong', content: 'Persephone'}, ' deck'],
+              [{type: 'strong', content: "River Tam"}, ' from ', {type: 'strong', content: 'Persephone'}, ' deck'],
+              [{type: 'strong', content: "Inara"}, ' from ', {type: 'strong', content: 'Osiris'}, ' deck'],
+              [{type: 'strong', content: "Shepherd Book"}, ' from ', {type: 'strong', content: 'Persephone'}, ' deck']
+            ]},
+            {type: 'br'},
+            "Place this shuffled deck ", {type: 'strong', content: 'face down'}, ". ",
+            {type: 'br'},
+            {type: 'br'},
+            "This is the ", {type: 'strong', content: "Prisoner Deck"}, " and represents your ", {type: 'strong', content: 'game goals.'}
           ]
         },
         source: 'story', 

@@ -159,6 +159,7 @@ export const STORIES_R_S: StoryCardDef[] = [
     maxPlayerCount: 2,
     isPvP: true,
     intro: "During the war you watched your twin get cut down in a hail of shrapnel. You've lived an empty existence since that day making ends meet and trying to keep flying as best you can. Then you get a message from your Ma out on the Rim. \"Come home right away.\" So you fly to St. Albans, Red Sun to see your Mother. Once there, your twin (Who wasn't dead!) steals your ship and sets about ruining your life. Your twin has the exact same abilities as you do. Your twin may not discard any of your inactive jobs.",
+    requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
     setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship. Both ships starts on St. Albans, Red Sun. Set 20 counters on this card as timing counters.",
     tags: ['community', 'character', 'pvp'],
