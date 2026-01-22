@@ -466,8 +466,14 @@ export const SETUP_CARDS: SetupCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1335810/solitaire-firefly-some-new-story-cards-for-fans-of",
     rules: createRules("Solitaire Firefly", [
       { type: 'addFlag', flag: 'isSolitaireFirefly' },
-      // Decoupled: Replaced 'removePiracyJobs' flag with explicit SetJobDeckRule
-      { type: 'setJobDeck', operation: 'remove', jobType: 'piracy' },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+            title: 'Solitaire Rules',
+            content: ['Remove all Piracy Jobs from the Contact Decks.']
+        }
+      },
       { type: 'addFlag', flag: 'soloCrewDraft' },
       { type: 'addFlag', flag: 'soloGameTimer' },
       {

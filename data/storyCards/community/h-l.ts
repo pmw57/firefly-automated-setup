@@ -1,4 +1,3 @@
-
 import { StoryCardDef } from '../../../types';
 
 export const STORIES_H_L: StoryCardDef[] = [
@@ -152,5 +151,5 @@ export const STORIES_H_L: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/1107085/the-long-haul-idea-for-an-unofficial-story-card",
     rating: 1,
     tags: ['community', 'reputation'],
-  },
+  }
 ];

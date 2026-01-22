@@ -1,4 +1,5 @@
 
+
 import { StoryCardDef } from '../../../types';
 import { CONTACT_NAMES, STEP_IDS } from '../../ids';
 
@@ -13,7 +14,7 @@ export const STORIES_R_S: StoryCardDef[] = [
   },
   {
     title: "Return to Sturges",
-    intro: "The Barrle of Sturges was the shortest and bloodiest battle of the Unification War. Badger has broadcast news that there is a hoard of Alliance treasure left in the wreckage of this space battle to a few \"trusted friends\". The race is on to get the information, equipment and speed to get there first, find the goods and get clear before the Alliance shows up to claim its property!",
+    intro: "The Battle of Sturges was the shortest and bloodiest battle of the Unification War. Badger has broadcast news that there is a hoard of Alliance treasure left in the wreckage of this space battle to a few \"trusted friends\". The race is on to get the information, equipment and speed to get there first, find the goods and get clear before the Alliance shows up to claim its property!",
     setupDescription: "Captain Nandi and Atherton may not be used by any player.",
     requiredExpansion: "community",
     sourceUrl: "https://boardgamegeek.com/filepage/125866/return-to-sturges-a-firefly-mission",
@@ -365,7 +366,6 @@ export const STORIES_R_S: StoryCardDef[] = [
     requiredExpansion: "community",
     tags: ['community', 'pvp'],
     rules: [
-      { type: 'setJobDeck', operation: 'remove', jobType: 'piracy', source: 'story', sourceName: "Shiny New Year 25 - Protect Or Plunder" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
@@ -374,6 +374,17 @@ export const STORIES_R_S: StoryCardDef[] = [
           content: ["After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks."]
         },
         source: 'story', 
+        sourceName: "Shiny New Year 25 - Protect Or Plunder"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+            title: 'Deck Modification',
+            content: ['Remove all Piracy Jobs from the Contact Decks.'],
+            position: 'after'
+        },
+        source: 'info',
         sourceName: "Shiny New Year 25 - Protect Or Plunder"
       }
     ]

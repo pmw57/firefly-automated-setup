@@ -1,4 +1,5 @@
 
+
 import { StoryCardDef } from '../../../types';
 import { CONTACT_NAMES } from '../../ids';
 
@@ -93,7 +94,6 @@ export const STORIES_A_D: StoryCardDef[] = [
     setupDescription: "Remove all legal job cards from play.",
     tags: ['community', 'criminal_enterprise'],
     rules: [
-      { type: 'setJobDeck', operation: 'remove', jobType: 'legal', source: 'story', sourceName: "Aimin' To Misbehave" },
       {
         type: 'addSpecialRule',
         category: 'jobs',
@@ -102,6 +102,16 @@ export const STORIES_A_D: StoryCardDef[] = [
           content: ["Remove all legal jobs from play."]
         },
         source: 'story', 
+        sourceName: "Aimin' To Misbehave"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+            title: 'Deck Modification',
+            content: ['Remove all Legal Jobs from the Contact Decks.']
+        },
+        source: 'info',
         sourceName: "Aimin' To Misbehave"
       }
     ]
