@@ -91,6 +91,15 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const displayInfo = formatRules(infoMessages);
   const displayOverrides = formatRules(overrideMessages, true);
   
+  // Split based on position
+  // Info defaults to 'before' (top)
+  const infoBefore = displayInfo.filter(r => r.position !== 'after');
+  const infoAfter = displayInfo.filter(r => r.position === 'after');
+
+  // Overrides defaults to 'after' (bottom), unless explicitly 'before'
+  const overridesBefore = displayOverrides.filter(r => r.position === 'before');
+  const overridesAfter = displayOverrides.filter(r => r.position !== 'before');
+  
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
   const sectionHeaderColor = isDark ? 'text-gray-200' : 'text-gray-800';
@@ -148,8 +157,11 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
 
   return (
     <div className="space-y-6">
-      {displayInfo.map((block, i) => <OverrideNotificationBlock key={`info-${i}`} {...block} />)}
+      {/* Top Section: Info & Pre-Overrides */}
+      {infoBefore.map((block, i) => <OverrideNotificationBlock key={`info-before-${i}`} {...block} />)}
+      {overridesBefore.map((block, i) => <OverrideNotificationBlock key={`override-before-${i}`} {...block} />)}
 
+      {/* Main Content Area */}
       {mainContentPosition === 'after' ? (
         <>
           {ContactListBlock}
@@ -166,7 +178,9 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
         </>
       )}
 
-      {displayOverrides.map((block, i) => <OverrideNotificationBlock key={`override-${i}`} {...block} />)}
+      {/* Bottom Section: Post-Info & Standard Overrides */}
+      {infoAfter.map((block, i) => <OverrideNotificationBlock key={`info-after-${i}`} {...block} />)}
+      {overridesAfter.map((block, i) => <OverrideNotificationBlock key={`override-after-${i}`} {...block} />)}
     </div>
   );
 };

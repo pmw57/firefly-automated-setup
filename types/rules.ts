@@ -142,11 +142,6 @@ export interface SetPlayerBadgesRule extends BaseRule {
     badges: Record<number, string>; // Player Index -> Badge Text
 }
 
-export interface SetJobDeckRule extends BaseRule {
-    type: 'setJobDeck';
-    operation: 'remove' | 'keep_only';
-    jobType: 'piracy' | 'legal' | 'immoral';
-}
 
 export type SetupRule = 
   | SetJobModeRule
@@ -170,5 +165,4 @@ export type SetupRule =
   | SetComponentRule
   | SetJobStepContentRule
   | AddBoardComponentRule
-  | SetPlayerBadgesRule
-  | SetJobDeckRule;
+  | SetPlayerBadgesRule;
