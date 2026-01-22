@@ -179,8 +179,16 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     const mainContent = jobStepContentRule?.content || null;
     const mainContentPosition = jobStepContentRule?.position || 'before';
 
-    // Logic for Standard/Shared Hand/Draft modes
-    if (jobDrawMode !== 'no_jobs' && jobDrawMode !== 'caper_start') {
+    if (jobDrawMode === 'hide_jobs') {
+        // In 'hide_jobs' mode, we intentionally do not generate the "No Starting Jobs" message
+        // or the contact list. This mode is used when a story completely replaces the concept
+        // of starting jobs or handles instructions manually via other rules/components.
+        
+        // We still allow 'mainContent' (via setJobStepContent) and manual rule messages to pass through,
+        // but default warnings are suppressed.
+        
+    } else if (jobDrawMode !== 'no_jobs' && jobDrawMode !== 'caper_start') {
+        // Logic for Standard/Shared Hand/Draft modes
         const initialContacts = _getInitialContacts(allRules, gameState);
         const contacts = _filterContacts(initialContacts, allRules);
 
@@ -294,14 +302,16 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
 
     } else {
         // Mode is no_jobs or caper_start
-        // Add generic "No Starting Jobs" message if not already covered by rules
-        const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
+        // Add generic "No Starting Jobs" message if the mode is specifically 'no_jobs'.
+        // If content is manually overridden via rules, this message is STILL shown to prevent ambiguity.
+        // Use 'hide_jobs' mode if suppression is required.
         
-        // If story provides no specific rule about job removal, we add a default one if it was triggered by a setup card.
-        // This maintains compatibility with Setup Cards that set "no_jobs".
-        if (jobModeSource === 'setupCard' && !messages.some(m => m.source === 'setupCard')) {
-             messages.push({
-                source: 'setupCard',
+        if (jobDrawMode === 'no_jobs') {
+            const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
+            const validSource = (['story', 'setupCard'].includes(jobModeSource)) ? jobModeSource as 'story' | 'setupCard' : 'setupCard';
+             
+            messages.push({
+                source: validSource,
                 title: 'No Starting Jobs',
                 content: [{ type: 'paragraph', content: ["Crews must find work on their own out in the black."] }]
             });
@@ -314,10 +324,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
               { type: 'paragraph', content: ['Instead of taking Starting Jobs, ', { type: 'strong', content: 'prime the Contact Decks' }, ':'] },
               { type: 'list', items: [['Reveal the top ', { type: 'strong', content: '3 cards' }, ' of each Contact Deck.'], ['Place the revealed Job Cards in their discard piles.']] }
             ];
-            
-            // Add a message for visibility in the info/override list too if preferred, 
-            // but we have a dedicated UI block for it now.
-            // We'll skip adding a duplicate message here since `primeInstruction` is returned.
         }
     }
 

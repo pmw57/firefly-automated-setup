@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { StoryCardDef, ExpansionId, SetupRule, StoryCardGoal, ChallengeOption, JobMode, NavMode, PrimeMode, DraftMode, LeaderSetupMode, AllianceSetupMode, ResourceType, EffectMethod, RuleSourceType, ModifyResourceRule, AddFlagRule, AddSpecialRule, ModifyPrimeRule, AllowContactsRule, PrimeContactsRule, CreateAlertTokenStackRule } from '../types/index';
 import { EXPANSIONS_METADATA } from '../data/expansions';
@@ -10,7 +11,7 @@ const DEV_STORY_CARD_DRAFT_KEY = 'firefly_dev_story_card_draft';
 
 // --- Visual Rule Builder: Configuration & Components ---
 
-const JOB_MODES: JobMode[] = ['standard', 'no_jobs', 'times_jobs', 'high_alert_jobs', 'buttons_jobs', 'awful_jobs', 'rim_jobs', 'draft_choice', 'caper_start', 'wind_takes_us'];
+const JOB_MODES: JobMode[] = ['standard', 'no_jobs', 'hide_jobs', 'times_jobs', 'high_alert_jobs', 'buttons_jobs', 'awful_jobs', 'rim_jobs', 'draft_choice', 'caper_start', 'wind_takes_us'];
 const NAV_MODES: NavMode[] = ['standard', 'browncoat', 'rim', 'flying_solo', 'clearer_skies', 'standard_reshuffle'];
 const PRIME_MODES: PrimeMode[] = ['standard', 'blitz'];
 const DRAFT_MODES: DraftMode[] = ['standard', 'browncoat'];

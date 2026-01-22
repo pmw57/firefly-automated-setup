@@ -5,6 +5,7 @@ export type JobMode =
   | 'shared_hand'
   | 'standard' 
   | 'no_jobs' 
+  | 'hide_jobs'
   | 'times_jobs' 
   | 'high_alert_jobs' 
   | 'buttons_jobs' 
