@@ -172,12 +172,20 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     requiredExpansion: "community",
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/thread/1049419/hunt-for-the-arc-a-solo-adventure",
-    setupDescription: "Place 1 Reaver ship below Valentine. If Blue Sun is active, place 2 more Cutters near Miranda.",
+    setupDescription: "Place 1 Reaver ship and the Alliance Cruiser in the Border Space sector below Valentine. If Blue Sun is active, place 2 more Cutters near Miranda.",
     tags: ['community', 'mystery', 'against_the_black', 'solo'],
     rules: [
       {
         type: 'setReaverPlacement',
-        placement: "Place 1 Reaver ship in the Border Space sector directly below Valentine. If Blue Sun is active, place the remaining 2 Cutters in the border sectors closest to Miranda.",
+        placement: "Place 1 Cutter in the Border Space sector directly below Valentine. Place the remaining 2 Cutters in the border sectors closest to Miranda.",
+        criteria: { requireExpansion: 'blue' },
+        source: 'story',
+        sourceName: "Hunt For The Arc"
+      },
+      {
+        type: 'setReaverPlacement',
+        placement: "Place 1 Cutter in the Border Space sector directly below Valentine.",
+        criteria: { excludeExpansion: 'blue' },
         source: 'story',
         sourceName: "Hunt For The Arc"
       }
@@ -208,7 +216,7 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'allianceReaver',
+        category: 'prime',
         rule: {
           title: 'Active Bounties',
           content: ["The Bounty deck is placed face up. All bounties are active."]
@@ -240,21 +248,21 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
         sourceName: "Jubal's Mighty Roar"
       },
       {
+        type: 'addSpecialRule',
+        category: 'draft',
+        rule: {
+          title: 'Special Token Placement',
+          content: ["Place the Serenity ship token on any non-planetary sector within the Georgia system."]
+        },
+        source: 'story',
+        sourceName: "Jubal's Mighty Roar"
+      },
+      {
         type: 'modifyResource',
         resource: 'credits',
         method: 'add',
         value: -1600,
         description: "Cost of Starting Gear",
-        source: 'story',
-        sourceName: "Jubal's Mighty Roar"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'allianceReaver',
-        rule: {
-          title: 'Special Token Placement',
-          content: ["Place the Serenity ship token on any non-planetary sector within the Georgia system."]
-        },
         source: 'story',
         sourceName: "Jubal's Mighty Roar"
       },
@@ -270,176 +278,5 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
       }
     ],
     sourceUrl: "https://boardgamegeek.com/thread/3399878/jubals-mighty-roar"
-  },
-  {
-    title: "The Lonely Smuggler's Blues",
-    intro: "Sometimes, it gets lonely in the Black, but it's a good way to dodge the law when you're haulin' goods that might draw the wrong kind of attention.",
-    setupDescription: "Place 3 Contraband on each Supply Planet except Persephone and Space Bazaar. Place a Goal Token on the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Do not deal Starting Jobs. Begin play at Londinium. Start with one random Alliance Alert Card in play.",
-    requiredExpansion: "tenth",
-    additionalRequirements: ["crime"],
-    isSolo: true,
-    sourceUrl: "https://boardgamegeek.com/image/8860503/sjliver",
-    tags: ['smugglers_run', 'against_the_black', 'solo'],
-    rules: [
-      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
-      { type: 'addFlag', flag: 'lonelySmugglerSetup', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
-      {
-        type: 'addBoardComponent',
-        component: 'contraband',
-        count: 3,
-        locations: ['Supply Planets'],
-        title: "Lonely Smuggler's Stash",
-        icon: '📦',
-        locationTitle: '3 on each Supply Planet',
-        distribution: 'all_supply_planets',
-        excludeLocations: ['Persephone', 'Space Bazaar'],
-        source: 'story', 
-        sourceName: "The Lonely Smuggler's Blues"
-      },
-      { type: 'setShipPlacement', location: 'londinium', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
-      { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
-      { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "The Lonely Smuggler's Blues" },
-      {
-        type: 'addSpecialRule',
-        category: 'draft_placement',
-        rule: {
-          title: "In the Belly of the Beast",
-          content: ["Begin play at Londinium."],
-          position: 'before'
-        },
-        source: 'story', 
-        sourceName: "The Lonely Smuggler's Blues"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'prime',
-        rule: {
-          title: 'Alliance High Alert',
-          content: ['Begin the game with one random Alliance Alert Card in play.']
-        },
-        source: 'story', 
-        sourceName: "The Lonely Smuggler's Blues"
-      }
-    ],
-    advancedRule: {
-      id: "adv_lone_targets",
-      title: "Lone Targets",
-      description: "You are more vulnerable to threats when flying alone.",
-      disabledDescription: "This rule is on the back of the selected Story Card."
-    }
-  },
-  {
-    title: "Once Upon A Time In The Black",
-    intro: "Robin Hood. Ching Shih. Billy the Kid. Al Capone. Bori Khan. Test your mettle to tell a tale to match the legends.",
-    requiredExpansion: "tenth",
-    isSolo: true,
-    sourceUrl: "https://boardgamegeek.com/image/8860506/sjliver",
-    tags: ['character', 'against_the_black', 'solo'],
-    advancedRule: {
-      id: "adv_alt_reaver_contacts",
-      title: "Alternate Reaver Contacts",
-      description: "Changes which contacts are associated with Reavers.",
-      disabledDescription: "This rule is on the back of the selected Story Card."
-    }
-  },
-  {
-    title: "Racing A Pale Horse",
-    intro: "The Operative has your scent. He's closing in on your home, and nothing can stop him. Well, maybe nothing except Glücklich Jiã's prototype next-gen artillery cannon...",
-    setupDescription: "Place your Haven at Deadwood, Blue Sun. Do not use a Timer for this game.",
-    requiredExpansion: "tenth",
-    additionalRequirements: ["blue", "kalidasa"],
-    isSolo: true,
-    sourceUrl: "https://boardgamegeek.com/image/8860500/sjliver",
-    tags: ['character', 'survival', 'against_the_black', 'solo'],
-    rules: [
-      { type: 'addFlag', flag: 'disableSoloTimer', source: 'story', sourceName: "Racing A Pale Horse" },
-      { 
-        type: 'addSpecialRule',
-        category: 'draft',
-        rule: {
-          title: 'Story Setup: Haven',
-          content: [{ type: 'strong', content: `Place your Haven at Deadwood (Blue Sun).` }, { type: 'br' }, `If you end your turn at your Haven, remove Disgruntled from all Crew.`]
-        },
-        source: 'story', 
-        sourceName: "Racing A Pale Horse"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'soloTimer',
-        rule: {
-          title: 'Timer Disabled',
-          content: [{ type: 'paragraph', content: ["No Timer: Do not use a Game Timer for this game."] }]
-        },
-        source: 'story', 
-        sourceName: "Racing A Pale Horse"
-      }
-    ],
-    advancedRule: {
-      id: "adv_automated_movement",
-      title: "Automated Movement",
-      description: "When you draw 'Keep Flying', move an NPC ship one sector instead of drawing again.",
-      disabledDescription: "This rule is on the back of the selected Story Card."
-    }
-  },
-  {
-    title: "The Raggedy Edge",
-    intro: "It's a hard life out in the Black. See how long you can last before Reavers, the law, or bad luck catches up with you.",
-    setupDescription: "Do not use a Timer for this game. Start with one random Alliance Alert Card in play. Begin play with 1 Goal Token.",
-    requiredExpansion: "tenth",
-    additionalRequirements: ["crime"],
-    isSolo: true,
-    sourceUrl: "https://boardgamegeek.com/image/8860505/sjliver",
-    tags: ['character', 'survival', 'against_the_black', 'solo'],
-    rules: [
-      { type: 'modifyResource', resource: 'goalTokens', method: 'add', value: 1, description: "Begin play with 1 Goal Token.", source: 'story', sourceName: "The Raggedy Edge" },
-      { type: 'addFlag', flag: 'disableSoloTimer', source: 'story', sourceName: "The Raggedy Edge" },
-      { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "The Raggedy Edge" },
-      {
-        type: 'addSpecialRule',
-        category: 'prime',
-        rule: {
-          title: 'Alliance High Alert',
-          content: ['Begin the game with one random Alliance Alert Card in play.']
-        },
-        source: 'story', 
-        sourceName: "The Raggedy Edge"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'soloTimer',
-        rule: {
-          title: 'Timer Disabled',
-          content: [{ type: 'paragraph', content: ["No Timer: Do not use a Game Timer for this game."] }]
-        },
-        source: 'story', 
-        sourceName: "The Raggedy Edge"
-      }
-    ],
-    advancedRule: {
-      id: "adv_contact_quirks_deal",
-      title: "Contact Quirks - Deal",
-      description: "Contacts have special rules when dealing with them.",
-      disabledDescription: "This rule is on the back of the selected Story Card."
-    }
-  },
-  {
-    title: "Seeds Of Rebellion",
-    intro: "The New Resistance is ready to open up some eyes and change a few hearts. They need a savvy captain to deliver key personnel to the heart of Alliance space.",
-    setupDescription: "You may not deal with Harken. Place Harken's 7 Immoral Transport Jobs in separate discard pile to represent New Resistance Missions.",
-    requiredExpansion: "tenth",
-    additionalRequirements: ["blue", "kalidasa"],
-    isSolo: true,
-    sourceUrl: "https://boardgamegeek.com/image/8860507/sjliver",
-    tags: ['character', 'faction_war', 'against_the_black', 'solo'],
-    rules: [
-      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "Seeds Of Rebellion" },
-      { type: 'forbidContact', contact: 'Harken', source: 'story', sourceName: "Seeds Of Rebellion" }
-    ],
-    advancedRule: {
-      id: "adv_lost_little_lambs",
-      title: "Lost Little Lambs",
-      description: "Rescuing crew has additional complications and risks.",
-      disabledDescription: "This rule is on the back of the selected Story Card."
-    }
   }
 ];
