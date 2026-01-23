@@ -1,3 +1,4 @@
+
 import React, { useMemo, useCallback } from 'react';
 import { SpecialRule } from '../types';
 import { OverrideNotificationBlock } from './SpecialRuleBlock';
@@ -19,6 +20,7 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
     infoRules,
     overrideRules,
     hasRimDecks,
+    isDisabled,
   } = useNavDeckDetails(overrides);
 
   const formatRules = useCallback((rules: SpecialRule[]) => {
@@ -65,36 +67,45 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
       ))}
 
       <div className={cls(panelBg, "p-6 rounded-lg border shadow-sm overflow-hidden transition-colors duration-300 space-y-4", panelBorder)}>
-        <div className={cls(panelText, "space-y-2")}>
-          <p>Shuffle the {decksToShuffle} Nav Decks separately.</p>
-          
-          {showStandardRules && (
-            <p>
-              <span className={cls("font-bold border-b border-dotted", isDark ? 'border-zinc-500' : 'border-gray-400')}>
-                For {gameState.playerCount} player{gameState.playerCount > 1 ? 's' : ''}:
-              </span>
-              {' '}
-              {standardReshuffleInstruction}
-            </p>
-          )}
-          
-          {forceReshuffle && (
-            <p className="font-bold">
-              {forcedReshuffleInstruction}
-            </p>
-          )}
-        </div>
-        
-        {clearerSkies && (
-          <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-stone-200')}>
-            <h4 className="font-bold text-lg text-sky-800 dark:text-sky-300">Clearer Skies Rule</h4>
-            <p className={cls("text-sm mt-1", panelText)}>
-              When initiating a <strong className="font-semibold">Full Burn</strong>, roll a die. The result is how many sectors you may move before you start drawing Nav Cards.
-            </p>
-            <p className="text-xs mt-2 italic text-gray-500 dark:text-gray-400">
-              Note: You may not move farther than your Drive Core's range, regardless of the die roll.
-            </p>
-          </div>
+        {isDisabled ? (
+            <div className={cls("text-center italic", isDark ? "text-zinc-500" : "text-gray-500")}>
+               <h4 className="font-bold text-lg mb-2 not-italic">Nav Decks Disabled</h4>
+               <p>Nav Decks are not used in this scenario.</p>
+            </div>
+        ) : (
+            <>
+                <div className={cls(panelText, "space-y-2")}>
+                  <p>Shuffle the {decksToShuffle} Nav Decks separately.</p>
+                  
+                  {showStandardRules && (
+                    <p>
+                      <span className={cls("font-bold border-b border-dotted", isDark ? 'border-zinc-500' : 'border-gray-400')}>
+                        For {gameState.playerCount} player{gameState.playerCount > 1 ? 's' : ''}:
+                      </span>
+                      {' '}
+                      {standardReshuffleInstruction}
+                    </p>
+                  )}
+                  
+                  {forceReshuffle && (
+                    <p className="font-bold">
+                      {forcedReshuffleInstruction}
+                    </p>
+                  )}
+                </div>
+                
+                {clearerSkies && (
+                  <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-stone-200')}>
+                    <h4 className="font-bold text-lg text-sky-800 dark:text-sky-300">Clearer Skies Rule</h4>
+                    <p className={cls("text-sm mt-1", panelText)}>
+                      When initiating a <strong className="font-semibold">Full Burn</strong>, roll a die. The result is how many sectors you may move before you start drawing Nav Cards.
+                    </p>
+                    <p className="text-xs mt-2 italic text-gray-500 dark:text-gray-400">
+                      Note: You may not move farther than your Drive Core's range, regardless of the die roll.
+                    </p>
+                  </div>
+                )}
+            </>
         )}
       </div>
 

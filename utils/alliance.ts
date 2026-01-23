@@ -30,10 +30,6 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
   const standardReaverPlacement = "Place 1 Cutter at the Firefly logo.";
 
   // --- Process general alert token rules ---
-  // Note: Specific rule text for 'awful_crowded' and 'no_alerts' modes is now
-  // handled via explicit `addSpecialRule` entries in data/setupCards.ts.
-  // This block processes any other generic rules added by stories/expansions.
-
   allRules.forEach(rule => {
       if (rule.type === 'addSpecialRule' && rule.category === 'allianceReaver') {
           specialRules.push({
@@ -46,41 +42,54 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
   // --- Process Alliance Cruiser placement ---
   const alliancePlacementRule = allRules.find(r => r.type === 'setAlliancePlacement') as SetAlliancePlacementRule | undefined;
   
-  const finalAlliancePlacement = alliancePlacementRule
-    ? alliancePlacementRule.placement
-    : standardAlliancePlacement;
+  const isAllianceDisabled = alliancePlacementRule?.placement === 'disabled';
+  let finalAlliancePlacement = standardAlliancePlacement;
 
-  if (finalAlliancePlacement !== standardAlliancePlacement) {
-    allianceOverride = {
-        // Use the mapping function to ensure the source type is compatible with the UI component.
-        source: mapRuleSourceToBlockSource(alliancePlacementRule?.source || 'setupCard'),
-        title: 'Alliance Cruiser Placement Override',
-        content: [finalAlliancePlacement]
-    };
+  if (isAllianceDisabled) {
+      finalAlliancePlacement = 'disabled';
+      allianceOverride = {
+          source: mapRuleSourceToBlockSource(alliancePlacementRule?.source || 'story'),
+          title: 'Alliance Cruiser Disabled',
+          content: ['The Alliance Cruiser is not used in this scenario.']
+      };
+  } else if (alliancePlacementRule) {
+      finalAlliancePlacement = alliancePlacementRule.placement;
+      if (finalAlliancePlacement !== standardAlliancePlacement) {
+        allianceOverride = {
+            source: mapRuleSourceToBlockSource(alliancePlacementRule.source),
+            title: 'Alliance Cruiser Placement Override',
+            content: [finalAlliancePlacement]
+        };
+      }
   }
 
   // --- Process Reaver Cutter placement ---
   const reaverPlacementRule = allRules.find(r => r.type === 'setReaverPlacement') as SetReaverPlacementRule | undefined;
   
-  let finalReaverPlacement: string;
-  let reaverOverrideSource: RuleSourceType = 'expansion';
-  let reaverOverrideTitle = 'Reaver Placement';
-  
-  if (reaverPlacementRule) {
-      reaverOverrideSource = reaverPlacementRule.source;
-      reaverOverrideTitle = 'Special Reaver Placement';
-      finalReaverPlacement = reaverPlacementRule.placement;
-  } else {
-      finalReaverPlacement = standardReaverPlacement;
-  }
+  let finalReaverPlacement = standardReaverPlacement;
+  const isReaverDisabled = reaverPlacementRule?.placement === 'disabled';
 
-  if (finalReaverPlacement !== standardReaverPlacement) {
-    reaverOverride = {
-        // Use the mapping function to ensure the source type is compatible with the UI component.
-        source: mapRuleSourceToBlockSource(reaverOverrideSource),
-        title: reaverOverrideTitle,
-        content: [finalReaverPlacement]
-    };
+  if (isReaverDisabled) {
+      finalReaverPlacement = 'disabled';
+      reaverOverride = {
+          source: mapRuleSourceToBlockSource(reaverPlacementRule?.source || 'story'),
+          title: 'Reaver Cutter Disabled',
+          content: ['Reaver Cutters are not used in this scenario.']
+      };
+  } else if (reaverPlacementRule) {
+      finalReaverPlacement = reaverPlacementRule.placement;
+      // Default to 'expansion' if not provided, though typically rules have a source.
+      // Special logic: Reaver placements often come from expansions (Blue Sun) or Setup Cards.
+      // We generally want to show these unless they are standard.
+      // Note: "Place 1 Cutter at the Firefly logo" is standard.
+      // But reaverPlacementRule.placement might be different.
+      if (finalReaverPlacement !== standardReaverPlacement) {
+          reaverOverride = {
+              source: mapRuleSourceToBlockSource(reaverPlacementRule.source),
+              title: 'Reaver Placement',
+              content: [finalReaverPlacement]
+          };
+      }
   }
   
   const infoRules = specialRules.filter(r => r.source === 'info' || r.source === 'warning');
@@ -93,9 +102,9 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
     standardReaverPlacement,
     allianceOverride,
     reaverOverride,
-    // The final resolved placement strings are included for consumption by legacy tests
-    // that don't parse the more complex override objects.
     alliancePlacement: finalAlliancePlacement,
     reaverPlacement: finalReaverPlacement,
+    isAllianceDisabled,
+    isReaverDisabled
   };
 };
