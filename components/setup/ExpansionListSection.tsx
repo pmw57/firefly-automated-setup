@@ -120,34 +120,33 @@ export const ExpansionListSection: React.FC<ExpansionListSectionProps> = ({ expa
                     {core_mechanics.length > 0 && renderGroup('Core Mechanics', core_mechanics)}
                     {map.length > 0 && renderGroup('Map Expansions', map)}
                     {variants.length > 0 && renderGroup('Game Variants', variants)}
+                    {isDevMode && (
+                        <div className="mt-8 pt-6 border-t border-dashed border-gray-300 dark:border-zinc-700">
+                            <div 
+                                role="switch"
+                                aria-checked={state.showHiddenContent}
+                                tabIndex={0}
+                                onClick={() => dispatch({ type: ActionType.TOGGLE_SHOW_HIDDEN_CONTENT })}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dispatch({ type: ActionType.TOGGLE_SHOW_HIDDEN_CONTENT }); } }}
+                                className="flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-colors border-gray-300 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800/50"
+                            >
+                                <div>
+                                    <h3 className="font-bold text-base text-gray-900 dark:text-gray-200">Show Unreleased Content</h3>
+                                    <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">Includes hidden promotional and in-development expansions.</p>
+                                </div>
+                                <div className={cls(
+                                    "w-14 h-8 rounded-full p-1 transition-colors duration-300 ease-in-out flex items-center shrink-0",
+                                    state.showHiddenContent ? 'bg-green-600' : (isDark ? 'bg-zinc-600' : 'bg-gray-300')
+                                )}>
+                                    <div className={cls(
+                                        "bg-white w-6 h-6 rounded-full shadow-sm transform transition-transform duration-300 ease-in-out",
+                                        { 'translate-x-6': state.showHiddenContent, 'translate-x-0': !state.showHiddenContent }
+                                    )}></div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     {independent.length > 0 && renderGroup('Independent Content', independent)}
-                </div>
-            )}
-            
-            {isDevMode && (
-                <div className="mt-8 pt-6 border-t border-dashed border-gray-300 dark:border-zinc-700">
-                    <div 
-                        role="switch"
-                        aria-checked={state.showHiddenContent}
-                        tabIndex={0}
-                        onClick={() => dispatch({ type: ActionType.TOGGLE_SHOW_HIDDEN_CONTENT })}
-                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dispatch({ type: ActionType.TOGGLE_SHOW_HIDDEN_CONTENT }); } }}
-                        className="flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-colors border-gray-300 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800/50"
-                    >
-                        <div>
-                            <h3 className="font-bold text-base text-gray-900 dark:text-gray-200">Show Unreleased Content</h3>
-                            <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">Includes hidden promotional and in-development expansions.</p>
-                        </div>
-                        <div className={cls(
-                            "w-14 h-8 rounded-full p-1 transition-colors duration-300 ease-in-out flex items-center shrink-0",
-                            state.showHiddenContent ? 'bg-green-600' : (isDark ? 'bg-zinc-600' : 'bg-gray-300')
-                        )}>
-                            <div className={cls(
-                                "bg-white w-6 h-6 rounded-full shadow-sm transform transition-transform duration-300 ease-in-out",
-                                { 'translate-x-6': state.showHiddenContent, 'translate-x-0': !state.showHiddenContent }
-                            )}></div>
-                        </div>
-                    </div>
                 </div>
             )}
         </div>
