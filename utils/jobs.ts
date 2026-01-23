@@ -9,24 +9,17 @@ import {
     ForbidContactRule,
     AllowContactsRule,
     SetJobModeRule,
-    RuleSourceType,
     SetupRule,
     SetJobContactsRule,
-    SpecialRule,
     ChallengeOption,
     SetJobStepContentRule,
-    JobContactListConfig
+    JobContactListConfig,
+    RuleSourceType
 } from '../types/index';
 import { getResolvedRules } from './selectors/rules';
 import { CONTACT_NAMES, CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
-
-const mapSource = (source: RuleSourceType): SpecialRule['source'] => {
-    if (source === 'challenge') return 'warning';
-    if (source === 'combinableSetupCard') return 'setupCard';
-    if (source === 'optionalRule') return 'info';
-    return source as SpecialRule['source'];
-};
+import { mapRuleSourceToBlockSource, processOverrulableRules } from './ruleProcessing';
 
 const _getJobRulesMessages = (allRules: SetupRule[], phase: 'deck_setup' | 'job_draw'): JobSetupMessage[] => {
     const messages: JobSetupMessage[] = [];
@@ -34,22 +27,9 @@ const _getJobRulesMessages = (allRules: SetupRule[], phase: 'deck_setup' | 'job_
         // Explicit Text Rules (addSpecialRule)
         if (rule.type === 'addSpecialRule' && rule.category === 'jobs') {
              const flags = rule.rule.flags || [];
-             
-             // Phase Filtering:
-             // If a rule is explicitly tagged for deck setup, don't show it during job draw.
              if (flags.includes('phase_deck_setup') && phase !== 'deck_setup') return;
-             
-             // If a rule is explicitly tagged for job draw, don't show it during deck setup.
-             // (Though usually default rules appear in job draw)
              if (flags.includes('phase_job_draw') && phase !== 'job_draw') return;
-
-             // If we are in deck setup phase, we generally treat it as a specialized step.
-             // To prevent generic job rules (like "Remove Piracy Jobs") from appearing here 
-             // AND in the later step, we can be restrictive.
-             // However, simply respecting the phase_deck_setup flag is usually sufficient 
-             // if the content definition is correct.
-             
-             messages.push({ source: mapSource(rule.source), ...rule.rule });
+             messages.push({ source: mapRuleSourceToBlockSource(rule.source), ...rule.rule });
         }
     });
     return messages;
@@ -78,7 +58,6 @@ const _getInitialContacts = (allRules: SetupRule[], gameState: GameState): strin
                     CONTACT_NAMES.MAGISTRATE_HIGGINS
                 );
             }
-            // Future expansions can be added here
             return allContacts;
         } else if (jobContactsRule.preset === 'custom' || jobContactsRule.contacts?.length > 0) {
             return jobContactsRule.contacts;
@@ -131,11 +110,22 @@ const getTextFromContent = (content: StructuredContent): string => {
     }).join('');
 };
 
+const getJobModeLabel = (rule: SetJobModeRule): string => {
+    // Return the custom description if available, otherwise a generic fallback
+    return rule.jobDescription || `Active Job Mode: ${rule.mode}`;
+};
+
 export const getJobSetupDetails = (gameState: GameState, overrides: StepOverrides): JobSetupDetails => {
     const allRules = getResolvedRules(gameState);
     const activeStoryCard = getActiveStoryCard(gameState);
 
-    const jobModeRule = allRules.find(r => r.type === 'setJobMode') as SetJobModeRule | undefined;
+    const jobModeRules = allRules.filter((r): r is SetJobModeRule => r.type === 'setJobMode');
+    const { activeRule: jobModeRule, overruledRules: jobOverruled } = processOverrulableRules(
+        jobModeRules,
+        getJobModeLabel,
+        () => 'Starting Jobs'
+    );
+
     const jobDrawMode: JobMode = jobModeRule?.mode || overrides.jobMode || 'standard';
     const { jobStepPhase = 'job_draw' } = overrides;
 
@@ -145,6 +135,9 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     
     // Collect all messages first, passing the current phase
     const messages = _getJobRulesMessages(allRules, jobStepPhase);
+    
+    // Append overruled messages
+    messages.push(...jobOverruled);
     
     // Handle specific challenge warnings
     const processedChallenges = new Set<string>();
@@ -182,25 +175,15 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
     const mainContentPosition = jobStepContentRule?.position || 'before';
 
     if (jobDrawMode === 'hide_jobs') {
-        // In 'hide_jobs' mode, we intentionally do not generate the "No Starting Jobs" message
-        // or the contact list. This mode is used when a story completely replaces the concept
-        // of starting jobs or handles instructions manually via other rules/components.
-        
-        // We still allow 'mainContent' (via setJobStepContent) and manual rule messages to pass through,
-        // but default warnings are suppressed.
-        
+        // Mode 'hide_jobs' behavior preserved...
     } else if (jobDrawMode !== 'no_jobs' && jobDrawMode !== 'caper_start') {
-        // Logic for Standard/Shared Hand/Draft modes
         const initialContacts = _getInitialContacts(allRules, gameState);
         const contacts = _filterContacts(initialContacts, allRules);
 
         // Generate contact restriction warnings if needed
         if (jobStepPhase !== 'deck_setup') {
             const jobContactsRule = allRules.find(r => r.type === 'setJobContacts') as SetJobContactsRule | undefined;
-            // The compiler may believe 'all' is not in preset type, causing an overlap error. 
-            // We cast to string to safely perform the check.
             if (jobContactsRule && (jobContactsRule.preset as string) !== 'all') {
-                // Find all forbidden contacts that might cause a conflict with the initial contact list
                 const forbiddenRules = allRules.filter(r => r.type === 'forbidContact') as ForbidContactRule[];
                 const conflicts = forbiddenRules
                     .map(r => r.contact)
@@ -229,8 +212,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
                         ]
                     });
                 } else if (jobContactsRule.preset !== 'all') {
-                    // Only show "Limited Contacts" message if we aren't using "all" mode,
-                    // as "all" implies the story specifically wants to expand options, not limit them.
                     messages.push({ 
                         source: 'setupCard', 
                         title: 'Limited Contacts', 
@@ -259,7 +240,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             
             let description = '';
 
-            // Use description from data if provided, otherwise fallback to defaults
             if (jobModeRule?.jobDescription) {
                  description = jobModeRule.jobDescription;
             } else {
@@ -289,15 +269,10 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         }
 
     } else {
-        // Mode is no_jobs or caper_start
-        // Add generic "No Starting Jobs" message if the mode is specifically 'no_jobs'.
-        // If content is manually overridden via rules, this message is STILL shown to prevent ambiguity.
-        // Use 'hide_jobs' mode if suppression is required.
-        
         if (jobDrawMode === 'no_jobs') {
+            // Using the source from the active rule if available, otherwise defaulting.
             const jobModeSource: RuleSourceType = jobModeRule ? jobModeRule.source : 'setupCard';
-            // Simple mapping since we're generating the message directly
-            const validSource = mapSource(jobModeSource);
+            const validSource = mapRuleSourceToBlockSource(jobModeSource);
              
             messages.push({
                 source: validSource,
@@ -306,7 +281,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
             });
         }
         
-        // Priming
         const dontPrime = !!gameState.challengeOptions[CHALLENGE_IDS.DONT_PRIME_CONTACTS];
         if (!dontPrime && allRules.some(r => r.type === 'primeContacts')) {
              primeInstruction = [
@@ -316,7 +290,6 @@ export const getJobSetupDetails = (gameState: GameState, overrides: StepOverride
         }
     }
 
-    // Caper Logic
     if (jobDrawMode === 'caper_start') {
         caperDraw = 1;
     } else {

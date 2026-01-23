@@ -1,5 +1,6 @@
 
 import { SpecialRule, StructuredContent } from './core';
+import { Expansions } from './common';
 
 export type JobMode = 
   | 'shared_hand'
@@ -45,10 +46,16 @@ export interface ModifyResourceEffect extends Effect {
 
 export type RuleSourceType = 'story' | 'setupCard' | 'expansion' | 'optionalRule' | 'challenge' | 'combinableSetupCard' | 'warning' | 'info';
 
+export interface RuleCriteria {
+    requireExpansion?: keyof Expansions;
+    excludeExpansion?: keyof Expansions;
+}
+
 export interface BaseRule {
   type: string;
   source: RuleSourceType;
   sourceName: string;
+  criteria?: RuleCriteria;
 }
 
 export interface SetJobModeRule extends BaseRule { type: 'setJobMode'; mode: JobMode; jobDescription?: string; }

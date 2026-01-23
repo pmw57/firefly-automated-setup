@@ -6,17 +6,18 @@ import {
     ModifyPrimeRule,
     SpecialRule,
     SetPrimeModeRule,
-    AddSpecialRule,
-    RuleSourceType
+    AddSpecialRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { EXPANSIONS_METADATA } from '../data/expansions';
+import { mapRuleSourceToBlockSource, processOverrulableRules } from './ruleProcessing';
 
-const mapSource = (source: RuleSourceType): SpecialRule['source'] => {
-    if (source === 'challenge') return 'warning';
-    if (source === 'combinableSetupCard') return 'setupCard';
-    if (source === 'optionalRule') return 'info';
-    return source as SpecialRule['source'];
+const getPrimeModeLabel = (rule: SetPrimeModeRule): string => {
+    switch (rule.mode) {
+        case 'blitz': return 'The Blitz (Double Dip)';
+        case 'standard': return 'Standard Priming';
+        default: return 'Custom Priming';
+    }
 };
 
 export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides): PrimeDetails => {
@@ -38,12 +39,12 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
         const r = rule as AddSpecialRule;
         if (r.category === 'prime') {
             specialRules.push({
-                source: mapSource(r.source),
+                source: mapRuleSourceToBlockSource(r.source),
                 ...r.rule
             });
         } else if (r.category === 'prime_panel') {
             primePanels.push({
-                source: mapSource(r.source),
+                source: mapRuleSourceToBlockSource(r.source),
                 ...r.rule
             });
         }
@@ -56,8 +57,14 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   const primeModifierRule = allRules.find(r => r.type === 'modifyPrime' && r.modifier !== undefined) as ModifyPrimeRule | undefined;
   const primeModifier = primeModifierRule?.modifier;
 
-  const primeModeRule = allRules.find(r => r.type === 'setPrimeMode') as SetPrimeModeRule | undefined;
-  const isBlitz = primeModeRule?.mode === 'blitz' || overrides.primeMode === 'blitz';
+  const primeModeRules = allRules.filter((r): r is SetPrimeModeRule => r.type === 'setPrimeMode');
+  const { activeRule: activePrimeModeRule, overruledRules: primeOverruled } = processOverrulableRules(
+      primeModeRules,
+      getPrimeModeLabel,
+      () => 'Prime Mode'
+  );
+
+  const isBlitz = activePrimeModeRule?.mode === 'blitz' || overrides.primeMode === 'blitz';
 
   const hasStartWithAlertCard = hasRuleFlag(allRules, 'startWithAlertCard');
 
@@ -67,6 +74,9 @@ export const getPrimeDetails = (gameState: GameState, overrides: StepOverrides):
   let finalCount = baseDiscard * effectiveMultiplier;
   if (primeModifier?.add) finalCount += primeModifier.add;
   
+  // Add overruled rules
+  specialRules.push(...primeOverruled);
+
   const infoRules = specialRules.filter(r => r.source === 'info' || r.source === 'warning');
   const overrideRules = specialRules.filter(r => r.source !== 'info' && r.source !== 'warning');
 

@@ -4,34 +4,37 @@ import {
     NavDeckSetupDetails,
     StepOverrides,
     SetNavModeRule,
-    SpecialRule,
-    RuleSourceType
+    SpecialRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
-import { RULE_PRIORITY_ORDER } from '../data/constants';
+import { mapRuleSourceToBlockSource, processOverrulableRules } from './ruleProcessing';
 
-const mapSource = (source: RuleSourceType): SpecialRule['source'] => {
-    if (source === 'challenge') return 'warning';
-    if (source === 'combinableSetupCard') return 'setupCard';
-    if (source === 'optionalRule') return 'info';
-    return source as SpecialRule['source'];
+const getNavModeLabel = (rule: SetNavModeRule): string => {
+    switch (rule.mode) {
+        case 'standard': return 'Standard Rules';
+        case 'standard_reshuffle': return 'Standard (Forced Reshuffle)';
+        case 'browncoat': return 'Browncoat Rules (Hard Economy)';
+        case 'rim': return 'Rim Space Rules';
+        case 'flying_solo': return 'Flying Solo Rules';
+        case 'clearer_skies': return 'Clearer Skies Variant';
+        case 'disabled': return 'Nav Decks Disabled';
+        default: return 'Custom Rules';
+    }
 };
 
 export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides): NavDeckSetupDetails => {
     const allRules = getResolvedRules(gameState);
 
-    // Find all nav mode rules and sort them by priority
-    const navModeRules = allRules.filter(
-        (r): r is SetNavModeRule => r.type === 'setNavMode'
+    const navModeRules = allRules.filter((r): r is SetNavModeRule => r.type === 'setNavMode');
+    
+    // Use helper to resolve priority and identify overruled rules
+    const { activeRule, overruledRules: navOverruled } = processOverrulableRules(
+        navModeRules,
+        getNavModeLabel,
+        () => 'Nav Deck Rules'
     );
     
-    if (navModeRules.length > 1) {
-        navModeRules.sort((a, b) => RULE_PRIORITY_ORDER.indexOf(a.source) - RULE_PRIORITY_ORDER.indexOf(b.source));
-    }
-    
-    // The highest priority rule is the first one in the sorted list
-    const navModeRule = navModeRules[0];
-    const navMode = navModeRule?.mode || overrides.navMode;
+    const navMode = activeRule?.mode || overrides.navMode;
     
     const isDisabled = navMode === 'disabled';
     const forceReshuffle = !isDisabled && ['standard_reshuffle', 'browncoat', 'rim', 'clearer_skies', 'flying_solo'].includes(navMode || '');
@@ -43,11 +46,14 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule' && rule.category === 'nav') {
             specialRules.push({
-                source: mapSource(rule.source),
+                source: mapRuleSourceToBlockSource(rule.source),
                 ...rule.rule
             });
         }
     });
+
+    // Add identified overruled rules to the list
+    specialRules.push(...navOverruled);
 
     const infoRules = specialRules.filter(r => r.source === 'info' || r.source === 'warning');
     const overrideRules = specialRules.filter(r => r.source !== 'info' && r.source !== 'warning');
