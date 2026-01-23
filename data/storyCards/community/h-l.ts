@@ -112,7 +112,7 @@ export const STORIES_H_L: StoryCardDef[] = [
       { type: 'modifyResource', resource: 'warrants', method: 'add', value: 2, description: "Start with 2 Warrants.", source: 'story', sourceName: "It Ain't Easy Goin' Legit" },
       { 
         type: 'addSpecialRule', 
-        category: 'nav', 
+        category: 'draft', 
         rule: { 
             title: 'Restricted Airspace', 
             content: [{ type: 'strong', content: `Alliance Space is Off Limits` }, ` until Goal 3.`] 

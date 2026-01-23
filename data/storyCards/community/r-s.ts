@@ -250,10 +250,20 @@ export const STORIES_R_S: StoryCardDef[] = [
       { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No parts used.", source: 'story', sourceName: "Scavengers" },
       {
         type: 'addSpecialRule',
-        category: 'resources',
+        category: 'nav',
         rule: {
-          title: 'Starting Cargo',
-          content: ["Each player begins with 10 Cargo."]
+          title: 'Component Not Used',
+          content: ["Nav Decks are not used in this scenario."]
+        },
+        source: 'story', 
+        sourceName: "Scavengers"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'allianceReaver',
+        rule: {
+          title: 'Component Not Used',
+          content: ["Alliance Cruiser and Reaver ships are not used in this scenario."]
         },
         source: 'story', 
         sourceName: "Scavengers"
@@ -270,20 +280,10 @@ export const STORIES_R_S: StoryCardDef[] = [
       },
       {
         type: 'addSpecialRule',
-        category: 'nav',
+        category: 'resources',
         rule: {
-          title: 'Component Not Used',
-          content: ["Nav Decks are not used in this scenario."]
-        },
-        source: 'story', 
-        sourceName: "Scavengers"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'allianceReaver',
-        rule: {
-          title: 'Component Not Used',
-          content: ["Alliance Cruiser and Reaver ships are not used in this scenario."]
+          title: 'Starting Cargo',
+          content: ["Each player begins with 10 Cargo."]
         },
         source: 'story', 
         sourceName: "Scavengers"
