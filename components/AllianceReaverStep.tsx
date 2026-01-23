@@ -1,3 +1,4 @@
+
 import React, { useMemo, useCallback } from 'react';
 import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
@@ -33,7 +34,9 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
     standardAlliancePlacement,
     standardReaverPlacement,
     allianceOverride,
-    reaverOverride
+    reaverOverride,
+    isAllianceDisabled,
+    isReaverDisabled
   } = useAllianceReaverDetails();
 
   const { theme } = useTheme();
@@ -42,9 +45,10 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
   const formatRules = useCallback((rules: SpecialRule[], includeShipOverrides = false) => {
       const combined = [...rules];
 
-      // The alliance/reaver overrides are rendered inline, so the notification blocks
-      // for them are for extra context in detailed mode only.
-      if (includeShipOverrides && setupMode === 'detailed') {
+      // Add the ship-specific overrides to the list if requested.
+      // We rely on the subsequent filter to hide them in Quick mode if they come from a Story.
+      // Setup Card or Expansion overrides should be visible even in Quick mode.
+      if (includeShipOverrides) {
           if (allianceOverride) combined.push(allianceOverride);
           if (reaverOverride) combined.push(reaverOverride);
       }
@@ -56,6 +60,9 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
       let sorted = combined.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
 
       if (setupMode === 'quick') {
+        // In Quick mode, we specifically hide Story overrides as they are considered "fluff" 
+        // or redundant to the main card text in some contexts, but vital mechanics 
+        // from Setup Cards/Expansions must remain.
         sorted = sorted.filter(r => r.source !== 'story');
       }
 
@@ -77,6 +84,10 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
   const reaverBoxBg = isDark ? 'bg-red-900/20 border-red-900/50' : 'bg-red-50 border-red-100';
   const reaverTitle = isDark ? 'text-red-300' : 'text-red-900';
   const reaverText = isDark ? 'text-red-200' : 'text-red-800';
+  
+  const disabledBoxBg = isDark ? 'bg-zinc-800/40 border-zinc-700' : 'bg-gray-100 border-gray-200';
+  const disabledTitle = isDark ? 'text-zinc-500 line-through' : 'text-gray-400 line-through';
+  const disabledText = isDark ? 'text-zinc-500 italic' : 'text-gray-500 italic';
 
   return (
     <div className="space-y-4">
@@ -87,19 +98,33 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
       <div className={`${standardContainerBg} p-4 rounded-lg border ${standardContainerBorder} shadow-sm mt-4 transition-colors duration-300`}>
         <h3 className={`text-lg font-bold ${headerColor} mb-3 font-western tracking-wide border-b-2 ${headerBorder} pb-1`}>Ship Placement</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className={cls('p-3 rounded border', allianceBoxBg)}>
-            <strong className={cls('block text-sm uppercase mb-1', allianceTitle)}>{allianceOverride?.title || 'Alliance Cruiser'}</strong>
-            <p className={cls('text-sm', allianceText)}>
-              {allianceOverride ? renderContent(allianceOverride.content) : standardAlliancePlacement}
+          
+          {/* Alliance Ship Panel */}
+          <div className={cls('p-3 rounded border transition-colors', isAllianceDisabled ? disabledBoxBg : allianceBoxBg)}>
+            <strong className={cls('block text-sm uppercase mb-1', isAllianceDisabled ? disabledTitle : allianceTitle)}>
+              {allianceOverride?.title || 'Alliance Cruiser'}
+            </strong>
+            <p className={cls('text-sm', isAllianceDisabled ? disabledText : allianceText)}>
+              {isAllianceDisabled 
+                ? 'Not used in this scenario.' 
+                : (allianceOverride ? renderContent(allianceOverride.content) : standardAlliancePlacement)
+              }
             </p>
           </div>
           
-          <div className={cls('p-3 rounded border', reaverBoxBg)}>
-            <strong className={cls('block text-sm uppercase mb-1', reaverTitle)}>{reaverOverride?.title || 'Reaver Cutter'}</strong>
-            <p className={cls('text-sm', reaverText)}>
-              {reaverOverride ? renderContent(reaverOverride.content) : standardReaverPlacement}
+          {/* Reaver Ship Panel */}
+          <div className={cls('p-3 rounded border transition-colors', isReaverDisabled ? disabledBoxBg : reaverBoxBg)}>
+            <strong className={cls('block text-sm uppercase mb-1', isReaverDisabled ? disabledTitle : reaverTitle)}>
+              {reaverOverride?.title || 'Reaver Cutter'}
+            </strong>
+            <p className={cls('text-sm', isReaverDisabled ? disabledText : reaverText)}>
+              {isReaverDisabled 
+                ? 'Not used in this scenario.'
+                : (reaverOverride ? renderContent(reaverOverride.content) : standardReaverPlacement)
+              }
             </p>
           </div>
+
         </div>
       </div>
 

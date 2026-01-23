@@ -15,7 +15,7 @@ export type JobMode =
   | 'caper_start' 
   | 'wind_takes_us';
 
-export type NavMode = 'standard' | 'browncoat' | 'rim' | 'flying_solo' | 'clearer_skies' | 'standard_reshuffle';
+export type NavMode = 'standard' | 'browncoat' | 'rim' | 'flying_solo' | 'clearer_skies' | 'standard_reshuffle' | 'disabled';
 export type PrimeMode = 'standard' | 'blitz';
 export type DraftMode = 'standard' | 'browncoat';
 export type LeaderSetupMode = 'standard' | 'wanted';

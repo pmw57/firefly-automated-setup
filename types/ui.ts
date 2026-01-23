@@ -65,6 +65,7 @@ export interface NavDeckSetupDetails {
   infoRules: SpecialRule[];
   overrideRules: SpecialRule[];
   hasRimDecks: boolean;
+  isDisabled: boolean;
 }
 
 export interface AllianceReaverDetails {
@@ -76,6 +77,8 @@ export interface AllianceReaverDetails {
   reaverOverride: SpecialRule | undefined;
   alliancePlacement: string;
   reaverPlacement: string;
+  isAllianceDisabled: boolean;
+  isReaverDisabled: boolean;
 }
 
 export interface ConflictOptionDetails {
