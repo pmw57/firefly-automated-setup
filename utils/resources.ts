@@ -14,13 +14,7 @@ import {
 import { getResolvedRules } from './selectors/rules';
 import { getActiveStoryCard } from './selectors/story';
 import { RULE_PRIORITY_ORDER } from '../data/constants';
-
-const mapSource = (source: RuleSourceType): SpecialRule['source'] => {
-    if (source === 'challenge') return 'warning';
-    if (source === 'combinableSetupCard') return 'setupCard';
-    if (source === 'optionalRule') return 'info';
-    return source as SpecialRule['source'];
-};
+import { mapRuleSourceToBlockSource } from './ruleProcessing';
 
 const _findCreditConflict = (resourceRules: ModifyResourceRule[], manualResolutionEnabled: boolean): {
     conflict?: ResourceConflict;
@@ -50,14 +44,15 @@ const _applyResourceRules = (
     rulesForResource: ModifyResourceRule[],
     creditConflictInfo: ReturnType<typeof _findCreditConflict>,
     manualSelection?: 'story' | 'setupCard'
-): { value: number; modifications: { description: string; value: string }[] } => {
+): { value: number; modifications: { description: string; value: string }[], overruledRules: SpecialRule[] } => {
     let finalValue = baseValue;
     let modifications: { description: string; value: string }[] = [];
+    const overruledRules: SpecialRule[] = [];
 
     if (rulesForResource.some(r => r.method === 'disable')) {
         const disablingRule = rulesForResource.find(r => r.method === 'disable')!;
         modifications.push({ description: disablingRule.description, value: '0' });
-        return { value: 0, modifications };
+        return { value: 0, modifications, overruledRules: [] };
     }
 
     // Handle 'set' rules
@@ -67,6 +62,8 @@ const _applyResourceRules = (
             finalValue = selectedRule.value;
             modifications = [{ description: selectedRule.description, value: `$${finalValue.toLocaleString()}` }];
         }
+        // In manual conflict, we don't treat the other as "overruled" in the badge sense, 
+        // as the user made an explicit choice via UI.
     } else {
         const setRules = rulesForResource.filter(r => r.method === 'set');
         if (setRules.length > 0) {
@@ -76,6 +73,19 @@ const _applyResourceRules = (
                 finalValue = topRule.value;
                 if (resourceType === 'credits') {
                     modifications = [{ description: topRule.description, value: `$${finalValue.toLocaleString()}` }];
+                }
+            }
+
+            // Identify overridden 'set' rules
+            for (let i = 1; i < setRules.length; i++) {
+                const loser = setRules[i];
+                if (loser.value !== undefined && loser.value !== topRule.value) {
+                     overruledRules.push({
+                        source: mapRuleSourceToBlockSource(loser.source),
+                        title: `${resourceType === 'credits' ? 'Starting Capitol' : 'Starting Resource'} (${loser.sourceName})`,
+                        badge: 'Overruled',
+                        content: [{ type: 'paragraph-small-italic', content: [`Original value: ${loser.value}`] }]
+                     });
                 }
             }
         }
@@ -97,12 +107,11 @@ const _applyResourceRules = (
         }
     });
     
-    // Default modification for credits if no other rules applied
     if (resourceType === 'credits' && modifications.length === 0) {
         modifications.push({ description: "Standard Allocation", value: `$${finalValue.toLocaleString()}` });
     }
 
-    return { value: finalValue, modifications };
+    return { value: finalValue, modifications, overruledRules };
 };
 
 export const getResourceDetails = (gameState: GameState, manualSelection?: 'story' | 'setupCard'): ResourceDetails => {
@@ -143,26 +152,21 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     });
   }
   
-  // Smugglers Blues variant check
   const smugglersBluesVariantAvailable = 
       !!activeStoryCard?.challengeOptions?.some(o => o.id === 'smugglers_blues_rim_variant') &&
       gameState.expansions.blue && 
       gameState.expansions.kalidasa;
   
-  // Create deep copy of board component rules to avoid mutating the original rule objects in state/data
   const addBoardComponentRules = allRules
       .filter((r): r is AddBoardComponentRule => r.type === 'addBoardComponent')
       .map(r => ({ ...r }));
 
   addBoardComponentRules.forEach(rule => {
-    // Dynamic logic for Smuggler's Blues variant
     if (rule.sourceName === "Smuggler's Blues" && rule.title === 'A Lucrative Opportunity') {
         if (gameState.challengeOptions['smugglers_blues_rim_variant']) {
             rule.count = 2;
             rule.targetRegion = 'Rim Space';
-            // Clear explicit locations to force dynamic generation based on new region
             rule.locations = [];
-            // Clear titles to allow dynamic regeneration
             rule.locationTitle = undefined;
             rule.locationSubtitle = undefined;
         }
@@ -171,7 +175,6 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     let locationTitle = rule.locationTitle;
     let locationSubtitle = rule.locationSubtitle;
 
-    // Dynamically generate location text based on distribution properties if not explicitly provided
     if (!locationTitle && rule.distribution) {
         if (rule.distribution === 'region' && rule.targetRegion) {
             locationTitle = `${rule.count} on each Planetary Sector`;
@@ -186,10 +189,9 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     }
 
     boardSetupRules.push({
-      source: mapSource(rule.source),
+      source: mapRuleSourceToBlockSource(rule.source),
       title: rule.title,
       content: [],
-      // Pass through new visual properties
       icon: rule.icon,
       locationTitle: locationTitle,
       locationSubtitle: locationSubtitle
@@ -198,7 +200,7 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
 
   allRules.forEach(rule => {
     if (rule.type === 'addSpecialRule' && rule.category === 'resources') {
-        const newRule = { source: mapSource(rule.source), ...rule.rule };
+        const newRule = { source: mapRuleSourceToBlockSource(rule.source), ...rule.rule };
         
         if (!newRule.flags?.includes('hideFromTop')) {
                 specialRules.push(newRule);
@@ -217,7 +219,7 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
   const creditConflictInfo = _findCreditConflict(resourceRules, !!gameState.optionalRules.resolveConflictsManually);
   
   (Object.keys(baseResources) as ResourceType[]).forEach(resource => {
-    const { value, modifications } = _applyResourceRules(
+    const { value, modifications, overruledRules } = _applyResourceRules(
       resource,
       baseResources[resource],
       resourceRules.filter(r => r.resource === resource),
@@ -228,6 +230,8 @@ export const getResourceDetails = (gameState: GameState, manualSelection?: 'stor
     if (resource === 'credits') {
       finalCreditModifications = modifications;
     }
+    // Add any overruled rules found during calculation
+    specialRules.push(...overruledRules);
   });
   
   const getModificationInfo = (resource: ResourceType): { source?: RuleSourceType; description?: string } => {

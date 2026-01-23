@@ -1,5 +1,4 @@
 
-
 import { GameState, SetupRule, RuleSourceType } from '../../types/index';
 import { getSetupCardById } from './story';
 import { getActiveStoryCard } from './story';
@@ -16,6 +15,17 @@ import { EXPANSIONS_METADATA } from '../../data/expansions';
 export const getResolvedRules = (gameState: GameState): SetupRule[] => {
     const rules: SetupRule[] = [];
 
+    // Helper to check if a rule's criteria are met by the current game state
+    const isRuleActive = (rule: SetupRule): boolean => {
+        if (!rule.criteria) return true;
+        const { requireExpansion, excludeExpansion } = rule.criteria;
+        
+        if (requireExpansion && !gameState.expansions[requireExpansion]) return false;
+        if (excludeExpansion && gameState.expansions[excludeExpansion]) return false;
+        
+        return true;
+    };
+
     // Rules from Setup Cards
     const primaryCard = getSetupCardById(gameState.setupCardId);
     const isCombinable = !!primaryCard?.isCombinable;
@@ -26,31 +36,35 @@ export const getResolvedRules = (gameState: GameState): SetupRule[] => {
         const secondaryCard = getSetupCardById(gameState.secondarySetupId);
         if (secondaryCard?.rules) {
             // These rules retain the standard 'setupCard' source for high priority.
-            rules.push(...secondaryCard.rules);
+            rules.push(...secondaryCard.rules.filter(isRuleActive));
         }
     }
     
     if (primaryCard?.rules) {
         if (isCombinable) {
             // The combinable card's rules are assigned a lower-priority source.
-            const combinableRules = primaryCard.rules.map((rule: SetupRule) => ({ ...rule, source: 'combinableSetupCard' as RuleSourceType }));
+            const combinableRules = primaryCard.rules
+                .filter(isRuleActive)
+                .map((rule: SetupRule) => ({ ...rule, source: 'combinableSetupCard' as RuleSourceType }));
             rules.push(...combinableRules);
         } else {
             // If not a combinable setup, it's a standard setup card.
-            rules.push(...primaryCard.rules);
+            rules.push(...primaryCard.rules.filter(isRuleActive));
         }
     }
     
     // Rules from Story Card (Highest Priority)
     const storyCard = getActiveStoryCard(gameState);
     if (storyCard?.rules) {
-        rules.push(...storyCard.rules);
+        rules.push(...storyCard.rules.filter(isRuleActive));
     }
 
     // Rules from Active Expansions
+    // Expansion rules generally imply the expansion is active, but we filter just in case
+    // they have complex internal criteria (though unusual).
     for (const expansion of EXPANSIONS_METADATA) {
         if (expansion.rules && gameState.expansions[expansion.id as keyof typeof gameState.expansions]) {
-            rules.push(...expansion.rules);
+            rules.push(...expansion.rules.filter(isRuleActive));
         }
     }
     

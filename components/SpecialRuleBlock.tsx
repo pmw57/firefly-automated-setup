@@ -1,3 +1,4 @@
+
 import React, { useMemo } from 'react';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';
@@ -11,10 +12,11 @@ export interface OverrideNotificationBlockProps {
   content: StructuredContent;
   page?: string | number;
   manual?: string;
+  badge?: string;
   className?: string;
 }
 
-export const OverrideNotificationBlock: React.FC<OverrideNotificationBlockProps> = ({ source, title, content, page, manual, className }) => {
+export const OverrideNotificationBlock: React.FC<OverrideNotificationBlockProps> = ({ source, title, content, page, manual, badge, className }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -64,7 +66,14 @@ export const OverrideNotificationBlock: React.FC<OverrideNotificationBlockProps>
                 <span id={labelId} className={cls("text-[10px] font-bold uppercase tracking-widest opacity-60 block mb-0.5", s.text)}>
                   {labels[source]}
                 </span>
-                {title && <h4 id={titleId} className={cls("font-bold text-base leading-tight", s.text)}>{title}</h4>}
+                <div className="flex items-center gap-2 flex-wrap">
+                    {title && <h4 id={titleId} className={cls("font-bold text-base leading-tight", s.text)}>{title}</h4>}
+                    {badge && (
+                        <span className={cls("text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border border-current opacity-70", s.text)}>
+                            {badge}
+                        </span>
+                    )}
+                </div>
               </div>
             </div>
             {page && <PageReference page={page} manual={manual} />}

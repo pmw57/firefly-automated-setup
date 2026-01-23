@@ -8,18 +8,25 @@ import {
     SetDraftModeRule,
     SetPlayerBadgesRule,
     ThemeColor,
-    AddSpecialRule,
-    RuleSourceType
+    AddSpecialRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
+import { mapRuleSourceToBlockSource, processOverrulableRules } from './ruleProcessing';
 
-const mapSource = (source: RuleSourceType): SpecialRule['source'] => {
-    if (source === 'challenge') return 'warning';
-    if (source === 'combinableSetupCard') return 'setupCard';
-    if (source === 'optionalRule') return 'info';
-    return source as SpecialRule['source'];
+const getShipPlacementLabel = (rule: SetShipPlacementRule): string => {
+    if (typeof rule.location === 'string') {
+        switch (rule.location) {
+            case 'persephone': return 'Start at Persephone';
+            case 'londinium': return 'Start at Londinium';
+            case 'outside_alliance': return 'Start Outside Alliance Space';
+            default: return `Start at ${rule.location}`;
+        }
+    }
+    if ('sector' in rule.location) return `Start at ${rule.location.sector}`;
+    if ('region' in rule.location) return `Start in ${rule.location.region}`;
+    return 'Custom Start Location';
 };
 
 export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRuleDetails, 'isRuiningIt'> => {
@@ -43,7 +50,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule') {
             const r = rule as AddSpecialRule;
-            const contentRule: SpecialRule = { source: mapSource(r.source), ...r.rule };
+            const contentRule: SpecialRule = { source: mapRuleSourceToBlockSource(r.source), ...r.rule };
             const position = r.rule.position || 'after';
 
             switch (r.category) {
@@ -88,11 +95,17 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const isHavenDraft = !!havenPlacementRules;
     const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
     
-    // Check if the "Heroes & Misfits: Further Adventures" rule exists to detect the story context,
-    // rather than using a hardcoded flag.
+    // Check if the "Heroes & Misfits: Further Adventures" rule exists to detect the story context
     const isHeroesAndMisfitsActive = allRules.some(r => r.type === 'addSpecialRule' && r.rule.title === 'Heroes & Misfits: Further Adventures');
 
-    const shipPlacementRule = allRules.find(r => r.type === 'setShipPlacement') as (SetShipPlacementRule | undefined);
+    const shipPlacementRules = allRules.filter((r): r is SetShipPlacementRule => r.type === 'setShipPlacement');
+    const { activeRule: shipPlacementRule, overruledRules: placementOverruled } = processOverrulableRules(
+        shipPlacementRules,
+        getShipPlacementLabel,
+        () => 'Starting Location'
+    );
+    
+    specialRules.push(...placementOverruled);
     
     let specialStartSector: string | null = null;
     const placementRegionRestriction: string | null = null;
@@ -111,15 +124,19 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
         if ('sector' in shipPlacementRule.location) {
             specialStartSector = shipPlacementRule.location.sector;
         }
-        // NOTE: We no longer automatically extract 'region' restrictions.
-        // Instead, we rely on `draft_placement` rules defined in the story/setup data 
-        // to populate the UI panel. This prevents code/data duplication logic errors.
       }
     }
 
     // --- Process Flags into Panel Extras ---
     
-    const draftModeRule = allRules.find(r => r.type === 'setDraftMode') as SetDraftModeRule | undefined;
+    const draftModeRules = allRules.filter((r): r is SetDraftModeRule => r.type === 'setDraftMode');
+    const { activeRule: draftModeRule, overruledRules: draftModeOverruled } = processOverrulableRules(
+        draftModeRules,
+        (r) => r.mode === 'browncoat' ? 'Browncoat Draft (Buy Ship)' : 'Standard Draft',
+        () => 'Draft Mode'
+    );
+    specialRules.push(...draftModeOverruled);
+
     const isBrowncoatDraft = draftModeRule?.mode === 'browncoat' || overrides.draftMode === 'browncoat';
 
     const showBrowncoatHeroesWarning = isBrowncoatDraft && isHeroesAndMisfitsActive && isHeroesCustomSetup;
@@ -157,8 +174,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
         });
     }
 
-    // The generic Heroes & Misfits Custom Setup warning is now moved to the story card data.
-    
     if (gameState.optionalRules.optionalShipUpgrades) {
         specialRules.push({
             source: 'expansion', title: 'Optional Ship Upgrades',
@@ -181,7 +196,14 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     }
 
     // Process Player Badges
-    const badgeRule = allRules.find(r => r.type === 'setPlayerBadges') as SetPlayerBadgesRule | undefined;
+    const badgeRules = allRules.filter((r): r is SetPlayerBadgesRule => r.type === 'setPlayerBadges');
+    const { activeRule: badgeRule, overruledRules: badgeOverruled } = processOverrulableRules(
+        badgeRules,
+        () => 'Custom Player Badges',
+        () => 'Player Roles'
+    );
+    specialRules.push(...badgeOverruled);
+
     const playerBadges: Record<number, string> = badgeRule ? badgeRule.badges : {};
     
     const infoRules = specialRules.filter(r => r.source === 'info' || r.source === 'warning');
@@ -201,8 +223,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
         specialStartSector, 
         placementRegionRestriction, 
         conflictMessage, 
-        // We no longer pass the full rule object to the UI for automatic rendering,
-        // avoiding duplication with the new draft_placement rules.
         havenPlacementRules: null, 
         playerBadges 
     };
