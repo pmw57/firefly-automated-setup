@@ -102,23 +102,30 @@ export const DevPanel = () => {
              currentIndex = availableStories.findIndex(s => s.title === currentStory.title);
         }
         
-        let nextIndex;
+        let nextIndex = currentIndex;
+
         if (currentIndex === -1) {
             nextIndex = 0;
         } else {
             if (direction === 'next') {
-                nextIndex = (currentIndex + 1) % availableStories.length;
+                if (currentIndex < availableStories.length - 1) {
+                    nextIndex = currentIndex + 1;
+                }
             } else {
-                nextIndex = (currentIndex - 1 + availableStories.length) % availableStories.length;
+                if (currentIndex > 0) {
+                    nextIndex = currentIndex - 1;
+                }
             }
         }
         
-        const nextStory = availableStories[nextIndex];
-        // Find original index in master list to dispatch
-        const originalIndex = STORY_CARDS.findIndex(s => s.title === nextStory.title);
-        
-        if (originalIndex !== -1) {
-             setStoryCard(originalIndex, nextStory.goals?.[0]?.title);
+        if (nextIndex !== currentIndex) {
+            const nextStory = availableStories[nextIndex];
+            // Find original index in master list to dispatch
+            const originalIndex = STORY_CARDS.findIndex(s => s.title === nextStory.title);
+            
+            if (originalIndex !== -1) {
+                 setStoryCard(originalIndex, nextStory.goals?.[0]?.title);
+            }
         }
     };
 
