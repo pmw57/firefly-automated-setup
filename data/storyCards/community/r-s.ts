@@ -1,5 +1,4 @@
 
-
 import { StoryCardDef } from '../../../types';
 import { CONTACT_NAMES, STEP_IDS } from '../../ids';
 
@@ -248,22 +247,25 @@ export const STORIES_R_S: StoryCardDef[] = [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 10000, description: "Scavenger's Hoard", source: 'story', sourceName: "Scavengers" },
       { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No fuel used.", source: 'story', sourceName: "Scavengers" },
       { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No parts used.", source: 'story', sourceName: "Scavengers" },
-      {
-        type: 'addSpecialRule',
-        category: 'nav',
-        rule: {
-          title: 'Component Not Used',
-          content: ["Nav Decks are not used in this scenario."]
-        },
-        source: 'story', 
-        sourceName: "Scavengers"
-      },
+      { type: 'setAlliancePlacement', placement: 'disabled', source: 'story', sourceName: "Scavengers" },
+      { type: 'setReaverPlacement', placement: 'disabled', source: 'story', sourceName: "Scavengers" },
+      { type: 'setNavMode', mode: 'disabled', source: 'story', sourceName: "Scavengers" },
       {
         type: 'addSpecialRule',
         category: 'allianceReaver',
         rule: {
           title: 'Component Not Used',
           content: ["Alliance Cruiser and Reaver ships are not used in this scenario."]
+        },
+        source: 'story', 
+        sourceName: "Scavengers"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'nav',
+        rule: {
+          title: 'Component Not Used',
+          content: ["Nav Decks are not used in this scenario."]
         },
         source: 'story', 
         sourceName: "Scavengers"
@@ -388,5 +390,5 @@ export const STORIES_R_S: StoryCardDef[] = [
         sourceName: "Shiny New Year 25 - Protect Or Plunder"
       }
     ]
-  },
+  }
 ];
