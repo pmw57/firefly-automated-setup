@@ -27,8 +27,9 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
 
     const navModeRules = allRules.filter((r): r is SetNavModeRule => r.type === 'setNavMode');
     
-    // Use helper to resolve priority and identify overruled rules
-    const { activeRule, overruledRules: navOverruled } = processOverrulableRules(
+    // Use helper to resolve priority. We ignore overruledRules to prevent auto-generated
+    // "Overruled" blocks (specifically "Flying Solo Rules") from appearing in the UI.
+    const { activeRule } = processOverrulableRules(
         navModeRules,
         getNavModeLabel,
         () => 'Nav Deck Rules'
@@ -67,9 +68,6 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
             });
         }
     });
-
-    // Add identified overruled rules to the list
-    specialRules.push(...navOverruled);
 
     const infoRules = specialRules.filter(r => r.source === 'info' || r.source === 'warning');
     const overrideRules = specialRules.filter(r => r.source !== 'info' && r.source !== 'warning');
