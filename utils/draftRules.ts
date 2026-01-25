@@ -45,6 +45,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const { overrides = {} } = step;
     const allRules = getResolvedRules(gameState);
     const activeStoryCard = getActiveStoryCard(gameState);
+    const isSolo = gameState.playerCount === 1;
 
     // Process generic special rules for this step category
     allRules.forEach(rule => {
@@ -206,6 +207,37 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
 
     const playerBadges: Record<number, string> = badgeRule ? badgeRule.badges : {};
     
+    // --- Text Calculation ---
+    // Default text
+    let selectShipTitle = "Select Ship & Leader";
+    let selectShipDescription = isSolo
+        ? "Choose a Leader & Ship."
+        : "Winner selects Ship & Leader. Pass to Left.";
+    
+    let placementTitle = 'Placement';
+    let placementDescription = isSolo
+        ? "Place Ship in Sector."
+        : "Pass to Right (Anti-Clockwise). Place Ship in Sector.";
+    
+    // Default Haven Draft overrides (can still be overwritten by specific rules)
+    if (resolvedHavenDraft) {
+        placementTitle = 'Haven Placement';
+    }
+
+    if (specialStartSector) {
+        placementTitle = 'Special Placement';
+        // Note: When specialStartSector is set, the component suppresses placementDescription entirely 
+        // in favor of the custom panel content.
+    }
+
+    // Apply Overrides from Rules
+    if (draftModeRule) {
+        if (draftModeRule.selectShipTitle) selectShipTitle = draftModeRule.selectShipTitle;
+        if (draftModeRule.selectShipDescription) selectShipDescription = draftModeRule.selectShipDescription;
+        if (draftModeRule.placementTitle) placementTitle = draftModeRule.placementTitle;
+        if (draftModeRule.placementDescription) placementDescription = draftModeRule.placementDescription;
+    }
+    
     const infoRules = specialRules.filter(r => r.source === 'info' || r.source === 'warning');
     const overrideRules = specialRules.filter(r => r.source !== 'info' && r.source !== 'warning');
 
@@ -224,6 +256,10 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
         placementRegionRestriction, 
         conflictMessage, 
         havenPlacementRules: null, 
-        playerBadges 
+        playerBadges,
+        selectShipTitle,
+        selectShipDescription,
+        placementTitle,
+        placementDescription
     };
 };

@@ -48,8 +48,11 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
     let activePlacement = standardText;
     let overrideObj: SpecialRule | undefined;
     let isDisabled = false;
+    let title = defaultTitle;
 
     if (winner) {
+        if (winner.title) title = winner.title;
+
         if (winner.placement === 'disabled') {
             isDisabled = true;
             activePlacement = 'disabled';
@@ -65,7 +68,7 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
             if (activePlacement !== standardText || winner.source !== 'expansion') {
                 overrideObj = {
                     source: mapRuleSourceToBlockSource(winner.source),
-                    title: defaultTitle, // e.g. "Reaver Placement"
+                    title: title, 
                     content: [activePlacement]
                 };
             }
@@ -88,7 +91,7 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
         });
     });
 
-    return { activePlacement, overrideObj, isDisabled };
+    return { activePlacement, overrideObj, isDisabled, title };
   };
 
   const allianceResult = processPlacement('setAlliancePlacement', standardAlliancePlacement, 'Alliance Cruiser');
@@ -107,6 +110,8 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
     alliancePlacement: allianceResult.activePlacement,
     reaverPlacement: reaverResult.activePlacement,
     isAllianceDisabled: allianceResult.isDisabled,
-    isReaverDisabled: reaverResult.isDisabled
+    isReaverDisabled: reaverResult.isDisabled,
+    allianceTitle: allianceResult.title,
+    reaverTitle: reaverResult.title
   };
 };

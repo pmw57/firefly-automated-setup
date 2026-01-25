@@ -71,6 +71,15 @@ export const STORIES_F_G: StoryCardDef[] = [
     tags: ['community', 'character'],
     rules: [
       {
+        type: 'setDraftMode',
+        mode: 'standard',
+        selectShipDescription: "The player with the highest die roll chooses a Leader & Ship first. Pass to Left.",
+        placementTitle: "Haven Placement",
+        placementDescription: "The last player to choose a Leader places their Haven first. Remaining players in reverse order.",
+        source: 'story',
+        sourceName: "Going Legit"
+      },
+      {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {

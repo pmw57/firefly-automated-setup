@@ -1,5 +1,4 @@
 
-
 import { StoryCardDef } from '../../../types';
 import { CONTACT_NAMES } from '../../ids';
 
@@ -19,6 +18,15 @@ export const STORIES_A_D: StoryCardDef[] = [
     tags: ['community', 'character'],
     rules: [
       { type: 'modifyResource', resource: 'credits', method: 'set', value: 10000, description: "Story Funds", source: 'story', sourceName: "A New Leaf" },
+      {
+        type: 'setDraftMode',
+        mode: 'standard',
+        selectShipDescription: "The player with the highest die roll chooses a Leader & Ship first. Pass to Left.",
+        placementTitle: "Haven Placement",
+        placementDescription: "The last player to choose a Leader places their Haven first. Remaining players in reverse order.",
+        source: 'story',
+        sourceName: "A New Leaf"
+      },
       {
         type: 'addSpecialRule',
         category: 'draft',

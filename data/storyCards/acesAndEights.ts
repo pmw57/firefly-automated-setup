@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../types';
 
 export const ACES_EIGHTS_STORIES: StoryCardDef[] = [
@@ -20,6 +21,15 @@ export const ACES_EIGHTS_STORIES: StoryCardDef[] = [
           content: ["Players begin at their Havens with one Warrant."]
         },
         source: 'story', 
+        sourceName: "A Jubilant Victory"
+      },
+      {
+        type: 'setDraftMode',
+        mode: 'standard',
+        selectShipDescription: "The player with the highest die roll chooses a Leader & Ship first. Pass to Left.",
+        placementTitle: "Haven Placement",
+        placementDescription: "The last player to choose a Leader places their Haven first. Remaining players in reverse order.",
+        source: 'story',
         sourceName: "A Jubilant Victory"
       },
       {

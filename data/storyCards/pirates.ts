@@ -1,5 +1,4 @@
 
-
 import { StoryCardDef } from '../../types';
 
 export const PIRATES_STORIES: StoryCardDef[] = [
@@ -20,6 +19,15 @@ export const PIRATES_STORIES: StoryCardDef[] = [
           position: 'before'
         },
         source: 'story', 
+        sourceName: "...Another Man's Treasure"
+      },
+      {
+        type: 'setDraftMode',
+        mode: 'standard',
+        selectShipDescription: "The player with the highest die roll chooses a Leader & Ship first. Pass to Left.",
+        placementTitle: "Haven Placement",
+        placementDescription: "The last player to choose a Leader places their Haven first. Remaining players in reverse order.",
+        source: 'story',
         sourceName: "...Another Man's Treasure"
       },
       {

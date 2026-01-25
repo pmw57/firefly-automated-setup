@@ -79,6 +79,8 @@ export interface AllianceReaverDetails {
   reaverPlacement: string;
   isAllianceDisabled: boolean;
   isReaverDisabled: boolean;
+  allianceTitle: string;
+  reaverTitle: string;
 }
 
 export interface ConflictOptionDetails {
@@ -154,6 +156,11 @@ export interface DraftRuleDetails {
   conflictMessage: StructuredContent | null;
   havenPlacementRules?: SpecialRule | null;
   playerBadges: Record<number, string>;
+  // Display overrides
+  selectShipTitle: string;
+  selectShipDescription: string;
+  placementTitle: string;
+  placementDescription: string;
 }
 
 export interface HeaderDetails {

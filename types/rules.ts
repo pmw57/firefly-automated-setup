@@ -77,11 +77,26 @@ export interface CreateAlertTokenStackRule extends BaseRule {
   description?: string;
 }
 export interface SetAllianceModeRule extends BaseRule { type: 'setAllianceMode'; mode: AllianceSetupMode; }
-export interface SetAlliancePlacementRule extends BaseRule { type: 'setAlliancePlacement'; placement: string; }
-export interface SetReaverPlacementRule extends BaseRule { type: 'setReaverPlacement'; placement: string; }
+export interface SetAlliancePlacementRule extends BaseRule { 
+    type: 'setAlliancePlacement'; 
+    placement: string; 
+    title?: string; // Optional override for "Alliance Cruiser"
+}
+export interface SetReaverPlacementRule extends BaseRule { 
+    type: 'setReaverPlacement'; 
+    placement: string; 
+    title?: string; // Optional override for "Reaver Cutter"
+}
 export interface SetNavModeRule extends BaseRule { type: 'setNavMode'; mode: NavMode; }
 export interface SetPrimeModeRule extends BaseRule { type: 'setPrimeMode'; mode: PrimeMode; }
-export interface SetDraftModeRule extends BaseRule { type: 'setDraftMode'; mode: DraftMode; }
+export interface SetDraftModeRule extends BaseRule { 
+    type: 'setDraftMode'; 
+    mode: DraftMode; 
+    selectShipTitle?: string;
+    selectShipDescription?: string;
+    placementTitle?: string;
+    placementDescription?: string;
+}
 export interface SetLeaderSetupRule extends BaseRule { type: 'setLeaderSetup'; mode: LeaderSetupMode; }
 export interface SetShipPlacementRule extends BaseRule {
   type: 'setShipPlacement';

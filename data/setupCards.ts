@@ -150,7 +150,12 @@ export const SETUP_CARDS: SetupCardDef[] = [
       { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "No Starting Fuel" },
       { type: 'modifyResource', resource: 'parts', method: 'disable', description: "No Starting Parts" },
       { type: 'setNavMode', mode: 'browncoat' },
-      { type: 'setDraftMode', mode: 'browncoat' },
+      { 
+          type: 'setDraftMode', 
+          mode: 'browncoat',
+          selectShipDescription: "Winner buys Ship or selects Leader. Pass to Left.",
+          placementDescription: "Pass back to Right. Make remaining choice. Buy Fuel ($100)."
+      },
       { type: 'setJobMode', mode: 'no_jobs' },
       // Decoupled Nav Rule
       { 
@@ -372,6 +377,13 @@ export const SETUP_CARDS: SetupCardDef[] = [
     requiredExpansion: 'tenth',
     rules: createRules("Home Sweet Haven", [
       { type: 'setNavMode', mode: 'browncoat' },
+      { 
+          type: 'setDraftMode', 
+          mode: 'standard', 
+          selectShipDescription: "The player with the highest die roll chooses a Leader & Ship first. Pass to Left.",
+          placementTitle: 'Haven Placement',
+          placementDescription: "The last player to choose a Leader places their Haven first. Remaining players in reverse order."
+      },
       // Decoupled Nav Rule (Inherited behavior from Browncoat Nav mode)
       { 
         type: 'addSpecialRule',
