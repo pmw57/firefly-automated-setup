@@ -1,3 +1,4 @@
+
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getDraftDetails } from '../../../utils/draftRules';
@@ -97,9 +98,9 @@ describe('rules/draftRules', () => {
         };
         const details = getDraftDetails(state, baseStep);
         const specialRules = [...details.infoRules, ...details.overrideRules];
-        const rule = specialRules.find(r => r.title === 'Heroes & Misfits: Further Adventures');
+        const rule = specialRules.find(r => r.title === 'Story Override');
         expect(rule).toBeDefined();
-        expect(getTextContent(rule?.content)).toContain('Custom Setup Active');
+        expect(getTextContent(rule?.content)).toContain('Begin play at Persephone with Malcolm and Serenity');
     });
 
     it.concurrent('resolves conflict between Haven Draft and special start sector (Story Priority)', () => {

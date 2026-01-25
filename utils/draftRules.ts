@@ -96,8 +96,8 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const isHavenDraft = !!havenPlacementRules;
     const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
     
-    // Check if the "Heroes & Misfits: Further Adventures" rule exists to detect the story context
-    const isHeroesAndMisfitsActive = allRules.some(r => r.type === 'addSpecialRule' && r.rule.title === 'Heroes & Misfits: Further Adventures');
+    // Check if the "Heroes & Misfits" story is active by checking the flag
+    const isHeroesAndMisfitsActive = hasRuleFlag(allRules, 'isHeroesAndMisfits');
 
     const shipPlacementRules = allRules.filter((r): r is SetShipPlacementRule => r.type === 'setShipPlacement');
     const { activeRule: shipPlacementRule, overruledRules: placementOverruled } = processOverrulableRules(
