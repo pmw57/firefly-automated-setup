@@ -164,6 +164,11 @@ export interface SetPlayerBadgesRule extends BaseRule {
     badges: Record<number, string>; // Player Index -> Badge Text
 }
 
+export interface BypassDraftRule extends BaseRule {
+    type: 'bypassDraft';
+    reason?: string;
+}
+
 
 export type SetupRule = 
   | SetJobModeRule
@@ -187,4 +192,5 @@ export type SetupRule =
   | SetComponentRule
   | SetJobStepContentRule
   | AddBoardComponentRule
-  | SetPlayerBadgesRule;
+  | SetPlayerBadgesRule
+  | BypassDraftRule;
