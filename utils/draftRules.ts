@@ -8,7 +8,8 @@ import {
     SetDraftModeRule,
     SetPlayerBadgesRule,
     ThemeColor,
-    AddSpecialRule
+    AddSpecialRule,
+    BypassDraftRule
 } from '../types/index';
 import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CHALLENGE_IDS } from '../data/ids';
@@ -96,8 +97,9 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     const isHavenDraft = !!havenPlacementRules;
     const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
     
-    // Check if the "Heroes & Misfits: Further Adventures" rule exists to detect the story context
-    const isHeroesAndMisfitsActive = allRules.some(r => r.type === 'addSpecialRule' && r.rule.title === 'Heroes & Misfits: Further Adventures');
+    // Check if a story explicitly bypasses the draft (e.g. Heroes & Misfits)
+    const bypassDraftRule = allRules.find((r): r is BypassDraftRule => r.type === 'bypassDraft');
+    const isDraftBypassed = !!bypassDraftRule;
 
     const shipPlacementRules = allRules.filter((r): r is SetShipPlacementRule => r.type === 'setShipPlacement');
     const { activeRule: shipPlacementRule, overruledRules: placementOverruled } = processOverrulableRules(
@@ -128,6 +130,18 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
       }
     }
 
+    let resolvedHavenDraft = isHavenDraft;
+    const conflictMessage: import('../types/core').StructuredContent | null = null;
+
+    if (resolvedHavenDraft && specialStartSector) {
+        resolvedHavenDraft = false;
+        specialRules.push({
+            source: 'info',
+            title: 'Conflict Resolved',
+            content: [{ type: 'paragraph', content: [`Specific starting location (${specialStartSector}) overrides Haven Placement.`] }]
+        });
+    }
+
     // --- Process Flags into Panel Extras ---
     
     const draftModeRules = allRules.filter((r): r is SetDraftModeRule => r.type === 'setDraftMode');
@@ -140,29 +154,10 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
 
     const isBrowncoatDraft = draftModeRule?.mode === 'browncoat' || overrides.draftMode === 'browncoat';
 
-    const showBrowncoatHeroesWarning = isBrowncoatDraft && isHeroesAndMisfitsActive && isHeroesCustomSetup;
-    
-    let resolvedHavenDraft = isHavenDraft;
-    let conflictMessage: import('../types').StructuredContent | null = null;
-  
-    if (isHavenDraft && specialStartSector) {
-        resolvedHavenDraft = false;
-        
-        // Remove the original haven rule, as it's being overridden by a special start sector.
-        const ruleToRemove = havenPlacementRules;
-        if (ruleToRemove) {
-            const index = specialRules.indexOf(ruleToRemove);
-            if (index > -1) {
-                specialRules.splice(index, 1);
-            }
-        }
-        
-        conflictMessage = [{ type: 'strong', content: 'Story Priority:' }, ` Ships start at `, { type: 'strong', content: specialStartSector }, `, overriding Haven placement rules.`];
-    }
-    
-    if (conflictMessage) specialRules.push({ source: 'info', title: 'Conflict Resolved', content: conflictMessage });
-
-    if (showBrowncoatHeroesWarning) {
+    // Conflict Detection: If the draft mode is Browncoat (which requires buying a ship),
+    // but the story actively bypasses the draft (assigning a specific ship), we need to warn
+    // the user about the financial implications.
+    if (isBrowncoatDraft && isDraftBypassed && isHeroesCustomSetup) {
         specialRules.push({
             source: 'warning', title: 'Story & Setup Card Interaction',
             content: [

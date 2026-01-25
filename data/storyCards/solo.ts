@@ -1,3 +1,4 @@
+
 import { StoryCardDef } from '../../types/index';
 
 export const SOLO_STORIES: StoryCardDef[] = [
@@ -191,7 +192,40 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "Heroes & Misfits" },
       { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "Heroes & Misfits" },
       { type: 'setShipPlacement', location: 'persephone', source: 'story', sourceName: "Heroes & Misfits" },
-      { type: 'addFlag', flag: 'isHeroesAndMisfits', source: 'story', sourceName: "Heroes & Misfits" },
+      { 
+        type: 'addSpecialRule', 
+        category: 'draft',
+        rule: {
+          title: 'Serenity\'s Legacy', 
+          content: ['Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000.']
+        },
+        source: 'story', 
+        sourceName: "Heroes & Misfits"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'draft_ships',
+        rule: {
+          title: 'Use Serenity\'s Crew',
+          content: [
+            'Collect the original 9 crew:',
+            {type: 'numbered-list', items: [
+              [{type: 'strong', content: "Malcolm"}, ' from ', {type: 'strong', content: 'Leaders'}, ' deck'],
+              [{type: 'strong', content: "Zoë"}, ' from ', {type: 'strong', content: 'Silverhold'}, ' deck'],
+              [{type: 'strong', content: "Wash"}, ' from ', {type: 'strong', content: 'Space Bazaar'}, ' deck'],
+              [{type: 'strong', content: "Jayne"}, ' from ', {type: 'strong', content: 'Silverhold'}, ' deck'],
+              [{type: 'strong', content: "Kaylee"}, ' from ', {type: 'strong', content: 'Regina'}, ' deck'],
+              [{type: 'strong', content: "Simon Tam"}, ' from ', {type: 'strong', content: 'Persephone'}, ' deck'],
+              [{type: 'strong', content: "River Tam"}, ' from ', {type: 'strong', content: 'Persephone'}, ' deck'],
+              [{type: 'strong', content: "Inara"}, ' from ', {type: 'strong', content: 'Osiris'}, ' deck'],
+              [{type: 'strong', content: "Shepherd Book"}, ' from ', {type: 'strong', content: 'Persephone'}, ' deck'],
+              [{type: 'strong', content: "Expanded Crew Quarters"}, ' from ', {type: 'strong', content: 'Osiris'}, ' deck']
+            ]}
+          ]
+        },
+        source: 'story', 
+        sourceName: "Heroes & Misfits"
+      },
       {
         type: 'addSpecialRule',
         category: 'draft_placement',
@@ -208,14 +242,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
         category: 'resources',
         rule: {
           title: 'Story Override',
-          content: [
-            { type: 'paragraph', content: [
-              { type: 'strong', content: 'Starting Resources: ' },
-              'Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000.'
-            ] },
-            { type: 'paragraph', content: [{ type: 'strong', content: 'Alliance Alerts:' }, ' Start with one random Alliance Alert in play.'] },
-            { type: 'paragraph', content: [{ type: 'strong', content: 'Adventure Deck:' }, ' Shuffle all 3-Goal story cards into a single deck.'] }
-          ]
+          content: ['Begin play with $2000.']
         },
         source: 'story', 
         sourceName: "Heroes & Misfits"
@@ -224,26 +251,25 @@ export const SOLO_STORIES: StoryCardDef[] = [
         type: 'addSpecialRule',
         category: 'prime',
         rule: {
-          title: 'Alliance High Alert',
-          content: ['Begin the game with one random Alliance Alert Card in play.']
+          title: 'The Heat is On',
+          content: [
+            'Alliance Alerts: Begin the game with one random Alliance Alert Card in play. ',
+            {type: 'br'},
+            'Adventure Deck: Shuffle all 3-Goal Story Cards into a single deck.']
         },
         source: 'story', 
         sourceName: "Heroes & Misfits"
       },
-      { 
-        type: 'addSpecialRule', 
-        category: 'draft',
+      {
+        type: 'addSpecialRule',
+        category: 'prime_panel',
         rule: {
-          title: 'Heroes & Misfits: Further Adventures', 
-          // Changed "Custom Setup Option:" to "Custom Setup Active:" to match test expectation
-          content: [{ type: 'strong', content: `Custom Setup Active:` }, ` If you enabled "Further Adventures", ignore standard crew/ship/location requirements.`, { type: 'br' }, `Pick your Leader, Ship, and Supply Planet. Start with $2000 and a full compliment of your favourite crew.`] 
+          title: 'The Heat is On',
+          content: ['Adventure Deck: Shuffle all 3-Goal Story Cards into a single deck.']
         },
-        source: 'warning', 
+        source: 'story', 
         sourceName: "Heroes & Misfits"
       }
-    ],
-    challengeOptions: [
-      { id: 'heroes_custom_setup', label: "Why should Mal have all the fun? Pick the Leader, Ship, and Supply Planet of your choice. Begin the game with $2000 and a full compliment of your favourite crew from the show or game." }
     ],
     advancedRule: {
       id: "adv_contact_quirks_work",
