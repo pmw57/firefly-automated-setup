@@ -36,7 +36,9 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
     allianceOverride,
     reaverOverride,
     isAllianceDisabled,
-    isReaverDisabled
+    isReaverDisabled,
+    allianceTitle,
+    reaverTitle
   } = useAllianceReaverDetails();
 
   const { theme } = useTheme();
@@ -81,11 +83,11 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
   const headerBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
 
   const allianceBoxBg = isDark ? 'bg-blue-900/20 border-blue-900/50' : 'bg-blue-50 border-blue-100';
-  const allianceTitle = isDark ? 'text-blue-300' : 'text-blue-900';
+  const allianceTitleColor = isDark ? 'text-blue-300' : 'text-blue-900';
   const allianceText = isDark ? 'text-blue-200' : 'text-blue-800';
 
   const reaverBoxBg = isDark ? 'bg-red-900/20 border-red-900/50' : 'bg-red-50 border-red-100';
-  const reaverTitle = isDark ? 'text-red-300' : 'text-red-900';
+  const reaverTitleColor = isDark ? 'text-red-300' : 'text-red-900';
   const reaverText = isDark ? 'text-red-200' : 'text-red-800';
   
   const disabledBoxBg = isDark ? 'bg-zinc-800/40 border-zinc-700' : 'bg-gray-100 border-gray-200';
@@ -104,8 +106,8 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
           
           {/* Alliance Ship Panel */}
           <div className={cls('p-3 rounded border transition-colors', isAllianceDisabled ? disabledBoxBg : allianceBoxBg)}>
-            <strong className={cls('block text-sm uppercase mb-1', isAllianceDisabled ? disabledTitle : allianceTitle)}>
-              {allianceOverride?.title || 'Alliance Cruiser'}
+            <strong className={cls('block text-sm uppercase mb-1', isAllianceDisabled ? disabledTitle : allianceTitleColor)}>
+              {allianceTitle}
             </strong>
             <p className={cls('text-sm', isAllianceDisabled ? disabledText : allianceText)}>
               {isAllianceDisabled 
@@ -117,8 +119,8 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
           
           {/* Reaver Ship Panel */}
           <div className={cls('p-3 rounded border transition-colors', isReaverDisabled ? disabledBoxBg : reaverBoxBg)}>
-            <strong className={cls('block text-sm uppercase mb-1', isReaverDisabled ? disabledTitle : reaverTitle)}>
-              {reaverOverride?.title || 'Reaver Cutter'}
+            <strong className={cls('block text-sm uppercase mb-1', isReaverDisabled ? disabledTitle : reaverTitleColor)}>
+              {reaverTitle}
             </strong>
             <p className={cls('text-sm', isReaverDisabled ? disabledText : reaverText)}>
               {isReaverDisabled 

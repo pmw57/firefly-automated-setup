@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useCallback } from 'react';
 import { calculateDraftOutcome, runAutomatedDraft, getInitialSoloDraftState } from '../utils/draft';
 import { useDraftDetails } from '../hooks/useDraftDetails';
@@ -31,21 +32,21 @@ const DraftInstructionList = ({ rules, textColor }: { rules: SpecialRule[], text
 const DraftOrderPanel = ({ 
     draftOrder, 
     isSolo, 
-    isHavenDraft, 
-    isBrowncoatDraft,
     stepBadgeClass,
     playerBadges,
     beforeRules,
     afterRules,
+    title,
+    description
 }: { 
     draftOrder: string[]; 
     isSolo: boolean; 
-    isHavenDraft: boolean; 
-    isBrowncoatDraft: boolean;
     stepBadgeClass: string; 
     playerBadges: Record<number, string>;
     beforeRules: SpecialRule[];
     afterRules: SpecialRule[];
+    title: string;
+    description: string;
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -58,19 +59,11 @@ const DraftOrderPanel = ({
     const itemText = isDark ? 'text-gray-200' : 'text-gray-800';
     const restrictionTextColor = isDark ? 'text-yellow-400' : 'text-yellow-700';
 
-    const description = isSolo
-        ? "Choose a Leader & Ship."
-        : isHavenDraft
-        ? "The player with the highest die roll chooses a Leader & Ship first. Pass to Left."
-        : isBrowncoatDraft
-        ? "Winner buys Ship or selects Leader. Pass to Left."
-        : "Winner selects Ship & Leader. Pass to Left.";
-
     return (
         <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
               <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Phase 1</div>
               <h4 className={cls("font-bold mb-2 border-b pb-1", panelHeaderColor, panelHeaderBorder)}>
-                  {'Select Ship & Leader'}
+                  {title}
               </h4>
               
               <p className={cls("text-xs mb-3 italic", panelSubColor)}>
@@ -116,20 +109,22 @@ const PlacementOrderPanel = ({
     placementOrder,
     isSolo,
     isHavenDraft,
-    isBrowncoatDraft,
     specialStartSector,
     stepBadgeClass,
     beforeRules,
     afterRules,
+    title,
+    description
 }: {
     placementOrder: string[];
     isSolo: boolean;
     isHavenDraft: boolean;
-    isBrowncoatDraft: boolean;
     specialStartSector: string | null;
     stepBadgeClass: string;
     beforeRules: SpecialRule[];
     afterRules: SpecialRule[];
+    title: string;
+    description: string;
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -144,14 +139,10 @@ const PlacementOrderPanel = ({
     const specialPlacementTitle = isDark ? 'text-amber-100' : 'text-amber-900';
     const specialPlacementText = isDark ? 'text-amber-300' : 'text-amber-800';
 
-    let description: string;
-    let placementTitle = isHavenDraft ? 'Haven Placement' : 'Placement';
     let content: React.ReactNode;
-
     const restrictionTextColor = isDark ? 'text-yellow-400' : 'text-yellow-700';
 
     if (specialStartSector) {
-        placementTitle = 'Special Placement';
         // When specialStartSector is set, we suppress the standard list.
         // We now rely entirely on `beforeRules` (populated from story data) to explain where to place.
         content = (
@@ -164,14 +155,6 @@ const PlacementOrderPanel = ({
             </div>
         );
     } else {
-        if (isHavenDraft) {
-            description = isSolo ? "Place Haven in a valid sector." : "The last player to choose a Leader places their Haven first. Remaining players in reverse order.";
-        } else if (isBrowncoatDraft) {
-            description = isSolo ? "Buy Fuel ($100) and place ship." : "Pass back to Right. Make remaining choice. Buy Fuel ($100).";
-        } else {
-            description = isSolo ? "Place Ship in Sector." : "Pass to Right (Anti-Clockwise). Place Ship in Sector.";
-        }
-        
         const descriptionColor = isHavenDraft 
             ? (isDark ? 'text-green-300' : 'text-green-800')
             : (isDark ? 'text-gray-400' : 'text-gray-500');
@@ -208,7 +191,7 @@ const PlacementOrderPanel = ({
             <div className={cls("absolute top-0 right-0 text-xs font-bold px-2 py-1 rounded-bl", stepBadgeClass)}>Phase 2</div>
             <div className={cls("flex justify-between items-baseline mb-2 border-b pb-1", panelHeaderBorder)}>
                 <h4 className={cls("font-bold", panelHeaderColor)}>
-                    {placementTitle}
+                    {title}
                 </h4>
             </div>
             {content}
@@ -268,9 +251,13 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
       draftPlacementBefore,
       draftPlacementAfter,
       isHavenDraft,
-      isBrowncoatDraft,
       specialStartSector,
       playerBadges,
+      // Consuming text strings from hook
+      selectShipTitle,
+      selectShipDescription,
+      placementTitle,
+      placementDescription,
   } = useDraftDetails(step);
 
   const campaignNotes = useMemo(
@@ -386,23 +373,24 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                 <DraftOrderPanel 
                     draftOrder={draftState.draftOrder}
                     isSolo={isSolo}
-                    isHavenDraft={isHavenDraft}
-                    isBrowncoatDraft={isBrowncoatDraft}
                     stepBadgeClass={stepBadgeBlueBg}
                     playerBadges={playerBadges}
                     beforeRules={draftShipsBefore}
                     afterRules={draftShipsAfter}
+                    title={selectShipTitle}
+                    description={selectShipDescription}
                 />
                 
                 <PlacementOrderPanel 
                     placementOrder={draftState.placementOrder}
                     isSolo={isSolo}
                     isHavenDraft={isHavenDraft}
-                    isBrowncoatDraft={isBrowncoatDraft}
                     specialStartSector={specialStartSector}
                     stepBadgeClass={stepBadgeAmberBg}
                     beforeRules={draftPlacementBefore}
                     afterRules={draftPlacementAfter}
+                    title={placementTitle}
+                    description={placementDescription}
                 />
 
                 {/* Custom panels injected by story/setup rules AFTER standard panels */}
