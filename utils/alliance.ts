@@ -3,7 +3,7 @@ import {
     GameState, 
     AllianceReaverDetails, 
     SpecialRule, 
-    SetAlliancePlacementRule,
+    SetAlliancePlacementRule, 
     SetReaverPlacementRule
 } from '../types/index';
 import { getResolvedRules } from './selectors/rules';
@@ -53,11 +53,11 @@ export const getAllianceReaverDetails = (gameState: GameState): AllianceReaverDe
         if (winner.placement === 'disabled') {
             isDisabled = true;
             activePlacement = 'disabled';
-            overrideObj = {
-                source: mapRuleSourceToBlockSource(winner.source),
-                title: `${defaultTitle} Disabled`,
-                content: [`${defaultTitle} is not used in this scenario.`]
-            };
+            // CRITICAL CHANGE: Do NOT create an overrideObj for 'disabled'.
+            // The UI will handle the greyed-out box via `isDisabled`.
+            // Any explanation text should come from a manual `addSpecialRule` in the Story Card data,
+            // preventing "Auto-generated" blocks from cluttering the UI.
+            overrideObj = undefined;
         } else {
             activePlacement = winner.placement;
             // Only create an override object if it differs from standard, 

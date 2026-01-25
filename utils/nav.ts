@@ -45,6 +45,22 @@ export const getNavDeckDetails = (gameState: GameState, overrides: StepOverrides
     // Process generic special rules for this step category
     allRules.forEach(rule => {
         if (rule.type === 'addSpecialRule' && rule.category === 'nav') {
+            // Specific logic for conflicting rules when Nav Decks are disabled
+            if (isDisabled) {
+                // "Forced Reshuffle" rules from Setup Cards (like Browncoat Way) conflict with "Nav Disabled".
+                // We mark them as Overruled rather than suppressing them entirely, so the user sees the conflict resolution.
+                if (rule.rule.title === 'Forced Reshuffle') {
+                    specialRules.push({
+                        source: mapRuleSourceToBlockSource(rule.source),
+                        ...rule.rule,
+                        badge: 'Overruled'
+                    });
+                    return;
+                }
+                // Other rules (like "Additional Components" from expansions) should remain visible
+                // even if Nav Decks are disabled, as per user requirement.
+            }
+
             specialRules.push({
                 source: mapRuleSourceToBlockSource(rule.source),
                 ...rule.rule

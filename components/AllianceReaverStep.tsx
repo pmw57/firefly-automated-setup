@@ -49,8 +49,11 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
       // We rely on the subsequent filter to hide them in Quick mode if they come from a Story.
       // Setup Card or Expansion overrides should be visible even in Quick mode.
       if (includeShipOverrides) {
-          if (allianceOverride) combined.push(allianceOverride);
-          if (reaverOverride) combined.push(reaverOverride);
+          // Only include ship overrides if they are NOT disabled.
+          // Disabled state is visually represented by the greyed-out box and usually accompanied
+          // by a generic text rule (e.g. "Ships not used"), so a specific "Disabled" notification is redundant.
+          if (allianceOverride && !isAllianceDisabled) combined.push(allianceOverride);
+          if (reaverOverride && !isReaverDisabled) combined.push(reaverOverride);
       }
       
       const order: Record<SpecialRule['source'], number> = {
@@ -67,7 +70,7 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
       }
 
       return sorted;
-  }, [setupMode, allianceOverride, reaverOverride]);
+  }, [setupMode, allianceOverride, reaverOverride, isAllianceDisabled, isReaverDisabled]);
   
   const displayInfo = useMemo(() => formatRules(infoRules), [infoRules, formatRules]);
   const displayOverrides = useMemo(() => formatRules(overrideRules, true), [overrideRules, formatRules]);
