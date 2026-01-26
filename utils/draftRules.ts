@@ -157,7 +157,7 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     // Conflict Detection: If the draft mode is Browncoat (which requires buying a ship),
     // but the story actively bypasses the draft (assigning a specific ship), we need to warn
     // the user about the financial implications.
-    if (isBrowncoatDraft && isDraftBypassed && isHeroesCustomSetup) {
+    if (isBrowncoatDraft && isDraftBypassed) {
         specialRules.push({
             source: 'warning', title: 'Story & Setup Card Interaction',
             content: [

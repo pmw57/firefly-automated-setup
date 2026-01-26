@@ -192,40 +192,7 @@ export const SOLO_STORIES: StoryCardDef[] = [
       { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "Heroes & Misfits" },
       { type: 'addFlag', flag: 'startWithAlertCard', source: 'story', sourceName: "Heroes & Misfits" },
       { type: 'setShipPlacement', location: 'persephone', source: 'story', sourceName: "Heroes & Misfits" },
-      { 
-        type: 'addSpecialRule', 
-        category: 'draft',
-        rule: {
-          title: 'Serenity\'s Legacy', 
-          content: ['Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000.']
-        },
-        source: 'story', 
-        sourceName: "Heroes & Misfits"
-      },
-      {
-        type: 'addSpecialRule',
-        category: 'draft_ships',
-        rule: {
-          title: 'Use Serenity\'s Crew',
-          content: [
-            'Collect the original 9 crew:',
-            {type: 'numbered-list', items: [
-              [{type: 'strong', content: "Malcolm"}, ' from ', {type: 'strong', content: 'Leaders'}, ' deck'],
-              [{type: 'strong', content: "Zoë"}, ' from ', {type: 'strong', content: 'Silverhold'}, ' deck'],
-              [{type: 'strong', content: "Wash"}, ' from ', {type: 'strong', content: 'Space Bazaar'}, ' deck'],
-              [{type: 'strong', content: "Jayne"}, ' from ', {type: 'strong', content: 'Silverhold'}, ' deck'],
-              [{type: 'strong', content: "Kaylee"}, ' from ', {type: 'strong', content: 'Regina'}, ' deck'],
-              [{type: 'strong', content: "Simon Tam"}, ' from ', {type: 'strong', content: 'Persephone'}, ' deck'],
-              [{type: 'strong', content: "River Tam"}, ' from ', {type: 'strong', content: 'Persephone'}, ' deck'],
-              [{type: 'strong', content: "Inara"}, ' from ', {type: 'strong', content: 'Osiris'}, ' deck'],
-              [{type: 'strong', content: "Shepherd Book"}, ' from ', {type: 'strong', content: 'Persephone'}, ' deck'],
-              [{type: 'strong', content: "Expanded Crew Quarters"}, ' from ', {type: 'strong', content: 'Osiris'}, ' deck']
-            ]}
-          ]
-        },
-        source: 'story', 
-        sourceName: "Heroes & Misfits"
-      },
+      { type: 'bypassDraft', reason: 'Assigned Ship & Crew', source: 'story', sourceName: "Heroes & Misfits" },
       {
         type: 'addSpecialRule',
         category: 'draft_placement',
@@ -241,8 +208,12 @@ export const SOLO_STORIES: StoryCardDef[] = [
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
-          title: 'Story Override',
-          content: ['Begin play with $2000.']
+          title: 'Serenity\'s Legacy',
+          content: [
+            'Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000.',
+            'Alliance Alerts: Start with one random Alliance Alert in play.',
+            'Adventure Deck: Shuffle all 3-Goal story cards into a single deck.'
+          ]
         },
         source: 'story', 
         sourceName: "Heroes & Misfits"
@@ -251,25 +222,28 @@ export const SOLO_STORIES: StoryCardDef[] = [
         type: 'addSpecialRule',
         category: 'prime',
         rule: {
-          title: 'The Heat is On',
-          content: [
-            'Alliance Alerts: Begin the game with one random Alliance Alert Card in play. ',
-            {type: 'br'},
-            'Adventure Deck: Shuffle all 3-Goal Story Cards into a single deck.']
+          title: 'Alliance High Alert',
+          content: ['Begin the game with one random Alliance Alert Card in play.']
         },
         source: 'story', 
         sourceName: "Heroes & Misfits"
       },
-      {
-        type: 'addSpecialRule',
-        category: 'prime_panel',
+      { 
+        type: 'addSpecialRule', 
+        category: 'draft_panel',
         rule: {
-          title: 'The Heat is On',
-          content: ['Adventure Deck: Shuffle all 3-Goal Story Cards into a single deck.']
+          title: 'Serenity\'s Legacy',
+          badge: 'Story Override',
+          content: [
+              'Begin play with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book.'
+          ]
         },
         source: 'story', 
         sourceName: "Heroes & Misfits"
       }
+    ],
+    challengeOptions: [
+      { id: 'heroes_custom_setup', label: "Why should Mal have all the fun? Pick the Leader, Ship, and Supply Planet of your choice. Begin the game with $2000 and a full compliment of your favourite crew from the show or game." }
     ],
     advancedRule: {
       id: "adv_contact_quirks_work",
