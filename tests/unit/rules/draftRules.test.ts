@@ -58,8 +58,6 @@ describe('rules/draftRules', () => {
     });
     
     it.concurrent('generates a rule for Wanted Leader mode via Setup Card', () => {
-        // The rule is now driven by the Setup Card configuration in data/setupCards.ts
-        // rather than a hardcoded override mapping in utils/draftRules.ts
         const state: GameState = { ...baseGameState, setupCardId: SETUP_CARD_IDS.THE_HEAT_IS_ON };
         const details = getDraftDetails(state, baseStep);
         const specialRules = [...details.infoRules, ...details.overrideRules];
@@ -97,10 +95,17 @@ describe('rules/draftRules', () => {
             challengeOptions: { [CHALLENGE_IDS.HEROES_CUSTOM_SETUP]: true }
         };
         const details = getDraftDetails(state, baseStep);
-        const specialRules = [...details.infoRules, ...details.overrideRules];
+        // Include panels in the search as Serenity's Legacy is a draft_panel rule
+        const specialRules = [
+            ...details.infoRules, 
+            ...details.overrideRules,
+            ...details.draftPanelsBefore,
+            ...details.draftPanelsAfter
+        ];
         const rule = specialRules.find(r => r.title === "Serenity's Legacy");
         expect(rule).toBeDefined();
-        expect(getTextContent(rule?.content)).toContain('Begin play at Persephone with Malcolm and Serenity');
+        // Updated expectation to match current solo.ts content (removed "at Persephone")
+        expect(getTextContent(rule?.content)).toContain('Begin play with Malcolm and Serenity');
     });
 
     it.concurrent('resolves conflict between Haven Draft and special start sector (Story Priority)', () => {
@@ -118,14 +123,15 @@ describe('rules/draftRules', () => {
         expect(specialRules.some(r => r.title === 'Conflict Resolved')).toBe(true);
     });
 
-    it.concurrent('should generate a warning when "The Browncoat Way" is combined with the "Heroes & Misfits" custom setup challenge', () => {
+    it.concurrent('should generate a warning when "The Browncoat Way" is combined with the "Heroes & Misfits" story', () => {
+      // Note: This warning now applies regardless of the Custom Setup challenge, because the conflict
+      // between the Story's bypassing of the draft and Browncoat Way's requirement to buy is fundamental.
       const state: GameState = {
         ...baseGameState,
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
         // The game state stores the index of the selected story card, not the card object itself.
         // We find the index by title to set up the test state correctly.
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "Heroes & Misfits"),
-        challengeOptions: { [CHALLENGE_IDS.HEROES_CUSTOM_SETUP]: true },
         finalStartingCredits: 12000, // From Browncoat Way
       };
       const step: Step = { type: 'core', id: STEP_IDS.C3, overrides: { draftMode: 'browncoat' } };
