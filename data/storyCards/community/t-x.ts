@@ -11,6 +11,13 @@ export const STORIES_T_X: StoryCardDef[] = [
     tags: ['community', 'character'],
   },
   {
+    title: "This Here's History",
+    intro: "Legendary Captain Arien Grimbold, a legend of the Battle of Serenity Valley, disappeared after the Browncoats dissolved. She is said to have been buried with her priceless rifle, Flamespeaker. Can you find her tomb and uncover this lost relic of a nobler time?",
+    sourceUrl: "https://boardgamegeek.com/thread/3655131/three-homebrew-scenarios",
+    requiredExpansion: "community",
+    rating: 2
+  },
+  {
     title: "Trash Part Deux",
     intro: "Have MRP (Mrs Reynolds persona) steal and sell the latest Firefly story.",
     requiredExpansion: "community",

@@ -80,8 +80,7 @@ export const STORIES_H_L: StoryCardDef[] = [
         rule: {
           title: "Scraping By",
           content: [
-            "Start with $500, 2 Fuel, and 2 Parts. ",
-            "Nandi pays half price (rounded up) when hiring crew."
+            "Start with $500, 2 Fuel, and 2 Parts. Nandi pays half price (rounded up) when hiring crew."
           ]
         },
         source: 'story', 
@@ -100,6 +99,29 @@ export const STORIES_H_L: StoryCardDef[] = [
       }
     ],
     sourceUrl: "https://boardgamegeek.com/filepage/186593/where-it-all-started-story-card"
+  },
+  {
+    title: "If Anyone Gets Nosy, Just, You Know... Shoot 'Em",
+    intro: "It's been a rough year, and funds are running low. Desperate, you've had to agree to something your otherwise never would: hosting a docu-holo film crew investigating \"outlaw traders\".",
+    setupDescription: "Players are short on cash -- start with only $2000.",
+    sourceUrl: "https://boardgamegeek.com/thread/3655131/three-homebrew-scenarios",
+    requiredExpansion: "community",
+    rating: 3,
+    rules: [
+      { type: 'modifyResource', resource: 'credits', method: 'set', value: 2000, description: "Start with only $2000.", source: 'story', sourceName: "If Anyone Gets Nosy, Just, You Know... Shoot 'Em" },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: "Rough Year",
+          content: [
+            "Start with only $2000."
+          ]
+        },
+        source: 'story', 
+        sourceName: "If Anyone Gets Nosy, Just, You Know... Shoot 'Em"
+      },
+    ]
   },
   {
     title: "It Ain't Easy Goin' Legit",

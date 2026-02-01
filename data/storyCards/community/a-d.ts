@@ -95,6 +95,13 @@ export const STORIES_A_D: StoryCardDef[] = [
     ]
   },
   {
+    title: "Absolutely. What's 'Sanguine' Mean?",
+    intro: " ",
+    sourceUrl: "https://boardgamegeek.com/thread/3655131/three-homebrew-scenarios",
+    requiredExpansion: "community",
+    rating: 1
+  },
+  {
     title: "Aimin' To Misbehave",
     intro: "A big time crime boss has retired to a life of ease and comfort, leaving behind a nice little power vacuum. If you want to take his place you'll need money and business parthers. Shady business partners to be exact. The shadier the better.",
     requiredExpansion: "community",
