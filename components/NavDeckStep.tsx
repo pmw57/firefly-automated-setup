@@ -7,6 +7,7 @@ import { useGameState } from '../hooks/useGameState';
 import { useNavDeckDetails } from '../hooks/useNavDeckDetails';
 import { cls } from '../utils/style';
 import { StepComponentProps } from './StepContent';
+import { getCampaignNotesForStep } from '../utils/selectors/story';
 
 export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
@@ -23,22 +24,38 @@ export const NavDeckStep = ({ step }: StepComponentProps): React.ReactElement =>
     isDisabled,
   } = useNavDeckDetails(overrides);
 
-  const formatRules = useCallback((rules: SpecialRule[]) => {
+  const campaignNotes = useMemo(
+      () => getCampaignNotesForStep(gameState, step.id),
+      [gameState, step.id]
+  );
+
+  const formatRules = useCallback((rules: SpecialRule[], addNotes = false) => {
+      let combined = [...rules];
+      
+      if (addNotes) {
+          const notesAsRules: SpecialRule[] = campaignNotes.map(note => ({
+              source: 'story',
+              title: 'Campaign Setup Note',
+              content: note.content
+          }));
+          combined = [...combined, ...notesAsRules];
+      }
+
       // Sort logic for overrides: Expansion -> Setup -> Story
       const order: Record<SpecialRule['source'], number> = {
         expansion: 1, setupCard: 2, story: 3, warning: 0, info: 0,
       };
       
-      let sorted = [...rules].sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
+      let sorted = combined.sort((a, b) => (order[a.source] || 99) - (order[b.source] || 99));
 
       if (gameState.setupMode === 'quick') {
         sorted = sorted.filter(r => r.source !== 'story');
       }
       return sorted;
-  }, [gameState.setupMode]);
+  }, [gameState.setupMode, campaignNotes]);
   
   const displayInfo = useMemo(() => formatRules(infoRules), [infoRules, formatRules]);
-  const displayOverrides = useMemo(() => formatRules(overrideRules), [overrideRules, formatRules]);
+  const displayOverrides = useMemo(() => formatRules(overrideRules, true), [overrideRules, formatRules]);
 
   const { theme } = useTheme();
   const isDark = theme === 'dark';

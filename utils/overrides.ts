@@ -1,5 +1,5 @@
 
-import { GameState, SetupRule, Step, AddSpecialRule, AddFlagRule, StepOverrides } from '../types/index';
+import { GameState, SetupRule, Step, AddSpecialRule, AddFlagRule, StepOverrides, SetComponentRule } from '../types/index';
 import { STEP_IDS } from '../data/ids';
 import { getNavDeckDetails } from './nav';
 import { getAllianceReaverDetails } from './alliance';
@@ -49,6 +49,11 @@ const RULE_TYPE_TO_STEP_ID: { [key in SetupRule['type']]?: string | ((rule: Setu
   createAlertTokenStack: STEP_IDS.C5,
   setShipPlacement: STEP_IDS.C3,
   modifyResource: STEP_IDS.C5,
+  bypassDraft: STEP_IDS.C3,
+  setPlayerBadges: STEP_IDS.C3,
+  addBoardComponent: STEP_IDS.C5,
+  setComponent: (rule: SetupRule) => (rule as SetComponentRule).stepId,
+  setJobStepContent: () => STEP_IDS.C6,
   addSpecialRule: (rule: SetupRule): string => {
     const r = rule as AddSpecialRule;
     switch (r.category) {
@@ -61,6 +66,11 @@ const RULE_TYPE_TO_STEP_ID: { [key in SetupRule['type']]?: string | ((rule: Setu
       case 'goal': return STEP_IDS.C4;
       case 'soloTimer': return STEP_IDS.D_GAME_LENGTH_TOKENS;
       case 'pressures_high': return STEP_IDS.D_PRESSURES_HIGH;
+      case 'draft_panel': return STEP_IDS.C3;
+      case 'draft_ships': return STEP_IDS.C3;
+      case 'draft_placement': return STEP_IDS.C3;
+      case 'prime_panel': return STEP_IDS.C_PRIME;
+      case 'setup_selection': return STEP_IDS.SETUP_CARD_SELECTION;
       default: return '';
     }
   },
@@ -91,6 +101,9 @@ const RULE_TYPE_TO_STEP_ID: { [key in SetupRule['type']]?: string | ((rule: Setu
 
         case 'startWithAlertCard':
             return STEP_IDS.C_PRIME;
+        
+        case 'soloGameTimer':
+            return STEP_IDS.D_GAME_LENGTH_TOKENS;
         
         default:
             return '';
