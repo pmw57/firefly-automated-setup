@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { StoryCardDef, ExpansionId, SetupRule, StoryCardGoal, ChallengeOption, JobMode, NavMode, PrimeMode, DraftMode, LeaderSetupMode, AllianceSetupMode, ResourceType, EffectMethod, RuleSourceType, ModifyResourceRule, AddFlagRule, AddSpecialRule, ModifyPrimeRule, AllowContactsRule, PrimeContactsRule, CreateAlertTokenStackRule } from '../types/index';
+import { StoryCardDef, ExpansionId, SetupRule, StoryCardGoal, ChallengeOption, JobMode, NavMode, PrimeMode, DraftMode, LeaderSetupMode, AllianceSetupMode, ResourceType, EffectMethod, RuleSourceType, ModifyResourceRule, AddFlagRule, AddSpecialRule, ModifyPrimeRule, AllowContactsRule, PrimeContactsRule, CreateAlertTokenStackRule, BypassDraftRule, SetPlayerBadgesRule, SetComponentRule, SetJobStepContentRule, AddBoardComponentRule } from '../types/index';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { STORY_CARDS } from '../data/storyCards';
 import { StoryCardGridItem } from './story/StoryCardGridItem';
@@ -11,7 +11,7 @@ const DEV_STORY_CARD_DRAFT_KEY = 'firefly_dev_story_card_draft';
 
 // --- Visual Rule Builder: Configuration & Components ---
 
-const JOB_MODES: JobMode[] = ['standard', 'no_jobs', 'hide_jobs', 'times_jobs', 'high_alert_jobs', 'buttons_jobs', 'awful_jobs', 'rim_jobs', 'draft_choice', 'caper_start', 'wind_takes_us'];
+const JOB_MODES: JobMode[] = ['standard', 'no_jobs', 'hide_jobs', 'times_jobs', 'high_alert_jobs', 'buttons_jobs', 'awful_jobs', 'rim_jobs', 'draft_choice', 'caper_start', 'wind_takes_us', 'shared_hand'];
 const NAV_MODES: NavMode[] = ['standard', 'browncoat', 'rim', 'flying_solo', 'clearer_skies', 'standard_reshuffle'];
 const PRIME_MODES: PrimeMode[] = ['standard', 'blitz'];
 const DRAFT_MODES: DraftMode[] = ['standard', 'browncoat'];
@@ -19,14 +19,31 @@ const LEADER_SETUP_MODES: LeaderSetupMode[] = ['standard', 'wanted'];
 const ALLIANCE_SETUP_MODES: AllianceSetupMode[] = ['standard', 'awful_crowded', 'no_alerts'];
 const RESOURCE_TYPES: ResourceType[] = ['credits', 'fuel', 'parts', 'warrants', 'goalTokens'];
 const EFFECT_METHODS: EffectMethod[] = ['set', 'add', 'disable'];
-const SHIP_PLACEMENT_LOCATIONS = ['persephone', 'londinium', 'border_of_murphy', 'outside_alliance'];
-const SPECIAL_RULE_CATEGORIES: AddSpecialRule['category'][] = ['jobs', 'allianceReaver', 'draft', 'nav', 'prime', 'resources', 'soloTimer', 'goal'];
+const SHIP_PLACEMENT_LOCATIONS = ['persephone', 'londinium', 'outside_alliance'];
+const SPECIAL_RULE_CATEGORIES: AddSpecialRule['category'][] = [
+    'jobs', 
+    'allianceReaver', 
+    'draft', 
+    'nav', 
+    'prime', 
+    'resources', 
+    'soloTimer', 
+    'goal',
+    'draft_panel',
+    'draft_ships',
+    'draft_placement',
+    'prime_panel',
+    'setup_selection',
+    'pressures_high'
+];
+const DISTRIBUTION_TYPES = ['fixed', 'all_supply_planets', 'region'];
+const COMPONENT_TYPES = ['contraband', 'alert_token'];
 
 
 interface RuleParam {
   name: string;
   label: string;
-  type: 'text' | 'number' | 'select' | 'textarea';
+  type: 'text' | 'number' | 'select' | 'textarea' | 'checkbox';
   options?: string[];
   condition?: (rule: Partial<SetupRule>) => boolean;
 }
@@ -44,6 +61,14 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
   allowContacts: { label: 'Allow Only Specific Contacts', params: [{ name: 'contacts', label: 'Contacts (comma-sep)', type: 'text' }], default: () => ({ type: 'allowContacts', contacts: [] } as Partial<AllowContactsRule>) },
   forbidContact: { label: 'Forbid Contact', params: [{ name: 'contact', label: 'Contact', type: 'select', options: Object.values(CONTACT_NAMES) }], default: () => ({ type: 'forbidContact', contact: CONTACT_NAMES.HARKEN }) },
   primeContacts: { label: 'Prime Contact Decks', params: [], default: () => ({ type: 'primeContacts' } as Partial<PrimeContactsRule>) },
+  setJobStepContent: {
+      label: 'Set Job Step Content',
+      params: [
+          { name: 'position', label: 'Position', type: 'select', options: ['before', 'after'] },
+          { name: 'content', label: 'Content (JSON StructuredContent)', type: 'textarea' }
+      ],
+      default: () => ({ type: 'setJobStepContent', position: 'before', content: [] } as Partial<SetJobStepContentRule>)
+  },
   
   // Nav Rules
   setNavMode: { label: 'Set Nav Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: NAV_MODES }], default: () => ({ type: 'setNavMode', mode: 'standard' }) },
@@ -62,11 +87,36 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
   // Draft Rules
   setDraftMode: { label: 'Set Draft Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: DRAFT_MODES }], default: () => ({ type: 'setDraftMode', mode: 'standard' }) },
   setLeaderSetup: { label: 'Set Leader Setup', params: [{ name: 'mode', label: 'Mode', type: 'select', options: LEADER_SETUP_MODES }], default: () => ({ type: 'setLeaderSetup', mode: 'standard' }) },
+  bypassDraft: {
+    label: 'Bypass Draft',
+    params: [{ name: 'reason', label: 'Reason', type: 'text' }],
+    default: () => ({ type: 'bypassDraft', reason: 'Assigned Ship & Crew' } as Partial<BypassDraftRule>)
+  },
+  setPlayerBadges: {
+    label: 'Set Player Badges',
+    params: [{ name: 'badges', label: 'Badges Map (JSON: {0:"Role"})', type: 'textarea' }],
+    default: () => ({ type: 'setPlayerBadges', badges: { 0: "Commander" } } as Partial<SetPlayerBadgesRule>)
+  },
   
   // Alliance / Reaver Rules
   setAllianceMode: { label: 'Set Alliance Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: ALLIANCE_SETUP_MODES }], default: () => ({ type: 'setAllianceMode', mode: 'standard' }) },
   setAlliancePlacement: { label: 'Set Alliance Placement', params: [{ name: 'placement', label: 'Placement Text', type: 'text' }], default: () => ({ type: 'setAlliancePlacement', placement: '' }) },
   createAlertTokenStack: { label: 'Create Alert Token Stack', params: [{ name: 'multiplier', label: 'Multiplier (per player)', type: 'number' }], default: () => ({ type: 'createAlertTokenStack', multiplier: 1 } as Partial<CreateAlertTokenStackRule>) },
+  addBoardComponent: {
+      label: 'Add Board Component',
+      params: [
+          { name: 'title', label: 'Title', type: 'text' },
+          { name: 'component', label: 'Component Type', type: 'select', options: COMPONENT_TYPES },
+          { name: 'count', label: 'Count', type: 'number' },
+          { name: 'distribution', label: 'Distribution', type: 'select', options: DISTRIBUTION_TYPES },
+          { name: 'targetRegion', label: 'Target Region (if distribution=region)', type: 'text', condition: (r) => (r as Partial<AddBoardComponentRule>).distribution === 'region' },
+          { name: 'locations', label: 'Locations (Specific List - comma sep)', type: 'text', condition: (r) => !(r as Partial<AddBoardComponentRule>).distribution || (r as Partial<AddBoardComponentRule>).distribution === 'fixed' },
+          { name: 'locationTitle', label: 'Location Title (Optional Override)', type: 'text' },
+          { name: 'locationSubtitle', label: 'Location Subtitle (Optional Override)', type: 'text' },
+          { name: 'icon', label: 'Icon (Emoji)', type: 'text' }
+      ],
+      default: () => ({ type: 'addBoardComponent', title: 'New Component', component: 'contraband', count: 1 } as Partial<AddBoardComponentRule>)
+  },
 
   // General / Misc Rules
   setShipPlacement: { label: 'Set Ship Placement', params: [{ name: 'location', label: 'Location', type: 'select', options: SHIP_PLACEMENT_LOCATIONS }], default: () => ({ type: 'setShipPlacement', location: 'persephone' }) },
@@ -96,16 +146,27 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
     ],
     default: () => ({ type: 'addSpecialRule', category: 'goal', rule: { title: 'New Rule', content: ['Description here.'] } } as Partial<AddSpecialRule>)
   },
+  setComponent: {
+      label: 'Set Component Override',
+      params: [
+          { name: 'stepId', label: 'Step ID (e.g. C3)', type: 'text' },
+          { name: 'component', label: 'Component Name', type: 'text' }
+      ],
+      default: () => ({ type: 'setComponent', stepId: 'C3', component: 'RuiningItDraftStep' } as Partial<SetComponentRule>)
+  },
 };
 
 
-const RuleInput: React.FC<{ param: RuleParam, value: unknown, onChange: (val: string | number) => void }> = ({ param, value, onChange }) => {
+const RuleInput: React.FC<{ param: RuleParam, value: unknown, onChange: (val: string | number | boolean) => void }> = ({ param, value, onChange }) => {
     const commonProps = "w-full bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500";
     if (param.type === 'select') {
         return <select className={commonProps} value={String(value ?? '')} onChange={(e) => onChange(e.target.value)}>{param.options?.map(o => <option key={o} value={o}>{o}</option>)}</select>;
     }
     if (param.type === 'number') {
         return <input type="number" className={commonProps} value={Number(value ?? 0)} onChange={(e) => onChange(parseInt(e.target.value, 10))} />;
+    }
+    if (param.type === 'checkbox') {
+        return <input type="checkbox" className="h-4 w-4" checked={!!value} onChange={(e) => onChange(e.target.checked)} />;
     }
     if (param.type === 'textarea') {
         const textValue = typeof value === 'object' && value !== null ? JSON.stringify(value, null, 2) : String(value ?? '');
@@ -120,7 +181,7 @@ const RuleEditor: React.FC<{ rule: Partial<SetupRule>, index: number, onUpdate: 
   const definition = RULE_DEFINITIONS[rule.type!];
   if (!definition) return <div className="text-red-500 text-xs p-2 bg-red-900/50 rounded">Unknown rule type: {rule.type}</div>;
   
-  const handleFieldChange = (name: string, value: string | number) => {
+  const handleFieldChange = (name: string, value: string | number | boolean) => {
     onUpdate(index, { ...rule, [name]: value });
   };
 
@@ -159,6 +220,7 @@ const VisualRuleBuilder: React.FC<{ rules: Partial<SetupRule>[], onRulesChange: 
     const newRules = [...rules];
     let processedRule = newRule;
     
+    // Auto-process certain string lists back to arrays for the object model
     if (processedRule.type === 'setJobContacts' || processedRule.type === 'allowContacts') {
       const contactsValue = processedRule.contacts as unknown;
       if (typeof contactsValue === 'string') {
@@ -167,18 +229,30 @@ const VisualRuleBuilder: React.FC<{ rules: Partial<SetupRule>[], onRulesChange: 
           contacts: contactsValue.split(',').map((s: string) => s.trim()).filter(Boolean),
         };
       }
-    } else if (processedRule.type === 'addSpecialRule' || processedRule.type === 'modifyPrime') {
-      const key = processedRule.type === 'addSpecialRule' ? 'rule' : 'modifier';
-      const ruleValue = (processedRule as { rule?: unknown; modifier?: unknown })[key];
-      if (typeof ruleValue === 'string') {
-        try {
-          const parsed = JSON.parse(ruleValue);
-          processedRule = { ...processedRule, [key]: parsed };
-        } catch (e) {
-          // Not valid JSON, keep as string for user to edit
+    } else if (processedRule.type === 'addBoardComponent') {
+        const locationsVal = (processedRule as Partial<AddBoardComponentRule>).locations;
+        if (typeof locationsVal === 'string') {
+             processedRule = {
+                 ...processedRule,
+                 locations: (locationsVal as string).split(',').map((s: string) => s.trim()).filter(Boolean)
+             } as Partial<SetupRule>;
         }
-      }
     }
+    
+    // Auto-parse JSON fields
+    const jsonFields = ['rule', 'modifier', 'badges', 'content'];
+    jsonFields.forEach(field => {
+        const ruleAsRecord = processedRule as Record<string, unknown>;
+        if (ruleAsRecord[field] && typeof ruleAsRecord[field] === 'string') {
+            try {
+                const parsed = JSON.parse(ruleAsRecord[field] as string);
+                processedRule = { ...processedRule, [field]: parsed };
+            } catch (e) {
+                // Keep as string if invalid JSON to allow editing
+            }
+        }
+    });
+
     newRules[index] = processedRule;
     onRulesChange(newRules);
   };
@@ -242,6 +316,7 @@ const getInitialState = () => ({
         sourceUrl: '',
         requiredExpansion: undefined,
         rating: undefined,
+        sortOrder: undefined,
     } as Partial<StoryCardDef>,
     rules: [] as Partial<SetupRule>[],
 });
@@ -321,6 +396,11 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
             setStory(prev => ({
                 ...prev,
                 rating: ratingValue === -1 ? undefined : ratingValue,
+            }));
+        } else if (name === 'sortOrder') {
+            setStory(prev => ({
+                ...prev,
+                sortOrder: value ? parseInt(value, 10) : undefined,
             }));
         } else {
             const finalValue = name === 'requiredExpansion' && value === '' ? undefined : value;
@@ -410,6 +490,7 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
         if (!finalStory.challengeOptions?.length) delete finalStory.challengeOptions;
         if (!finalStory.rules?.length) delete finalStory.rules;
         if (finalStory.rating === undefined) delete finalStory.rating;
+        if (finalStory.sortOrder === undefined) delete finalStory.sortOrder;
 
         const jsonString = JSON.stringify(finalStory, null, 2);
         const objectLiteralString = jsonString.replace(/"([^"]+)":/g, '$1:');
@@ -520,6 +601,8 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
                             </Select>
                         </div>
                         
+                        <div><label className="text-xs font-bold">Sort Order (Number)</label><Input name="sortOrder" type="number" value={story.sortOrder || ''} onChange={handleChange} /></div>
+
                         <h3 className="font-bold text-lg text-yellow-400 pt-2 border-t border-gray-700">Requirements</h3>
                         <div>
                             <label className="text-xs font-bold">Required Expansion</label>

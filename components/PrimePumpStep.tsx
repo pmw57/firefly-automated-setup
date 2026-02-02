@@ -1,3 +1,4 @@
+
 import React, { useMemo, useCallback } from 'react';
 import { OverrideNotificationBlock } from './SpecialRuleBlock';
 import { useTheme } from './ThemeContext';
@@ -7,6 +8,7 @@ import { StepComponentProps } from './StepContent';
 import { SpecialRule } from '../types';
 import { cls } from '../utils/style';
 import { StructuredContentRenderer } from './StructuredContentRenderer';
+import { getCampaignNotesForStep } from '../utils/selectors/story';
 
 interface CustomPrimePanelProps {
   rule: SpecialRule;
@@ -55,9 +57,23 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     hasStartWithAlertCard,
     disablePriming,
   } = usePrimeDetails(overrides);
+
+  const campaignNotes = useMemo(
+      () => getCampaignNotesForStep(gameState, step.id),
+      [gameState, step.id]
+  );
   
-  const formatRules = useCallback((rules: SpecialRule[]) => {
-      const combined = [...rules];
+  const formatRules = useCallback((rules: SpecialRule[], addNotes = false) => {
+      let combined = [...rules];
+
+      if (addNotes) {
+          const notesAsRules: SpecialRule[] = campaignNotes.map(note => ({
+              source: 'story',
+              title: 'Campaign Setup Note',
+              content: note.content
+          }));
+          combined = [...combined, ...notesAsRules];
+      }
       
       const order: Record<SpecialRule['source'], number> = {
           expansion: 1, setupCard: 2, story: 3, warning: 0, info: 0,
@@ -69,7 +85,7 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
         sorted = sorted.filter(b => b.source !== 'story');
       }
       return sorted;
-  }, [gameState.setupMode]);
+  }, [gameState.setupMode, campaignNotes]);
   
   // Inject calculated logic into the appropriate list for display
   const displayInfo = useMemo(() => {
@@ -88,7 +104,7 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     if (isBlitz && !hasStoryPrimeOverride) {
       list.push({ source: 'setupCard', title: 'The Blitz: Double Dip', page: 22, manual: 'Core', content: [{ type: 'paragraph', content: [`"Double Dip" rules are in effect. Discard the top ${baseDiscard * 2} cards (2x Base) from each deck.`] }] });
     }
-    return formatRules(list);
+    return formatRules(list, true);
   }, [overrideRules, isBlitz, baseDiscard, formatRules]);
 
   const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-[#faf8ef]/70 backdrop-blur-sm';

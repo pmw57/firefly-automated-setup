@@ -7,6 +7,7 @@ import { useAllianceReaverDetails } from '../hooks/useAllianceReaverDetails';
 import { StepComponentProps } from './StepContent';
 import { SpecialRule, StructuredContentPart } from '../types';
 import { cls } from '../utils/style';
+import { getCampaignNotesForStep } from '../utils/selectors/story';
 
 // Simple renderer for the override content to avoid duplicating the full OverrideNotificationBlock.
 const renderContent = (content: StructuredContentPart[]): React.ReactNode => {
@@ -24,7 +25,7 @@ const renderContent = (content: StructuredContentPart[]): React.ReactNode => {
     });
 };
 
-export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
+export const AllianceReaverStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState } = useGameState();
   const { setupMode } = gameState;
 
@@ -41,11 +42,16 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
     reaverTitle
   } = useAllianceReaverDetails();
 
+  const campaignNotes = useMemo(
+      () => getCampaignNotesForStep(gameState, step.id),
+      [gameState, step.id]
+  );
+
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  const formatRules = useCallback((rules: SpecialRule[], includeShipOverrides = false) => {
-      const combined = [...rules];
+  const formatRules = useCallback((rules: SpecialRule[], includeShipOverrides = false, addNotes = false) => {
+      let combined = [...rules];
 
       // Add the ship-specific overrides to the list if requested.
       // We rely on the subsequent filter to hide them in Quick mode if they come from a Story.
@@ -56,6 +62,15 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
           // by a generic text rule (e.g. "Ships not used"), so a specific "Disabled" notification is redundant.
           if (allianceOverride && !isAllianceDisabled) combined.push(allianceOverride);
           if (reaverOverride && !isReaverDisabled) combined.push(reaverOverride);
+      }
+
+      if (addNotes) {
+          const notesAsRules: SpecialRule[] = campaignNotes.map(note => ({
+              source: 'story',
+              title: 'Campaign Setup Note',
+              content: note.content
+          }));
+          combined = [...combined, ...notesAsRules];
       }
       
       const order: Record<SpecialRule['source'], number> = {
@@ -72,10 +87,10 @@ export const AllianceReaverStep: React.FC<StepComponentProps> = () => {
       }
 
       return sorted;
-  }, [setupMode, allianceOverride, reaverOverride, isAllianceDisabled, isReaverDisabled]);
+  }, [setupMode, allianceOverride, reaverOverride, isAllianceDisabled, isReaverDisabled, campaignNotes]);
   
   const displayInfo = useMemo(() => formatRules(infoRules), [infoRules, formatRules]);
-  const displayOverrides = useMemo(() => formatRules(overrideRules, true), [overrideRules, formatRules]);
+  const displayOverrides = useMemo(() => formatRules(overrideRules, true, true), [overrideRules, formatRules]);
 
   const standardContainerBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
   const standardContainerBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
