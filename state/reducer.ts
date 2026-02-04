@@ -1,3 +1,4 @@
+
 import { GameState, Expansions, GameMode, SetupMode, AddFlagRule } from '../types/index';
 import { Action, ActionType, ExpansionBundle } from './actions';
 import { STORY_CARDS } from '../data/storyCards';
@@ -558,6 +559,18 @@ export function gameReducer(state: GameState, action: Action): GameState {
             resolveConflictsManually: false,
             highVolumeSupply: true,
         },
+      };
+
+    case ActionType.IMPORT_GAME_STATE:
+      // Merge imported state with default/current structure to ensure all keys exist
+      return {
+          ...getDefaultGameState(),
+          ...action.payload,
+          // Ensure nested objects are merged correctly if partial
+          expansions: { ...getDefaultGameState().expansions, ...(action.payload.expansions || {}) },
+          // Reset ephemeral UI state
+          draft: { state: null, isManual: false },
+          missionDossierSubStep: 1
       };
 
     default:

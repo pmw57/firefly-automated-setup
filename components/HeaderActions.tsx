@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';
+import { useUrlSync } from '../hooks/useUrlSync';
 
 interface HeaderActionsProps {
   onOpenHelp: () => void;
@@ -32,10 +34,18 @@ const HelpIcon = () => (
   </svg>
 );
 
+const ShareIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+    </svg>
+);
+
 
 export const HeaderActions: React.FC<HeaderActionsProps> = ({ onOpenHelp, onOpenQr }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { copyShareUrl } = useUrlSync();
+  const [shareText, setShareText] = useState('Share Setup');
   const menuRef = useRef<HTMLDivElement>(null);
   const isDark = theme === 'dark';
 
@@ -60,6 +70,15 @@ export const HeaderActions: React.FC<HeaderActionsProps> = ({ onOpenHelp, onOpen
   const handleAction = (action: () => void) => {
     action();
     setIsOpen(false);
+  };
+  
+  const handleShare = () => {
+      copyShareUrl();
+      setShareText('Copied!');
+      setTimeout(() => {
+          setShareText('Share Setup');
+          setIsOpen(false);
+      }, 1000);
   };
 
   const buttonClass = "bg-black/60 hover:bg-black/80 dark:bg-zinc-800/80 dark:hover:bg-zinc-700 backdrop-blur-md text-yellow-400 border-2 border-yellow-600/50";
@@ -97,6 +116,10 @@ export const HeaderActions: React.FC<HeaderActionsProps> = ({ onOpenHelp, onOpen
           aria-labelledby="menu-button"
         >
           <div className="py-1" role="none">
+            <button role="menuitem" onClick={handleShare} className={cls("w-full text-left flex items-center gap-3 px-4 py-2 text-sm", menuItemHover, menuItemText)}>
+                <span className={menuItemIcon}><ShareIcon /></span>
+                <span>{shareText}</span>
+            </button>
             <button role="menuitem" onClick={() => handleAction(toggleTheme)} className={cls("w-full text-left flex items-center gap-3 px-4 py-2 text-sm", menuItemHover, menuItemText)}>
                 <span className={menuItemIcon}>{isDark ? <SunIcon /> : <MoonIcon />}</span>
                 <span>Change to {isDark ? 'Light' : 'Dark'} Mode</span>
