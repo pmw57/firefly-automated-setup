@@ -2,7 +2,6 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { getResourceDetails } from '../utils/resources';
 import { OverrideNotificationBlock } from './SpecialRuleBlock';
-import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { cls } from '../utils/style';
@@ -28,8 +27,6 @@ const renderSimpleContent = (content: StructuredContent): React.ReactNode => {
 export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
   const { state: gameState } = useGameState();
   const { setFinalStartingCredits, toggleChallengeOption } = useGameDispatch();
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
   const [showBreakdown, setShowBreakdown] = useState(false);
   const isQuickMode = gameState.setupMode === 'quick';
   
@@ -100,20 +97,12 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
       }
   };
   
-  const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
-  const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
-  const sectionHeaderColor = isDark ? 'text-gray-200' : 'text-gray-800';
-  const sectionHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
-  const textColor = isDark ? 'text-gray-200' : 'text-gray-700';
-  const creditColor = isDark ? 'text-green-400' : 'text-green-700';
-  const modsBorder = isDark ? 'border-zinc-700/50' : 'border-gray-200';
-  const modsText = isDark ? 'text-gray-400' : 'text-gray-600';
-  const disabledBg = isDark ? 'bg-zinc-900/50 border-zinc-800' : 'bg-stone-100 border-stone-300';
-  const disabledText = isDark ? 'text-zinc-500' : 'text-stone-500';
+  const disabledBg = 'bg-surface-subtle border-border-subtle';
+  const disabledText = 'text-content-subtle';
   const disabledTitle = cls(disabledText, 'line-through');
-  const disabledBorder = isDark ? 'border-zinc-800' : 'border-stone-300';
-  const fuelBadgeBg = isDark ? 'bg-yellow-900/40 text-yellow-200 border-yellow-800' : 'bg-yellow-100 text-yellow-900 border-yellow-200';
-  const partsBadgeBg = isDark ? 'bg-zinc-800 text-gray-200 border-zinc-700' : 'bg-gray-200 text-gray-800 border-gray-300';
+  const disabledBorder = 'border-border-subtle';
+  const fuelBadgeBg = 'bg-surface-warning text-content-warning border-border-warning';
+  const partsBadgeBg = 'bg-surface-subtle text-content-secondary border-border-subtle';
   
   return (
     <div className="space-y-6">
@@ -122,33 +111,33 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
       ))}
       
       {smugglersBluesVariantAvailable && (
-        <div className={`${cardBg} rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300 overflow-hidden animate-fade-in-up`}>
+        <div className="bg-surface-card/60 backdrop-blur-sm rounded-lg border border-border-separator shadow-sm transition-colors duration-300 overflow-hidden animate-fade-in-up">
           <div className="p-4 md:p-6">
-              <h4 className={`font-bold text-lg mb-3 pb-2 border-b ${sectionHeaderColor} ${sectionHeaderBorder}`}>
+              <h4 className="font-bold text-lg mb-3 pb-2 border-b text-content-primary border-border-subtle">
                   Board Setup: Seeding the 'Verse
               </h4>
-              <p className={`text-sm mb-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+              <p className="text-sm mb-4 text-content-secondary">
                   Because the <strong>Blue Sun</strong> and <strong>Kalidasa</strong> expansions are active, an optional contraband placement rule is available. Please choose which rule to use:
               </p>
               <div className="space-y-3">
                   <label 
                       onClick={() => handleVariantChange(false)}
-                      className={cls("flex items-start p-3 rounded-lg border cursor-pointer transition-colors", !useRimVariant ? (isDark ? 'border-green-600 bg-green-900/20' : 'border-green-600 bg-green-50') : (isDark ? 'border-zinc-700 hover:bg-zinc-800/80' : 'border-gray-200 hover:bg-gray-100'))}
+                      className={cls("flex items-start p-3 rounded-lg border cursor-pointer transition-colors", !useRimVariant ? 'border-border-success bg-surface-success' : 'border-border-subtle hover:bg-surface-subtle')}
                   >
                       <input type="radio" name="smugglers-variant" checked={!useRimVariant} readOnly className="mt-1 mr-3 accent-green-600"/>
                       <div>
-                          <span className="font-bold">Standard Rule</span>
-                          <p className="text-xs">Place <strong>3 Contraband</strong> on each Planetary Sector in <strong>Alliance Space</strong>.</p>
+                          <span className="font-bold text-content-primary">Standard Rule</span>
+                          <p className="text-xs text-content-secondary">Place <strong>3 Contraband</strong> on each Planetary Sector in <strong>Alliance Space</strong>.</p>
                       </div>
                   </label>
                   <label 
                       onClick={() => handleVariantChange(true)}
-                      className={cls("flex items-start p-3 rounded-lg border cursor-pointer transition-colors", useRimVariant ? (isDark ? 'border-green-600 bg-green-900/20' : 'border-green-600 bg-green-50') : (isDark ? 'border-zinc-700 hover:bg-zinc-800/80' : 'border-gray-200 hover:bg-gray-100'))}
+                      className={cls("flex items-start p-3 rounded-lg border cursor-pointer transition-colors", useRimVariant ? 'border-border-success bg-surface-success' : 'border-border-subtle hover:bg-surface-subtle')}
                   >
                       <input type="radio" name="smugglers-variant" checked={useRimVariant} readOnly className="mt-1 mr-3 accent-green-600"/>
                       <div>
-                          <span className="font-bold">Optional Variant</span>
-                          <p className="text-xs">Place <strong>2 Contraband</strong> on each Planetary Sector in <strong>Rim Space</strong>.</p>
+                          <span className="font-bold text-content-primary">Optional Variant</span>
+                          <p className="text-xs text-content-secondary">Place <strong>2 Contraband</strong> on each Planetary Sector in <strong>Rim Space</strong>.</p>
                       </div>
                   </label>
               </div>
@@ -157,19 +146,19 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
       )}
 
       {/* Main container for all resource sections */}
-      <div className={`${cardBg} rounded-lg border ${cardBorder} shadow-sm transition-colors duration-300 overflow-hidden`}>
+      <div className="bg-surface-card/60 backdrop-blur-sm rounded-lg border border-border-separator shadow-sm transition-colors duration-300 overflow-hidden">
         
         {/* Credits section */}
         <div className={cls("p-4 md:p-6")}>
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <h4 className={`font-bold text-lg ${textColor}`}>Starting Capitol</h4>
+              <h4 className="font-bold text-lg text-content-primary">Starting Capitol</h4>
               
               {!isQuickMode && (
                   hasComplexCreditCalculation ? (
                     <button
                       onClick={() => setShowBreakdown(s => !s)}
-                      className={`text-xs mt-1 ${modsText} flex items-center gap-1.5 p-1 -ml-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors`}
+                      className="text-xs mt-1 text-content-secondary flex items-center gap-1.5 p-1 -ml-1 rounded hover:bg-surface-subtle transition-colors"
                       aria-expanded={showBreakdown}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
@@ -181,14 +170,14 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
                       </svg>
                     </button>
                   ) : (
-                    <p className={`text-xs mt-1 ${modsText} italic`}>
+                    <p className="text-xs mt-1 text-content-secondary italic">
                       {hasCreditModification ? creditModifications[0].description : 'Standard Allocation'}
                     </p>
                   )
               )}
 
               {showBreakdown && hasComplexCreditCalculation && !isQuickMode && (
-                <div className={`grid grid-cols-1 xs:grid-cols-[1fr_auto] gap-x-4 text-xs mt-2 border-t ${modsBorder} pt-2 ${modsText} animate-fade-in`}>
+                <div className="grid grid-cols-1 xs:grid-cols-[1fr_auto] gap-x-4 text-xs mt-2 border-t border-border-subtle pt-2 text-content-secondary animate-fade-in">
                   {creditModifications.map((mod, i) => (
                     <React.Fragment key={i}>
                       <span className="truncate">{mod.description}</span>
@@ -198,17 +187,17 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
                 </div>
               )}
             </div>
-            <div className={`text-3xl font-bold font-western drop-shadow-sm ${creditColor} flex-shrink-0`}>${credits.toLocaleString()}</div>
+            <div className="text-3xl font-bold font-western drop-shadow-sm text-content-success flex-shrink-0">${credits.toLocaleString()}</div>
           </div>
         </div>
         
         {isQuickMode ? (
           // QUICK MODE: Combined Supplies Section
-          <div className={cls("p-4 md:p-6 border-t", cardBorder)}>
+          <div className="p-4 md:p-6 border-t border-border-separator">
             <div className="flex items-start justify-between">
-              <h4 className={`font-bold text-lg ${textColor}`}>Starting Supplies</h4>
+              <h4 className="font-bold text-lg text-content-primary">Starting Supplies</h4>
               <div className="text-right">
-                <div className={`text-sm font-bold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                <div className="text-sm font-bold text-content-primary">
                   <div className="py-0.5">{fuel} Fuel Tokens</div>
                   <div className="py-0.5">{parts} Parts</div>
                   {warrants > 0 && <div className="py-0.5">{warrants} Warrant Token{warrants > 1 ? 's' : ''}</div>}
@@ -226,14 +215,14 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
           // DETAILED MODE: Existing separate sections
           <>
             {/* Fuel & Parts section */}
-            <div className={cls("p-4 md:p-6 border-t", cardBorder, isFuelDisabled || isPartsDisabled ? disabledBg : '')}>
+            <div className={cls("p-4 md:p-6 border-t border-border-separator", isFuelDisabled || isPartsDisabled ? disabledBg : '')}>
               <div className="flex items-start justify-between">
-                  <h4 className={`font-bold text-lg ${isFuelDisabled || isPartsDisabled ? disabledTitle : textColor}`}>Fuel & Parts</h4>
+                  <h4 className={`font-bold text-lg ${isFuelDisabled || isPartsDisabled ? disabledTitle : 'text-content-primary'}`}>Fuel & Parts</h4>
                   <div className="text-right">
                     {(isFuelDisabled || isPartsDisabled) ? (
                       <span className={`text-3xl font-bold ${disabledText}`}>0</span>
                     ) : (
-                      <div className={`text-sm font-bold ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                      <div className="text-sm font-bold text-content-primary">
                         <div className={cls("px-2 py-1 rounded mb-1 border", fuel > 6 ? 'font-black' : '', fuelBadgeBg)}>{fuel} Fuel Tokens</div>
                         <div className={cls("px-2 py-1 rounded border", parts > 2 ? 'font-black' : '', partsBadgeBg)}>{parts} Part Tokens</div>
                       </div>
@@ -246,7 +235,7 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
                     "text-xs pt-2 border-t space-y-1 mt-2",
                     isFuelDisabled || isPartsDisabled 
                         ? `${disabledBorder} ${disabledText}`
-                        : `${modsBorder} ${modsText}`
+                        : "border-border-subtle text-content-secondary"
                 )}>
                   {fuelModificationDescription && <p><strong>Fuel:</strong> {fuelModificationDescription}</p>}
                   {partsModificationDescription && <p><strong>Parts:</strong> {partsModificationDescription}</p>}
@@ -256,16 +245,16 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
 
             {/* Individual section for token stacks */}
             {tokenStacks.map((stack, i) => (
-                <div key={`token-stack-${i}`} className={cls("p-4 md:p-6 border-t", cardBorder)}>
+                <div key={`token-stack-${i}`} className="p-4 md:p-6 border-t border-border-separator">
                     <div className="flex justify-between items-center">
-                        <h4 className={`font-bold text-lg ${textColor}`}>{stack.title}</h4>
-                        <div className={`text-right text-sm ${modsText} ml-4`}>
+                        <h4 className="font-bold text-lg text-content-primary">{stack.title}</h4>
+                        <div className="text-right text-sm text-content-secondary ml-4">
                             Stack of <strong>{stack.count}</strong>
                             {stack.rule.multiplier && <span className="text-xs block">({stack.rule.multiplier} per player)</span>}
                         </div>
                     </div>
                     {stack.description && (
-                      <div className={cls("text-xs pt-2 border-t space-y-1 mt-2", modsBorder, modsText)}>
+                      <div className="text-xs pt-2 border-t border-border-subtle space-y-1 mt-2 text-content-secondary">
                           <p>{stack.description}</p>
                       </div>
                     )}
@@ -274,10 +263,10 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
             
             {/* Individual section for Warrants */}
             {warrants > 0 && (
-              <div className={cls("p-4 md:p-6 border-t", cardBorder)}>
+              <div className="p-4 md:p-6 border-t border-border-separator">
                   <div className="flex justify-between items-center">
-                      <h4 className={`font-bold text-lg ${textColor}`}>Warrant Tokens</h4>
-                      <div className={`text-right text-sm ${modsText} ml-4`}>
+                      <h4 className="font-bold text-lg text-content-primary">Warrant Tokens</h4>
+                      <div className="text-right text-sm text-content-secondary ml-4">
                           Each player begins with <strong>{warrants}</strong>
                       </div>
                   </div>
@@ -286,10 +275,10 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
     
             {/* Individual section for Goal Tokens */}
             {goalTokens > 0 && (
-              <div className={cls("p-4 md:p-6 border-t", cardBorder)}>
+              <div className="p-4 md:p-6 border-t border-border-separator">
                   <div className="flex justify-between items-center">
-                      <h4 className={`font-bold text-lg ${textColor}`}>Goal Tokens</h4>
-                      <div className={`text-right text-sm ${modsText} ml-4`}>
+                      <h4 className="font-bold text-lg text-content-primary">Goal Tokens</h4>
+                      <div className="text-right text-sm text-content-secondary ml-4">
                           Begin play with <strong>{goalTokens}</strong>
                       </div>
                   </div>
@@ -300,25 +289,19 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
         
         {/* Instructional sections (Board Setup) - Decoupled Rendering */}
         {boardSetupRules.map((rule, i) => {
-            // Check if rule provides new visual properties, fallback to title/content if needed
-            // The 'addBoardComponent' rule type injects these visual props.
             const icon = rule.icon || '📍';
             const title = rule.title || 'Board Setup';
             const locationTitle = rule.locationTitle || '';
             const locationSubtitle = rule.locationSubtitle || '';
             
-            // If it's a legacy rule without the new structure, we skip it here 
-            // (or handle it with a fallback if desired, though current refactor aims to remove legacy mapping).
-            // For now, we render it using the new props if present.
-
             return (
-                <div key={`board-rule-${i}`} className={cls("p-4 md:p-6 border-t", cardBorder)}>
+                <div key={`board-rule-${i}`} className="p-4 md:p-6 border-t border-border-separator">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
                              <span className="text-xl" role="img" aria-hidden="true">{icon}</span>
-                             <h4 className={`font-bold text-lg ${textColor}`}>{title}</h4>
+                             <h4 className="font-bold text-lg text-content-primary">{title}</h4>
                         </div>
-                        <div className={`text-right text-sm ${modsText} ml-4`}>
+                        <div className="text-right text-sm text-content-secondary ml-4">
                             {locationTitle && <div>{locationTitle}</div>}
                             {locationSubtitle && <div className="text-xs">{locationSubtitle}</div>}
                         </div>
@@ -328,10 +311,10 @@ export const ResourcesStep: React.FC<StepComponentProps> = ({ step }) => {
         })}
         
         {componentAdjustmentRules.map((rule, i) => (
-            <div key={`comp-rule-${i}`} className={cls("p-4 md:p-6 border-t", cardBorder)}>
+            <div key={`comp-rule-${i}`} className="p-4 md:p-6 border-t border-border-separator">
                 <div className="flex justify-between items-center">
-                    <h4 className={`font-bold text-lg ${textColor}`}>{rule.title || 'Component Adjustment'}</h4>
-                    <div className={`text-right text-sm ${modsText} ml-4`}>
+                    <h4 className="font-bold text-lg text-content-primary">{rule.title || 'Component Adjustment'}</h4>
+                    <div className="text-right text-sm text-content-secondary ml-4">
                         {renderSimpleContent(rule.content)}
                     </div>
                 </div>
