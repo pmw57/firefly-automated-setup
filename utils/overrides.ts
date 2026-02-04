@@ -71,6 +71,9 @@ const RULE_TYPE_TO_STEP_ID: Record<SetupRule['type'], string | ((rule: SetupRule
         case 'addBorderHavens':
         case 'allianceSpaceOffLimits':
             return STEP_IDS.C3;
+            
+        case 'activatesRimDecks':
+            return STEP_IDS.C1;
 
         case 'smugglersBluesSetup':
         case 'lonelySmugglerSetup':

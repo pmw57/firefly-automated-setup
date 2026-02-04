@@ -129,8 +129,9 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   if (!currentStep) return null;
   
   const isFinal = currentStep.type === 'final';
-  const footerBg = isDark ? 'bg-zinc-950/90' : 'bg-[#faf8ef]/95';
-  const footerBorder = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
+  // Use semantic tokens
+  const footerBg = 'bg-surface-overlay/95';
+  const footerBorder = 'border-border-separator';
   
   const touchHandlers = isOverrideModalOpen ? {} : {
     onTouchStart: handleTouchStart,
@@ -155,10 +156,10 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
       />
 
       {isFinal ? (
-        <div className={cls(isDark ? 'bg-zinc-900/70 backdrop-blur-md border-zinc-800' : 'bg-[#faf8ef]/80 backdrop-blur-md border-[#d6cbb0]', "rounded-xl shadow-xl p-8 text-center border-t-8 animate-fade-in-up transition-colors duration-300", isDark ? 'border-t-green-800' : 'border-t-[#7f1d1d]')}>
+        <div className={cls("bg-surface-card/80 backdrop-blur-md border border-border-separator rounded-xl shadow-xl p-8 text-center border-t-8 animate-fade-in-up transition-colors duration-300", isDark ? 'border-t-green-800' : 'border-t-[#7f1d1d]')}>
           <div className="text-6xl mb-4">🚀</div>
-          <h2 className={cls("text-3xl font-bold font-western mb-4", isDark ? 'text-gray-100' : 'text-[#292524]')}>You are ready to fly!</h2>
-          <p className={cls("mb-8 text-lg", isDark ? 'text-gray-300' : 'text-[#57534e]')}>Setup is complete. Good luck, Captain.</p>
+          <h2 className={cls("text-3xl font-bold font-western mb-4 text-content-primary")}>You are ready to fly!</h2>
+          <p className={cls("mb-8 text-lg text-content-secondary")}>Setup is complete. Good luck, Captain.</p>
           
           {gameState.setupMode === 'detailed' && <FinalSummary gameState={gameState} />}
 

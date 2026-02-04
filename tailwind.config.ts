@@ -25,6 +25,20 @@ export default {
       },
       colors: {
         'expansion': expansionColors,
+        // Semantic Tokens mapped to CSS variables
+        surface: {
+            canvas: 'var(--color-surface-canvas)',
+            card: 'rgb(var(--color-surface-card) / <alpha-value>)',
+            overlay: 'rgb(var(--color-surface-overlay) / <alpha-value>)',
+        },
+        content: {
+            primary: 'var(--color-content-primary)',
+            secondary: 'var(--color-content-secondary)',
+            accent: 'var(--color-content-accent)',
+        },
+        border: {
+            separator: 'var(--color-border-separator)',
+        },
         'firefly': {
           'red': '#7f1d1d',
           'red-light': '#991b1b',
