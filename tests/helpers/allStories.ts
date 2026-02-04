@@ -35,3 +35,11 @@ export const ALL_FULL_STORIES: StoryCardDef[] = [
     ...COMMUNITY_STORIES,
     ...SOLO_STORIES
 ];
+
+export const getTestStory = (title: string): StoryCardDef => {
+    const story = ALL_FULL_STORIES.find(c => c.title === title);
+    if (!story) {
+        throw new Error(`Test Helper Error: Story card with title "${title}" not found in ALL_FULL_STORIES. Verify data file exports.`);
+    }
+    return story;
+};

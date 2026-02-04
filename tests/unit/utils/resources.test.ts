@@ -6,6 +6,7 @@ import { GameState } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
 import { STORY_CARDS } from '../../../data/storyCards';
+import { getTestStory } from '../../helpers/allStories';
 
 describe('rules/resources', () => {
   const baseGameState = getDefaultGameState();
@@ -38,9 +39,11 @@ describe('rules/resources', () => {
 
     it.concurrent('applies an "add" credits effect from a story card', () => {
       const storyTitle = "Running On Empty";
+      const fullStory = getTestStory(storyTitle);
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: fullStory
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(4200); // 3000 + 1200
@@ -50,9 +53,11 @@ describe('rules/resources', () => {
     
     it.concurrent('applies a "set" credits effect from a story card, overriding the base', () => {
       const storyTitle = "How It All Started";
+      const fullStory = getTestStory(storyTitle);
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: fullStory
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(500);
@@ -61,9 +66,11 @@ describe('rules/resources', () => {
 
     it.concurrent('resolves conflict between "set" credit effects by prioritizing the story rule', () => {
       const storyTitle = "How It All Started";
+      const fullStory = getTestStory(storyTitle);
       const state = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: fullStory
       });
       const details = getResourceDetails(state);
       
@@ -74,9 +81,11 @@ describe('rules/resources', () => {
 
     it.concurrent('applies "disable" effects for fuel and parts from a story', () => {
       const storyTitle = "Running On Empty";
+      const fullStory = getTestStory(storyTitle);
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: fullStory
       });
       const details = getResourceDetails(state);
 
@@ -99,9 +108,11 @@ describe('rules/resources', () => {
 
     it.concurrent('handles adding warrants and other resources', () => {
       const storyTitle = "It Ain't Easy Goin' Legit";
+      const fullStory = getTestStory(storyTitle);
       const state = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.STANDARD,
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: fullStory
       });
       const details = getResourceDetails(state);
 
@@ -111,9 +122,11 @@ describe('rules/resources', () => {
 
     it.concurrent('should return a conflict object and respect manual selection when manual resolution is enabled', () => {
       const storyTitle = "How It All Started";
+      const fullStory = getTestStory(storyTitle);
       const state: GameState = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: fullStory,
         optionalRules: { ...baseGameState.optionalRules, resolveConflictsManually: true },
       });
 
@@ -134,20 +147,15 @@ describe('rules/resources', () => {
 
     describe("for Smuggler's Blues", () => {
       const storyTitle = "Smuggler's Blues";
-      const storyCard = STORY_CARDS.find(c => c.title === storyTitle);
-      
-      // Safety check to ensure test data is loaded
-      if (!storyCard) {
-        throw new Error("Smuggler's Blues story card not found in test environment");
-      }
-      
-      const storyIndex = STORY_CARDS.indexOf(storyCard);
+      const fullStory = getTestStory(storyTitle);
+      const storyIndex = STORY_CARDS.findIndex(c => c.title === storyTitle);
   
       it.concurrent('makes variant available when Blue Sun and Kalidasa are active', () => {
           const state: GameState = { 
               ...baseGameState, 
               expansions: { ...baseGameState.expansions, blue: true, kalidasa: true }, 
-              selectedStoryCardIndex: storyIndex
+              selectedStoryCardIndex: storyIndex,
+              activeStory: fullStory
           };
           const details = getResourceDetails(state);
           expect(details.smugglersBluesVariantAvailable).toBe(true);
@@ -157,17 +165,16 @@ describe('rules/resources', () => {
           const state: GameState = { 
               ...baseGameState, 
               expansions: { ...baseGameState.expansions, blue: true, kalidasa: false }, 
-              selectedStoryCardIndex: storyIndex
+              selectedStoryCardIndex: storyIndex,
+              activeStory: fullStory
           };
           const details = getResourceDetails(state);
-          const boardRules = details.boardSetupRules; 
           
           expect(details.smugglersBluesVariantAvailable).toBe(false);
           
-          const rule = boardRules.find(r => r.title === "A Lucrative Opportunity");
+          const rule = details.boardSetupRules.find(r => r.title === "A Lucrative Opportunity");
           expect(rule).toBeDefined();
           
-          // Verify content generated from distribution props
           expect(rule?.locationTitle).toContain("3 on each Planetary Sector");
           expect(rule?.locationSubtitle).toContain("In Alliance Space");
       });
