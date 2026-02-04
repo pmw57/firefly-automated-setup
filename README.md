@@ -1,3 +1,4 @@
+
 <div align="center">
   <h1 align="center">Firefly: The Game - Automated Setup Guide</h1>
   <p align="center">
@@ -41,11 +42,19 @@ This guide ensures you never miss a rule by dynamically adjusting the setup flow
 
 To ensure long-term maintainability and performance, the following major refactoring efforts are planned:
 
-1.  **Selector Layer**: Move derived state calculations from Hooks to pure Selector functions to improve performance and testability.
-2.  **Unified Rule Engine**: Centralize rule conflict resolution and "overrule" detection into a single processing pipeline.
-3.  **Schema Validation**: Implement Zod to validate Story and Setup card JSON data at build/test time.
-4.  **Component Decoupling**: Refactor the `StepContent` "God Component" into a dynamic registry pattern.
-5.  **Semantic Theming**: Move from hex-code utility classes to semantic Tailwind tokens (e.g., `bg-surface-primary`).
+1.  **Selector Layer**: Move derived state calculations from Hooks to pure Selector functions to improve performance and testability. (Completed)
+2.  **Unified Rule Engine**: Centralize rule conflict resolution and "overrule" detection into a single processing pipeline. (Completed)
+3.  **Schema Validation**: Implement Zod to validate Story and Setup card JSON data at build/test time. (Completed)
+4.  **Component Decoupling**: Refactor the `StepContent` "God Component" into a dynamic registry pattern. (Completed)
+5.  **Semantic Theming**: Move from hex-code utility classes to semantic Tailwind tokens (e.g., `bg-surface-primary`). (Completed)
+
+### Major Issues & Future Work
+
+1.  **Code Splitting for Data Files**: The `STORY_CARDS` constant is becoming very large. Splitting this data into chunks or fetching it asynchronously could improve initial load times as the content library grows.
+2.  **Accessibility Audit & Focus Management**: While basic ARIA support exists, a full audit of focus management (especially during modal interactions and step transitions) is needed to ensure full WCAG compliance.
+3.  **Internationalization (i18n) Support**: The codebase currently contains hardcoded English strings. Extracting these into resource files would allow for community translations.
+4.  **State Management Scalability**: As features grow, the `useGameDispatch` context is becoming bloated. Migrating to a more robust state management solution (like Zustand or Redux Toolkit) might be necessary in the future.
+5.  **Responsive Layout Improvements**: The sticky footer navigation on mobile can sometimes obscure content on very long steps. A layout review for smaller viewports is recommended.
 
 ## 📦 Installation & Development
 

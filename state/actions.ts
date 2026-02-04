@@ -1,5 +1,6 @@
 
 import { GameState, SetupMode } from '../types/index';
+import { StoryCardDef } from '../types/data';
 
 // Action types related to the 10th Anniversary solo campaign mode.
 export enum ActionType {
@@ -10,7 +11,7 @@ export enum ActionType {
   SET_CAMPAIGN_STORIES = 'SET_CAMPAIGN_STORIES',
   SET_SETUP_CARD = 'SET_SETUP_CARD',
   TOGGLE_FLYING_SOLO = 'TOGGLE_FLYING_SOLO',
-  SET_STORY_CARD = 'SET_STORY_CARD',
+  SET_ACTIVE_STORY = 'SET_ACTIVE_STORY',
   SET_GOAL = 'SET_GOAL',
   TOGGLE_CHALLENGE_OPTION = 'TOGGLE_CHALLENGE_OPTION',
   SET_DISGRUNTLED_DIE = 'SET_DISGRUNTLED_DIE',
@@ -48,7 +49,7 @@ export type Action =
   | { type: ActionType.SET_CAMPAIGN_STORIES; payload: number }
   | { type: ActionType.SET_SETUP_CARD; payload: { id: string; name: string } }
   | { type: ActionType.TOGGLE_FLYING_SOLO }
-  | { type: ActionType.SET_STORY_CARD; payload: { index: number | null; goal?: string } }
+  | { type: ActionType.SET_ACTIVE_STORY; payload: { story: StoryCardDef | null; index: number | null; goal?: string } }
   | { type: ActionType.SET_GOAL; payload: string }
   | { type: ActionType.TOGGLE_CHALLENGE_OPTION; payload: string }
   | { type: ActionType.SET_DISGRUNTLED_DIE; payload: GameState['optionalRules']['disgruntledDie'] }

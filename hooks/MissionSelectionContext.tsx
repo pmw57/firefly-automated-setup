@@ -1,5 +1,3 @@
-
-
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { StoryCardDef, AdvancedRuleDef, StoryTag } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
@@ -111,7 +109,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
   const handleCancelShortList = useCallback(() => localDispatch({ type: 'SET_SHORT_LIST', payload: [] }), []);
 
   // --- Handlers with Logic ---
-  const handleStoryCardSelect = useCallback((index: number | null) => {
+  const handleStoryCardSelect = useCallback(async (index: number | null) => {
     const card = index !== null ? STORY_CARDS[index] : undefined;
     setStoryCard(index, card?.goals?.[0]?.title);
   }, [setStoryCard]);
@@ -147,6 +145,7 @@ export const MissionSelectionProvider: React.FC<{ children: React.ReactNode }> =
     shortList,
     subStep,
     sortMode,
+    isLoading: false,
     // Derived Data
     activeStoryCard,
     selectedStoryCardIndex: gameState.selectedStoryCardIndex,

@@ -1,10 +1,13 @@
-import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
+
+import React, { useMemo, useCallback, useReducer, useEffect, useState } from 'react';
 import { StoryCardDef, AdvancedRuleDef, StoryTag } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { MissionSelectionContext, MissionSelectionContextType } from '../hooks/useMissionSelection';
 import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getAllPotentialAdvancedRules } from '../utils/selectors/story';
 import { STORY_CARDS } from '../data/storyCards';
+import { loadStoryData } from '../utils/storyLoader';
+import { ActionType } from '../state/actions';
 
 interface LocalState {
   searchTerm: string;
@@ -67,8 +70,9 @@ interface MissionSelectionProviderProps {
 
 export const MissionSelectionProvider: React.FC<MissionSelectionProviderProps> = ({ children, onJump }) => {
   const { state: gameState } = useGameState();
-  const { setStoryCard, setMissionDossierSubstep } = useGameDispatch();
+  const { dispatch, setMissionDossierSubstep } = useGameDispatch();
   const [localState, localDispatch] = useReducer(reducer, initialState);
+  const [isLoading, setIsLoading] = useState(false);
   const { searchTerm, filterExpansion, filterTheme, shortList, sortMode } = localState;
   const subStep = gameState.missionDossierSubStep;
   
@@ -87,8 +91,6 @@ export const MissionSelectionProvider: React.FC<MissionSelectionProviderProps> =
     [gameState.expansions.tenth, gameState.setupMode]
   );
 
-  // When valid stories change, sanitize the expansion filter to remove any
-  // selections that are no longer relevant.
   useEffect(() => {
     const storyExpansionIds = new Set<string>();
     validStories.forEach(story => {
@@ -111,11 +113,33 @@ export const MissionSelectionProvider: React.FC<MissionSelectionProviderProps> =
   const setFilterTheme = useCallback((theme: StoryTag | 'all') => localDispatch({ type: 'SET_FILTER_THEME', payload: theme }), []);
   const handleCancelShortList = useCallback(() => localDispatch({ type: 'SET_SHORT_LIST', payload: [] }), []);
 
-  // --- Handlers with Logic ---
-  const handleStoryCardSelect = useCallback((index: number | null) => {
-    const card = index !== null ? STORY_CARDS[index] : undefined;
-    setStoryCard(index, card?.goals?.[0]?.title);
-  }, [setStoryCard]);
+  // --- Handlers with Async Logic ---
+  const handleStoryCardSelect = useCallback(async (index: number | null) => {
+    if (index === null) {
+        dispatch({ 
+            type: ActionType.SET_ACTIVE_STORY, 
+            payload: { story: null, index: null, goal: undefined } 
+        });
+        return;
+    }
+
+    setIsLoading(true);
+    try {
+        const fullStoryData = await loadStoryData(index);
+        dispatch({ 
+            type: ActionType.SET_ACTIVE_STORY, 
+            payload: { 
+                story: fullStoryData, 
+                index, 
+                goal: fullStoryData.goals?.[0]?.title 
+            } 
+        });
+    } catch (error) {
+        console.error("Failed to load story data", error);
+    } finally {
+        setIsLoading(false);
+    }
+  }, [dispatch]);
 
   const handleRandomPick = useCallback(() => {
     if (validStories.length === 0) return;
@@ -154,6 +178,7 @@ export const MissionSelectionProvider: React.FC<MissionSelectionProviderProps> =
     shortList,
     subStep,
     sortMode,
+    isLoading,
     // Derived Data
     activeStoryCard,
     selectedStoryCardIndex: gameState.selectedStoryCardIndex,

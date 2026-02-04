@@ -3,6 +3,7 @@ import { GameState, Expansions, SetupMode } from '../types/index';
 import { Action, ActionType } from './actions';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { EXPANSION_SETTINGS_STORAGE_KEY, SETUP_MODE_STORAGE_KEY } from '../data/constants';
+import { STORY_CARDS } from '../data/storyCards';
 
 import { validateState } from './validation';
 import { configReducer } from './reducers/configReducer';
@@ -72,6 +73,7 @@ export const getDefaultGameState = (): GameState => {
         setupCardName: '',
         secondarySetupId: undefined,
         selectedStoryCardIndex: null,
+        activeStory: null, // Initialize as null
         selectedGoal: undefined,
         challengeOptions: {},
         timerConfig: {
@@ -133,6 +135,11 @@ export function gameReducer(state: GameState, action: Action): GameState {
           draft: { state: null, isManual: false },
           missionDossierSubStep: 1
       };
+      
+      // Re-hydrate activeStory from index if it's missing (e.g. from URL)
+      if (nextState.selectedStoryCardIndex !== null && !nextState.activeStory) {
+          nextState.activeStory = STORY_CARDS[nextState.selectedStoryCardIndex];
+      }
       break;
 
     // Domain Specific Reducers
@@ -149,7 +156,7 @@ export function gameReducer(state: GameState, action: Action): GameState {
     case ActionType.TOGGLE_FLYING_SOLO:
     case ActionType.SET_CAMPAIGN_MODE:
     case ActionType.SET_CAMPAIGN_STORIES:
-    case ActionType.SET_STORY_CARD:
+    case ActionType.SET_ACTIVE_STORY:
     case ActionType.SET_GOAL:
     case ActionType.RESET_CHALLENGES:
     case ActionType.TOGGLE_CHALLENGE_OPTION:

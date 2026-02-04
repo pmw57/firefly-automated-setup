@@ -6,14 +6,21 @@ import { render, user } from '../test-utils';
 import App from '../../App';
 import { getDefaultGameState } from '../../state/reducer';
 import { GameState } from '../../types';
-import { STORY_CARDS } from '../../data/storyCards';
+import { ALL_FULL_STORIES } from '../helpers/allStories';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { SETUP_CARD_IDS } from '../../data/ids';
+import { STORY_CARDS } from '../../data/storyCards';
 
 // Helper to get card definitions robustly
 const getStory = (title: string) => {
-    const card = STORY_CARDS.find(c => c.title === title);
-    if (!card) throw new Error(`Test setup failed: Story card "${title}" not found.`);
+    // We search the FULL list for properties, but ensure it exists in the manifest (app visibility)
+    const card = ALL_FULL_STORIES.find(c => c.title === title);
+    if (!card) throw new Error(`Test setup failed: Story card "${title}" not found in full data.`);
+    
+    // Verify it is also in the manifest used by the app
+    const manifestExists = STORY_CARDS.some(c => c.title === title);
+    if (!manifestExists) throw new Error(`Test setup failed: Story card "${title}" missing from manifest.`);
+    
     return card;
 };
 const getSetup = (id: string) => {
@@ -141,8 +148,10 @@ describe('Integration Scenarios', () => {
   });
 
   it('correctly displays rules for "Smuggler\'s Blues" based on expansions', async () => {
+    // Note: This relies on index lookup in the main manifest
     const smugglersBluesCard = getStory("Smuggler's Blues");
     const smugglersBluesIndex = STORY_CARDS.findIndex(c => c.title === smugglersBluesCard.title);
+    
     const initialState: GameState = getDefaultGameState();
     initialState.expansions.kalidasa = false;
     initialState.selectedStoryCardIndex = smugglersBluesIndex;

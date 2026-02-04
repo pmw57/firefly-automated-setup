@@ -1,7 +1,8 @@
+
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { SETUP_CARDS } from '../../../data/setupCards';
-import { STORY_CARDS } from '../../../data/storyCards';
+import { ALL_FULL_STORIES } from '../../helpers/allStories';
 import { EXPANSIONS_METADATA } from '../../../data/expansions';
 import { SETUP_CONTENT } from '../../../data/steps';
 
@@ -29,9 +30,9 @@ describe('Data Integrity', () => {
     });
   });
 
-  describe('Story Cards', () => {
+  describe('Story Cards (Full Data)', () => {
     it.concurrent('all story cards have valid expansion requirements', () => {
-      STORY_CARDS.forEach(card => {
+      ALL_FULL_STORIES.forEach(card => {
         if (card.requiredExpansion) {
           const expansion = EXPANSIONS_METADATA.find(e => e.id === card.requiredExpansion);
           expect(expansion, `Story "${card.title}" references invalid expansion "${card.requiredExpansion}"`).toBeDefined();
@@ -43,6 +44,17 @@ describe('Data Integrity', () => {
           });
         }
       });
+    });
+
+    it.concurrent('all rules in stories have valid structures', () => {
+        ALL_FULL_STORIES.forEach(card => {
+            if (card.rules) {
+                expect(Array.isArray(card.rules)).toBe(true);
+                card.rules.forEach((rule, i) => {
+                    expect(rule.type, `Story "${card.title}" rule ${i} missing type`).toBeDefined();
+                });
+            }
+        });
     });
   });
 });

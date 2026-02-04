@@ -1,67 +1,1076 @@
 
-
-import { StoryCardDef } from '../types/index';
-import { SOLO_STORIES } from './storyCards/solo';
-import { CORE_STORIES } from './storyCards/core';
-import { TENTH_STORIES } from './storyCards/tenth';
-import { STILL_FLYING_STORIES } from './storyCards/stillFlying';
-import { BLUE_SUN_STORIES } from './storyCards/blueSun';
-import { KALIDASA_STORIES } from './storyCards/kalidasa';
-import { PIRATES_STORIES } from './storyCards/pirates';
-import { CRIME_STORIES } from './storyCards/crime';
-import { COACHWORKS_STORIES } from './storyCards/coachworks';
-import { BLACK_MARKET_STORIES } from './storyCards/blackMarket';
-import { COMMUNITY_STORIES } from './storyCards/community/index';
+import { StoryCardManifest } from '../types/index';
 import { EXPANSIONS_METADATA } from './expansions';
-import { ACES_EIGHTS_STORIES } from './storyCards/acesAndEights';
-import { WHITE_LIGHTNING_STORIES } from './storyCards/whiteLightning';
-import { CANTANKEROUS_STORIES } from './storyCards/cantankerous';
-import { HUNTINGDONS_BOLT_STORIES } from './storyCards/huntingdonsBolt';
 
-// Create a map of expansion IDs to their sort index for consistent ordering
+// Helper to determine sort order. 
+// Replicates the logic previously done at runtime with full objects.
 const expansionIndices = EXPANSIONS_METADATA.reduce((acc, exp, idx) => {
     (acc as Record<string, number>)[exp.id] = idx;
     return acc;
 }, {} as Record<string, number>);
 
 const getSortableTitle = (str: string) => {
-  // First, remove any leading non-alphanumeric characters (like quotes or ellipses).
-  // Then, remove a leading "The " for sorting.
   return str.replace(/^[^a-zA-Z0-9]+/, '').replace(/^The\s+/i, '');
 };
 
-export const STORY_CARDS: StoryCardDef[] = [
-  ...SOLO_STORIES,
-  ...CORE_STORIES,
-  ...PIRATES_STORIES,
-  ...BLUE_SUN_STORIES,
-  ...KALIDASA_STORIES,
-  ...COACHWORKS_STORIES,
-  ...CRIME_STORIES,
-  ...STILL_FLYING_STORIES,
-  ...TENTH_STORIES,
-  ...ACES_EIGHTS_STORIES,
-  ...WHITE_LIGHTNING_STORIES,
-  ...CANTANKEROUS_STORIES,
-  ...HUNTINGDONS_BOLT_STORIES,
-  ...BLACK_MARKET_STORIES,
-  ...COMMUNITY_STORIES
-].sort((a, b) => {
-    // Prioritize cards with a specific sortOrder (for TV episode campaign)
-    if (a.sortOrder !== undefined && b.sortOrder !== undefined) {
-        return a.sortOrder - b.sortOrder;
+const sortStories = (stories: StoryCardManifest[]) => {
+    return stories.sort((a, b) => {
+        if (a.sortOrder !== undefined && b.sortOrder !== undefined) {
+            return a.sortOrder - b.sortOrder;
+        }
+        if (a.sortOrder !== undefined) return -1;
+        if (b.sortOrder !== undefined) return 1;
+
+        const idxA = a.requiredExpansion ? (expansionIndices[a.requiredExpansion] ?? 999) : -1;
+        const idxB = b.requiredExpansion ? (expansionIndices[b.requiredExpansion] ?? 999) : -1;
+
+        if (idxA !== idxB) {
+            return idxA - idxB;
+        }
+
+        return getSortableTitle(a.title).localeCompare(getSortableTitle(b.title));
+    });
+};
+
+const RAW_MANIFEST: StoryCardManifest[] = [
+    // --- SOLO ---
+    {
+        title: "A Fistful Of Scoundrels",
+        intro: "A captain is only as good as his reputation. And you never know when the winds might change, so best to be on terms with many folks as possible.",
+        setupDescription: "Starting Jobs: No Starting Jobs are dealt. Instead, prime the Contacts, revealing the top 3 cards of each. Place the revealed Job Cards in their discard piles.",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["blue", "kalidasa"],
+        isSolo: true,
+        sourceUrl: "https://boardgamegeek.com/image/8860502/sjliver",
+        tags: ['reputation', 'against_the_black', 'solo'],
+        challengeOptions: [{ id: 'dont_prime_contacts', label: "Don't prime the Contact decks." }, { id: 'illegal_jobs_only', label: "Work only Illegal Jobs." }, { id: 'recover_1_glt', label: "Only recover 1 Game Length Token each time you become Solid." }, { id: 'caper_first', label: "Complete a Caper before gaining any Solid Rep." }],
+        advancedRule: { id: "adv_alt_alliance_contacts", title: "Alternate Alliance Contacts", description: "Changes which contacts are considered Alliance contacts.", disabledDescription: "This rule is on the back of the selected Story Card." }
+    },
+    {
+        title: "Awful Lonely In The Big Black",
+        intro: "It takes a brave soul to sail the Big Black alone... Pick your goal and test your skills.",
+        setupDescription: "Setup follows the normal rules with the following exceptions: 1) In addition to selecting your Leader, you may also select up to 4 crew cards from any deck - up to a total value of $1000. 2) Place a pile of exactly 20 Disgruntled Tokens to the side. These tokens will be used as Game Length Tokens.",
+        sourceUrl: "https://web.archive.org/web/20220226163627/https://www.flamesofwar.com/Portals/0/all_images/GF9/Firefly/Rulebooks/StoryCards/AwfulLonelyStoryCard.png",
+        tags: ['against_the_black', 'solo'],
+        goals: [{ title: "Goal 1: The Good", description: "Making Connections: End the game Solid with 5 different Contacts." }, { title: "Goal 2: The Bad", description: "Crime Does Pay: End the game with $15,000 or more." }, { title: "Goal 3: The Ugly", description: "No Rest For The Wicked: Successfully Proceed past 20 or more Misbehave cards. Set aside Misbehave Cards you Proceed past to track your progress." }],
+        isSolo: true
+    },
+    {
+        title: "For A Few Credits More",
+        intro: "Money can't buy happiness, but empty pockets can't buy nothin'.",
+        setupDescription: "Starting Jobs: No Starting Jobs are dealt. Instead, prime the Contact Decks, revealing the top 3 cards of each. Place the revealed Job Cards in their discard piles. Alliance Alerts: Start with one random Alliance Alert in play.",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["crime"],
+        isSolo: true,
+        sourceUrl: "https://boardgamegeek.com/image/8860501/sjliver",
+        tags: ['doing_the_job', 'against_the_black', 'solo'],
+        challengeOptions: [{ id: 'one_job_per_contact', label: "Work no more than one Job per Contact." }, { id: 'legal_jobs_only', label: "Work only Legal Jobs, including Bounties." }, { id: 'single_contact', label: "Work for a single Contact only." }, { id: 'pay_on_botch', label: "Pay your Crew whenever you Botch. Otherwise, Disgruntle them." }],
+        advancedRule: { id: "adv_alt_corvette_contacts", title: "Alternate Corvette Contacts", description: "Changes which contacts are considered Corvette contacts.", disabledDescription: "This rule is on the back of the selected Story Card." }
+    },
+    {
+        title: "Goin' Reaver",
+        intro: "Captain ain't been the same since we pulled 'em out of that Alliance black ops site: cagey, paranoid... rageful. We can't figure it out soon, it's gonna get real bad.",
+        setupDescription: "Place Reaver Alert Tokens in every sector in Motherlode, Redsun, and the Uroboros Belt, Blue Sun.",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["blue", "kalidasa"],
+        isSolo: true,
+        sourceUrl: "https://boardgamegeek.com/image/8860508/sjliver",
+        tags: ['survival', 'against_the_black', 'solo'],
+        advancedRule: { id: "adv_wolf_at_your_door", title: "Wolf At Your Door", description: "An additional threat pursues you through the 'Verse.", disabledDescription: "This rule is on the back of the selected Story Card." }
+    },
+    {
+        title: "Heroes & Misfits",
+        intro: "Legends whisper the tales of the ship that could outrun Alliance Cruisers and Reavers alike. A ship that carried a rag-tag crew, each a misfit, each a hero. Now, it's time for you to make your own legacy.",
+        setupDescription: "Starting Resources: Begin play at Persephone with Malcolm and Serenity (with Expanded Crew Quarters), Zoë, Wash, Jayne, Kaylee, Simon Tam, River Tam, Inara, Shepherd Book, and $2000. Alliance Alerts: Start with one random Alliance Alert in play. Adventure Deck: Shuffle all 3-Goal Story Cards into a single deck.",
+        requiredExpansion: "tenth",
+        isSolo: true,
+        sourceUrl: "https://boardgamegeek.com/image/8860504/sjliver",
+        tags: ['character', 'against_the_black', 'solo'],
+        challengeOptions: [{ id: 'heroes_custom_setup', label: "Why should Mal have all the fun? Pick the Leader, Ship, and Supply Planet of your choice. Begin the game with $2000 and a full compliment of your favourite crew from the show or game." }],
+        advancedRule: { id: "adv_contact_quirks_work", title: "Contact Quirks - Work", description: "Contacts have additional requirements or penalties when taking jobs from them.", disabledDescription: "This rule is on the back of the selected Story Card." }
+    },
+    {
+        title: "The Lonely Smuggler's Blues",
+        intro: "Sometimes, it gets lonely in the Black, but it's a good way to dodge the law when you're haulin' goods that might draw the wrong kind of attention.",
+        setupDescription: "Place 3 Contraband on each Supply Planet except Persephone and Space Bazaar. Place a Goal Token on the Contact Decks for Amnon Duul, Patience, Badger, and Niska. Do not deal Starting Jobs. Begin play at Londinium. Start with one random Alliance Alert Card in play.",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["crime"],
+        isSolo: true,
+        sourceUrl: "https://boardgamegeek.com/image/8860503/sjliver",
+        tags: ['smugglers_run', 'against_the_black', 'solo'],
+        advancedRule: { id: "adv_lone_targets", title: "Lone Targets", description: "You are more vulnerable to threats when flying alone.", disabledDescription: "This rule is on the back of the selected Story Card." }
+    },
+    {
+        title: "Once Upon A Time In The Black",
+        intro: "Robin Hood. Ching Shih. Billy the Kid. Al Capone. Bori Khan. Test your mettle to tell a tale to match the legends.",
+        requiredExpansion: "tenth",
+        isSolo: true,
+        sourceUrl: "https://boardgamegeek.com/image/8860506/sjliver",
+        tags: ['character', 'against_the_black', 'solo'],
+        advancedRule: { id: "adv_alt_reaver_contacts", title: "Alternate Reaver Contacts", description: "Changes which contacts are associated with Reavers.", disabledDescription: "This rule is on the back of the selected Story Card." }
+    },
+    {
+        title: "Racing A Pale Horse",
+        intro: "The Operative has your scent. He's closing in on your home, and nothing can stop him. Well, maybe nothing except Glücklich Jiã's prototype next-gen artillery cannon...",
+        setupDescription: "Place your Haven at Deadwood, Blue Sun. Do not use a Timer for this game.",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["blue", "kalidasa"],
+        isSolo: true,
+        sourceUrl: "https://boardgamegeek.com/image/8860500/sjliver",
+        tags: ['character', 'survival', 'against_the_black', 'solo'],
+        advancedRule: { id: "adv_automated_movement", title: "Automated Movement", description: "When you draw 'Keep Flying', move an NPC ship one sector instead of drawing again.", disabledDescription: "This rule is on the back of the selected Story Card." }
+    },
+    {
+        title: "The Raggedy Edge",
+        intro: "It's a hard life out in the Black. See how long you can last before Reavers, the law, or bad luck catches up with you.",
+        setupDescription: "Do not use a Timer for this game. Start with one random Alliance Alert Card in play. Begin play with 1 Goal Token.",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["crime"],
+        isSolo: true,
+        sourceUrl: "https://boardgamegeek.com/image/8860505/sjliver",
+        tags: ['character', 'survival', 'against_the_black', 'solo'],
+        advancedRule: { id: "adv_contact_quirks_deal", title: "Contact Quirks - Deal", description: "Contacts have special rules when dealing with them.", disabledDescription: "This rule is on the back of the selected Story Card." }
+    },
+    {
+        title: "Seeds Of Rebellion",
+        intro: "The New Resistance is ready to open up some eyes and change a few hearts. They need a savvy captain to deliver key personnel to the heart of Alliance space.",
+        setupDescription: "You may not deal with Harken. Place Harken's 7 Immoral Transport Jobs in separate discard pile to represent New Resistance Missions.",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["blue", "kalidasa"],
+        isSolo: true,
+        sourceUrl: "https://boardgamegeek.com/image/8860507/sjliver",
+        tags: ['character', 'faction_war', 'against_the_black', 'solo'],
+        advancedRule: { id: "adv_lost_little_lambs", title: "Lost Little Lambs", description: "Rescuing crew has additional complications and risks.", disabledDescription: "This rule is on the back of the selected Story Card." }
+    },
+
+    // --- CORE ---
+    {
+        title: "Desperadoes",
+        soloTimerAdjustment: "Declare Last Call before discarding your last token to win the game.",
+        intro: "Your checkered past is catching up with you and the Alliance is hot on your tail! It's time to make a final cash grab and head out to the Rim to retire before the Alliance makes other arrangements.",
+        setupDescription: "All players start with a Warrant Token! Players may not deal with Harken. Do not draw Harken Jobs during Set Up.",
+        sourceUrl: "https://boardgamegeek.com/image/2785050/gerryrailbaron",
+        tags: ['smugglers_run', 'survival'],
+    },
+    {
+        title: "First Time in the Captain's Chair",
+        intro: "So you finally took the plunge and borrowed enough credits for a ship to call your own. You're the master of your destiny and right now that destiny looks mighty uncertain! You're in debt up to your eyeballs with a creditor that's not the sort of man to be trifled with.",
+        setupDescription: "When taking Starting Jobs, only take a job from Harken and Amnon Duul. These Jobs may be discarded, as normal.",
+        sourceUrl: "https://boardgamegeek.com/image/2785053/gerryrailbaron",
+        tags: ['character', 'doing_the_job'],
+    },
+    {
+        title: "Harken's Folly",
+        intro: "Commander Harken has been entrusted by the Alliance to provide security for a gathering of Alliance VIPs and Parliament Officials. Lead Harken off on a wild goose chase and infiltrate the venue. Inside, plant bugs and hack secure servers to gather sensitive intel that'll make you rich.",
+        sourceUrl: "https://boardgamegeek.com/image/2785049/gerryrailbaron",
+        tags: ['classic_heist'],
+    },
+    {
+        title: "Niska's Holiday",
+        intro: "Adelai Niska is taking a holiday and has left his operations in the incompetent hands of one of his wife's many nephews. This presents an opportunity for an ambitious Captain to prove himself during his absence. Insure the continuing profitability of Niska's criminal enterprise and ensure his nephew's failure.",
+        sourceUrl: "https://boardgamegeek.com/image/2785048/gerryrailbaron",
+        tags: ['criminal_enterprise', 'reputation'],
+    },
+    {
+        title: '"Respectable" Persons Of Business',
+        soloTimerAdjustment: "Declare Last Call before discarding your last token to win the game.",
+        intro: "There's a heap of trouble waiting out in the 'Verse. The Big Black is full of derelict ships, drifting proof of their Captain's missteps. Keeping you and yours in bullets and chow can be challenge enough. Not everyone has the mettle to keep their boat in the air. Prove you've got what it takes.",
+        sourceUrl: "https://boardgamegeek.com/image/2785036/gerryrailbaron",
+        tags: ['doing_the_job'],
+    },
+    {
+        title: "The King Of All Londinium",
+        intro: "The New Cardiff Museum is about to play host to a grand exhibit of \"Earth That Was\" artifacts, the centerpiece of which is the Crown Jewels of old England. Endeavor to swap a quality counterfeit for the \"Shiny Hat\" and make off with the real one leaving no one the wiser.",
+        sourceUrl: "https://boardgamegeek.com/image/2785047/gerryrailbaron",
+        tags: ['classic_heist'],
+    },
+
+    // --- PIRATES ---
+    {
+        title: "...Another Man's Treasure",
+        isPvP: true,
+        intro: "Wealth can be measured in many ways. In some parts of the 'Verse Alliance credits ain't worth the paper they're printed on. For those regions, a more practical measure of wealth is required. Hoard a mountain of trade goods and spare parts, through any means necessary. Break contracts, steal from your rivals or just pick the bones. Anything goes!",
+        requiredExpansion: "pirates",
+        sourceUrl: "https://boardgamegeek.com/image/2785046/gerryrailbaron",
+        setupDescription: "Choose Havens. Havens must in in Border Space. After taking starting Jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks.",
+        tags: ['pvp'],
+    },
+    {
+        title: "Jail Break",
+        intro: "Your friend has been pinched by the Alliance and you don't intend to let 'em twist. Bad plan's better than no plan...",
+        requiredExpansion: "pirates",
+        sourceUrl: "https://boardgamegeek.com/image/2785045/gerryrailbaron",
+        tags: ["jailbreak"],
+        setupDescription: "During Leader selection, players also choose any card from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards next to the 'Verse;s Most Wanted List. They are prisoners of the Alliance!"
+    },
+    {
+        title: "The Choices We Make",
+        isPvP: true,
+        intro: "The 'Verse is full of people trying to carve themselves a little slice, however they can. Even a good man can get turned about from time to time. The straight and narrow can get a might twisted when walkin' the raggedy edge. In the end, the mark a person leaves all comes down to the choices they make.",
+        requiredExpansion: "pirates",
+        sourceUrl: "https://boardgamegeek.com/image/2785051/gerryrailbaron",
+        tags: ['pvp'],
+        setupDescription: "After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles.",
+    },
+
+    // --- BLUE SUN ---
+    {
+        title: "Any Port In A Storm",
+        intro: "The Alliance has got a burr in their collective britches: patrols have been tripled and strict enforcement of penal codes is in effect. Times such as these can make for strange bedfellows and safe harbor is where you can find it. Any port in a storm...",
+        requiredExpansion: "blue",
+        sourceUrl: "https://boardgamegeek.com/image/2785044/gerryrailbaron",
+        tags: ['character', 'survival'],
+        setupDescription: "Choose Havens. Havens must in in Alliance Space. Londinium may not be chosen as a Haven. Place an Alliance Alert Token on any Alliance planet that is not a Haven. All Players Start with Warrant Token."
+    },
+    {
+        title: "Patience's War",
+        intro: "Patience has gotten herself embroiled in an all out Range War. She is paying hard cash to any crew smart enough to use a gun and dumb enough to put themselves in harm's way... and you know just the right crew for the job!",
+        requiredExpansion: "blue",
+        sourceUrl: "https://boardgamegeek.com/image/2785040/gerryrailbaron",
+        tags: ['faction_war', 'doing_the_job'],
+    },
+    {
+        title: "The Great Recession",
+        intro: "Life on the raggedy edge can be a hard slog. Paying work is precious enough in the good times, but when things get lean the competition for jobs can get downright unsavory. Make hay while the sun shines or get left in the dust, beggin' for scraps.",
+        requiredExpansion: "blue",
+        sourceUrl: "https://boardgamegeek.com/image/2785041/gerryrailbaron",
+        tags: ['reputation', 'doing_the_job'],
+        setupDescription: "No Starting Jobs are dealt. This Story Card uses dramatically smaller Contact Decks. Each Contact Deck starts with a number of Job Cards equal to the number of players in the game. Place the remainder of the Contact's Job Cards back in the box - they will not be used in this game."
+    },
+
+    // --- KALIDASA ---
+    {
+        title: "It's All In Who You Know",
+        intro: "Credits are all well and good, but a strong network of contacts will pay greater dividends in the future. That's a lesson every captain gets to learn early, or they're likely not to be around long enough to learn it at all.",
+        requiredExpansion: "kalidasa",
+        sourceUrl: "https://boardgamegeek.com/image/2785039/gerryrailbaron",
+        setupDescription: "Create a stack of Alliance Alert Tokens equal to three times the number of players. Do not deal Starting Jobs.",
+        tags: ['reputation', 'verse_variant'],
+    },
+    {
+        title: "The Scavenger's 'Verse",
+        intro: "Scour the 'Verse high and low, to the Rim and back you may go.",
+        requiredExpansion: "kalidasa",
+        sourceUrl: "https://boardgamegeek.com/image/2785038/gerryrailbaron",
+        tags: ['character', 'mystery'],
+    },
+    {
+        title: "The Well's Run Dry",
+        intro: "Increased Alliance oversight has made gettin' paid hard. Folks are limited to whatever cash they've got stashed under their bedrolls; even the movers and shakers are findin' the spigot's run dry.",
+        requiredExpansion: "kalidasa",
+        sourceUrl: "https://boardgamegeek.com/image/2785037/gerryrailbaron",
+        tags: ['smugglers_run'],
+        setupDescription: "After completing game Set Up, reduce the amount of money in the bank to an amount equal to $5000 per player."
+    },
+
+    // --- COACHWORKS ---
+    {
+        title: "Down And Out",
+        intro: "Once your reputation's been blemished, it's hard to get right with the right people. Compete with the other riffraff for what scraps your employers are willing to risk on the likes of you. Nothing to do but suck it up and try to prove yourself worthy.",
+        requiredExpansion: "coachworks",
+        sourceUrl: "https://boardgamegeek.com/image/2785043/gerryrailbaron",
+        setupDescription: "Place one job from each Contact face up on top of its deck. These face up Jobs form a shared hand of Inactive Jobs that everyone may use. All Players start with a Warrant token.",
+        tags: ['reputation', 'classic_heist', 'verse_variant'],
+    },
+    {
+        title: "Where The Wind Takes Us",
+        intro: "The winds of fate can be fickle, blowing this way and that with no regard whatsoever for a captain's plans... Now, you might could rage through the storm and buck those headwinds, trying to hold true to your intended course. The wise captain knows to ride the currents and take opportunities as they come. After the storm, will you be the broken ginkgo tree or the leaf blown to new and greener pastures?",
+        requiredExpansion: "coachworks",
+        sourceUrl: "https://boardgamegeek.com/image/2785042/gerryrailbaron",
+        setupDescription: "Each player draws three Jobs from a Contact Deck of their choice and places a Goal token at the Job's Drop-Off/Target/Destination Sectors. In games with three of fewer players, draw four cards per player. Return all the Jobs to their Contact Decks and reshuffle the decks. Do NOT deal Starting Jobs.",
+        tags: ['character', 'verse_variant'],
+    },
+
+    // --- CRIME ---
+    {
+        title: "Smuggler's Blues",
+        intro: "Bringin' goods to folk who want 'em is an old-fashioned way to make a living... 'cept, sometimes, a law or two gets in the way.",
+        requiredExpansion: "crime",
+        sourceUrl: "https://boardgamegeek.com/image/3464668/firefly-the-game-crime-and-punishment",
+        setupDescription: "Place 3 Contraband on each Planetary Sector in Alliance Space. Optional: If playing with both Blue Sun and Kalidasa, place 2 Contraband on each Planetary Sector in Rim Space instead. Place a $2000 Bill under Amnon Duul, Patience, Badger, and Niska's Contact Decks. Players do not receive Starting Jobs and begin at Londinium. Start with one random Alliance Alert Card in play.",
+        tags: ['smugglers_run'],
+        challengeOptions: [{ id: 'smugglers_blues_rim_variant', label: 'Use "The Rim\'s The Thing" Variant (Place 2 Contraband in Rim Space instead)' }],
+    },
+    {
+        title: "Wanted Men",
+        intro: "Infamy's a funny thing. Bucking the law, while a might stressful day-to-day, leads to being known. The more you're known, the more your name's worth. Trick of it is, you got to sock away a lifetime of credits before you find yourself retiring early, in an Alliance lockup...",
+        setupDescription: "Each player starts the game with 1 Warrant. Players' starting locations may not be within Alliance Space. Start with one random Alliance Alert in play. Starting Jobs may only be drawn from Patience, Badger, Niska, Mr. Universe and Fanty & Mingo.",
+        requiredExpansion: "crime",
+        sourceUrl: "https://boardgamegeek.com/image/3524452",
+        tags: ['reputation', 'smugglers_run'],
+    },
+
+    // --- STILL FLYING ---
+    {
+        title: "A Rare Specimen Indeed",
+        soloTimerAdjustment: "Send Out Invites before discarding your last token to win the game.",
+        intro: "Saffron's at it again. This time, she's convinced Badger that she's from a respectable family, and now the sad little king has his eye on a psychotic blushing bride. Whoever collects the most presents gets to give the toast... before it turns into a shotgun wedding.",
+        setupDescription: "No starting jobs are dealt. Each player begins the game with one Caper.",
+        requiredExpansion: "still_flying",
+        sourceUrl: "https://boardgamegeek.com/image/8103875/sjliver",
+        tags: ['character', 'mystery'],
+    },
+    {
+        title: "The Rumrunners' Seasonal",
+        intro: "An eccentric billionaire arranges a very special race every year to pick his most favorite captain. Win and you're set for life... or at least until someone breaks your record next time around.",
+        requiredExpansion: "still_flying",
+        additionalRequirements: ["blue", "kalidasa"],
+        sourceUrl: "https://boardgamegeek.com/image/8103881/sjliver",
+        tags: ['character', 'doing_the_job'],
+    },
+    {
+        title: "The Smuggly Bustle",
+        intro: "The Alliance is cracking down. May come a day when there won't be room for naughty men and women to slip about, but for now, the right set of connections could help make you a smuggler extraordinaire.",
+        requiredExpansion: "still_flying",
+        additionalRequirements: ["blue", "kalidasa"],
+        setupDescription: "Place an Alliance Alert Token in every planetary sector in Alliance Space.",
+        sourceUrl: "https://boardgamegeek.com/image/8103882/sjliver",
+        tags: ['smugglers_run'],
+    },
+
+    // --- TENTH ---
+    {
+        title: "A Friend In Every Port",
+        intro: "High places, low places... When you sail the Black for a living, best to have friends in ALL places.",
+        setupDescription: "Starting Jobs: Starting with the last player to choose a Leader, each player chooses 1 Job from 3 different Contacts. Mr. Universe cannot be chosen for starting Jobs. Priming the Pump: Reveal the top 6 cards of each Supply deck. Place the revealed cards in their discard piles.",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["blue", "kalidasa"],
+        sourceUrl: "https://boardgamegeek.com/image/8103874/sjliver",
+        tags: ['character'],
+    },
+    {
+        title: "Aces Up Your Sleeve",
+        intro: "Prove you're the best - or luckiest - crew around by collecting tales of your exploits.",
+        setupDescription: "Create a stack of Alliance Alert Tokens equal to four times the number of players.",
+        requiredExpansion: "tenth",
+        sourceUrl: "https://boardgamegeek.com/image/8103873/sjliver",
+        tags: ['reputation'],
+    },
+    {
+        title: "Dead Man's Hand",
+        intro: "The tale of the Dead Man's Hand followed mankind from Earth-That-Was out to the Black. Honor the legends of the outlaws of old with a series of adventures across the 'Verse.",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["blue"],
+        sourceUrl: "https://boardgamegeek.com/image/8103876/sjliver",
+        tags: ['classic_heist'],
+    },
+    {
+        title: "It's a Mad, Mad, Mad, Mad 'Verse!",
+        intro: "A mishap at Eavesdown Docks seriously injures a renowned swindler. Before passing, he shares clues that will lead to a hidden fortune. News spreads fast, igniting a frenzied race.",
+        setupDescription: "Players begin at Persephone.",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["kalidasa"],
+        sourceUrl: "https://boardgamegeek.com/image/8103877",
+        tags: ['classic_heist'],
+    },
+    {
+        title: "Let's Be Bad Guys",
+        intro: "It takes a particular kind of sinner to build lasting bridges with Adelai Niska. Are you that brand of renegade?",
+        setupDescription: "Players may not deal with Niska until they are Solid with at least one other Contact. Jobs for Niska are not dealt during Set Up.",
+        requiredExpansion: "tenth",
+        sourceUrl: "https://boardgamegeek.com/image/8103878/sjliver",
+        tags: ['criminal_enterprise'],
+    },
+    {
+        title: "Red Skies Over Ransom",
+        intro: "Reavers are pushing out more and more, making delivery runs almost impossible. Keelhauler Transport & Trading Co. is hiring skilled pilots, madcap mercs, and crafty smugglers to haul needed goods to their Rim distributors.",
+        setupDescription: "Reaver Sighting!: Treat New Canaan, Blue Sun as if there is a Reaver Cutter there at all times. Put a stack of Reaver Alert Tokens there as a reminder. These tokens are never cleared.",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["blue"],
+        sourceUrl: "https://boardgamegeek.com/image/8103879/sjliver",
+        tags: ['survival'],
+    },
+    {
+        title: "Running On Empty",
+        intro: "Dust Devil attacks on refineries have spiked fuel prices. Higher costs and shortages are squeezing the entire 'Verse, causing worlds of hurt. The perpetrators must be found!",
+        setupDescription: "Players do not receive free starting Fuel or Parts. Each player begins with an extra $1200.",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["blue", "kalidasa"],
+        sourceUrl: "https://boardgamegeek.com/image/8103880/sjliver",
+        tags: ['character'],
+    },
+    {
+        title: "The Wobbly Headed Doll Caper",
+        intro: "Dolls with big heads that wobble! What could go wrong!",
+        requiredExpansion: "tenth",
+        additionalRequirements: ["blue", "kalidasa"],
+        sourceUrl: "https://boardgamegeek.com/image/8103883/sjliver",
+        tags: ['classic_heist', 'mystery'],
+    },
+
+    // --- OTHERS ---
+    {
+        title: "A Jubilant Victory",
+        intro: "10,000 Credits will put a mighty fine jingle in anyone's pocket. If that pocket belongs to you, best keep a watchful eye out for Jubal Early and his intentions.",
+        requiredExpansion: "aces_eights",
+        additionalRequirements: ["local_color"],
+        rating: 1,
+        sourceUrl: "https://boardgamegeek.com/filepage/235439/storycard-a-jubilant-victory",
+        setupDescription: "Just another day in the 'Verse: Players use Firefly-class ships equipped with standard core drives and begin at their Havens with one Warrant. Jubal Early uses the Interceptor, starting from Meridian.",
+        tags: ['community', 'survival'],
+    },
+    {
+        "title": "Rumrunners II: Rourke's Revenge",
+        "intro": "Rourke is so sore about losing last year's race that he's kidnapped the sponsor. Jorgenson richly rewards the winner of the Rumrunners' Seasonal -- imagine how much he'll pay his rescuers!",
+        "sourceUrl": "https://boardgamegeek.com/image/9249688/gwek",
+        "requiredExpansion": "white_lightning",
+        tags: ['jailbreak', 'doing_the_job'],
+    },
+    {
+        title: "Reap The Whirlwind",
+        intro: "Word is, the Alliance has been hiding all manner of dirty secrets out Himinbjorg way. Convince the Dust Devils you're dangerous -- or desperate -- enough for them to come out of hiding and join forces. But hurry: the upcoming Unification Day Summit seems like the perfect time to let the truth out.",
+        sourceUrl: "https://boardgamegeek.com/image/7072594/gwek",
+        requiredExpansion: "cantankerous",
+        additionalRequirements: ["blue", "kalidasa"],
+        tags: ['classic_heist', 'faction_war'],
+    },
+    {
+        title: "Under The Radar",
+        intro: "Legend holds that a priceless Earth-That-Was artifact is sealed away in a high-security vault on Albion. The usual suspects might draw too much attention. Best keep the crew small this time.",
+        sourceUrl: "https://boardgamegeek.com/thread/3281169/article/47098185#47098185",
+        requiredExpansion: "huntingdons_bolt",
+        additionalRequirements: ["blue"],
+        tags: ['classic_heist'],
+    },
+    {
+        title: "The Old Man And The Dragons",
+        intro: "The Seven Dragon Kings are preparing to go to war with Adelai Niska, but their war would be bad for your business. Figure out where the Tong leaders are meeting, and maybe you can convince both sides to come to an arrangement.",
+        requiredExpansion: "black_market",
+        sourceUrl: "https://boardgamegeek.com/image/4487979",
+        tags: ['classic_heist', 'faction_war'],
+    },
+    
+    // --- COMMUNITY ---
+    {
+        title: "A New Leaf",
+        intro: "You're a Captain who's tired of the smuggling life. Also, recent inflation spikes in the 'Verse are making ship maintenance costs too ruttin' expensive. You're considering a government land grab program that helps people get settled on planets in Alliance Space. The program has only one slot left to claim a free piece of land.",
+        additionalRequirements: ["blue", "kalidasa", "pirates"],
+        setupDescription: "When placing ships, each player also places a Haven token on any non-supply planet within Alliance Space, except for Londinium. Only one Haven per planet. Start with $10,000. Strart with a small ship (less than 10 cargo hold). With your $10,000 pay for the small ship. Buy parts/fuel  at listed price. No Starting Jobs from Niska.",
+        sourceUrl: "https://boardgamegeek.com/thread/3092841/a-new-leaf-story-card-using-fan-made-ships",
+        requiredExpansion: "community",
+        rating: 1,
+        tags: ['community', 'character'],
+    },
+    {
+        title: "Absolutely. What's 'Sanguine' Mean?",
+        intro: " ",
+        sourceUrl: "https://boardgamegeek.com/thread/3655131/three-homebrew-scenarios",
+        requiredExpansion: "community",
+        rating: 1
+    },
+    {
+        title: "Aimin' To Misbehave",
+        intro: "A big time crime boss has retired to a life of ease and comfort, leaving behind a nice little power vacuum. If you want to take his place you'll need money and business parthers. Shady business partners to be exact. The shadier the better.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/3077380/aimin-to-misbehave",
+        setupDescription: "Remove all legal job cards from play.",
+        tags: ['community', 'criminal_enterprise'],
+    },
+    {
+        title: "Bank Job",
+        intro: "There's wages belonging to no-one (Alliance don't count). Find out where, and get the tools you'll need, then pull off the heist.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/filepage/103321/firefly-goal-bank-job-jpeg-and-psd",
+        rating: 3,
+        tags: ['community', 'classic_heist'],
+    },
+    {
+        title: "The Battle of Serenity Valley (PvP)",
+        isPvP: true,
+        playerCount: [2, 4, 6],
+        intro: "Serenity Valley was a valley located on Hera; it was mainly sparse and rocky with little vegetation. The valley was famous for being the location of the Battle of Serenity Valley—one of the bloodiest battles of the entire Unification War. Due to Hera's strategic positioning, taking the planet was a key to winning the war, and Serenity Valley became the turning point of the entire conflict.",
+        setupDescription: "For 2 or 4 or 6 Players. Take all Crew cards with \"Fight\" skill and all gear cards with \"Fight\" skill, add crew compartment ship upgrades and put them all in one deck; Shuffle. Take all Misbehave cards with \"Fight\" skill checks; Shuffle. Remove half \"Keep Flying\" cards from Alliance and Border decks. Other cards won't be used. Players evenly pick Alliance or Independents (Browncoats). Deal 3 crew/gear to each player (disregard warrants). Place ships in appropriate space. Alliance to inner planets, Browncoats to Border Planets.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1099553/story-card-the-battle-of-serenity-valley-pvp",
+        rating: 0,
+        tags: ['community', 'pvp'],
+    },
+    {
+        title: "Black Market Beagles",
+        intro: "One too many loads of smuggled cargo (of the live variety) has really started to stink up the place so the crew has opted to transport something smaller, more specifically with smaller droppings.",
+        setupDescription: "Beagles are the contraband. If you lose 'em you can get more at Jiangyin, Red Sun, for $1000 each! Start out with 1 Cry Baby on the ship to use as you liken'",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1098646/article/14445829#14445829",
+        rating: 1,
+        tags: ['community', 'character'],
+    },
+    {
+        title: "Cupid's Little Helpers",
+        intro: "Sometimes romance needs a little helping hand in the 'Verse. Here are three Jobs that let your Crew give love a fighting chance. The Jobs may be attempted in any order, and the Crew with the most money when the last Job is completed is the winner. Each Job may only be completed once per game.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1122149/story-card-cupids-little-helpers",
+        rating: 0,
+        tags: ['community', 'character'],
+    },
+    {
+        title: "Doing Good Works",
+        intro: "A plague has broken out on the border worlds. A natural disease? Leftover bioweapons from the Unification War? Or an attempt by the Alliance to exterminate those who resist its rule? No one knows. But word's gotten out that the Alliance has a cure for it--and they're not sharing. Plucky heroes must steal the medicine from the Alliance, deliver it to those in need, and do what they can to stem the plague before worlds become graveyards.",
+        setupDescription: "A player placing his ship on a supply world may choose three cards from that world's deck. Crew are hired for free. Other cards must be paid for at half price from the player's starting cash. Corbin and Marco's half-price abilities apply—round the price of each item up to the nearest $100. More than one player may start on the same world. Additional players must wait until the previous player has selected three cards before taking their selections.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1240655/doing-good-works-soloco-op-scenario",
+        rating: 0,
+        tags: ['community', 'against_the_black'],
+    },
+    {
+        title: "Double Duty",
+        intro: "Sometimes, It's best to work under the radar and quiet-like. Fanty and Mingo have goods and folks in need of moving throughout the 'Verse. Use your connections with others to keep the twins' names out of the picture. Do a good enough job, and you might become their new favorite captain.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/image/6067255",
+        rating: 3,
+        tags: ['community', 'criminal_enterprise'],
+    },
+    {
+        title: "Fruity Oat Bar",
+        intro: "One of your crew was once used in an experiment by the Alliance. After escaping and joining your crew, they are now wanted. Before you are caught, you decide to get to the bottom of things, and discover the secret that the Alliance wants kept secret.",
+        setupDescription: "After choosing your Leader, search for any Wanted crew from any deck and add them to your crew. You must start in Alliance space.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1045716/article/13603393#13603393",
+        rating: 1,
+        tags: ['community', 'mystery'],
+    },
+    {
+        title: "Gentleman's Agreement",
+        intro: "Until now, the big players in the 'verse have agreed to keep to their own back yards, but that's about to change. Badger has received word that Adelai Niska has grown too big for his Skyplex around Ezra, and is branching out. The rumor is that Niska is setting up shop in Badger's territory. This doesn't sit well with Badger.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1101220/story-card-gentlemans-agreement",
+        rating: 0,
+        tags: ['community', 'faction_war'],
+    },
+    {
+        title: "The Ghost Rock Run",
+        intro: "On Anson's World the Sweetrock Mining Co. has discovered a rare mineral called \"Ghost Rock\". Will you handle the run, or sell it to the highest bidder?",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/filepage/105342/custom-story-card-the-ghost-rock-run",
+        rating: 2,
+        tags: ['community', 'smugglers_run'],
+    },
+    {
+        title: "Going Legit",
+        intro: "With the strong arm of the Alliance growing ever string, there's gettin' to be less and less room for naughty men and women to slip about... I hear Blue Sun's in need of a legitimate transport company that can get government goods to the people what need 'em.",
+        setupDescription: "A Port of Operation: While choosing starting positions, players must choose a planetary sector within Blue Sun system that is not a Contact or Supply sector. Mark the sector with a Haven Token. Leave unused ships out of the box as a \"For Sale\" pile.",
+        sourceUrl: "https://boardgamegeek.com/thread/3560944/going-legit-story-card",
+        requiredExpansion: "community",
+        tags: ['community', 'character'],
+    },
+    {
+        title: "The Good Guys",
+        intro: " ",
+        setupDescription: "Only MORAL leaders can be chosen. Immoral jobs cannot be accepted. EZRA is off limits until Goal 3 and working for Niska is not allowed. Crow is removed from the Game.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1624739/story-card-the-good-guys",
+        tags: ['community', 'against_the_black'],
+        rating: 1
+    },
+    {
+        title: "The Good, The Bad, and The Ugly",
+        intro: "To survive the 'Verse, you must walk among saints, trade with devils, and strike a deal with the depraved. Prove you can master every side of the law.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/2688034/the-good-the-bad-and-the-ugly-story-card",
+        rating: 2,
+        tags: ['community', 'reputation'],
+        setupDescription: "Only take Starting Jobs from Harken, Lord Harrow, Mr. Universe and Amnon Duul. These jobs may be discardsed, as normal. Follow the Standard Game Set-Up Card otherwise."
+    },
+    {
+        title: "The Great Escape",
+        intro: "The Alliance has been busy. Rounded up a few of our nearest and dearest. We aim to right that wrong, and see about ending that incarceration.",
+        requiredExpansion: "community",
+        isCoOp: true,
+        sourceUrl: "https://boardgamegeek.com/thread/2717955/article/38380038#38380038",
+        tags: ['community', 'jailbreak', 'against_the_black', 'coop'],
+        setupDescription: "During Leader selection, players also choose 2 cards from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards at Miranda, Burnham. Captains can trade crew, items, money, goods, passengers, and jobs from hand when on the same space."
+    },
+    {
+        title: "Honorably Dishonorable Men",
+        intro: "Care to press your luck? All them shiny things in the core sure could be of some use to folks out on the Rim.",
+        setupDescription: "Place 8 contraband tokens on each of the following sectors in Alliance Space: Londonium, Bernadette, Liann Jiun, Sihnon, Gonghe, and Bellerophon. Use 20 Disgruntled tokens as the game length timer.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/3602682/honorably-dishonorable-men",
+        tags: ['community', 'smugglers_run'],
+    },
+    {
+        title: "Hospital Rescue",
+        intro: "River is prisoner in a secure hospital at Londinium, and needs rescuing.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/filepage/103582/goal-hospital-rescue",
+        setupDescription: "Remove River from play.",
+        tags: ['community', 'jailbreak'],
+        rating: 2,
+    },
+    {
+        title: "How It All Started",
+        intro: "You're low on funds, and need to get a job. Badger's hired you to scavenge a derelict ship dangerously close to an Alliance cruiser. Get the cargo, evade the Alliance, and sell it.",
+        requiredExpansion: "community",
+        setupDescription: "Everyone starts with 2 parts, 2 fuel, and $500. Nandi pays half price, rounded up, when hiring crew.",
+        tags: ['community', 'classic_heist'],
+        sourceUrl: "https://boardgamegeek.com/filepage/186593/where-it-all-started-story-card"
+    },
+    {
+        title: "If Anyone Gets Nosy, Just, You Know... Shoot 'Em",
+        intro: "It's been a rough year, and funds are running low. Desperate, you've had to agree to something your otherwise never would: hosting a docu-holo film crew investigating \"outlaw traders\".",
+        setupDescription: "Players are short on cash -- start with only $2000.",
+        sourceUrl: "https://boardgamegeek.com/thread/3655131/three-homebrew-scenarios",
+        requiredExpansion: "community",
+        rating: 3,
+    },
+    {
+        title: "It Ain't Easy Goin' Legit",
+        intro: "Your last run in with Harken turned South and you've got a boatload of warrants trailin' ya. Time to clean your ledger and get dirt on Harken instead.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/image/4434522/pmw57",
+        setupDescription: "All players start with 2 Warrant Token! Alliance Space is off limits until Goal 3. Players may not deal with Harken.",
+        tags: ['community', 'classic_heist'],
+        rating: 2,
+    },
+    {
+        title: "Laying Down the Law",
+        intro: "Alliance brass has handed down some flush to the local magistrates to round up some old warrants and they're hiring new law men who can prove they can get the job done.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1093761/article/14404723#14404723",
+        rating: 1,
+        tags: ['community', 'character'],
+    },
+    {
+        title: "The Long Haul",
+        intro: "Anson's looking for a top notch crew for a really big job. He doesn't just hand out jobs to anyone though. Can you prove yourself capable, secure the job, and make a fortune?",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1107085/the-long-haul-idea-for-an-unofficial-story-card",
+        rating: 1,
+        tags: ['community', 'reputation'],
+    },
+    {
+        title: "The Magnificent Crew",
+        intro: "On a backwater planet, an old friend sends out a plea. Marauders are bleeding their town dry. Suss out the trouble, assemble a crew, and eliminate the pesky varmints.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/image/2277037/upstarter",
+        setupDescription: "There's no time for working other Jobs. Remove all Job Card decks from the game.",
+        tags: ['community', 'survival'],
+        rating: 2
+    },
+    {
+        title: "Mark Of A Great Captain",
+        intro: "If you don't much care for the wellbeing of your crew, your crew won't care much for you. Do what you can to keep your chosen family together. Without them, who's gonna keep you company when you're floating in the black?",
+        setupDescription: "Each player must choose a Moral Leader. After all players have collected their Starting Supplies, each player will pay the code of an Expanded Crew Quarters ($600) and can now hold 9 crew. HIRING CREW: Starting with 1st player, each player will add any crew card from any supply deck to their ship by paying the listed cost. Continue rounds of hiring crew until all players have 9 crew on their ship. Remove all other crew cards from play. You may only use the crew you start with. 7 disgruntle tokens will be used as a timer that triggers the arrest of 4 crew members from each ship.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/filepage/286230/mark-of-a-great-captain-story-card",
+        rating: 2,
+        tags: ['community', 'character'],
+    },
+    {
+        title: "Master Of All",
+        intro: "The 'Verse is a profitable place for a crew that can rise to any occasion. Be the first to prove their crew is ready for anything... without attracting the law.",
+        setupDescription: "In turn order, choose an empty planet with a Contact as a starting point. Then draw only 3 of that contact's jobs as starting hand. Start with an Alliance Alert in play and replace it whenever a Goal Token is won or when any RESHUFFLE card is drawn.",
+        sourceUrl: "https://boardgamegeek.com/thread/2941994/master-of-all-story-card",
+        requiredExpansion: "community",
+        tags: ['community', 'reputation'],
+    },
+    {
+        title: "Miranda",
+        intro: "You suspect that there is a hidden message in the Fruity Oaty Bars advertisement recently broadcast by the Alliance network. Decoding it may reveal something of value or maybe it's just a new form of subliminal advertising!",
+        setupDescription: "Place your Firefly on a supply world to begin the game. Draw 1 startgin crew from ANY deck by flipping the draw pile and taking the first 'named' character that is revealed.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1135128/article/1512332#1512332",
+        rating: 2,
+        tags: ['community', 'mystery'],
+    },
+    {
+        title: "Miranda's Secret",
+        intro: "So you have heard of Miranda. The forgotton planet deep inside the Reaver space. There is some secret it holds that can change the Alliance position in the Verse. Are you bold enough to ventur there and try to find it?",
+        additionalRequirements: ["blue", "pirates"],
+        sourceUrl: "https://boardgamegeek.com/filepage/110153/story-card-mirandas-secret",
+        requiredExpansion: "community",
+        rating: 2,
+        tags: ['community', 'mystery'],
+    },
+    {
+        title: "My Fellow Browncoats",
+        isCoOp: true,
+        intro: "The crew of Serenity needs your help. They've been captured by the Alliance and sent to unknown prison camps all over the 'Verse. For a price, Badger might let you in on a little secret.",
+        requiredExpansion: "community",
+        setupDescription: "Place Serenity on Shadow, Murphy as the drop-off point for Serenity's rescued crew. Shuffle Malcolm, Zoë, Wash, Jayne, Kaylee, Inara, Book, Simon, and River together. Place them face down as the \"Prisoner Deck\".",
+        tags: ['community', 'jailbreak', 'against_the_black', 'coop'],
+        sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
+    },
+    {
+        title: "Rags To Riches",
+        intro: " ",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/filepage/108288/rags-to-riches",
+        rating: 0,
+        tags: ['community', 'reputation'],
+    },
+    {
+        title: "Return to Sturges",
+        intro: "The Battle of Sturges was the shortest and bloodiest battle of the Unification War. Badger has broadcast news that there is a hoard of Alliance treasure left in the wreckage of this space battle to a few \"trusted friends\". The race is on to get the information, equipment and speed to get there first, find the goods and get clear before the Alliance shows up to claim its property!",
+        setupDescription: "Captain Nandi and Atherton may not be used by any player.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/filepage/125866/return-to-sturges-a-firefly-mission",
+        tags: ['community', 'classic_heist'],
+    },
+    {
+        title: "River's Run 1v1",
+        intro: "The Alliance had her in that institution for a purpose, whatever it was, and they will want her back.",
+        isPvP: true,
+        playerCount: 2,
+        additionalRequirements: ["blue"],
+        setupDescription: "Roll for player position. Player 1 will be the Captain of Serenity with Malcolm, Zoë, Wash, Kaylee, Jayne, Inara, Book, Simon, and River. Serenity starts with the Xùnsù Whisper X1 from Meridian, Expanded Crew Quarters from Osiris, and an EVA Suit from Space Bazaar for River. Player 2 is a Bounty Hunter and chooses the Setup card. No Starting Jobs. Remove all Serenity's crew from the Bounty deck, excluding River Tam. The Bounty deck is placed face up and all bounties are active.",
+        sourceUrl: "https://boardgamegeek.com/thread/3454248/rivers-run-1v1",
+        requiredExpansion: "community",
+        tags: ['community', 'pvp'],
+    },
+    {
+        title: "Round the 'Verse in \"80 Days\"",
+        intro: "Mr. Big Bucks, who lives next to the Tams in Sihnon, has two 19-year-old kids. They are finishing a semester of school at Osiris. Mr. Big Bucks wants the kids to experience the universe. He's looking for someone to show them around the universe and return them healthily. You can put the kids to work to some extent, but must return them healthy. He'll pay $20,000 when done.",
+        requiredExpansion: "community",
+        sourceUrl: "https://web.archive.org/web/20151227202622/http://notionnexus.com/index.php/ponderings-and-thoughts/247-playing-firefly",
+        tags: ['community', 'character'],
+    },
+    {
+        title: "Ruining It For Everyone",
+        maxPlayerCount: 2,
+        isPvP: true,
+        intro: "During the war you watched your twin get cut down in a hail of shrapnel. You've lived an empty existence since that day making ends meet and trying to keep flying as best you can. Then you get a message from your Ma out on the Rim. \"Come home right away.\" So you fly to St. Albans, Red Sun to see your Mother. Once there, your twin (Who wasn't dead!) steals your ship and sets about ruining your life. Your twin has the exact same abilities as you do. Your twin may not discard any of your inactive jobs.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1082965/story-card-ruining-it-for-everyone",
+        setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship. Both ships starts on St. Albans, Red Sun. Set 20 counters on this card as timing counters.",
+        tags: ['community', 'character', 'pvp'],
+    },
+    {
+        title: "Save River Tam",
+        intro: "River Tam is being held in secure, secret government facility. Beloved sister, daughter of the ridiculously wealthy, and super useful government secret weapon. Whatever your reasons, you are on a mission to break River out.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1066622/story-card-save-river-tam",
+        setupDescription: "Remove River Tam from play.",
+        tags: ['community', 'jailbreak', 'character'],
+        rating: 1
+    },
+    {
+        title: "Saving Pirate Ryan",
+        intro: "You know, there's a certain motto. A creed among folks like us. You may have heard it: \"Leave no man behind.\" Wash - Firefy Episide 10 - War Stories",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1536695/article/22110859#22110859",
+        rating: 1,
+        tags: ['community', 'jailbreak'],
+    },
+    {
+        title: "Scavengers",
+        intro: "This game only uses dice, cash, Leader cards, Supply decks, cargo, and contraband. Everything else stays in the box. A scavengers goal is simple, Find a Crew, Attack Another Crew, Keep Trying.",
+        isPvP: true,
+        setupDescription: "Shuffle all Supply decks and lay them face down in the middle of the table with the banks cash. All players start with $10,000 and 10 cargo. Roll for first player. First player chooses a Leader card then passes the Leader deck to the next player until each player has a Leader card.",
+        sourceUrl: "https://boardgamegeek.com/thread/3114859/scavenger-card-game-story-card",
+        requiredExpansion: "community",
+        rating: 1,
+        tags: ['community', 'pvp', 'verse_variant'],
+    },
+    {
+        title: "Shadows Over Duul",
+        intro: "The Silverhold-Hera route is usually a harmless uneventful run. Unless, of course, someone installs a beacon on the cargo which attracts a Reaver party.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/filepage/100497/shadows-over-duul-new-goal-reupload",
+        setupDescription: "Remove jobs from Amnon Duul. Start in the border of Murphy.",
+        tags: ['community', 'survival'],
+        rating: 2,
+    },
+    {
+        title: "Shiny New Year 25 - Protect Or Plunder",
+        intro: "An affluent governor from Osiris is hosting a grand New Year's celebration--a wedding for his daughter aboard the luxury liner, Shiny New Year. The event has drawn attention from both well-meaning guardians and those with darker intentions. Which one are you? Protector or plunderer?",
+        additionalRequirements: ["pirates"],
+        isPvP: true,
+        setupDescription: "After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles. Reshuffle the Contact Decks.",
+        sourceUrl: "https://boardgamegeek.com/thread/3405568/article/45332549#45332549",
+        requiredExpansion: "community",
+        tags: ['community', 'pvp'],
+    },
+    {
+        title: "The Truth Will Out",
+        intro: "For too long the tragic fate of the Miranda colony has been covered up by the Alliance, and Mr. Universe would like to correct that, but lacks the manpower to do so on his own. Helping him is bound to be dangerous, but who wouldn't enjoy giving the Alliance a black eye?",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/image/4894306/pmw57",
+        additionalRequirements: ["blue"],
+        tags: ['community', 'character'],
+    },
+    {
+        title: "This Here's History",
+        intro: "Legendary Captain Arien Grimbold, a legend of the Battle of Serenity Valley, disappeared after the Browncoats dissolved. She is said to have been buried with her priceless rifle, Flamespeaker. Can you find her tomb and uncover this lost relic of a nobler time?",
+        sourceUrl: "https://boardgamegeek.com/thread/3655131/three-homebrew-scenarios",
+        requiredExpansion: "community",
+        rating: 2
+    },
+    {
+        title: "Trash Part Deux",
+        intro: "Have MRP (Mrs Reynolds persona) steal and sell the latest Firefly story.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/filepage/164355/story-card-trash-part-deux",
+        tags: ['community', 'classic_heist'],
+    },
+    {
+        title: "Unification Day",
+        intro: "Unification Day is fast approaching and you have plans to cause all sorts of mischief, but what better way to do it than right under the nose of the Alliance? You just might get more than a little pay back out of it.",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/1083899/unification-day-alliance-oriented-story-card",
+        rating: 1,
+        tags: ['community', 'classic_heist'],
+    },
+    {
+        title: "Wild Cards",
+        intro: "Prove you're the best - or luckiest - crew around by collecting tales of your exploits.",
+        requiredExpansion: "aces_eights",
+        sourceUrl: "https://boardgamegeek.com/thread/3281169/article/47090467#47090467",
+        rating: 3,
+        tags: ['community', 'reputation'],
+    },
+    {
+        title: "X Marks The Spot",
+        intro: "Pirate Captain Medina's legendary buried treasure was forever lost when he split his treasure map ensuring none could find it. Who will be first to unearth his fabled booty?",
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/2954291/article/41076542#41076542",
+        rating: 2,
+        incompatibleSetupCardIds: ["ClearerSkiesBetterDays"],
+        tags: ['community', 'classic_heist', 'mystery'],
+    },
+    {
+        title: "Ariel",
+        intro: "When River slashes Jayne's chest, Simon decides it's time to get serious about treating her. He hires the crew of Serenity to get him and River into a high-tech hospital on Ariel so he can see what the Alliance did to her.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 10,
+        tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Bushwhacked",
+        intro: "Serenity encounters a drifting spaceship of  a type which was converted to transport settlers to the Outer Planets. Mal decides to check out the derelict in order to either help survivors or loot the dead.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 4,
+        tags: ['community', 'mystery', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Heart of Gold",
+        intro: "Aboard Serenity, a crewmember receives a distress call from a friend, Nandi, owner of a border moon bordello. Nandi asks for help dealing with a landowner named Burgess, who is victimizing one of her employees.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 14,
+        tags: ['community', 'faction_war', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Jaynestown",
+        intro: "On Higgins' Moon, Inara meets the son of Magistrate Higgins. The rest of the crew is in search of loot. Meanwhile, One of the crew worries that his past misdeeds on Higgins' Moon might catch up with him.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 8,
+        tags: ['community', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "The Message",
+        intro: "Amnon Duul has a crate for Mal. Inside is the body of Tracey, a man Mal knew during the war. The crew take the crate aboard Serenity and plan to take it home for burial, but now corrupt police are in pursuit.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 13,
+        tags: ['community', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Objects in Space",
+        intro: "With the crew asleep, Jubal Early, a bounty hunter, sneaks aboard Serenity. He has been paid to abduct River Tam. He locks most of the crew in their cabins. However, River has disappeared.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 15,
+        tags: ['community', 'survival', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Our Mrs. Reynolds",
+        intro: "The crew of Serenity have agreed to help rid a settlement on Triumph of its bandit problem. The community can't pay, but promises the crew a big party and whatever other presents they can give.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 7,
+        tags: ['community', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Out of Gas",
+        intro: "Something has gone terribly wrong on Serenity. Remember that compression coil that Kaylee's always going on about? Well it busted, and we are driftin'. And in deep space too. Can things get any worse?",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 9,
+        tags: ['community', 'survival', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Safe",
+        intro: "The crew of Serenity find themselves on Jiangyin, where Mal is selling livestock to the Grange Brothers. Just as business is about to be concluded, the law shows up. To complicate things more, Simon and River are missing.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 6,
+        tags: ['community', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Serenity Movie Part 1",
+        intro: "Against Simon's objections, Mal takes River along on a bank robbery because, in his words, \"She might see trouble before it's coming\". Just as the crew reach the vault, the town is attacked by Reavers.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 16,
+        tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Serenity Movie Part 2",
+        intro: "The crew are laying low at Haven when Inara calls from the Companion Training Hose on Sihnon requesting help. Mal realizes it's some kind of trap, but he decides to go anyway.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 17,
+        tags: ['community', 'mystery', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Serenity Movie Part 3",
+        intro: "On Miranda a weak distress beacon leads the crew to a research shuttle and a recording that shows Miranda was an Alliance population control experiment that went horribly wrong, killing millions and creating the Reavers!",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 18,
+        tags: ['community', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Serenity Part 1",
+        intro: "Mal Reynolds and the crew of the Firefly Class Transport Serenity are involved in illegally slavaging crates off an abandoned spaceship for Badger, a small-time crime boss on the planet Persephone.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 1,
+        tags: ['community', 'smugglers_run', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Serenity Part 2",
+        intro: "Mal Reynolds and the crew of the Firefly Class Transport Serenity are despereately trying to sell contraband they found on an abandoned spaceship. Arriving at Whitefall, they need to deal with Patience.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 2,
+        tags: ['community', 'smugglers_run', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Shindig",
+        intro: "The crew of Serenity attends a high society ball - a \"Shindig\". Badger wants Mal to deal with Sir Warrick Harrow. Everything goes smoothly until Mal inadvertently challenges someone to a duel.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 5,
+        tags: ['community', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "The Train Job",
+        intro: "Unification Day: six years since the Alliance won the war. The crew of Serenity are on a moon of Ariel in the White Sun system. Mal and the crew are relaxing in a local bar.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 3,
+        tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Trash",
+        intro: "While overseeing a cargo transfer for a smuggling job, Mal runs into Saffron. Guns are drawn, but Saffron convinces Mal to get in on her plan to steal the Lassiter Laser Pistol - a priceless artifact.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 12,
+        tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "War Stories",
+        intro: "After a simple business deal goes badly wrong, Mal and Wash find themselves in the hands of Adelai Niska, who is still holding a grudge from an earlier encounter. The rest of the crew must mount a rescue.",
+        sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
+        requiredExpansion: "community",
+        isSolo: true,
+        requiredFlag: 'isSolitaireFirefly',
+        sortOrder: 11,
+        tags: ['community', 'jailbreak', 'character', 'against_the_black', 'solo'],
+    },
+    {
+        title: "And That Makes Us Mighty",
+        intro: "Feeling disrespected, broke, and in a bad mood, you finally decide to do something about it. But how many of your problems can you solve at once?",
+        isSolo: true,
+        tags: ['community', 'reputation', 'against_the_black', 'solo'],
+        setupDescription: "After randomly selecting a Leader, you may select up to 4 Crew cards revealed when Priming the Pump - up to a total value of $1000.",
+        sourceUrl: "https://boardgamegeek.com/filepage/253651/solo-story-card-and-that-makes-us-mighty",
+        requiredExpansion: "community"
+    },
+    {
+        title: "Beholden to Niska",
+        intro: "You have gotten a loan from Niska to buy your first ship. Niska will expect favors and to be paid back (with interest) in a timely manner. Failure to do so will result in legal confiscation of your ship, and illegal confiscation of your life!",
+        isSolo: true,
+        tags: ['community', 'criminal_enterprise', 'against_the_black', 'solo'],
+        setupDescription: "This game lasts for 30 turns (plus a final \"No Fly Action\" turn. Start at the Osiris ShipWorks with $3000, a Leader and a Ship.",
+        sourceUrl: "https://boardgamegeek.com/filepage/129108/beholden-to-niska-firefly-solitaire-story-card-by",
+        requiredExpansion: "community"
+    },
+    {
+        title: "Christmas Delivery",
+        intro: "The 'Verse is just too big for one man to provide joy for all of the good little boys and girls. He needs your help and you'd better not misbehave!",
+        requiredExpansion: "community",
+        isSolo: true,
+        setupDescription: "Same as Awful Lonely in the Big Black",
+        tags: ['community', 'character', 'against_the_black', 'solo'],
+        sourceUrl: "https://boardgamegeek.com/thread/1076227/christmas-delivery-a-solo-story-card-for-the-holid"
+    },
+    {
+        title: "The Hero of Canton",
+        intro: "You can't do that to my people. Can't crush them under your heel. I'll strap on my hat, and in 20 rounds flat, steal every Mudder Boss Higgins has to steal.",
+        isSolo: true,
+        tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
+        setupDescription: "Start play with Cap'n Jayne as your Leader, Jayne's Cunning Hat, and Vera. Subtract the cost of Vera from your Starting Cash.",
+        sourceUrl: "https://boardgamegeek.com/filepage/288785/the-hero-of-canton-solo-story-card",
+        requiredExpansion: "community"
+    },
+    {
+        title: "Hunt For The Arc",
+        intro: "The Joan of Arc, one of the great colony ships that left Earth-That-Was hundreds of years ago, never arrived at its destination. Filled with priceless Earth artifacts, the huge vessel has long been rumored to be floating out beyond Alliance space, just waiting to make some lucky crew filthy rich. It's haunted you, become an obsession, but you pored over star charts and history books for years, and now you might just have a notion where she 'bides. Find the Arc and successfully deliver her to the Alliance for a hefty sum, or fence her to a criminal boss to become financially set for life...",
+        requiredExpansion: "community",
+        isSolo: true,
+        sourceUrl: "https://boardgamegeek.com/thread/1049419/hunt-for-the-arc-a-solo-adventure",
+        setupDescription: "Place 1 Reaver ship and the Alliance Cruiser in the Border Space sector below Valentine. If Blue Sun is active, place 2 more Cutters near Miranda.",
+        tags: ['community', 'mystery', 'against_the_black', 'solo'],
+    },
+    {
+        title: "Jubal's Early Years",
+        intro: "Not much is know about Jubal's past.",
+        isSolo: true,
+        tags: ['community', 'character', 'against_the_black', 'solo'],
+        setupDescription: "Start play with Jubal Early as your leader. Remove Serenity's crew from the Bounty and Supply Decks. The Bounty deck is placed face up. All bounties are active.",
+        sourceUrl: "https://boardgamegeek.com/filepage/289736/jubals-story-solo-cards",
+        requiredExpansion: "community"
+    },
+    {
+        title: "Jubal's Mighty Roar",
+        intro: "Bounty Hunting's been 'round since long before you was born and it'll be 'round long after you're gone. So, why not cash in some of them high priced Bounties. I hear there's a young girl that'll fetch a nice price.",
+        isSolo: true,
+        requiredExpansion: "community",
+        rating: 3,
+        tags: ['community', 'doing_the_job', 'character', 'against_the_black', 'solo'],
+        setupDescription: "Start play with Jubal Early as your Leader, Early's Pistol, Early's Combat Armor, and the Interceptor. Subtract the cost of Early's Pistol and Armor from your Starting Cash. Place Serenity on a non-planetary sector in the Georgia system. Collect Serenity's crew and set them to the side. The Bounty deck is placed face up. All bounties are active.",
+        sourceUrl: "https://boardgamegeek.com/thread/3399878/jubals-mighty-roar"
     }
-    if (a.sortOrder !== undefined) return -1; // a comes first
-    if (b.sortOrder !== undefined) return 1;  // b comes first
+];
 
-    // Base game cards (no requiredExpansion) get index -1 to stay at the very top.
-    const idxA = a.requiredExpansion ? (expansionIndices[a.requiredExpansion] ?? 999) : -1;
-    const idxB = b.requiredExpansion ? (expansionIndices[b.requiredExpansion] ?? 999) : -1;
-
-    if (idxA !== idxB) {
-        return idxA - idxB;
-    }
-
-    // If both cards belong to the same expansion, sort alphabetically by title
-    return getSortableTitle(a.title).localeCompare(getSortableTitle(b.title));
-});
+export const STORY_CARDS: StoryCardManifest[] = sortStories(RAW_MANIFEST);
