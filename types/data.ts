@@ -1,3 +1,4 @@
+
 import { SETUP_CARD_IDS } from '../data/ids';
 import { GameMode, Expansions } from './common';
 import { SetupRule } from './rules';
@@ -87,29 +88,42 @@ export type StoryTag =
   | 'coop'
   | 'pvp';
 
-export interface StoryCardDef {
+// The lightweight manifest used for lists and filtering
+export interface StoryCardManifest {
   title: string;
   intro: string;
-  setupDescription?: string;
+  setupDescription?: string; // Kept for grid view footer
   requiredExpansion?: keyof Expansions;
   additionalRequirements?: (keyof Expansions)[];
   sourceUrl?: string;
-  goals?: StoryCardGoal[];
   isSolo?: boolean;
   isCoOp?: boolean;
   isPvP?: boolean;
   playerCount?: number | number[];
   maxPlayerCount?: number;
-  soloTimerAdjustment?: string;
-  challengeOptions?: ChallengeOption[];
-  advancedRule?: AdvancedRuleDef;
-  rules?: SetupRule[];
   requiredFlag?: string;
   requiredSetupCardId?: string;
   incompatibleSetupCardIds?: string[];
   sortOrder?: number;
-  campaignSetupNotes?: string[];
   rating?: number;
-  noJobsMessage?: { title: string; description: string; };
   tags?: StoryTag[];
+  
+  // Metadata for Advanced Rules (needed for list filtering/display)
+  advancedRule?: AdvancedRuleDef;
+  
+  // Metadata for Goals (needed for list display/counters)
+  goals?: StoryCardGoal[];
+  
+  // Minimal Challenge Options metadata (id/label) needed for UI
+  challengeOptions?: ChallengeOption[];
+  
+  // Solo Timer text (needed for dossier display without loading rules)
+  soloTimerAdjustment?: string;
+}
+
+// The full definition used for game logic
+export interface StoryCardDef extends StoryCardManifest {
+  rules?: SetupRule[];
+  campaignSetupNotes?: string[];
+  noJobsMessage?: { title: string; description: string; };
 }

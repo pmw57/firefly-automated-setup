@@ -1,6 +1,5 @@
 
 import React, { useMemo } from 'react';
-import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';
 import { PageReference } from './PageReference';
 import { StructuredContent } from '../types';
@@ -17,29 +16,51 @@ export interface OverrideNotificationBlockProps {
 }
 
 export const OverrideNotificationBlock: React.FC<OverrideNotificationBlockProps> = ({ source, title, content, page, manual, badge, className }) => {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-
   const getStyles = () => {
-    // Semantic mapping based on source type
-    if (isDark) {
-      switch(source) {
-        case 'story': return { border: 'border-amber-700', bg: 'bg-amber-900/20', text: 'text-amber-200/90' };
-        case 'setupCard': return { border: 'border-blue-800', bg: 'bg-blue-900/20', text: 'text-blue-200/90' };
-        case 'expansion': return { border: 'border-purple-800', bg: 'bg-purple-900/20', text: 'text-purple-200/90' };
-        case 'warning': return { border: 'border-red-800', bg: 'bg-red-900/20', text: 'text-red-200/90' };
-        case 'info': return { border: 'border-zinc-600', bg: 'bg-zinc-800/40', text: 'text-gray-300' };
-      }
-    } else {
-      switch(source) {
-        case 'story': return { border: 'border-[#b45309]', bg: 'bg-[#fffbeb]', text: 'text-[#92400e]' };
-        case 'setupCard': return { border: 'border-[#1e40af]', bg: 'bg-[#eff6ff]', text: 'text-[#1e3a8a]' };
-        case 'expansion': return { border: 'border-[#7e22ce]', bg: 'bg-[#faf5ff]', text: 'text-[#6b21a8]' };
-        case 'warning': return { border: 'border-[#b91c1c]', bg: 'bg-[#fef2f2]', text: 'text-[#991b1b]' };
-        case 'info': return { border: 'border-border-separator', bg: 'bg-surface-overlay/50', text: 'text-content-secondary' };
-      }
+    // Mapping sources to Semantic Tokens
+    switch(source) {
+      case 'story': 
+        // Story Overrides -> Warning/Amber-ish tone (using 'warning' semantics or custom override)
+        return { 
+          border: 'border-amber-600 dark:border-amber-700', 
+          bg: 'bg-amber-50 dark:bg-amber-950/30', 
+          text: 'text-amber-900 dark:text-amber-200/90' 
+        };
+      case 'setupCard': 
+        // Setup Rules -> Info/Blue tone
+        return { 
+          border: 'border-blue-600 dark:border-blue-700', 
+          bg: 'bg-blue-50 dark:bg-blue-950/30', 
+          text: 'text-blue-900 dark:text-blue-200/90' 
+        };
+      case 'expansion': 
+        // Expansion Rules -> Purple tone (Custom semantic)
+        return { 
+          border: 'border-purple-600 dark:border-purple-700', 
+          bg: 'bg-purple-50 dark:bg-purple-950/30', 
+          text: 'text-purple-900 dark:text-purple-200/90' 
+        };
+      case 'warning': 
+        // Restrictions -> Error/Red tone
+        return { 
+            border: 'border-border-error', 
+            bg: 'bg-surface-error', 
+            text: 'text-content-error' 
+        };
+      case 'info': 
+        // General Info -> Subtle/Gray tone
+        return { 
+            border: 'border-border-subtle', 
+            bg: 'bg-surface-subtle', 
+            text: 'text-content-secondary' 
+        };
+      default:
+        return { 
+            border: 'border-border-separator', 
+            bg: 'bg-surface-card', 
+            text: 'text-content-primary' 
+        };
     }
-    return { border: 'border-border-separator', bg: 'bg-surface-card', text: 'text-content-primary' };
   };
 
   const icons = { story: '📜', setupCard: '⚙️', expansion: '🧩', warning: '⚠️', info: 'ℹ️' };
@@ -51,7 +72,6 @@ export const OverrideNotificationBlock: React.FC<OverrideNotificationBlockProps>
   const labelId = `${uniqueId}-label`;
   const titleId = `${uniqueId}-title`;
   const labelledby = [labelId, title ? titleId : undefined].filter(Boolean).join(' ');
-
 
   return (
     <section 
@@ -77,7 +97,7 @@ export const OverrideNotificationBlock: React.FC<OverrideNotificationBlockProps>
                 </div>
               </div>
             </div>
-            {page && <PageReference page={page} manual={manual} />}
+            {page && <PageReference page={page} manual={manual} className={s.text} />}
           </div>
         </div>
       </div>

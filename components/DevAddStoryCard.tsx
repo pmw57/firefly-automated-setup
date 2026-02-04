@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { StoryCardDef, ExpansionId, SetupRule, StoryCardGoal, ChallengeOption, JobMode, NavMode, PrimeMode, DraftMode, LeaderSetupMode, AllianceSetupMode, ResourceType, EffectMethod, RuleSourceType, ModifyResourceRule, AddFlagRule, AddSpecialRule, ModifyPrimeRule, AllowContactsRule, PrimeContactsRule, CreateAlertTokenStackRule, BypassDraftRule, SetPlayerBadgesRule, SetJobStepContentRule, AddBoardComponentRule } from '../types/index';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { STORY_CARDS } from '../data/storyCards';
 import { StoryCardGridItem } from './story/StoryCardGridItem';
 import { CONTACT_NAMES } from '../data/ids';
+import { loadStoryData } from '../utils/storyLoader';
 
 // --- Local Storage ---
 const DEV_STORY_CARD_DRAFT_KEY = 'firefly_dev_story_card_draft';
@@ -354,15 +354,26 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
     
     // Load selected card from dropdown
     useEffect(() => {
-        if (cardToLoad) {
-            const cardData = STORY_CARDS.find(c => c.title === cardToLoad);
-            if (cardData) {
-                const { rules: cardRules, ...cardStoryData } = cardData;
-                setStory(cardStoryData);
-                // Deep copy rules to prevent accidental mutation
-                setRules(cardRules ? JSON.parse(JSON.stringify(cardRules)) : []);
+        const load = async () => {
+            if (cardToLoad) {
+                // Find index from manifest
+                const index = STORY_CARDS.findIndex(c => c.title === cardToLoad);
+                if (index >= 0) {
+                    try {
+                        const cardData = await loadStoryData(index);
+                        if (cardData) {
+                            const { rules: cardRules, ...cardStoryData } = cardData;
+                            setStory(cardStoryData);
+                            // Deep copy rules to prevent accidental mutation
+                            setRules(cardRules ? JSON.parse(JSON.stringify(cardRules)) : []);
+                        }
+                    } catch (e) {
+                        console.error("Error loading story definition:", e);
+                    }
+                }
             }
-        }
+        };
+        load();
     }, [cardToLoad]);
     
     const clearForm = () => {

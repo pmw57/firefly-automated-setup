@@ -59,36 +59,3 @@ export interface DraftState {
   draftOrder: string[];
   placementOrder: string[];
 }
-
-// "Campaign" terminology is used to align with the 10th Anniversary rulebook.
-export interface GameState {
-  gameEdition: GameEdition;
-  gameMode: GameMode;
-  setupMode: SetupMode;
-  playerCount: number;
-  playerNames: string[];
-  setupCardId: import('./data').SetupCardId | string;
-  setupCardName: string;
-  secondarySetupId?: import('./data').SetupCardId | string;
-  selectedStoryCardIndex: number | null;
-  selectedGoal?: string;
-  challengeOptions: Record<string, boolean>;
-  timerConfig: TimerConfig;
-  soloOptions: SoloOptions;
-  optionalRules: OptionalRules;
-  expansions: Expansions;
-  isCampaign: boolean;
-  campaignStoriesCompleted: number;
-  finalStartingCredits: number | null;
-  storyRatingFilters: Record<number, boolean>;
-  overriddenStepIds: string[];
-  acknowledgedOverrides: string[];
-  visitedStepOverrides: string[];
-  draft: {
-    state: DraftState | null;
-    isManual: boolean;
-  };
-  showHiddenContent: boolean;
-  missionDossierSubStep: number;
-  riversRun_setupConfirmed: boolean;
-}

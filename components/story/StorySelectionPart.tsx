@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useGameState } from '../../hooks/useGameState';
@@ -23,7 +24,8 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
   const { 
     activeStoryCard,
     handleStoryCardSelect,
-    enablePart2
+    enablePart2,
+    isLoading
   } = useMissionSelection();
   const { state: gameState } = useGameState();
   const { theme } = useTheme();
@@ -92,7 +94,12 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
           {enablePart2 && <span className={`text-xs uppercase tracking-widest ${badgeBg} ${badgeBorder} ${badgeText} px-2 py-1 rounded font-bold`}>Part 1 of 2</span>}
         </div>
         
-        {activeStoryCard ? (
+        {isLoading ? (
+            <div className="p-12 flex flex-col items-center justify-center">
+                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-firefly-red dark:border-amber-500 mb-4"></div>
+                 <p className="text-sm font-bold text-content-secondary">Fetching Story Data...</p>
+            </div>
+        ) : activeStoryCard ? (
           <StoryDossier activeStoryCard={activeStoryCard} />
         ) : (
           <div className="p-8 text-center">
@@ -104,7 +111,7 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
         )}
       </div>
 
-      <div className="space-y-4">
+      <div className={cls("space-y-4 transition-opacity", isLoading ? "opacity-50 pointer-events-none" : "opacity-100")}>
         <StoryRandomizer onSelect={handleStoryCardSelect} />
         <StoryCardGrid onSelect={handleStoryCardSelect} />
       </div>
@@ -116,14 +123,14 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
           navBorderTop
       )}>
         {!isFirstStep && (
-          <Button onClick={onPrev} variant="secondary" className="shadow-sm" disabled={isNavigating}>
+          <Button onClick={onPrev} variant="secondary" className="shadow-sm" disabled={isNavigating || isLoading}>
             ← Back
           </Button>
         )}
         <Button 
           onClick={onNext} 
           className="shadow-lg hover:translate-y-[-2px] transition-transform"
-          disabled={!activeStoryCard || isNavigating}
+          disabled={!activeStoryCard || isNavigating || isLoading}
         >
           {nextButtonText}
         </Button>
@@ -138,7 +145,7 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
           <Button 
             onClick={onPrev} 
             variant="secondary"
-            disabled={isNavigating}
+            disabled={isNavigating || isLoading}
             className="flex-1 text-xs uppercase tracking-wider !py-3"
           >
             ← Back
@@ -146,7 +153,7 @@ export const StorySelectionPart: React.FC<StorySelectionPartProps> = ({ onNext, 
         )}
         <Button 
           onClick={onNext} 
-          disabled={!activeStoryCard || isNavigating}
+          disabled={!activeStoryCard || isNavigating || isLoading}
           className={cls(isFirstStep ? 'w-full' : 'flex-[2]', "text-xs uppercase tracking-[0.1em] !py-3")}
         >
           {nextButtonText}

@@ -1,3 +1,4 @@
+
 import { createContext, useContext } from 'react';
 import { StoryCardDef, AdvancedRuleDef, GameState, StoryTag } from '../types';
 
@@ -14,13 +15,20 @@ export interface MissionSelectionContextType {
   filteredStories: StoryCardDef[];
   allPotentialAdvancedRules: AdvancedRuleDef[];
   enablePart2: boolean;
+  
+  // Loading State
+  isLoading: boolean;
+  
   setSearchTerm: (term: string) => void;
   setFilterExpansion: (ids: string[]) => void;
   toggleFilterExpansion: (id: string) => void;
   setFilterTheme: (theme: StoryTag | 'all') => void;
   setSubStep: (step: number) => void;
   toggleSortMode: () => void;
-  handleStoryCardSelect: (index: number | null) => void;
+  
+  // Async Handler
+  handleStoryCardSelect: (index: number | null) => Promise<void>;
+  
   handleRandomPick: () => void;
   handleGenerateShortList: () => void;
   handlePickFromShortList: () => void;

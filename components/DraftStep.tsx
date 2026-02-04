@@ -5,7 +5,6 @@ import { useDraftDetails } from '../hooks/useDraftDetails';
 import { Button } from './Button';
 import { DiceControls } from './DiceControls';
 import { OverrideNotificationBlock } from './SpecialRuleBlock';
-import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { cls } from '../utils/style';
@@ -48,16 +47,16 @@ const DraftOrderPanel = ({
     title: string;
     description: string;
 }) => {
-    const { theme } = useTheme();
-    const isDark = theme === 'dark';
-    const panelBg = isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm';
-    const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
-    const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
-    const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
-    const panelSubColor = isDark ? 'text-gray-400' : 'text-gray-500';
-    const itemBg = isDark ? 'bg-zinc-800 border-zinc-700' : 'bg-gray-50 border-gray-100';
-    const itemText = isDark ? 'text-gray-200' : 'text-gray-800';
-    const restrictionTextColor = isDark ? 'text-yellow-400' : 'text-yellow-700';
+    // Semantic Tokens
+    const panelBg = 'bg-surface-card/60 backdrop-blur-sm';
+    const panelBorder = 'border-border-separator';
+    const panelHeaderColor = 'text-content-primary';
+    const panelHeaderBorder = 'border-border-subtle';
+    const panelSubColor = 'text-content-secondary';
+    
+    const itemBg = 'bg-surface-subtle border-border-subtle';
+    const itemText = 'text-content-primary';
+    const restrictionTextColor = 'text-content-warning';
 
     return (
         <div className={cls(panelBg, "p-4 rounded-lg border relative overflow-hidden shadow-sm transition-colors duration-300", panelBorder)}>
@@ -86,7 +85,7 @@ const DraftOrderPanel = ({
                           {player}
                       </span>
                       {displayBadge && (
-                        <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isDark ? 'text-blue-400' : 'text-blue-600')}>
+                        <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400")}>
                           {displayBadge}
                         </span>
                       )}
@@ -96,7 +95,7 @@ const DraftOrderPanel = ({
               </ul>
 
               {afterRules.length > 0 && (
-                <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
+                <div className={cls("mt-4 pt-4 border-t", panelHeaderBorder)}>
                      <DraftInstructionList rules={afterRules} textColor={restrictionTextColor} />
                 </div>
               )}
@@ -126,38 +125,35 @@ const PlacementOrderPanel = ({
     title: string;
     description: string;
 }) => {
-    const { theme } = useTheme();
-    const isDark = theme === 'dark';
-    const panelBg = isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm';
-    const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
-    const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
-    const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
-    const itemBg = isDark ? 'bg-zinc-800 border-zinc-700' : 'bg-gray-50 border-gray-100';
-    const itemText = isDark ? 'text-gray-200' : 'text-gray-800';
+    // Semantic Tokens
+    const panelBg = 'bg-surface-card/60 backdrop-blur-sm';
+    const panelBorder = 'border-border-separator';
+    const panelHeaderColor = 'text-content-primary';
+    const panelHeaderBorder = 'border-border-subtle';
+    const itemBg = 'bg-surface-subtle border-border-subtle';
+    const itemText = 'text-content-primary';
     
-    const specialPlacementBg = isDark ? 'bg-amber-950/40 border-amber-800' : 'bg-amber-50 border-amber-200';
-    const specialPlacementTitle = isDark ? 'text-amber-100' : 'text-amber-900';
-    const specialPlacementText = isDark ? 'text-amber-300' : 'text-amber-800';
+    // Special states still need specific colors (Amber for Special/Override)
+    const specialPlacementBg = 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800';
+    const specialPlacementTitle = 'text-amber-900 dark:text-amber-100';
+    const specialPlacementText = 'text-amber-800 dark:text-amber-300';
+    const restrictionTextColor = 'text-content-warning';
 
     let content: React.ReactNode;
-    const restrictionTextColor = isDark ? 'text-yellow-400' : 'text-yellow-700';
 
     if (specialStartSector) {
         // When specialStartSector is set, we suppress the standard list.
-        // We now rely entirely on `beforeRules` (populated from story data) to explain where to place.
         content = (
             <div className={cls("p-4 rounded text-center border", specialPlacementBg)}>
                 <p className={cls("font-bold mb-2", specialPlacementTitle)}>Fixed Starting Sector</p>
-                {/* The text "All ships start in..." is no longer generated here. 
-                    It must be provided by the story card via `draft_placement` rules. */}
                 <DraftInstructionList rules={beforeRules} textColor={specialPlacementText} />
                 <DraftInstructionList rules={afterRules} textColor={specialPlacementText} />
             </div>
         );
     } else {
         const descriptionColor = isHavenDraft 
-            ? (isDark ? 'text-green-300' : 'text-green-800')
-            : (isDark ? 'text-gray-400' : 'text-gray-500');
+            ? 'text-green-700 dark:text-green-300'
+            : 'text-content-secondary';
 
         content = (
             <>
@@ -172,13 +168,13 @@ const PlacementOrderPanel = ({
                     <li key={i} className={cls("flex items-center p-2 rounded border", itemBg)}>
                         <span className={`w-6 h-6 rounded-full ${isHavenDraft ? 'bg-green-600' : 'bg-amber-500'} text-white text-xs font-bold flex items-center justify-center mr-2 shadow-sm`}>{i + 1}</span>
                         <span className={cls("text-sm font-medium", itemText)}>{player}</span>
-                        {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isHavenDraft ? (isDark ? 'text-green-400' : 'text-green-600') : (isDark ? 'text-amber-400' : 'text-amber-600'))}>Places First</span>}
+                        {!isSolo && i === 0 && <span className={cls("ml-auto text-[10px] font-bold uppercase tracking-wider", isHavenDraft ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400')}>Places First</span>}
                     </li>
                     ))}
                 </ul>
                 
                 {afterRules.length > 0 && (
-                    <div className={cls("mt-4 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-gray-200')}>
+                    <div className={cls("mt-4 pt-4 border-t", panelHeaderBorder)}>
                          <DraftInstructionList rules={afterRules} textColor={restrictionTextColor} />
                     </div>
                 )}
@@ -199,22 +195,18 @@ const PlacementOrderPanel = ({
     );
 };
 
-// By typing the component as React.FC, we ensure it correctly handles standard
-// React props like 'key', which is necessary when rendering this component in a list.
 interface CustomDraftPanelProps {
   rule: SpecialRule;
   stepBadgeClass: string;
 }
 
 const CustomDraftPanel: React.FC<CustomDraftPanelProps> = ({ rule, stepBadgeClass }) => {
-    const { theme } = useTheme();
-    const isDark = theme === 'dark';
-
-    const panelBg = isDark ? 'bg-zinc-900/50 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-sm';
-    const panelBorder = isDark ? 'border-zinc-700' : 'border-gray-200';
-    const panelHeaderColor = isDark ? 'text-gray-100' : 'text-gray-900';
-    const panelHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
-    const textColor = isDark ? 'text-gray-300' : 'text-gray-700';
+    // Semantic Tokens
+    const panelBg = 'bg-surface-card/60 backdrop-blur-sm';
+    const panelBorder = 'border-border-separator';
+    const panelHeaderColor = 'text-content-primary';
+    const panelHeaderBorder = 'border-border-subtle';
+    const textColor = 'text-content-primary';
     
     const isWide = rule.flags?.includes('col-span-2');
 
@@ -236,8 +228,6 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { setDraftConfig } = useGameDispatch();
   const { state: draftState, isManual: isManualEntry } = gameState.draft;
   
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
   const isSolo = gameState.playerCount === 1;
   const isQuickMode = gameState.setupMode === 'quick';
   
@@ -319,10 +309,12 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
     setDraftConfig({ state: newState, isManual: true });
   };
 
-  const introText = isDark ? 'text-gray-400' : 'text-gray-600';
-  const stepBadgeBlueBg = isDark ? 'bg-blue-900/50 text-blue-200' : 'bg-blue-100 text-blue-800';
-  const stepBadgeAmberBg = isDark ? 'bg-amber-900/50 text-amber-200' : 'bg-amber-100 text-amber-800';
-  const stepBadgePurpleBg = isDark ? 'bg-purple-900/50 text-purple-200' : 'bg-purple-100 text-purple-800';
+  const introText = 'text-content-secondary';
+  
+  // Phase Badges - Kept colorful but compatible with dark mode
+  const stepBadgeBlueBg = 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200';
+  const stepBadgeAmberBg = 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200';
+  const stepBadgePurpleBg = 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-200';
 
   return (
     <div className="space-y-6">
@@ -355,7 +347,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
                          <div className="flex justify-center mb-6">
                             <button 
                                 onClick={handleDetermineOrder}
-                                className={cls("text-xs font-bold underline", isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800')}
+                                className={cls("text-xs font-bold underline text-content-info hover:text-blue-600 transition-colors")}
                             >
                                 Re-roll
                             </button>

@@ -1,13 +1,14 @@
+
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { isStoryCompatible } from '../../../utils/filters';
 import { GameState, StoryCardDef } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
-import { STORY_CARDS } from '../../../data/storyCards';
+import { ALL_FULL_STORIES } from '../../helpers/allStories';
 
 const getStory = (title: string): StoryCardDef => {
-  const card = STORY_CARDS.find(c => c.title === title);
+  const card = ALL_FULL_STORIES.find(c => c.title === title);
   if (!card) throw new Error(`Test data missing: Could not find story card "${title}"`);
   return card;
 };

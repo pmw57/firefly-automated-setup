@@ -1,3 +1,4 @@
+
 // Explicitly import from the barrel file to avoid module resolution ambiguity.
 import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption, CampaignSetupNote, SetupMode, StoryTag } from '../../types/index';
 import { SETUP_CARDS } from '../../data/setupCards';
@@ -13,10 +14,15 @@ import { SOLO_EXCLUDED_STORIES } from '../../data/collections';
 // =================================================================
 
 export const getActiveStoryCard = (gameState: GameState): StoryCardDef | undefined => {
-    if (gameState.selectedStoryCardIndex === null) {
-        return undefined;
+    // Return the injected story object if available.
+    if (gameState.activeStory) {
+        return gameState.activeStory;
     }
-    return STORY_CARDS[gameState.selectedStoryCardIndex];
+    // Fallback for legacy tests or intermediate states: look up by index if object is missing
+    if (gameState.selectedStoryCardIndex !== null) {
+        return STORY_CARDS[gameState.selectedStoryCardIndex];
+    }
+    return undefined;
 };
 
 export const getStoryCardByTitle = (title: string): StoryCardDef | undefined => {
@@ -311,7 +317,6 @@ export const getActiveAdvancedRules = (gameState: GameState): AdvancedRuleDef[] 
         .map(c => c.advancedRule!);
 };
 
-// FIX: Add missing function `getActiveStoryChallenges` to resolve import error in FinalSummary.tsx.
 /**
  * Gets a list of active story challenges based on the selected story card and game state.
  * @param gameState The current game state.

@@ -3,7 +3,6 @@ import { GameState, AddFlagRule } from '../../types/index';
 import { Action, ActionType } from '../actions';
 import { SETUP_CARD_IDS } from '../../data/ids';
 import { SETUP_CARDS } from '../../data/setupCards';
-import { STORY_CARDS } from '../../data/storyCards';
 
 const handleToggleFlyingSolo = (state: GameState): GameState => {
     const isFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
@@ -48,14 +47,13 @@ export function setupReducer(state: GameState, action: Action): GameState {
         case ActionType.SET_CAMPAIGN_STORIES:
             return { ...state, campaignStoriesCompleted: Math.max(0, action.payload) };
 
-        case ActionType.SET_STORY_CARD: {
-            const { index, goal } = action.payload;
-            const card = index !== null ? STORY_CARDS[index] : undefined;
+        case ActionType.SET_ACTIVE_STORY: {
+            const { story, index, goal } = action.payload;
             
             const newChallengeOptions: Record<string, boolean> = {};
       
             // If Smuggler's Blues is selected, check if we should default the variant.
-            const hasSmugglersBluesFlag = card?.rules?.some(r => r.type === 'addFlag' && (r as AddFlagRule).flag === 'smugglersBluesSetup');
+            const hasSmugglersBluesFlag = story?.rules?.some(r => r.type === 'addFlag' && (r as AddFlagRule).flag === 'smugglersBluesSetup');
             if (hasSmugglersBluesFlag) {
               const canUseRimRule = state.expansions.blue && state.expansions.kalidasa;
               if (canUseRimRule) {
@@ -65,6 +63,7 @@ export function setupReducer(state: GameState, action: Action): GameState {
       
             return { 
               ...state, 
+              activeStory: story,
               selectedStoryCardIndex: index, 
               selectedGoal: goal, 
               challengeOptions: newChallengeOptions, 
