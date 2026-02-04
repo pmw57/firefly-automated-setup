@@ -1,3 +1,4 @@
+
 import { GameState, SetupMode } from '../types/index';
 
 // Action types related to the 10th Anniversary solo campaign mode.
@@ -33,6 +34,7 @@ export enum ActionType {
   SET_MISSION_DOSSIER_SUBSTEP = 'SET_MISSION_DOSSIER_SUBSTEP',
   RIVERS_RUN_CONFIRM_SETUP = 'RIVERS_RUN_CONFIRM_SETUP',
   INITIALIZE_OPTIONAL_RULES = 'INITIALIZE_OPTIONAL_RULES',
+  IMPORT_GAME_STATE = 'IMPORT_GAME_STATE',
 }
 
 export type ExpansionBundle = 'core_only' | 'rim_worlds' | 'all_official';
@@ -69,4 +71,5 @@ export type Action =
   | { type: ActionType.SET_EXPANSIONS_BUNDLE; payload: ExpansionBundle }
   | { type: ActionType.SET_MISSION_DOSSIER_SUBSTEP; payload: number }
   | { type: ActionType.RIVERS_RUN_CONFIRM_SETUP }
-  | { type: ActionType.INITIALIZE_OPTIONAL_RULES };
+  | { type: ActionType.INITIALIZE_OPTIONAL_RULES }
+  | { type: ActionType.IMPORT_GAME_STATE; payload: Partial<GameState> };

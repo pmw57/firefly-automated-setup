@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { InstallPWA } from './components/InstallPWA';
@@ -14,6 +15,8 @@ import { useWizardState } from './hooks/useWizardState';
 import { SetupModeToggle } from './components/SetupModeToggle';
 import { OnboardingTooltip } from './components/OnboardingTooltip';
 import { DevPanel } from './components/DevPanel';
+// Import sync hook to activate listeners
+import { useUrlSync } from './hooks/useUrlSync';
 
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
@@ -25,6 +28,9 @@ const App = (): React.ReactElement => {
   const { isStateInitialized } = useGameState();
   // Access the UI-specific wizard state.
   const { isWizardInitialized } = useWizardState();
+  
+  // Activate URL Synchronization
+  useUrlSync();
   
   const [showFooterQr, setShowFooterQr] = useState(() => {
     if (typeof window === 'undefined') return true;
