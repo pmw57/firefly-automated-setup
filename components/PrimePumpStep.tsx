@@ -107,17 +107,6 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
     return formatRules(list, true);
   }, [overrideRules, isBlitz, baseDiscard, formatRules]);
 
-  const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-[#faf8ef]/70 backdrop-blur-sm';
-  const cardBorder = isDark ? 'border-zinc-800' : 'border-[#d6cbb0]';
-  const titleColor = isDark ? 'text-white' : 'text-[#292524]';
-  const iconColor = isDark ? 'text-gray-600' : 'text-[#a8a29e]';
-  const textColor = isDark ? 'text-gray-300' : 'text-[#57534e]';
-  
-  const highlightBg = isDark ? 'bg-green-900/30 border-green-800' : 'bg-[#e6ddc5] border-[#d6cbb0]';
-  const numberColor = isDark ? 'text-green-400' : 'text-[#7f1d1d]';
-  const labelColor = isDark ? 'text-green-300' : 'text-[#78350f]';
-  const subTextColor = isDark ? 'text-gray-400' : 'text-[#a8a29e]';
-
   const stepBadgePurpleBg = isDark ? 'bg-purple-900/50 text-purple-200' : 'bg-purple-100 text-purple-800';
 
   return (
@@ -128,24 +117,24 @@ export const PrimePumpStep: React.FC<StepComponentProps> = ({ step }) => {
       ))}
       
       {!disablePriming && (
-        <div className={`${cardBg} p-6 rounded-lg border ${cardBorder} shadow-sm text-center transition-colors duration-300`}>
-          <h4 className={`font-bold text-xl font-western mb-4 ${titleColor}`}>Priming The Pump</h4>
-          <div className={`text-5xl font-bold mb-4 ${iconColor}`}>🃏</div>
-          <p className={`text-lg ${textColor}`}>
+        <div className="bg-surface-card/60 backdrop-blur-sm p-6 rounded-lg border border-border-separator shadow-sm text-center transition-colors duration-300">
+          <h4 className="font-bold text-xl font-western mb-4 text-content-primary">Priming The Pump</h4>
+          <div className="text-5xl font-bold mb-4 text-content-subtle">🃏</div>
+          <p className="text-lg text-content-secondary">
             Shuffle all Supply Decks.
           </p>
-          <div className={`my-6 p-4 rounded-lg inline-block border ${highlightBg}`}>
-            <span className={`block text-4xl font-bold mb-1 ${numberColor}`}>{finalCount}</span>
-            <span className={`text-sm font-bold uppercase tracking-wide ${labelColor}`}>Cards Discarded</span>
+          <div className="my-6 p-4 rounded-lg inline-block border bg-surface-success border-border-success">
+            <span className="block text-4xl font-bold mb-1 text-content-success">{finalCount}</span>
+            <span className="text-sm font-bold uppercase tracking-wide text-green-700 dark:text-green-300">Cards Discarded</span>
           </div>
-          <p className={`text-sm italic ${subTextColor}`}>
+          <p className="text-sm italic text-content-subtle">
             (From the top of each Supply Deck)
           </p>
 
           {hasStartWithAlertCard && (
-            <div className={cls("mt-6 pt-4 border-t", isDark ? 'border-zinc-700' : 'border-stone-200')}>
-              <h4 className={cls("font-bold text-lg", isDark ? 'text-blue-300' : 'text-blue-800')}>Alliance Alert</h4>
-              <p className={cls("text-sm mt-1", textColor)}>
+            <div className="mt-6 pt-4 border-t border-border-subtle">
+              <h4 className="font-bold text-lg text-content-info">Alliance Alert</h4>
+              <p className="text-sm mt-1 text-content-secondary">
                 Reveal one <strong>Alliance Alert Card</strong> from the deck and put it into play.
               </p>
             </div>

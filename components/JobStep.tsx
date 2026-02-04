@@ -1,21 +1,17 @@
 
 import React, { useMemo } from 'react';
 import { OverrideNotificationBlock } from './SpecialRuleBlock';
-import { useTheme } from './ThemeContext';
 import { useGameState } from '../hooks/useGameState';
 import { useJobSetupDetails } from '../hooks/useJobSetupDetails';
 import { getCampaignNotesForStep } from '../utils/selectors/story';
 import { StepComponentProps } from './StepContent';
 import { SpecialRule, StructuredContent, StructuredContentPart } from '../types';
-import { cls } from '../utils/style';
 import { StructuredContentRenderer } from './StructuredContentRenderer';
 
 export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const { state: gameState } = useGameState();
   const { playerCount, setupMode } = gameState;
   const { overrides = {} } = step;
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
   
   const { 
     contactList,
@@ -91,42 +87,32 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   const displayInfo = formatRules(infoMessages);
   const displayOverrides = formatRules(overrideMessages, true);
   
-  // Split based on position
-  // Info defaults to 'before' (top)
   const infoBefore = displayInfo.filter(r => r.position !== 'after');
   const infoAfter = displayInfo.filter(r => r.position === 'after');
 
-  // Overrides defaults to 'after' (bottom), unless explicitly 'before'
   const overridesBefore = displayOverrides.filter(r => r.position === 'before');
   const overridesAfter = displayOverrides.filter(r => r.position !== 'before');
   
-  const cardBg = isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white/60 backdrop-blur-sm';
-  const cardBorder = isDark ? 'border-zinc-800' : 'border-gray-200';
-  const sectionHeaderColor = isDark ? 'text-gray-200' : 'text-gray-800';
-  const sectionHeaderBorder = isDark ? 'border-zinc-800' : 'border-gray-100';
-  const textColor = isDark ? 'text-gray-300' : 'text-gray-700';
-  const contactColor = isDark ? 'text-amber-400' : 'text-firefly-brown';
-
   const ContactListBlock = contactList ? (
-      <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm transition-colors duration-300 overflow-hidden")}>
+      <div className="bg-surface-card/60 backdrop-blur-sm rounded-lg border border-border-separator shadow-sm transition-colors duration-300 overflow-hidden">
           <div className="p-4 md:p-6">
-              <h4 className={cls("font-bold text-lg mb-3 pb-2 border-b", sectionHeaderColor, sectionHeaderBorder)}>
+              <h4 className="font-bold text-lg mb-3 pb-2 border-b text-content-primary border-border-subtle">
                 {contactList.title}
               </h4>
-              <p className={cls("text-sm mb-4", textColor)}>
+              <p className="text-sm mb-4 text-content-secondary">
                 {contactList.description}
               </p>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {contactList.contacts.map(contact => (
-                  <div key={contact} className={cls("text-center font-western p-3 rounded border font-bold", isDark ? 'bg-zinc-800 border-zinc-700' : 'bg-gray-50 border-gray-200', contactColor)}>
+                  <div key={contact} className="text-center font-western p-3 rounded border font-bold bg-surface-subtle border-border-subtle text-content-accent">
                   {contact}
                   </div>
               ))}
               </div>
 
               {contactList.isOverridden && (
-              <p className={cls("text-xs mt-4 italic", isDark ? 'text-gray-500' : 'text-gray-600')}>
+              <p className="text-xs mt-4 italic text-content-subtle">
                   Note: The list of available contacts has been modified by the current setup.
               </p>
               )}
@@ -135,14 +121,14 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   ) : null;
   
   const CaperMessageBlock = (caperDraw && caperDraw > 0) ? (
-    <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-6 text-center", textColor)}>
+    <div className="bg-surface-card/60 backdrop-blur-sm rounded-lg border border-border-separator shadow-sm p-6 text-center text-content-secondary">
         <p className="font-semibold">Draw {caperDraw} Caper{caperDraw > 1 ? 's' : ''}</p>
     </div>
   ) : null;
 
   const PrimeContactsBlock = primeInstruction ? (
-    <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-4 md:p-6", textColor)}>
-      <h4 className={cls("font-bold text-lg mb-3 pb-2 border-b", sectionHeaderColor, sectionHeaderBorder)}>
+    <div className="bg-surface-card/60 backdrop-blur-sm rounded-lg border border-border-separator shadow-sm p-4 md:p-6 text-content-secondary">
+      <h4 className="font-bold text-lg mb-3 pb-2 border-b text-content-primary border-border-subtle">
         Prime Contact Decks
       </h4>
       <StructuredContentRenderer content={primeInstruction} />
@@ -150,7 +136,7 @@ export const JobStep = ({ step }: StepComponentProps): React.ReactElement => {
   ) : null;
 
   const MainContentBlock = processedMainContent ? (
-    <div className={cls(cardBg, "rounded-lg border", cardBorder, "shadow-sm p-4 md:p-6", textColor)}>
+    <div className="bg-surface-card/60 backdrop-blur-sm rounded-lg border border-border-separator shadow-sm p-4 md:p-6 text-content-secondary">
       <StructuredContentRenderer content={processedMainContent} />
     </div>
   ) : null;
