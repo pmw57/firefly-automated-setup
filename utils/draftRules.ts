@@ -1,4 +1,3 @@
-
 import { 
     GameState, 
     Step,
@@ -94,7 +93,8 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     }
 
     const havenPlacementRules = specialRules.find(r => (r.source === 'story' || r.source === 'setupCard') && r.flags?.includes('isHavenPlacement')) || null;
-    const isHavenDraft = !!havenPlacementRules;
+    let resolvedHavenDraft = !!havenPlacementRules;
+
     const isHeroesCustomSetup = !!gameState.challengeOptions[CHALLENGE_IDS.HEROES_CUSTOM_SETUP];
     
     // Check if a story explicitly bypasses the draft (e.g. Heroes & Misfits)
@@ -130,7 +130,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
       }
     }
 
-    let resolvedHavenDraft = isHavenDraft;
     const conflictMessage: import('../types/core').StructuredContent | null = null;
 
     if (resolvedHavenDraft && specialStartSector) {
@@ -145,6 +144,19 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     // --- Process Flags into Panel Extras ---
     
     const draftModeRules = allRules.filter((r): r is SetDraftModeRule => r.type === 'setDraftMode');
+    
+    let isBrowncoatDraft = false;
+    let selectShipTitle = "Select Ship & Leader";
+    let selectShipDescription = isSolo
+        ? "Choose a Leader & Ship."
+        : "Winner selects Ship & Leader. Pass to Left.";
+    
+    let placementTitle = 'Placement';
+    let placementDescription = isSolo
+        ? "Place Ship in Sector."
+        : "Pass to Right (Anti-Clockwise). Place Ship in Sector.";
+    
+    // Standard Processing
     const { activeRule: draftModeRule, overruledRules: draftModeOverruled } = processOverrulableRules(
         draftModeRules,
         (r) => r.mode === 'browncoat' ? 'Browncoat Draft (Buy Ship)' : 'Standard Draft',
@@ -152,7 +164,26 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     );
     specialRules.push(...draftModeOverruled);
 
-    const isBrowncoatDraft = draftModeRule?.mode === 'browncoat' || overrides.draftMode === 'browncoat';
+    isBrowncoatDraft = draftModeRule?.mode === 'browncoat' || overrides.draftMode === 'browncoat';
+    
+    // Default Haven Draft overrides (can still be overwritten by specific rules)
+    if (resolvedHavenDraft) {
+        placementTitle = 'Haven Placement';
+    }
+
+    if (specialStartSector) {
+        placementTitle = 'Special Placement';
+        // Note: When specialStartSector is set, the component suppresses placementDescription entirely 
+        // in favor of the custom panel content.
+    }
+
+    // Apply Overrides from Rules
+    if (draftModeRule) {
+        if (draftModeRule.selectShipTitle) selectShipTitle = draftModeRule.selectShipTitle;
+        if (draftModeRule.selectShipDescription) selectShipDescription = draftModeRule.selectShipDescription;
+        if (draftModeRule.placementTitle) placementTitle = draftModeRule.placementTitle;
+        if (draftModeRule.placementDescription) placementDescription = draftModeRule.placementDescription;
+    }
 
     // Conflict Detection: If the draft mode is Browncoat (which requires buying a ship),
     // but the story actively bypasses the draft (assigning a specific ship), we need to warn
@@ -201,37 +232,6 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     specialRules.push(...badgeOverruled);
 
     const playerBadges: Record<number, string> = badgeRule ? badgeRule.badges : {};
-    
-    // --- Text Calculation ---
-    // Default text
-    let selectShipTitle = "Select Ship & Leader";
-    let selectShipDescription = isSolo
-        ? "Choose a Leader & Ship."
-        : "Winner selects Ship & Leader. Pass to Left.";
-    
-    let placementTitle = 'Placement';
-    let placementDescription = isSolo
-        ? "Place Ship in Sector."
-        : "Pass to Right (Anti-Clockwise). Place Ship in Sector.";
-    
-    // Default Haven Draft overrides (can still be overwritten by specific rules)
-    if (resolvedHavenDraft) {
-        placementTitle = 'Haven Placement';
-    }
-
-    if (specialStartSector) {
-        placementTitle = 'Special Placement';
-        // Note: When specialStartSector is set, the component suppresses placementDescription entirely 
-        // in favor of the custom panel content.
-    }
-
-    // Apply Overrides from Rules
-    if (draftModeRule) {
-        if (draftModeRule.selectShipTitle) selectShipTitle = draftModeRule.selectShipTitle;
-        if (draftModeRule.selectShipDescription) selectShipDescription = draftModeRule.selectShipDescription;
-        if (draftModeRule.placementTitle) placementTitle = draftModeRule.placementTitle;
-        if (draftModeRule.placementDescription) placementDescription = draftModeRule.placementDescription;
-    }
     
     const infoRules = specialRules.filter(r => r.source === 'info' || r.source === 'warning');
     const overrideRules = specialRules.filter(r => r.source !== 'info' && r.source !== 'warning');
