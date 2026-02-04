@@ -1,9 +1,11 @@
+
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getPrimeDetails } from '../../../utils/prime';
 import { GameState } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { STORY_CARDS } from '../../../data/storyCards';
+import { getTestStory } from '../../helpers/allStories';
 
 describe('rules/prime', () => {
   describe('getPrimeDetails', () => {
@@ -62,9 +64,11 @@ describe('rules/prime', () => {
 
     it.concurrent('applies story multiplier', () => {
       const storyTitle = "A Friend In Every Port";
+      const fullStory = getTestStory(storyTitle);
       const state: GameState = {
         ...stateForStandardPriming,
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: fullStory
       };
       const details = getPrimeDetails(state, {});
       expect(details.effectiveMultiplier).toBe(2);
@@ -73,9 +77,11 @@ describe('rules/prime', () => {
     
     it.concurrent('prioritizes blitz multiplier over story multiplier', () => {
       const storyTitle = "A Friend In Every Port";
+      const fullStory = getTestStory(storyTitle);
       const state: GameState = {
         ...stateForStandardPriming,
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: fullStory
       };
       const details = getPrimeDetails(state, { primeMode: 'blitz' });
       expect(details.effectiveMultiplier).toBe(2); // Blitz is 2x

@@ -1,9 +1,15 @@
+
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getPrimeDetails } from '../../../utils/prime';
-import { GameState } from '../../../types/index';
+import { GameState, StoryCardDef } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { STORY_CARDS } from '../../../data/storyCards';
+import { ALL_FULL_STORIES } from '../../helpers/allStories';
+
+const getFullStory = (title: string): StoryCardDef | null => {
+    return ALL_FULL_STORIES.find(c => c.title === title) || null;
+};
 
 describe('rules/prime', () => {
   describe('getPrimeDetails', () => {
@@ -64,8 +70,8 @@ describe('rules/prime', () => {
       const storyTitle = "A Friend In Every Port";
       const state: GameState = {
         ...stateForStandardPriming,
-        // The game state stores the index of the selected story card, not the card object itself.
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle)
       };
       const details = getPrimeDetails(state, {});
       expect(details.effectiveMultiplier).toBe(2);
@@ -76,8 +82,8 @@ describe('rules/prime', () => {
       const storyTitle = "A Friend In Every Port";
       const state: GameState = {
         ...stateForStandardPriming,
-        // The game state stores the index of the selected story card, not the card object itself.
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle)
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle)
       };
       const details = getPrimeDetails(state, { primeMode: 'blitz' });
       expect(details.effectiveMultiplier).toBe(2); // Blitz is 2x

@@ -2,10 +2,15 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getResourceDetails } from '../../../utils/resources';
-import { GameState } from '../../../types/index';
+import { GameState, StoryCardDef } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
 import { STORY_CARDS } from '../../../data/storyCards';
+import { ALL_FULL_STORIES } from '../../helpers/allStories';
+
+const getFullStory = (title: string): StoryCardDef | null => {
+    return ALL_FULL_STORIES.find(c => c.title === title) || null;
+};
 
 describe('rules/resources', () => {
   const baseGameState = getDefaultGameState();
@@ -41,6 +46,7 @@ describe('rules/resources', () => {
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle)
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(4200); // 3000 + 1200
@@ -53,6 +59,7 @@ describe('rules/resources', () => {
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle)
       });
       const details = getResourceDetails(state);
       expect(details.credits).toBe(500);
@@ -64,6 +71,7 @@ describe('rules/resources', () => {
       const state = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle)
       });
       const details = getResourceDetails(state);
       
@@ -77,6 +85,7 @@ describe('rules/resources', () => {
       const state = getGameStateWithConfig({ 
         setupCardId: SETUP_CARD_IDS.STANDARD, 
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle)
       });
       const details = getResourceDetails(state);
 
@@ -102,6 +111,7 @@ describe('rules/resources', () => {
       const state = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.STANDARD,
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle)
       });
       const details = getResourceDetails(state);
 
@@ -114,6 +124,7 @@ describe('rules/resources', () => {
       const state: GameState = getGameStateWithConfig({
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle),
         optionalRules: { ...baseGameState.optionalRules, resolveConflictsManually: true },
       });
 
@@ -140,7 +151,8 @@ describe('rules/resources', () => {
           const state: GameState = { 
               ...baseGameState, 
               expansions: { ...baseGameState.expansions, blue: true, kalidasa: true }, 
-              selectedStoryCardIndex: storyIndex
+              selectedStoryCardIndex: storyIndex,
+              activeStory: getFullStory(storyTitle)
           };
           const details = getResourceDetails(state);
           expect(details.smugglersBluesVariantAvailable).toBe(true);
@@ -150,7 +162,8 @@ describe('rules/resources', () => {
           const state: GameState = { 
               ...baseGameState, 
               expansions: { ...baseGameState.expansions, blue: true, kalidasa: false }, 
-              selectedStoryCardIndex: storyIndex
+              selectedStoryCardIndex: storyIndex,
+              activeStory: getFullStory(storyTitle)
           };
           const details = getResourceDetails(state);
           

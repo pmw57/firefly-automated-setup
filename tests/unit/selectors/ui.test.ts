@@ -1,3 +1,4 @@
+
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getStoryCardSetupSummary, getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../../../utils/selectors/ui';
@@ -6,6 +7,7 @@ import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
 import { SETUP_CARDS } from '../../../data/setupCards';
 import { STORY_CARDS } from '../../../data/storyCards';
+import { getTestStory } from '../../helpers/allStories';
 
 const getSetupCard = (id: string): SetupCardDef => {
     const card = SETUP_CARDS.find(c => c.id === id);
@@ -64,10 +66,12 @@ describe('selectors/ui', () => {
 
         it.concurrent('returns "Disabled" if story card disables solo timer', () => {
             const storyTitle = "Racing A Pale Horse";
+            const fullStory = getTestStory(storyTitle);
             const state: GameState = { 
                 ...baseGameState, 
                 gameMode: 'solo', 
-                selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle), 
+                selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+                activeStory: fullStory
             };
             expect(getTimerSummaryText(state)).toBe("Disabled (Story Override)");
         });
@@ -93,12 +97,14 @@ describe('selectors/ui', () => {
 
         it.concurrent('should correctly show the timer as disabled when "Racing a Pale Horse" overrides "Flying Solo"', () => {
             const storyTitle = "Racing A Pale Horse";
+            const fullStory = getTestStory(storyTitle);
             const state: GameState = {
               ...baseGameState,
               gameMode: 'solo',
               setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
               secondarySetupId: SETUP_CARD_IDS.STANDARD, 
               selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+              activeStory: fullStory
             };
             
             const timerSummary = getTimerSummaryText(state);

@@ -2,10 +2,15 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getJobSetupDetails } from '../../../utils/jobs';
-import { GameState, StepOverrides } from '../../../types/index';
+import { GameState, StepOverrides, StoryCardDef } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { CONTACT_NAMES, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../../data/ids';
 import { STORY_CARDS } from '../../../data/storyCards';
+import { ALL_FULL_STORIES } from '../../helpers/allStories';
+
+const getFullStory = (title: string): StoryCardDef | null => {
+    return ALL_FULL_STORIES.find(c => c.title === title) || null;
+};
 
 describe('rules/jobs', () => {
   const baseGameState = getDefaultGameState();
@@ -27,6 +32,7 @@ describe('rules/jobs', () => {
       const state: GameState = {
         ...baseGameState,
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle)
       };
       const { contactList } = getJobSetupDetails(state, {});
       expect(contactList?.contacts).not.toContain(CONTACT_NAMES.NISKA);
@@ -37,6 +43,7 @@ describe('rules/jobs', () => {
       const state: GameState = {
         ...baseGameState,
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle)
       };
       const { contactList } = getJobSetupDetails(state, {});
       expect(contactList?.contacts).toEqual(['Harken', 'Amnon Duul']);
@@ -71,6 +78,7 @@ describe('rules/jobs', () => {
       const state: GameState = {
         ...baseGameState,
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle),
         gameMode: 'solo',
       };
       const { contactList, infoMessages, overrideMessages, mainContent } = getJobSetupDetails(state, {});
@@ -118,6 +126,7 @@ describe('rules/jobs', () => {
         const state: GameState = {
             ...baseGameState,
             selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+            activeStory: getFullStory(storyTitle),
             challengeOptions: { [CHALLENGE_IDS.DONT_PRIME_CONTACTS]: true }
         };
         const { infoMessages, overrideMessages } = getJobSetupDetails(state, {});
@@ -133,6 +142,7 @@ describe('rules/jobs', () => {
         ...baseGameState,
         setupCardId: SETUP_CARD_IDS.AWFUL_CROWDED,
         selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle)
       };
       const overrides: StepOverrides = { jobMode: 'awful_jobs' };
       const { contactList, infoMessages, overrideMessages } = getJobSetupDetails(state, overrides);

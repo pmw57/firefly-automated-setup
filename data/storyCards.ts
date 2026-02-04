@@ -2,7 +2,7 @@
 import { StoryCardManifest } from '../types/index';
 import { EXPANSIONS_METADATA } from './expansions';
 
-// Helper to determine sort order. 
+// Helper to determine sort order based on expansion metadata.
 // Replicates the logic previously done at runtime with full objects.
 const expansionIndices = EXPANSIONS_METADATA.reduce((acc, exp, idx) => {
     (acc as Record<string, number>)[exp.id] = idx;

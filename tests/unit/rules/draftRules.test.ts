@@ -2,10 +2,15 @@
 /** @vitest-environment node */
 import { describe, it, expect } from 'vitest';
 import { getDraftDetails } from '../../../utils/draftRules';
-import { GameState, Step, StructuredContent, StructuredContentPart } from '../../../types/index';
+import { GameState, Step, StructuredContent, StructuredContentPart, StoryCardDef } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { STEP_IDS, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../../data/ids';
 import { STORY_CARDS } from '../../../data/storyCards';
+import { ALL_FULL_STORIES } from '../../helpers/allStories';
+
+const getFullStory = (title: string): StoryCardDef | null => {
+    return ALL_FULL_STORIES.find(c => c.title === title) || null;
+};
 
 // Helper to recursively flatten structured content to a searchable string
 const getTextContent = (content: StructuredContent | StructuredContentPart | undefined): string => {
@@ -76,9 +81,12 @@ describe('rules/draftRules', () => {
     });
     
     it.concurrent('generates a rule for Racing a Pale Horse', () => {
-        // The game state stores the index of the selected story card, not the card object itself.
-        // We find the index by title to set up the test state correctly.
-        const state: GameState = { ...baseGameState, selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "Racing A Pale Horse") };
+        const storyTitle = "Racing A Pale Horse";
+        const state: GameState = { 
+            ...baseGameState, 
+            selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+            activeStory: getFullStory(storyTitle)
+        };
         const details = getDraftDetails(state, baseStep);
         const specialRules = [...details.infoRules, ...details.overrideRules];
         const rule = specialRules.find(r => r.title === 'Story Setup: Haven');
@@ -87,11 +95,11 @@ describe('rules/draftRules', () => {
     });
 
     it.concurrent('generates a rule for Heroes & Misfits custom setup', () => {
+        const storyTitle = "Heroes & Misfits";
         const state: GameState = { 
             ...baseGameState, 
-            // The game state stores the index of the selected story card, not the card object itself.
-            // We find the index by title to set up the test state correctly.
-            selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "Heroes & Misfits"),
+            selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+            activeStory: getFullStory(storyTitle),
             challengeOptions: { [CHALLENGE_IDS.HEROES_CUSTOM_SETUP]: true }
         };
         const details = getDraftDetails(state, baseStep);
@@ -109,10 +117,12 @@ describe('rules/draftRules', () => {
     });
 
     it.concurrent('resolves conflict between Haven Draft and special start sector (Story Priority)', () => {
+        const storyTitle = "It's a Mad, Mad, Mad, Mad 'Verse!";
         const state: GameState = { 
             ...baseGameState, 
             setupCardId: SETUP_CARD_IDS.HOME_SWEET_HAVEN,
-            selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "It's a Mad, Mad, Mad, Mad 'Verse!") 
+            selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+            activeStory: getFullStory(storyTitle)
         }; // This story forces Persephone start
         const step: Step = { ...baseStep, id: STEP_IDS.D_HAVEN_DRAFT }; // This is Haven Draft
         const details = getDraftDetails(state, step);
@@ -124,14 +134,12 @@ describe('rules/draftRules', () => {
     });
 
     it.concurrent('should generate a warning when "The Browncoat Way" is combined with the "Heroes & Misfits" story', () => {
-      // Note: This warning now applies regardless of the Custom Setup challenge, because the conflict
-      // between the Story's bypassing of the draft and Browncoat Way's requirement to buy is fundamental.
+      const storyTitle = "Heroes & Misfits";
       const state: GameState = {
         ...baseGameState,
         setupCardId: SETUP_CARD_IDS.THE_BROWNCOAT_WAY,
-        // The game state stores the index of the selected story card, not the card object itself.
-        // We find the index by title to set up the test state correctly.
-        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === "Heroes & Misfits"),
+        selectedStoryCardIndex: STORY_CARDS.findIndex(c => c.title === storyTitle),
+        activeStory: getFullStory(storyTitle),
         finalStartingCredits: 12000, // From Browncoat Way
       };
       const step: Step = { type: 'core', id: STEP_IDS.C3, overrides: { draftMode: 'browncoat' } };
