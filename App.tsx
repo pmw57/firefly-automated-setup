@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { InstallPWA } from './components/InstallPWA';
 import { UpdatePrompt } from './components/UpdatePrompt';
@@ -21,6 +21,8 @@ import { useUrlSync } from './hooks/useUrlSync';
 // Global variable injected by Vite at build time
 declare const __APP_VERSION__: string;
 
+const DEV_OVERRIDE_KEY = 'firefly_dev_override';
+
 const App = (): React.ReactElement => {
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
@@ -37,6 +39,44 @@ const App = (): React.ReactElement => {
     // Default to showing the QR code unless explicitly dismissed
     return localStorage.getItem(SHOW_FOOTER_QR_KEY) !== 'false';
   });
+
+  // --- Secret Dev Mode Logic ---
+  const [devOverride, setDevOverride] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    // Check URL params
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('dev') === 'true') {
+        localStorage.setItem(DEV_OVERRIDE_KEY, 'true');
+        return true;
+    }
+    return localStorage.getItem(DEV_OVERRIDE_KEY) === 'true';
+  });
+
+  const tapCountRef = useRef(0);
+  const tapTimerRef = useRef<number | null>(null);
+
+  const handleSecretDevTap = () => {
+    // Clear existing timer
+    if (tapTimerRef.current) {
+        clearTimeout(tapTimerRef.current);
+    }
+
+    tapCountRef.current += 1;
+
+    // Reset count if no tap for 1 second
+    tapTimerRef.current = window.setTimeout(() => {
+        tapCountRef.current = 0;
+    }, 1000);
+
+    if (tapCountRef.current === 7) {
+        const newState = !devOverride;
+        setDevOverride(newState);
+        localStorage.setItem(DEV_OVERRIDE_KEY, String(newState));
+        tapCountRef.current = 0; // Reset
+        alert(`Developer Mode ${newState ? 'ENABLED' : 'DISABLED'}`);
+    }
+  };
+  // -----------------------------
 
   const [offlineReady, setOfflineReady] = useState(false);
   const [needRefresh, setNeedRefresh] = useState(false);
@@ -121,9 +161,9 @@ const App = (): React.ReactElement => {
   // "Production" is defined as not dev, not a static preview, and not running on localhost.
   const isProdDeployment = !isDevMode && !isPreview && (typeof window !== 'undefined' && !['localhost', '1227.0.0.1'].includes(window.location.hostname));
   
-  // Development features (like the unreleased content toggle) are shown in dev and preview,
-  // but hidden in the live production deployment.
-  const showDevFeatures = !isProdDeployment;
+  // Development features are shown in dev/preview OR if overridden via secret trigger
+  const showDevFeatures = !isProdDeployment || devOverride;
+
   const isAnyModalOpen = isHelpModalOpen || isQrModalOpen;
   const showWizard = isStateInitialized && isWizardInitialized;
 
@@ -143,7 +183,10 @@ const App = (): React.ReactElement => {
         <div className="container mx-auto px-2 sm:px-4 pt-24 pb-4 relative z-20 flex flex-col justify-end items-center">
             {/* Accessible heading, as the visual "Firefly: The Game" is in the background image */}
             <h1 className="sr-only">Firefly: The Game</h1>
-            <p className="text-yellow-100/90 dark:text-gray-300 font-medium tracking-[0.3em] uppercase text-sm md:text-base [text-shadow:0_2px_6px_rgba(0,0,0,0.9)]">
+            <p 
+                className="text-yellow-100/90 dark:text-gray-300 font-medium tracking-[0.3em] uppercase text-sm md:text-base [text-shadow:0_2px_6px_rgba(0,0,0,0.9)] cursor-default select-none"
+                onClick={handleSecretDevTap}
+            >
                 Automated Setup Guide
             </p>
         </div>
