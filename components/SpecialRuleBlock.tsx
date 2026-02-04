@@ -21,6 +21,7 @@ export const OverrideNotificationBlock: React.FC<OverrideNotificationBlockProps>
   const isDark = theme === 'dark';
 
   const getStyles = () => {
+    // Semantic mapping based on source type
     if (isDark) {
       switch(source) {
         case 'story': return { border: 'border-amber-700', bg: 'bg-amber-900/20', text: 'text-amber-200/90' };
@@ -35,10 +36,10 @@ export const OverrideNotificationBlock: React.FC<OverrideNotificationBlockProps>
         case 'setupCard': return { border: 'border-[#1e40af]', bg: 'bg-[#eff6ff]', text: 'text-[#1e3a8a]' };
         case 'expansion': return { border: 'border-[#7e22ce]', bg: 'bg-[#faf5ff]', text: 'text-[#6b21a8]' };
         case 'warning': return { border: 'border-[#b91c1c]', bg: 'bg-[#fef2f2]', text: 'text-[#991b1b]' };
-        case 'info': return { border: 'border-[#78716c]', bg: 'bg-[#f5f5f4]', text: 'text-[#44403c]' };
+        case 'info': return { border: 'border-border-separator', bg: 'bg-surface-overlay/50', text: 'text-content-secondary' };
       }
     }
-    return { border: 'border-gray-500', bg: 'bg-gray-100', text: 'text-gray-800' };
+    return { border: 'border-border-separator', bg: 'bg-surface-card', text: 'text-content-primary' };
   };
 
   const icons = { story: '📜', setupCard: '⚙️', expansion: '🧩', warning: '⚠️', info: 'ℹ️' };

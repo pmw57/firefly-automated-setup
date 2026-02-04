@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, lazy, Suspense, useMemo } from 'react';
 import { Step } from '../types/index';
 import { Button } from './Button';
@@ -49,8 +50,14 @@ const CaptainSetup = lazy(() => import('./CaptainSetup').then(m => ({ default: m
 const SetupCardSelection = lazy(() => import('./setup/SetupCardSelection').then(m => ({ default: m.SetupCardSelection })));
 const OptionalRulesSelection = lazy(() => import('./OptionalRulesSelection').then(m => ({ default: m.OptionalRulesSelection })));
 
-// Registry for standard step components
+// Complete Registry for ALL step components
 const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
+  // Config Phase
+  [STEP_IDS.SETUP_CAPTAIN_EXPANSIONS]: CaptainSetup,
+  [STEP_IDS.SETUP_CARD_SELECTION]: SetupCardSelection,
+  [STEP_IDS.SETUP_OPTIONAL_RULES]: OptionalRulesSelection,
+  
+  // Core Phase
   [STEP_IDS.C1]: NavDeckStep,
   [STEP_IDS.C2]: AllianceReaverStep,
   [STEP_IDS.C3]: DraftStep,
@@ -58,6 +65,8 @@ const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
   [STEP_IDS.C5]: ResourcesStep,
   [STEP_IDS.C6]: JobStep,
   [STEP_IDS.C_PRIME]: PrimePumpStep,
+  
+  // Dynamic Steps
   [STEP_IDS.D_RIM_JOBS]: JobStep,
   [STEP_IDS.D_HAVEN_DRAFT]: DraftStep,
   [STEP_IDS.D_GAME_LENGTH_TOKENS]: GameLengthTokensStep,
@@ -86,34 +95,29 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
   
   const isSpecial = step.id.startsWith('D_');
 
+  // Render Strategy: Lookup component in registry
   const renderStepBody = () => {
-    // Fallback to standard component rendering
-    if (step.type === 'setup') {
-      if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) return <CaptainSetup isDevMode={isDevMode} />;
-      if (step.id === STEP_IDS.SETUP_CARD_SELECTION) return <SetupCardSelection />;
-      if (step.id === STEP_IDS.SETUP_OPTIONAL_RULES) return <OptionalRulesSelection />;
-      return <div className="text-red-500">Unknown Setup Step: {step.id}</div>;
-    }
-
     const Component = STEP_COMPONENT_REGISTRY[step.id];
     if (Component) {
-      return <Component 
-        step={step} 
-        onNext={onNext} 
-        onPrev={onPrev} 
-        isNavigating={isNavigating}
-        isDevMode={isDevMode}
-        openOverrideModal={openOverrideModal}
-        hasUnacknowledgedPastOverrides={hasUnacknowledgedPastOverrides}
-        onJump={onJump}
-      />;
+      return (
+        <Component 
+          step={step} 
+          onNext={onNext} 
+          onPrev={onPrev} 
+          isNavigating={isNavigating}
+          isDevMode={isDevMode}
+          openOverrideModal={openOverrideModal}
+          hasUnacknowledgedPastOverrides={hasUnacknowledgedPastOverrides}
+          onJump={onJump}
+        />
+      );
     }
-
-    return <div className="text-red-500">Content for step '{step.id}' not found.</div>;
+    return <div className="text-red-500 p-4 border border-red-500 rounded">Error: No component registered for step ID '{step.id}'</div>;
   };
   
-  const footerBg = isDark ? 'bg-zinc-950/90' : 'bg-[#faf8ef]/95';
-  const footerBorder = isDark ? 'border-zinc-800' : 'border-firefly-parchment-border';
+  // Semantic classes
+  const footerBg = 'bg-surface-overlay/90';
+  const footerBorder = 'border-border-separator';
 
   if (step.type === 'setup') {
       const isFirstSetupStep = step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS;
@@ -126,8 +130,8 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
       
       const finalNextText = nextButtonTextMap[step.id] || 'Next →';
       
-      const { isNextDisabled } = getSetupCardSelectionInfo(gameState);
-      const isButtonDisabled = step.id === STEP_IDS.SETUP_CARD_SELECTION && isNextDisabled;
+      const { isNextDisabled: isSetupNextDisabled } = getSetupCardSelectionInfo(gameState);
+      const isButtonDisabled = step.id === STEP_IDS.SETUP_CARD_SELECTION && isSetupNextDisabled;
       
       return (
           <div className="animate-fade-in-up pb-24 xl:pb-0">
@@ -136,7 +140,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
             </Suspense>
 
             {/* Desktop Nav */}
-            <div className={cls("hidden xl:flex mt-8 pt-6 border-t", isFirstSetupStep ? 'justify-end' : 'justify-between', isDark ? 'border-zinc-800' : 'border-stone-200')}>
+            <div className={cls("hidden xl:flex mt-8 pt-6 border-t", isFirstSetupStep ? 'justify-end' : 'justify-between', footerBorder)}>
                 {!isFirstSetupStep && (
                     <Button onClick={onPrev} variant="secondary" disabled={isNavigating}>
                         ← Back
@@ -219,7 +223,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
       {showNav && (
         <>
           {/* Desktop Nav */}
-          <div className={cls("hidden xl:flex mt-12 justify-between clear-both pt-8 border-t", isDark ? 'border-zinc-800' : 'border-stone-200')}>
+          <div className={cls("hidden xl:flex mt-12 justify-between clear-both pt-8 border-t", footerBorder)}>
             <Button onClick={onPrev} variant="secondary" disabled={isNavigating}>
               ← Back
             </Button>

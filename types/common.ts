@@ -1,3 +1,4 @@
+
 // This file contains types that are shared across different parts of the state and data logic,
 // helping to break circular dependencies between modules.
 
@@ -47,6 +48,18 @@ export interface OptionalRules {
     highVolumeSupply: boolean | undefined;
 }
 
+export interface DiceResult {
+  player: string;
+  roll: number;
+  isWinner?: boolean;
+}
+
+export interface DraftState {
+  rolls: DiceResult[];
+  draftOrder: string[];
+  placementOrder: string[];
+}
+
 // "Campaign" terminology is used to align with the 10th Anniversary rulebook.
 export interface GameState {
   gameEdition: GameEdition;
@@ -72,7 +85,7 @@ export interface GameState {
   acknowledgedOverrides: string[];
   visitedStepOverrides: string[];
   draft: {
-    state: import('./state').DraftState | null;
+    state: DraftState | null;
     isManual: boolean;
   };
   showHiddenContent: boolean;

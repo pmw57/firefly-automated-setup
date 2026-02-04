@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -53,6 +54,17 @@ html {
   --vignette-opacity: 0.03125;
   --grid-size: 15px;
   
+  /* Semantic Colors - Light */
+  --color-surface-canvas: #f5f0e1;
+  --color-surface-card: 255 255 255; /* RGB for opacity usage */
+  --color-surface-overlay: 250 248 239;
+  
+  --color-content-primary: #292524;
+  --color-content-secondary: #57534e;
+  --color-content-accent: #b45309;
+  
+  --color-border-separator: #d6cbb0;
+  
   /* Dark Theme */
   --nebula-1-opacity: 0.25;
   --nebula-2-opacity: 0.2;
@@ -70,6 +82,17 @@ html.dark {
     radial-gradient(at 15% 85%, hsla(280, 50%, 30%, var(--nebula-1-opacity)), transparent 50%),
     radial-gradient(at 85% 15%, hsla(200, 50%, 40%, var(--nebula-2-opacity)), transparent 50%);
   background-size: 100% 100%, 100% 100%;
+
+  /* Semantic Colors - Dark */
+  --color-surface-canvas: #0c0c0c;
+  --color-surface-card: 0 0 0;
+  --color-surface-overlay: 9 9 11; /* zinc-950 */
+  
+  --color-content-primary: #e4e4e7; /* zinc-200 */
+  --color-content-secondary: #a1a1aa; /* zinc-400 */
+  --color-content-accent: #fbbf24; /* amber-400 */
+  
+  --color-border-separator: #27272a; /* zinc-800 */
 }
 
 html.dark::before,

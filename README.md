@@ -37,6 +37,16 @@ This guide ensures you never miss a rule by dynamically adjusting the setup flow
 *   **Styling**: Tailwind CSS
 *   **Testing**: Vitest + React Testing Library
 
+## 🏗️ Refactoring Roadmap
+
+To ensure long-term maintainability and performance, the following major refactoring efforts are planned:
+
+1.  **Selector Layer**: Move derived state calculations from Hooks to pure Selector functions to improve performance and testability.
+2.  **Unified Rule Engine**: Centralize rule conflict resolution and "overrule" detection into a single processing pipeline.
+3.  **Schema Validation**: Implement Zod to validate Story and Setup card JSON data at build/test time.
+4.  **Component Decoupling**: Refactor the `StepContent` "God Component" into a dynamic registry pattern.
+5.  **Semantic Theming**: Move from hex-code utility classes to semantic Tailwind tokens (e.g., `bg-surface-primary`).
+
 ## 📦 Installation & Development
 
 1.  **Install dependencies**:
