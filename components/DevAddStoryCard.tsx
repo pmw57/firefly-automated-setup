@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { StoryCardDef, ExpansionId, SetupRule, StoryCardGoal, ChallengeOption, JobMode, NavMode, PrimeMode, DraftMode, LeaderSetupMode, AllianceSetupMode, ResourceType, EffectMethod, RuleSourceType, ModifyResourceRule, AddFlagRule, AddSpecialRule, ModifyPrimeRule, AllowContactsRule, PrimeContactsRule, CreateAlertTokenStackRule, BypassDraftRule, SetPlayerBadgesRule, SetComponentRule, SetJobStepContentRule, AddBoardComponentRule } from '../types/index';
+import { StoryCardDef, ExpansionId, SetupRule, StoryCardGoal, ChallengeOption, JobMode, NavMode, PrimeMode, DraftMode, LeaderSetupMode, AllianceSetupMode, ResourceType, EffectMethod, RuleSourceType, ModifyResourceRule, AddFlagRule, AddSpecialRule, ModifyPrimeRule, AllowContactsRule, PrimeContactsRule, CreateAlertTokenStackRule, BypassDraftRule, SetPlayerBadgesRule, SetJobStepContentRule, AddBoardComponentRule } from '../types/index';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { STORY_CARDS } from '../data/storyCards';
 import { StoryCardGridItem } from './story/StoryCardGridItem';
@@ -145,14 +145,6 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
       { name: 'rule', label: 'Rule Object (JSON)', type: 'textarea' }
     ],
     default: () => ({ type: 'addSpecialRule', category: 'goal', rule: { title: 'New Rule', content: ['Description here.'] } } as Partial<AddSpecialRule>)
-  },
-  setComponent: {
-      label: 'Set Component Override',
-      params: [
-          { name: 'stepId', label: 'Step ID (e.g. C3)', type: 'text' },
-          { name: 'component', label: 'Component Name', type: 'text' }
-      ],
-      default: () => ({ type: 'setComponent', stepId: 'C3', component: 'RuiningItDraftStep' } as Partial<SetComponentRule>)
   },
 };
 

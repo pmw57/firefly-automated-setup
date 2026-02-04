@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, lazy, Suspense, useMemo } from 'react';
-import { Step, SetComponentRule } from '../types/index';
+import { Step } from '../types/index';
 import { Button } from './Button';
 import { QuotePanel } from './QuotePanel';
 import { useTheme } from './ThemeContext';
@@ -9,7 +9,6 @@ import { PageReference } from './PageReference';
 import { useGameState } from '../hooks/useGameState';
 import { calculateSetupFlow } from '../utils/flow';
 import { getSetupCardSelectionInfo } from '../utils/selectors/ui';
-import { getResolvedRules } from '../utils/selectors/rules';
 
 export interface StepComponentProps {
   step: Step;
@@ -50,12 +49,7 @@ const CaptainSetup = lazy(() => import('./CaptainSetup').then(m => ({ default: m
 const SetupCardSelection = lazy(() => import('./setup/SetupCardSelection').then(m => ({ default: m.SetupCardSelection })));
 const OptionalRulesSelection = lazy(() => import('./OptionalRulesSelection').then(m => ({ default: m.OptionalRulesSelection })));
 
-// Story-specific override components
-const RuiningItDraftStep = lazy(() => import('./steps/story/RuiningItDraftStep').then(m => ({ default: m.RuiningItDraftStep })));
-const RuiningItResourcesStep = lazy(() => import('./steps/story/RuiningItResourcesStep').then(m => ({ default: m.RuiningItResourcesStep })));
-const RuiningItJobsStep = lazy(() => import('./steps/story/RuiningItJobsStep').then(m => ({ default: m.RuiningItJobsStep })));
-
-
+// Registry for standard step components
 const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
   [STEP_IDS.C1]: NavDeckStep,
   [STEP_IDS.C2]: AllianceReaverStep,
@@ -76,19 +70,12 @@ const STEP_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
   [STEP_IDS.D_STRIP_MINING]: StripMiningStep,
 };
 
-const STORY_COMPONENT_REGISTRY: Record<string, React.FC<StepComponentProps>> = {
-    RuiningItDraftStep,
-    RuiningItResourcesStep,
-    RuiningItJobsStep,
-};
-
 export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, openOverrideModal, hasUnacknowledgedPastOverrides, onJump, isNextDisabled }: StepComponentProps): React.ReactElement => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const titleRef = useRef<HTMLHeadingElement>(null);
   const { state: gameState } = useGameState();
   const totalSetupParts = useMemo(() => calculateSetupFlow(gameState).filter(s => s.type === 'setup').length, [gameState]);
-  const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -100,15 +87,6 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
   const isSpecial = step.id.startsWith('D_');
 
   const renderStepBody = () => {
-    // Check for a story-specific component override first
-    const componentRule = allRules.find(
-      (r): r is SetComponentRule => r.type === 'setComponent' && r.stepId === step.id
-    );
-    if (componentRule && STORY_COMPONENT_REGISTRY[componentRule.component]) {
-        const StoryComponent = STORY_COMPONENT_REGISTRY[componentRule.component];
-        return <StoryComponent step={step} onNext={onNext} onPrev={onPrev} isNavigating={isNavigating} />;
-    }
-    
     // Fallback to standard component rendering
     if (step.type === 'setup') {
       if (step.id === STEP_IDS.SETUP_CAPTAIN_EXPANSIONS) return <CaptainSetup isDevMode={isDevMode} />;

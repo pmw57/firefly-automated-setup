@@ -1,6 +1,6 @@
 
 import { StoryCardDef } from '../../../types';
-import { CONTACT_NAMES, STEP_IDS } from '../../ids';
+import { CONTACT_NAMES } from '../../ids';
 
 export const STORIES_R_S: StoryCardDef[] = [
   {
@@ -164,42 +164,100 @@ export const STORIES_R_S: StoryCardDef[] = [
     setupDescription: "Start with only $2000 and 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship. Both ships starts on St. Albans, Red Sun. Set 20 counters on this card as timing counters.",
     tags: ['community', 'character', 'pvp'],
     rules: [
-      { type: 'setComponent', stepId: STEP_IDS.C3, component: 'RuiningItDraftStep', source: 'story', sourceName: "Ruining It For Everyone" },
-      { type: 'setComponent', stepId: STEP_IDS.C5, component: 'RuiningItResourcesStep', source: 'story', sourceName: "Ruining It For Everyone" },
-      { type: 'setComponent', stepId: STEP_IDS.C6, component: 'RuiningItJobsStep', source: 'story', sourceName: "Ruining It For Everyone" },
       { type: 'setShipPlacement', location: { sector: 'St. Albans, Red Sun' }, source: 'story', sourceName: "Ruining It For Everyone" },
-      { type: 'modifyResource', resource: 'credits', method: 'add', value: -1000, description: "Base funds adjusted for story.", source: 'story', sourceName: "Ruining It For Everyone" },
-      { type: 'modifyResource', resource: 'fuel', method: 'disable', description: "Your twin stole your starting fuel.", source: 'story', sourceName: "Ruining It For Everyone" },
-      { type: 'modifyResource', resource: 'parts', method: 'disable', description: "Your twin stole your starting parts.", source: 'story', sourceName: "Ruining It For Everyone" },
       { type: 'setJobMode', mode: 'no_jobs', source: 'story', sourceName: "Ruining It For Everyone" },
+      // Main Narrative Override
       {
         type: 'addSpecialRule',
         category: 'draft',
         rule: {
-          title: "Nothin' Left But The Hurt",
-          content: ["Start with 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew. This is your new ship. Both ships starts on St. Albans, Red Sun."]
+          title: 'Setup Override',
+          content: [
+            "Start with 2 crew valuing no more than $500. You cannot take any crew with a $0 cost. If you have no wanted crew, take a Warrant instead. This becomes your Twin's ship. Draw a \"backup\" ship with 0 crew. This is your new ship. Both ships starts on St. Albans, Red Sun."
+          ]
         },
-        source: 'story', 
+        source: 'story',
         sourceName: "Ruining It For Everyone"
       },
+      // Custom Draft Instructions Panel
       {
         type: 'addSpecialRule',
-        category: 'jobs',
+        category: 'draft_panel',
         rule: {
-          title: 'A Raw Deal',
-          content: ["Draw a \"backup\" ship with 0 crew, no money, no jobs. This is your new ship."]
+            title: 'Asymmetric Setup: A Tale of Two Twins',
+            badge: 'Story Setup',
+            position: 'before',
+            content: [
+                { type: 'numbered-list', items: [
+                    [{ type: 'strong', content: 'Player 2 (You): Prepare the "Stolen" Ship' }, { type: 'br' }, "Choose one Ship and one Leader. Hire two Crew members (max value $500 total). Take a Warrant if neither is Wanted."],
+                    [{ type: 'strong', content: 'Player 1 (The Twin): Steal the Ship' }, { type: 'br' }, "Player 1 takes the completed setup (Ship, Leader, and Crew) prepared by Player 2."],
+                    [{ type: 'strong', content: 'Player 2 (You): Get a "Backup" Ship' }, { type: 'br' }, "Choose a new Ship and a Leader for yourself. You will start with no crew or money."],
+                ]}
+            ]
         },
-        source: 'story', 
+        source: 'story',
+        sourceName: "Ruining It For Everyone"
+      },
+      // Override default placement text
+      {
+        type: 'addSpecialRule',
+        category: 'draft_placement',
+        rule: {
+            title: 'Fixed Location',
+            content: ["Both ships start at ", { type: 'strong', content: 'St. Albans, Red Sun' }, "."],
+            position: 'before'
+        },
+        source: 'story',
+        sourceName: "Ruining It For Everyone"
+      },
+      // Resource Overrides (Text only, as calculations are messy with asymmetric swap)
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+            title: 'Player 1 (The Twin)',
+            content: [
+                { type: 'paragraph', content: ["The Twin takes Player 2's prepared ship and outfits it with:"] },
+                { type: 'list', items: [
+                    [{ type: 'strong', content: '$2,000' }, ' Credits'],
+                    ['6 Fuel'],
+                    ['2 Parts'],
+                    ['The 2 Crew and/or Warrant from setup']
+                ]}
+            ]
+        },
+        source: 'story',
         sourceName: "Ruining It For Everyone"
       },
       {
         type: 'addSpecialRule',
         category: 'resources',
         rule: {
-          title: "The Twin's Head Start",
-          content: ["Set 20 counters on this card as timing counters."]
+            title: 'Player 2 (You)',
+            content: [
+                { type: 'paragraph', content: ["You are left with a new, empty ship and:"] },
+                { type: 'list', items: [
+                    [{ type: 'strong', content: '$0' }, ' Credits'],
+                    ['0 Fuel'],
+                    ['0 Parts']
+                ]}
+            ]
         },
-        source: 'story', 
+        source: 'story',
+        sourceName: "Ruining It For Everyone"
+      },
+      // Job Overrides
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+            title: "Starting Jobs: The Twin's Advantage",
+            content: [
+                { type: 'paragraph', content: [{ type: 'strong', content: 'Player 1 (The Twin):' }, " Draws starting jobs as per the standard rules."] },
+                { type: 'paragraph', content: [{ type: 'strong', content: 'Player 2 (You):' }, " Starts with ", { type: 'strong', content: 'No Jobs' }, "."] }
+            ]
+        },
+        source: 'story',
         sourceName: "Ruining It For Everyone"
       }
     ]

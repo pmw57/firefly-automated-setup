@@ -131,11 +131,7 @@ export interface ModifyResourceRule extends BaseRule {
   description: string;
 }
 
-export interface SetComponentRule extends BaseRule {
-  type: 'setComponent';
-  stepId: string;
-  component: string;
-}
+// SetComponentRule removed to decouple UI from Data.
 
 export interface SetJobStepContentRule extends BaseRule {
   type: 'setJobStepContent';
@@ -189,7 +185,6 @@ export type SetupRule =
   | AddFlagRule
   | ModifyPrimeRule
   | ModifyResourceRule
-  | SetComponentRule
   | SetJobStepContentRule
   | AddBoardComponentRule
   | SetPlayerBadgesRule
