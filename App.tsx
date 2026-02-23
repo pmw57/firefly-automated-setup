@@ -184,8 +184,12 @@ const App = (): React.ReactElement => {
             {/* Accessible heading, as the visual "Firefly: The Game" is in the background image */}
             <h1 className="sr-only">Firefly: The Game</h1>
             <p 
-                className="text-yellow-100/90 dark:text-gray-300 font-medium tracking-[0.3em] uppercase text-sm md:text-base [text-shadow:0_2px_6px_rgba(0,0,0,0.9)] cursor-default select-none"
+                className="text-yellow-100/90 dark:text-gray-300 font-medium tracking-[0.3em] uppercase text-sm md:text-base [text-shadow:0_2px_6px_rgba(0,0,0,0.9)] cursor-default select-none touch-manipulation"
                 onClick={handleSecretDevTap}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  handleSecretDevTap();
+                }}
             >
                 Automated Setup Guide
             </p>
