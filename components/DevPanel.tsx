@@ -8,6 +8,9 @@ import { useGameDispatch } from '../hooks/useGameDispatch';
 import { getAvailableStoryCards } from '../utils/selectors/story';
 import { STORY_CARDS } from '../data/storyCards';
 
+import { loadStoryData } from '../utils/storyLoader';
+import { ActionType } from '../state/actions';
+
 const DEFAULT_THEME_VALUES = {
   // Light Theme
   gridLinesOpacity: 0.02,
@@ -65,7 +68,7 @@ export const DevPanel = () => {
     const { theme } = useTheme();
 
     const { state: gameState } = useGameState();
-    const { setStoryCard } = useGameDispatch();
+    const { dispatch } = useGameDispatch();
 
     useEffect(() => {
         const root = document.documentElement;
@@ -91,7 +94,7 @@ export const DevPanel = () => {
         setThemeValues(DEFAULT_THEME_VALUES);
     };
 
-    const handleNavigateStory = (direction: 'prev' | 'next') => {
+    const handleNavigateStory = async (direction: 'prev' | 'next') => {
         const availableStories = getAvailableStoryCards(gameState);
         if (availableStories.length === 0) return;
 
@@ -124,7 +127,19 @@ export const DevPanel = () => {
             const originalIndex = STORY_CARDS.findIndex(s => s.title === nextStory.title);
             
             if (originalIndex !== -1) {
-                 setStoryCard(originalIndex, nextStory.goals?.[0]?.title);
+                 try {
+                     const fullStory = await loadStoryData(originalIndex);
+                     dispatch({ 
+                        type: ActionType.SET_ACTIVE_STORY, 
+                        payload: { 
+                            story: fullStory, 
+                            index: originalIndex, 
+                            goal: fullStory.goals?.[0]?.title 
+                        } 
+                     });
+                 } catch (e) {
+                     console.error("Failed to load story via DevPanel", e);
+                 }
             }
         }
     };
