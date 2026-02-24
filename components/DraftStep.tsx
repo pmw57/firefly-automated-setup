@@ -282,8 +282,8 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
   const displayOverrides = useMemo(() => formatRules(overrideRules, true), [overrideRules, formatRules]);
 
   const handleDetermineOrder = useCallback(() => {
-    setDraftConfig({ state: runAutomatedDraft(gameState.playerNames), isManual: false });
-  }, [setDraftConfig, gameState.playerNames]);
+    setDraftConfig({ state: runAutomatedDraft(gameState.playerNames.slice(0, gameState.playerCount)), isManual: false });
+  }, [setDraftConfig, gameState.playerNames, gameState.playerCount]);
 
   useEffect(() => {
     if (isSolo && !draftState) {
@@ -291,7 +291,7 @@ export const DraftStep = ({ step }: StepComponentProps): React.ReactElement => {
     } else if (!isSolo && !draftState && isQuickMode) {
         handleDetermineOrder();
     }
-  }, [isSolo, gameState.playerNames, draftState, isQuickMode, handleDetermineOrder, setDraftConfig]);
+  }, [isSolo, gameState.playerNames, gameState.playerCount, draftState, isQuickMode, handleDetermineOrder, setDraftConfig]);
 
 
   const handleRollChange = (index: number, newValue: string) => {
