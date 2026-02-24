@@ -5,6 +5,30 @@ import { STORY_CARDS } from '../data/storyCards';
 import { SETUP_CARD_IDS } from '../data/ids';
 
 /**
+ * A helper function to default to "Flying Solo" mode if the conditions are met.
+ * This should be called when entering solo mode or when enabling the 10th Anniversary expansion.
+ */
+export const defaultToFlyingSoloIfNeeded = (state: GameState): GameState => {
+    const isEligible = state.gameMode === 'solo' && state.expansions.tenth;
+    const isAlreadyFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
+
+    if (isEligible && !isAlreadyFlyingSolo) {
+        // If the current setup is a valid card, store it as secondary.
+        // If not (e.g., empty string), don't store it.
+        const secondarySetupId = SETUP_CARDS.some(c => c.id === state.setupCardId) ? state.setupCardId : undefined;
+
+        return {
+            ...state,
+            setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
+            setupCardName: 'Flying Solo',
+            secondarySetupId: secondarySetupId,
+            draft: { state: null, isManual: false },
+        };
+    }
+    return state;
+};
+
+/**
  * Validates that the selected Setup Card is compatible with the enabled expansions.
  * Resets to Standard if a required expansion is disabled.
  */
@@ -50,9 +74,21 @@ const validateStoryCard = (state: GameState): GameState => {
 
 /**
  * Validates game mode specific rules, like 'Flying Solo' only being available in solo.
+ * Also ensures consistency between playerCount and gameMode.
  */
 const validateGameMode = (state: GameState): GameState => {
     let newState = { ...state };
+
+    // Ensure gameMode matches playerCount
+    const expectedMode = newState.playerCount === 1 ? 'solo' : 'multiplayer';
+    if (newState.gameMode !== expectedMode) {
+        newState.gameMode = expectedMode;
+        
+        // If we switched to solo, we might need to set Flying Solo
+        if (expectedMode === 'solo') {
+             newState = defaultToFlyingSoloIfNeeded(newState);
+        }
+    }
 
     // 'Flying Solo' is not a valid setup for multiplayer.
     if (newState.gameMode === 'multiplayer' && newState.setupCardId === SETUP_CARD_IDS.FLYING_SOLO) {
@@ -106,28 +142,4 @@ export const validateState = (state: GameState): GameState => {
     validatedState = validateGameMode(validatedState);
     validatedState = validateOptionalRules(validatedState);
     return validatedState;
-};
-
-/**
- * A helper function to default to "Flying Solo" mode if the conditions are met.
- * This should be called when entering solo mode or when enabling the 10th Anniversary expansion.
- */
-export const defaultToFlyingSoloIfNeeded = (state: GameState): GameState => {
-    const isEligible = state.gameMode === 'solo' && state.expansions.tenth;
-    const isAlreadyFlyingSolo = state.setupCardId === SETUP_CARD_IDS.FLYING_SOLO;
-
-    if (isEligible && !isAlreadyFlyingSolo) {
-        // If the current setup is a valid card, store it as secondary.
-        // If not (e.g., empty string), don't store it.
-        const secondarySetupId = SETUP_CARDS.some(c => c.id === state.setupCardId) ? state.setupCardId : undefined;
-
-        return {
-            ...state,
-            setupCardId: SETUP_CARD_IDS.FLYING_SOLO,
-            setupCardName: 'Flying Solo',
-            secondarySetupId: secondarySetupId,
-            draft: { state: null, isManual: false },
-        };
-    }
-    return state;
 };
