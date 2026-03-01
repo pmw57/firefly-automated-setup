@@ -33,6 +33,24 @@ export const STORIES_T_X: StoryCardDef[] = [
     tags: ['community', 'classic_heist'],
   },
   {
+    title: "Welcome to the Traders Guild",
+    intro: "You and your partner are looking for the blessings of the Traders Guild to take your new business venture to the next level.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/3264733/article/47362082#47362082",
+    tags: [
+      "reputation",
+      "doing_the_job",
+      "classic_heist",
+      "verse_variant"
+    ],
+    isCoOp: true,
+    rating: 2,
+    additionalRequirements: [
+      "kalidasa",
+      "blue"
+    ]
+  },
+  {
     title: "Wild Cards",
     intro: "Prove you're the best - or luckiest - crew around by collecting tales of your exploits.",
     requiredExpansion: "aces_eights",

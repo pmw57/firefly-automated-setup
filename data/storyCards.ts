@@ -691,6 +691,16 @@ const RAW_MANIFEST: StoryCardManifest[] = [
         sourceUrl: "https://boardgamegeek.com/filepage/278719/solo-and-co-op-story-cards-focusing-on-the-crew-of",
     },
     {
+        title: "The Old Man And The 'Verse",
+        isCoOp: true,
+        intro: "Niska has been consolidating his power and is ready to move against his enemies. He needs able captains to do his bidding. Succeed, and you’ll be well rewarded. Fail at your peril.",
+        sourceUrl: "https://boardgamegeek.com/thread/3264733/article/47362082#47362082",
+        requiredExpansion: "community",
+        additionalRequirements: ["kalidasa", "blue"],
+        rating: 2,
+        tags: ["criminal_enterprise", "faction_war", "reputation", "against_the_black"],
+    },
+    {
         title: "Rags To Riches",
         intro: " ",
         requiredExpansion: "community",
@@ -809,6 +819,16 @@ const RAW_MANIFEST: StoryCardManifest[] = [
         sourceUrl: "https://boardgamegeek.com/thread/1083899/unification-day-alliance-oriented-story-card",
         rating: 1,
         tags: ['community', 'classic_heist'],
+    },
+  {
+        title: "Welcome to the Traders Guild",
+        intro: "You and your partner are looking for the blessings of the Traders Guild to take your new business venture to the next level.",
+        isCoOp: true,
+        requiredExpansion: "community",
+        sourceUrl: "https://boardgamegeek.com/thread/3264733/article/47362082#47362082",
+        rating: 2,
+        tags: ["reputation", "doing_the_job", "classic_heist", "verse_variant"],
+        additionalRequirements: ["kalidasa", "blue"],
     },
     {
         title: "Wild Cards",
