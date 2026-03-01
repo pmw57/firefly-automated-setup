@@ -9,7 +9,7 @@ import { GameState } from '../../types';
 import { getTestStory } from '../helpers/allStories';
 import { SETUP_CARDS } from '../../data/setupCards';
 import { SETUP_CARD_IDS } from '../../data/ids';
-import { STORY_CARDS } from '../../data/storyCards';
+import { STORY_CARDS } from '../../data/storyCards/index';
 
 const getSetup = (id: string) => {
     const card = SETUP_CARDS.find(c => c.id === id);
@@ -144,6 +144,8 @@ describe('Integration Scenarios', () => {
     const fullStory = getTestStory("Smuggler's Blues");
 
     const initialState: GameState = getDefaultGameState();
+    initialState.setupMode = 'detailed';
+    initialState.setupCardId = SETUP_CARD_IDS.STANDARD;
     initialState.expansions.kalidasa = false;
     initialState.selectedStoryCardIndex = smugglersBluesIndex;
     initialState.activeStory = fullStory || null; // Inject full story

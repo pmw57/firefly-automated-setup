@@ -3,7 +3,7 @@ import { GameState, Expansions, SetupMode } from '../types/index';
 import { Action, ActionType } from './actions';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { EXPANSION_SETTINGS_STORAGE_KEY, SETUP_MODE_STORAGE_KEY } from '../data/constants';
-import { STORY_CARDS } from '../data/storyCards';
+import { STORY_CARDS } from '../data/storyCards/index';
 
 import { validateState } from './validation';
 import { configReducer } from './reducers/configReducer';

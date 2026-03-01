@@ -3,7 +3,7 @@ import { Button } from '../Button';
 import { StoryCardGridItem } from './StoryCardGridItem';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useTheme } from '../ThemeContext';
-import { STORY_CARDS } from '../../data/storyCards';
+import { STORY_CARDS } from '../../data/storyCards/index';
 import { useGameState } from '../../hooks/useGameState';
 
 interface StoryRandomizerProps {

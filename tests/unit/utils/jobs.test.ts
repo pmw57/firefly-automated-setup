@@ -5,7 +5,7 @@ import { getJobSetupDetails } from '../../../utils/jobs';
 import { GameState, StepOverrides, StoryCardDef } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { CONTACT_NAMES, CHALLENGE_IDS, SETUP_CARD_IDS } from '../../../data/ids';
-import { STORY_CARDS } from '../../../data/storyCards';
+import { STORY_CARDS } from '../../../data/storyCards/index';
 import { ALL_FULL_STORIES } from '../../helpers/allStories';
 
 const getFullStory = (title: string): StoryCardDef | null => {

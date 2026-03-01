@@ -76,7 +76,7 @@ export const useUrlSync = () => {
                     secondarySetupId: data.secondarySetupId,
                     selectedStoryCardIndex: data.storyIndex,
                     selectedGoal: data.goal,
-                    playerCount: data.players,
+                    playerCount: data.players !== undefined ? Number(data.players) : 4,
                 };
 
                 const expansionMap: Record<string, boolean> = {};

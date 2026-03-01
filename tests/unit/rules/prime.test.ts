@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest';
 import { getPrimeDetails } from '../../../utils/prime';
 import { GameState, StoryCardDef } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
-import { STORY_CARDS } from '../../../data/storyCards';
+import { STORY_CARDS } from '../../../data/storyCards/index';
 import { ALL_FULL_STORIES } from '../../helpers/allStories';
 
 const getFullStory = (title: string): StoryCardDef | null => {

@@ -1,7 +1,7 @@
 
 import { GameState } from '../types/index';
 import { SETUP_CARDS } from '../data/setupCards';
-import { STORY_CARDS } from '../data/storyCards';
+import { STORY_CARDS } from '../data/storyCards/index';
 import { SETUP_CARD_IDS } from '../data/ids';
 
 /**

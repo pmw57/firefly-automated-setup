@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { STORY_CARDS } from '../data/storyCards';
+import { STORY_CARDS } from '../data/storyCards/index';
 import { StoryCardDef } from '../types';
 
 interface AuditedLink {

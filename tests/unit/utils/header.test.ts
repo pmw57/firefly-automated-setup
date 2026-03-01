@@ -6,7 +6,7 @@ import { GameState, Step } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { STEP_IDS, SETUP_CARD_IDS } from '../../../data/ids';
 import { getSetupCardById } from '../../../utils/selectors/story';
-import { STORY_CARDS } from '../../../data/storyCards';
+import { STORY_CARDS } from '../../../data/storyCards/index';
 
 describe('selectors/header', () => {
     const baseGameState = getDefaultGameState();

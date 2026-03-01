@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest';
 import { getPrimeDetails } from '../../../utils/prime';
 import { GameState } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
-import { STORY_CARDS } from '../../../data/storyCards';
+import { STORY_CARDS } from '../../../data/storyCards/index';
 import { getTestStory } from '../../helpers/allStories';
 
 describe('rules/prime', () => {

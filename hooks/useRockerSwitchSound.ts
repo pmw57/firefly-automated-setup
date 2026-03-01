@@ -21,7 +21,13 @@ const loadAudio = async () => {
     isLoading = true;
     try {
         if (!audioContext) {
-            audioContext = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
+            const AudioContextClass = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+            if (!AudioContextClass) {
+                console.warn("AudioContext is not supported in this environment.");
+                isLoading = false;
+                return;
+            }
+            audioContext = new AudioContextClass();
         }
         
         const isPreview = typeof import.meta.env === 'undefined';

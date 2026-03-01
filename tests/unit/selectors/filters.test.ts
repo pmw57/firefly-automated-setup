@@ -4,7 +4,7 @@ import { isStoryCompatible } from '../../../utils/filters';
 import { GameState, StoryCardDef } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
-import { STORY_CARDS } from '../../../data/storyCards';
+import { STORY_CARDS } from '../../../data/storyCards/index';
 
 const getStory = (title: string): StoryCardDef => {
   const card = STORY_CARDS.find(c => c.title === title);

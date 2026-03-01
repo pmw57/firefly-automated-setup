@@ -5,7 +5,7 @@ import { getResourceDetails } from '../../../utils/resources';
 import { GameState } from '../../../types/index';
 import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
-import { STORY_CARDS } from '../../../data/storyCards';
+import { STORY_CARDS } from '../../../data/storyCards/index';
 import { getTestStory } from '../../helpers/allStories';
 
 describe('rules/resources', () => {

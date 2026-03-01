@@ -190,9 +190,23 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
       )}
 
       {/* Detailed Setup Description Block */}
-      {activeStoryCard.setupDescription && (
-        <OverrideNotificationBlock source="story" content={[activeStoryCard.setupDescription]} />
-      )}
+      {(() => {
+        const storyOverrides = activeStoryCard.rules?.filter(
+          (r): r is AddSpecialRule => r.type === 'addSpecialRule' && r.category === 'story_override'
+        );
+        if (storyOverrides && storyOverrides.length > 0) {
+          return (
+            <div className="space-y-2">
+              {storyOverrides.map((override, idx) => (
+                <OverrideNotificationBlock key={idx} source="story" content={override.rule.content} />
+              ))}
+            </div>
+          );
+        } else if (activeStoryCard.setupDescription) {
+          return <OverrideNotificationBlock source="story" content={[activeStoryCard.setupDescription]} />;
+        }
+        return null;
+      })()}
 
       {/* Solo Adjustments */}
       {gameState.gameMode === 'solo' && soloTimerAdjustment && (

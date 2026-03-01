@@ -6,7 +6,7 @@ import { DevTestingMatrix } from './DevTestingMatrix';
 import { useGameState } from '../hooks/useGameState';
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { getAvailableStoryCards } from '../utils/selectors/story';
-import { STORY_CARDS } from '../data/storyCards';
+import { STORY_CARDS } from '../data/storyCards/index';
 
 import { loadStoryData } from '../utils/storyLoader';
 import { ActionType } from '../state/actions';
