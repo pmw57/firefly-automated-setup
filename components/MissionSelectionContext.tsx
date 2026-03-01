@@ -5,7 +5,7 @@ import { useGameState } from '../hooks/useGameState';
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { MissionSelectionContext, MissionSelectionContextType } from '../hooks/useMissionSelection';
 import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getAllPotentialAdvancedRules } from '../utils/selectors/story';
-import { STORY_CARDS } from '../data/storyCards';
+import { STORY_CARDS } from '../data/storyCards/index';
 import { loadStoryData } from '../utils/storyLoader';
 import { ActionType } from '../state/actions';
 

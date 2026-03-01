@@ -6,7 +6,7 @@ import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacement
 import { getDefaultGameState } from '../../../state/reducer';
 import { SETUP_CARD_IDS } from '../../../data/ids';
 import { SETUP_CARDS } from '../../../data/setupCards';
-import { STORY_CARDS } from '../../../data/storyCards';
+import { STORY_CARDS } from '../../../data/storyCards/index';
 import { getTestStory } from '../../helpers/allStories';
 
 const getSetupCard = (id: string): SetupCardDef => {

@@ -1,4 +1,4 @@
-import { STORY_CARDS } from '../data/storyCards';
+import { STORY_CARDS } from '../data/storyCards/index';
 import { SETUP_CARDS } from '../data/setupCards';
 import { isStoryCompatible } from './filters';
 import { getDefaultGameState } from '../state/reducer';

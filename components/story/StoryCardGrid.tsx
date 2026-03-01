@@ -5,7 +5,7 @@ import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useTheme } from '../ThemeContext';
 import { getFilterableExpansions, getStoryIncompatibilityReason } from '../../utils/selectors/story';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
-import { STORY_CARDS } from '../../data/storyCards';
+import { STORY_CARDS } from '../../data/storyCards/index';
 import { cls } from '../../utils/style';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionId, StoryTag } from '../../types';

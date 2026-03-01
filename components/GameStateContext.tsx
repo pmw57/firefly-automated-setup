@@ -6,7 +6,7 @@ import { LocalStorageService } from '../utils/storage';
 import { ActionType, ExpansionBundle } from '../state/actions';
 import { GameStateContext, GameDispatchContext, WizardStateContext } from '../hooks/useGameState';
 import { GAME_STATE_STORAGE_KEY, WIZARD_STEP_STORAGE_KEY } from '../data/constants';
-import { STORY_CARDS } from '../data/storyCards';
+import { STORY_CARDS } from '../data/storyCards/index';
 
 const storageService = new LocalStorageService(GAME_STATE_STORAGE_KEY);
 

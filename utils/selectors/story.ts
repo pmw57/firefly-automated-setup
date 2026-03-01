@@ -4,7 +4,7 @@ import { GameState, SetupCardDef, StoryCardDef, AdvancedRuleDef, ChallengeOption
 import { SETUP_CARDS } from '../../data/setupCards';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
 import { SETUP_CARD_IDS, STEP_IDS } from '../../data/ids';
-import { STORY_CARDS } from '../../data/storyCards';
+import { STORY_CARDS } from '../../data/storyCards/index';
 import { isStoryCompatible } from '../filters';
 import { CAMPAIGN_SETUP_NOTES } from '../../data/collections';
 import { SOLO_EXCLUDED_STORIES } from '../../data/collections';

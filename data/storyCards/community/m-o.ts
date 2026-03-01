@@ -246,5 +246,23 @@ export const STORIES_M_O: StoryCardDef[] = [
         sourceName: "My Fellow Browncoats"
       }
     ]
+  },
+  {
+    title: "The Old Man And The 'Verse",
+    intro: "Niska has been consolidating his power and is ready to move against his enemies. He needs able captains to do his bidding. Succeed, and you’ll be well rewarded. Fail at your peril.",
+    requiredExpansion: "community",
+    sourceUrl: "https://boardgamegeek.com/thread/3264733/article/47362082#47362082",
+    tags: [
+      "criminal_enterprise",
+      "faction_war",
+      "reputation",
+      "against_the_black"
+    ],
+    isCoOp: true,
+    rating: 2,
+    additionalRequirements: [
+      "kalidasa",
+      "blue"
+    ]
   }
 ];
