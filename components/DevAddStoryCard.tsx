@@ -568,7 +568,11 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose }) => 
             <div className="bg-gray-800 text-white p-6 rounded-lg shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col border border-gray-600">
                 <div className="flex justify-between items-center mb-4 pb-4 border-b border-gray-700">
                     <h2 className="text-2xl font-bold">Add New Story Card</h2>
-                    <button onClick={onClose} className="text-gray-400 hover:text-white text-3xl font-bold">&times;</button>
+                    <button onClick={onClose} className="text-gray-400 hover:text-white p-2 -mr-2 transition-colors" title="Close">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
                 <div className="flex-1 overflow-y-auto custom-scrollbar pr-4 grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Form Column */}

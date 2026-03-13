@@ -11,24 +11,27 @@ export const DevSetupAudit: React.FC<DevSetupAuditProps> = ({ onClose }) => {
   const [cardsWithRules, setCardsWithRules] = useState<StoryCardDef[]>([]);
 
   const runAudit = () => {
-    const withDesc: StoryCardDef[] = [];
-    const withRules: StoryCardDef[] = [];
+    const needsConversion: StoryCardDef[] = [];
+    const converted: StoryCardDef[] = [];
 
     for (const card of STORY_CARDS) {
       if (card.setupDescription) {
-        const hasStoryOverride = card.rules?.some(
-          rule => rule.type === 'addSpecialRule' && rule.category === 'story_override'
+        // A card is considered converted if it has rules that are NOT just a single 'story_override' block.
+        // This means the setup description has been split across appropriate setup pages.
+        const hasSplitRules = card.rules?.some(
+          rule => !(rule.type === 'addSpecialRule' && rule.category === 'story_override')
         );
-        if (hasStoryOverride) {
-          withRules.push(card);
+        
+        if (hasSplitRules) {
+          converted.push(card);
         } else {
-          withDesc.push(card);
+          needsConversion.push(card);
         }
       }
     }
 
-    setCardsWithSetupDescription(withDesc);
-    setCardsWithRules(withRules);
+    setCardsWithSetupDescription(needsConversion);
+    setCardsWithRules(converted);
   };
 
   return (
