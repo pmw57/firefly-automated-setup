@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeContext';
 import { DevStoryAudit } from './DevStoryAudit';
+import { DevSetupAudit } from './DevSetupAudit';
 import { DevAddStoryCard } from './DevAddStoryCard';
 import { DevTestingMatrix } from './DevTestingMatrix';
 import { useGameState } from '../hooks/useGameState';
@@ -62,6 +63,7 @@ const Slider = ({ label, value, onChange, min = 0, max = 1, step = 0.01 }: { lab
 export const DevPanel = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [showStoryAudit, setShowStoryAudit] = useState(false);
+    const [showSetupAudit, setShowSetupAudit] = useState(false);
     const [showAddStory, setShowAddStory] = useState(false);
     const [showTestingMatrix, setShowTestingMatrix] = useState(false);
     const [themeValues, setThemeValues] = useState(DEFAULT_THEME_VALUES);
@@ -148,6 +150,10 @@ export const DevPanel = () => {
         return <DevStoryAudit onClose={() => setShowStoryAudit(false)} />;
     }
     
+    if (showSetupAudit) {
+        return <DevSetupAudit onClose={() => setShowSetupAudit(false)} />;
+    }
+    
     if (showAddStory) {
         return <DevAddStoryCard onClose={() => setShowAddStory(false)} />;
     }
@@ -158,7 +164,7 @@ export const DevPanel = () => {
 
     if (!isOpen) {
         return (
-            <div className="fixed bottom-4 right-4 z-[9999] flex items-center gap-2">
+            <div className="fixed bottom-4 right-20 z-[9999] flex items-center gap-2">
                 <button
                     onClick={() => handleNavigateStory('prev')}
                     className="bg-purple-800 text-white p-2 rounded-full shadow-lg hover:bg-purple-700 transition-colors"
@@ -189,7 +195,7 @@ export const DevPanel = () => {
     }
 
     return (
-        <div className="fixed bottom-4 right-4 z-[9999] bg-gray-800/90 backdrop-blur-md text-white p-4 rounded-lg shadow-2xl w-80 border border-gray-600">
+        <div className="fixed bottom-4 right-20 z-[9999] bg-gray-800/90 backdrop-blur-md text-white p-4 rounded-lg shadow-2xl w-80 border border-gray-600">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold text-lg">Dev Panel</h3>
                 <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
@@ -201,6 +207,12 @@ export const DevPanel = () => {
                     className="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 rounded"
                 >
                     Audit Story Links
+                </button>
+                <button
+                    onClick={() => setShowSetupAudit(true)}
+                    className="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 rounded"
+                >
+                    Audit Setup Descriptions
                 </button>
                 <button
                     onClick={() => setShowAddStory(true)}
