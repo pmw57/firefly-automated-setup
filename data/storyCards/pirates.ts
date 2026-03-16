@@ -90,7 +90,19 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     tags: [
       "jailbreak"
     ],
-    setupDescription: "During Leader selection, players also choose any card from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards next to the 'Verse;s Most Wanted List. They are prisoners of the Alliance!"
+    setupDescription: "During Leader selection, players also choose any card from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards next to the 'Verse;s Most Wanted List. They are prisoners of the Alliance!",
+    rules: [
+      {
+        type: 'addSpecialRule',
+        category: 'draft_ships',
+        rule: { 
+          content: ["Players also choose any card from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards next to the 'Verse;s Most Wanted List. They are prisoners of the Alliance!"],
+          position: 'after'
+        },
+        source: 'story', 
+        sourceName: "Jail Break"
+      },
+    ]
   },
   {
     title: "The Choices We Make",

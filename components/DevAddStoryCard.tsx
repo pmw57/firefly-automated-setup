@@ -21,18 +21,18 @@ const RESOURCE_TYPES: ResourceType[] = ['credits', 'fuel', 'parts', 'warrants', 
 const EFFECT_METHODS: EffectMethod[] = ['set', 'add', 'disable'];
 const SHIP_PLACEMENT_LOCATIONS = ['persephone', 'londinium', 'outside_alliance'];
 const SPECIAL_RULE_CATEGORIES: AddSpecialRule['category'][] = [
-    'jobs', 
     'allianceReaver', 
-    'draft', 
     'nav', 
-    'prime', 
-    'resources', 
-    'soloTimer', 
-    'goal',
+    'draft', 
     'draft_panel',
     'draft_ships',
     'draft_placement',
+    'goal',
+    'resources', 
+    'jobs', 
+    'prime', 
     'prime_panel',
+    'soloTimer', 
     'setup_selection',
     'pressures_high'
 ];

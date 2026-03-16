@@ -7,7 +7,29 @@ export const BLUE_SUN_STORIES: StoryCardDef[] = [
     requiredExpansion: "blue",
     sourceUrl: "https://boardgamegeek.com/image/2785044/gerryrailbaron",
     tags: ['character', 'survival'],
-    setupDescription: "Choose Havens. Havens must in in Alliance Space. Londinium may not be chosen as a Haven. Place an Alliance Alert Token on any Alliance planet that is not a Haven. All Players Start with Warrant Token."
+    setupDescription: "Choose Havens. Havens must in in Alliance Space. Londinium may not be chosen as a Haven. Place an Alliance Alert Token on any Alliance planet that is not a Haven. All Players Start with Warrant Token.",
+    rules: [
+      {
+        type: 'addSpecialRule',
+        category: 'draft_placement',
+        rule: { 
+          content: ['Choose Havens. Havens must in in Alliance Space. Londinium may not be chosen as a Haven. Place an Alliance Alert Token on any Alliance planet that is not a Haven.'],
+          position: 'before'
+        },
+        source: 'story', 
+        sourceName: "Any Port In A Storm"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: 'A Checkered Past',
+          content: ["All Players start with a Warrant token."]
+        },
+        source: 'story', 
+        sourceName: "Any Port In A Storm"
+      }
+    ]
   },
   {
     title: "Patience's War",
@@ -22,6 +44,23 @@ export const BLUE_SUN_STORIES: StoryCardDef[] = [
     requiredExpansion: "blue",
     sourceUrl: "https://boardgamegeek.com/image/2785041/gerryrailbaron",
     tags: ['reputation', 'doing_the_job'],
-    setupDescription: "No Starting Jobs are dealt. This Story Card uses dramatically smaller Contact Decks. Each Contact Deck starts with a number of Job Cards equal to the number of players in the game. Place the remainder of the Contact's Job Cards back in the box - they will not be used in this game."
-  },
+    setupDescription: "No Starting Jobs are dealt. This Story Card uses dramatically smaller Contact Decks. Each Contact Deck starts with a number of Job Cards equal to the number of players in the game. Place the remainder of the Contact's Job Cards back in the box - they will not be used in this game.",
+    rules: [
+      {
+        type: "setJobMode",
+        mode: "no_jobs",
+        source: "story",
+        sourceName: "The Great Recession"
+      },
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: { 
+          content: ["No Starting Jobs are dealt. This Story Card uses dramatically smaller Contact Decks. Each Contact Deck starts with a number of Job Cards equal to the number of players in the game. Place the remainder of the Contact's Job Cards back in the box - they will not be used in this game."],
+        },
+        source: 'story', 
+        sourceName: "Any Port In A Storm"
+      },
+    ]
+  }
 ];
