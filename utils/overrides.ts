@@ -7,7 +7,7 @@ import { getResolvedRules } from './selectors/rules';
  * A map of rule types to the ID of the setup step they primarily affect.
  * This allow us to trace a Story Card rule back to the step it overrides.
  */
-const RULE_TYPE_TO_STEP_ID: Record<SetupRule['type'], string | ((rule: SetupRule) => string)> = {
+export const RULE_TYPE_TO_STEP_ID: Record<SetupRule['type'], string | ((rule: SetupRule) => string)> = {
   // Core Mode Setters
   setJobMode: STEP_IDS.C6,
   setJobContacts: STEP_IDS.C6,

@@ -216,7 +216,7 @@ export const DevPanel = () => {
                     onClick={() => setShowSetupAudit(true)}
                     className="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 rounded"
                 >
-                    Audit Setup Descriptions
+                    Audit Story Cards
                 </button>
                 <button
                     onClick={() => setShowAddStory(true)}
