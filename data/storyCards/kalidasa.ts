@@ -45,7 +45,21 @@ export const KALIDASA_STORIES: StoryCardDef[] = [
     intro: "Increased Alliance oversight has made gettin' paid hard. Folks are limited to whatever cash they've got stashed under their bedrolls; even the movers and shakers are findin' the spigot's run dry.",
     requiredExpansion: "kalidasa",
     sourceUrl: "https://boardgamegeek.com/image/2785037/gerryrailbaron",
-    tags: ['smugglers_run'],
-    setupDescription: "After completing game Set Up, reduce the amount of money in the bank to an amount equal to $5000 per player."
+    tags: [
+      "smugglers_run"
+    ],
+    setupDescription: "After completing game Set Up, reduce the amount of money in the bank to an amount equal to $5000 per player.",
+    rules: [
+      {
+        type: 'addSpecialRule',
+        category: 'resources',
+        rule: {
+          title: "Spigot's Run Dry",
+          content: ['Reduce the amount of money in the bank to an amount equal to $5000 per player.']
+        },
+        source: 'story', 
+        sourceName: "The Well's Run Dry"
+      }
+    ]
   },
 ];

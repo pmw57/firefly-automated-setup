@@ -142,8 +142,28 @@ export const STORIES_F_G: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/thread/2688034/the-good-the-bad-and-the-ugly-story-card",
     rating: 2,
     tags: ['community', 'reputation'],
-    setupDescription: "Only take Starting Jobs from Harken, Lord Harrow, Mr. Universe and Amnon Duul. These jobs may be discardsed, as normal. Follow the Standard Game Set-Up Card otherwise."
-  },
+    setupDescription: "Only take Starting Jobs from Harken, Lord Harrow, Mr. Universe and Amnon Duul. These jobs may be discarded, as normal. Follow the Standard Game Set-Up Card otherwise.",
+    rules: [
+      {
+        type: 'addSpecialRule',
+        category: 'jobs',
+        rule: {
+          title: 'Strange Bedfellows',
+          content: ["Only take Starting Jobs from Harken, Lord Harrow, Mr. Universe and Amnon Duul. These jobs may be discarded, as normal."]
+        },
+        source: 'story', 
+        sourceName: "The Good, The Bad, and The Ugly"
+      },
+      {
+        type: "setJobContacts",
+        contacts: [
+          "Harken", "Lord Harrow", "Mr. Universe", "Amnon Duul"
+        ],
+        source: "story",
+        sourceName: "The Good, The Bad, and The Ugly"
+      }
+      ],
+    },
   {
     title: "The Great Escape",
     intro: "The Alliance has been busy. Rounded up a few of our nearest and dearest. We aim to right that wrong, and see about ending that incarceration.",
@@ -151,6 +171,19 @@ export const STORIES_F_G: StoryCardDef[] = [
     isCoOp: true,
     sourceUrl: "https://boardgamegeek.com/thread/2717955/article/38380038#38380038",
     tags: ['community', 'jailbreak', 'against_the_black', 'coop'],
-    setupDescription: "During Leader selection, players also choose 2 cards from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards at Miranda, Burnham. Captains can trade crew, items, money, goods, passengers, and jobs from hand when on the same space."
+    setupDescription: "During Leader selection, players also choose 2 cards from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards at Miranda, Burnham. Captains can trade crew, items, money, goods, passengers, and jobs from hand when on the same space.",
+    rules: [
+      {
+        type: 'addSpecialRule',
+        category: 'draft_ships',
+        rule: {
+          title: 'Nearest and Dearest',
+          content: ["Players also choose 2 cards from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards at Miranda, Burnham."],
+          position: "after"
+        },
+        source: 'story', 
+        sourceName: "The Good, The Bad, and The Ugly"
+      },
+    ],
   },
 ];
