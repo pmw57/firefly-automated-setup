@@ -65,6 +65,7 @@ export const DevPanel = () => {
     const [showStoryAudit, setShowStoryAudit] = useState(false);
     const [showSetupAudit, setShowSetupAudit] = useState(false);
     const [showAddStory, setShowAddStory] = useState(false);
+    const [addStoryInitialTitle, setAddStoryInitialTitle] = useState<string | undefined>();
     const [showTestingMatrix, setShowTestingMatrix] = useState(false);
     const [themeValues, setThemeValues] = useState(DEFAULT_THEME_VALUES);
     const { theme } = useTheme();
@@ -151,11 +152,24 @@ export const DevPanel = () => {
     }
     
     if (showSetupAudit) {
-        return <DevSetupAudit onClose={() => setShowSetupAudit(false)} />;
+        return <DevSetupAudit 
+            onClose={() => setShowSetupAudit(false)} 
+            onEditStory={(title) => {
+                setShowSetupAudit(false);
+                setAddStoryInitialTitle(title);
+                setShowAddStory(true);
+            }} 
+        />;
     }
     
     if (showAddStory) {
-        return <DevAddStoryCard onClose={() => setShowAddStory(false)} />;
+        return <DevAddStoryCard 
+            onClose={() => {
+                setShowAddStory(false);
+                setAddStoryInitialTitle(undefined);
+            }} 
+            initialStoryTitle={addStoryInitialTitle}
+        />;
     }
 
     if (showTestingMatrix) {

@@ -4,9 +4,10 @@ import { StoryCardDef } from '../types';
 
 interface DevSetupAuditProps {
     onClose: () => void;
+    onEditStory: (title: string) => void;
 }
 
-export const DevSetupAudit: React.FC<DevSetupAuditProps> = ({ onClose }) => {
+export const DevSetupAudit: React.FC<DevSetupAuditProps> = ({ onClose, onEditStory }) => {
   const [cardsWithSetupDescription, setCardsWithSetupDescription] = useState<{card: StoryCardDef, reason: string}[]>([]);
   const [cardsWithRules, setCardsWithRules] = useState<StoryCardDef[]>([]);
 
@@ -74,9 +75,17 @@ export const DevSetupAudit: React.FC<DevSetupAuditProps> = ({ onClose }) => {
               </h3>
               <ul className="space-y-2">
                 {cardsWithSetupDescription.map(item => (
-                  <li key={item.card.title} className="bg-red-900/20 border border-red-900/50 p-3 rounded text-sm">
-                    <div className="font-bold text-red-300">{item.card.title}</div>
-                    <div className="text-gray-400 mt-1">{item.reason}</div>
+                  <li key={item.card.title} className="bg-red-900/20 border border-red-900/50 p-3 rounded text-sm flex justify-between items-center">
+                    <div>
+                      <div className="font-bold text-red-300">{item.card.title}</div>
+                      <div className="text-gray-400 mt-1">{item.reason}</div>
+                    </div>
+                    <button
+                      onClick={() => onEditStory(item.card.title)}
+                      className="px-3 py-1 bg-red-800 hover:bg-red-700 text-white text-xs rounded transition-colors ml-4 whitespace-nowrap"
+                    >
+                      Edit Story
+                    </button>
                   </li>
                 ))}
               </ul>

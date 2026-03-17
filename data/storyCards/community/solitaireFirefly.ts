@@ -281,25 +281,34 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 1,
-    tags: ['community', 'smugglers_run', 'character', 'against_the_black', 'solo'],
-    campaignSetupNotes: [
-      'SERENITY_PART_1_CREW',
-      'SERENITY_PART_1_RESOURCES',
-      'SERENITY_PART_1_JOBS'
+    tags: [
+      "community",
+      "smugglers_run",
+      "character",
+      "against_the_black",
+      "solo"
     ],
+    campaignSetupNotes: [
+      "SERENITY_PART_1_CREW",
+      "SERENITY_PART_1_RESOURCES",
+      "SERENITY_PART_1_JOBS"
+    ],
+    setupDescription: "Ten Percent of Nothin' Expansion Solo Campaign story based on tv episodes",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Set up Serenity at Valentine with Malcolm, Zoë, Wash, Kaylee, Jaune, 1 Fuel, $500, Cry Baby, Expanded Crew Quarters. Load 2 Contra, then turn over a Nav Card."]
+          title: "Story Override",
+          content: [
+            "Set up Serenity at Valentine with Malcolm, Zoë, Wash, Kaylee, Jaune, 1 Fuel, $500, Cry Baby, Expanded Crew Quarters. Load 2 Contra, then turn over a Nav Card."
+          ]
         },
-        source: 'story', 
+        source: "story",
         sourceName: "Serenity Part 1"
-      }
+      },
     ]
   },
   {
