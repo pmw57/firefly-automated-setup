@@ -301,14 +301,58 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
         type: "addSpecialRule",
         category: "draft",
         rule: {
-          title: "Story Override",
+          title: "Setup your ship",
           content: [
-            "Set up Serenity at Valentine with Malcolm, Zoë, Wash, Kaylee, Jaune, 1 Fuel, $500, Cry Baby, Expanded Crew Quarters. Load 2 Contra, then turn over a Nav Card."
+            "Set up Serenity at Valentine with Malcolm, Zoë, Wash, Kaylee, Jayne, Cry Baby, Expanded Crew Quarters."
           ]
         },
         source: "story",
         sourceName: "Serenity Part 1"
       },
+      {
+        type: "setDraftMode",
+        mode: "standard",
+        selectShipDescription: "Set up Serenity at Valentine with Malcolm, Zoë, Wash, Kaylee, Jayne, 1 Fuel, $500, Cry Baby, Expanded Crew Quarters. Load 2 Contra, then turn over a Nav Card.",
+        placementTitle: "Starting Placement",
+        placementDescription: "Place the Serenity ship at Valentine.",
+        source: "story",
+        sourceName: "Serenity Part 1"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        source: "story",
+        sourceName: "Serenity Part 1",
+        rule: {
+          title: "With your Crew",
+          content: [
+            "Set up Serenity with Malcolm, Zoë, Wash, Kaylee, Jayne, Cry Baby, Expanded Crew Quarters."
+          ]
+        }
+      },
+      {
+        type: "setShipPlacement",
+        location: "valentine",
+        source: "story",
+        sourceName: "Serenity Part 1"
+      },
+      {
+        type: "addSpecialRule",
+        category: "story_override",
+        rule: {
+          title: "Setup your ship",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Set up Serenity at Valentine with Malcolm, Zoë, Wash, Kaylee, Jayne, Cry Baby, Expanded Crew Quarters."
+              ]
+            }
+          ]
+        },
+        source: "story",
+        sourceName: "Serenity Part 1"
+      }
     ]
   },
   {
