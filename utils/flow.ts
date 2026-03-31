@@ -1,4 +1,4 @@
-import { GameState, Step, SetupCardStep, SetupContentData } from '../types/index';
+import { GameState, Step, SetupCardStep, SetupContentData, SetupCardDef } from '../types/index';
 import { SETUP_CONTENT } from '../data/steps';
 import { STEP_IDS, SETUP_CARD_IDS } from '../data/ids';
 import { getSetupCardById } from './selectors/story';
@@ -31,15 +31,15 @@ const getOptionalRulesStep = (): Step[] => {
     return [{ type: 'setup', id: STEP_IDS.SETUP_OPTIONAL_RULES }];
 };
 
-const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
-    const primaryCardDef = getSetupCardById(state.setupCardId);
+const getCoreStepsFromSetupCard = (state: GameState, setupCards?: SetupCardDef[]): Step[] => {
+    const primaryCardDef = getSetupCardById(state.setupCardId, setupCards);
     const isCombinable = !!primaryCardDef?.isCombinable;
 
     const primarySequenceCardId = isCombinable && state.secondarySetupId
         ? state.secondarySetupId
         : state.setupCardId;
 
-    const setupCard = getSetupCardById(primarySequenceCardId) || getSetupCardById(SETUP_CARD_IDS.STANDARD)!;
+    const setupCard = getSetupCardById(primarySequenceCardId, setupCards) || getSetupCardById(SETUP_CARD_IDS.STANDARD, setupCards)!;
     const stepDefs = setupCard.steps;
 
     let steps = stepDefs
@@ -48,7 +48,7 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
 
     // If a combinable card (like Flying Solo) is active, merge its specific overrides.
     if (isCombinable) {
-        const combinableCard = getSetupCardById(state.setupCardId)!;
+        const combinableCard = getSetupCardById(state.setupCardId, setupCards)!;
         const combinableStepMap = new Map(combinableCard.steps.map(s => [s.id, s]));
         
         steps = steps.map((step: Step) => {
@@ -105,13 +105,13 @@ const getCoreStepsFromSetupCard = (state: GameState): Step[] => {
 
 const getFinalStep = (): Step => ({ type: 'final', id: STEP_IDS.FINAL });
 
-export const calculateSetupFlow = (state: GameState): Step[] => {
+export const calculateSetupFlow = (state: GameState, setupCards?: SetupCardDef[]): Step[] => {
     const optionalRulesStep = state.setupMode === 'detailed' ? getOptionalRulesStep() : [];
 
     return [
         ...getInitialSetupSteps(),
         ...optionalRulesStep,
-        ...getCoreStepsFromSetupCard(state),
+        ...getCoreStepsFromSetupCard(state, setupCards),
         getFinalStep(),
     ];
 };

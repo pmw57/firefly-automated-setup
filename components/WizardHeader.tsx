@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { GameState, Step } from '../types/index';
 import { useTheme } from './ThemeContext';
+import { useData } from '../hooks/useData';
 import { getHeaderDetails } from '../utils/header';
 import { cls } from '../utils/style';
 
@@ -14,12 +15,13 @@ interface WizardHeaderProps {
 
 export const WizardHeader = ({ gameState, onReset, flow, currentStepIndex }: WizardHeaderProps): React.ReactElement => {
     const [showConfirmReset, setShowConfirmReset] = useState(false);
+    const { stories, setupCards } = useData();
     const { theme } = useTheme();
     const isDark = theme === 'dark';
 
     const { setupName, storyName, soloMode } = useMemo(() => 
-        getHeaderDetails(gameState, flow, currentStepIndex),
-        [gameState, flow, currentStepIndex]
+        getHeaderDetails(gameState, flow, currentStepIndex, stories, setupCards),
+        [gameState, flow, currentStepIndex, stories, setupCards]
     );
 
     const handleResetClick = () => {

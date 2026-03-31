@@ -4,9 +4,8 @@ import { StoryCardDef, AdvancedRuleDef, StoryTag } from '../types/index';
 import { useGameState } from '../hooks/useGameState';
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { MissionSelectionContext, MissionSelectionContextType } from '../hooks/useMissionSelection';
+import { useData } from '../hooks/useData';
 import { getAvailableStoryCards, getFilteredStoryCards, getActiveStoryCard, getAllPotentialAdvancedRules } from '../utils/selectors/story';
-import { STORY_CARDS } from '../data/storyCards/index';
-import { loadStoryData } from '../utils/storyLoader';
 import { ActionType } from '../state/actions';
 
 interface LocalState {
@@ -70,6 +69,7 @@ interface MissionSelectionProviderProps {
 
 export const MissionSelectionProvider: React.FC<MissionSelectionProviderProps> = ({ children, onJump }) => {
   const { state: gameState } = useGameState();
+  const { stories } = useData();
   const { dispatch, setMissionDossierSubstep } = useGameDispatch();
   const [localState, localDispatch] = useReducer(reducer, initialState);
   const [isLoading, setIsLoading] = useState(false);
@@ -77,14 +77,14 @@ export const MissionSelectionProvider: React.FC<MissionSelectionProviderProps> =
   const subStep = gameState.missionDossierSubStep;
   
   // Memoized derived data
-  const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
-  const validStories = useMemo(() => getAvailableStoryCards(gameState), [gameState]);
+  const activeStoryCard = useMemo(() => getActiveStoryCard(gameState, stories), [gameState, stories]);
+  const validStories = useMemo(() => getAvailableStoryCards(gameState, stories), [gameState, stories]);
   const filteredStories = useMemo(() => {
-    return getFilteredStoryCards(gameState, { searchTerm, filterExpansion, filterTheme, sortMode });
-  }, [gameState, searchTerm, filterExpansion, filterTheme, sortMode]);
+    return getFilteredStoryCards(gameState, { searchTerm, filterExpansion, filterTheme, sortMode }, stories);
+  }, [gameState, searchTerm, filterExpansion, filterTheme, sortMode, stories]);
   const allPotentialAdvancedRules: AdvancedRuleDef[] = useMemo(() =>
-    getAllPotentialAdvancedRules(gameState),
-    [gameState]
+    getAllPotentialAdvancedRules(gameState, stories),
+    [gameState, stories]
   );
   const enablePart2 = useMemo(() => 
     gameState.expansions.tenth && gameState.setupMode === 'detailed',
@@ -125,7 +125,9 @@ export const MissionSelectionProvider: React.FC<MissionSelectionProviderProps> =
 
     setIsLoading(true);
     try {
-        const fullStoryData = await loadStoryData(index);
+        const fullStoryData = stories[index];
+        if (!fullStoryData) throw new Error(`Story at index ${index} not found`);
+        
         dispatch({ 
             type: ActionType.SET_ACTIVE_STORY, 
             payload: { 
@@ -139,16 +141,16 @@ export const MissionSelectionProvider: React.FC<MissionSelectionProviderProps> =
     } finally {
         setIsLoading(false);
     }
-  }, [dispatch]);
+  }, [dispatch, stories]);
 
   const handleRandomPick = useCallback(() => {
     if (validStories.length === 0) return;
     const r = Math.floor(Math.random() * validStories.length);
     const card = validStories[r];
-    const originalIndex = STORY_CARDS.indexOf(card);
+    const originalIndex = stories.indexOf(card);
     handleStoryCardSelect(originalIndex);
     localDispatch({ type: 'SET_SHORT_LIST', payload: [] });
-  }, [validStories, handleStoryCardSelect]);
+  }, [validStories, handleStoryCardSelect, stories]);
 
   const handleGenerateShortList = useCallback(() => {
     if (validStories.length === 0) return;
@@ -160,9 +162,9 @@ export const MissionSelectionProvider: React.FC<MissionSelectionProviderProps> =
     if (shortList.length === 0) return;
     const r = Math.floor(Math.random() * shortList.length);
     const card = shortList[r];
-    const originalIndex = STORY_CARDS.indexOf(card);
+    const originalIndex = stories.indexOf(card);
     handleStoryCardSelect(originalIndex);
-  }, [shortList, handleStoryCardSelect]);
+  }, [shortList, handleStoryCardSelect, stories]);
 
   const handleJump = useCallback((index: number) => {
     if (onJump) {

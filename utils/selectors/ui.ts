@@ -1,6 +1,7 @@
 
 
 import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacementRule, Step } from '../../types/index';
+import { LocationDef } from '../../types/locations';
 import { STEP_IDS } from '../../data/ids';
 import { getResolvedRules, hasRuleFlag } from './rules';
 import { getSetupCardById } from './story';
@@ -14,7 +15,7 @@ export const isFlyingSoloEligible = (gameState: GameState): boolean => {
   return gameState.gameMode === 'solo' && gameState.expansions.tenth;
 };
 
-export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
+export const getStoryCardSetupSummary = (card: StoryCardDef, locations?: LocationDef[]): string | null => {
     const rules = card.rules || [];
     if (card.setupDescription) return "Setup Changes";
 
@@ -25,7 +26,7 @@ export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     const placementRule = rules.find(r => r.type === 'setShipPlacement') as SetShipPlacementRule | undefined;
     if (placementRule?.location) {
         if (typeof placementRule.location === 'string') {
-            const loc = getLocationById(placementRule.location);
+            const loc = getLocationById(placementRule.location, locations);
             return `Starts at ${loc ? loc.label : placementRule.location}`;
         }
         return "Custom Ship Placement";
@@ -34,8 +35,8 @@ export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     return null;
 };
 
-export const getDisplaySetupName = (state: GameState, secondarySetupCard?: SetupCardDef): string => {
-    const cardDef = getSetupCardById(state.setupCardId);
+export const getDisplaySetupName = (state: GameState, secondarySetupCard?: SetupCardDef, setupCards?: SetupCardDef[]): string => {
+    const cardDef = getSetupCardById(state.setupCardId, setupCards);
     const isCombinable = !!cardDef?.isCombinable;
 
     if (isCombinable && secondarySetupCard) {
@@ -44,15 +45,15 @@ export const getDisplaySetupName = (state: GameState, secondarySetupCard?: Setup
     return state.setupCardName || 'Configuring...';
 };
 
-export const getTimerSummaryText = (state: GameState): string | null => {
+export const getTimerSummaryText = (state: GameState, stories?: StoryCardDef[], setupCards?: SetupCardDef[]): string | null => {
     if (state.gameMode === 'multiplayer') return null;
     
-    const allRules = getResolvedRules(state);
+    const allRules = getResolvedRules(state, stories, setupCards);
     if (hasRuleFlag(allRules, 'disableSoloTimer')) {
         return "Disabled (Story Override)";
     }
     
-    const cardDef = getSetupCardById(state.setupCardId);
+    const cardDef = getSetupCardById(state.setupCardId, setupCards);
     const isFlyingSolo = !!cardDef?.isCombinable;
     
     // Timer is only relevant for Flying Solo mode
@@ -93,10 +94,10 @@ export const getActiveOptionalRulesText = (state: GameState): string[] => {
 /**
  * Provides derived UI state for the SetupCardSelection component.
  */
-export const getSetupCardSelectionInfo = (gameState: GameState) => {
+export const getSetupCardSelectionInfo = (gameState: GameState, setupCards?: SetupCardDef[]) => {
     const { setupCardId, secondarySetupId } = gameState;
 
-    const cardDef = getSetupCardById(setupCardId);
+    const cardDef = getSetupCardById(setupCardId, setupCards);
     const isFlyingSoloActive = !!cardDef?.isCombinable;
     
     // The setup process has 3 parts: Captain/Expansions, Setup Card, and Optional Rules.

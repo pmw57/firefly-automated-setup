@@ -6,7 +6,7 @@ import { LocalStorageService } from '../utils/storage';
 import { ActionType, ExpansionBundle } from '../state/actions';
 import { GameStateContext, GameDispatchContext, WizardStateContext } from '../hooks/useGameState';
 import { GAME_STATE_STORAGE_KEY, WIZARD_STEP_STORAGE_KEY } from '../data/constants';
-import { STORY_CARDS } from '../data/storyCards/index';
+import { useData } from '../hooks/useData';
 
 const storageService = new LocalStorageService(GAME_STATE_STORAGE_KEY);
 
@@ -36,6 +36,7 @@ const initializer = (): GameState => {
 };
 
 export const GameStateProvider: React.FC<{ children: React.ReactNode, initialState?: GameState }> = ({ children, initialState }) => {
+  const { stories } = useData();
   const [state, dispatch] = useReducer(
     gameReducer,
     initialState,
@@ -72,6 +73,23 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode, initialSta
   }, [currentStepIndex, isWizardInitialized, initialState]);
   // --- End Wizard Step Logic ---
   
+  // Re-hydrate activeStory from index if it's missing (e.g. from URL or localStorage)
+  useEffect(() => {
+    if (state.selectedStoryCardIndex !== null && !state.activeStory && stories.length > 0) {
+      const story = stories[state.selectedStoryCardIndex];
+      if (story) {
+        dispatch({ 
+          type: ActionType.SET_ACTIVE_STORY, 
+          payload: { 
+            story, 
+            index: state.selectedStoryCardIndex, 
+            goal: state.selectedGoal || story.goals?.[0]?.title 
+          } 
+        });
+      }
+    }
+  }, [state.selectedStoryCardIndex, state.activeStory, state.selectedGoal, stories, dispatch]);
+
   // This effect synchronizes the reducer's state with localStorage.
   useEffect(() => {
     if (isStateInitialized && !initialState) {
@@ -102,9 +120,9 @@ export const GameStateProvider: React.FC<{ children: React.ReactNode, initialSta
   const setSetupCard = useCallback((id: string, name: string) => dispatch({ type: ActionType.SET_SETUP_CARD, payload: { id, name } }), [dispatch]);
   const toggleFlyingSolo = useCallback(() => dispatch({ type: ActionType.TOGGLE_FLYING_SOLO }), [dispatch]);
   const setStoryCard = useCallback((index: number | null, goal?: string) => {
-    const story = index !== null ? STORY_CARDS[index] : null;
+    const story = index !== null ? stories[index] : null;
     dispatch({ type: ActionType.SET_ACTIVE_STORY, payload: { story, index, goal } });
-  }, [dispatch]);
+  }, [dispatch, stories]);
   const setGoal = useCallback((goalTitle: string) => dispatch({ type: ActionType.SET_GOAL, payload: goalTitle }), [dispatch]);
   const toggleChallengeOption = useCallback((id: string) => dispatch({ type: ActionType.TOGGLE_CHALLENGE_OPTION, payload: id }), [dispatch]);
   const setDisgruntledDie = useCallback((mode: DisgruntledDieOption) => dispatch({ type: ActionType.SET_DISGRUNTLED_DIE, payload: mode }), [dispatch]);

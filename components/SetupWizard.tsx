@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import { useGameState } from '../hooks/useGameState';
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { useWizardState } from '../hooks/useWizardState';
+import { useData } from '../hooks/useData';
 import { useSetupFlow } from '../hooks/useSetupFlow';
 import { useTheme } from './ThemeContext';
 import { cls } from '../utils/style';
@@ -27,6 +28,7 @@ interface SetupWizardProps {
 
 const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null => {
   const { state: gameState, isStateInitialized } = useGameState();
+  const { stories, setupCards } = useData();
   const { resetGameState, setMissionDossierSubstep } = useGameDispatch();
   const { currentStepIndex, isWizardInitialized } = useWizardState();
   const { flow } = useSetupFlow();
@@ -55,7 +57,7 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
   const currentStep = flow[currentStepIndex];
   
   // Determine if specific logic flags are active
-  const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
+  const allRules = useMemo(() => getResolvedRules(gameState, stories, setupCards), [gameState, stories, setupCards]);
   const requiresSetupConfirmation = useMemo(() => hasRuleFlag(allRules, 'requiresSetupConfirmation'), [allRules]);
 
   const isNextDisabled = useMemo(() => {
@@ -69,15 +71,15 @@ const SetupWizard = ({ isDevMode }: SetupWizardProps): React.ReactElement | null
       }
       
       if (currentStep.id === STEP_IDS.SETUP_CARD_SELECTION) {
-          return getSetupCardSelectionInfo(gameState).isNextDisabled;
+          return getSetupCardSelectionInfo(gameState, setupCards).isNextDisabled;
       }
       if (currentStep.id === STEP_IDS.C4) {
-          if (gameState.missionDossierSubStep === 1 && !getActiveStoryCard(gameState)) {
+          if (gameState.missionDossierSubStep === 1 && !getActiveStoryCard(gameState, stories)) {
               return true;
           }
       }
       return false;
-  }, [currentStep, currentStepIndex, flow.length, gameState, isNavigating, requiresSetupConfirmation]);
+  }, [currentStep, currentStepIndex, flow.length, gameState, isNavigating, requiresSetupConfirmation, stories, setupCards]);
 
   const isPrevDisabled = useMemo(() => {
       return currentStepIndex <= 0 || isNavigating;

@@ -8,6 +8,7 @@ import { STEP_IDS } from '../data/ids';
 import { cls } from '../utils/style';
 import { PageReference } from './PageReference';
 import { useGameState } from '../hooks/useGameState';
+import { useData } from '../hooks/useData';
 import { calculateSetupFlow } from '../utils/flow';
 import { getSetupCardSelectionInfo } from '../utils/selectors/ui';
 
@@ -84,7 +85,8 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
   const isDark = theme === 'dark';
   const titleRef = useRef<HTMLHeadingElement>(null);
   const { state: gameState } = useGameState();
-  const totalSetupParts = useMemo(() => calculateSetupFlow(gameState).filter(s => s.type === 'setup').length, [gameState]);
+  const { setupCards } = useData();
+  const totalSetupParts = useMemo(() => calculateSetupFlow(gameState, setupCards).filter(s => s.type === 'setup').length, [gameState, setupCards]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -130,7 +132,7 @@ export const StepContent = ({ step, onNext, onPrev, isNavigating, isDevMode, ope
       
       const finalNextText = nextButtonTextMap[step.id] || 'Next →';
       
-      const { isNextDisabled: isSetupNextDisabled } = getSetupCardSelectionInfo(gameState);
+      const { isNextDisabled: isSetupNextDisabled } = getSetupCardSelectionInfo(gameState, setupCards);
       const isButtonDisabled = step.id === STEP_IDS.SETUP_CARD_SELECTION && isSetupNextDisabled;
       
       return (

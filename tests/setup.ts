@@ -5,6 +5,36 @@ import { cleanup } from '@testing-library/react';
 // Use `import type` to only load the type definitions for user-event.
 import type userEvent from '@testing-library/user-event';
 
+// Mock Firebase services to return empty arrays immediately in tests
+// This prevents DataProvider from hanging or erroring during tests
+vi.mock('../src/services/storyService', () => ({
+  storyService: {
+    getAllStories: () => Promise.resolve([]),
+    subscribeToStories: () => () => {},
+    testConnection: () => Promise.resolve(),
+    saveStory: () => Promise.resolve(),
+    deleteStory: () => Promise.resolve(),
+  }
+}));
+
+vi.mock('../src/services/setupCardService', () => ({
+  setupCardService: {
+    getAllSetupCards: () => Promise.resolve([]),
+    subscribeToSetupCards: () => () => {},
+    saveSetupCard: () => Promise.resolve(),
+    deleteSetupCard: () => Promise.resolve(),
+  }
+}));
+
+vi.mock('../src/services/locationService', () => ({
+  locationService: {
+    getAllLocations: () => Promise.resolve([]),
+    subscribeToLocations: () => () => {},
+    saveLocation: () => Promise.resolve(),
+    deleteLocation: () => Promise.resolve(),
+  }
+}));
+
 // The type can be correctly inferred from the type-only import.
 export let user: ReturnType<typeof userEvent.setup>;
 

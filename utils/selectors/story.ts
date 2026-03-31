@@ -13,31 +13,35 @@ import { SOLO_EXCLUDED_STORIES } from '../../data/collections';
 // Card Definition Fetchers
 // =================================================================
 
-export const getActiveStoryCard = (gameState: GameState): StoryCardDef | undefined => {
+export const getActiveStoryCard = (gameState: GameState, stories?: StoryCardDef[]): StoryCardDef | undefined => {
     // Return the injected story object if available.
     if (gameState.activeStory) {
         return gameState.activeStory;
     }
     // Fallback for legacy tests or intermediate states: look up by index if object is missing
     if (gameState.selectedStoryCardIndex !== null) {
-        return STORY_CARDS[gameState.selectedStoryCardIndex];
+        const source = stories || STORY_CARDS;
+        return source[gameState.selectedStoryCardIndex];
     }
     return undefined;
 };
 
-export const getStoryCardByTitle = (title: string): StoryCardDef | undefined => {
-    return STORY_CARDS.find(c => c.title === title);
+export const getStoryCardByTitle = (title: string, stories?: StoryCardDef[]): StoryCardDef | undefined => {
+    const source = stories || STORY_CARDS;
+    return source.find(c => c.title === title);
 };
 
-export const getSetupCardById = (id: string): SetupCardDef | undefined => {
-    return SETUP_CARDS.find(c => c.id === id);
+export const getSetupCardById = (id: string, setupCards?: SetupCardDef[]): SetupCardDef | undefined => {
+    const source = setupCards || SETUP_CARDS;
+    return source.find(c => c.id === id);
 };
 
 // =================================================================
 // List Generators & Filters
 // =================================================================
 
-export const getAvailableSetupCards = (gameState: GameState): SetupCardDef[] => {
+export const getAvailableSetupCards = (gameState: GameState, setupCards?: SetupCardDef[]): SetupCardDef[] => {
+    const source = setupCards || SETUP_CARDS;
     const expansionIndices = EXPANSIONS_METADATA.reduce((acc, exp, idx) => {
         (acc as Record<string, number>)[exp.id] = idx;
         return acc;
@@ -46,7 +50,7 @@ export const getAvailableSetupCards = (gameState: GameState): SetupCardDef[] => 
     const stripThe = (str: string) => str.replace(/^The\s+/i, '');
     const isSolo = gameState.gameMode === 'solo';
 
-    return SETUP_CARDS
+    return source
         .filter(setup => {
             if (setup.requiredExpansion && !gameState.expansions[setup.requiredExpansion]) return false;
             if (setup.id === SETUP_CARD_IDS.FLYING_SOLO) return false;
@@ -61,7 +65,8 @@ export const getAvailableSetupCards = (gameState: GameState): SetupCardDef[] => 
         });
 };
 
-export const getAvailableStoryCards = (gameState: GameState): StoryCardDef[] => {
+export const getAvailableStoryCards = (gameState: GameState, stories?: StoryCardDef[]): StoryCardDef[] => {
+    const source = stories || STORY_CARDS;
     const stateWithQuickModeFilters: GameState = {
         ...gameState,
         expansions: {
@@ -70,17 +75,18 @@ export const getAvailableStoryCards = (gameState: GameState): StoryCardDef[] => 
             community: gameState.setupMode === 'quick' ? false : gameState.expansions.community,
         }
     };
-    return STORY_CARDS.filter(card => isStoryCompatible(card, stateWithQuickModeFilters));
+    return source.filter(card => isStoryCompatible(card, stateWithQuickModeFilters));
 };
 
 export const getFilteredStoryCards = (
     gameState: GameState, 
-    filters: { searchTerm: string; filterExpansion: string[]; filterTheme: StoryTag | 'all'; sortMode: 'expansion' | 'name' | 'rating' }
+    filters: { searchTerm: string; filterExpansion: string[]; filterTheme: StoryTag | 'all'; sortMode: 'expansion' | 'name' | 'rating' },
+    stories?: StoryCardDef[]
 ): StoryCardDef[] => {
-    const validStories = getAvailableStoryCards(gameState);
+    const validStories = getAvailableStoryCards(gameState, stories);
     const { searchTerm, filterExpansion, filterTheme, sortMode } = filters;
     
-    const stories = validStories.filter(card => {
+    const filtered = validStories.filter(card => {
         const matchesSearch = searchTerm === '' || 
            card.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
            card.intro.toLowerCase().includes(searchTerm.toLowerCase());
@@ -97,16 +103,16 @@ export const getFilteredStoryCards = (
     const getSortableTitle = (str: string) => str.replace(/^[^a-zA-Z0-9]+/, '').replace(/^The\s+/i, '');
     
     if (sortMode === 'name') {
-        stories.sort((a, b) => getSortableTitle(a.title).localeCompare(getSortableTitle(b.title)));
+        filtered.sort((a, b) => getSortableTitle(a.title).localeCompare(getSortableTitle(b.title)));
     } else if (sortMode === 'rating') {
-        stories.sort((a, b) => {
+        filtered.sort((a, b) => {
             const ratingA = a.rating ?? -1;
             const ratingB = b.rating ?? -1;
             return ratingB - ratingA;
         });
     }
     
-    return stories;
+    return filtered;
 };
 
 // =================================================================
@@ -297,10 +303,11 @@ export const getFilterableExpansions = (showHidden = false) => {
     });
 };
 
-export const getAllPotentialAdvancedRules = (gameState: GameState): AdvancedRuleDef[] => {
+export const getAllPotentialAdvancedRules = (gameState: GameState, stories?: StoryCardDef[]): AdvancedRuleDef[] => {
+    const source = stories || STORY_CARDS;
     const rules: AdvancedRuleDef[] = [];
     if (gameState.expansions.tenth) {
-      STORY_CARDS.forEach(card => {
+      source.forEach(card => {
         if (card.advancedRule) {
           const hasReq = !card.requiredExpansion || gameState.expansions[card.requiredExpansion];
           if (hasReq) rules.push(card.advancedRule);
@@ -311,8 +318,9 @@ export const getAllPotentialAdvancedRules = (gameState: GameState): AdvancedRule
     return rules;
 };
 
-export const getActiveAdvancedRules = (gameState: GameState): AdvancedRuleDef[] => {
-    return STORY_CARDS
+export const getActiveAdvancedRules = (gameState: GameState, stories?: StoryCardDef[]): AdvancedRuleDef[] => {
+    const source = stories || STORY_CARDS;
+    return source
         .filter(c => c.advancedRule && gameState.challengeOptions[c.advancedRule.id])
         .map(c => c.advancedRule!);
 };

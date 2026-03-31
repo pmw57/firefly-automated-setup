@@ -3,9 +3,9 @@ import { StoryCardGridItem } from './StoryCardGridItem';
 import { Button } from '../Button';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useTheme } from '../ThemeContext';
+import { useData } from '../../hooks/useData';
 import { getFilterableExpansions, getStoryIncompatibilityReason } from '../../utils/selectors/story';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
-import { STORY_CARDS } from '../../data/storyCards/index';
 import { cls } from '../../utils/style';
 import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionId, StoryTag } from '../../types';
@@ -85,6 +85,7 @@ const RequestStoryCTA = () => (
 export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const { stories } = useData();
   
   const {
     filteredStories,
@@ -126,7 +127,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
         return [];
     }
 
-    const allMatchingSearch = STORY_CARDS.filter(card =>
+    const allMatchingSearch = stories.filter(card =>
         card.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         card.intro.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -140,7 +141,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
             reason: getStoryIncompatibilityReason(card, gameState),
         }))
         .filter(item => item.reason !== null);
-  }, [searchTerm, filteredStories, gameState]);
+  }, [searchTerm, filteredStories, gameState, stories]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -280,7 +281,7 @@ export const StoryCardGrid: React.FC<StoryCardGridProps> = ({ onSelect }) => {
         {filteredStories.length > 0 ? (
           <>
             {filteredStories.map((card) => {
-              const originalIndex = STORY_CARDS.indexOf(card);
+              const originalIndex = stories.indexOf(card);
               const showHeader = sortMode === 'expansion' && card.requiredExpansion !== lastExpansionId;
               if (showHeader) {
                 lastExpansionId = card.requiredExpansion;

@@ -1,5 +1,5 @@
 
-import { GameState, SetupRule, RuleSourceType } from '../../types/index';
+import { GameState, SetupRule, RuleSourceType, StoryCardDef, SetupCardDef } from '../../types/index';
 import { getSetupCardById } from './story';
 import { getActiveStoryCard } from './story';
 import { EXPANSIONS_METADATA } from '../../data/expansions';
@@ -10,9 +10,11 @@ import { EXPANSIONS_METADATA } from '../../data/expansions';
  * setup cards, the selected story card, and any active challenges or advanced rules.
  *
  * @param gameState The current game state.
+ * @param stories Optional array of story cards.
+ * @param setupCards Optional array of setup cards.
  * @returns An array of all active `SetupRule` objects.
  */
-export const getResolvedRules = (gameState: GameState): SetupRule[] => {
+export const getResolvedRules = (gameState: GameState, stories?: StoryCardDef[], setupCards?: SetupCardDef[]): SetupRule[] => {
     const rules: SetupRule[] = [];
 
     // Helper to check if a rule's criteria are met by the current game state
@@ -27,13 +29,13 @@ export const getResolvedRules = (gameState: GameState): SetupRule[] => {
     };
 
     // Rules from Setup Cards
-    const primaryCard = getSetupCardById(gameState.setupCardId);
+    const primaryCard = getSetupCardById(gameState.setupCardId, setupCards);
     const isCombinable = !!primaryCard?.isCombinable;
 
     // When a combinable card is active (e.g., Flying Solo), it acts as a modifier.
     // The secondary card defines the main board state and should have higher priority.
     if (isCombinable && gameState.secondarySetupId) {
-        const secondaryCard = getSetupCardById(gameState.secondarySetupId);
+        const secondaryCard = getSetupCardById(gameState.secondarySetupId, setupCards);
         if (secondaryCard?.rules) {
             // These rules retain the standard 'setupCard' source for high priority.
             rules.push(...secondaryCard.rules.filter(isRuleActive));
@@ -54,7 +56,7 @@ export const getResolvedRules = (gameState: GameState): SetupRule[] => {
     }
     
     // Rules from Story Card (Highest Priority)
-    const storyCard = getActiveStoryCard(gameState);
+    const storyCard = getActiveStoryCard(gameState, stories);
     if (storyCard?.rules) {
         rules.push(...storyCard.rules.filter(isRuleActive));
     }

@@ -6,6 +6,7 @@ import { InlineExpansionIcon } from '../InlineExpansionIcon';
 import { ExpansionIcon } from '../ExpansionIcon';
 import { useGameState } from '../../hooks/useGameState';
 import { useGameDispatch } from '../../hooks/useGameDispatch';
+import { useData } from '../../hooks/useData';
 import { hasRuleFlag, getResolvedRules } from '../../utils/selectors/rules';
 import { getSoloTimerAdjustmentText } from '../../utils/selectors/story';
 
@@ -32,6 +33,7 @@ const mapRuleSourceToBlockSource = (source: RuleSourceType): SpecialRule['source
 export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) => {
   const { state: gameState } = useGameState();
   const { setGoal, toggleChallengeOption } = useGameDispatch();
+  const { stories, setupCards } = useData();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -39,7 +41,7 @@ export const StoryDossier: React.FC<StoryDossierProps> = ({ activeStoryCard }) =
     setGoal(goalTitle);
   };
 
-  const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
+  const allRules = useMemo(() => getResolvedRules(gameState, stories, setupCards), [gameState, stories, setupCards]);
 
   const goalRules = useMemo(() => {
     return allRules.filter(
