@@ -55,49 +55,9 @@ interface RuleDefinition {
 }
 
 const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
-  // Job Rules
-  setJobMode: { label: 'Set Job Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: JOB_MODES }], default: () => ({ type: 'setJobMode', mode: 'standard' }) },
-  setJobContacts: { label: 'Set Specific Job Contacts', params: [{ name: 'contacts', label: 'Contacts', type: 'multi-select', options: Object.values(CONTACT_NAMES) }], default: () => ({ type: 'setJobContacts', contacts: [] }) },
-  allowContacts: { label: 'Allow Only Specific Contacts', params: [{ name: 'contacts', label: 'Contacts', type: 'multi-select', options: Object.values(CONTACT_NAMES) }], default: () => ({ type: 'allowContacts', contacts: [] } as Partial<AllowContactsRule>) },
-  forbidContact: { label: 'Forbid Contact', params: [{ name: 'contact', label: 'Contact', type: 'select', options: Object.values(CONTACT_NAMES) }], default: () => ({ type: 'forbidContact', contact: CONTACT_NAMES.HARKEN }) },
-  primeContacts: { label: 'Prime Contact Decks', params: [], default: () => ({ type: 'primeContacts' } as Partial<PrimeContactsRule>) },
-  setJobStepContent: {
-      label: 'Set Job Step Content',
-      params: [
-          { name: 'position', label: 'Position', type: 'select', options: ['before', 'after'] },
-          { name: 'content', label: 'Content', type: 'string-list-builder' }
-      ],
-      default: () => ({ type: 'setJobStepContent', position: 'before', content: [] } as Partial<SetJobStepContentRule>)
-  },
-  
   // Nav Rules
   setNavMode: { label: 'Set Nav Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: NAV_MODES }], default: () => ({ type: 'setNavMode', mode: 'standard' }) },
 
-  // Prime Rules
-  setPrimeMode: { label: 'Set Prime Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: PRIME_MODES }], default: () => ({ type: 'setPrimeMode', mode: 'standard' }) },
-  modifyPrime: {
-    label: 'Modify Prime the Pump',
-    params: [
-      { name: 'multiplier', label: 'Set Multiplier (e.g., 2)', type: 'number' },
-      { name: 'modifier', label: 'Modifier Object (JSON)', type: 'textarea' }
-    ],
-    default: () => ({ type: 'modifyPrime', multiplier: 2 } as Partial<ModifyPrimeRule>)
-  },
-  
-  // Draft Rules
-  setDraftMode: { label: 'Set Draft Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: DRAFT_MODES }], default: () => ({ type: 'setDraftMode', mode: 'standard' }) },
-  setLeaderSetup: { label: 'Set Leader Setup', params: [{ name: 'mode', label: 'Mode', type: 'select', options: LEADER_SETUP_MODES }], default: () => ({ type: 'setLeaderSetup', mode: 'standard' }) },
-  bypassDraft: {
-    label: 'Bypass Draft',
-    params: [{ name: 'reason', label: 'Reason', type: 'text' }],
-    default: () => ({ type: 'bypassDraft', reason: 'Assigned Ship & Crew' } as Partial<BypassDraftRule>)
-  },
-  setPlayerBadges: {
-    label: 'Set Player Badges',
-    params: [{ name: 'badges', label: 'Badges Map', type: 'key-value-builder' }],
-    default: () => ({ type: 'setPlayerBadges', badges: { 0: "Commander" } } as Partial<SetPlayerBadgesRule>)
-  },
-  
   // Alliance / Reaver Rules
   setAllianceMode: { label: 'Set Alliance Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: ALLIANCE_SETUP_MODES }], default: () => ({ type: 'setAllianceMode', mode: 'standard' }) },
   setAlliancePlacement: { label: 'Set Alliance Placement', params: [{ name: 'placement', label: 'Placement Text', type: 'text' }], default: () => ({ type: 'setAlliancePlacement', placement: '' }) },
@@ -118,8 +78,22 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
       default: () => ({ type: 'addBoardComponent', title: 'New Component', component: 'contraband', count: 1 } as Partial<AddBoardComponentRule>)
   },
 
-  // General / Misc Rules
+  // Draft Rules
+  setDraftMode: { label: 'Set Draft Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: DRAFT_MODES }], default: () => ({ type: 'setDraftMode', mode: 'standard' }) },
+  setLeaderSetup: { label: 'Set Leader Setup', params: [{ name: 'mode', label: 'Mode', type: 'select', options: LEADER_SETUP_MODES }], default: () => ({ type: 'setLeaderSetup', mode: 'standard' }) },
+  bypassDraft: {
+    label: 'Bypass Draft',
+    params: [{ name: 'reason', label: 'Reason', type: 'text' }],
+    default: () => ({ type: 'bypassDraft', reason: 'Assigned Ship & Crew' } as Partial<BypassDraftRule>)
+  },
+  setPlayerBadges: {
+    label: 'Set Player Badges',
+    params: [{ name: 'badges', label: 'Badges Map', type: 'key-value-builder' }],
+    default: () => ({ type: 'setPlayerBadges', badges: { 0: "Commander" } } as Partial<SetPlayerBadgesRule>)
+  },
   setShipPlacement: { label: 'Set Ship Placement', params: [{ name: 'location', label: 'Location', type: 'select', options: SHIP_PLACEMENT_LOCATIONS }], default: () => ({ type: 'setShipPlacement', location: 'persephone' }) },
+
+  // Resource Rules
   modifyResource: {
     label: 'Modify Resource',
     params: [
@@ -130,6 +104,34 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
     ],
     default: () => ({ type: 'modifyResource', resource: 'credits', method: 'add', value: 0, description: '' })
   },
+
+  // Job Rules
+  setJobMode: { label: 'Set Job Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: JOB_MODES }], default: () => ({ type: 'setJobMode', mode: 'standard' }) },
+  setJobContacts: { label: 'Set Specific Job Contacts', params: [{ name: 'contacts', label: 'Contacts', type: 'multi-select', options: Object.values(CONTACT_NAMES) }], default: () => ({ type: 'setJobContacts', contacts: [] }) },
+  allowContacts: { label: 'Allow Only Specific Contacts', params: [{ name: 'contacts', label: 'Contacts', type: 'multi-select', options: Object.values(CONTACT_NAMES) }], default: () => ({ type: 'allowContacts', contacts: [] } as Partial<AllowContactsRule>) },
+  forbidContact: { label: 'Forbid Contact', params: [{ name: 'contact', label: 'Contact', type: 'select', options: Object.values(CONTACT_NAMES) }], default: () => ({ type: 'forbidContact', contact: CONTACT_NAMES.HARKEN }) },
+  primeContacts: { label: 'Prime Contact Decks', params: [], default: () => ({ type: 'primeContacts' } as Partial<PrimeContactsRule>) },
+  setJobStepContent: {
+      label: 'Set Job Step Content',
+      params: [
+          { name: 'position', label: 'Position', type: 'select', options: ['before', 'after'] },
+          { name: 'content', label: 'Content', type: 'string-list-builder' }
+      ],
+      default: () => ({ type: 'setJobStepContent', position: 'before', content: [] } as Partial<SetJobStepContentRule>)
+  },
+  
+  // Prime Rules
+  setPrimeMode: { label: 'Set Prime Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: PRIME_MODES }], default: () => ({ type: 'setPrimeMode', mode: 'standard' }) },
+  modifyPrime: {
+    label: 'Modify Prime the Pump',
+    params: [
+      { name: 'multiplier', label: 'Set Multiplier (e.g., 2)', type: 'number' },
+      { name: 'modifier', label: 'Modifier Object (JSON)', type: 'textarea' }
+    ],
+    default: () => ({ type: 'modifyPrime', multiplier: 2 } as Partial<ModifyPrimeRule>)
+  },
+  
+  // General / Misc Rules
   addFlag: {
     label: 'Add Flag',
     params: [
