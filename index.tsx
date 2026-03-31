@@ -4,6 +4,7 @@ import App from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ThemeProvider } from './components/ThemeProvider';
 import { GameStateProvider } from './components/GameStateContext';
+import { DataProvider } from './components/DataProvider';
 import './index.css';
 
 declare global {
@@ -30,9 +31,11 @@ root.render(
   <React.StrictMode>
     <ErrorBoundary>
       <ThemeProvider>
-        <GameStateProvider>
-          <App />
-        </GameStateProvider>
+        <DataProvider>
+          <GameStateProvider>
+            <App />
+          </GameStateProvider>
+        </DataProvider>
       </ThemeProvider>
     </ErrorBoundary>
   </React.StrictMode>

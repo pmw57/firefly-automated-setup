@@ -3,7 +3,6 @@ import { GameState, Expansions, SetupMode } from '../types/index';
 import { Action, ActionType } from './actions';
 import { EXPANSIONS_METADATA } from '../data/expansions';
 import { EXPANSION_SETTINGS_STORAGE_KEY, SETUP_MODE_STORAGE_KEY } from '../data/constants';
-import { STORY_CARDS } from '../data/storyCards/index';
 
 import { validateState } from './validation';
 import { configReducer } from './reducers/configReducer';
@@ -135,11 +134,6 @@ export function gameReducer(state: GameState, action: Action): GameState {
           draft: { state: null, isManual: false },
           missionDossierSubStep: 1
       };
-      
-      // Re-hydrate activeStory from index if it's missing (e.g. from URL)
-      if (nextState.selectedStoryCardIndex !== null && !nextState.activeStory) {
-          nextState.activeStory = STORY_CARDS[nextState.selectedStoryCardIndex];
-      }
       break;
 
     // Domain Specific Reducers

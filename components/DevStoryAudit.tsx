@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { STORY_CARDS } from '../data/storyCards/index';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useData } from '../hooks/useData';
 import { StoryCardDef } from '../types';
 
 interface AuditedLink {
@@ -15,11 +15,12 @@ interface DevStoryAuditProps {
 const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
 
 export const DevStoryAudit: React.FC<DevStoryAuditProps> = ({ onClose }) => {
+  const { stories } = useData();
   const [auditedLinks, setAuditedLinks] = useState<AuditedLink[]>([]);
   const [missingLinks, setMissingLinks] = useState<StoryCardDef[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const runAudit = async () => {
+  const runAudit = useCallback(async () => {
     setIsLoading(true);
     setAuditedLinks([]);
     setMissingLinks([]);
@@ -27,7 +28,7 @@ export const DevStoryAudit: React.FC<DevStoryAuditProps> = ({ onClose }) => {
     const linksToAudit: StoryCardDef[] = [];
     const missing: StoryCardDef[] = [];
 
-    for (const card of STORY_CARDS) {
+    for (const card of stories) {
       if (card.sourceUrl) {
         linksToAudit.push(card);
       } else {
@@ -73,11 +74,11 @@ export const DevStoryAudit: React.FC<DevStoryAuditProps> = ({ onClose }) => {
 
     setAuditedLinks(results);
     setIsLoading(false);
-  };
+  }, [stories]);
 
   useEffect(() => {
     runAudit();
-  }, []);
+  }, [runAudit]);
 
   const validLinks = auditedLinks.filter(l => l.status === 'valid');
   const corsLinks = auditedLinks.filter(l => l.status === 'cors_error');
@@ -140,7 +141,7 @@ export const DevStoryAudit: React.FC<DevStoryAuditProps> = ({ onClose }) => {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center h-full">
               <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
-              <p className="mt-4">Auditing {STORY_CARDS.filter(c => c.sourceUrl).length} URLs...</p>
+              <p className="mt-4">Auditing {stories.filter(c => c.sourceUrl).length} URLs...</p>
             </div>
           ) : (
             <>

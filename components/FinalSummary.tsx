@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { GameState } from '../types/index';
 import { getDisplaySetupName, getTimerSummaryText, getActiveOptionalRulesText } from '../utils/selectors/ui';
 import { useTheme } from './ThemeContext';
+import { useData } from '../hooks/useData';
 import { getActiveExpansions, getActiveAdvancedRules, getActiveStoryChallenges, getActiveStoryCard } from '../utils/selectors/story';
 
 interface FinalSummaryProps {
@@ -10,14 +11,15 @@ interface FinalSummaryProps {
 
 export const FinalSummary = ({ gameState }: FinalSummaryProps): React.ReactElement => {
     const { theme } = useTheme();
+    const { stories, setupCards } = useData();
     const isDark = theme === 'dark';
     
     const activeExpansions = getActiveExpansions(gameState);
     
-    const displaySetupName = getDisplaySetupName(gameState);
-    const timerSummary = getTimerSummaryText(gameState);
+    const displaySetupName = getDisplaySetupName(gameState, undefined, setupCards);
+    const timerSummary = getTimerSummaryText(gameState, stories, setupCards);
     const activeOptionalRules = getActiveOptionalRulesText(gameState);
-    const activeStoryCard = useMemo(() => getActiveStoryCard(gameState), [gameState]);
+    const activeStoryCard = useMemo(() => getActiveStoryCard(gameState, stories), [gameState, stories]);
     
     // Disgruntled Die
     const disgruntledDieMode = gameState.optionalRules?.disgruntledDie || 'standard';

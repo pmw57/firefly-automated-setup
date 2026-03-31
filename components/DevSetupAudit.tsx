@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { STORY_CARDS } from '../data/storyCards/index';
+import { useData } from '../hooks/useData';
 import { StoryCardDef } from '../types';
 
 interface DevSetupAuditProps {
@@ -8,6 +8,7 @@ interface DevSetupAuditProps {
 }
 
 export const DevSetupAudit: React.FC<DevSetupAuditProps> = ({ onClose, onEditStory }) => {
+  const { stories } = useData();
   const [cardsWithSetupDescription, setCardsWithSetupDescription] = useState<{card: StoryCardDef, reason: string}[]>([]);
   const [cardsWithRules, setCardsWithRules] = useState<StoryCardDef[]>([]);
 
@@ -15,7 +16,7 @@ export const DevSetupAudit: React.FC<DevSetupAuditProps> = ({ onClose, onEditSto
     const needsConversion: {card: StoryCardDef, reason: string}[] = [];
     const converted: StoryCardDef[] = [];
 
-    for (const card of STORY_CARDS) {
+    for (const card of stories) {
       const hasSetupDescription = !!card.setupDescription;
       
       const hasStoryOverrideRule = card.rules?.some(

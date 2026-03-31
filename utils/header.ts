@@ -1,5 +1,5 @@
 // Explicitly import from the barrel file to avoid module resolution ambiguity.
-import { GameState, Step, HeaderDetails } from '../types/index';
+import { GameState, Step, HeaderDetails, StoryCardDef, SetupCardDef } from '../types/index';
 import { getDisplaySetupName } from './selectors/ui';
 import { SETUP_CARD_IDS } from '../data/ids';
 import { getActiveStoryCard, getSetupCardById } from './selectors/story';
@@ -12,20 +12,24 @@ import { getActiveStoryCard, getSetupCardById } from './selectors/story';
  * @param gameState The current state of the game setup.
  * @param flow The calculated array of steps for the current setup.
  * @param currentStepIndex The user's current position in the flow.
+ * @param stories Optional array of story cards.
+ * @param setupCards Optional array of setup cards.
  * @returns A HeaderDetails object containing the final strings to display.
  */
 export const getHeaderDetails = (
     gameState: GameState,
     flow: Step[],
-    currentStepIndex: number
+    currentStepIndex: number,
+    stories?: StoryCardDef[],
+    setupCards?: SetupCardDef[]
 ): HeaderDetails => {
     const firstCoreStepIndex = flow.findIndex(step => step.type === 'core');
     const isPastFirstStep = firstCoreStepIndex !== -1 && currentStepIndex >= firstCoreStepIndex;
 
-    const secondaryCard = gameState.secondarySetupId ? getSetupCardById(gameState.secondarySetupId) : undefined;
-    const setupName = gameState.setupCardName ? getDisplaySetupName(gameState, secondaryCard) : 'Configuring...';
+    const secondaryCard = gameState.secondarySetupId ? getSetupCardById(gameState.secondarySetupId, setupCards) : undefined;
+    const setupName = gameState.setupCardName ? getDisplaySetupName(gameState, secondaryCard, setupCards) : 'Configuring...';
     
-    const storyName = getActiveStoryCard(gameState)?.title ?? null;
+    const storyName = getActiveStoryCard(gameState, stories)?.title ?? null;
 
     let soloMode: 'Expanded' | 'Classic' | null = null;
     if (gameState.gameMode === 'solo' && isPastFirstStep) {

@@ -35,6 +35,7 @@ export const ALL_LOCATIONS: LocationDef[] = [
 
 export const LOCATION_IDS = ALL_LOCATIONS.map(loc => loc.id);
 
-export const getLocationById = (id: string): LocationDef | undefined => {
-  return ALL_LOCATIONS.find(loc => loc.id === id);
+export const getLocationById = (id: string, locations?: LocationDef[]): LocationDef | undefined => {
+  const source = locations || ALL_LOCATIONS;
+  return source.find(loc => loc.id === id);
 };

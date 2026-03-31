@@ -4,6 +4,7 @@ import { SETUP_CARD_IDS } from '../../data/ids';
 import { useTheme } from '../ThemeContext';
 import { useGameState } from '../../hooks/useGameState';
 import { useGameDispatch } from '../../hooks/useGameDispatch';
+import { useData } from '../../hooks/useData';
 import { getAvailableSetupCards, getSetupCardById } from '../../utils/selectors/story';
 import { FlyingSoloBanner } from './FlyingSoloBanner';
 import { SetupCardList } from './SetupCardList';
@@ -18,11 +19,12 @@ interface SetupCardSelectionProps {
 
 export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
   const { state: gameState } = useGameState();
+  const { stories, setupCards } = useData();
   const { setSetupCard, toggleFlyingSolo, riversRunConfirmSetup } = useGameDispatch();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  const allRules = useMemo(() => getResolvedRules(gameState), [gameState]);
+  const allRules = useMemo(() => getResolvedRules(gameState, stories, setupCards), [gameState, stories, setupCards]);
   const setupSelectionRules = useMemo(() => {
     return allRules
       .filter((r): r is AddSpecialRule => r.type === 'addSpecialRule' && r.category === 'setup_selection')
@@ -31,18 +33,18 @@ export const SetupCardSelection: React.FC<SetupCardSelectionProps> = () => {
   
   const requiresSetupConfirmation = useMemo(() => hasRuleFlag(allRules, 'requiresSetupConfirmation'), [allRules]);
   
-  const totalParts = useMemo(() => calculateSetupFlow(gameState).filter(s => s.type === 'setup').length, [gameState]);
+  const totalParts = useMemo(() => calculateSetupFlow(gameState, setupCards).filter(s => s.type === 'setup').length, [gameState, setupCards]);
 
   const {
     isFlyingSoloActive,
     isFlyingSoloEligible,
-  } = useMemo(() => getSetupCardSelectionInfo(gameState), [gameState]);
+  } = useMemo(() => getSetupCardSelectionInfo(gameState, setupCards), [gameState, setupCards]);
 
-  const flyingSoloCard = useMemo(() => getSetupCardById(SETUP_CARD_IDS.FLYING_SOLO), []);
+  const flyingSoloCard = useMemo(() => getSetupCardById(SETUP_CARD_IDS.FLYING_SOLO, setupCards), [setupCards]);
 
   const availableSetups = useMemo(() => 
-    getAvailableSetupCards(gameState), 
-  [gameState]);
+    getAvailableSetupCards(gameState, setupCards), 
+  [gameState, setupCards]);
 
   const handleSetupCardSelect = useCallback((id: string, label: string) => {
     setSetupCard(id, label);

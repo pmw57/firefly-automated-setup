@@ -3,7 +3,7 @@ import { Button } from '../Button';
 import { StoryCardGridItem } from './StoryCardGridItem';
 import { useMissionSelection } from '../../hooks/useMissionSelection';
 import { useTheme } from '../ThemeContext';
-import { STORY_CARDS } from '../../data/storyCards/index';
+import { useData } from '../../hooks/useData';
 import { useGameState } from '../../hooks/useGameState';
 
 interface StoryRandomizerProps {
@@ -13,6 +13,7 @@ interface StoryRandomizerProps {
 export const StoryRandomizer: React.FC<StoryRandomizerProps> = ({ onSelect }) => {
   const { theme } = useTheme();
   const { state: gameState } = useGameState();
+  const { stories } = useData();
   const isDark = theme === 'dark';
 
   const {
@@ -62,7 +63,7 @@ export const StoryRandomizer: React.FC<StoryRandomizerProps> = ({ onSelect }) =>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
             {shortList.map((card) => {
-                const originalIndex = STORY_CARDS.indexOf(card);
+                const originalIndex = stories.indexOf(card);
                 return (
                   <StoryCardGridItem 
                     key={`${card.title}-${originalIndex}`}

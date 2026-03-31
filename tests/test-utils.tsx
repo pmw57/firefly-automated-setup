@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { ThemeProvider } from '../components/ThemeProvider';
 import { GameStateProvider } from '../components/GameStateContext';
+import { DataProvider } from '../components/DataProvider';
 import { GameState } from '../types/index';
 import { user } from './setup';
 
@@ -16,9 +17,11 @@ const customRender = (
 ) => {
   const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     <ThemeProvider>
-      <GameStateProvider initialState={options?.initialState}>
-        {children}
-      </GameStateProvider>
+      <DataProvider>
+        <GameStateProvider initialState={options?.initialState}>
+          {children}
+        </GameStateProvider>
+      </DataProvider>
     </ThemeProvider>
   );
 

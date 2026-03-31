@@ -10,8 +10,9 @@ import { STORY_CARDS } from '../data/storyCards/index';
  * @param index The index of the story card in the main manifest.
  * @returns A Promise resolving to the full StoryCardDef.
  */
-export const loadStoryData = async (index: number): Promise<StoryCardDef> => {
-    const manifest = STORY_CARDS[index];
+export const loadStoryData = async (index: number, stories?: StoryCardDef[]): Promise<StoryCardDef> => {
+    const source = stories || STORY_CARDS;
+    const manifest = source[index];
     if (!manifest) {
         throw new Error(`Story card at index ${index} not found.`);
     }

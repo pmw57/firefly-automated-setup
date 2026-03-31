@@ -1,109 +1,66 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from './ThemeContext';
 import { DevStoryAudit } from './DevStoryAudit';
 import { DevSetupAudit } from './DevSetupAudit';
-import { DevAddStoryCard } from './DevAddStoryCard';
+import { StoryCardEditor } from './StoryCardEditor';
 import { DevTestingMatrix } from './DevTestingMatrix';
+import { DevThemeEditor } from './DevThemeEditor';
+import { DevMigrationTools } from './DevMigrationTools';
 import { useGameState } from '../hooks/useGameState';
+import { auth } from '../firebase';
+import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, User, signOut } from 'firebase/auth';
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { getAvailableStoryCards } from '../utils/selectors/story';
-import { STORY_CARDS } from '../data/storyCards/index';
+import { useData } from '../hooks/useData';
 
 import { loadStoryData } from '../utils/storyLoader';
 import { ActionType } from '../state/actions';
-
-const DEFAULT_THEME_VALUES = {
-  // Light Theme
-  gridLinesOpacity: 0.02,
-  waterStainOpacity: 0.2,
-  vignetteOpacity: 0.1,
-  gridSize: 15,
-  // Dark Theme
-  nebula1Opacity: 0.2,
-  nebula2Opacity: 0.2,
-  starsTinyOpacity: 0.4,
-  starsMediumOpacity: 0.25,
-  starsLargeOpacity: 0.15,
-  animationSpeed1: 60,
-  animationSpeed2: 60,
-};
-
-const CSS_VARS = {
-  gridLinesOpacity: '--grid-line-opacity',
-  waterStainOpacity: '--water-stain-opacity',
-  vignetteOpacity: '--vignette-opacity',
-  gridSize: '--grid-size',
-  nebula1Opacity: '--nebula-1-opacity',
-  nebula2Opacity: '--nebula-2-opacity',
-  starsTinyOpacity: '--stars-tiny-opacity',
-  starsMediumOpacity: '--stars-medium-opacity',
-  starsLargeOpacity: '--stars-large-opacity',
-  animationSpeed1: '--starfield-animation-duration-1',
-  animationSpeed2: '--starfield-animation-duration-2',
-};
-
-const Slider = ({ label, value, onChange, min = 0, max = 1, step = 0.01 }: { label: string, value: number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, min?: number, max?: number, step?: number }) => (
-    <div className="flex flex-col">
-        <label className="text-xs font-mono flex justify-between">
-            <span>{label}</span>
-            <span>{value.toFixed(4)}</span>
-        </label>
-        <input
-            type="range"
-            min={min}
-            max={max}
-            step={step}
-            value={value}
-            onChange={onChange}
-            className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-        />
-    </div>
-);
 
 export const DevPanel = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [showStoryAudit, setShowStoryAudit] = useState(false);
     const [showSetupAudit, setShowSetupAudit] = useState(false);
     const [showAddStory, setShowAddStory] = useState(false);
+    const [showThemeEditor, setShowThemeEditor] = useState(false);
+    const [showMigrationTools, setShowMigrationTools] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+        return () => unsubscribe();
+    }, []);
+
+    const handleLogin = async () => {
+        try {
+            await signInWithPopup(auth, new GoogleAuthProvider());
+        } catch (error) {
+            console.error("Login failed:", error);
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
+
     const [addStoryInitialTitle, setAddStoryInitialTitle] = useState<string | undefined>();
     const [showTestingMatrix, setShowTestingMatrix] = useState(false);
-    const [themeValues, setThemeValues] = useState(DEFAULT_THEME_VALUES);
-    const { theme } = useTheme();
 
     const { state: gameState } = useGameState();
     const { dispatch } = useGameDispatch();
-
-    useEffect(() => {
-        const root = document.documentElement;
-        Object.entries(themeValues).forEach(([key, value]) => {
-            const cssVar = CSS_VARS[key as keyof typeof CSS_VARS];
-            if (cssVar) {
-                let cssValue = value.toString();
-                if (key === 'gridSize') {
-                    cssValue += 'px';
-                } else if (key.startsWith('animationSpeed')) {
-                    cssValue += 's';
-                }
-                root.style.setProperty(cssVar, cssValue);
-            }
-        });
-    }, [themeValues]);
-
-    const handleChange = (key: keyof typeof DEFAULT_THEME_VALUES) => (e: React.ChangeEvent<HTMLInputElement>) => {
-        setThemeValues(prev => ({ ...prev, [key]: parseFloat(e.target.value) }));
-    };
-
-    const handleReset = () => {
-        setThemeValues(DEFAULT_THEME_VALUES);
-    };
+    const { stories } = useData();
 
     const handleNavigateStory = async (direction: 'prev' | 'next') => {
-        const availableStories = getAvailableStoryCards(gameState);
+        const availableStories = getAvailableStoryCards(gameState, stories);
         if (availableStories.length === 0) return;
 
         let currentIndex = -1;
         if (gameState.selectedStoryCardIndex !== null) {
-             const currentStory = STORY_CARDS[gameState.selectedStoryCardIndex];
+             const currentStory = stories[gameState.selectedStoryCardIndex];
              // Find by title to ensure we match the correct object reference or equivalent in filtered list
              currentIndex = availableStories.findIndex(s => s.title === currentStory.title);
         }
@@ -127,11 +84,11 @@ export const DevPanel = () => {
         if (nextIndex !== currentIndex) {
             const nextStory = availableStories[nextIndex];
             // Find original index in master list to dispatch
-            const originalIndex = STORY_CARDS.findIndex(s => s.title === nextStory.title);
+            const originalIndex = stories.findIndex(s => s.title === nextStory.title);
             
             if (originalIndex !== -1) {
                  try {
-                     const fullStory = await loadStoryData(originalIndex);
+                     const fullStory = await loadStoryData(originalIndex, stories);
                      dispatch({ 
                         type: ActionType.SET_ACTIVE_STORY, 
                         payload: { 
@@ -163,7 +120,7 @@ export const DevPanel = () => {
     }
     
     if (showAddStory) {
-        return <DevAddStoryCard 
+        return <StoryCardEditor 
             onClose={() => {
                 setShowAddStory(false);
                 setAddStoryInitialTitle(undefined);
@@ -174,6 +131,14 @@ export const DevPanel = () => {
 
     if (showTestingMatrix) {
         return <DevTestingMatrix onClose={() => setShowTestingMatrix(false)} />;
+    }
+
+    if (showThemeEditor) {
+        return <DevThemeEditor onClose={() => setShowThemeEditor(false)} />;
+    }
+
+    if (showMigrationTools) {
+        return <DevMigrationTools user={user} onClose={() => setShowMigrationTools(false)} />;
     }
 
     if (!isOpen) {
@@ -211,7 +176,17 @@ export const DevPanel = () => {
     return (
         <div className="fixed bottom-4 left-4 z-[9999] bg-gray-800/90 backdrop-blur-md text-white p-4 rounded-lg shadow-2xl w-80 border border-gray-600">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-lg">Dev Panel</h3>
+                <div className="flex flex-col">
+                    <h3 className="font-bold text-lg leading-tight">Dev Panel</h3>
+                    {user ? (
+                        <div className="flex items-center gap-2 mt-1">
+                            <span className="text-[10px] text-green-400 font-mono truncate max-w-[120px]">{user.email}</span>
+                            <button onClick={handleLogout} className="text-[10px] text-gray-400 hover:text-white underline">Logout</button>
+                        </div>
+                    ) : (
+                        <button onClick={handleLogin} className="text-[10px] text-blue-400 hover:text-blue-300 underline mt-1 text-left">Login to Save/Migrate</button>
+                    )}
+                </div>
                 <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white p-2 -mr-2 transition-colors" title="Close Dev Panel">
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -219,60 +194,51 @@ export const DevPanel = () => {
                 </button>
             </div>
             
-            <div className="flex flex-col gap-2 mb-4">
-                <button
-                    onClick={() => setShowStoryAudit(true)}
-                    className="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 rounded"
-                >
-                    Audit Story Links
-                </button>
-                <button
-                    onClick={() => setShowSetupAudit(true)}
-                    className="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2 rounded"
-                >
-                    Audit Story Cards
-                </button>
+            <div className="flex flex-col gap-2">
+                <div className="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-1">Content Management</div>
                 <button
                     onClick={() => setShowAddStory(true)}
-                    className="w-full bg-green-600 hover:bg-green-500 text-white text-sm font-bold py-2 rounded"
+                    className="w-full bg-green-600 hover:bg-green-500 text-white text-sm font-bold py-2 rounded flex items-center justify-center gap-2"
                 >
-                    Add Story Card
+                    <span>📝</span> Story Card Editor
+                </button>
+                <div className="grid grid-cols-2 gap-2">
+                    <button
+                        onClick={() => setShowStoryAudit(true)}
+                        className="bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold py-2 rounded"
+                    >
+                        Audit Links
+                    </button>
+                    <button
+                        onClick={() => setShowSetupAudit(true)}
+                        className="bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold py-2 rounded"
+                    >
+                        Audit Cards
+                    </button>
+                </div>
+
+                <div className="text-[10px] uppercase tracking-wider text-gray-500 font-bold mt-4 mb-1">Visuals & Testing</div>
+                <button
+                    onClick={() => setShowThemeEditor(true)}
+                    className="w-full bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-bold py-2 rounded flex items-center justify-center gap-2"
+                >
+                    <span>🎨</span> Theme Editor
                 </button>
                 <button
                     onClick={() => setShowTestingMatrix(true)}
-                    className="w-full bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold py-2 rounded"
+                    className="w-full bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold py-2 rounded flex items-center justify-center gap-2"
                 >
-                    Generate Testing Matrix
+                    <span>📊</span> Testing Matrix
+                </button>
+
+                <div className="text-[10px] uppercase tracking-wider text-gray-500 font-bold mt-4 mb-1">System</div>
+                <button
+                    onClick={() => setShowMigrationTools(true)}
+                    className="w-full bg-gray-700 hover:bg-gray-600 text-white text-[11px] font-bold py-2 rounded flex items-center justify-center gap-2"
+                >
+                    <span>⚙️</span> Migration Tools
                 </button>
             </div>
-
-            <div className="space-y-4">
-                <div className={`p-2 rounded transition-colors ${theme === 'light' ? 'bg-gray-700' : 'bg-transparent opacity-50'}`}>
-                    <h4 className="text-sm font-bold mb-2 text-yellow-400">Light Theme (Parchment)</h4>
-                    <Slider label="Grid Size (px)" value={themeValues.gridSize} onChange={handleChange('gridSize')} min={5} max={50} step={1} />
-                    <Slider label="Grid Lines Opacity" value={themeValues.gridLinesOpacity} onChange={handleChange('gridLinesOpacity')} />
-                    <Slider label="Water Stain Opacity" value={themeValues.waterStainOpacity} onChange={handleChange('waterStainOpacity')} />
-                    <Slider label="Vignette Opacity" value={themeValues.vignetteOpacity} onChange={handleChange('vignetteOpacity')} />
-                </div>
-                
-                <div className={`p-2 rounded transition-colors ${theme === 'dark' ? 'bg-gray-700' : 'bg-transparent opacity-50'}`}>
-                    <h4 className="text-sm font-bold mb-2 text-cyan-400">Dark Theme (Starfield)</h4>
-                    <Slider label="Animation 1 Speed (s)" value={themeValues.animationSpeed1} onChange={handleChange('animationSpeed1')} min={5} max={200} step={1} />
-                    <Slider label="Animation 2 Speed (s)" value={themeValues.animationSpeed2} onChange={handleChange('animationSpeed2')} min={5} max={200} step={1} />
-                    <Slider label="Nebula 1 Opacity" value={themeValues.nebula1Opacity} onChange={handleChange('nebula1Opacity')} />
-                    <Slider label="Nebula 2 Opacity" value={themeValues.nebula2Opacity} onChange={handleChange('nebula2Opacity')} />
-                    <Slider label="Tiny Stars Opacity" value={themeValues.starsTinyOpacity} onChange={handleChange('starsTinyOpacity')} />
-                    <Slider label="Medium Stars Opacity" value={themeValues.starsMediumOpacity} onChange={handleChange('starsMediumOpacity')} />
-                    <Slider label="Large Stars Opacity" value={themeValues.starsLargeOpacity} onChange={handleChange('starsLargeOpacity')} />
-                </div>
-            </div>
-
-            <button
-                onClick={handleReset}
-                className="w-full mt-4 bg-red-600 hover:bg-red-500 text-white text-sm font-bold py-2 rounded"
-            >
-                Reset Theme Defaults
-            </button>
         </div>
     );
 };
