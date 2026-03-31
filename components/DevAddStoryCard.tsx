@@ -34,7 +34,8 @@ const SPECIAL_RULE_CATEGORIES: AddSpecialRule['category'][] = [
     'prime_panel',
     'soloTimer', 
     'setup_selection',
-    'pressures_high'
+    'pressures_high',
+    'story_override'
 ];
 const DISTRIBUTION_TYPES = ['fixed', 'all_supply_planets', 'region'];
 const COMPONENT_TYPES = ['contraband', 'alert_token'];
@@ -55,10 +56,10 @@ interface RuleDefinition {
 }
 
 const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
-  // Nav Rules
+  // Nav Rules (C1)
   setNavMode: { label: 'Set Nav Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: NAV_MODES }], default: () => ({ type: 'setNavMode', mode: 'standard' }) },
 
-  // Alliance / Reaver Rules
+  // Alliance / Reaver Rules (C2)
   setAllianceMode: { label: 'Set Alliance Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: ALLIANCE_SETUP_MODES }], default: () => ({ type: 'setAllianceMode', mode: 'standard' }) },
   setAlliancePlacement: { label: 'Set Alliance Placement', params: [{ name: 'placement', label: 'Placement Text', type: 'text' }], default: () => ({ type: 'setAlliancePlacement', placement: '' }) },
   createAlertTokenStack: { label: 'Create Alert Token Stack', params: [{ name: 'multiplier', label: 'Multiplier (per player)', type: 'number' }], default: () => ({ type: 'createAlertTokenStack', multiplier: 1 } as Partial<CreateAlertTokenStackRule>) },
@@ -78,7 +79,7 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
       default: () => ({ type: 'addBoardComponent', title: 'New Component', component: 'contraband', count: 1 } as Partial<AddBoardComponentRule>)
   },
 
-  // Draft Rules
+  // Draft Rules (C3)
   setDraftMode: { label: 'Set Draft Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: DRAFT_MODES }], default: () => ({ type: 'setDraftMode', mode: 'standard' }) },
   setLeaderSetup: { label: 'Set Leader Setup', params: [{ name: 'mode', label: 'Mode', type: 'select', options: LEADER_SETUP_MODES }], default: () => ({ type: 'setLeaderSetup', mode: 'standard' }) },
   bypassDraft: {
@@ -91,21 +92,8 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
     params: [{ name: 'badges', label: 'Badges Map', type: 'key-value-builder' }],
     default: () => ({ type: 'setPlayerBadges', badges: { 0: "Commander" } } as Partial<SetPlayerBadgesRule>)
   },
-  setShipPlacement: { label: 'Set Ship Placement', params: [{ name: 'location', label: 'Location', type: 'select', options: SHIP_PLACEMENT_LOCATIONS }], default: () => ({ type: 'setShipPlacement', location: 'persephone' }) },
 
-  // Resource Rules
-  modifyResource: {
-    label: 'Modify Resource',
-    params: [
-      { name: 'resource', label: 'Resource', type: 'select', options: RESOURCE_TYPES },
-      { name: 'method', label: 'Method', type: 'select', options: EFFECT_METHODS },
-      { name: 'value', label: 'Value', type: 'number', condition: (r: Partial<SetupRule>) => (r as Partial<ModifyResourceRule>).method !== 'disable' },
-      { name: 'description', label: 'Description', type: 'text' },
-    ],
-    default: () => ({ type: 'modifyResource', resource: 'credits', method: 'add', value: 0, description: '' })
-  },
-
-  // Job Rules
+  // Job Rules (C6)
   setJobMode: { label: 'Set Job Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: JOB_MODES }], default: () => ({ type: 'setJobMode', mode: 'standard' }) },
   setJobContacts: { label: 'Set Specific Job Contacts', params: [{ name: 'contacts', label: 'Contacts', type: 'multi-select', options: Object.values(CONTACT_NAMES) }], default: () => ({ type: 'setJobContacts', contacts: [] }) },
   allowContacts: { label: 'Allow Only Specific Contacts', params: [{ name: 'contacts', label: 'Contacts', type: 'multi-select', options: Object.values(CONTACT_NAMES) }], default: () => ({ type: 'allowContacts', contacts: [] } as Partial<AllowContactsRule>) },
@@ -117,10 +105,10 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
           { name: 'position', label: 'Position', type: 'select', options: ['before', 'after'] },
           { name: 'content', label: 'Content', type: 'string-list-builder' }
       ],
-      default: () => ({ type: 'setJobStepContent', position: 'before', content: [] } as Partial<SetJobStepContentRule>)
+      default: () => ({ type: 'setJobStepContent', position: 'before', content: [{ type: 'paragraph', content: [''] }] } as Partial<SetJobStepContentRule>)
   },
-  
-  // Prime Rules
+
+  // Prime Rules (C_PRIME)
   setPrimeMode: { label: 'Set Prime Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: PRIME_MODES }], default: () => ({ type: 'setPrimeMode', mode: 'standard' }) },
   modifyPrime: {
     label: 'Modify Prime the Pump',
@@ -132,6 +120,17 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
   },
   
   // General / Misc Rules
+  setShipPlacement: { label: 'Set Ship Placement', params: [{ name: 'location', label: 'Location', type: 'select', options: SHIP_PLACEMENT_LOCATIONS }], default: () => ({ type: 'setShipPlacement', location: 'persephone' }) },
+  modifyResource: {
+    label: 'Modify Resource',
+    params: [
+      { name: 'resource', label: 'Resource', type: 'select', options: RESOURCE_TYPES },
+      { name: 'method', label: 'Method', type: 'select', options: EFFECT_METHODS },
+      { name: 'value', label: 'Value', type: 'number', condition: (r: Partial<SetupRule>) => (r as Partial<ModifyResourceRule>).method !== 'disable' },
+      { name: 'description', label: 'Description', type: 'text' },
+    ],
+    default: () => ({ type: 'modifyResource', resource: 'credits', method: 'add', value: 0, description: '' })
+  },
   addFlag: {
     label: 'Add Flag',
     params: [
@@ -146,7 +145,7 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
       { name: 'category', label: 'Category', type: 'select', options: SPECIAL_RULE_CATEGORIES },
       { name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }
     ],
-    default: () => ({ type: 'addSpecialRule', category: 'goal', rule: { title: 'New Rule', content: ['Description here.'] } } as Partial<AddSpecialRule>)
+    default: () => ({ type: 'addSpecialRule', category: 'goal', rule: { title: 'New Rule', content: [{ type: 'paragraph', content: ['Description here.'] }] } } as Partial<AddSpecialRule>)
   },
 };
 
@@ -183,20 +182,24 @@ const RuleInput: React.FC<{ param: RuleParam, value: unknown, onChange: (val: un
         );
     }
     if (param.type === 'string-list-builder') {
-        const list = Array.isArray(value) ? value : [];
+        const list = Array.isArray(value) 
+            ? value.map(item => typeof item === 'string' ? item : (item.type === 'paragraph' && Array.isArray(item.content) ? item.content[0] : ''))
+            : [];
         return (
             <div className="space-y-1 mt-1">
                 {list.map((item, i) => (
                     <div key={i} className="flex gap-1">
                         <input type="text" className={commonProps} value={item} onChange={e => {
-                            const newList = [...list]; newList[i] = e.target.value; onChange(newList);
+                            const newList = [...list]; newList[i] = e.target.value; 
+                            onChange(newList.map(s => ({ type: 'paragraph', content: [s] })));
                         }} />
                         <button type="button" onClick={() => {
-                            const newList = [...list]; newList.splice(i, 1); onChange(newList);
+                            const newList = [...list]; newList.splice(i, 1); 
+                            onChange(newList.map(s => ({ type: 'paragraph', content: [s] })));
                         }} className="text-red-500 px-1">&times;</button>
                     </div>
                 ))}
-                <button type="button" onClick={() => onChange([...list, ''])} className="text-[10px] bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded">+ Add Item</button>
+                <button type="button" onClick={() => onChange([...(Array.isArray(value) ? value : []), { type: 'paragraph', content: [''] }])} className="text-[10px] bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded">+ Add Item</button>
             </div>
         );
     }
@@ -223,27 +226,37 @@ const RuleInput: React.FC<{ param: RuleParam, value: unknown, onChange: (val: un
         );
     }
     if (param.type === 'special-rule-builder') {
-        const ruleObj = (typeof value === 'object' && value !== null) ? value as { title?: string, content?: string[] } : { title: '', content: [] };
+        const valObj = (typeof value === 'object' && value !== null) ? value as Record<string, unknown> : {};
+        const rawContent = Array.isArray(valObj.content) ? valObj.content : [];
+        const content = rawContent.map((item: unknown) => {
+            if (typeof item === 'string') return item;
+            const itemObj = (typeof item === 'object' && item !== null) ? item as Record<string, unknown> : null;
+            if (itemObj?.type === 'paragraph' && Array.isArray(itemObj.content)) return String(itemObj.content[0] || '');
+            return '';
+        });
+        const ruleObj = { title: String(valObj.title || ''), content };
         return (
             <div className="space-y-2 mt-1 bg-gray-800 p-2 rounded border border-gray-700">
                 <div>
                     <label className="text-[10px] text-gray-400">Rule Title</label>
-                    <input type="text" className={commonProps} value={ruleObj.title || ''} onChange={e => onChange({ ...ruleObj, title: e.target.value })} />
+                    <input type="text" className={commonProps} value={ruleObj.title || ''} onChange={e => onChange({ ...ruleObj, title: e.target.value, content: ruleObj.content.map(s => ({ type: 'paragraph', content: [s] })) })} />
                 </div>
                 <div>
                     <label className="text-[10px] text-gray-400">Rule Content (Paragraphs)</label>
                     <div className="space-y-1 mt-1">
-                        {(ruleObj.content || []).map((item, i) => (
+                        {ruleObj.content.map((item, i) => (
                             <div key={i} className="flex gap-1">
                                 <textarea className={commonProps} rows={2} value={item} onChange={e => {
-                                    const newContent = [...(ruleObj.content || [])]; newContent[i] = e.target.value; onChange({ ...ruleObj, content: newContent });
+                                    const newContent = [...ruleObj.content]; newContent[i] = e.target.value; 
+                                    onChange({ ...ruleObj, content: newContent.map(s => ({ type: 'paragraph', content: [s] })) });
                                 }} />
                                 <button type="button" onClick={() => {
-                                    const newContent = [...(ruleObj.content || [])]; newContent.splice(i, 1); onChange({ ...ruleObj, content: newContent });
+                                    const newContent = [...ruleObj.content]; newContent.splice(i, 1); 
+                                    onChange({ ...ruleObj, content: newContent.map(s => ({ type: 'paragraph', content: [s] })) });
                                 }} className="text-red-500 px-1">&times;</button>
                             </div>
                         ))}
-                        <button type="button" onClick={() => onChange({ ...ruleObj, content: [...(ruleObj.content || []), ''] })} className="text-[10px] bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded">+ Add Paragraph</button>
+                        <button type="button" onClick={() => onChange({ ...ruleObj, content: [...ruleObj.content, ''].map(s => ({ type: 'paragraph', content: [s] })) })} className="text-[10px] bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded">+ Add Paragraph</button>
                     </div>
                 </div>
             </div>
@@ -617,9 +630,11 @@ export const DevAddStoryCard: React.FC<DevAddStoryCardProps> = ({ onClose, initi
                     setRules(prev => [...prev, {
                         type: 'addSpecialRule',
                         category: 'story_override',
-                        name: 'Story Override',
-                        description: 'Replaces standard setup rules.'
-                    }]);
+                        rule: {
+                            title: 'Story Override',
+                            content: [{ type: 'paragraph', content: ['Replaces standard setup rules.'] }]
+                        }
+                    } as Partial<AddSpecialRule>]);
                     setTimeout(() => {
                         rulesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }, 100);
