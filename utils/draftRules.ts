@@ -14,12 +14,14 @@ import { getResolvedRules, hasRuleFlag } from './selectors/rules';
 import { CHALLENGE_IDS } from '../data/ids';
 import { getActiveStoryCard } from './selectors/story';
 import { mapRuleSourceToBlockSource, processOverrulableRules } from './ruleProcessing';
+import { getLocationById } from '../data/locations/index';
 
 const getShipPlacementLabel = (rule: SetShipPlacementRule): string => {
     if (typeof rule.location === 'string') {
+        const loc = getLocationById(rule.location);
+        if (loc) return `Start at ${loc.label}`;
+        
         switch (rule.location) {
-            case 'persephone': return 'Start at Persephone';
-            case 'londinium': return 'Start at Londinium';
             case 'outside_alliance': return 'Start Outside Alliance Space';
             default: return `Start at ${rule.location}`;
         }
@@ -115,13 +117,23 @@ export const getDraftDetails = (gameState: GameState, step: Step): Omit<DraftRul
     
     if (shipPlacementRule) {
       if (typeof shipPlacementRule.location === 'string') {
-        switch (shipPlacementRule.location) {
-          case 'persephone':
-              if (!isHeroesCustomSetup) specialStartSector = 'Persephone';
-              break;
-          case 'londinium':
-              specialStartSector = 'Londinium';
-              break;
+        const loc = getLocationById(shipPlacementRule.location);
+        if (loc) {
+            if (loc.id === 'persephone') {
+                if (!isHeroesCustomSetup) specialStartSector = loc.label;
+            } else {
+                specialStartSector = loc.label;
+            }
+        } else {
+            // Fallback for legacy or special strings
+            switch (shipPlacementRule.location) {
+                case 'persephone':
+                    if (!isHeroesCustomSetup) specialStartSector = 'Persephone';
+                    break;
+                case 'londinium':
+                    specialStartSector = 'Londinium';
+                    break;
+            }
         }
       } else if (typeof shipPlacementRule.location === 'object') {
         if ('sector' in shipPlacementRule.location) {

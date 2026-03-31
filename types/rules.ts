@@ -101,9 +101,7 @@ export interface SetLeaderSetupRule extends BaseRule { type: 'setLeaderSetup'; m
 export interface SetShipPlacementRule extends BaseRule {
   type: 'setShipPlacement';
   location:
-    | 'persephone'
-    | 'londinium'
-    | 'outside_alliance'
+    | string
     | { sector: string }
     | { region: string };
 }

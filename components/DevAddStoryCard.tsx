@@ -5,6 +5,7 @@ import { STORY_CARDS } from '../data/storyCards/index';
 import { StoryCardGridItem } from './story/StoryCardGridItem';
 import { CONTACT_NAMES } from '../data/ids';
 import { loadStoryData } from '../utils/storyLoader';
+import { LOCATION_IDS } from '../data/locations/index';
 
 // --- Local Storage ---
 const DEV_STORY_CARD_DRAFT_KEY = 'firefly_dev_story_card_draft';
@@ -19,7 +20,7 @@ const LEADER_SETUP_MODES: LeaderSetupMode[] = ['standard', 'wanted'];
 const ALLIANCE_SETUP_MODES: AllianceSetupMode[] = ['standard', 'awful_crowded', 'no_alerts'];
 const RESOURCE_TYPES: ResourceType[] = ['credits', 'fuel', 'parts', 'warrants', 'goalTokens'];
 const EFFECT_METHODS: EffectMethod[] = ['set', 'add', 'disable'];
-const SHIP_PLACEMENT_LOCATIONS = ['persephone', 'londinium', 'outside_alliance'];
+const SHIP_PLACEMENT_LOCATIONS = LOCATION_IDS;
 const SPECIAL_RULE_CATEGORIES: AddSpecialRule['category'][] = [
     'allianceReaver', 
     'nav', 
