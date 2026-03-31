@@ -4,6 +4,7 @@ import { GameState, StoryCardDef, SetupCardDef, SetJobModeRule, SetShipPlacement
 import { STEP_IDS } from '../../data/ids';
 import { getResolvedRules, hasRuleFlag } from './rules';
 import { getSetupCardById } from './story';
+import { getLocationById } from '../../data/locations/index';
 
 /**
  * Determines if the "Flying Solo" setup card is a valid option.
@@ -22,7 +23,13 @@ export const getStoryCardSetupSummary = (card: StoryCardDef): string | null => {
     if (jobModeRule?.mode === 'caper_start') return "Starts with Caper";
 
     const placementRule = rules.find(r => r.type === 'setShipPlacement') as SetShipPlacementRule | undefined;
-    if (placementRule?.location === 'persephone') return "Starts at Persephone";
+    if (placementRule?.location) {
+        if (typeof placementRule.location === 'string') {
+            const loc = getLocationById(placementRule.location);
+            return `Starts at ${loc ? loc.label : placementRule.location}`;
+        }
+        return "Custom Ship Placement";
+    }
     
     return null;
 };
