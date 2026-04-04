@@ -6,14 +6,12 @@ import { StoryCardGridItem } from './story/StoryCardGridItem';
 import { CONTACT_NAMES } from '../data/ids';
 import { loadStoryData } from '../utils/storyLoader';
 import { LOCATION_IDS } from '../data/locations/index';
-import { auth } from '../firebase';
-import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, User } from 'firebase/auth';
-import { storyService } from '../src/services/storyService';
 
 // --- Local Storage ---
 const DEV_STORY_CARD_DRAFT_KEY = 'firefly_dev_story_card_draft';
 
 // --- Visual Rule Builder: Configuration & Components ---
+// ... (rest of the file remains similar but without auth/db logic)
 
 const JOB_MODES: JobMode[] = ['standard', 'no_jobs', 'hide_jobs', 'times_jobs', 'high_alert_jobs', 'buttons_jobs', 'awful_jobs', 'rim_jobs', 'draft_choice', 'caper_start', 'wind_takes_us', 'shared_hand'];
 const NAV_MODES: NavMode[] = ['standard', 'browncoat', 'rim', 'flying_solo', 'clearer_skies', 'standard_reshuffle'];
@@ -484,54 +482,6 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
     const [activeTab, setActiveTab] = useState<'basic' | 'goals' | 'rules'>('basic');
 
     const [templateToLoad, setTemplateToLoad] = useState('');
-    const [user, setUser] = useState<User | null>(null);
-    const [isSaving, setIsSaving] = useState(false);
-    const [dbStories, setDbStories] = useState<StoryCardDef[]>([]);
-
-    useEffect(() => {
-        const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
-        
-        const unsubscribeStories = storyService.subscribeToStories((stories: StoryCardDef[]) => {
-            setDbStories(stories);
-        });
-
-        return () => {
-            unsubscribeAuth();
-            unsubscribeStories();
-        };
-    }, []);
-
-    const handleLogin = async () => {
-        try {
-            await signInWithPopup(auth, new GoogleAuthProvider());
-        } catch (error) {
-            console.error("Login failed:", error);
-        }
-    };
-
-    const handleSaveToDatabase = async () => {
-        if (!user) {
-            alert("You must be logged in to save to the database.");
-            return;
-        }
-        
-        setIsSaving(true);
-        try {
-            const storyToSave: Partial<StoryCardDef> = {
-                ...story,
-                rules: rules as SetupRule[],
-            };
-            await storyService.saveStory(storyToSave);
-            alert("Story saved successfully!");
-        } catch (error) {
-            console.error("Failed to save story:", error);
-            alert("Failed to save story. Check console for details.");
-        } finally {
-            setIsSaving(false);
-        }
-    };
 
     const introRef = useRef<HTMLTextAreaElement>(null);
     const setupDescRef = useRef<HTMLInputElement>(null);
@@ -705,13 +655,13 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
     }, [story.title, story.setupDescription, rules]);
 
     const sortedStoryCardsForDropdown = useMemo(() => {
-        const allStories = [...STORY_CARDS, ...dbStories];
-        // Deduplicate by title, preferring DB version
+        const allStories = [...STORY_CARDS];
+        // Deduplicate by title
         const uniqueStories = new Map<string, StoryCardDef>();
         allStories.forEach(s => uniqueStories.set(s.title, s as StoryCardDef));
         
         return Array.from(uniqueStories.values()).sort((a, b) => a.title.localeCompare(b.title));
-    }, [dbStories]);
+    }, []);
 
     // Load draft from local storage on mount
     useEffect(() => {
@@ -744,16 +694,13 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
     useEffect(() => {
         const load = async () => {
             if (cardToLoad) {
-                // Find in DB first, then static
-                let cardData = dbStories.find(s => s.title === cardToLoad);
-                if (!cardData) {
-                    const index = STORY_CARDS.findIndex(c => c.title === cardToLoad);
-                    if (index >= 0) {
-                        try {
-                            cardData = await loadStoryData(index);
-                        } catch (e) {
-                            console.error("Error loading story definition:", e);
-                        }
+                let cardData: StoryCardDef | undefined;
+                const index = STORY_CARDS.findIndex(c => c.title === cardToLoad);
+                if (index >= 0) {
+                    try {
+                        cardData = await loadStoryData(index);
+                    } catch (e) {
+                        console.error("Error loading story definition:", e);
                     }
                 }
 
@@ -766,7 +713,7 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
             }
         };
         load();
-    }, [cardToLoad, dbStories]);
+    }, [cardToLoad]);
     
     // Load selected template
     useEffect(() => {
@@ -1044,22 +991,6 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
                                  ))}
                              </Select>
                              <button onClick={clearForm} className="bg-red-800 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-xs">Clear</button>
-                             {user ? (
-                                 <button 
-                                     onClick={handleSaveToDatabase} 
-                                     disabled={isSaving}
-                                     className={`${isSaving ? 'bg-gray-600' : 'bg-green-700 hover:bg-green-600'} text-white font-bold py-1 px-3 rounded text-xs flex items-center gap-1`}
-                                 >
-                                     {isSaving ? 'Saving...' : 'Save to DB'}
-                                 </button>
-                             ) : (
-                                 <button 
-                                     onClick={handleLogin} 
-                                     className="bg-blue-700 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs"
-                                 >
-                                     Login to Save
-                                 </button>
-                             )}
                         </div>
                         <button onClick={onClose} className="text-gray-400 hover:text-white p-2 -mr-2 transition-colors" title="Close">
                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

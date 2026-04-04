@@ -7,8 +7,6 @@ export interface DataContextType {
   setupCards: SetupCardDef[];
   locations: LocationDef[];
   isLoading: boolean;
-  isFromDb: boolean;
-  refreshData: () => Promise<void>;
 }
 
 export const DataContext = createContext<DataContextType | undefined>(undefined);

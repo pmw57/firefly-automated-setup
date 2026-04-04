@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { DevStoryAudit } from './DevStoryAudit';
 import { DevSetupAudit } from './DevSetupAudit';
 import { StoryCardEditor } from './StoryCardEditor';
 import { DevTestingMatrix } from './DevTestingMatrix';
 import { DevThemeEditor } from './DevThemeEditor';
-import { DevMigrationTools } from './DevMigrationTools';
 import { useGameState } from '../hooks/useGameState';
-import { auth } from '../firebase';
-import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, User, signOut } from 'firebase/auth';
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { getAvailableStoryCards } from '../utils/selectors/story';
 import { useData } from '../hooks/useData';
@@ -21,31 +18,6 @@ export const DevPanel = () => {
     const [showSetupAudit, setShowSetupAudit] = useState(false);
     const [showAddStory, setShowAddStory] = useState(false);
     const [showThemeEditor, setShowThemeEditor] = useState(false);
-    const [showMigrationTools, setShowMigrationTools] = useState(false);
-    const [user, setUser] = useState<User | null>(null);
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
-        return () => unsubscribe();
-    }, []);
-
-    const handleLogin = async () => {
-        try {
-            await signInWithPopup(auth, new GoogleAuthProvider());
-        } catch (error) {
-            console.error("Login failed:", error);
-        }
-    };
-
-    const handleLogout = async () => {
-        try {
-            await signOut(auth);
-        } catch (error) {
-            console.error("Logout failed:", error);
-        }
-    };
 
     const [addStoryInitialTitle, setAddStoryInitialTitle] = useState<string | undefined>();
     const [showTestingMatrix, setShowTestingMatrix] = useState(false);
@@ -137,10 +109,6 @@ export const DevPanel = () => {
         return <DevThemeEditor onClose={() => setShowThemeEditor(false)} />;
     }
 
-    if (showMigrationTools) {
-        return <DevMigrationTools user={user} onClose={() => setShowMigrationTools(false)} />;
-    }
-
     if (!isOpen) {
         return (
             <div className="fixed bottom-4 left-4 z-[9999] flex items-center gap-2">
@@ -178,14 +146,6 @@ export const DevPanel = () => {
             <div className="flex justify-between items-center mb-4">
                 <div className="flex flex-col">
                     <h3 className="font-bold text-lg leading-tight">Dev Panel</h3>
-                    {user ? (
-                        <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[10px] text-green-400 font-mono truncate max-w-[120px]">{user.email}</span>
-                            <button onClick={handleLogout} className="text-[10px] text-gray-400 hover:text-white underline">Logout</button>
-                        </div>
-                    ) : (
-                        <button onClick={handleLogin} className="text-[10px] text-blue-400 hover:text-blue-300 underline mt-1 text-left">Login to Save/Migrate</button>
-                    )}
                 </div>
                 <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white p-2 -mr-2 transition-colors" title="Close Dev Panel">
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -229,14 +189,6 @@ export const DevPanel = () => {
                     className="w-full bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold py-2 rounded flex items-center justify-center gap-2"
                 >
                     <span>📊</span> Testing Matrix
-                </button>
-
-                <div className="text-[10px] uppercase tracking-wider text-gray-500 font-bold mt-4 mb-1">System</div>
-                <button
-                    onClick={() => setShowMigrationTools(true)}
-                    className="w-full bg-gray-700 hover:bg-gray-600 text-white text-[11px] font-bold py-2 rounded flex items-center justify-center gap-2"
-                >
-                    <span>⚙️</span> Migration Tools
                 </button>
             </div>
         </div>
