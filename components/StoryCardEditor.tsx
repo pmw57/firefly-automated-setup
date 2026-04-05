@@ -36,8 +36,7 @@ const SPECIAL_RULE_CATEGORIES: AddSpecialRule['category'][] = [
     'prime_panel',
     'soloTimer', 
     'setup_selection',
-    'pressures_high',
-    'story_override'
+    'pressures_high'
 ];
 const DISTRIBUTION_TYPES = ['fixed', 'all_supply_planets', 'region'];
 const COMPONENT_TYPES = ['contraband', 'alert_token'];
@@ -60,10 +59,35 @@ interface RuleDefinition {
 const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
   // Nav Rules (C1)
   setNavMode: { label: 'Set Nav Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: NAV_MODES }], default: () => ({ type: 'setNavMode', mode: 'standard' }) },
+  addNavInstructions: {
+    label: 'Add Nav Instructions',
+    params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
+    default: () => ({ type: 'addSpecialRule', category: 'nav', rule: { title: 'Navigation Note', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
 
   // Alliance / Reaver Rules (C2)
   setAllianceMode: { label: 'Set Alliance Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: ALLIANCE_SETUP_MODES }], default: () => ({ type: 'setAllianceMode', mode: 'standard' }) },
-  setAlliancePlacement: { label: 'Set Alliance Placement', params: [{ name: 'placement', label: 'Placement Text', type: 'text' }], default: () => ({ type: 'setAlliancePlacement', placement: '' }) },
+  setAlliancePlacement: { 
+    label: 'Set Alliance Placement', 
+    params: [
+      { name: 'placement', label: 'Placement Text', type: 'text' },
+      { name: 'title', label: 'Title (Optional Override)', type: 'text' }
+    ], 
+    default: () => ({ type: 'setAlliancePlacement', placement: '' }) 
+  },
+  addAllianceReaverInstructions: {
+    label: 'Add Alliance/Reaver Instructions',
+    params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
+    default: () => ({ type: 'addSpecialRule', category: 'allianceReaver', rule: { title: 'Alliance/Reaver Note', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
+  setReaverPlacement: { 
+    label: 'Set Reaver Placement', 
+    params: [
+      { name: 'placement', label: 'Placement Text', type: 'text' },
+      { name: 'title', label: 'Title (Optional Override)', type: 'text' }
+    ], 
+    default: () => ({ type: 'setReaverPlacement', placement: '' }) 
+  },
   createAlertTokenStack: { label: 'Create Alert Token Stack', params: [{ name: 'multiplier', label: 'Multiplier (per player)', type: 'number' }], default: () => ({ type: 'createAlertTokenStack', multiplier: 1 } as Partial<CreateAlertTokenStackRule>) },
   addBoardComponent: {
       label: 'Add Board Component',
@@ -83,6 +107,16 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
 
   // Draft Rules (C3)
   setDraftMode: { label: 'Set Draft Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: DRAFT_MODES }], default: () => ({ type: 'setDraftMode', mode: 'standard' }) },
+  addDraftInstructions: {
+    label: 'Add Draft Instructions',
+    params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
+    default: () => ({ type: 'addSpecialRule', category: 'draft', rule: { title: 'Draft Note', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
+  addDraftPanel: {
+    label: 'Add Custom Draft Panel',
+    params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
+    default: () => ({ type: 'addSpecialRule', category: 'draft_panel', rule: { title: 'Custom Panel', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
   setLeaderSetup: { label: 'Set Leader Setup', params: [{ name: 'mode', label: 'Mode', type: 'select', options: LEADER_SETUP_MODES }], default: () => ({ type: 'setLeaderSetup', mode: 'standard' }) },
   bypassDraft: {
     label: 'Bypass Draft',
@@ -94,10 +128,29 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
     params: [{ name: 'badges', label: 'Badges Map', type: 'key-value-builder' }],
     default: () => ({ type: 'setPlayerBadges', badges: { 0: "Commander" } } as Partial<SetPlayerBadgesRule>)
   },
+  addDraftShipInstructions: {
+    label: 'Add Draft Ship Instructions',
+    params: [
+      { name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }
+    ],
+    default: () => ({ type: 'addSpecialRule', category: 'draft_ships', rule: { title: 'Ship Selection Note', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
+  addDraftPlacementInstructions: {
+    label: 'Add Draft Placement Instructions',
+    params: [
+      { name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }
+    ],
+    default: () => ({ type: 'addSpecialRule', category: 'draft_placement', rule: { title: 'Placement Note', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
 
   // Job Rules (C6)
   setJobMode: { label: 'Set Job Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: JOB_MODES }], default: () => ({ type: 'setJobMode', mode: 'standard' }) },
   setJobContacts: { label: 'Set Specific Job Contacts', params: [{ name: 'contacts', label: 'Contacts', type: 'multi-select', options: Object.values(CONTACT_NAMES) }], default: () => ({ type: 'setJobContacts', contacts: [] }) },
+  addJobInstructions: {
+    label: 'Add Job Instructions',
+    params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
+    default: () => ({ type: 'addSpecialRule', category: 'jobs', rule: { title: 'Job Note', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
   allowContacts: { label: 'Allow Only Specific Contacts', params: [{ name: 'contacts', label: 'Contacts', type: 'multi-select', options: Object.values(CONTACT_NAMES) }], default: () => ({ type: 'allowContacts', contacts: [] } as Partial<AllowContactsRule>) },
   forbidContact: { label: 'Forbid Contact', params: [{ name: 'contact', label: 'Contact', type: 'select', options: Object.values(CONTACT_NAMES) }], default: () => ({ type: 'forbidContact', contact: CONTACT_NAMES.HARKEN }) },
   primeContacts: { label: 'Prime Contact Decks', params: [], default: () => ({ type: 'primeContacts' } as Partial<PrimeContactsRule>) },
@@ -112,6 +165,16 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
 
   // Prime Rules (C_PRIME)
   setPrimeMode: { label: 'Set Prime Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: PRIME_MODES }], default: () => ({ type: 'setPrimeMode', mode: 'standard' }) },
+  addPrimeInstructions: {
+    label: 'Add Prime Instructions',
+    params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
+    default: () => ({ type: 'addSpecialRule', category: 'prime', rule: { title: 'Prime Note', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
+  addPrimePanel: {
+    label: 'Add Custom Prime Panel',
+    params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
+    default: () => ({ type: 'addSpecialRule', category: 'prime_panel', rule: { title: 'Custom Panel', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
   modifyPrime: {
     label: 'Modify Prime the Pump',
     params: [
@@ -132,6 +195,31 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
       { name: 'description', label: 'Description', type: 'text' },
     ],
     default: () => ({ type: 'modifyResource', resource: 'credits', method: 'add', value: 0, description: '' })
+  },
+  addResourceInstructions: {
+    label: 'Add Resource Instructions',
+    params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
+    default: () => ({ type: 'addSpecialRule', category: 'resources', rule: { title: 'Resource Note', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
+  addGoalInstructions: {
+    label: 'Add Goal Instructions',
+    params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
+    default: () => ({ type: 'addSpecialRule', category: 'goal', rule: { title: 'Goal Note', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
+  addSoloTimerInstructions: {
+    label: 'Add Solo Timer Instructions',
+    params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
+    default: () => ({ type: 'addSpecialRule', category: 'soloTimer', rule: { title: 'Solo Timer Note', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
+  addSetupSelectionInstructions: {
+    label: 'Add Setup Selection Instructions',
+    params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
+    default: () => ({ type: 'addSpecialRule', category: 'setup_selection', rule: { title: 'Setup Selection Note', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
+  },
+  addPressuresHighInstructions: {
+    label: 'Add Pressures High Instructions',
+    params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
+    default: () => ({ type: 'addSpecialRule', category: 'pressures_high', rule: { title: 'Pressures High Note', content: [{ type: 'paragraph', content: [''] }] } } as Partial<AddSpecialRule>)
   },
   addFlag: {
     label: 'Add Flag',
@@ -278,7 +366,25 @@ const RuleEditor: React.FC<{
   onMove: (index: number, direction: 'up' | 'down') => void,
   onDuplicate: (index: number) => void
 }> = ({ rule, index, totalRules, onUpdate, onRemove, onMove, onDuplicate }) => {
-  const definition = RULE_DEFINITIONS[rule.type!];
+  let ruleType: string = rule.type!;
+  if (ruleType === 'addSpecialRule') {
+    const specialRule = rule as Partial<AddSpecialRule>;
+    if (specialRule.category === 'draft_ships') ruleType = 'addDraftShipInstructions';
+    else if (specialRule.category === 'draft_placement') ruleType = 'addDraftPlacementInstructions';
+    else if (specialRule.category === 'nav') ruleType = 'addNavInstructions';
+    else if (specialRule.category === 'prime') ruleType = 'addPrimeInstructions';
+    else if (specialRule.category === 'prime_panel') ruleType = 'addPrimePanel';
+    else if (specialRule.category === 'allianceReaver') ruleType = 'addAllianceReaverInstructions';
+    else if (specialRule.category === 'draft') ruleType = 'addDraftInstructions';
+    else if (specialRule.category === 'draft_panel') ruleType = 'addDraftPanel';
+    else if (specialRule.category === 'resources') ruleType = 'addResourceInstructions';
+    else if (specialRule.category === 'goal') ruleType = 'addGoalInstructions';
+    else if (specialRule.category === 'jobs') ruleType = 'addJobInstructions';
+    else if (specialRule.category === 'soloTimer') ruleType = 'addSoloTimerInstructions';
+    else if (specialRule.category === 'setup_selection') ruleType = 'addSetupSelectionInstructions';
+    else if (specialRule.category === 'pressures_high') ruleType = 'addPressuresHighInstructions';
+  }
+  const definition = RULE_DEFINITIONS[ruleType];
   if (!definition) return <div className="text-red-500 text-xs p-2 bg-red-900/50 rounded">Unknown rule type: {rule.type}</div>;
   
   const handleFieldChange = (name: string, value: unknown) => {
@@ -313,8 +419,35 @@ const RuleEditor: React.FC<{
   );
 };
 
+const RULE_GROUPS = [
+    {
+        label: 'Step 1: Navigation & Prime',
+        rules: ['setNavMode', 'addNavInstructions', 'setPrimeMode', 'addPrimeInstructions', 'addPrimePanel', 'modifyPrime']
+    },
+    {
+        label: 'Step 2: Alliance & Reavers',
+        rules: ['setAllianceMode', 'setAlliancePlacement', 'setReaverPlacement', 'addAllianceReaverInstructions', 'createAlertTokenStack', 'addBoardComponent']
+    },
+    {
+        label: 'Step 3: Draft & Placement',
+        rules: ['setDraftMode', 'addDraftInstructions', 'addDraftPanel', 'setLeaderSetup', 'bypassDraft', 'setPlayerBadges', 'setShipPlacement', 'addDraftShipInstructions', 'addDraftPlacementInstructions']
+    },
+    {
+        label: 'Step 5: Resources & Goal Tokens',
+        rules: ['modifyResource', 'addResourceInstructions', 'addGoalInstructions']
+    },
+    {
+        label: 'Step 6: Jobs & Contacts',
+        rules: ['setJobMode', 'addJobInstructions', 'setJobContacts', 'allowContacts', 'forbidContact', 'primeContacts', 'setJobStepContent']
+    },
+    {
+        label: 'System / Advanced',
+        rules: ['addSoloTimerInstructions', 'addSetupSelectionInstructions', 'addPressuresHighInstructions', 'addFlag', 'addSpecialRule']
+    }
+];
+
 const VisualRuleBuilder: React.FC<{ rules: Partial<SetupRule>[], onRulesChange: (rules: Partial<SetupRule>[]) => void }> = ({ rules, onRulesChange }) => {
-  const [newRuleType, setNewRuleType] = useState(Object.keys(RULE_DEFINITIONS)[0]);
+  const [newRuleType, setNewRuleType] = useState(RULE_GROUPS[0].rules[0]);
 
   const addRule = () => {
     const definition = RULE_DEFINITIONS[newRuleType];
@@ -392,7 +525,13 @@ const VisualRuleBuilder: React.FC<{ rules: Partial<SetupRule>[], onRulesChange: 
       ))}
       <div className="flex gap-2 pt-2 border-t border-gray-700">
         <select value={newRuleType} onChange={(e) => setNewRuleType(e.target.value)} className="flex-1 w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-          {Object.entries(RULE_DEFINITIONS).map(([type, { label }]) => <option key={type} value={type}>{label}</option>)}
+          {RULE_GROUPS.map(group => (
+            <optgroup key={group.label} label={group.label}>
+              {group.rules.map(type => (
+                <option key={type} value={type}>{RULE_DEFINITIONS[type]?.label || type}</option>
+              ))}
+            </optgroup>
+          ))}
         </select>
         <button onClick={addRule} className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded text-sm">Add Rule</button>
       </div>
@@ -475,6 +614,8 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
     const [story, setStory] = useState<Partial<StoryCardDef>>(getInitialState().story);
     const [rules, setRules] = useState<Partial<SetupRule>[]>(getInitialState().rules);
     const [copyButtonText, setCopyButtonText] = useState('Copy JSON');
+    const [saveButtonText, setSaveButtonText] = useState('Save to File');
+    const [originalTitle, setOriginalTitle] = useState<string | null>(null);
     const [cardToLoad, setCardToLoad] = useState(initialStoryTitle || '');
     const [suppressWarning, setSuppressWarning] = useState(!!initialStoryTitle);
     // Add a key to force re-mounting of the VisualRuleBuilder on clear
@@ -539,17 +680,19 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
             for (let i = currentIndex; i < endIndex; i++) {
                 const card = STORY_CARDS[i];
                 const hasSetupDescription = !!card.setupDescription;
-                const hasStoryOverrideRule = card.rules?.some(
-                    rule => rule.type === 'addSpecialRule' && rule.category === 'story_override'
+                const hasStoryOverride = card.rules?.some(
+                    rule => rule.type === 'addSpecialRule' && rule.source === 'story'
                 );
-                const hasOtherRules = card.rules?.some(
-                    rule => !(rule.type === 'addSpecialRule' && rule.category === 'story_override')
+                const hasFunctionalRules = card.rules?.some(
+                    rule => rule.type !== 'addFlag' && 
+                           rule.type !== 'setPlayerBadges' && 
+                           !(rule.type === 'addSpecialRule' && rule.source === 'story')
                 );
 
-                const isMissingSomething = (hasSetupDescription && !hasStoryOverrideRule) ||
-                                           (hasStoryOverrideRule && !hasSetupDescription) ||
-                                           (hasStoryOverrideRule && !hasOtherRules) ||
-                                           (hasOtherRules && !hasStoryOverrideRule);
+                const isMissingSomething = 
+                    (hasSetupDescription && (!hasStoryOverride || !hasFunctionalRules)) ||
+                    (hasStoryOverride && !hasFunctionalRules) ||
+                    (hasFunctionalRules && (!hasStoryOverride || !hasSetupDescription));
 
                 if (isMissingSomething) {
                     needsUpdate.add(card.title);
@@ -599,23 +742,25 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
         if (!story.title && !story.setupDescription && (!rules || rules.length === 0)) return null;
         
         const hasSetupDescription = !!story.setupDescription;
-        const hasStoryOverrideRule = rules?.some(
-            rule => rule.type === 'addSpecialRule' && rule.category === 'story_override'
+        const hasStoryOverride = rules?.some(
+            rule => rule.type === 'addSpecialRule' && rule.source === 'story'
         );
-        const hasOtherRules = rules?.some(
-            rule => !(rule.type === 'addSpecialRule' && rule.category === 'story_override')
+        const hasFunctionalRules = rules?.some(
+            rule => rule.type !== 'addFlag' && 
+                   rule.type !== 'setPlayerBadges' && 
+                   !(rule.type === 'addSpecialRule' && rule.source === 'story')
         );
 
         // If it has none of these, it's not a setup-modifying card, so no checklist needed
-        if (!hasSetupDescription && !hasStoryOverrideRule && !hasOtherRules) return null;
+        if (!hasSetupDescription && !hasStoryOverride && !hasFunctionalRules) return null;
 
-        // If it has all of them, the checklist is fully complete, so we can hide the warning banner
-        if (hasSetupDescription && hasStoryOverrideRule && hasOtherRules) return null;
+        // If it has all three, the checklist is fully complete, so we can hide the warning banner
+        if (hasSetupDescription && hasStoryOverride && hasFunctionalRules) return null;
 
         return [
             {
                 id: 'setupDesc',
-                label: 'Setup Description',
+                label: 'Setup Description (Story Card)',
                 isComplete: hasSetupDescription,
                 actionLabel: 'Edit Description',
                 action: () => {
@@ -625,27 +770,17 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
             },
             {
                 id: 'storyOverride',
-                label: 'Story Override Rule',
-                isComplete: hasStoryOverrideRule,
-                actionLabel: 'Add Override Rule',
+                label: 'Story Override (Setup Pages)',
+                isComplete: hasStoryOverride,
+                actionLabel: 'Add Override',
                 action: () => {
-                    setRules(prev => [...prev, {
-                        type: 'addSpecialRule',
-                        category: 'story_override',
-                        rule: {
-                            title: 'Story Override',
-                            content: [{ type: 'paragraph', content: ['Replaces standard setup rules.'] }]
-                        }
-                    } as Partial<AddSpecialRule>]);
-                    setTimeout(() => {
-                        rulesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 100);
+                    rulesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             },
             {
-                id: 'otherRules',
-                label: 'Functional Rules',
-                isComplete: hasOtherRules,
+                id: 'functionalRules',
+                label: 'Functional Setup Rules',
+                isComplete: hasFunctionalRules,
                 actionLabel: 'Add Rules',
                 action: () => {
                     rulesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -707,6 +842,7 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
                 if (cardData) {
                     const { rules: cardRules, ...cardStoryData } = cardData;
                     setStory(cardStoryData);
+                    setOriginalTitle(cardData.title);
                     // Deep copy rules to prevent accidental mutation
                     setRules(cardRules ? JSON.parse(JSON.stringify(cardRules)) : []);
                 }
@@ -733,7 +869,9 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
         setStory(initialStory);
         setRules(initialRules);
         setCardToLoad('');
+        setOriginalTitle(null);
         setCopyButtonText('Copy JSON');
+        setSaveButtonText('Save to File');
         setSuppressWarning(false);
         // Incrementing the key will force VisualRuleBuilder to re-mount with fresh state
         setBuilderKey(prev => prev + 1); 
@@ -913,6 +1051,58 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
         });
     };
     
+    const handleSaveToFile = async () => {
+        if (!isFormValid || !originalTitle) return;
+        
+        setSaveButtonText('Saving...');
+        
+        try {
+            const finalStory: Partial<StoryCardDef> = { ...story };
+            const filledRules = rules.map(rule => ({
+                ...rule,
+                source: 'story' as RuleSourceType,
+                sourceName: story.title,
+            }));
+            finalStory.rules = filledRules as SetupRule[];
+
+            // Clean up empty fields
+            if (!finalStory.setupDescription) delete finalStory.setupDescription;
+            if (!finalStory.requiredExpansion) delete finalStory.requiredExpansion;
+            if (!finalStory.additionalRequirements?.length) delete finalStory.additionalRequirements;
+            if (!finalStory.sourceUrl) delete finalStory.sourceUrl;
+            if (!finalStory.isSolo) delete finalStory.isSolo;
+            if (!finalStory.isCoOp) delete finalStory.isCoOp;
+            if (!finalStory.isPvP) delete finalStory.isPvP;
+            if (!finalStory.goals?.length) delete finalStory.goals;
+            if (!finalStory.challengeOptions?.length) delete finalStory.challengeOptions;
+            if (!finalStory.rules?.length) delete finalStory.rules;
+            if (finalStory.rating === undefined) delete finalStory.rating;
+            if (finalStory.sortOrder === undefined) delete finalStory.sortOrder;
+
+            const response = await fetch('/api/save-story', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    originalTitle,
+                    newStoryData: finalStory
+                })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                setSaveButtonText('Saved!');
+                setOriginalTitle(story.title || null); // Update original title to new title if changed
+                setTimeout(() => setSaveButtonText('Save to File'), 2000);
+            } else {
+                throw new Error(result.error || 'Failed to save');
+            }
+        } catch (error) {
+            console.error('Error saving to file:', error);
+            setSaveButtonText('Error');
+            setTimeout(() => setSaveButtonText('Save to File'), 2000);
+        }
+    };
+
     const expansionOptions = EXPANSIONS_METADATA.filter(e => e.id !== 'base' && e.id !== 'community');
 
     const renderGoalsList = () => (
@@ -1169,13 +1359,24 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
                                 <code>{generatedJson}</code>
                             </pre>
                             {!generatedJson.startsWith('//') && (
-                                <button 
-                                    onClick={handleCopy} 
-                                    disabled={!isFormValid}
-                                    className={`absolute top-2 right-2 text-xs px-2 py-1 rounded ${isFormValid ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-800 text-gray-500 cursor-not-allowed'}`}
-                                >
-                                    {copyButtonText}
-                                </button>
+                                <div className="absolute top-2 right-2 flex gap-2">
+                                    <button 
+                                        onClick={handleCopy} 
+                                        disabled={!isFormValid}
+                                        className={`text-xs px-2 py-1 rounded ${isFormValid ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-800 text-gray-500 cursor-not-allowed'}`}
+                                    >
+                                        {copyButtonText}
+                                    </button>
+                                    {originalTitle && (
+                                        <button 
+                                            onClick={handleSaveToFile} 
+                                            disabled={!isFormValid}
+                                            className={`text-xs px-2 py-1 rounded font-bold ${isFormValid ? 'bg-green-700 hover:bg-green-600' : 'bg-gray-800 text-gray-500 cursor-not-allowed'}`}
+                                        >
+                                            {saveButtonText}
+                                        </button>
+                                    )}
+                                </div>
                             )}
                         </div>
                     </div>

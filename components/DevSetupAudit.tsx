@@ -19,23 +19,23 @@ export const DevSetupAudit: React.FC<DevSetupAuditProps> = ({ onClose, onEditSto
     for (const card of stories) {
       const hasSetupDescription = !!card.setupDescription;
       
-      const hasStoryOverrideRule = card.rules?.some(
-        rule => rule.type === 'addSpecialRule' && rule.category === 'story_override'
+      const hasStoryOverride = card.rules?.some(
+        rule => rule.type === 'addSpecialRule' && rule.source === 'story'
       );
 
-      const hasOtherRules = card.rules?.some(
-        rule => !(rule.type === 'addSpecialRule' && rule.category === 'story_override')
+      const hasFunctionalRules = card.rules?.some(
+        rule => rule.type !== 'addFlag' && 
+               rule.type !== 'setPlayerBadges' && 
+               !(rule.type === 'addSpecialRule' && rule.source === 'story')
       );
 
-      if (hasSetupDescription && !hasStoryOverrideRule) {
-        needsConversion.push({ card, reason: "Has setupDescription but no story_override rule" });
-      } else if (hasStoryOverrideRule && !hasSetupDescription) {
-        needsConversion.push({ card, reason: "Has story_override rule but no setupDescription" });
-      } else if (hasStoryOverrideRule && !hasOtherRules) {
-        needsConversion.push({ card, reason: "Has story_override rule but no other rules" });
-      } else if (hasOtherRules && !hasStoryOverrideRule) {
-        needsConversion.push({ card, reason: "Has rule updates but no story_override rule" });
-      } else if (hasSetupDescription && hasStoryOverrideRule && hasOtherRules) {
+      if (hasSetupDescription && (!hasStoryOverride || !hasFunctionalRules)) {
+        needsConversion.push({ card, reason: "Has setupDescription but missing Story Override or Functional Rules" });
+      } else if (hasStoryOverride && !hasFunctionalRules) {
+        needsConversion.push({ card, reason: "Has Story Override but no Functional Rules to implement it" });
+      } else if (hasFunctionalRules && (!hasStoryOverride || !hasSetupDescription)) {
+        needsConversion.push({ card, reason: "Has Functional Rules but missing Story Override explanation or Setup Description" });
+      } else if (hasSetupDescription && hasStoryOverride && hasFunctionalRules) {
         converted.push(card);
       }
     }
