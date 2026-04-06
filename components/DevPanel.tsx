@@ -8,6 +8,8 @@ import { useGameState } from '../hooks/useGameState';
 import { useGameDispatch } from '../hooks/useGameDispatch';
 import { getAvailableStoryCards } from '../utils/selectors/story';
 import { useData } from '../hooks/useData';
+import { isStoryOverride, isActiveSetupRule } from '../utils/overrides';
+import { SetupRule } from '../types';
 
 import { loadStoryData } from '../utils/storyLoader';
 import { ActionType } from '../state/actions';
@@ -25,6 +27,19 @@ export const DevPanel = () => {
     const { state: gameState } = useGameState();
     const { dispatch } = useGameDispatch();
     const { stories } = useData();
+    
+    const currentStory = gameState.selectedStoryCardIndex !== null ? stories[gameState.selectedStoryCardIndex] : null;
+    const needsUpdate = React.useMemo(() => {
+        if (!currentStory) return false;
+        const hasSetupDescription = !!currentStory.setupDescription;
+        const rules = (currentStory.rules || []) as Partial<SetupRule>[];
+        const hasStoryOverride = rules.some(isStoryOverride);
+        const isActiveSetup = rules.some(isActiveSetupRule);
+
+        return (hasSetupDescription && (!hasStoryOverride || !isActiveSetup)) ||
+               (hasStoryOverride && !isActiveSetup) ||
+               (isActiveSetup && (!hasStoryOverride || !hasSetupDescription));
+    }, [currentStory]);
 
     const handleNavigateStory = async (direction: 'prev' | 'next') => {
         const availableStories = getAvailableStoryCards(gameState, stories);
@@ -130,6 +145,26 @@ export const DevPanel = () => {
                         <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                     </svg>
                 </button>
+                {currentStory && (
+                    <button
+                        onClick={() => {
+                            setAddStoryInitialTitle(currentStory.title);
+                            setShowAddStory(true);
+                        }}
+                        className={`relative p-2 rounded-full shadow-lg transition-colors ${needsUpdate ? 'bg-amber-600 hover:bg-amber-500 animate-pulse' : 'bg-green-700 hover:bg-green-600'}`}
+                        title={needsUpdate ? "Edit Story (Audit Warning)" : "Edit Story"}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        </svg>
+                        {needsUpdate && (
+                            <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                            </span>
+                        )}
+                    </button>
+                )}
                 <button
                     onClick={() => setIsOpen(true)}
                     className="bg-purple-800 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-colors"

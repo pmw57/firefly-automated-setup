@@ -96,6 +96,8 @@ export interface SetDraftModeRule extends BaseRule {
     selectShipDescription?: string;
     placementTitle?: string;
     placementDescription?: string;
+    capitolModifier?: number;
+    shipDiscounts?: Record<string, number>;
 }
 export interface SetLeaderSetupRule extends BaseRule { type: 'setLeaderSetup'; mode: LeaderSetupMode; }
 export interface SetShipPlacementRule extends BaseRule {
@@ -104,6 +106,14 @@ export interface SetShipPlacementRule extends BaseRule {
     | string
     | { sector: string }
     | { region: string };
+}
+export interface SetHavenPlacementRule extends BaseRule {
+    type: 'setHavenPlacement';
+    enabled: boolean;
+}
+export interface RestrictShipsRule extends BaseRule {
+    type: 'restrictShips';
+    ships: string[];
 }
 // The `draft_panel` and `draft_placement_extra` categories allow story cards
 // to inject custom UI panels directly into the draft step for complex setups.
@@ -179,6 +189,8 @@ export type SetupRule =
   | SetDraftModeRule
   | SetLeaderSetupRule
   | SetShipPlacementRule
+  | SetHavenPlacementRule
+  | RestrictShipsRule
   | AddSpecialRule
   | AddFlagRule
   | ModifyPrimeRule

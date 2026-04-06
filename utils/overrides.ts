@@ -3,6 +3,20 @@ import { GameState, SetupRule, AddSpecialRule, AddFlagRule } from '../types/inde
 import { STEP_IDS } from '../data/ids';
 import { getResolvedRules } from './selectors/rules';
 
+export const STORY_OVERRIDE_CATEGORIES = ['nav', 'allianceReaver', 'draft', 'resources', 'goal', 'jobs', 'prime', 'soloTimer', 'pressures_high', 'setup_selection'];
+
+/**
+ * Checks if a rule is a narrative "Story Override" (passive note).
+ */
+export const isStoryOverride = (rule: Partial<SetupRule>) => 
+    rule.type === 'addSpecialRule' && 
+    STORY_OVERRIDE_CATEGORIES.includes((rule as Partial<AddSpecialRule>).category || '');
+
+/**
+ * Checks if a rule is an "Active Setup Rule" (modifies logic or UI).
+ */
+export const isActiveSetupRule = (rule: Partial<SetupRule>) => !isStoryOverride(rule);
+
 /**
  * A map of rule types to the ID of the setup step they primarily affect.
  * This allow us to trace a Story Card rule back to the step it overrides.
@@ -25,6 +39,8 @@ export const RULE_TYPE_TO_STEP_ID: Record<SetupRule['type'], string | ((rule: Se
   setDraftMode: STEP_IDS.C3,
   setLeaderSetup: STEP_IDS.C3,
   setShipPlacement: STEP_IDS.C3,
+  setHavenPlacement: STEP_IDS.C3,
+  restrictShips: STEP_IDS.C3,
   bypassDraft: STEP_IDS.C3,
   setPlayerBadges: STEP_IDS.C3,
   

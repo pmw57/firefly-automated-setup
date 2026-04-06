@@ -6,6 +6,7 @@ import { StoryCardGridItem } from './story/StoryCardGridItem';
 import { CONTACT_NAMES } from '../data/ids';
 import { loadStoryData } from '../utils/storyLoader';
 import { LOCATION_IDS } from '../data/locations/index';
+import { isStoryOverride, isActiveSetupRule } from '../utils/overrides';
 
 // --- Local Storage ---
 const DEV_STORY_CARD_DRAFT_KEY = 'firefly_dev_story_card_draft';
@@ -45,7 +46,7 @@ const COMPONENT_TYPES = ['contraband', 'alert_token'];
 interface RuleParam {
   name: string;
   label: string;
-  type: 'text' | 'number' | 'select' | 'textarea' | 'checkbox' | 'multi-select' | 'string-list-builder' | 'key-value-builder' | 'special-rule-builder';
+  type: 'text' | 'number' | 'select' | 'textarea' | 'checkbox' | 'multi-select' | 'string-list-builder' | 'key-value-builder' | 'special-rule-builder' | 'player-badges';
   options?: string[];
   condition?: (rule: Partial<SetupRule>) => boolean;
 }
@@ -56,6 +57,11 @@ interface RuleDefinition {
   default: () => Partial<SetupRule>;
 }
 
+
+const SHIP_IDS = [
+  'serenity', 'jetwash', 'esmeralda', 'interceptor', 'bonanza', 'ss_walden', 
+  'white_lightning', 'cantankerous', 'huntingdons_bolt', 'restless_sole'
+];
 const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
   // Nav Rules (C1)
   setNavMode: { label: 'Set Nav Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: NAV_MODES }], default: () => ({ type: 'setNavMode', mode: 'standard' }) },
@@ -106,7 +112,20 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
   },
 
   // Draft Rules (C3)
-  setDraftMode: { label: 'Set Draft Mode', params: [{ name: 'mode', label: 'Mode', type: 'select', options: DRAFT_MODES }], default: () => ({ type: 'setDraftMode', mode: 'standard' }) },
+  setDraftMode: { 
+    label: 'Set Draft Mode', 
+    params: [
+      { name: 'mode', label: 'Mode', type: 'select', options: DRAFT_MODES },
+      { name: 'capitolModifier', label: 'Capitol Modifier (Browncoat Only)', type: 'number' },
+      { name: 'shipDiscounts', label: 'Ship Discounts (Browncoat Only)', type: 'key-value-builder' }
+    ], 
+    default: () => ({ type: 'setDraftMode', mode: 'standard' }) 
+  },
+  restrictShips: {
+    label: 'Restrict Ships',
+    params: [{ name: 'ships', label: 'Allowed Ships', type: 'multi-select', options: SHIP_IDS }],
+    default: () => ({ type: 'restrictShips', ships: [] })
+  },
   addDraftInstructions: {
     label: 'Add Draft Instructions',
     params: [{ name: 'rule', label: 'Rule Object', type: 'special-rule-builder' }],
@@ -125,7 +144,7 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
   },
   setPlayerBadges: {
     label: 'Set Player Badges',
-    params: [{ name: 'badges', label: 'Badges Map', type: 'key-value-builder' }],
+    params: [{ name: 'badges', label: 'Badges Map', type: 'player-badges' }],
     default: () => ({ type: 'setPlayerBadges', badges: { 0: "Commander" } } as Partial<SetPlayerBadgesRule>)
   },
   addDraftShipInstructions: {
@@ -186,6 +205,11 @@ const RULE_DEFINITIONS: Record<string, RuleDefinition> = {
   
   // General / Misc Rules
   setShipPlacement: { label: 'Set Ship Placement', params: [{ name: 'location', label: 'Location', type: 'select', options: SHIP_PLACEMENT_LOCATIONS }], default: () => ({ type: 'setShipPlacement', location: 'persephone' }) },
+  setHavenPlacement: {
+    label: 'Set Haven Placement',
+    params: [{ name: 'enabled', label: 'Enabled', type: 'checkbox' }],
+    default: () => ({ type: 'setHavenPlacement', enabled: true })
+  },
   modifyResource: {
     label: 'Modify Resource',
     params: [
@@ -304,7 +328,10 @@ const RuleInput: React.FC<{ param: RuleParam, value: unknown, onChange: (val: un
                             const newObj = { ...obj }; delete newObj[k]; newObj[e.target.value] = v; onChange(newObj);
                         }} />
                         <input type="text" className={commonProps} placeholder="Value" value={v} onChange={e => {
-                            const newObj = { ...obj, [k]: e.target.value }; onChange(newObj);
+                            const raw = e.target.value;
+                            const num = parseFloat(raw);
+                            const finalVal = !isNaN(num) && String(num) === raw ? num : raw;
+                            const newObj = { ...obj, [k]: finalVal }; onChange(newObj);
                         }} />
                         <button type="button" onClick={() => {
                             const newObj = { ...obj }; delete newObj[k]; onChange(newObj);
@@ -312,6 +339,29 @@ const RuleInput: React.FC<{ param: RuleParam, value: unknown, onChange: (val: un
                     </div>
                 ))}
                 <button type="button" onClick={() => onChange({ ...obj, ['newKey']: 'newValue' })} className="text-[10px] bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded">+ Add Pair</button>
+            </div>
+        );
+    }
+    if (param.type === 'player-badges') {
+        const badges = (typeof value === 'object' && value !== null) ? value as Record<string, string> : {};
+        return (
+            <div className="space-y-2 mt-1">
+                {[0, 1, 2, 3, 4, 5].map(idx => (
+                    <div key={idx} className="flex items-center gap-2">
+                        <span className="text-[10px] text-gray-500 w-16">Player {idx + 1}:</span>
+                        <input
+                            type="text"
+                            className={commonProps}
+                            value={badges[String(idx)] || ''}
+                            onChange={(e) => {
+                                const newVal = { ...badges, [String(idx)]: e.target.value };
+                                if (!e.target.value) delete newVal[String(idx)];
+                                onChange(newVal);
+                            }}
+                            placeholder="e.g. The Operative"
+                        />
+                    </div>
+                ))}
             </div>
         );
     }
@@ -384,6 +434,10 @@ const RuleEditor: React.FC<{
     else if (specialRule.category === 'setup_selection') ruleType = 'addSetupSelectionInstructions';
     else if (specialRule.category === 'pressures_high') ruleType = 'addPressuresHighInstructions';
   }
+  
+  if (rule.type === 'setHavenPlacement') ruleType = 'setHavenPlacement';
+  if (rule.type === 'restrictShips') ruleType = 'restrictShips';
+
   const definition = RULE_DEFINITIONS[ruleType];
   if (!definition) return <div className="text-red-500 text-xs p-2 bg-red-900/50 rounded">Unknown rule type: {rule.type}</div>;
   
@@ -430,7 +484,7 @@ const RULE_GROUPS = [
     },
     {
         label: 'Step 3: Draft & Placement',
-        rules: ['setDraftMode', 'addDraftInstructions', 'addDraftPanel', 'setLeaderSetup', 'bypassDraft', 'setPlayerBadges', 'setShipPlacement', 'addDraftShipInstructions', 'addDraftPlacementInstructions']
+        rules: ['setDraftMode', 'restrictShips', 'addDraftInstructions', 'addDraftPanel', 'setLeaderSetup', 'bypassDraft', 'setPlayerBadges', 'setShipPlacement', 'setHavenPlacement', 'addDraftShipInstructions', 'addDraftPlacementInstructions']
     },
     {
         label: 'Step 5: Resources & Goal Tokens',
@@ -528,7 +582,9 @@ const VisualRuleBuilder: React.FC<{ rules: Partial<SetupRule>[], onRulesChange: 
           {RULE_GROUPS.map(group => (
             <optgroup key={group.label} label={group.label}>
               {group.rules.map(type => (
-                <option key={type} value={type}>{RULE_DEFINITIONS[type]?.label || type}</option>
+                <option key={type} value={type}>
+                  {RULE_DEFINITIONS[type]?.label || type}
+                </option>
               ))}
             </optgroup>
           ))}
@@ -617,7 +673,7 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
     const [saveButtonText, setSaveButtonText] = useState('Save to File');
     const [originalTitle, setOriginalTitle] = useState<string | null>(null);
     const [cardToLoad, setCardToLoad] = useState(initialStoryTitle || '');
-    const [suppressWarning, setSuppressWarning] = useState(!!initialStoryTitle);
+    const [suppressWarning, setSuppressWarning] = useState(false);
     // Add a key to force re-mounting of the VisualRuleBuilder on clear
     const [builderKey, setBuilderKey] = useState(0);
     const [activeTab, setActiveTab] = useState<'basic' | 'goals' | 'rules'>('basic');
@@ -680,19 +736,13 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
             for (let i = currentIndex; i < endIndex; i++) {
                 const card = STORY_CARDS[i];
                 const hasSetupDescription = !!card.setupDescription;
-                const hasStoryOverride = card.rules?.some(
-                    rule => rule.type === 'addSpecialRule' && rule.source === 'story'
-                );
-                const hasFunctionalRules = card.rules?.some(
-                    rule => rule.type !== 'addFlag' && 
-                           rule.type !== 'setPlayerBadges' && 
-                           !(rule.type === 'addSpecialRule' && rule.source === 'story')
-                );
+                const hasStoryOverride = card.rules?.some(isStoryOverride);
+                const isActiveSetup = card.rules?.some(isActiveSetupRule);
 
                 const isMissingSomething = 
-                    (hasSetupDescription && (!hasStoryOverride || !hasFunctionalRules)) ||
-                    (hasStoryOverride && !hasFunctionalRules) ||
-                    (hasFunctionalRules && (!hasStoryOverride || !hasSetupDescription));
+                    (hasSetupDescription && (!hasStoryOverride || !isActiveSetup)) ||
+                    (hasStoryOverride && !isActiveSetup) ||
+                    (isActiveSetup && (!hasStoryOverride || !hasSetupDescription));
 
                 if (isMissingSomething) {
                     needsUpdate.add(card.title);
@@ -742,20 +792,14 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
         if (!story.title && !story.setupDescription && (!rules || rules.length === 0)) return null;
         
         const hasSetupDescription = !!story.setupDescription;
-        const hasStoryOverride = rules?.some(
-            rule => rule.type === 'addSpecialRule' && rule.source === 'story'
-        );
-        const hasFunctionalRules = rules?.some(
-            rule => rule.type !== 'addFlag' && 
-                   rule.type !== 'setPlayerBadges' && 
-                   !(rule.type === 'addSpecialRule' && rule.source === 'story')
-        );
+        const hasStoryOverride = rules?.some(isStoryOverride);
+        const hasActiveSetupRules = rules?.some(isActiveSetupRule);
 
         // If it has none of these, it's not a setup-modifying card, so no checklist needed
-        if (!hasSetupDescription && !hasStoryOverride && !hasFunctionalRules) return null;
+        if (!hasSetupDescription && !hasStoryOverride && !hasActiveSetupRules) return null;
 
         // If it has all three, the checklist is fully complete, so we can hide the warning banner
-        if (hasSetupDescription && hasStoryOverride && hasFunctionalRules) return null;
+        if (hasSetupDescription && hasStoryOverride && hasActiveSetupRules) return null;
 
         return [
             {
@@ -778,9 +822,9 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
                 }
             },
             {
-                id: 'functionalRules',
-                label: 'Functional Setup Rules',
-                isComplete: hasFunctionalRules,
+                id: 'activeSetupRules',
+                label: 'Active Setup Rules',
+                isComplete: hasActiveSetupRules,
                 actionLabel: 'Add Rules',
                 action: () => {
                     rulesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
