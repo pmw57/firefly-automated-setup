@@ -7,6 +7,9 @@ import { CONTACT_NAMES } from '../data/ids';
 import { loadStoryData } from '../utils/storyLoader';
 import { LOCATION_IDS } from '../data/locations/index';
 import { isStoryOverride, isActiveSetupRule } from '../utils/overrides';
+import { useGameState } from '../hooks/useGameState';
+import { useGameDispatch } from '../hooks/useGameDispatch';
+import { ActionType } from '../state/actions';
 
 // --- Local Storage ---
 const DEV_STORY_CARD_DRAFT_KEY = 'firefly_dev_story_card_draft';
@@ -667,6 +670,9 @@ const getInitialState = () => ({
 });
 
 export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initialStoryTitle }) => {
+    const { state: gameState } = useGameState();
+    const { dispatch } = useGameDispatch();
+
     const [story, setStory] = useState<Partial<StoryCardDef>>(getInitialState().story);
     const [rules, setRules] = useState<Partial<SetupRule>[]>(getInitialState().rules);
     const [copyButtonText, setCopyButtonText] = useState('Copy JSON');
@@ -1136,6 +1142,22 @@ export const StoryCardEditor: React.FC<StoryCardEditorProps> = ({ onClose, initi
             if (result.success) {
                 setSaveButtonText('Saved!');
                 setOriginalTitle(story.title || null); // Update original title to new title if changed
+                
+                // Update global game state if this story is currently active
+                if (gameState.selectedStoryCardIndex !== null) {
+                    const activeStory = gameState.activeStory;
+                    if (activeStory && (activeStory.title === originalTitle || activeStory.title === story.title)) {
+                        dispatch({
+                            type: ActionType.SET_ACTIVE_STORY,
+                            payload: {
+                                story: finalStory as StoryCardDef,
+                                index: gameState.selectedStoryCardIndex,
+                                goal: gameState.selectedGoal || undefined
+                            }
+                        });
+                    }
+                }
+
                 setTimeout(() => setSaveButtonText('Save to File'), 2000);
             } else {
                 throw new Error(result.error || 'Failed to save');

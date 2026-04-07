@@ -7,19 +7,47 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 10,
-    campaignSetupNotes: ['EXPLOSIVES_REQUIRED'],
-    tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
+    campaignSetupNotes: [
+      "EXPLOSIVES_REQUIRED"
+    ],
+    tags: [
+      "community",
+      "classic_heist",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing Out Of Gas.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Out of Gas. Requires EXPLOSIVES."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Out of Gas. Requires EXPLOSIVES."
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "Ariel"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing Out of Gas. Requires EXPLOSIVES."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Ariel"
       }
     ]
@@ -30,18 +58,44 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 4,
-    tags: ['community', 'mystery', 'character', 'against_the_black', 'solo'],
+    tags: [
+      "community",
+      "mystery",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing The Train Job.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing The Train Job."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing The Train Job."
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "Bushwhacked"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing The Train Job."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Bushwhacked"
       }
     ]
@@ -52,18 +106,44 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 14,
-    tags: ['community', 'faction_war', 'character', 'against_the_black', 'solo'],
+    tags: [
+      "community",
+      "faction_war",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing The Message.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing The Message."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing The Message."
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "Heart of Gold"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing The Message."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Heart of Gold"
       }
     ]
@@ -74,19 +154,46 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 8,
-    campaignSetupNotes: ['SUGGEST_NEGOTIATION_GEAR'],
-    tags: ['community', 'character', 'against_the_black', 'solo'],
+    campaignSetupNotes: [
+      "SUGGEST_NEGOTIATION_GEAR"
+    ],
+    tags: [
+      "community",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing Our Mrs. Reynolds.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Our Mrs. Reynolds. You may want to get Jayne some negotiation gear, or things could go badly."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Our Mrs. Reynolds. You may want to get Jayne some negotiation gear, or things could go badly."
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "Jaynestown"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing Our Mrs. Reynolds. You may want to get Jayne some negotiation gear, or things could go badly."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Jaynestown"
       }
     ]
@@ -97,19 +204,47 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 13,
-    campaignSetupNotes: ['START_AT_SPACE_BAZAAR', 'SUGGEST_MED_BAY_AND_HAT'],
-    tags: ['community', 'character', 'against_the_black', 'solo'],
+    campaignSetupNotes: [
+      "START_AT_SPACE_BAZAAR",
+      "SUGGEST_MED_BAY_AND_HAT"
+    ],
+    tags: [
+      "community",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing Trash.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Trash. Start the Story at the Space Bazaar. Suggested: Fully Equipped Med Bay. Take Jayne's \"Cunning\" Hat."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Trash. Start the Story at the Space Bazaar. Suggested: Fully Equipped Med Bay. Take Jayne's \"Cunning\" Hat."
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "The Message"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing Trash. Start the Story at the Space Bazaar. Suggested: Fully Equipped Med Bay. Take Jayne's \"Cunning\" Hat."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "The Message"
       }
     ]
@@ -120,19 +255,52 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 15,
-    campaignSetupNotes: ['ANY_SECTOR_PLACEMENT_WITH_CREW_NOTE'],
-    tags: ['community', 'survival', 'character', 'against_the_black', 'solo'],
+    campaignSetupNotes: [
+      "ANY_SECTOR_PLACEMENT_WITH_CREW_NOTE"
+    ],
+    tags: [
+      "community",
+      "survival",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing Heart of Gold.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Heart of Gold. This Story can take place in any sector. If a named Crew is missing, choose another Crew."]
+          title: "Story Override",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing Heart of Gold. This Story can take place in any sector. If a named Crew is missing, choose another Crew."
+              ]
+            }
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "Objects in Space"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing Heart of Gold. This Story can take place in any sector. If a named Crew is missing, choose another Crew."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Objects in Space"
       }
     ]
@@ -143,19 +311,46 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 7,
-    campaignSetupNotes: ['SUGGEST_BONNET_VERA'],
-    tags: ['community', 'character', 'against_the_black', 'solo'],
+    campaignSetupNotes: [
+      "SUGGEST_BONNET_VERA"
+    ],
+    tags: [
+      "community",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing Safe.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Safe Suggested: Mal's Pretty Floral Bonnet & Vera."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Safe Suggested: Mal's Pretty Floral Bonnet & Vera."
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "Our Mrs. Reynolds"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing Safe Suggested: Mal's Pretty Floral Bonnet & Vera."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Our Mrs. Reynolds"
       }
     ]
@@ -166,19 +361,46 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 9,
-    campaignSetupNotes: ['ANY_SECTOR_PLACEMENT'],
-    tags: ['community', 'survival', 'against_the_black', 'solo'],
+    campaignSetupNotes: [
+      "ANY_SECTOR_PLACEMENT"
+    ],
+    tags: [
+      "community",
+      "survival",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing Jaynestown.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Jaynestown. This Story can take place in any empty sector."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Jaynestown. This Story can take place in any empty sector."
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "Out of Gas"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing Jaynestown. This Story can take place in any empty sector."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Out of Gas"
       }
     ]
@@ -189,19 +411,46 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 6,
-    campaignSetupNotes: ['FAKE_ID_REQUIRED'],
-    tags: ['community', 'character', 'against_the_black', 'solo'],
+    campaignSetupNotes: [
+      "FAKE_ID_REQUIRED"
+    ],
+    tags: [
+      "community",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing Shindig.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Shindig. Requires FAKE ID."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Shindig. Requires FAKE ID."
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "Safe"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing Shindig. Requires FAKE ID."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Safe"
       }
     ]
@@ -212,19 +461,48 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 16,
-    campaignSetupNotes: ['REMOVE_INARA_AND_BOOK', 'TRANSPORT_REQUIRED'],
-    tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
+    campaignSetupNotes: [
+      "REMOVE_INARA_AND_BOOK",
+      "TRANSPORT_REQUIRED"
+    ],
+    tags: [
+      "community",
+      "classic_heist",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing Objects in Space.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Objects in Space. Remove Inara and Shepherd Book from the game. Requires Transport."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Objects in Space. Remove Inara and Shepherd Book from the game. Requires Transport."
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "Serenity Movie Part 1"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing Objects in Space. Remove Inara and Shepherd Book from the game. Requires Transport."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Serenity Movie Part 1"
       }
     ]
@@ -235,19 +513,48 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 17,
-    campaignSetupNotes: ['INARA_REJOINS', 'REMOVE_DISGRUNTLED'],
-    tags: ['community', 'mystery', 'character', 'against_the_black', 'solo'],
+    campaignSetupNotes: [
+      "INARA_REJOINS",
+      "REMOVE_DISGRUNTLED"
+    ],
+    tags: [
+      "community",
+      "mystery",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing Serenity Movie Part 1.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Serenity Movie Part 1. Remove Disgruntled Tokens from all crew. Inara rejoins the crew at this point."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Serenity Movie Part 1. Remove Disgruntled Tokens from all crew. Inara rejoins the crew at this point."
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "Serenity Movie Part 2"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing Serenity Movie Part 1. Remove Disgruntled Tokens from all crew. Inara rejoins the crew at this point."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Serenity Movie Part 2"
       }
     ]
@@ -258,19 +565,46 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 18,
-    campaignSetupNotes: ['NO_MED_BAY_SUGGEST_KIT'],
-    tags: ['community', 'character', 'against_the_black', 'solo'],
+    campaignSetupNotes: [
+      "NO_MED_BAY_SUGGEST_KIT"
+    ],
+    tags: [
+      "community",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing Serenity Movie Part 2.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Serenity Movie Part 2. Fully Equipped Med Bay may not be used. Suggested: Simon's Surgical Kit."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Serenity Movie Part 2. Fully Equipped Med Bay may not be used. Suggested: Simon's Surgical Kit."
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "Serenity Movie Part 3"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing Serenity Movie Part 2. Fully Equipped Med Bay may not be used. Suggested: Simon's Surgical Kit."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Serenity Movie Part 3"
       }
     ]
@@ -335,23 +669,6 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
         location: "valentine",
         source: "story",
         sourceName: "Serenity Part 1"
-      },
-      {
-        type: "addSpecialRule",
-        category: "story_override",
-        rule: {
-          title: "Setup your ship",
-          content: [
-            {
-              type: "paragraph",
-              content: [
-                "Set up Serenity at Valentine with Malcolm, Zoë, Wash, Kaylee, Jayne, Cry Baby, Expanded Crew Quarters."
-              ]
-            }
-          ]
-        },
-        source: "story",
-        sourceName: "Serenity Part 1"
       }
     ]
   },
@@ -361,18 +678,50 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sourceUrl: "https://boardgamegeek.com/filepage/114133/ten-percent-of-nothin-expansion",
     requiredExpansion: "community",
     isSolo: true,
-    requiredFlag: 'isSolitaireFirefly',
+    requiredFlag: "isSolitaireFirefly",
     sortOrder: 2,
-    tags: ['community', 'smugglers_run', 'character', 'against_the_black', 'solo'],
+    tags: [
+      "community",
+      "smugglers_run",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
+    setupDescription: "Continue with the crew and items you acquired after completing Serenity Part 1.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "bypassDraft",
+        reason: "Continue with the crew and items you acquired after completing Serenity Part 1.",
+        source: "story",
+        sourceName: "Serenity Part 2"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Serenity Part 1."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Serenity Part 1."
+          ]
         },
-        source: 'story', 
+        source: "story",
+        sourceName: "Serenity Part 2"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Ship Selection Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Continue with the crew and items you acquired after completing Serenity Part 1."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Serenity Part 2"
       }
     ]
@@ -387,15 +736,24 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 5,
     campaignSetupNotes: ['SUGGEST_FANCY_DUDS'],
     tags: ['community', 'character', 'against_the_black', 'solo'],
+    setupDescription: "Continue with the crew and items you acquired after completing Bushwhacked.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "bypassDraft",
+        reason: "Continue with the crew and items you acquired after completing Bushwhacked.",
+        source: "story",
+        sourceName: "Shindig"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Bushwhacked. Suggested: Kaylee's Fluffy Pink Dress. Required: Mal must wear FANCY DUDS throughout."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Bushwhacked. Suggested: Kaylee's Fluffy Pink Dress. Required: Mal must wear FANCY DUDS throughout."
+          ]
         },
-        source: 'story', 
+        source: "story",
         sourceName: "Shindig"
       }
     ]
@@ -410,15 +768,24 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 3,
     campaignSetupNotes: ['SUGGEST_MED_BAY'],
     tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
+    setupDescription: "Continue with the crew and items you acquired after completing Serenity Part 2.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "bypassDraft",
+        reason: "Continue with the crew and items you acquired after completing Serenity Part 2.",
+        source: "story",
+        sourceName: "The Train Job"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Serenity Part 2. If you have the credits, a Fully Equipped Med Bay might also come in handy."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Serenity Part 2. If you have the credits, a Fully Equipped Med Bay might also come in handy."
+          ]
         },
-        source: 'story', 
+        source: "story",
         sourceName: "The Train Job"
       }
     ]
@@ -433,15 +800,24 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 12,
     campaignSetupNotes: ['PICK_UP_SAFFRON', 'HACKING_RIG_REQUIRED'],
     tags: ['community', 'classic_heist', 'character', 'against_the_black', 'solo'],
+    setupDescription: "Continue with the crew and items you acquired after completing War Stories.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "bypassDraft",
+        reason: "Continue with the crew and items you acquired after completing War Stories.",
+        source: "story",
+        sourceName: "Trash"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing War Stories. Before starting, pick up Saffron on Newhope. Requires HACKING RIG."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing War Stories. Before starting, pick up Saffron on Newhope. Requires HACKING RIG."
+          ]
         },
-        source: 'story', 
+        source: "story",
         sourceName: "Trash"
       }
     ]
@@ -456,15 +832,24 @@ export const SOLITAIRE_FIREFLY_STORIES: StoryCardDef[] = [
     sortOrder: 11,
     campaignSetupNotes: ['EXPLOSIVES_REQUIRED'],
     tags: ['community', 'jailbreak', 'character', 'against_the_black', 'solo'],
+    setupDescription: "Continue with the crew and items you acquired after completing Ariel.",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "bypassDraft",
+        reason: "Continue with the crew and items you acquired after completing Ariel.",
+        source: "story",
+        sourceName: "War Stories"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Story Override',
-          content: ["Continue with the crew and items you acquired after completing Ariel. Requires EXPLOSIVES."]
+          title: "Story Override",
+          content: [
+            "Continue with the crew and items you acquired after completing Ariel. Requires EXPLOSIVES."
+          ]
         },
-        source: 'story', 
+        source: "story",
         sourceName: "War Stories"
       }
     ]
