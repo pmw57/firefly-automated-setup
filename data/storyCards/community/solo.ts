@@ -123,7 +123,16 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     setupDescription: "Start play with Cap'n Jayne as your Leader, Jayne's Cunning Hat, and Vera. Subtract the cost of Vera from your Starting Cash.",
     rules: [
       {
-        type: 'addSpecialRule',
+        type: "modifyResource",
+        resource: "credits",
+        method: "add",
+        value: -1000,
+        description: "Subtract the cost of Vera from your Starting Cash.",
+        source: "story",
+        sourceName: "The Hero of Canton"
+      },
+      {
+        type: "addSpecialRule",
         category: 'draft',
         rule: {
           title: 'Hero Assignment',
