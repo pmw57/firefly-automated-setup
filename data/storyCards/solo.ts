@@ -164,20 +164,54 @@ export const SOLO_STORIES: StoryCardDef[] = [
     intro: "Captain ain't been the same since we pulled 'em out of that Alliance black ops site: cagey, paranoid... rageful. We can't figure it out soon, it's gonna get real bad.",
     setupDescription: "Place Reaver Alert Tokens in every sector in Motherlode, Redsun, and the Uroboros Belt, Blue Sun.",
     requiredExpansion: "tenth",
-    additionalRequirements: ["blue", "kalidasa"],
+    additionalRequirements: [
+      "blue",
+      "kalidasa"
+    ],
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860508/sjliver",
-    tags: ['survival', 'against_the_black', 'solo'],
-    rules: [
-      { type: 'addFlag', flag: 'placeReaverAlertsInMotherlodeAndUroboros', source: 'story', sourceName: "Goin' Reaver" },
-      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "Goin' Reaver" }
+    tags: [
+      "survival",
+      "against_the_black",
+      "solo"
     ],
     advancedRule: {
       id: "adv_wolf_at_your_door",
       title: "Wolf At Your Door",
       description: "An additional threat pursues you through the 'Verse.",
       disabledDescription: "This rule is on the back of the selected Story Card."
-    }
+    },
+    rules: [
+      {
+        type: "addFlag",
+        flag: "placeReaverAlertsInMotherlodeAndUroboros",
+        source: "story",
+        sourceName: "Goin' Reaver"
+      },
+      {
+        type: "addFlag",
+        flag: "soloGameTimer",
+        source: "story",
+        sourceName: "Goin' Reaver"
+      },
+      {
+        type: "addSpecialRule",
+        category: "allianceReaver",
+        rule: {
+          title: "Alliance/Reaver Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Place Reaver Alert Tokens in every sector in Motherlode, Redsun, and the Uroboros Belt, Blue Sun."
+              ]
+            }
+          ]
+        },
+        source: "story",
+        sourceName: "Goin' Reaver"
+      }
+    ]
   },
   {
     title: "Heroes & Misfits",
@@ -405,19 +439,68 @@ export const SOLO_STORIES: StoryCardDef[] = [
     intro: "The New Resistance is ready to open up some eyes and change a few hearts. They need a savvy captain to deliver key personnel to the heart of Alliance space.",
     setupDescription: "You may not deal with Harken. Place Harken's 7 Immoral Transport Jobs in separate discard pile to represent New Resistance Missions.",
     requiredExpansion: "tenth",
-    additionalRequirements: ["blue", "kalidasa"],
+    additionalRequirements: [
+      "blue",
+      "kalidasa"
+    ],
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/image/8860507/sjliver",
-    tags: ['character', 'faction_war', 'against_the_black', 'solo'],
-    rules: [
-      { type: 'addFlag', flag: 'soloGameTimer', source: 'story', sourceName: "Seeds Of Rebellion" },
-      { type: 'forbidContact', contact: 'Harken', source: 'story', sourceName: "Seeds Of Rebellion" }
+    tags: [
+      "character",
+      "faction_war",
+      "against_the_black",
+      "solo"
     ],
     advancedRule: {
       id: "adv_lost_little_lambs",
       title: "Lost Little Lambs",
       description: "Rescuing crew has additional complications and risks.",
       disabledDescription: "This rule is on the back of the selected Story Card."
-    }
+    },
+    rules: [
+      {
+        type: "addFlag",
+        flag: "soloGameTimer",
+        source: "story",
+        sourceName: "Seeds Of Rebellion"
+      },
+      {
+        type: "forbidContact",
+        contact: "Harken",
+        source: "story",
+        sourceName: "Seeds Of Rebellion"
+      },
+      {
+        type: "addSpecialRule",
+        category: "jobs",
+        rule: {
+          title: "Job Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "You may not deal with Harken. Place Harken's 7 Immoral Transport Jobs in separate discard pile to represent New Resistance Missions."
+              ]
+            }
+          ]
+        },
+        source: "story",
+        sourceName: "Seeds Of Rebellion"
+      },
+      {
+        type: "setJobStepContent",
+        position: "after",
+        content: [
+          {
+            type: "paragraph",
+            content: [
+              "Place Harken's 7 Immoral Transport Jobs in separate discard pile to represent New Resistance Missions."
+            ]
+          }
+        ],
+        source: "story",
+        sourceName: "Seeds Of Rebellion"
+      }
+    ]
   }
 ];

@@ -182,20 +182,46 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     isSolo: true,
     sourceUrl: "https://boardgamegeek.com/thread/1049419/hunt-for-the-arc-a-solo-adventure",
     setupDescription: "Place 1 Reaver ship and the Alliance Cruiser in the Border Space sector below Valentine. If Blue Sun is active, place 2 more Cutters near Miranda.",
-    tags: ['community', 'mystery', 'against_the_black', 'solo'],
+    tags: [
+      "community",
+      "mystery",
+      "against_the_black",
+      "solo"
+    ],
     rules: [
       {
-        type: 'setReaverPlacement',
+        type: "setReaverPlacement",
         placement: "Place 1 Cutter in the Border Space sector directly below Valentine. Place the remaining 2 Cutters in the border sectors closest to Miranda.",
-        criteria: { requireExpansion: 'blue' },
-        source: 'story',
+        criteria: {
+          requireExpansion: "blue"
+        },
+        source: "story",
         sourceName: "Hunt For The Arc"
       },
       {
-        type: 'setReaverPlacement',
+        type: "setReaverPlacement",
         placement: "Place 1 Cutter in the Border Space sector directly below Valentine.",
-        criteria: { excludeExpansion: 'blue' },
-        source: 'story',
+        criteria: {
+          excludeExpansion: "blue"
+        },
+        source: "story",
+        sourceName: "Hunt For The Arc"
+      },
+      {
+        type: "addSpecialRule",
+        category: "allianceReaver",
+        rule: {
+          title: "Initial contact",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Place 1 Reaver ship and the Alliance Cruiser in the Border Space sector below Valentine. If Blue Sun is active, place 2 more Cutters near Miranda."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Hunt For The Arc"
       }
     ]
@@ -206,36 +232,89 @@ export const SOLO_COMMUNITY_STORIES: StoryCardDef[] = [
     isSolo: true,
     goals: [
       {
-        "title": "Hunt the Verse's Most Wanted",
-        "description": "During Setup, mark 3 random bounties (not Cortex Alerts). Deliver the 3 marked bounties."
+        title: "Hunt the Verse's Most Wanted",
+        description: "During Setup, mark 3 random bounties (not Cortex Alerts). Deliver the 3 marked bounties."
       }
     ],
-    tags: ['community', 'character', 'against_the_black', 'solo'],
+    tags: [
+      "community",
+      "character",
+      "against_the_black",
+      "solo"
+    ],
     setupDescription: "Start play with Jubal Early as your leader. Remove Serenity's crew from the Bounty and Supply Decks. The Bounty deck is placed face up. All bounties are active.",
+    sourceUrl: "https://boardgamegeek.com/filepage/289736/jubals-story-solo-cards",
+    requiredExpansion: "community",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft',
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
-          title: 'Leader Assignment',
-          content: ["Start play with Jubal Early as your Leader. Remove Serenity's crew from the Bounty and Supply Decks."]
+          title: "Leader Assignment",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Start play with Jubal Early as your Leader."
+              ]
+            }
+          ]
         },
-        source: 'story',
+        source: "story",
         sourceName: "Jubal's Early Years"
       },
       {
-        type: 'addSpecialRule',
-        category: 'prime',
+        type: "addSpecialRule",
+        category: "draft_ships",
         rule: {
-          title: 'Active Bounties',
-          content: ["The Bounty deck is placed face up. All bounties are active."]
+          title: "Jubal takes the lead",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Start play with Jubal Early as your Leader."
+              ]
+            }
+          ]
         },
-        source: 'story',
+        source: "story",
+        sourceName: "Jubal's Early Years"
+      },
+      {
+        type: "addSpecialRule",
+        category: "prime",
+        rule: {
+          title: "Prime Note",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Remove Serenity's crew from the Bounty and Supply Decks. The Bounty deck is placed face up. All bounties are active."
+              ]
+            }
+          ]
+        },
+        source: "story",
+        sourceName: "Jubal's Early Years"
+      },
+      {
+        type: "addSpecialRule",
+        category: "prime_panel",
+        rule: {
+          title: "Crew adjustment",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Remove Serenity's crew from the Bounty and Supply Decks. The Bounty deck is placed face up. All bounties are active."
+              ]
+            }
+          ]
+        },
+        source: "story",
         sourceName: "Jubal's Early Years"
       }
-    ],
-    sourceUrl: "https://boardgamegeek.com/filepage/289736/jubals-story-solo-cards",
-    requiredExpansion: "community"
+    ]
   },
   {
     title: "Jubal's Mighty Roar",
