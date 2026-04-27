@@ -120,13 +120,15 @@ export const STORIES_A_D: StoryCardDef[] = [
         sourceName: "Aimin' To Misbehave"
       },
       {
-        type: 'addSpecialRule',
-        category: 'jobs',
-        rule: {
-            title: 'Deck Modification',
+        type: 'setJobStepContent',
+        position: 'after',
+        content: [
+          {
+            type: 'paragraph',
             content: ['Remove all Legal Jobs from the Contact Decks.']
-        },
-        source: 'info',
+          }
+        ],
+        source: 'story',
         sourceName: "Aimin' To Misbehave"
       }
     ]

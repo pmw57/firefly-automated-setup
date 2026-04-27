@@ -93,15 +93,39 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     setupDescription: "During Leader selection, players also choose any card from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards next to the 'Verse;s Most Wanted List. They are prisoners of the Alliance!",
     rules: [
       {
-        type: 'addSpecialRule',
-        category: 'draft_ships',
-        rule: { 
-          content: ["Players also choose any card from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards next to the 'Verse;s Most Wanted List. They are prisoners of the Alliance!"],
-          position: 'after'
+        type: "addSpecialRule",
+        category: "draft_ships",
+        rule: {
+          title: "Who's your rescue?",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Players also choose any card from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards next to the 'Verse;s Most Wanted List. They are prisoners of the Alliance!"
+              ]
+            }
+          ]
         },
-        source: 'story', 
+        source: "story",
         sourceName: "Jail Break"
       },
+      {
+        type: "addSpecialRule",
+        category: "draft",
+        rule: {
+          title: "Who's your rescue?",
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Players also choose any card from the Bounty Deck. Pair each chosen Bounty with its associated Wanted Crew card and place the two cards next to the 'Verse;s Most Wanted List. They are prisoners of the Alliance!"
+              ]
+            }
+          ]
+        },
+        source: "story",
+        sourceName: "Jail Break"
+      }
     ]
   },
   {
@@ -110,28 +134,35 @@ export const PIRATES_STORIES: StoryCardDef[] = [
     intro: "The 'Verse is full of people trying to carve themselves a little slice, however they can. Even a good man can get turned about from time to time. The straight and narrow can get a might twisted when walkin' the raggedy edge. In the end, the mark a person leaves all comes down to the choices they make.",
     requiredExpansion: "pirates",
     sourceUrl: "https://boardgamegeek.com/image/2785051/gerryrailbaron",
-    tags: ['pvp'],
+    tags: [
+      "pvp"
+    ],
     setupDescription: "After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles.",
     rules: [
-       {
-        type: 'addSpecialRule',
-        category: 'jobs',
+      {
+        type: "addSpecialRule",
+        category: "jobs",
         rule: {
-          title: 'Remove Piracy Jobs',
-          content: ["After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles."]
+          title: "Remove Piracy Jobs",
+          content: [
+            "After taking starting jobs, pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles."
+          ]
         },
-        source: 'story', 
+        source: "story",
         sourceName: "The Choices We Make"
       },
       {
-        type: 'addSpecialRule',
-        category: 'jobs',
-        rule: {
-            title: 'Deck Modification',
-            content: ['Remove all Piracy Jobs from the Contact Decks.'],
-            position: 'after'
-        },
-        source: 'info',
+        type: "setJobStepContent",
+        position: "after",
+        content: [
+          {
+            type: "paragraph",
+            content: [
+              "Pull all remaining Piracy Jobs from the Contact Decks and place them in their discard piles."
+            ]
+          }
+        ],
+        source: "story",
         sourceName: "The Choices We Make"
       }
     ]

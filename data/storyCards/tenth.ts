@@ -68,20 +68,35 @@ export const TENTH_STORIES: StoryCardDef[] = [
     intro: "A mishap at Eavesdown Docks seriously injures a renowned swindler. Before passing, he shares clues that will lead to a hidden fortune. News spreads fast, igniting a frenzied race.",
     setupDescription: "Players begin at Persephone.",
     requiredExpansion: "tenth",
-    additionalRequirements: ["kalidasa"],
+    additionalRequirements: [
+      "kalidasa"
+    ],
     sourceUrl: "https://boardgamegeek.com/image/8103877",
-    tags: ['classic_heist'],
+    tags: [
+      "classic_heist"
+    ],
     rules: [
-      { type: 'setShipPlacement', location: 'persephone', source: 'story', sourceName: "It's a Mad, Mad, Mad, Mad 'Verse!" },
       {
-        type: 'addSpecialRule',
-        category: 'draft_placement',
+        type: "setShipPlacement",
+        location: "persephone",
+        source: "story",
+        sourceName: "It's a Mad, Mad, Mad, Mad 'Verse!"
+      },
+      {
+        type: "addSpecialRule",
+        category: "draft",
         rule: {
           title: "A Frenzied Race",
-          content: ["Players begin at Persephone."],
-          position: 'before'
+          content: [
+            {
+              type: "paragraph",
+              content: [
+                "Players begin at Persephone."
+              ]
+            }
+          ]
         },
-        source: 'story', 
+        source: "story",
         sourceName: "It's a Mad, Mad, Mad, Mad 'Verse!"
       }
     ]
